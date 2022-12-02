@@ -159,8 +159,7 @@ namespace Microsoft.OData.Json
         public void StartPaddingFunctionScope()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
-            ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)'(' };
-            this.bufferWriter.Write(buf);
+            this.bufferWriter.Write(parentheses[..1].Span);
             this.FlushIfBufferThresholdReached();
         }
 
@@ -174,8 +173,7 @@ namespace Microsoft.OData.Json
         public void EndPaddingFunctionScope()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
-            ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)')' };
-            this.bufferWriter.Write(buf);
+            this.bufferWriter.Write(parentheses[1..2].Span);
             this.FlushIfBufferThresholdReached();
         }
 
@@ -398,7 +396,7 @@ namespace Microsoft.OData.Json
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
-            if ((this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
+            if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray || !this.IsInArray())
             {
                 this.shouldWriteSeparator = true;
             }
