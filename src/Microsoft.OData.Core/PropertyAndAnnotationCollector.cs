@@ -31,7 +31,7 @@ namespace Microsoft.OData
     /// </remarks>
     internal sealed class PropertyAndAnnotationCollector
     {
-        private static readonly IDictionary<string, object> emptyDictionary = new Dictionary<string, object>();
+        private static readonly IReadOnlyDictionary<string, object> emptyDictionary = new Dictionary<string, object>();
 
         /// <summary>
         /// Whether to enable duplicate property validation so that an exception is thrown when detected.
@@ -44,12 +44,12 @@ namespace Microsoft.OData
         /// <summary>
         /// Caches OData scope annotations.
         /// </summary>
-        private Dictionary<string, object> odataScopeAnnotations = new Dictionary<string, object>();
+        private Dictionary<string, object> odataScopeAnnotations;
 
         /// <summary>
         /// Caches custom scope annotations.
         /// </summary>
-        private IList<Annotation> customScopeAnnotations = new List<Annotation>();
+        private IList<Annotation> customScopeAnnotations;
 
         /// <summary>
         /// Caches property data.
@@ -243,7 +243,12 @@ namespace Microsoft.OData
 
             try
             {
-                odataScopeAnnotations.Add(annotationName, annotationValue);
+                if (this.odataScopeAnnotations == null)
+                {
+                    this.odataScopeAnnotations = new Dictionary<string, object>();
+                }
+
+                this.odataScopeAnnotations.Add(annotationName, annotationValue);
             }
             catch (ArgumentException)
             {
@@ -271,6 +276,11 @@ namespace Microsoft.OData
                 return;
             }
 
+            if (customScopeAnnotations== null)
+            {
+                this.customScopeAnnotations = new List<Annotation>();
+            }
+
             customScopeAnnotations.Add(new Annotation(annotationName, annotationValue));
         }
 
@@ -281,9 +291,9 @@ namespace Microsoft.OData
         /// <remarks>
         /// Scope annotations are those that do not apply to specific properties, and start directly with "@".
         /// </remarks>
-        internal Dictionary<string, object> GetODataScopeAnnotation()
+        internal IReadOnlyDictionary<string, object> GetODataScopeAnnotation()
         {
-            return odataScopeAnnotations;
+            return this.odataScopeAnnotations == null ? emptyDictionary : this.odataScopeAnnotations;
         }
 
         /// <summary>
@@ -295,7 +305,7 @@ namespace Microsoft.OData
         /// </remarks>
         internal IEnumerable<Annotation> GetCustomScopeAnnotation()
         {
-            return customScopeAnnotations;
+            return customScopeAnnotations == null ? Enumerable.Empty<Annotation>() : customScopeAnnotations;
         }
 
         /// <summary>
@@ -332,7 +342,7 @@ namespace Microsoft.OData
 
             try
             {
-                data.ODataAnnotations.Add(annotationName, annotationValue);
+                data.AddODataAnnotation(annotationName, annotationValue);
             }
             catch (ArgumentException)
             {
@@ -375,7 +385,7 @@ namespace Microsoft.OData
                 }
             }
 
-            data.CustomAnnotations.Add(new Annotation(annotationName, annotationValue));
+            data.AddCustomAnnotation(new Annotation(annotationName, annotationValue));
         }
 
         /// <summary>
@@ -421,7 +431,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
         /// <returns>OData property annotation name value pairs.</returns>
-        internal IDictionary<string, object> GetODataPropertyAnnotations(string propertyName)
+        internal IReadOnlyDictionary<string, object> GetODataPropertyAnnotations(string propertyName)
         {
             Debug.Assert(propertyName != null);
 
@@ -518,6 +528,9 @@ namespace Microsoft.OData
 
         private sealed class PropertyData
         {
+            Dictionary<string, object> odataAnnotations;
+            List<Annotation> customAnnotations;
+
             /// <summary>
             /// Constructor.
             /// </summary>
@@ -525,8 +538,8 @@ namespace Microsoft.OData
             internal PropertyData(PropertyState propertyState)
             {
                 State = propertyState;
-                ODataAnnotations = new Dictionary<string, object>();
-                CustomAnnotations = new List<Annotation>();
+                ODataAnnotations = emptyDictionary;
+                CustomAnnotations = Enumerable.Empty<Annotation>();
             }
 
             /// <summary>
@@ -551,7 +564,7 @@ namespace Microsoft.OData
             /// The key is the fully qualified annotation name like "odata.type".
             /// The value is the parsed value of the annotation, which is annotation specific.
             /// </remarks>
-            internal IDictionary<string, object> ODataAnnotations { get; private set; }
+            internal IReadOnlyDictionary<string, object> ODataAnnotations { get; private set; }
 
             /// <summary>
             /// Custom property annotations.
@@ -560,7 +573,7 @@ namespace Microsoft.OData
             /// The key is the fully qualified annotation name.
             /// The value is the parsed value of the annotation, which is annotation specific.
             /// </remarks>
-            internal IList<Annotation> CustomAnnotations { get; private set; }
+            internal IEnumerable<Annotation> CustomAnnotations { get; private set; }
 
             /// <summary>
             /// Denotes whether the property has been marked as processed.
@@ -571,6 +584,28 @@ namespace Microsoft.OData
             /// The derived type validator for property.
             /// </summary>
             internal DerivedTypeValidator DerivedTypeValidator { get; set; }
+
+            internal void AddODataAnnotation(string annotationName, object annotationValue)
+            {
+                if (this.odataAnnotations == null)
+                {
+                    this.odataAnnotations = new Dictionary<string, object>();
+                    this.ODataAnnotations = this.odataAnnotations;
+                }
+
+                this.odataAnnotations.Add(annotationName, annotationValue);
+            }
+
+            internal void AddCustomAnnotation(Annotation annotation)
+            {
+                if (this.customAnnotations == null)
+                {
+                    this.customAnnotations = new List<Annotation>();
+                    this.CustomAnnotations = this.customAnnotations;
+                }
+
+                this.customAnnotations.Add(annotation);
+            }
         }
     }
 }

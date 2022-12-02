@@ -94,11 +94,16 @@ namespace Microsoft.OData.Edm
         {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(bindingType, "bindingType");
-       
-            IList<IEdmOperation> bindableOperations = new List<IEdmOperation>();
+
+            IList<IEdmOperation> bindableOperations = null;
 
             foreach (IEdmOperation operation in model.FindDeclaredBoundOperations(bindingType))
             {
+                if (bindableOperations == null)
+                {
+                    bindableOperations = new List<IEdmOperation>();
+                }
+
                 bindableOperations.Add(operation);
             }
 
@@ -106,11 +111,16 @@ namespace Microsoft.OData.Edm
             {
                 foreach (IEdmOperation operation in reference.FindDeclaredBoundOperations(bindingType))
                 {
+                    if (bindableOperations == null)
+                    {
+                        bindableOperations = new List<IEdmOperation>();
+                    }
+
                     bindableOperations.Add(operation);
                 }
             }
 
-            return bindableOperations;
+            return bindableOperations == null ? Enumerable.Empty<IEdmOperation>() : bindableOperations;
         }
 
         /// <summary>

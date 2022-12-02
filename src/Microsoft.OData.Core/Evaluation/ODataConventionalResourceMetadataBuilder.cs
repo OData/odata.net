@@ -36,7 +36,7 @@ namespace Microsoft.OData.Evaluation
         protected readonly HashSet<string> ProcessedNestedResourceInfos;
 
         /// <summary>The list of stream properties that have been processed.</summary>
-        protected readonly HashSet<string> ProcessedStreamProperties;
+        private HashSet<string> ProcessedStreamProperties = null;
 
         /// <summary>The enumerator for unprocessed navigation links.</summary>
         private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Evaluation
             this.UriBuilder = uriBuilder;
             this.MetadataContext = metadataContext;
             this.ProcessedNestedResourceInfos = new HashSet<string>(StringComparer.Ordinal);
-            this.ProcessedStreamProperties = new HashSet<string>(StringComparer.Ordinal);
+            this.ProcessedStreamProperties = null;
             this.resource = resourceMetadataContext.Resource;
         }
 
@@ -413,7 +413,11 @@ namespace Microsoft.OData.Evaluation
         internal override void MarkStreamPropertyProcessed(string streamPropertyName)
         {
             Debug.Assert(!string.IsNullOrEmpty(streamPropertyName), "!string.IsNullOrEmpty(streamPropertyName)");
-            Debug.Assert(this.ProcessedStreamProperties != null, "this.processedStreamProperties != null");
+            if (this.ProcessedStreamProperties == null)
+            {
+                this.ProcessedStreamProperties = new HashSet<string>();
+            }
+
             this.ProcessedStreamProperties.Add(streamPropertyName);
         }
 
@@ -428,7 +432,7 @@ namespace Microsoft.OData.Evaluation
             {
                 Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
                 this.unprocessedStreamProperties = this.ResourceMetadataContext.SelectedStreamProperties
-                    .Where(p => !this.ProcessedStreamProperties.Contains(p.Key))
+                    .Where(p => !this.ProcessedStreamPropertiesContain(p.Key))
                     .Select(p => p.Key)
                     .GetEnumerator();
             }
@@ -453,6 +457,11 @@ namespace Microsoft.OData.Evaluation
             }
 
             return null;
+        }
+
+        private bool ProcessedStreamPropertiesContain(string streamPropertyName)
+        {
+            return this.ProcessedStreamProperties == null ? false : this.ProcessedStreamProperties.Contains(streamPropertyName);
         }
 
         //// Stream content type and ETag can't be computed from conventions, but it can retrieve from the vocabulary annoation?

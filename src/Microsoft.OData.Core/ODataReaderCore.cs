@@ -493,24 +493,7 @@ namespace Microsoft.OData
         /// <returns>The scope with type of <typeparamref name="T"/></returns>
         internal Scope SeekScope<T>(int maxDepth) where T : Scope
         {
-            int count = 1;
-
-            foreach (Scope scope in this.scopes)
-            {
-                if (count > maxDepth)
-                {
-                    return null;
-                }
-
-                if (scope is T)
-                {
-                    return scope;
-                }
-
-                count++;
-            }
-
-            return null;
+            return this.scopes.SeekScope<T>(maxDepth);
         }
 
         /// <summary>

@@ -1637,7 +1637,7 @@ namespace Microsoft.OData.JsonLight
             // Undeclared property
             // Detect whether it's a link property or value property.
             // Link properties are stream properties and deferred links.
-            IDictionary<string, object> odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
+            IReadOnlyDictionary<string, object> odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
             object propertyAnnotationValue;
 
             // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property
@@ -3866,7 +3866,7 @@ namespace Microsoft.OData.JsonLight
             // Undeclared property
             // Detect whether it's a link property or value property.
             // Link properties are stream properties and deferred links.
-            IDictionary<string, object> odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
+            IReadOnlyDictionary<string, object> odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
             object propertyAnnotationValue;
 
             // If the property has 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaContentType' or 'odata.mediaEtag' annotation, read it as a stream property

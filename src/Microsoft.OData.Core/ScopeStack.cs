@@ -11,7 +11,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Lightweight wrapper for the stack of scopes which exposes a few helper properties for getting parent scopes.
     /// </summary>
-    internal sealed class ScopeStack<TScope> : IEnumerable<TScope> where TScope : class
+    internal sealed class ScopeStack<TScope>  where TScope : class
     {
         /// <summary>
         /// Use a list to store the scopes instead of a true stack so that parent/grandparent lookups will be fast.
@@ -114,22 +114,31 @@ namespace Microsoft.OData
             return null;
         }
 
-        public IEnumerator<TScope> GetEnumerator()
+        /// <summary>
+        /// Seek scope in the stack which is type of <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="TTarget">The type of scope to seek.</typeparam>
+        /// <param name="maxDepth">The max depth to seek.</param>
+        /// <returns>The scope with type of <typeparamref name="T"/></returns>
+        internal TTarget SeekScope<TTarget>(int maxDepth) where TTarget : TScope
         {
-            return ScopesIterator().GetEnumerator();
-        }
-
-        private IEnumerable<TScope> ScopesIterator()
-        {
+            int count = 1;
             for (int i = this.scopes.Count - 1; i >= 0; i--)
             {
-                yield return this.scopes[i];
-            }
-        }
+                if (count > maxDepth)
+                {
+                    return default;
+                }
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ScopesIterator().GetEnumerator();
+                if (this.scopes[i] is TTarget targetScope)
+                {
+                    return targetScope;
+                }
+
+                count++;
+            }
+
+            return default;
         }
     }
 }
