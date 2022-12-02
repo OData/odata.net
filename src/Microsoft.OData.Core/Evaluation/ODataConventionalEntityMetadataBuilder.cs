@@ -40,7 +40,7 @@ namespace Microsoft.OData.Evaluation
         private ODataStreamReferenceValue computedMediaResource;
 
         /// <summary>The list of computed stream properties.</summary>
-        private List<ODataProperty> computedStreamProperties;
+        private IEnumerable<ODataProperty> computedStreamProperties;
 
         /// <summary>
         /// Mark if we are at state of ResourceEnd, if it is true, GetProperties would concat computed stream properties.
@@ -433,9 +433,9 @@ namespace Microsoft.OData.Evaluation
                     }
                 }
 
-                this.computedStreamProperties = new List<ODataProperty>();
                 if (projectedStreamProperties.Count > 0)
                 {
+                    List<ODataProperty> computedStreamProperties = new List<ODataProperty>();
                     // Create all the missing stream properties and set the metadata builder
                     foreach (string missingStreamPropertyName in projectedStreamProperties.Keys)
                     {
@@ -452,8 +452,14 @@ namespace Microsoft.OData.Evaluation
                             streamPropertyValue.ContentType = mediaTypes.ElementAt(0);
                         }
 
-                        this.computedStreamProperties.Add(new ODataProperty { Name = missingStreamPropertyName, Value = streamPropertyValue });
+                        computedStreamProperties.Add(new ODataProperty { Name = missingStreamPropertyName, Value = streamPropertyValue });
                     }
+
+                    this.computedStreamProperties = computedStreamProperties;
+                }
+                else
+                {
+                    this.computedStreamProperties = Enumerable.Empty<ODataProperty>();
                 }
             }
 

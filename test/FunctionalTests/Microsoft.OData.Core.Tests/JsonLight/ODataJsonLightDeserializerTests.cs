@@ -634,7 +634,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     jsonReader.ShouldBeOn(JsonNodeType.Property, "@odata.unknown");
                     var propertyAnnotation = duplicateChecker.GetODataPropertyAnnotations("NavProp").Keys;
                     Assert.Contains("odata.navigationLink", propertyAnnotation);
-                    Assert.Equal(1, propertyAnnotation.Count);
+                    Assert.Single(propertyAnnotation);
                 },
                 (jsonReader, name) =>
                 {
@@ -673,7 +673,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     Assert.Contains("odata.navigationLink", propertyAnnotation);
                     Assert.Contains("odata.associationLink", propertyAnnotation);
                     Assert.Contains("odata.unknown", propertyAnnotation);
-                    Assert.Equal(3, propertyAnnotation.Count);
+                    Assert.Equal(3, propertyAnnotation.Count());
                 },
                 (jsonReader, name) => jsonReader.ReadStringValue(name));
         }
