@@ -76,7 +76,7 @@ namespace Microsoft.OData.Json
         /// Whether we're about to write the first element in array. This helps
         /// decide whether we should manually write a separator.
         /// </summary>
-        private bool isWritingFirstElementInArray = false;
+        private bool isWritingAtStartOfArray = false;
         /// <summary>
         /// Whether we're currently writing a raw value at the start of an array
         /// or preceeded by a sequence of consecutive raw values at the start of
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Json
 
             // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
             this.CommitUtf8JsonWriterContentsToBuffer();
-            if (IsInArray() && !isWritingFirstElementInArray)
+            if (IsInArray() && !isWritingAtStartOfArray)
             {
                 // Place a separator before the raw value if
                 // this is an array, unless this is the first item in the array.
@@ -398,17 +398,17 @@ namespace Microsoft.OData.Json
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
-            if ((this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
+            if ((this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray) || !this.IsInArray())
             {
                 this.shouldWriteSeparator = true;
             }
 
-            if (this.isWritingFirstElementInArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
+            if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
             {
                 this.isWritingConsecutiveRawValuesAtStartOfArray = true;
             }
 
-            this.isWritingFirstElementInArray = false;
+            this.isWritingAtStartOfArray = false;
         }
 
         /// <summary>
@@ -427,7 +427,7 @@ namespace Microsoft.OData.Json
 
             // reset state since now we're back in sync with Utf8JsonWriter.
             this.shouldWriteSeparator = false;
-            this.isWritingFirstElementInArray = false;
+            this.isWritingAtStartOfArray = false;
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
         }
 
@@ -448,7 +448,7 @@ namespace Microsoft.OData.Json
         private void EnterObjectScope()
         {
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
-            this.isWritingFirstElementInArray = false;
+            this.isWritingAtStartOfArray = false;
             this.bitStack.PushTrue();
         }
 
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Json
         private void EnterArrayScope()
         {
             this.isWritingConsecutiveRawValuesAtStartOfArray = false;
-            this.isWritingFirstElementInArray = true;
+            this.isWritingAtStartOfArray = true;
             this.bitStack.PushFalse();
         }
 
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void ExitScope()
         {
-            this.isWritingFirstElementInArray = false;
+            this.isWritingAtStartOfArray = false;
             this.shouldWriteSeparator = false;
             this.bitStack.Pop();
         }
