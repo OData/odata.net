@@ -457,6 +457,23 @@ namespace Microsoft.OData.Client
             return headers.ToDictionary((h1) => h1.Key, (h2) => string.Join(",", h2.Value));
         }
 
+        private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpContentHeaders headers)
+        {
+            Dictionary<string, string> result = new Dictionary<string, string>();
+
+            foreach (var header in headers)
+            {
+                result.Add(header.Key, string.Join(",", header.Value));
+            }
+
+            // We observed strange behaviour where the Content-Length header
+            // does not get reached when we iterate over the headers.
+            // Here retrieve it manually from headers.ContentLength a sa workaround.
+            result["Content-Length"] = headers.ContentLength.ToString();
+
+            return result;
+        }
+
         /// <summary> Returns the underlying HttpRequestMessage </summary>
         internal HttpRequestMessage HttpRequestMessage
         {
@@ -468,7 +485,7 @@ namespace Microsoft.OData.Client
 
         private static HttpWebResponseMessage ConvertHttpWebResponse(HttpResponseMessage response)
         {
-            IEnumerable<KeyValuePair<string, string>> allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(HttpHeadersToStringDictionary(response.Content.Headers));
+            IEnumerable<KeyValuePair<string, string>> allHeaders = HttpHeadersToStringDictionary(response.Headers).Concat(HttpHeadersToStringDictionary(response.Content.Headers as HttpContentHeaders));
             return new HttpWebResponseMessage(
                 allHeaders.ToDictionary((h1) => h1.Key, (h2) => h2.Value),
                 (int)response.StatusCode,
