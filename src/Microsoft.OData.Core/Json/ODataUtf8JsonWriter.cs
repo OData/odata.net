@@ -130,7 +130,7 @@ namespace Microsoft.OData.Json
 
         public void Flush()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             this.writeStream.Write(this.bufferWriter.WrittenMemory.Span);
             this.bufferWriter.Clear();
             this.writeStream.Flush();
@@ -151,14 +151,14 @@ namespace Microsoft.OData.Json
         /// to the bufferWriter.
         /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void CommitWriterContentsToBuffer()
+        private void CommitUtf8JsonWriterContentsToBuffer()
         {
             this.utf8JsonWriter.Flush();
         }
 
         public void StartPaddingFunctionScope()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)'(' };
             this.bufferWriter.Write(buf);
             this.FlushIfBufferThresholdReached();
@@ -166,14 +166,14 @@ namespace Microsoft.OData.Json
 
         public void WritePaddingFunctionName(string functionName)
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
             this.FlushIfBufferThresholdReached();
         }
 
         public void EndPaddingFunctionScope()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             ReadOnlySpan<byte> buf = stackalloc byte[] { (byte)')' };
             this.bufferWriter.Write(buf);
             this.FlushIfBufferThresholdReached();
@@ -386,7 +386,7 @@ namespace Microsoft.OData.Json
             // see: https://github.com/OData/odata.net/issues/2420
 
             // ensure we don't write to the buffer directly while there are still pending data in the Utf8JsonWriter buffer
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             if (IsInArray() && !isWritingFirstElementInArray)
             {
                 // Place a separator before the raw value if
@@ -436,7 +436,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void WriteItemSeparator()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             Span<byte> buf = this.bufferWriter.GetSpan(1);
             buf[0] = (byte)',';
             this.bufferWriter.Advance(1);
@@ -552,21 +552,21 @@ namespace Microsoft.OData.Json
 
         public async Task StartPaddingFunctionScopeAsync()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[..1].Span);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WritePaddingFunctionNameAsync(string functionName)
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task EndPaddingFunctionScopeAsync()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[1..2].Span);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
@@ -761,7 +761,7 @@ namespace Microsoft.OData.Json
 
         public async Task FlushAsync()
         {
-            this.CommitWriterContentsToBuffer();
+            this.CommitUtf8JsonWriterContentsToBuffer();
             await this.writeStream.WriteAsync(this.bufferWriter.WrittenMemory).ConfigureAwait(false);
             this.bufferWriter.Clear();
             await this.writeStream.FlushAsync().ConfigureAwait(false);
