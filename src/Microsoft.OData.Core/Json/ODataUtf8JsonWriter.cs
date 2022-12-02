@@ -42,7 +42,7 @@ namespace Microsoft.OData.Json
         /// The Utf8JsonWriter internally keeps track of when to write the item separtor ','
         /// between key-value pairs in an object and between items in an array
         /// However, we bypass the Utf8JsonWriter in our implementation of WriteRawValue
-        /// and write directly to the destination stream. This means that we have to manually
+        /// and write directly to the bufferWriter that was ppased to Utf8JsonWriter. This means that we have to manually
         /// write an item separator when writing raw values. And since the Utf8JsonWriter is not
         /// aware of this write, we have to manually keep track of state to synchronise with the Utf8JsonWriter
         /// to ensure we don't write extra separators or skip a separator where it's needed, both of
@@ -54,6 +54,9 @@ namespace Microsoft.OData.Json
         /// We only need to do this for the first non-raw value after a sequence of raw values. That's because the Utf8JsonWriter
         /// (not aware of the raw values) will think that this is the first item in the array and not include a separator before it.
         /// - inside an array, before writing a raw value that is not at the start of the array
+        /// 
+        /// We write to the bufferWriter directly instead of the stream because it would be too expensive to write and flush
+        /// the stream frequently.
         /// 
         /// The following variables are used to keep track of state that allows us to figure out where to manually place a separator
         /// This will not be necessary when we implement WriteRawValue using Utf8JsonWriter.WriteRawValue()
