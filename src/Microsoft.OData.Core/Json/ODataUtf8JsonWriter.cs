@@ -436,7 +436,7 @@ namespace Microsoft.OData.Json
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             Span<byte> buf = this.bufferWriter.GetSpan(1);
-            buf[0] = (byte)',';
+            buf[0] = itemSeparator.Span[0];
             this.bufferWriter.Advance(1);
         }
 
@@ -466,6 +466,7 @@ namespace Microsoft.OData.Json
         private void ExitScope()
         {
             this.isWritingAtStartOfArray = false;
+            this.isWritingConsecutiveRawValuesAtStartOfArray = false;
             this.shouldWriteSeparator = false;
             this.bitStack.Pop();
         }
