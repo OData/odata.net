@@ -913,7 +913,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.RecursiveComplexTypedPropertyMustBeOptional
             };
 
-            model.Validate(new ValidationRuleSet(new List<ValidationRule>(rules)), out errors);
+            model.Validate(new ValidationRuleSet(rules), out errors);
+
             Assert.Equal(2, errors.Count());
 
             int currentIndex = 1;
