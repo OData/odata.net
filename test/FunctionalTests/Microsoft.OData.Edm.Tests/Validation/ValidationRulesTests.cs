@@ -908,7 +908,10 @@ namespace Microsoft.OData.Edm.Tests.Validation
             var model = new EdmModel();
             model.AddElement(complexType);
             IEnumerable<EdmError> errors;
-            List<ValidationRule> rules = new List<ValidationRule>{ValidationRules.RecursiveComplexTypedPropertyMustBeOptional};
+            List<ValidationRule> rules = new List<ValidationRule>
+            {
+                ValidationRules.RecursiveComplexTypedPropertyMustBeOptional
+            };
 
             model.Validate(new ValidationRuleSet(new List<ValidationRule>(rules)), out errors);
             Assert.Equal(2, errors.Count());
