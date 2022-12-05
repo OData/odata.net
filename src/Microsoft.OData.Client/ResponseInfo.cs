@@ -61,6 +61,14 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Specifies whether query projection will handle null propagation automatically.
+        /// </summary>
+        internal bool AutoNullPropagation
+        {
+            get { return this.Context.AutoNullPropagation; }
+        }
+
+        /// <summary>
         /// Returns whether ThrowOnUndeclaredPropertyForNonOpenType validation setting is enabled.
         /// </summary>
         internal bool ThrowOnUndeclaredPropertyForNonOpenType

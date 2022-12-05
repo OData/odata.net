@@ -95,7 +95,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="entry">Entry to get sub-entry from.</param>
         /// <param name="name">Name of sub-entry.</param>
         /// <param name="materializerContext">The materializer context.</param>
-        /// <returns>The sub-entry (never null).</returns>
+        /// <returns>The sub-entry (or null if materializerContext.AutoNullPropagation is true).</returns>
         internal static object ProjectionGetEntry(object entry, string name, IODataMaterializerContext materializerContext)
         {
             Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Client.Materialization
             Func<object, object, Type, object>[] propertyValues)
         {
             Debug.Assert(typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType()), "typeof(ODataEntityMaterializer).IsAssignableFrom(materializer.GetType())");
-            Debug.Assert(entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
+            Debug.Assert(entry == null || entry.GetType() == typeof(ODataResource), "entry.GetType() == typeof(ODataResource)");
             ODataEntityMaterializer entityMaterializer = (ODataEntityMaterializer)materializer;
             return ODataEntityMaterializer.ProjectionInitializeEntity(entityMaterializer, MaterializerEntry.GetEntry((ODataResource)entry, entityMaterializer.MaterializerContext), expectedType, resultType, properties, propertyValues);
         }

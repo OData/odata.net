@@ -386,9 +386,13 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="entry">Entry to get sub-entry from.</param>
         /// <param name="name">Name of sub-entry.</param>
         /// <param name="materializerContext">The materializer context.</param>
-        /// <returns>The sub-entry (never null).</returns>
+        /// <returns>The sub-entry (or null if materializerContext.AutoNullPropagation is true).</returns>
         internal static ODataResource ProjectionGetEntry(MaterializerEntry entry, string name, IODataMaterializerContext materializerContext)
         {
+            if (entry == null && materializerContext.AutoNullPropagation)
+            {
+                return null;
+            }
             Debug.Assert(entry.Entry != null, "entry != null -- ProjectionGetEntry never returns a null entry, and top-level materialization shouldn't pass one in");
 
             // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
@@ -400,7 +404,10 @@ namespace Microsoft.OData.Client.Materialization
                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
             }
 
-            CheckEntryToAccessNotNull(result, name);
+            if (!materializerContext.AutoNullPropagation)
+            {
+                CheckEntryToAccessNotNull(result, name);
+            }
             return result.Entry;
         }
 
@@ -421,6 +428,12 @@ namespace Microsoft.OData.Client.Materialization
             string[] properties,
             Func<object, object, Type, object>[] propertyValues)
         {
+
+            if (entry == null && materializer.MaterializerContext.AutoNullPropagation)
+            {
+                return null;
+            }
+
             if (entry.Entry == null)
             {
                 throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToInitializeIsNull(resultType.FullName));

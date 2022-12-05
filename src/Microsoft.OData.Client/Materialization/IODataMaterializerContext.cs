@@ -59,5 +59,10 @@ namespace Microsoft.OData.Client.Materialization
         /// OData items into CLR objects.
         /// </summary>
         MaterializerCache MaterializerCache { get; }
+
+        /// <summary>
+        /// Specifies whether query projection will handle null propagation automatically.
+        /// </summary>
+        bool AutoNullPropagation { get; }
     }
 }

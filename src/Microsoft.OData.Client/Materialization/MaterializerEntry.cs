@@ -256,6 +256,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materializer entry</returns>
         public static MaterializerEntry GetEntry(ODataResource entry, IODataMaterializerContext materializerContext)
         {
+            if (entry == null && materializerContext.AutoNullPropagation)
+            {
+                return null;
+            }
+
             return materializerContext.GetAnnotation<MaterializerEntry>(entry);
         }
 
