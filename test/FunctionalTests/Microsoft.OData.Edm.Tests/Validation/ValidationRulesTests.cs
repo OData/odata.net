@@ -897,6 +897,31 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 nestedOtherDerivedProp);
         }
 
+        [Fact]
+        public void MultipleComplexTypedPropertiesWithSameTypeAsDeclaringTypeShouldAllError()
+        {
+            EdmComplexType complexType = new EdmComplexType("ns", "myType");
+            IEdmTypeReference complexTypeRef = complexType.GetTypeReference(false);
+            complexType.AddStructuralProperty("nested1", complexTypeRef);
+            complexType.AddStructuralProperty("nested2", complexTypeRef);
+
+            var model = new EdmModel();
+            model.AddElement(complexType);
+            IEnumerable<EdmError> errors;
+            List<ValidationRule> rules = new List<ValidationRule>{ValidationRules.RecursiveComplexTypedPropertyMustBeOptional};
+
+            model.Validate(new ValidationRuleSet(new List<ValidationRule>(rules)), out errors);
+            Assert.Equal(2, errors.Count());
+
+            int currentIndex = 1;
+            foreach (var error in errors)
+            {
+                Assert.Equal(EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional, error.ErrorCode);
+                Assert.Equal(Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional("nested" + currentIndex), error.ErrorMessage);
+                currentIndex++;
+            }
+        }
+
         #endregion
 
         [Fact]
