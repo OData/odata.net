@@ -834,6 +834,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The nullability of the property '{0}' is invalid. If a complex typed property is of the same type (or base type) as its declaring type, then the property represents a recursive containment and the given property must be optional."
+        /// </summary>
+        internal static string EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(object p0)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional, p0);
+        }
+
+        /// <summary>
         /// A string like "The source multiplicity of the navigation property '{0}' is invalid. If a navigation property has 'ContainsTarget' set to true and declaring entity type of the property is the same or inherits from the target entity type, then the property represents a recursive containment and the multiplicity of the navigation source must be zero or one."
         /// </summary>
         internal static string EdmModel_Validator_Semantic_NavigationPropertyWithRecursiveContainmentSourceMustBeFromZeroOrOne(object p0)
