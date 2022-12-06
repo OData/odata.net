@@ -473,6 +473,7 @@ namespace Microsoft.OData.Client
                 // Since the uninitialized value of ContentLength header is -1, we need to return
                 // -1 if the content length header is not present
                 this.contentLength = -1;
+                throw new Exception($"String content length is {stringContentLength}");
             }
 
             this.contentType = response.GetHeader(XmlConstants.HttpContentType);
@@ -643,6 +644,11 @@ namespace Microsoft.OData.Client
 
                 if (count > 0)
                 {
+                    if (count + outResponseStream.Length > (outResponseStream as MemoryStream).Capacity)
+                    {
+                        throw new Exception($"Unexpected writer greater than stream capacity, count {count}, cap {(outResponseStream as MemoryStream).Capacity}");
+                    }
+
                     outResponseStream.Write(buffer, 0, count);
                 }
 
