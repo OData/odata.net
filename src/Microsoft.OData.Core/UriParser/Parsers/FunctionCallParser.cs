@@ -182,7 +182,17 @@ namespace Microsoft.OData.UriParser
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
-                argList.Add(new FunctionParameterToken(null, this.parser.ParseExpression()));
+                QueryToken parameterToken = this.parser.ParseExpression();
+
+                if (this.Lexer.CurrentToken.Kind == ExpressionTokenKind.Colon) // ':'
+                {
+                    this.Lexer.NextToken();
+                    QueryToken caseValueToken = this.parser.ParseExpression();
+
+                    parameterToken = new CaseParameterToken(parameterToken, caseValueToken);
+                }
+
+                argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
                     break;

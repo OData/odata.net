@@ -1262,6 +1262,14 @@ Microsoft.OData.UriParser.BinaryOperatorToken.BinaryOperatorToken(Microsoft.ODat
 Microsoft.OData.UriParser.BinaryOperatorToken.Left.get -> Microsoft.OData.UriParser.QueryToken
 Microsoft.OData.UriParser.BinaryOperatorToken.OperatorKind.get -> Microsoft.OData.UriParser.BinaryOperatorKind
 Microsoft.OData.UriParser.BinaryOperatorToken.Right.get -> Microsoft.OData.UriParser.QueryToken
+Microsoft.OData.UriParser.CaseParameterNode
+Microsoft.OData.UriParser.CaseParameterNode.CaseParameterNode(Microsoft.OData.UriParser.SingleValueNode condition, Microsoft.OData.UriParser.QueryNode value) -> void
+Microsoft.OData.UriParser.CaseParameterNode.Condition.get -> Microsoft.OData.UriParser.QueryNode
+Microsoft.OData.UriParser.CaseParameterNode.Value.get -> Microsoft.OData.UriParser.QueryNode
+Microsoft.OData.UriParser.CaseParameterToken
+Microsoft.OData.UriParser.CaseParameterToken.CaseParameterToken(Microsoft.OData.UriParser.QueryToken condition, Microsoft.OData.UriParser.QueryToken value) -> void
+Microsoft.OData.UriParser.CaseParameterToken.Condition.get -> Microsoft.OData.UriParser.QueryToken
+Microsoft.OData.UriParser.CaseParameterToken.Value.get -> Microsoft.OData.UriParser.QueryToken
 Microsoft.OData.UriParser.CollectionComplexNode
 Microsoft.OData.UriParser.CollectionComplexNode.CollectionComplexNode(Microsoft.OData.UriParser.SingleResourceNode source, Microsoft.OData.Edm.IEdmProperty property) -> void
 Microsoft.OData.UriParser.CollectionComplexNode.Property.get -> Microsoft.OData.Edm.IEdmProperty
@@ -1454,6 +1462,7 @@ Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriPars
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.AllToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.AnyToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.BinaryOperatorToken tokenIn) -> T
+Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.CaseParameterToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.CountSegmentToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.CustomQueryOptionToken tokenIn) -> T
 Microsoft.OData.UriParser.ISyntacticTreeVisitor<T>.Visit(Microsoft.OData.UriParser.DottedIdentifierToken tokenIn) -> T
@@ -1711,6 +1720,7 @@ Microsoft.OData.UriParser.QueryNodeKind.AggregatedCollectionPropertyNode = 31 ->
 Microsoft.OData.UriParser.QueryNodeKind.All = 14 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.Any = 9 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.BinaryOperator = 4 -> Microsoft.OData.UriParser.QueryNodeKind
+Microsoft.OData.UriParser.QueryNodeKind.CaseParameter = 34 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.CollectionComplexNode = 26 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.CollectionConstant = 33 -> Microsoft.OData.UriParser.QueryNodeKind
 Microsoft.OData.UriParser.QueryNodeKind.CollectionFunctionCall = 18 -> Microsoft.OData.UriParser.QueryNodeKind
@@ -1752,6 +1762,7 @@ Microsoft.OData.UriParser.QueryTokenKind.AggregateGroupBy = 26 -> Microsoft.ODat
 Microsoft.OData.UriParser.QueryTokenKind.All = 19 -> Microsoft.OData.UriParser.QueryTokenKind
 Microsoft.OData.UriParser.QueryTokenKind.Any = 15 -> Microsoft.OData.UriParser.QueryTokenKind
 Microsoft.OData.UriParser.QueryTokenKind.BinaryOperator = 3 -> Microsoft.OData.UriParser.QueryTokenKind
+Microsoft.OData.UriParser.QueryTokenKind.CaseParameter = 33 -> Microsoft.OData.UriParser.QueryTokenKind
 Microsoft.OData.UriParser.QueryTokenKind.Compute = 27 -> Microsoft.OData.UriParser.QueryTokenKind
 Microsoft.OData.UriParser.QueryTokenKind.ComputeExpression = 28 -> Microsoft.OData.UriParser.QueryTokenKind
 Microsoft.OData.UriParser.QueryTokenKind.CountSegment = 32 -> Microsoft.OData.UriParser.QueryTokenKind
@@ -2001,6 +2012,10 @@ override Microsoft.OData.UriParser.BinaryOperatorNode.Accept<T>(Microsoft.OData.
 override Microsoft.OData.UriParser.BinaryOperatorNode.TypeReference.get -> Microsoft.OData.Edm.IEdmTypeReference
 override Microsoft.OData.UriParser.BinaryOperatorToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
 override Microsoft.OData.UriParser.BinaryOperatorToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
+override Microsoft.OData.UriParser.CaseParameterNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CaseParameterNode.Kind.get -> Microsoft.OData.UriParser.QueryNodeKind
+override Microsoft.OData.UriParser.CaseParameterToken.Accept<T>(Microsoft.OData.UriParser.ISyntacticTreeVisitor<T> visitor) -> T
+override Microsoft.OData.UriParser.CaseParameterToken.Kind.get -> Microsoft.OData.UriParser.QueryTokenKind
 override Microsoft.OData.UriParser.CollectionComplexNode.Accept<T>(Microsoft.OData.UriParser.QueryNodeVisitor<T> visitor) -> T
 override Microsoft.OData.UriParser.CollectionComplexNode.CollectionType.get -> Microsoft.OData.Edm.IEdmCollectionTypeReference
 override Microsoft.OData.UriParser.CollectionComplexNode.ItemStructuredType.get -> Microsoft.OData.Edm.IEdmStructuredTypeReference
@@ -2445,6 +2460,7 @@ virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriP
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.AllNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.AnyNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.BinaryOperatorNode nodeIn) -> T
+virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CaseParameterNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CollectionComplexNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CollectionConstantNode nodeIn) -> T
 virtual Microsoft.OData.UriParser.QueryNodeVisitor<T>.Visit(Microsoft.OData.UriParser.CollectionFunctionCallNode nodeIn) -> T

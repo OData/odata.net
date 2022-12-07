@@ -715,6 +715,15 @@ namespace Microsoft.OData.UriParser
             return token;
         }
 
+
+        //internal QueryToken ParseCaseParameter()
+        //{
+        //    this.RecurseEnter();
+        //    QueryToken token = this.ParseLogicalOr();
+        //    this.RecurseLeave();
+        //    return token;
+        //}
+
         /// <summary>
         /// Creates a new <see cref="ExpressionLexer"/> for the given filter, orderby or apply expression.
         /// </summary>

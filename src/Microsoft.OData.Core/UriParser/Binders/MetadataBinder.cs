@@ -195,6 +195,9 @@ namespace Microsoft.OData.UriParser
                 case QueryTokenKind.FunctionParameter:
                     result = this.BindFunctionParameter((FunctionParameterToken)token);
                     break;
+                case QueryTokenKind.CaseParameter:
+                    result = this.BindCaseParameter((CaseParameterToken)token);
+                    break;
                 case QueryTokenKind.In:
                     result = this.BindIn((InToken)token);
                     break;
@@ -239,6 +242,25 @@ namespace Microsoft.OData.UriParser
             }
 
             return this.Bind(token.ValueToken);
+        }
+
+        /// <summary>
+        /// Bind a case parameter token
+        /// </summary>
+        /// <param name="token">The token to bind.</param>
+        /// <returns>A semantically bound CaseParameterNode.</returns>
+        /// <exception cref="ODataException"></exception>
+        protected virtual QueryNode BindCaseParameter(CaseParameterToken token)
+        {
+            SingleValueNode condition = Bind(token.Condition) as SingleValueNode;
+
+            if (condition == null)
+            {
+                throw new ODataException("TODO:");
+                // throw new ODataException(ODataErrorStrings.MetadataBinder_BinaryOperatorOperandNotSingleValue(operatorKind.ToString()));
+            }
+
+            return new CaseParameterNode(condition, Bind(token.Value));
         }
 
         /// <summary>
