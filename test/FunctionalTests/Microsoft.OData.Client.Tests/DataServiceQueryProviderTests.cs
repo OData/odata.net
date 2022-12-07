@@ -170,6 +170,44 @@ namespace Microsoft.OData.Client.Tests
 
         #endregion
 
+        #region CustomUriFunction tests
+
+        [Fact]
+        public void TranslatesStaticFunction()
+        {
+            // Arrange
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            localDsc.ResolveName = (t) => "ServiceNamespace.Product";
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => Product.StaticFunction(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=ServiceNamespace.StaticFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceFunction()
+        {
+            // Arrange
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            localDsc.ResolveName = (t) => "ServiceNamespace.Product";
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.InstanceFunction(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=$it/ServiceNamespace.InstanceFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+        }
+
+        #endregion
+
         [EntityType]
         [Key(nameof(Id))]
         private class Product
@@ -181,6 +219,10 @@ namespace Microsoft.OData.Client.Tests
             public decimal Price { get; set; }
 
             public IEnumerable<string> Comments { get; set; }
+
+            public static bool StaticFunction(string parameter) { return true; }
+
+            public bool InstanceFunction(string parameter) { return true; }
         }
     }
 }
