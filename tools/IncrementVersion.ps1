@@ -85,6 +85,7 @@ foreach ($propertyGroup in $versions.Project.PropertyGroup)
       Write-Host "Incrementing the VersionMinor in $versionPath to $currentVersion"
 
       $propertyGroup.VersionMinor.'#text' = [string] $currentVersion
+      $propertyGroup.VersionBuildNumber.'#text' = '0'
     }
 
     # if there are not api changes or the caller requested a revision version increment
