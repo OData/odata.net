@@ -2485,3 +2485,14 @@ virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OD
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedPrecision(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedScale(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.UriPathParser.ParsePathIntoSegments(System.Uri fullUri, System.Uri serviceBaseUri) -> System.Collections.Generic.ICollection<string>
+Microsoft.OData.Json.IStreamBasedJsonWriterFactory
+Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateAsynchronousJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriterAsync
+Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.get -> bool
+Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.set -> void
+static Microsoft.OData.UriParser.ODataPathExtensions.EdmType(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmTypeReference
+static Microsoft.OData.UriParser.ODataPathExtensions.IsCollection(this Microsoft.OData.UriParser.ODataPath path) -> bool
+static Microsoft.OData.UriParser.ODataPathExtensions.NavigationSource(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmNavigationSource
+static Microsoft.OData.UriParser.ODataPathExtensions.ToResourcePathString(this Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.ODataUrlKeyDelimiter urlKeyDelimiter) -> string
+static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingKeySegment(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
+static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeSegment(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
