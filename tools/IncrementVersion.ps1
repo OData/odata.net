@@ -54,7 +54,9 @@ ForEach ($line in $($changedFiles -split [System.Environment]::NewLine))
     $unshipped = Join-Path -Path $PSScriptRoot -ChildPath ..\$line
     $shipped = [System.IO.Path]::GetDirectoryName($unshipped) + "\PublicAPI.Shipped.txt"
 
-    Copy-Item $unshipped -Destination $shipped
+    $combined = Get-Content $unshipped,$shipped
+    $combined | Set-Content $shipped
+    Clear-Content $unshipped
 
     $apiChanges = $true
   }
