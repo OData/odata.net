@@ -15,7 +15,12 @@
   </PropertyGroup>
  
   <Import Project="..\Build.props" />
-  
+
+  <PropertyGroup Condition="'$(TreatWarningsAsErrors)' == 'false' or '$(TreatWarningsAsErrors)' == ''">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);RS0017;RS0025</WarningsAsErrors>
+  </PropertyGroup>
+
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Core.txt">
       <ResFile>Microsoft.OData.Core</ResFile>
@@ -88,5 +93,9 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool">
       <Version>6.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
   </ItemGroup>
 </Project>
