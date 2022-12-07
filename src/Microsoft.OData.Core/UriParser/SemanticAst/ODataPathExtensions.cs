@@ -187,13 +187,18 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new ODataPath with key segment added</returns>
         internal static ODataPath AddKeySegment(this ODataPath path, IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
         {
+            KeySegment keySegment = new KeySegment(keys, edmType, navigationSource);
+            return path.AddKeySegment(keySegment);
+        }
+
+        internal static ODataPath AddKeySegment(this ODataPath path, KeySegment keySegment)
+        {
             var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
             path.WalkWith(handler);
-            KeySegment keySegment = new KeySegment(keys, edmType, navigationSource);
             ODataPath newPath = handler.FirstPart;
             newPath.Add(keySegment);
             AppendLastSegment(handler, newPath);
-          
+
             return newPath;
         }
 
