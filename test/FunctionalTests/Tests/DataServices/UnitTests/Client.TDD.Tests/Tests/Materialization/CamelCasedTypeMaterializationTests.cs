@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
 
         private const string ServiceUri = "http://tempuri.org/";
         private ClientEdmModel clientModel;
-        private DataServiceContext dataServiceContext;
+        private Container dataServiceContext;
 
         public CamelCasedTypeMaterializationTests()
         {
@@ -125,6 +125,46 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
             Assert.Empty(rectangles[0].Attributes);
         }
 
+        [Fact]
+        public void MaterializationTypeShouldBeResolvedFromTargetAssembly()
+        {
+            var typeName = typeof(Rectangle).FullName;
+            var typeNamespace = typeName.Substring(0, typeName.LastIndexOf('.'));
+
+            var resolvedType = dataServiceContext.DefaultResolveType(typeName, typeNamespace, typeNamespace);
+
+            Assert.Equal(typeof(Rectangle), resolvedType);
+        }
+
+        [Fact]
+        public void MaterializationTypeShouldBeResolvedFromLoadedAssembly()
+        {
+            var localClientModel = new ClientEdmModel(ODataProtocolVersion.V4);
+            // Use of DataServiceContext class directly will cause the materialization type not to be in the target assembly
+            // since this.GetType().GetAssembly() in DefaultResolveType method will return Microsoft.OData.Client assembly.
+            // Materialization type will be resolved from a loaded assembly
+            var localDataServiceContext = new DataServiceContext(
+                new Uri(ServiceUri),
+                ODataProtocolVersion.V4,
+                localClientModel);
+            localDataServiceContext.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
+
+            using (var reader = XmlReader.Create(new StringReader(CamelCasedEdmx)))
+            {
+                if (CsdlReader.TryParse(reader, out IEdmModel localServiceModel, out _))
+                {
+                    localDataServiceContext.Format.UseJson(localServiceModel);
+                }
+            }
+
+            var typeName = typeof(Rectangle).FullName;
+            var typeNamespace = typeName.Substring(0, typeName.LastIndexOf('.'));
+
+            var resolvedType = localDataServiceContext.DefaultResolveType(typeName, typeNamespace, typeNamespace);
+
+            Assert.Equal(typeof(Rectangle), resolvedType);
+        }
+
         private void ConfigureOnMessageCreating(string payload)
         {
             dataServiceContext.Configurations.RequestPipeline.OnMessageCreating = (args) =>
@@ -145,7 +185,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
         private void InitializeEdmModel()
         {
             this.clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
-            this.dataServiceContext = new DataServiceContext(new Uri(ServiceUri), ODataProtocolVersion.V4, this.clientModel);
+            this.dataServiceContext = new Container(new Uri(ServiceUri), this.clientModel);
             this.dataServiceContext.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
             this.dataServiceContext.ResolveType = (typeName) =>
             {
@@ -186,6 +226,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests.Materialization
 
 namespace NS.Models
 {
+    using System;
     using System.Collections.ObjectModel;
     using Microsoft.OData.Client;
 
@@ -215,5 +256,14 @@ namespace NS.Models
         public double Width { get; set; }
         [OriginalName("attributes")]
         public ObservableCollection<string> Attributes { get; set; }
+    }
+
+    internal class Container : DataServiceContext
+    {
+        internal Container(Uri serviceRoot, ClientEdmModel model)
+            : base(serviceRoot, ODataProtocolVersion.V4, model)
+        {
+
+        }
     }
 }

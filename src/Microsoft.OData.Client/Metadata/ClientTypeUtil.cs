@@ -454,7 +454,7 @@ namespace Microsoft.OData.Client.Metadata
         /// <returns>The server defined type name.</returns>
         internal static string GetServerDefinedTypeName(Type type)
         {
-            ODataTypeInfo typeInfo = GetODataTypeInfo(type);           
+            ODataTypeInfo typeInfo = GetODataTypeInfo(type);
 
             return typeInfo.ServerDefinedTypeName;
         }
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Client.Metadata
         internal static string GetClientFieldName(Type t, string serverDefinedName)
         {
             ODataTypeInfo typeInfo = GetODataTypeInfo(t);
-                        
+
             List<string> serverDefinedNames = serverDefinedName.Split(',').Select(name => name.Trim()).ToList();
             List<string> clientMemberNames = new List<string>();
             foreach (var serverSideName in serverDefinedNames)
@@ -618,7 +618,7 @@ namespace Microsoft.OData.Client.Metadata
             if (containerProperty == null)
             {
                 Type propertyType = propertyInfo.PropertyType;
-                
+
                 // Handle Dictionary<,> , SortedDictionary<,> , ConcurrentDictionary<,> , etc - must also have parameterless constructor
                 if (!propertyType.IsInterface() && !propertyType.IsAbstract() && propertyType.GetInstanceConstructor(true, new Type[0]) != null)
                 {
@@ -631,7 +631,7 @@ namespace Microsoft.OData.Client.Metadata
                     containerProperty = (IDictionary<string, object>)Util.ActivatorCreateInstance(dictionaryType);
                 }
                 else
-                { 
+                {
                     // Not easy to figure out the implementing type
                     return false;
                 }
@@ -688,59 +688,152 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Tries to resolve a type with specified name from the loaded assemblies.
+        /// Tries to resolve a type with specified name, first from the specified assembly and then from other loaded assemblies.
         /// </summary>
+        /// <param name="targetAssembly">Assembly expected to contain the proxy classes.</param>
         /// <param name="typeName">Name of the type to resolve.</param>
         /// <param name="fullNamespace">Namespace of the type.</param>
         /// <param name="languageDependentNamespace">Namespace that the resolved type is expected to be.
         /// Usually same as <paramref name="fullNamespace"/> but can be different
         /// where namespace for client types does not match namespace in service types.</param>
         /// <param name="matchedType">The resolved type.</param>
-        /// <returns>true if type was successfully resolved; otherwise false.</returns>
-        internal static bool TryResolveType(string typeName, string fullNamespace, string languageDependentNamespace, out Type matchedType)
+        /// <returns>true if a type with the specified name is successfully resolved; otherwise false.</returns>
+        internal static bool TryResolveType(
+            Assembly targetAssembly,
+            string typeName,
+            string fullNamespace,
+            string languageDependentNamespace,
+            out Type matchedType)
         {
+            Debug.Assert(targetAssembly != null, "targetAssembly != null");
             Debug.Assert(typeName != null, "typeName != null");
 
-            matchedType = null;
-            int namespaceLength = fullNamespace?.Length ?? 0;
-            string serverDefinedName = typeName.Substring(namespaceLength + 1);
+            int fullNamespaceLength = fullNamespace?.Length ?? 0;
+            string qualifiedTypeName = string.Concat(languageDependentNamespace, typeName.Substring(fullNamespaceLength));
+            string serverDefinedName = fullNamespaceLength > 0 ? typeName.Substring(fullNamespaceLength + 1) : typeName;
 
-            // Searching only loaded assemblies, not referenced assemblies
-            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            // We first try to look for the type from the assembly expected to contain the proxy classes
+            matchedType = FindType(
+                targetAssembly,
+                qualifiedTypeName,
+                serverDefinedName,
+                languageDependentNamespace);
+
+            if (matchedType != null)
             {
-                matchedType = assembly.GetType(string.Concat(languageDependentNamespace, typeName.Substring(namespaceLength)), false);
+                return true;
+            }
+
+            var entryAssembly = Assembly.GetEntryAssembly();
+            if (entryAssembly != null && !entryAssembly.Equals(targetAssembly))
+            {
+                // Next, we try to look for the type from the entry assembly
+                matchedType = FindType(
+                    entryAssembly,
+                    qualifiedTypeName,
+                    serverDefinedName,
+                    languageDependentNamespace);
+
                 if (matchedType != null)
                 {
                     return true;
                 }
+            }
 
-                IEnumerable<Type> types = null;
-
-                try
+            // Searching only loaded assemblies, not referenced assemblies
+            foreach (Assembly assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly.Equals(targetAssembly)
+                    || assembly.Equals(entryAssembly)
+                    || SkipAssembly(assembly))
                 {
-                    types = assembly.GetTypes();
+                    continue;
                 }
-                catch (ReflectionTypeLoadException)
-                {
-                    // Ignore
-                }
 
-                if (types != null)
+                matchedType = FindType(
+                    assembly,
+                    qualifiedTypeName,
+                    serverDefinedName,
+                    languageDependentNamespace);
+
+                if (matchedType != null)
                 {
-                    foreach (Type type in types)
-                    {
-                        OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)type.GetCustomAttributes(typeof(OriginalNameAttribute), true).SingleOrDefault();
-                        if (string.Equals(originalNameAttribute?.OriginalName, serverDefinedName, StringComparison.Ordinal)
-                            && type.Namespace.Equals(languageDependentNamespace, StringComparison.Ordinal))
-                        {
-                            matchedType = type;
-                            return true;
-                        }
-                    }
+                    return true;
                 }
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Searches for a type that matches the specified type name from the specified assembly.
+        /// </summary>
+        /// <param name="assembly">Assembly that the specified type is expected to be.</param>
+        /// <param name="qualifiedTypeName">The namespace-qualified name of the type.</param>
+        /// <param name="serverDefinedName">The namespace-qualified name of corresponding server type.</param>
+        /// <param name="languageDependentNamespace">Namespace that the specified type is expected to be.</param>
+        /// <returns>The type if found in the specified assembly; otherwise null.</returns>
+        private static Type FindType(
+            Assembly assembly,
+            string qualifiedTypeName,
+            string serverDefinedName,
+            string languageDependentNamespace)
+        {
+            Type matchedType = assembly.GetType(qualifiedTypeName, throwOnError: false);
+
+            if (matchedType != null)
+            {
+                return matchedType;
+            }
+
+            Type[] types = null;
+
+            try
+            {
+                types = assembly.GetTypes();
+            }
+            catch (ReflectionTypeLoadException)
+            {
+                // Ignore
+            }
+
+            if (types != null)
+            {
+                for (int i = 0; i < types.Length; i++)
+                {
+                    Type type = types[i];
+
+                    object[] originalNameAttributes = type.GetCustomAttributes(typeof(OriginalNameAttribute), inherit: true);
+                    if (originalNameAttributes.Length == 0)
+                    {
+                        continue;
+                    }
+
+                    OriginalNameAttribute originalNameAttribute = (OriginalNameAttribute)originalNameAttributes[0];
+                    if (string.Equals(originalNameAttribute.OriginalName, serverDefinedName, StringComparison.Ordinal)
+                        && type.Namespace.Equals(languageDependentNamespace, StringComparison.Ordinal))
+                    {
+                        matchedType = type;
+                    }
+                }
+            }
+
+            return matchedType;
+        }
+
+        /// <summary>
+        /// Checks whether to skip the assembly when trying to find a type to be used for materialization.
+        /// </summary>
+        /// <param name="assembly">The assembly to check.</param>
+        /// <returns>true to skip the assembly; otherwise false.</returns>
+        private static bool SkipAssembly(Assembly assembly)
+        {
+            return assembly.Equals(typeof(string).Assembly) // mscorlib assembly
+                || assembly.Equals(typeof(Uri).Assembly) // Common types assembly
+                || assembly.Equals(typeof(ClientEdmModel).Assembly) // OData client assembly
+                || assembly.Equals(typeof(ODataItem).Assembly) // OData core assembly
+                || assembly.Equals(typeof(EdmModel).Assembly) // OData Edm assembly
+                || assembly.Equals(typeof(Spatial.Geography).Assembly); // Spatial assembly
         }
     }
 }
