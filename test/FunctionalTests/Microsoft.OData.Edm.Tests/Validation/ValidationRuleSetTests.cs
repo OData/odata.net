@@ -25,7 +25,8 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 f.Name != "NavigationPropertyEntityMustNotIndirectlyContainItself" &&
                 f.Name != "EntityTypeKeyMissingOnEntityType" &&
                 f.Name != "VocabularyAnnotationTargetAllowedApplyToElement" &&
-                f.Name != "EntityTypeInvalidKeyKeyDefinedInAncestor")
+                f.Name != "EntityTypeInvalidKeyKeyDefinedInAncestor" && 
+                f.Name != nameof(ValidationRules.RecursiveComplexTypedPropertyMustBeOptional))
                 .Select(f=> new KeyValuePair<object, string>(f.GetValue(null), f.Name));
             foreach (var item in items)
             {

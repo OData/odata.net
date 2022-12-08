@@ -12,8 +12,13 @@
     <DefineConstants>$(DefineConstants);ASSEMBLY_ATTRIBUTE_ON_NETSTANDARD_20</DefineConstants>
   </PropertyGroup>
   
-  <Import Project="..\Build.props" /> 
-
+  <Import Project="..\Build.props" />
+  
+  <PropertyGroup Condition="'$(TreatWarningsAsErrors)' == 'false' or '$(TreatWarningsAsErrors)' == ''">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);RS0017;RS0025</WarningsAsErrors>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />
     <ProjectReference Include="..\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
@@ -139,6 +144,10 @@
     <Content Include="Microsoft.OData.Client.Common.txt" />
     <Content Include="Microsoft.OData.Client.Desktop.txt" />
     <Content Include="Microsoft.OData.Client.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
   </ItemGroup>
   
   <ItemGroup>

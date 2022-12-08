@@ -61,6 +61,12 @@ By default, there's a filter applied that only runs the "ToFile" tests. If you w
 crank --config benchmarks.yml --profile lab-windows --scenario SerializationComparisons --variable filter=*Memory*
 ```
 
+There's also an option to include "raw values" in the test, i.e. using `IJsonWriter.WriteRawValue()` (occurs if there are `ODataUntyped` values in the resources). This was option was added because `ODataUtf8JsonWriter.WriteRawvalue()`'s implementation requires special handling which may impact performance.
+
+```
+crank --config benchmarks.yml --profile lab-windows --scenario SerializationComparisons --variable filter=*RawValues*
+```
+
 ## Load tests
 
 The load tests are based on a simple AspNetCore service defined in the [TestServer](./TestServer/) project. It defines an endpoint that returns a collection of `Customer` objects. It allows you to specify the writer to use to serialize the request's response as well as the number of entries to return.
@@ -212,6 +218,12 @@ The following command limits the number of concurrent connections to 128 and the
 
 ```
 crank --config .\loadtests.yml --scenario SerializationComparisons --profile lab-windows  --application.options.counterProviders System.Runtime --variable writer=ODataMessageWriter-Utf8JsonWriter --variable connections=128 --variable rate=200
+```
+
+The following command includes raw values (`ODataUntypeValue` and `IJsonWriter.WriteRawValue`) in the payload:
+
+```
+crank --config .\loadtests.yml --scenario SerializationComparisons --profile lab-windows  --application.options.counterProviders System.Runtime --variable includeRawValues=true --variable writer=ODataMessageWriter
 ```
 
 Another important metric to look at when trying to make sense of results is the **CPU Usage**. If it's 100% it means all the CPUs were busy throughout. If the value is low it means the CPUs were not doing a lot of work. This can be an indication that the bottleneck in the application is I/O. **Cores Usage** is a similar metric, but is not normalized. If you have 12 CPU cores, the total Cores Usage will be 1200%, total CPU Usage will still be 100%.

@@ -8,6 +8,7 @@ using System.Diagnostics;
 //---------------------------------------------------------------------
 
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.OData.Json;
 
@@ -27,7 +28,7 @@ namespace ExperimentsLib
         }
 
         /// <inheritdoc/>
-        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             IJsonWriterAsync jsonWriter = this.jsonWriterFactory(stream);
@@ -61,6 +62,12 @@ namespace ExperimentsLib
                 await jsonWriter.StartObjectScopeAsync();
                 await jsonWriter.WriteNameAsync("City");
                 await jsonWriter.WriteValueAsync(customer.HomeAddress.City);
+                if (includeRawValues)
+                {
+                    await jsonWriter.WriteNameAsync("Misc");
+                    await jsonWriter.WriteRawValueAsync($"\"{customer.HomeAddress.Misc}\"");
+                }
+                
                 await jsonWriter.WriteNameAsync("Street");
                 await jsonWriter.WriteValueAsync(customer.HomeAddress.Street);
 
@@ -78,6 +85,11 @@ namespace ExperimentsLib
                     await jsonWriter.StartObjectScopeAsync();
                     await jsonWriter.WriteNameAsync("City");
                     await jsonWriter.WriteValueAsync(address.City);
+                    if (includeRawValues)
+                    {
+                        await jsonWriter.WriteNameAsync("Misc");
+                        await jsonWriter.WriteRawValueAsync($"\"{address.Misc}\"");
+                    }
                     await jsonWriter.WriteNameAsync("Street");
                     await jsonWriter.WriteValueAsync(address.Street);
                     await jsonWriter.EndObjectScopeAsync();

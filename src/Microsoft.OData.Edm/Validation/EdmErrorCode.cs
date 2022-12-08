@@ -1432,5 +1432,10 @@ namespace Microsoft.OData.Edm.Validation
         /// A property is required in an object
         /// </summary>
         MissingRequiredProperty,
+
+        /// <summary>
+        /// A recursive complex-typed property must be optional.
+        /// </summary>
+        RecursiveComplexTypedPropertyMustBeOptional,
     }
 }

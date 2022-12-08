@@ -1548,7 +1548,6 @@ static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmMode
 static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty annotatableProperty, string mimeType) -> void
 static Microsoft.OData.Edm.EnumHelper.ToStringLiteral(this Microsoft.OData.Edm.IEdmEnumTypeReference type, long value) -> string
 static Microsoft.OData.Edm.EnumHelper.TryParseEnum(this Microsoft.OData.Edm.IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult) -> bool
-static Microsoft.OData.Edm.ExtensionMethods.AddAlternateKeyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty> alternateKey) -> void
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract) -> Microsoft.OData.Edm.EdmComplexType
