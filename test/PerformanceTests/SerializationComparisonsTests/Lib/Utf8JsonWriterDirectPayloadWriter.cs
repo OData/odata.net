@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData;
@@ -27,7 +28,7 @@ namespace ExperimentsLib
         }
 
         /// <inheritdoc/>
-        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
+        public async Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
 
@@ -58,6 +59,17 @@ namespace ExperimentsLib
                 // start write homeAddress
                 jsonWriter.WriteStartObject("HomeAddress");
                 jsonWriter.WriteString("City", customer.HomeAddress.City);
+
+                if (includeRawValues)
+                {
+#if NET6_0
+                    jsonWriter.WritePropertyName("Misc");
+                    jsonWriter.WriteRawValue($"\"{customer.HomeAddress.Misc}\"");
+#else
+                    jsonWriter.WriteString("Misc", customer.HomeAddress.Misc as string);
+#endif
+                }
+
                 jsonWriter.WriteString("Street", customer.HomeAddress.Street);
 
                 // end write homeAddress
@@ -72,6 +84,17 @@ namespace ExperimentsLib
                 {
                     jsonWriter.WriteStartObject();
                     jsonWriter.WriteString("City", address.City);
+
+                    if (includeRawValues)
+                    {
+#if NET6_0
+                        jsonWriter.WritePropertyName("Misc");
+                        jsonWriter.WriteRawValue($"\"{address.Misc}\"");
+#else
+                    jsonWriter.WriteString("Misc", address.Misc as string);
+#endif
+                    }
+
                     jsonWriter.WriteString("Street", address.Street);
                     jsonWriter.WriteEndObject();
                 }

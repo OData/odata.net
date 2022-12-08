@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public sealed class ODataUtf8JsonWriterAsyncTests: IDisposable
+    public sealed class ODataUtf8JsonWriterAsyncTests: JsonWriterAsyncBaseTests, IDisposable
     {
         private IJsonWriterAsync writer;
         private MemoryStream stream;
@@ -433,19 +433,131 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion Custom JavaScriptEncoder
 
+        [Fact]
+        public async Task FlushesWhenBufferThresholdIsReachedAsync()
+        {
+            using var stream = new MemoryStream();
+            // set buffer size to 10, in current implementation, buffer threshold will be 9
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            await jsonWriter.StartArrayScopeAsync();
+            await jsonWriter.WriteValueAsync("well"); // 7 total bytes written: ["well"
+            Assert.Equal(0, stream.Length); // should not have flushed since threshold not reached
+
+            await jsonWriter.WriteValueAsync(1); // 9 total bytes written: ["well",1
+            Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
+
+            await jsonWriter.WriteValueAsync("well");
+            Assert.Equal(9, stream.Length); // not yet flushed
+
+            await jsonWriter.WriteValueAsync("well");
+            Assert.Equal(23, stream.Length); // data flushed. Stream contents: ["well",1,"well","well"
+
+            await jsonWriter.WriteValueAsync("Hello, World"); // write data larger than buffer size
+            Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
+
+            await jsonWriter.EndArrayScopeAsync();
+            await jsonWriter.FlushAsync();
+
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", await this.ReadStreamAsync(jsonWriter, stream, Encoding.UTF8));
+        }
+
+        [Fact]
+        public async Task FlushesWhenBufferThresholdIsReached_WithRawValues_Async()
+        {
+            using var stream = new MemoryStream();
+            // set buffer size to 10, in current implementation, buffer threshold will be 9
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            await jsonWriter.StartArrayScopeAsync();
+            await jsonWriter.WriteRawValueAsync(@"""well"""); // 7 total bytes written: ["well"
+            Assert.Equal(0, stream.Length); // should not have flushed since threshold not reached
+
+            await jsonWriter.WriteValueAsync(1); // 9 total bytes written: ["well",1
+            Assert.Equal(9, stream.Length); // buffer was flushed to stream and cleared due to hitting threshold
+
+            await jsonWriter.WriteValueAsync("well");
+            Assert.Equal(9, stream.Length); // not yet flushed
+
+            await jsonWriter.WriteRawValueAsync(@"""well""");
+            Assert.Equal(23, stream.Length); // data flushed. Stream contents: ["well",1,"well","well"
+
+            await jsonWriter.WriteRawValueAsync(@"""Hello, World"""); // write data larger than buffer size
+            Assert.Equal(38, stream.Length); // stream contents: ["well",1,"well","well","Hello, World"
+
+            await jsonWriter.EndArrayScopeAsync();
+            await jsonWriter.FlushAsync();
+
+            Assert.Equal(@"[""well"",1,""well"",""well"",""Hello, World""]", await this.ReadStreamAsync(jsonWriter, stream, Encoding.UTF8));
+        }
+
+        [Fact]
+        public async Task FlushingWriterAsyncBeforeBufferIsFullShouldBeOkay()
+        {
+            using var stream = new MemoryStream();
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, bufferSize: 10, leaveStreamOpen: true);
+            await jsonWriter.StartArrayScopeAsync();
+
+            await jsonWriter.WriteValueAsync("foo");
+            Assert.Equal(0, stream.Length); // not yet flushed
+
+            await jsonWriter.FlushAsync();
+            Assert.Equal(6, stream.Length); // buffer contents: ["foo"
+
+            await jsonWriter.WriteValueAsync("fooba");
+            Assert.Equal(6, stream.Length); // buffer was reset, so we're still below automatic flush threshold
+
+            await jsonWriter.EndArrayScopeAsync();
+
+            Assert.Equal(@"[""foo"",""fooba""]", await this.ReadStreamAsync(jsonWriter, stream, Encoding.UTF8));
+        }
+
+        [Fact]
+        public async Task FlushingEmptyWriterAsyncShouldBeOkay()
+        {
+            using var stream = new MemoryStream();
+            using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, leaveStreamOpen: true);
+            await jsonWriter.FlushAsync();
+            Assert.Equal(0, stream.Length);
+        }
+
+        /// <summary>
+        /// Reads the test class's default stream with UTF8 encoding.
+        /// </summary>
+        /// <returns>The text content in the stream.</returns>
         private Task<string> ReadStreamAsync()
         {
             return this.ReadStreamAsync(Encoding.UTF8);
         }
 
-        private async Task<string> ReadStreamAsync(Encoding encoding)
+        /// <summary>
+        /// Reads the test class's default stream with the specified <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="encoding">Encoding of the data in the stream.</param>
+        /// <returns>The text content in the stream.</returns>
+        private Task<string> ReadStreamAsync(Encoding encoding)
         {
-            await this.writer.FlushAsync();
-            this.stream.Seek(0, SeekOrigin.Begin);
+            return this.ReadStreamAsync(this.writer, this.stream, encoding);
+        }
+
+        /// <summary>
+        /// Reads the contents of the specified <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="writer">The writer that was used to write to the stream.</param>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="encoding">The encoding of the data in the stream.</param>
+        /// <returns>The text content in the stream.</returns>
+        private async Task<string> ReadStreamAsync(IJsonWriterAsync writer, Stream stream, Encoding encoding)
+        {
+            await writer.FlushAsync();
+            stream.Seek(0, SeekOrigin.Begin);
             // leave open since the this.stream is disposed separately
-            using StreamReader reader = new StreamReader(this.stream, encoding, leaveOpen: true);
-            string result = await reader.ReadToEndAsync();
-            return result;
+            using StreamReader reader = new StreamReader(stream, encoding, leaveOpen: true);
+            string contents = await reader.ReadToEndAsync();
+            return contents;
+        }
+
+        protected override IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
         }
     }
 }
