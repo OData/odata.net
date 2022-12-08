@@ -45,7 +45,14 @@ public class CustomerCollectionOutputFormatter : TextOutputFormatter
         var customers = (IEnumerable<Customer>)context.Object!;
 
         var stream = httpContext.Response.Body;
-        await writer.WritePayloadAsync(customers, stream);
+
+        bool includeRawValues = false;
+        if (httpContext.Request.Query.TryGetValue("includeRawValues", out var rawValueQuery) && rawValueQuery.Count >= 1)
+        {
+            includeRawValues = rawValueQuery[0] == "true";
+        }
+
+        await writer.WritePayloadAsync(customers, stream, includeRawValues);
     }
 }
 

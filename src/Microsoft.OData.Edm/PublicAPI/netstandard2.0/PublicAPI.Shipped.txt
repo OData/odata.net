@@ -38,23 +38,6 @@ const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.RequiresType =
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.ResourcePath = "Org.OData.Core.V1.ResourcePath" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.Revisions = "Org.OData.Core.V1.Revisions" -> string
 Microsoft.OData.Edm.Csdl.CsdlConstants
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderFactory
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.CsdlJsonReaderSettings() -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IgnoreUnexpectedJsonElements.get -> bool
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IgnoreUnexpectedJsonElements.set -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IncludeDefaultVocabularies.get -> bool
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IncludeDefaultVocabularies.set -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IsBracketNotation.get -> bool
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.IsBracketNotation.set -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.JsonSchemaReaderFactory.get -> Microsoft.OData.Edm.Csdl.CsdlJsonReaderFactory
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.JsonSchemaReaderFactory.set -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.ReferencedModels.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmModel>
-Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.ReferencedModels.set -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings
-Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings.CsdlJsonWriterSettings() -> void
-Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings.IsIeee754Compatible.get -> bool
-Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings.IsIeee754Compatible.set -> void
 Microsoft.OData.Edm.Csdl.CsdlLocation
 Microsoft.OData.Edm.Csdl.CsdlLocation.LineNumber.get -> int
 Microsoft.OData.Edm.Csdl.CsdlLocation.LinePosition.get -> int
@@ -1435,15 +1418,10 @@ override Microsoft.OData.Edm.Vocabularies.EdmPropertyPathExpression.ExpressionKi
 override Microsoft.OData.Edm.Vocabularies.EdmStringConstant.ValueKind.get -> Microsoft.OData.Edm.Vocabularies.EdmValueKind
 override Microsoft.OData.Edm.Vocabularies.EdmStructuredValue.ValueKind.get -> Microsoft.OData.Edm.Vocabularies.EdmValueKind
 override Microsoft.OData.Edm.Vocabularies.EdmTimeOfDayConstant.ValueKind.get -> Microsoft.OData.Edm.Vocabularies.EdmValueKind
-static Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings.Default -> Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings
-static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(ref System.Text.Json.Utf8JsonReader reader) -> Microsoft.OData.Edm.IEdmModel
-static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(ref System.Text.Json.Utf8JsonReader reader, Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings settings) -> Microsoft.OData.Edm.IEdmModel
 static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(System.Xml.XmlReader reader) -> Microsoft.OData.Edm.IEdmModel
 static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(System.Xml.XmlReader reader, Microsoft.OData.Edm.IEdmModel referencedModel) -> Microsoft.OData.Edm.IEdmModel
 static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmModel> referencedModels) -> Microsoft.OData.Edm.IEdmModel
 static Microsoft.OData.Edm.Csdl.CsdlReader.Parse(System.Xml.XmlReader reader, System.Func<System.Uri, System.Xml.XmlReader> getReferencedModelReaderFunc) -> Microsoft.OData.Edm.IEdmModel
-static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(ref System.Text.Json.Utf8JsonReader reader, Microsoft.OData.Edm.Csdl.CsdlJsonReaderSettings settings, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
-static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(ref System.Text.Json.Utf8JsonReader reader, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, bool ignoreUnexpectedAttributesAndElements, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
@@ -1452,8 +1430,6 @@ static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader,
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmModel> references, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, System.Func<System.Uri, System.Xml.XmlReader> getReferencedModelReaderFunc, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.GetVersionString(System.Version version) -> string
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, Microsoft.OData.Edm.Csdl.CsdlJsonWriterSettings settings, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
-static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Text.Json.Utf8JsonWriter writer, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
@@ -1572,7 +1548,6 @@ static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmMode
 static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty annotatableProperty, string mimeType) -> void
 static Microsoft.OData.Edm.EnumHelper.ToStringLiteral(this Microsoft.OData.Edm.IEdmEnumTypeReference type, long value) -> string
 static Microsoft.OData.Edm.EnumHelper.TryParseEnum(this Microsoft.OData.Edm.IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult) -> bool
-static Microsoft.OData.Edm.ExtensionMethods.AddAlternateKeyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty> alternateKey) -> void
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract) -> Microsoft.OData.Edm.EdmComplexType

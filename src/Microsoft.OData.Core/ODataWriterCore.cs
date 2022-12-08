@@ -2760,16 +2760,41 @@ namespace Microsoft.OData
                                         throw new ODataException(Strings.ODataWriterCore_PathInODataUriMustBeSetWhenWritingContainedElement);
                                     }
 
-                                    odataPath = AppendEntitySetKeySegment(odataPath, true);
-
-                                    if (odataPath != null && typeCastFromExpand != null)
+                                    ODataPath newPath = null;
+                                    if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
                                     {
-                                        odataPath = odataPath.AddSegment(typeCastFromExpand);
+                                        // if there's no key, for example in a complex property, just use the existing odata path.
+                                        newPath = odataPath;
+                                    }
+                                    else
+                                    {
+                                        // If there's only non-key properties selected in the request URI, then We don't have the key values to calcuate the key segment.
+                                        // So far, let's simply not to generate the link if we are missing this key information. Although even that is non-ideal.
+                                        // We should find a better solution for that. One way is to expand ODataResource to include the 'Key' properties if that's not presented in $select.
+                                        KeySegment keySegment;
+                                        if (TryBuildKeySegment(out keySegment))
+                                        {
+                                            newPath = odataPath.AddKeySegment(keySegment);
+                                        }
+                                        else
+                                        {
+                                            newPath = null;
+                                        }
                                     }
 
-                                    Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
-                                    IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
-                                    odataPath = odataPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    if (newPath != null)
+                                    {
+                                        if (typeCastFromExpand != null)
+                                        {
+                                            newPath = newPath.AddSegment(typeCastFromExpand);
+                                        }
+
+                                        Debug.Assert(navigationSource is IEdmContainedEntitySet, "If the NavigationSourceKind is ContainedEntitySet, the navigationSource must be IEdmContainedEntitySet.");
+                                        IEdmContainedEntitySet containedEntitySet = (IEdmContainedEntitySet)navigationSource;
+                                        newPath = newPath.AddNavigationPropertySegment(containedEntitySet.NavigationProperty, containedEntitySet);
+                                    }
+
+                                    odataPath = newPath;
                                     break;
                                 case EdmNavigationSourceKind.EntitySet:
                                     odataPath = new ODataPath(new EntitySetSegment(navigationSource as IEdmEntitySet));
@@ -2814,24 +2839,47 @@ namespace Microsoft.OData
         /// <returns>The new odata path.</returns>
         private ODataPath AppendEntitySetKeySegment(ODataPath odataPath, bool throwIfFail)
         {
+            if (!EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
+            {
+                return odataPath;
+            }
+
             ODataPath path = odataPath;
-            
-            if (EdmExtensionMethods.HasKey(this.CurrentScope.NavigationSource, this.CurrentScope.ResourceType))
+
+            KeyValuePair<string, object>[] keys = GetKeyProperties(throwIfFail);
+            if (keys != null && keys.Length > 0)
             {
                 IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
-                Debug.Assert(resource != null,
-                    "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
-
-                ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
-
-                KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource,
-                        serializationInfo, currentEntityType, throwIfFail);
-
                 path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             }
 
             return path;
+        }
+
+        private bool TryBuildKeySegment(out KeySegment keySegment)
+        {
+            KeyValuePair<string, object>[] keys = GetKeyProperties(false /*throwIfFail*/);
+            if (keys == null || keys.Length == 0)
+            {
+                keySegment = null;
+                return false;
+            }
+
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+            return true;
+        }
+
+        private KeyValuePair<string, object>[] GetKeyProperties(bool throwIfFail)
+        {
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
+            Debug.Assert(resource != null,
+                "If the current state is Resource the current item must be an ODataResource as well (and not null either).");
+
+            ODataResourceSerializationInfo serializationInfo = this.GetResourceSerializationInfo(resource);
+
+            return ODataResourceMetadataContext.GetKeyProperties(resource, serializationInfo, currentEntityType, throwIfFail);
         }
 
         /// <summary>

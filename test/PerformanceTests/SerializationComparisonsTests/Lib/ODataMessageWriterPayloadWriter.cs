@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 
@@ -30,7 +32,7 @@ namespace ExperimentsLib
         }
 
         /// <inheritdoc/>
-        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
+        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             var settings = new ODataMessageWriterSettings();
 
@@ -94,14 +96,31 @@ namespace ExperimentsLib
                 // start write homeAddress
                 writer.WriteStart(homeAddressInfo);
 
-                var homeAddressResource = new ODataResource
+                ODataResource homeAddressResource;
+                if (includeRawValues)
                 {
-                    Properties = new[]
+                    homeAddressResource = new ODataResource
                     {
-                        new ODataProperty { Name = "City", Value = customer.HomeAddress.City },
-                        new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
-                    }
-                };
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "City", Value = customer.HomeAddress.City },
+                            new ODataProperty { Name = "Misc", Value = new ODataUntypedValue() { RawValue = $"\"{customer.HomeAddress.Misc}\"" } },
+                            new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
+                        }
+                    };
+                }
+                else
+                {
+                    homeAddressResource = new ODataResource
+                    {
+                        Properties = new[]
+                        {
+                            new ODataProperty { Name = "City", Value = customer.HomeAddress.City },
+                            new ODataProperty { Name = "Street", Value = customer.HomeAddress.Street }
+                        }
+                    };
+                }
+
                 writer.WriteStart(homeAddressResource);
                 writer.WriteEnd();
 
@@ -121,19 +140,41 @@ namespace ExperimentsLib
                 var addressesResourceSet = new ODataResourceSet();
                 // start addressesResourceSet
                 writer.WriteStart(addressesResourceSet);
-                foreach (var address in customer.Addresses)
+
+                if (includeRawValues)
                 {
-                    var addressResource = new ODataResource
+                    foreach (var address in customer.Addresses)
                     {
-                        Properties = new[]
+                        var addressResource = new ODataResource
                         {
+                            Properties = new[]
+                            {
                             new ODataProperty { Name = "City", Value = address.City },
+                            new ODataProperty { Name = "Misc", Value = new ODataUntypedValue() { RawValue = $"\"{address.Misc}\"" } },
                             new ODataProperty { Name = "Street", Value = address.Street }
                         }
-                    };
+                        };
 
-                    writer.WriteStart(addressResource);
-                    writer.WriteEnd();
+                        writer.WriteStart(addressResource);
+                        writer.WriteEnd();
+                    }
+                }
+                else
+                {
+                    foreach (var address in customer.Addresses)
+                    {
+                        var addressResource = new ODataResource
+                        {
+                            Properties = new[]
+                            {
+                                new ODataProperty { Name = "City", Value = address.City },
+                                new ODataProperty { Name = "Street", Value = address.Street }
+                            }
+                        };
+
+                        writer.WriteStart(addressResource);
+                        writer.WriteEnd();
+                    }
                 }
 
                 // end addressesResourceSet

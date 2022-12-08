@@ -21,6 +21,7 @@ namespace ExperimentsLib
     public class Address
     {
         public string City { get; set; }
+        public object Misc { get; set; }
         public string Street { get; set; }
     }
 
@@ -38,6 +39,7 @@ namespace ExperimentsLib
             EdmComplexType addressType = new EdmComplexType("NS", "Address");
             addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
             addressType.AddStructuralProperty("Street", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("Misc", EdmUntypedStructuredTypeReference.NullableTypeReference);
             model.AddElement(addressType);
 
             EdmEntityType customer = new EdmEntityType("NS", "Customer");

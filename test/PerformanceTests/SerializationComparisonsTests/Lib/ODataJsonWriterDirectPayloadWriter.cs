@@ -27,7 +27,7 @@ namespace ExperimentsLib
         }
 
         /// <inheritdoc/>
-        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream)
+        public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             Uri serviceRoot = new Uri("https://services.odata.org/V4/OData/OData.svc/");
             IJsonWriter jsonWriter = this.jsonWriterFactory(stream);
@@ -60,6 +60,12 @@ namespace ExperimentsLib
                 jsonWriter.StartObjectScope();
                 jsonWriter.WriteName("City");
                 jsonWriter.WriteValue(customer.HomeAddress.City);
+                if (includeRawValues)
+                {
+                    jsonWriter.WriteName("Misc");
+                    jsonWriter.WriteRawValue($"\"{customer.HomeAddress.Misc}\"");
+                }
+
                 jsonWriter.WriteName("Street");
                 jsonWriter.WriteValue(customer.HomeAddress.Street);
 
@@ -77,6 +83,12 @@ namespace ExperimentsLib
                     jsonWriter.StartObjectScope();
                     jsonWriter.WriteName("City");
                     jsonWriter.WriteValue(address.City);
+                    if (includeRawValues)
+                    {
+                        jsonWriter.WriteName("Misc");
+                        jsonWriter.WriteRawValue($"\"{address.Misc}\"");
+                    }
+
                     jsonWriter.WriteName("Street");
                     jsonWriter.WriteValue(address.Street);
                     jsonWriter.EndObjectScope();
