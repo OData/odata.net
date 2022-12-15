@@ -53,5 +53,7 @@ namespace AstoriaUnitTests.Tests
         public DataServiceContext Context { get; set; }
 
         public MaterializerCache MaterializerCache { get; private set; }
+
+        public bool AutoNullPropagation { get; set; }
     }
 }
