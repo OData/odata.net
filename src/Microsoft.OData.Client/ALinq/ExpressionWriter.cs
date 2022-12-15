@@ -413,7 +413,10 @@ namespace Microsoft.OData.Client
 
                     if (m.Method.Name != "GetValue" && m.Method.Name != "GetValueAsync")
                     {
-                        this.builder.Append(UriHelper.FORWARDSLASH);
+                        if (this.parent != null)
+                        {
+                            this.builder.Append(UriHelper.FORWARDSLASH);
+                        }
 
                         // writing functions in query options
                         writingFunctionsInQuery = true;
