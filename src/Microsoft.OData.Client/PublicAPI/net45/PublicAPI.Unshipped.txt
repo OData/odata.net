@@ -1,1 +1,2 @@
-﻿
+﻿virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.get -> bool
+virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.set -> void
