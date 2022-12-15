@@ -158,6 +158,8 @@ namespace Microsoft.OData
                 return ExpressionConstants.KeywordNull;
             }
 
+            // Comments to make a diff
+            // Test PR
             ODataResourceValue resourceValue = value as ODataResourceValue;
             if (resourceValue != null)
             {
