@@ -1904,3 +1904,11 @@ virtual Microsoft.OData.Edm.EdmNavigationSource.FindNavigationTarget(Microsoft.O
 virtual Microsoft.OData.Edm.EdmPathExpression.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
 virtual Microsoft.OData.Edm.EdmStructuredType.DeclaredProperties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmProperty>
 virtual Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager.GetAttachedAnnotations(Microsoft.OData.Edm.IEdmElement element) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKey = "Org.OData.Core.V1.AlternateKey" -> string
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKeys = "Org.OData.Core.V1.AlternateKeys" -> string
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.PropertyRef = "Org.OData.Core.V1.PropertyRef" -> string
+Microsoft.OData.Edm.Validation.EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional = 411 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+static Microsoft.OData.Edm.ExtensionMethods.AddAlternateKeyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty> alternateKey, bool useCore = false) -> void
+static Microsoft.OData.Edm.ExtensionMethods.GetNavigationPropertyBindings(this Microsoft.OData.Edm.IEdmEntityContainer container) -> System.Collections.Generic.IEnumerable<System.Tuple<Microsoft.OData.Edm.IEdmEntityContainerElement, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>
+static readonly Microsoft.OData.Edm.Validation.ValidationRules.RecursiveComplexTypedPropertyMustBeOptional -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmStructuralProperty>
+static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.AlternateKeysTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
