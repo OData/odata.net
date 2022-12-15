@@ -477,7 +477,9 @@ namespace Microsoft.OData.Client
         }
 
 
-        /// <summary>Gets or sets whether query projection will handle null propagation automatically. If set to true null propagation checks can be omitted from queries.</summary>
+        /// <summary>
+        /// Gets or sets whether query projection will handle null propagation automatically. If set to true null propagation checks can be omitted from queries.
+        ///</summary>
         /// <remarks>
         /// Default is false.
         /// </remarks>
