@@ -8165,6 +8165,7 @@ public class Microsoft.OData.Client.DataServiceContext {
 
     Microsoft.OData.Client.DataServiceResponsePreference AddAndUpdateResponsePreference  { public virtual get; public virtual set; }
     bool ApplyingChanges  { public virtual get; }
+    bool AutoNullPropagation  { public virtual get; public virtual set; }
     System.Uri BaseUri  { public virtual get; public virtual set; }
     Microsoft.OData.Client.DataServiceClientConfigurations Configurations  { public virtual get; }
     System.Net.ICredentials Credentials  { public virtual get; public virtual set; }
