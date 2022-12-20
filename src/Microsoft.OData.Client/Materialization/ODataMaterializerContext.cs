@@ -67,6 +67,14 @@ namespace Microsoft.OData.Client.Materialization
         protected ResponseInfo ResponseInfo { get; private set; }
 
         /// <summary>
+        /// Specifies whether query projection will handle null propagation automatically.
+        /// </summary>
+        public bool AutoNullPropagation
+        {
+            get { return this.ResponseInfo.AutoNullPropagation; }
+        }
+
+        /// <summary>
         /// Resolved the given edm type to clr type.
         /// </summary>
         /// <param name="expectedType">Expected Clr type.</param>
