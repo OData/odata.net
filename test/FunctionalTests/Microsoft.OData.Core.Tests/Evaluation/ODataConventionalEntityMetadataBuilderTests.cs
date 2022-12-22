@@ -247,9 +247,10 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
-        public void EditLinkShouldContainTypeSegmentIfInstanceTypeIsMoreDerviedThanSet()
+        public void EditLinkShouldContainTypeSegmentIfInstanceTypeIsMoreDerviedThanSet() 
         {
             // Verify that the last segment of the edit link is the expected type segment.
+            _ = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink();
             string[] uriSegments = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Segments;
             Assert.Equal("TestModel.DerivedMleProduct", uriSegments[uriSegments.Length - 1]);
         }
@@ -270,6 +271,14 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleEntry.Id = id;
             Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleEntityTypeName);
             Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), expectedEditLink);
+        }
+
+        [Fact]
+        public void GetEditLinkShoulReturnNonComputedIdUriWithoutDoubleTypeCastForDerivedEntityWhenNonComputedIdIsSet()
+        {
+            var id = new Uri($"http://anotherodata.org/serviceBase/SomeType('xyz')/{DerivedMleEntityTypeName}");
+            this.derivedMultiKeyMultiEtagMleEntry.Id = id;
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), id);
         }
 
         [Fact]
@@ -574,6 +583,14 @@ namespace Microsoft.OData.Tests.Evaluation
             var readLinkUri = new Uri("http://anotherodata.org/serviceBaseRead/SomeType('xyz')");
             this.productEntry.ReadLink = readLinkUri;
             Assert.Equal(this.productConventionalEntityMetadataBuilder.GetReadLink(), readLinkUri);
+        }
+
+        [Fact]
+        public void GetReadLinkShoulReturnNonComputedIdUriWithoutDoubleTypeCastForDerivedEntityWhenNonComputedIdIsSet()
+        {
+            var id = new Uri($"http://anotherodata.org/serviceBase/SomeType('xyz')/{DerivedMleEntityTypeName}");
+            this.derivedMultiKeyMultiEtagMleEntry.Id = id;
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), id);
         }
 
         [Fact]
