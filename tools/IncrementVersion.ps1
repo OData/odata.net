@@ -54,7 +54,9 @@ ForEach ($line in $($changedFiles -split [System.Environment]::NewLine))
     $unshipped = Join-Path -Path $PSScriptRoot -ChildPath ..\$line
     $shipped = [System.IO.Path]::GetDirectoryName($unshipped) + "\PublicAPI.Shipped.txt"
 
-    Copy-Item $unshipped -Destination $shipped
+    $combined = Get-Content $unshipped,$shipped
+    $combined | Set-Content $shipped
+    Clear-Content $unshipped
 
     $apiChanges = $true
   }
@@ -83,6 +85,7 @@ foreach ($propertyGroup in $versions.Project.PropertyGroup)
       Write-Host "Incrementing the VersionMinor in $versionPath to $currentVersion"
 
       $propertyGroup.VersionMinor.'#text' = [string] $currentVersion
+      $propertyGroup.VersionBuildNumber.'#text' = '0'
     }
 
     # if there are not api changes or the caller requested a revision version increment
