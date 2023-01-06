@@ -1,4 +1,6 @@
-﻿abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.Accept(Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor) -> void
+virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.get -> bool
+virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.set -> void
+abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.Accept(Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor) -> void
 abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.Accept<T>(Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor<T> visitor) -> T
 abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.Identifier.get -> string
 abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.IsNamespaceOrContainerQualified() -> bool
