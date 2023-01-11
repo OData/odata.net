@@ -15,6 +15,7 @@ namespace Microsoft.OData.Evaluation
     using System.Text;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies.V1;
+    using Microsoft.OData.UriParser;
     #endregion
 
     /// <summary>
@@ -405,10 +406,34 @@ namespace Microsoft.OData.Evaluation
         {
             Uri uri = this.ResourceMetadataContext.Resource.HasNonComputedId ? this.ResourceMetadataContext.Resource.NonComputedId : this.ComputedId;
 
-            Debug.Assert(this.ResourceMetadataContext != null && this.ResourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
-            if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
+            Debug.Assert(this.ResourceMetadataContext != null && this.ResourceMetadataContext.TypeContext != null,
+                "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
+
+            string actualResourceTypeName= this.ResourceMetadataContext.ActualResourceTypeName;
+
+            if (actualResourceTypeName != this.ResourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
             {
-                uri = this.UriBuilder.AppendTypeSegment(uri, this.ResourceMetadataContext.ActualResourceTypeName);
+                IEdmStructuredType actualResourceType = this.ResourceMetadataContext.ActualResourceType;
+
+                // In some scenarios, the resource id will already contain the cast segment. For example,
+                // when full metadata is requested and a derived entity containing one or more navigation properties
+                // is being serialized, and the association and navigation links need to be serialized as well, the cast
+                // segment will already be contained in the resource id.
+                ODataUriParser odataUriParser = new ODataUriParser(this.MetadataContext.Model, this.MetadataContext.ServiceBaseUri, uri);
+                ODataPath odataPath = odataUriParser.ParsePath();
+
+                // Accomodate two scenarios:
+                // 1. ~/Customers(1)/NS.EnterpriseCustomer
+                // 2. ~/Customers/NS.EnterpriseCustomer(1) - key expression on type segment
+                if (!((odataPath.LastSegment is TypeSegment typeSegment1 
+                    && typeSegment1.TargetEdmType == actualResourceType)
+                    || (odataPath.LastSegment is KeySegment 
+                    && odataPath.Segments.Count >= 2
+                    && odataPath.Segments[odataPath.Segments.Count - 2] is TypeSegment typeSegment2
+                    && typeSegment2.TargetEdmType == actualResourceType)))
+                {
+                    uri = this.UriBuilder.AppendTypeSegment(uri, actualResourceTypeName);
+                }
             }
 
             return uri;
