@@ -1668,6 +1668,10 @@ namespace Microsoft.OData.JsonLight
 
                 if (this.writingResponse)
                 {
+                    // Write the count if it's available.
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, null)
+                        .ConfigureAwait(false);
+
                     // Write the next link if it's available.
                     await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, /*propertyName*/null)
                         .ConfigureAwait(false);
@@ -1703,6 +1707,9 @@ namespace Microsoft.OData.JsonLight
 
                     // Write the next link if it's available.
                     await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, propertyName)
+                        .ConfigureAwait(false);
+
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, propertyName)
                         .ConfigureAwait(false);
                 }
             }
@@ -2736,7 +2743,11 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private Task WriteResourceSetCountAsync(long? count, string propertyName)
         {
-            if (count.HasValue)
+            bool countWritten = this.State == WriterState.ResourceSet ?
+                this.CurrentResourceSetScope.CountWritten :
+                this.CurrentDeltaResourceSetScope.CountWritten;
+
+            if (count.HasValue && !countWritten)
             {
                 return WriteResourceSetCountInnerAsync(count.Value, propertyName);
 
@@ -2756,6 +2767,15 @@ namespace Microsoft.OData.JsonLight
 
                     await this.asynchronousJsonWriter.WriteValueAsync(innerCount)
                         .ConfigureAwait(false);
+
+                    if (this.State == WriterState.ResourceSet)
+                    {
+                        this.CurrentResourceSetScope.CountWritten = true;
+                    }
+                    else
+                    {
+                        this.CurrentDeltaResourceSetScope.CountWritten = true;
+                    }
                 }
             }
 
@@ -3060,6 +3080,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private sealed class JsonLightResourceSetScope : ResourceSetScope
         {
+            /// <summary>true if the odata.count was already written, false otherwise.</summary>
+            private bool countWritten;
+
             /// <summary>true if the odata.nextLink was already written, false otherwise.</summary>
             private bool nextLinkWritten;
 
@@ -3083,6 +3106,22 @@ namespace Microsoft.OData.JsonLight
                 : base(resourceSet, navigationSource, itemType, skipWriting, selectedProperties, odataUri)
             {
                 this.isUndeclared = isUndeclared;
+            }
+
+            /// <summary>
+            /// true if the odata.count annotation was already written, false otherwise.
+            /// </summary>
+            internal bool CountWritten
+            {
+                get
+                {
+                    return this.countWritten;
+                }
+
+                set
+                {
+                    this.countWritten = value;
+                }
             }
 
             /// <summary>
@@ -3373,6 +3412,9 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         private sealed class JsonLightDeltaResourceSetScope : DeltaResourceSetScope
         {
+            /// <summary>true if the odata.count was already written, false otherwise.</summary>
+            private bool countWritten;
+
             /// <summary>true if the odata.nextLink was already written, false otherwise.</summary>
             private bool nextLinkWritten;
 
@@ -3390,6 +3432,22 @@ namespace Microsoft.OData.JsonLight
             public JsonLightDeltaResourceSetScope(ODataDeltaResourceSet resourceSet, IEdmNavigationSource navigationSource, IEdmStructuredType resourceType, SelectedPropertiesNode selectedProperties, in ODataUriSlim odataUri)
                 : base(resourceSet, navigationSource, resourceType, selectedProperties, odataUri)
             {
+            }
+
+            /// <summary>
+            /// true if the odata.count annotation was already written, false otherwise.
+            /// </summary>
+            internal bool CountWritten
+            {
+                get
+                {
+                    return this.countWritten;
+                }
+
+                set
+                {
+                    this.countWritten = value;
+                }
             }
 
             /// <summary>
