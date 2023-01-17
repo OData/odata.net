@@ -314,15 +314,17 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(expect, result);
         }
 
-        [Fact]
-        public void WriteStreamValue_WritesStreamValue()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void WriteStreamValue_WritesStreamValue(bool leaveOpen)
         {
-            var stream = new MemoryStream();
+            var stream = new DisposeTrackingMemoryStream();
             var writer = new BinaryWriter(stream);
             writer.Write("1234567890");
             writer.Flush();
             stream.Position = 0;
-            var streamValue = new ODataBinaryStreamValue(stream);
+            var streamValue = new ODataBinaryStreamValue(stream, leaveOpen);
 
             var result = this.SetupSerializerAndRunTest(
                 (jsonLightValueSerializer) =>
@@ -331,6 +333,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 });
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
+            Assert.Equal(leaveOpen, !stream.Disposed);
         }
 
 #if NETCOREAPP3_1_OR_GREATER
@@ -394,6 +397,21 @@ namespace Microsoft.OData.Tests.JsonLight
             stream.Position = 0;
             var streamReader = new StreamReader(stream);
             return streamReader.ReadToEnd();
+        }
+
+        private class DisposeTrackingMemoryStream : MemoryStream
+        {
+            public bool Disposed { get; private set; } = false;
+
+            protected override void Dispose(bool disposing)
+            {
+                if (disposing)
+                {
+                    this.Disposed = true;
+                }
+
+                base.Dispose(disposing);
+            }
         }
     }
 }

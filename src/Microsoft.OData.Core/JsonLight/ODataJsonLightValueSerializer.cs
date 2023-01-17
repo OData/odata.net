@@ -390,6 +390,11 @@ namespace Microsoft.OData.JsonLight
                 stream.Dispose();
                 streamWriter.EndStreamValueScope();
             }
+
+            if (!streamValue.LeaveOpen)
+            {
+                streamValue.Stream.Dispose();
+            }
         }
 
         /// <summary>
@@ -720,7 +725,6 @@ namespace Microsoft.OData.JsonLight
             IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
             if (streamWriter == null)
             {
-                // write as a string
                 byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
                 await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
             }
@@ -731,6 +735,11 @@ namespace Microsoft.OData.JsonLight
                 await stream.FlushAsync().ConfigureAwait(false);
                 stream.Dispose();
                 await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
+            }
+
+            if (!streamValue.LeaveOpen)
+            {
+                streamValue.Stream.Dispose();
             }
         }
 
