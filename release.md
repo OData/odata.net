@@ -19,5 +19,5 @@
     git push origin 6.16.0
     ```
     and repacing `6.16.0` with the new version number
-13. Create a [new release](https://github.com/OData/odata.net/releases) in github with the name "ODL 7.9.4" replacig "7.9.4" with the new version number. Also choose the newly created tag. Add links to the new nuget packages in the description. Note that the assets files will be generated automatically by github when the release is created
+13. Create a [new release](https://github.com/OData/odata.net/releases) in github with the name "ODL 7.9.4" replacing "7.9.4" with the new version number. Also choose the newly created tag. Add links to the new nuget packages in the description. Note that the assets files will be generated automatically by github when the release is created
 14. Cherry-pick the change log commit in the docs repo from the `main` branch to the `live` branch
