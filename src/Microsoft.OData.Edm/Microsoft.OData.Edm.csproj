@@ -11,6 +11,11 @@
 
   <Import Project="..\Build.props" />
 
+  <PropertyGroup Condition="'$(TreatWarningsAsErrors)' == 'false' or '$(TreatWarningsAsErrors)' == ''">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);RS0017;RS0025</WarningsAsErrors>
+  </PropertyGroup>
+  
   <ItemGroup>
     <None Remove="Microsoft.OData.Edm.xml" />
   </ItemGroup>
@@ -47,16 +52,6 @@
   <ItemGroup>
     <Compile Include="..\AssemblyInfo\AssemblyKeys.cs" Link="AssemblyKeys.cs" />
     <Compile Include="..\PlatformHelper.cs" Link="PlatformHelper.cs" />
-    <Compile Update="Microsoft.OData.Edm.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.OData.Edm.tt</DependentUpon>
-    </Compile>
-    <Compile Update="Parameterized.Microsoft.OData.Edm.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.OData.Edm.tt</DependentUpon>
-    </Compile>
   </ItemGroup>
 
   <ItemGroup>
@@ -90,10 +85,9 @@
     </EmbeddedResource>
   </ItemGroup>
 
-    <ItemGroup>
-        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
-        <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
-    </ItemGroup>
+  <ItemGroup>
+    <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
+  </ItemGroup>
     
   <ItemGroup>
     <PackageReference Include="Microsoft.CodeAnalysis.FxCopAnalyzers" Version="3.0.0">

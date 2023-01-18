@@ -274,7 +274,7 @@ namespace Microsoft.OData.SampleService.Models.TripPin
             model.SetAsynchronousRequestsSupportedCapabilitiesAnnotation(defaultContainer, true);
             model.SetBatchContinueOnErrorSupportedCapabilitiesAnnotation(defaultContainer, false);
             model.SetNavigationRestrictionsCapabilitiesAnnotation(personSet, CapabilitiesNavigationType.None, new[] { new Tuple<IEdmNavigationProperty, CapabilitiesNavigationType>(friendsnNavigation, CapabilitiesNavigationType.Recursive) });
-            model.SetFilterFunctionsCapabilitiesAnnotation(defaultContainer, new[] { "contains", "endswith", "startswith", "length", "indexof", "substring", "tolower", "toupper", "trim", "concat", "year", "month", "day", "hour", "minute", "second", "round", "floor", "ceiling", "cast", "isof" });
+            model.SetFilterFunctionsCapabilitiesAnnotation(defaultContainer, new[] { "contains", "matchesPattern", "endswith", "startswith", "length", "indexof", "substring", "tolower", "toupper", "trim", "concat", "year", "month", "day", "hour", "minute", "second", "round", "floor", "ceiling", "cast", "isof" });
             model.SetSearchRestrictionsCapabilitiesAnnotation(personSet, true, CapabilitiesSearchExpressions.None);
             model.SetSearchRestrictionsCapabilitiesAnnotation(airlineSet, true, CapabilitiesSearchExpressions.None);
             model.SetSearchRestrictionsCapabilitiesAnnotation(airportSet, true, CapabilitiesSearchExpressions.None);

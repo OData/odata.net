@@ -65,6 +65,15 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
         /// <summary>Org.OData.Core.V1.Revisions</summary>
         public const string Revisions = "Org.OData.Core.V1.Revisions";
 
+        /// <summary>Org.OData.Core.V1.AlternateKeys</summary>
+        public const string AlternateKeys = "Org.OData.Core.V1.AlternateKeys";
+
+        // <summary>Org.OData.Core.V1.AlternateKey</summary>
+        public const string AlternateKey = "Org.OData.Core.V1.AlternateKey";
+
+        // <summary>Org.OData.Core.V1.PropertyRef</summary>
+        public const string PropertyRef = "Org.OData.Core.V1.PropertyRef";
+
         /// <summary>Org.OData.Core.V1.xml file suffix</summary>
         internal const string VocabularyUrlSuffix = "/Org.OData.Core.V1.xml";
     }

@@ -265,33 +265,36 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!(property.Value is ODataStreamReferenceValue), "!(property.Value is ODataStreamReferenceValue)");
 
             return this.WriteTopLevelPayloadAsync(
-                async () =>
+                async (thisParam, propertyParam) =>
                 {
-                    await this.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
-                    ODataPayloadKind kind = GetPayloadKind();
+                    await thisParam.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                    ODataPayloadKind kind = thisParam.GetPayloadKind();
 
-                    if (!(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
+                    if (!(thisParam.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                     {
-                        ODataContextUrlInfo contextInfo = GetContextUrlInfo(property);
-                        await this.WriteContextUriPropertyAsync(kind, () => contextInfo)
-                            .ConfigureAwait(false);
+                        ODataContextUrlInfo contextUrlInfo = thisParam.GetContextUrlInfo(propertyParam);
+                        await thisParam.WriteContextUriPropertyAsync(
+                            kind,
+                            (contextUrlInfoParam) => contextUrlInfoParam, contextUrlInfo).ConfigureAwait(false);
                     }
 
                     // Note we do not allow named stream properties to be written as top level property.
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
+                    thisParam.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = thisParam.GetDuplicatePropertyNameChecker();
 
-                    await this.WritePropertyAsync(
-                        property,
+                    await thisParam.WritePropertyAsync(
+                        property: propertyParam,
                         owningType : null,
                         isTopLevel : true,
                         duplicatePropertyNameChecker : duplicatePropertyNameChecker,
                         metadataBuilder : null).ConfigureAwait(false);
 
-                    this.JsonLightValueSerializer.AssertRecursionDepthIsZero();
-                    this.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
-                    await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
-                });
+                    thisParam.JsonLightValueSerializer.AssertRecursionDepthIsZero();
+                    thisParam.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                    await thisParam.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+                },
+                this,
+                property);
         }
 
         /// <summary>

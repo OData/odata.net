@@ -300,6 +300,17 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         }
 
         [Fact]
+        public void CaseInsensitiveMatchesPatternShouldWork()
+        {
+            this.TestCaseInsensitiveBuiltIn(
+                "People?$filter=matchesPattern(Name,'SU')",
+                "People?$filter=MATCHESPATTERN(Name,'SU')",
+                uriParser => uriParser.ParseFilter(),
+                filter => filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("matchesPattern", EdmCoreModel.Instance.GetBoolean(false)),
+                Strings.MetadataBinder_UnknownFunction("MATCHESPATTERN"));
+        }
+
+        [Fact]
         public void CaseInsensitiveStartswithEndswithShouldWork()
         {
             this.TestCaseInsensitiveBuiltIn(

@@ -211,7 +211,7 @@ namespace Microsoft.OData.Tests.Evaluation
             throw new NotImplementedException();
         }
 
-        public ODataUri ODataUri { get; set; }
+        public ODataUriSlim? ODataUri { get; set; }
     }
 
     public class AllPropertiesComparer<T> : IEqualityComparer<T>

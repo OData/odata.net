@@ -755,6 +755,36 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The provided implementation of IStreamBasedJsonWriterFactory returned null for arguments: isIeee754Compatible '{0}', encoding '{1}'. The factory should return a concrete IJsonWriter implementation."
+        /// </summary>
+        internal static string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(object p0, object p1)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull, p0, p1);
+        }
+
+        /// <summary>
+        /// A string like "The provided IJsonWriterAsync instance must also implement IJsonWriter."
+        /// </summary>
+        internal static string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Detected different instances of IJsonWriter and IJsonWriterAsync. The writer instance returned by the factory should implement both IJsonWriter and IJsonWriterAsync."
+        /// </summary>
+        internal static string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
+            }
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth

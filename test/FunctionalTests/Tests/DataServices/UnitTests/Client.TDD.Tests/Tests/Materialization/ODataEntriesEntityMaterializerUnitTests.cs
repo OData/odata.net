@@ -30,9 +30,10 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var context = new DataServiceContext();
-            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel);
             var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
-            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context);
+            MaterializerEntry.CreateEntry(odataEntry, ODataFormat.Json, true, clientEdmModel, materializerContext);
+            
+            var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(Customer), null, new Dictionary<Expression, Expression>());
 
             var entriesMaterializer = new ODataEntriesEntityMaterializer(new ODataResource[] { odataEntry }, materializerContext, adapter, components, typeof(Customer), null, ODataFormat.Json);

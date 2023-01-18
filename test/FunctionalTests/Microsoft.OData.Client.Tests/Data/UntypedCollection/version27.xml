@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Microsoft.DirectoryServices" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="DirectoryObject" OpenType="true">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="User" BaseType="Microsoft.DirectoryServices.DirectoryObject" OpenType="true">
+      </EntityType>
+      
+      <EntityContainer Name="DirectoryDataService">
+        <EntitySet Name="directoryObjects" EntityType="Microsoft.DirectoryServices.DirectoryObject" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

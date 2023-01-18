@@ -69,10 +69,11 @@ namespace Microsoft.Test.OData.Tests.Client
             ar.AsyncWaitHandle.WaitOne();
         }
 
-        public void Dispose()
+        public virtual void Dispose()
         {
             TestServiceWrapper.StopService();
         }
+
         private Stream GetStreamFromUrl(string absoluteUri)
         {
             HttpWebRequestMessage message = new HttpWebRequestMessage(new Uri(absoluteUri, UriKind.Absolute));

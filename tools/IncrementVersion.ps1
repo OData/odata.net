@@ -50,14 +50,15 @@ ForEach ($line in $($changedFiles -split [System.Environment]::NewLine))
   elseif ($fileName -eq "PublicAPI.Unshipped.txt")
   {
     # if that file represents an API change that isn't breaking, go ahead and move the API changes to the shipped file for future releases
-    Write-Host "There are API changes in $fileName. Updating the associated PublicAPI.Shipped.txt"
+    Write-Host "There are API changes in $line. Updating the associated PublicAPI.Shipped.txt"
     $unshipped = Join-Path -Path $PSScriptRoot -ChildPath ..\$line
     $shipped = [System.IO.Path]::GetDirectoryName($unshipped) + "\PublicAPI.Shipped.txt"
 
-    Copy-Item $unshipped -Destination $shipped
+    $combined = Get-Content $unshipped,$shipped
+    $combined | Set-Content $shipped
+    Clear-Content $unshipped
 
     $apiChanges = $true
-    break;
   }
 }
 
@@ -84,6 +85,7 @@ foreach ($propertyGroup in $versions.Project.PropertyGroup)
       Write-Host "Incrementing the VersionMinor in $versionPath to $currentVersion"
 
       $propertyGroup.VersionMinor.'#text' = [string] $currentVersion
+      $propertyGroup.VersionBuildNumber.'#text' = '0'
     }
 
     # if there are not api changes or the caller requested a revision version increment

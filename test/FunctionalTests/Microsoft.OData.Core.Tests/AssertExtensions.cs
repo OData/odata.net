@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -39,6 +40,18 @@ namespace Microsoft.OData.Tests
         }
 
         /// <summary>
+        /// Verifies that the exact exception calling the async test code is thrown.
+        /// </summary>
+        /// <typeparam name="T">The type of the exception expected to be thrown</typeparam>
+        /// <param name="testCode">An async delegate to the code to be tested</param>
+        /// <param name="errorMessage">The expected error message.</param>
+        public static async Task ThrowsAsync<T>(this Func<Task> testCode, string errorMessage) where T : Exception
+        {
+            T exception = await Assert.ThrowsAsync<T>(testCode);
+            Assert.Equal(errorMessage, exception.Message);
+        }
+
+        /// <summary>
         /// Verifies that the exact exception or a derived exception type is thrown with the error message.
         /// </summary>
         /// <typeparam name="T">The type of the exception or a derived exception type expected to be thrown</typeparam>
@@ -63,7 +76,7 @@ namespace Microsoft.OData.Tests
             int index = 0;
             foreach (var item in enumerable)
             {
-                Assert.Equal(item, expectedElements[index++]);
+                Assert.Equal(expectedElements[index++], item);
             }
         }
     }

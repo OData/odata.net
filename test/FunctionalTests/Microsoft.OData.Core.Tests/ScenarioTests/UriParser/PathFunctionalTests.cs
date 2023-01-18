@@ -73,6 +73,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void MultipleUnnamedKeysThrowsException()
+        {
+            Action parsePath = () => PathFunctionalTestsUtil.RunParsePath("People(7,8,9)");
+            parsePath.Throws<ODataException>(ODataErrorStrings.RequestUriProcessor_KeysMustBeNamed);
+        }
+
+        [Fact]
         public void SimpleActionImport()
         {
             var path = PathFunctionalTestsUtil.RunParsePath("ResetAllData");
@@ -1208,7 +1215,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             Assert.Equal("$42", path.FirstSegment.ShouldBeBatchReferenceSegment(HardCodedTestModel.GetDogType()).ContentId);
             path.LastSegment.ShouldBeNavigationPropertySegment(HardCodedTestModel.GetDogMyPeopleNavProp());
-            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(new DetermineNavigationSourceTranslator()));
+            Assert.Same(HardCodedTestModel.GetDogsSet(), path.FirstSegment.TranslateWith(DetermineNavigationSourceTranslator.Instance));
         }
 
         //[Fact(Skip = "#833: Throw exception when $value appears after a stream.")]

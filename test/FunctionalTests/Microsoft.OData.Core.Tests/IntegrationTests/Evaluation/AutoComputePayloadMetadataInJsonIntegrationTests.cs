@@ -13,6 +13,10 @@ using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
+using System.Xml;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Csdl;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
@@ -1232,7 +1236,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             ODataResource entityValue = new ODataResource
             {
                 TypeName = "NS.Customer",
-                Properties = new[] { new ODataProperty { Name = "Id", Value = 42 }}
+                Properties = new[] { new ODataProperty { Name = "Id", Value = 42 } }
             };
             resourceWriter.WriteStart(entityValue);
             resourceWriter.WriteEnd();
@@ -1356,6 +1360,262 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             return model;
         }
 
+        [Theory]
+        [InlineData("minimal")]
+        [InlineData("full")]
+        public void WritingContainedNavigationPropertyWithoutProvideKeyPropertyOnParentResourceWorks(string metadataLevel)
+        {
+            MemoryStream outputStream = new MemoryStream();
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+
+            message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
+            var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
+                new Dictionary<string, string> { { "$select", "Name" }, { "$expand", "ContainedNavProp" } }).ParseSelectAndExpand();
+
+            ODataUri odataUri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://example.com"),
+                SelectAndExpand = queryOptions
+            };
+
+            Uri requestUri = new Uri("http://example.com/EntitySet(1)");
+            odataUri.RequestUri = requestUri;
+            odataUri.Path = new ODataUriParser(Model, new Uri("http://example.com"), requestUri).ParsePath();
+
+            string output;
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                ODataUri = odataUri
+            };
+            using (var messageWriter = new ODataMessageWriter(message, settings, Model))
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
+
+                ODataResource resource = new ODataResource
+                {
+                    TypeName = "Namespace.EntityType",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "SampleName" }
+                    }
+                };
+
+                if (metadataLevel == "full")
+                {
+                    resource.Id = new Uri("http://example.com/EntitySet(1)");
+                }
+
+                writer.WriteStart(resource);
+                ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo
+                {
+                    IsCollection = true,
+                    Name = "ContainedNavProp"
+                };
+                writer.WriteStart(nestedResourceInfo);
+                writer.WriteStart(new ODataResourceSet());
+                writer.WriteEnd(); // end of nested resource set
+                writer.WriteEnd(); // end of nested resource info
+                writer.WriteEnd(); // end of resource
+
+                outputStream.Seek(0, SeekOrigin.Begin);
+                output = new StreamReader(outputStream).ReadToEnd();
+            }
+
+            if (metadataLevel == "full")
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(Name,ContainedNavProp())/$entity\"," +
+                  "\"@odata.type\":\"#Namespace.EntityType\"," +
+                  "\"@odata.id\":\"http://example.com/EntitySet(1)\"," +
+                  "\"@odata.etag\":\"W/\\\"'SampleName'\\\"\"," +
+                  "\"@odata.editLink\":\"EntitySet(1)\"," +
+                  "\"@odata.mediaEditLink\":\"EntitySet(1)/$value\"," +
+                  "\"Name\":\"SampleName\"," +
+                  "\"ContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(1)/ContainedNavProp/$ref\"," +
+                  "\"ContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(1)/ContainedNavProp\"," +
+                  "\"ContainedNavProp\":[]}", output);
+            }
+            else
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(Name,ContainedNavProp())/$entity\"," +
+                  "\"Name\":\"SampleName\"," +
+                  "\"ContainedNavProp\":[]}", output);
+            }
+        }
+
+        [Theory]
+        [InlineData("minimal")]
+        [InlineData("full")]
+        public void WritingContainedNavigationPropertyWithKeyPropertyOnParentResourceWorks(string metadataLevel)
+        {
+            MemoryStream outputStream = new MemoryStream();
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+
+            message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
+            var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
+                new Dictionary<string, string> { { "$select", "ID,Name" }, { "$expand", "ContainedNavProp" } }).ParseSelectAndExpand();
+
+            ODataUri odataUri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://example.com"),
+                SelectAndExpand = queryOptions
+            };
+
+            Uri requestUri = new Uri("http://example.com/EntitySet(42)");
+            odataUri.RequestUri = requestUri;
+            odataUri.Path = new ODataUriParser(Model, new Uri("http://example.com"), requestUri).ParsePath();
+
+            string output;
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                ODataUri = odataUri
+            };
+            using (var messageWriter = new ODataMessageWriter(message, settings, Model))
+            {
+                ODataWriter writer = messageWriter.CreateODataResourceWriter(EntitySet, EntityType);
+
+                ODataResource resource = new ODataResource
+                {
+                    TypeName = "Namespace.EntityType",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "SampleName" },
+                        new ODataProperty { Name = "ID", Value = 42 }
+                    }
+                };
+
+                if (metadataLevel == "full")
+                {
+                    resource.Id = new Uri("http://example.com/EntitySet(42)");
+                }
+
+                writer.WriteStart(resource);
+                ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo
+                {
+                    IsCollection = true,
+                    Name = "ContainedNavProp"
+                };
+                writer.WriteStart(nestedResourceInfo);
+                writer.WriteStart(new ODataResourceSet());
+                writer.WriteEnd(); // end of nested resource set
+                writer.WriteEnd(); // end of nested resource info
+                writer.WriteEnd(); // end of resource
+
+                outputStream.Seek(0, SeekOrigin.Begin);
+                output = new StreamReader(outputStream).ReadToEnd();
+            }
+
+            if (metadataLevel == "full")
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(ID,Name,ContainedNavProp())/$entity\"," +
+                  "\"@odata.type\":\"#Namespace.EntityType\"," +
+                  "\"@odata.id\":\"http://example.com/EntitySet(42)\"," +
+                  "\"@odata.etag\":\"W/\\\"'SampleName'\\\"\"," +
+                  "\"@odata.editLink\":\"EntitySet(42)\"," +
+                  "\"@odata.mediaEditLink\":\"EntitySet(42)/$value\"," +
+                  "\"Name\":\"SampleName\"," +
+                  "\"ID\":42," +
+                  "\"ContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(42)/ContainedNavProp/$ref\"," +
+                  "\"ContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(42)/ContainedNavProp\"," +
+                  "\"ContainedNavProp\":[]}", output);
+            }
+            else
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(ID,Name,ContainedNavProp())/$entity\"," +
+                  "\"Name\":\"SampleName\"," +
+                  "\"ID\":42," +
+                  "\"ContainedNavProp\":[]}", output);
+            }
+        }
+
+        [Theory]
+        [InlineData("minimal")]
+        [InlineData("full")]
+        public async Task WritingContainedNavigationPropertyWithoutProvideKeyPropertyOnParentResourceSetWorks(string metadataLevel)
+        {
+            MemoryStream outputStream = new MemoryStream();
+            var container = ContainerBuilderHelper.BuildContainer(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+
+            message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
+            var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
+                new Dictionary<string, string> { { "$select", "Name" }, { "$expand", "ContainedNavProp" } }).ParseSelectAndExpand();
+
+            ODataUri odataUri = new ODataUri()
+            {
+                ServiceRoot = new Uri("http://example.com"),
+                SelectAndExpand = queryOptions
+            };
+
+            Uri requestUri = new Uri("http://example.com/EntitySet");
+            odataUri.RequestUri = requestUri;
+            odataUri.Path = new ODataUriParser(Model, new Uri("http://example.com"), requestUri).ParsePath();
+
+            string output;
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                ODataUri = odataUri
+            };
+            using (var messageWriter = new ODataMessageWriter(message, settings, Model))
+            {
+                ODataWriter writer = await messageWriter.CreateODataResourceSetWriterAsync(EntitySet, EntityType);
+                await writer.WriteStartAsync(new ODataResourceSet());
+                ODataResource resource = new ODataResource
+                {
+                    TypeName = "Namespace.EntityType",
+                    Properties = new[]
+                    {
+                        new ODataProperty { Name = "Name", Value = "SampleName" }
+                    }
+                };
+
+                if (metadataLevel == "full")
+                {
+                    resource.Id = new Uri("http://example.com/EntitySet(1)");
+                }
+
+                await writer.WriteStartAsync(resource);
+                ODataNestedResourceInfo nestedResourceInfo = new ODataNestedResourceInfo
+                {
+                    IsCollection = true,
+                    Name = "ContainedNavProp"
+                };
+                await writer.WriteStartAsync(nestedResourceInfo);
+                await writer.WriteStartAsync(new ODataResourceSet());
+                await writer.WriteEndAsync(); // end of nested resource set
+                await writer.WriteEndAsync(); // end of nested resource info
+                await writer.WriteEndAsync(); // end of resource
+                await writer.WriteEndAsync(); // end of resourceset
+
+                outputStream.Seek(0, SeekOrigin.Begin);
+                output = new StreamReader(outputStream).ReadToEnd();
+            }
+
+            if (metadataLevel == "full")
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(Name,ContainedNavProp())\"," +
+                    "\"value\":[" +
+                    "{" +
+                      "\"@odata.type\":\"#Namespace.EntityType\"," +
+                      "\"@odata.id\":\"http://example.com/EntitySet(1)\"," +
+                      "\"@odata.etag\":\"W/\\\"'SampleName'\\\"\"," +
+                      "\"@odata.editLink\":\"EntitySet(1)\"," +
+                      "\"@odata.mediaEditLink\":\"EntitySet(1)/$value\"," +
+                      "\"Name\":\"SampleName\"," +
+                      "\"ContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(1)/ContainedNavProp/$ref\"," +
+                      "\"ContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(1)/ContainedNavProp\"," +
+                      "\"ContainedNavProp\":[]}]}", output);
+            }
+            else
+            {
+                Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata#EntitySet(Name,ContainedNavProp())\"," +
+                    "\"value\":[" +
+                      "{\"Name\":\"SampleName\",\"ContainedNavProp\":[]}" +
+                    "]}", output);
+            }
+        }
+
         [Fact]
         public void WritingSimplifiedODataAnnotationsInFullMetadataMode()
         {
@@ -1429,7 +1689,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                                            "\"UnknownNonCollectionNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/UnknownNonCollectionNavProp\"," +
                                            "\"UnknownCollectionNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/UnknownCollectionNavProp/$ref\"," +
                                            "\"UnknownCollectionNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/UnknownCollectionNavProp\"," +
-                                           "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp/$ref\","+
+                                           "\"EnumAsKeyContainedNavProp@odata.associationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp/$ref\"," +
                                            "\"EnumAsKeyContainedNavProp@odata.navigationLink\":\"http://example.com/EntitySet(123)/EnumAsKeyContainedNavProp\"," +
                                            "\"StreamProp1@odata.mediaEditLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +
                                            "\"StreamProp1@odata.mediaReadLink\":\"http://example.com/EntitySet(123)/StreamProp1\"," +

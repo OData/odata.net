@@ -21,7 +21,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
     /// <summary>
     /// Send query and verify the results from the service implemented using ODataLib and EDMLib.
     /// </summary>
-    public class ContainmentTest : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class ContainmentTest : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         private const string TestModelNameSpace = "Microsoft.Test.OData.Services.ODataWCFService";
 
@@ -1394,5 +1394,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
             return item;
         }
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

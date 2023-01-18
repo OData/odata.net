@@ -9,12 +9,13 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text.RegularExpressions;
     using Microsoft.OData;
     using Microsoft.Test.OData.Services.TestServices;
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class TripPinFilterTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>
+    public class TripPinFilterTests : ODataWCFServiceTestsBase<Microsoft.Test.OData.Services.TestServices.ODataWCFServiceReference.InMemoryEntities>, IDisposable
     {
         private const string NameSpacePrefix = "Microsoft.OData.SampleService.Models.TripPin.";
 
@@ -33,6 +34,17 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             {
                 var userName = item.Properties.Single(p => p.Name == "UserName").Value;
                 Assert.True(userName.ToString().Contains("v"));
+            },
+            "Person");
+            #endregion
+
+            #region matchesPattern
+            uri = "People?$filter=matchesPattern(UserName,'chum$')";
+            requestAndCheckResult(uri, (item) =>
+            {
+                var userName = item.Properties.Single(p => p.Name == "UserName").Value;
+                Assert.True(userName.ToString().Contains("chum"));
+                Assert.True(Regex.IsMatch(userName.ToString(), "chum$"));
             },
             "Person");
             #endregion
@@ -409,5 +421,10 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             return entries;
         }
         #endregion
+
+        public override void Dispose()
+        {
+            base.Dispose();
+        }
     }
 }

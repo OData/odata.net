@@ -1192,6 +1192,37 @@ namespace Microsoft.OData.Edm.Validation
                     }
                 });
 
+        // Add this to rule set as a breaking change for a future release.
+        /// <summary>
+        /// Validates that if a complex-typed property has a type or base type that is the same as
+        /// the complex type, then the complex type is nullable.
+        /// </summary>
+        public static readonly ValidationRule<IEdmStructuralProperty> RecursiveComplexTypedPropertyMustBeOptional =
+            new ValidationRule<IEdmStructuralProperty>(
+                (context, property) =>
+                {
+                    IEdmTypeReference currentPropTypeRef = property.Type;
+                    IEdmType currentPropType = currentPropTypeRef.Definition;
+                    IEdmStructuredType declaringType = property.DeclaringType;
+
+                    if (!currentPropTypeRef.IsNullable)
+                    {
+                        while (currentPropType != null && currentPropType != declaringType)
+                        {
+                            IEdmStructuredType baseType = ((IEdmStructuredType)currentPropType).BaseType;
+                            currentPropType = baseType;
+                        }
+
+                        if (currentPropType == declaringType)
+                        {
+                            context.AddError(
+                                property.Location(),
+                                EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional,
+                                Strings.EdmModel_Validator_Semantic_RecursiveComplexTypedPropertyMustBeOptional(property.Name));
+                        }
+                    }
+                });
+
         #endregion
 
         #region IEdmNavigationProperty
@@ -2771,8 +2802,10 @@ namespace Microsoft.OData.Edm.Validation
         private static bool TryResolveNavigationPropertyBindingPath(IEdmModel model, IEdmNavigationSource navigationSource, IEdmNavigationPropertyBinding binding)
         {
             var pathSegments = binding.Path.PathSegments.ToArray();
+            IEdmNavigationProperty lastNavProp = null;
             var definingType = navigationSource.EntityType() as IEdmStructuredType;
-            for (int index = 0; index < pathSegments.Length - 1; index++)
+
+            for (int index = 0; index < pathSegments.Length; index++)
             {
                 string segment = pathSegments[index];
                 if (segment.IndexOf('.') < 0)
@@ -2784,9 +2817,14 @@ namespace Microsoft.OData.Edm.Validation
                     }
 
                     var navProperty = property as IEdmNavigationProperty;
-                    if (navProperty != null && !navProperty.ContainsTarget)
+                    if (navProperty != null)
                     {
-                        return false;
+                        if (lastNavProp != null && !lastNavProp.ContainsTarget)
+                        {
+                            return false;
+                        }
+
+                        lastNavProp = navProperty;
                     }
 
                     definingType = property.Type.Definition.AsElementType() as IEdmStructuredType;
@@ -2807,8 +2845,7 @@ namespace Microsoft.OData.Edm.Validation
                 }
             }
 
-            var navigationProperty = definingType.FindProperty(pathSegments.Last()) as IEdmNavigationProperty;
-            return navigationProperty != null;
+            return lastNavProp != null;
         }
 
         private static bool HasPathTypeProperty(IEdmStructuredType structuredType, IList<IEdmStructuredType> visited)

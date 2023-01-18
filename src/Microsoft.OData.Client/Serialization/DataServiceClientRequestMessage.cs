@@ -59,6 +59,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets or set the credentials for this request.
         /// </summary>
+        [Obsolete("The recommended way to configure credentials is to provide an already-configured HttpClientHandler using an IHttpClientHandlerProvider.")]
         public abstract ICredentials Credentials { get; set; }
 
         /// <summary>

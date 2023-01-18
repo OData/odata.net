@@ -7,8 +7,10 @@
 #if NETCOREAPP3_1
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.Encodings.Web;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
@@ -242,6 +244,100 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             IEdmModel model = Parse(csdl);
             var setA = model.FindDeclaredNavigationSource("SetA");
             Assert.True(setA.NavigationPropertyBindings.First().NavigationProperty is UnresolvedNavigationPropertyPath);
+        }
+
+
+        [Fact]
+        public void ValidateNavigationPropertyBindingPathEndingInTypeCastInJson()
+        {
+            var csdl =
+@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""EntityA"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Nav"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.EntityX""
+      }
+    },
+    ""EntityX"": {
+      ""$Kind"": ""EntityType"",
+      ""$Abstract"": true,
+      ""$Key"": [
+        ""ID""
+      ],
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      }
+    },
+    ""EntityX1"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityX""
+    },
+    ""EntityX2"": {
+      ""$Kind"": ""EntityType"",
+      ""$BaseType"": ""NS.EntityX""
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""SetA"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityA"",
+        ""$NavigationPropertyBinding"": {
+          ""Nav/NS.EntityX1"": ""SetX1"",
+          ""Nav/NS.EntityX2"": ""SetX2""
+        }
+      },
+      ""SetX1"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityX1""
+      },
+      ""SetX2"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.EntityX2""
+      }
+    }
+  }
+}";
+            IEdmModel model = Parse(csdl);
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+            Assert.Empty(errors);
+
+            var setA = model.FindDeclaredNavigationSource("SetA");
+            Assert.NotNull(setA);
+
+            var navProp = setA.EntityType().FindProperty("Nav") as IEdmNavigationProperty;
+            Assert.NotNull(navProp);
+            Assert.Equal(2, setA.NavigationPropertyBindings.Count());
+
+            // NavPropBinding for EntityX1 should be SetX1
+            var X1NavPropBinding = setA.NavigationPropertyBindings.FirstOrDefault(b => b.Path.PathSegments.Last() == "NS.EntityX1");
+            Assert.NotNull(X1NavPropBinding);
+            var setX1 = model.FindDeclaredNavigationSource("SetX1");
+            Assert.Same(setX1, X1NavPropBinding.Target);
+            Assert.Same(setX1, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX1")));
+
+            // NavPropBinding for for EntityX2 should be SetX2
+            var X2NavPropBinding = setA.NavigationPropertyBindings.FirstOrDefault(b => b.Path.PathSegments.Last() == "NS.EntityX2");
+            Assert.NotNull(X2NavPropBinding);
+            var setX2 = model.FindDeclaredNavigationSource("SetX2");
+            Assert.Same(setX2, X2NavPropBinding.Target);
+            Assert.Same(setX2, setA.FindNavigationTarget(navProp, new EdmPathExpression("Nav/NS.EntityX2")));
+
+            // Navigation Property without path should return UnknownEntitySet
+            Assert.True(setA.FindNavigationTarget(navProp) is EdmUnknownEntitySet);
+
+            // Verify writing model
+            VerifyJsonModel(model, csdl);
         }
 
         [Fact]
@@ -1895,6 +1991,33 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         {
             Utf8JsonReader jsonReader = GetJsonReader(csdl);
             return CsdlReader.Parse(ref jsonReader);
+        }
+
+        private static void VerifyJsonModel(IEdmModel model, string csdl)
+        {
+            using (MemoryStream memStream = new MemoryStream())
+            {
+                JsonWriterOptions options = new JsonWriterOptions
+                {
+                    Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                    Indented = true,
+                    SkipValidation = false
+                };
+
+                using (Utf8JsonWriter jsonWriter = new Utf8JsonWriter(memStream, options))
+                {
+                    CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
+                    settings.IsIeee754Compatible = false;
+                    IEnumerable<EdmError> errors;
+                    bool ok = CsdlWriter.TryWriteCsdl(model, jsonWriter, settings, out errors);
+                    jsonWriter.Flush();
+                    Assert.True(ok);
+                }
+
+                memStream.Seek(0, SeekOrigin.Begin);
+                string actual = new StreamReader(memStream).ReadToEnd();
+                Assert.Equal(csdl, actual);
+            }
         }
     }
 }

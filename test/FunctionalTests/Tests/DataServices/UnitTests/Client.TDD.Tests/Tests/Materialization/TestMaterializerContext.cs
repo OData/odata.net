@@ -23,6 +23,7 @@ namespace AstoriaUnitTests.Tests
             this.ResponsePipeline = new DataServiceClientResponsePipelineConfiguration(this);
             this.Model = new ClientEdmModel(ODataProtocolVersion.V4);
             this.Context = new DataServiceContext();
+            this.MaterializerCache = new MaterializerCache();
         }
 
         public Func<Type, string, ClientTypeAnnotation> ResolveTypeForMaterializationOverrideFunc { get; set; }
@@ -50,5 +51,9 @@ namespace AstoriaUnitTests.Tests
         }
 
         public DataServiceContext Context { get; set; }
+
+        public MaterializerCache MaterializerCache { get; private set; }
+
+        public bool AutoNullPropagation { get; set; }
     }
 }

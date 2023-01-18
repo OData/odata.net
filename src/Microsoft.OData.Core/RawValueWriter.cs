@@ -17,7 +17,11 @@ namespace Microsoft.OData
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
     /// </summary>
+#if NETCOREAPP3_1_OR_GREATER
+    internal sealed class RawValueWriter : IDisposable, IAsyncDisposable
+#else
     internal sealed class RawValueWriter : IDisposable
+#endif
     {
         /// <summary>
         /// Writer settings.
@@ -85,6 +89,30 @@ namespace Microsoft.OData
             this.textWriter.Dispose();
             this.textWriter = null;
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously disposes the <see cref="RawValueWriter"/>.
+        /// It flushes itself and then disposes its inner <see cref="System.IO.TextWriter"/>.
+        /// </summary>
+        /// <returns>A task that represents the asynchronous dispose operation.</returns>
+        public ValueTask DisposeAsync()
+        {
+            return DisposeInnerAsync();
+
+            async ValueTask DisposeInnerAsync()
+            {
+                Debug.Assert(this.textWriter != null, "The text writer has not been initialized yet.");
+
+                if (this.textWriter != null)
+                {
+                    await this.textWriter.DisposeAsync().ConfigureAwait(false);
+                }
+
+                this.textWriter = null;
+            }
+        }
+#endif
 
         /// <summary>
         /// Start writing a raw output. This should only be called once.
@@ -156,15 +184,22 @@ namespace Microsoft.OData
         /// Asynchronously start writing a raw output. This should only be called once.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task StartAsync()
+        internal Task StartAsync()
         {
             if (this.settings.HasJsonPaddingFunction())
             {
-                await this.textWriter.WriteAsync(this.settings.JsonPCallback)
+                return StartInnerAsync();
+
+                async Task StartInnerAsync()
+                {
+                    await this.textWriter.WriteAsync(this.settings.JsonPCallback)
                     .ConfigureAwait(false);
-                await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
-                    .ConfigureAwait(false);
+                    await this.textWriter.WriteAsync(JsonConstants.StartPaddingFunctionScope)
+                        .ConfigureAwait(false);
+                }
             }
+
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -200,8 +235,13 @@ namespace Microsoft.OData
 
             if (value is Geometry || value is Geography)
             {
-                return TaskUtils.GetTaskForSynchronousOperation(
-                    () => PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter));
+                return TaskUtils.GetTaskForSynchronousOperation((
+                    valueParam,
+                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJsonLight(
+                        valueParam,
+                        jsonWriterParam),
+                    value,
+                    jsonWriter);
             }
 
             if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))

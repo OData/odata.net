@@ -97,7 +97,7 @@ namespace Microsoft.OData.MultipartMixed
             }
 
             ODataBatchOperationRequestMessage requestMessage = BuildOperationRequestMessage(
-                () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this),
+                () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this, this.InputContext.Synchronous),
                 httpMethod,
                 requestUri,
                 headers,
@@ -139,7 +139,7 @@ namespace Microsoft.OData.MultipartMixed
             // We don't have correlation of changeset boundary between request and response messages in
             // changesets, so use null value for groupId.
             ODataBatchOperationResponseMessage responseMessage = BuildOperationResponseMessage(
-                () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this),
+                () => ODataBatchUtils.CreateBatchOperationReadStream(this.batchStream, headers, this, this.InputContext.Synchronous),
                 statusCode,
                 headers,
                 this.currentContentId,

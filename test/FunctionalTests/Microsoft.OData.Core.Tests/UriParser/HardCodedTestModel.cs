@@ -209,6 +209,13 @@ namespace Microsoft.OData.Tests.UriParser
                 {"SocialSN", FullyQualifiedNamespacePerson_SSN}
             });
 
+            // Use Core Vocabulary version.
+            model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
+            {
+                {"CoreSN", FullyQualifiedNamespacePerson_SSN}
+            },
+            true);
+
             model.AddAlternateKeyAnnotation(FullyQualifiedNamespacePerson, new Dictionary<string, IEdmProperty>()
             {
                 {"NameAlias", FullyQualifiedNamespacePerson_Name},
@@ -1057,6 +1064,20 @@ namespace Microsoft.OData.Tests.UriParser
                   <Record Type=""OData.Community.Keys.V1.PropertyRef"">
                     <PropertyValue Property=""Alias"" String=""FirstNameAlias"" />
                     <PropertyValue Property=""Name"" PropertyPath=""FirstName"" />
+                  </Record>
+                </Collection>
+              </PropertyValue>
+            </Record>
+          </Collection>
+        </Annotation>
+        <Annotation Term=""Org.OData.Core.V1.AlternateKeys"">
+          <Collection>
+            <Record Type=""Org.OData.Core.V1.AlternateKey"">
+              <PropertyValue Property=""Key"">
+                <Collection>
+                  <Record Type=""Org.OData.Core.V1.PropertyRef"">
+                    <PropertyValue Property=""Alias"" String=""CoreSN"" />
+                    <PropertyValue Property=""Name"" PropertyPath=""SSN"" />
                   </Record>
                 </Collection>
               </PropertyValue>

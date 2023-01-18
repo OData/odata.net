@@ -70,5 +70,45 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Semantics
             Assert.Equal(EdmContainerElementKind.ActionImport, imports[0].ContainerElementKind);
             Assert.Null(imports[0].EntitySet);
         }
+
+        [Fact]
+        public void NavigationPropertyBindingsReturned()
+        {
+            // arrange
+            var entitySet1 = new CsdlEntitySet("EntitySet1", "unknown", new[] { 
+                new CsdlNavigationPropertyBinding("foo", "bar", testLocation)
+            }, testLocation);
+            var singleton1 = new CsdlSingleton("Singleton", "unknown", new[] {
+                new CsdlNavigationPropertyBinding("foo", "bar", testLocation)
+            }, testLocation);
+            var csdlEntityContainer = CsdlBuilder.EntityContainer("Container", entitySets: new [] { entitySet1 }, singletons: new[] { singleton1 } );
+            var schema = CsdlBuilder.Schema("FQ.NS", csdlEntityContainers: new CsdlEntityContainer[] { csdlEntityContainer });
+            var csdlModel = new CsdlModel();
+            csdlModel.AddSchema(schema);
+            
+            // act
+            var container = new CsdlSemanticsEntityContainer(
+                new CsdlSemanticsSchema(
+                    new CsdlSemanticsModel(
+                        csdlModel,
+                        new EdmDirectValueAnnotationsManager(),
+                        Enumerable.Empty<IEdmModel>()),
+                    schema),
+                csdlEntityContainer);
+            var bindings = container.GetNavigationPropertyBindings().ToList();
+
+            // assert
+            Assert.Equal(2, bindings.Count);
+            var entitySet = Assert.IsType<CsdlSemanticsEntitySet>(bindings[0].Item1);
+            var singleton = Assert.IsType<CsdlSemanticsSingleton>(bindings[1].Item1);
+            Assert.Equal("EntitySet1", entitySet.Name);
+            Assert.Equal("Singleton", singleton.Name);
+            var navigationPropertyBinding1 = Assert.IsType<EdmNavigationPropertyBinding>(bindings[0].Item2);
+            var navigationPropertyBinding2 = Assert.IsType<EdmNavigationPropertyBinding>(bindings[1].Item2);
+            Assert.Equal("foo", navigationPropertyBinding1.Path.Path);
+            Assert.Equal("bar", navigationPropertyBinding1.Target.Name);
+            Assert.Equal("foo", navigationPropertyBinding2.Path.Path);
+            Assert.Equal("bar", navigationPropertyBinding2.Target.Name);
+        }
     }
 }

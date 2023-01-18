@@ -12,6 +12,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Net;
     using Microsoft.OData;
+    using Microsoft.OData.Client.Materialization;
 
     /// <summary>Non-generic placeholder for generic implementation</summary>
     public abstract class DataServiceRequest
@@ -59,6 +60,7 @@ namespace Microsoft.OData.Client
         /// <param name="contentType">contentType</param>
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
+        /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
         /// <returns>atom materializer</returns>
         internal static MaterializeAtom Materialize(
             ResponseInfo responseInfo,
@@ -66,7 +68,8 @@ namespace Microsoft.OData.Client
             ProjectionPlan plan,
             string contentType,
             IODataResponseMessage message,
-            ODataPayloadKind expectedPayloadKind)
+            ODataPayloadKind expectedPayloadKind,
+            MaterializerCache materializerCache)
         {
             Debug.Assert(queryComponents != null, "querycomponents");
             Debug.Assert(message != null, "message");
@@ -77,7 +80,7 @@ namespace Microsoft.OData.Client
                 return MaterializeAtom.EmptyResults;
             }
 
-            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind);
+            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, materializerCache);
         }
 
         /// <summary>

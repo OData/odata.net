@@ -22,6 +22,7 @@ namespace Microsoft.OData.Client
     using System.Linq;
     using System.Linq.Expressions;
     using System.Net;
+    using System.Net.Http;
     using System.Reflection;
     using System.Threading;
     using System.Threading.Tasks;
@@ -475,6 +476,15 @@ namespace Microsoft.OData.Client
             internal set { this.applyingChanges = value; }
         }
 
+
+        /// <summary>
+        /// Gets or sets whether query projection will handle null propagation automatically. If set to true null propagation checks can be omitted from queries.
+        ///</summary>
+        /// <remarks>
+        /// Default is false.
+        /// </remarks>
+        public virtual bool AutoNullPropagation { get; set; }
+
         /// <summary>Gets or sets a function to override the default type resolution strategy used by the client library when you send entities to a data service.</summary>
         /// <returns>Returns a string that contains the name of the <see cref="Microsoft.OData.Client.DataServiceContext" />.</returns>
         /// <remarks>
@@ -717,13 +727,24 @@ namespace Microsoft.OData.Client
             set { this.httpRequestTransportMode = value; }
         }
 
-        /// <summary>Gets or sets the HttpRequest mode to use in making Http Requests.</summary>
-        /// <returns>TransportModeFactory.</returns>
+        /// <summary>
+        /// Gets or sets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> to use when making a request
+        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// If <see cref="HttpClientHandlerProvider"/> is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
+        /// </summary>
+        /// <remarks>
+        /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// </remarks>
+        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; set; }
+
+        /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
+        /// <returns>RequestMessageFactory</returns>
         internal IDataServiceRequestMessageFactory RequestMessageFactory
         {
             get { return this.requestMessageFactory; }
             set { this.requestMessageFactory = value; }
         }
+
 
         /// <summary>
         /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
@@ -3267,7 +3288,12 @@ namespace Microsoft.OData.Client
 
                 if (!this.resolveTypesCache.TryGetValue(typeName, out matchedType))
                 {
-                    if (ClientTypeUtil.TryResolveType(typeName, fullNamespace, languageDependentNamespace, out matchedType))
+                    if (ClientTypeUtil.TryResolveType(
+                        this.GetType().GetAssembly(),
+                        typeName,
+                        fullNamespace,
+                        languageDependentNamespace,
+                        out matchedType))
                     {
                         this.resolveTypesCache.TryAdd(typeName, matchedType);
 

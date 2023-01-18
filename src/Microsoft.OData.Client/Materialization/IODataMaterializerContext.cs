@@ -52,5 +52,17 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="clientClrType">The client side CLR type.</param>
         /// <returns>The resolved EDM type to provide to ODataLib.</returns>
         IEdmType ResolveExpectedTypeForReading(Type clientClrType);
+
+        /// <summary>
+        /// Used to store temporary metadata used to convert deserialized
+
+        /// OData items into CLR objects.
+        /// </summary>
+        MaterializerCache MaterializerCache { get; }
+
+        /// <summary>
+        /// Specifies whether query projection will handle null propagation automatically.
+        /// </summary>
+        bool AutoNullPropagation { get; }
     }
 }

@@ -7404,6 +7404,19 @@ namespace AstoriaUnitTests.Tests
 
             RunTest(baseline, query);
 
+			//matchesPattern
+            query = from t in context.CreateQuery<Team>("Teams")
+                    where Regex.IsMatch(t.TeamName, "^W")
+                    orderby Regex.IsMatch(t.TeamName, "^W")
+                    select t;
+
+            baseline = from t in baseLineContext.Teams
+                    where Regex.IsMatch(t.TeamName, "^W")
+                    orderby Regex.IsMatch(t.TeamName, "^W")
+                    select t;
+
+            RunTest(baseline, query);
+
             //endswith
             query = from t in context.CreateQuery<Team>("Teams")
                     where t.TeamName.EndsWith("s")

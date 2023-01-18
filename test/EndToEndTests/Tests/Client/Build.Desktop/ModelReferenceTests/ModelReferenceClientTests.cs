@@ -6,6 +6,7 @@
 
 namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
 {
+    using System;
     using System.Linq;
     using Microsoft.OData.Client;
     using Microsoft.Test.OData.Services.TestServices;
@@ -15,7 +16,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
     using Microsoft.Test.OData.Services.TestServices.ModelReferenceServiceReference.Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo;
     using Xunit;
 
-    public class ModelReferenceClientTests : ODataWCFServiceTestsBase<TruckDemoService>
+    public class ModelReferenceClientTests : ODataWCFServiceTestsBase<TruckDemoService>, IDisposable
     {
         public ModelReferenceClientTests()
             : base(ServiceDescriptors.ModelRefServiceDescriptor)
@@ -367,6 +368,11 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var querable3 = TestClientContext.VehicleGPSSet.Where(v => v.Key == "VehicleKey6").OfType<DerivedVehicleGPSType>();
             var test = querable3 as DataServiceQuery;
             Assert.True(test.RequestUri.OriginalString.EndsWith("VehicleGPSSet/Microsoft.OData.SampleService.Models.ModelRefDemo.TruckDemo.DerivedVehicleGPSType('VehicleKey6')"));
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

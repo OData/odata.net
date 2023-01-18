@@ -47,6 +47,10 @@ namespace Microsoft.OData.Client
             settings.BaseUri = this.responseInfo.BaseUriResolver.BaseUriOrNull;
             settings.MaxProtocolVersion = CommonUtil.ConvertToODataVersion(this.responseInfo.MaxProtocolVersion);
 
+            // we are defaulting to having untyped collections enabled because we assume that untyped properties are primitive in the materializer, meaning that if we
+            // receive a collection of untyped values, the materializer will throw an exception if the reader labeled it as a just untyped
+            settings.EnableUntypedCollections = true;
+
             if (!this.responseInfo.ThrowOnUndeclaredPropertyForNonOpenType)
             {
                 settings.Validations &= ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType;

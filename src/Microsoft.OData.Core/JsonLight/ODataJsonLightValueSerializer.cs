@@ -379,8 +379,8 @@ namespace Microsoft.OData.JsonLight
             IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
             if (streamWriter == null)
             {
-                // write as a string
-                this.JsonWriter.WritePrimitiveValue(new StreamReader(streamValue.Stream).ReadToEnd());
+                // write as a byte array
+                this.JsonWriter.WritePrimitiveValue(streamValue.Stream.ReadAllBytes());
             }
             else
             {
@@ -679,10 +679,12 @@ namespace Microsoft.OData.JsonLight
             if (actualTypeReference != null && actualTypeReference.IsSpatial())
             {
                 // TODO: Implement asynchronous handling of spatial types in a separate PR
-                await TaskUtils.GetTaskForSynchronousOperation(() =>
-                {
-                    PrimitiveConverter.Instance.WriteJsonLight(value, this.JsonWriter);
-                }).ConfigureAwait(false);
+                await TaskUtils.GetTaskForSynchronousOperation(
+                    (thisParam, valueParam) => PrimitiveConverter.Instance.WriteJsonLight(
+                        valueParam,
+                        thisParam.JsonWriter),
+                    this,
+                    value).ConfigureAwait(false);
             }
             else
             {
@@ -719,7 +721,7 @@ namespace Microsoft.OData.JsonLight
             if (streamWriter == null)
             {
                 // write as a string
-                string value = await new StreamReader(streamValue.Stream).ReadToEndAsync().ConfigureAwait(false);
+                byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
                 await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
             }
             else

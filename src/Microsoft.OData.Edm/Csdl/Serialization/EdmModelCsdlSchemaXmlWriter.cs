@@ -804,24 +804,27 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteNavigationPropertyBinding(IEdmNavigationPropertyBinding binding)
         {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyBinding);
-
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path.Path, EdmValueWriter.StringAsXml);
-
-            // TODO: handle container names, etc.
-            IEdmContainedEntitySet containedEntitySet = binding.Target as IEdmContainedEntitySet;
-            if (containedEntitySet != null)
+            // For backwards compatability, only write annotations that vary by type cast in versions > 4.0
+            if (this.Model.GetEdmVersion() > EdmConstants.EdmVersion4 || binding.Path.PathSegments.Last().IndexOf('.') < 0)
             {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, containedEntitySet.Path.Path, EdmValueWriter.StringAsXml);
-            }
-            else
-            {
-                this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
-            }
+                this.xmlWriter.WriteStartElement(CsdlConstants.Element_NavigationPropertyBinding);
 
-            this.xmlWriter.WriteEndElement();
+                this.WriteRequiredAttribute(CsdlConstants.Attribute_Path, binding.Path.Path, EdmValueWriter.StringAsXml);
+
+                // TODO: handle container names, etc.
+                IEdmContainedEntitySet containedEntitySet = binding.Target as IEdmContainedEntitySet;
+                if (containedEntitySet != null)
+                {
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, containedEntitySet.Path.Path, EdmValueWriter.StringAsXml);
+                }
+                else
+                {
+                    this.WriteRequiredAttribute(CsdlConstants.Attribute_Target, binding.Target.Name, EdmValueWriter.StringAsXml);
+                }
+
+                this.xmlWriter.WriteEndElement();
+            }
         }
-
 
         private static string SridAsXml(int? i)
         {

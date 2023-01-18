@@ -8,12 +8,14 @@ namespace Microsoft.OData.Client
 { 
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -64,19 +66,39 @@ namespace Microsoft.OData.Client
         /// <summary>True if SendingRequest2Event is currently invoked, otherwise false.</summary>
         private bool inSendingRequest2Event;
 
+        private bool _disposed = false;
+
         /// <summary>
         /// Constructor for HttpClientRequestMessage.
         /// Initializes the <see cref="HttpClientRequestMessage"/> class.
         /// The args.ActualMethod is the actual method. In post tunneling situations method will be POST instead of the specified verb method.
         /// The args.method is the specified verb method
         /// </summary>
-        /// </summary>
         public HttpClientRequestMessage(DataServiceClientRequestMessageArgs args) 
             : base(args.ActualMethod)
         {
             _messageStream = new MemoryStream();
-            _handler = new HttpClientHandler();
-            _client = new HttpClient(_handler, disposeHandler: true);
+
+            IHttpClientHandlerProvider clientHandlerProvider = args.HttpClientHandlerProvider;
+            if (clientHandlerProvider == null)
+            {
+                _handler = new HttpClientHandler();
+                _client = new HttpClient(_handler, disposeHandler: true);
+            }
+            else
+            {
+                try
+                {
+                    _handler = clientHandlerProvider.GetHttpClientHandler();
+                    _client = new HttpClient(_handler, disposeHandler: false);
+                }
+                catch
+                {
+                    _messageStream.Dispose();
+                    throw;
+                }
+            }
+            
             _contentHeaderValueCache = new Dictionary<string, string>();
             _effectiveHttpMethod = args.Method;
             _requestUrl = args.RequestUri;
@@ -138,6 +160,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         ///  Gets or set the credentials for this request.
         /// </summary>
+        [Obsolete("The recommended way to configure credentials is to provide an already-configured HttpClientHandler using an IHttpClientHandlerProvider.")]
         public override ICredentials Credentials
         {
             get
@@ -426,7 +449,6 @@ namespace Microsoft.OData.Client
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
-
             return _client.SendAsync(_requestMessage);
         }
 
@@ -514,12 +536,24 @@ namespace Microsoft.OData.Client
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
         protected virtual void Dispose(bool disposing)
         {
-            HttpResponseMessage response = _httpResponseMessage;
-            _httpResponseMessage = null;
-            if (response != null)
+            if (_disposed)
             {
-                ((IDisposable)response).Dispose();
+                return;
             }
+
+            if (disposing)
+            {
+                HttpResponseMessage response = _httpResponseMessage;
+                _httpResponseMessage = null;
+                if (response != null)
+                {
+                    ((IDisposable)response).Dispose();
+                }
+
+                _client.Dispose();
+            }
+
+            _disposed = true;
         }
 
         void ISendingRequest2.BeforeSendingRequest2Event()

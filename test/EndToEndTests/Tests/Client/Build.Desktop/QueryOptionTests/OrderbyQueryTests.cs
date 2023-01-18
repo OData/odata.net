@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
     using Microsoft.Test.OData.Tests.Client.Common;
     using Xunit;
 
-    public class OrderbyQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>
+    public class OrderbyQueryTests : ODataWCFServiceTestsBase<InMemoryEntities>, IDisposable
     {
         public OrderbyQueryTests()
             : base(ServiceDescriptors.ODataWCFServiceDescriptor)
@@ -78,6 +78,11 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     Assert.Equal("Bob", details.First().Properties.Single(p => p.Name == "FirstName").Value);
                 }
             }
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

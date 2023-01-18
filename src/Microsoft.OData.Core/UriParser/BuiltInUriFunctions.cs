@@ -26,6 +26,11 @@ namespace Microsoft.OData.UriParser
         private static readonly Dictionary<string, FunctionSignatureWithReturnType[]> builtInFunctions = InitializeBuiltInFunctions();
 
         /// <summary>
+        /// Case-insensitive lookup of the name of the built-in functions to their canonical case-sensitive name
+        /// </summary>
+        private static readonly Dictionary<string, string> caseInsensitiveKeys = builtInFunctions.Keys.ToDictionary(key => key, StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
         /// Returns a list of signatures for a function name.
         /// </summary>
         /// <param name="name">The name of the function to look for.</param>
@@ -36,6 +41,25 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(name != null, "name != null");
 
             return builtInFunctions.TryGetValue(name, out signatures);
+        }
+
+        internal static bool TryGetBuiltInFunction(string name, bool enableCaseInsensitive, out string caseSensitiveName, out FunctionSignatureWithReturnType[] signatures)
+        {
+            Debug.Assert(name != null, "name != null");
+
+            caseSensitiveName = enableCaseInsensitive && caseInsensitiveKeys.TryGetValue(name, out var csName)
+                ? csName
+                : name;
+
+            if (TryGetBuiltInFunction(caseSensitiveName, out signatures))
+            {
+                return true;
+            }
+            else
+            {
+                caseSensitiveName = null;
+                return false;
+            }
         }
 
         /// <summary>
@@ -218,6 +242,13 @@ namespace Microsoft.OData.UriParser
                 EdmCoreModel.Instance.GetString(true),
                 EdmCoreModel.Instance.GetString(true));
             functions.Add("contains", new FunctionSignatureWithReturnType[] { signature });
+
+            // bool matchesPattern(string, string)
+            signature = new FunctionSignatureWithReturnType(
+                EdmCoreModel.Instance.GetBoolean(false),
+                EdmCoreModel.Instance.GetString(true),
+                EdmCoreModel.Instance.GetString(true));
+            functions.Add("matchesPattern", new FunctionSignatureWithReturnType[] { signature });
 
             // string concat(string, string)
             signature = new FunctionSignatureWithReturnType(

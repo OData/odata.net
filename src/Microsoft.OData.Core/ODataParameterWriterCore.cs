@@ -134,11 +134,11 @@ namespace Microsoft.OData
         /// Asynchronously start writing a parameter payload.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteStartAsync()
+        public sealed override Task WriteStartAsync()
         {
             this.VerifyCanWriteStart(false /*synchronousCall*/);
-            await this.InterceptExceptionAsync(
-                (thisParam) => thisParam.WriteStartImplementationAsync()).ConfigureAwait(false);
+            return this.InterceptExceptionAsync(
+                (thisParam) => thisParam.WriteStartImplementationAsync());
         }
 
         /// <summary>
@@ -163,14 +163,14 @@ namespace Microsoft.OData
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteValueAsync(string parameterName, object parameterValue)
+        public sealed override Task WriteValueAsync(string parameterName, object parameterValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(false /*synchronousCall*/, parameterName, parameterValue);
-            await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 (thisParam, parameterNameParam, parameterValueParam, expectedTypeReferenceParam) => 
                     thisParam.WriteValueImplementationAsync(parameterNameParam, parameterValueParam, expectedTypeReferenceParam),
-                parameterName, parameterValue, expectedTypeReference).ConfigureAwait(false);
+                parameterName, parameterValue, expectedTypeReference);
         }
 
         /// <summary>
@@ -194,18 +194,15 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <returns>A running task for the created writer.</returns>
-        public sealed override async Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName)
+        public sealed override Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(false /*synchronousCall*/, parameterName);
 
-            ODataCollectionWriter collectionWriter = await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateCollectionWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
-                parameterName, itemTypeReference).ConfigureAwait(false);
-
-            Debug.Assert(collectionWriter != null, "collectionWriter != null");
-            return collectionWriter;
+                parameterName, itemTypeReference);
         }
 
         /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
@@ -225,18 +222,15 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="ODataWriter" />.</returns>
-        public sealed override async Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
+        public sealed override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(false /*synchronousCall*/, parameterName);
 
-            ODataWriter resourceWriter = await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
-                parameterName, itemTypeReference).ConfigureAwait(false);
-
-            Debug.Assert(resourceWriter != null, "resourceWriter != null");
-            return resourceWriter;
+                parameterName, itemTypeReference);
         }
 
         /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
@@ -256,18 +250,15 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="ODataWriter" />.</returns>
-        public sealed override async Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
+        public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(false /*synchronousCall*/, parameterName);
 
-            ODataWriter resourceSetWriter = await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 (thisParam, parameterNameParam, itemTypeReferenceParam) =>
                     thisParam.CreateResourceSetWriterImplementationAsync(parameterNameParam, itemTypeReferenceParam),
-                parameterName, itemTypeReference).ConfigureAwait(false);
-
-            Debug.Assert(resourceSetWriter != null, "resourceSetWriter != null");
-            return resourceSetWriter;
+                parameterName, itemTypeReference);
         }
 
         /// <summary>
@@ -288,10 +279,10 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a parameter payload.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteEndAsync()
+        public sealed override Task WriteEndAsync()
         {
             this.VerifyCanWriteEnd(false /*synchronousCall*/);
-            await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 async (thisParam) =>
                 {
                     await thisParam.WriteEndImplementationAsync()
@@ -303,7 +294,7 @@ namespace Microsoft.OData
                         await thisParam.FlushAsync()
                             .ConfigureAwait(false);
                     }
-                }).ConfigureAwait(false);
+                });
         }
 
         /// <summary>
@@ -973,23 +964,27 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="TArg0">The delegate first argument type.</typeparam>
-        /// <typeparam name="TArg1">The delegate second argument type.</typeparam>
-        /// <typeparam name="TArg2">The delegate third argument type.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="func"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="func"/> delegate second argument type.</typeparam>
+        /// <typeparam name="TArg3">The <paramref name="func"/> delegate third argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
-        /// <param name="arg0">The first argument value provided to the action.</param>
-        /// <param name="arg1">The second argument value provided to the action.</param>
-        /// <param name="arg2">The third argument value provided to the action.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg3">The third argument value provided to the <paramref name="func"/> delegate.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync<TArg0, TArg1, TArg2>(Func<ODataParameterWriterCore, TArg0, TArg1, TArg2, Task> func, TArg0 arg0, TArg1 arg1, TArg2 arg2)
+        private async Task InterceptExceptionAsync<TArg1, TArg2, TArg3>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, TArg3, Task> func,
+            TArg1 arg1,
+            TArg2 arg2,
+            TArg3 arg3)
         {
             try
             {
-                await func(this, arg0, arg1, arg2).ConfigureAwait(false);
+                await func(this, arg1, arg2, arg3).ConfigureAwait(false);
             }
             catch
             {
@@ -1003,23 +998,26 @@ namespace Microsoft.OData
         /// Asynchronously catch any exception thrown by the action passed in; in the exception case move the writer into
         /// state Error and then rethrow the exception.
         /// </summary>
-        /// <typeparam name="T">The delegate first argument type.</typeparam>
-        /// <typeparam name="TArg0">The delegate second argument type.</typeparam>
-        /// <typeparam name="TArg1">The delegate third argument type.</typeparam>
+        /// <typeparam name="T">The type of the result returned by the <paramref name="func"/> delegate.</typeparam>
+        /// <typeparam name="TArg1">The <paramref name="func"/> delegate first argument type.</typeparam>
+        /// <typeparam name="TArg2">The <paramref name="func"/> delegate second argument type.</typeparam>
         /// <param name="func">The delegate to execute asynchronously.</param>
-        /// <param name="arg0">The first argument value provided to the action.</param>
-        /// <param name="arg1">The second argument value provided to the action.</param>
+        /// <param name="arg1">The first argument value provided to the <paramref name="func"/> delegate.</param>
+        /// <param name="arg2">The second argument value provided to the <paramref name="func"/> delegate.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains a T instance.</returns>
         /// <remarks>
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task<T> InterceptExceptionAsync<T, TArg0, TArg1>(Func<ODataParameterWriterCore, TArg0, TArg1, Task<T>> func, TArg0 arg0, TArg1 arg1)
+        private async Task<T> InterceptExceptionAsync<T, TArg1, TArg2>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, Task<T>> func,
+            TArg1 arg1,
+            TArg2 arg2)
         {
             try
             {
-                return await func(this, arg0, arg1).ConfigureAwait(false);
+                return await func(this, arg1, arg2).ConfigureAwait(false);
             }
             catch
             {
@@ -1077,7 +1075,17 @@ namespace Microsoft.OData
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
-            return this.InterceptExceptionAsync((thisParam) => thisParam.WriteValueParameterAsync(parameterName, parameterValue, expectedTypeReference));
+            return this.InterceptExceptionAsync((
+                thisParam,
+                parameterNameParam,
+                parameterValueParam,
+                expectedTypeReferenceParam) => thisParam.WriteValueParameterAsync(
+                    parameterNameParam,
+                    parameterValueParam,
+                    expectedTypeReferenceParam),
+                parameterName,
+                parameterValue,
+                expectedTypeReference);
         }
 
         /// <summary>

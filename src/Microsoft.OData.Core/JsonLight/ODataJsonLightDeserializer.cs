@@ -123,13 +123,20 @@ namespace Microsoft.OData.JsonLight
                 // Under the client knob, the model we're given is really a facade, which doesn't flow open-type information into the combined types.
                 // However, we need to answer this question for materializing operations which were left out of the payload.
                 // To get around this, the client sets a callback in the ReaderBehavior to answer the question.
+
+                ODataUriSlim? odataUri = null;
+                if (this.ODataUri != null)
+                {
+                    odataUri = new ODataUriSlim(this.ODataUri);
+                }
+
                 return this.metadataContext ?? (this.metadataContext = new ODataMetadataContext(
                     this.ReadingResponse,
                     null,
                     this.JsonLightInputContext.EdmTypeResolver,
                     this.Model,
                     this.MetadataDocumentUri,
-                    this.ODataUri,
+                    odataUri,
                     this.JsonLightInputContext.MetadataLevel));
             }
         }
@@ -1161,7 +1168,7 @@ namespace Microsoft.OData.JsonLight
         /// 1) true if the annotation name and value is skipped; otherwise false.
         /// 2) The annotation value that was read.
         /// </returns>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(
 #else
         private async Task<Tuple<bool, object>> SkipOverUnknownODataAnnotationAsync(

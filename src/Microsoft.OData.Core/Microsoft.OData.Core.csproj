@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
@@ -9,9 +9,18 @@
     <DefineConstants>$(DefineConstants);ODATA_CORE;SUPPRESS_PORTABLELIB_TARGETFRAMEWORK_ATTRIBUTE;DelaySignKeys</DefineConstants>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
+  </PropertyGroup>
  
   <Import Project="..\Build.props" />
-  
+
+  <PropertyGroup Condition="'$(TreatWarningsAsErrors)' == 'false' or '$(TreatWarningsAsErrors)' == ''">
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <WarningsAsErrors>$(WarningsAsErrors);RS0017;RS0025</WarningsAsErrors>
+  </PropertyGroup>
+
   <ItemGroup>
     <TextStringResource Include="Microsoft.OData.Core.txt">
       <ResFile>Microsoft.OData.Core</ResFile>
@@ -77,20 +86,6 @@
     </Content>
   </ItemGroup>
 
-  <ItemGroup>
-    <Compile Update="Microsoft.OData.Core.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Microsoft.OData.Core.tt</DependentUpon>
-    </Compile>
-
-    <Compile Update="Parameterized.Microsoft.OData.Core.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
-    </Compile>
-  </ItemGroup>
-
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.AsyncInterfaces">
       <Version>5.0.0</Version>
@@ -98,5 +93,9 @@
     <PackageReference Include="Microsoft.Extensions.ObjectPool">
       <Version>6.0.3</Version>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
   </ItemGroup>
 </Project>

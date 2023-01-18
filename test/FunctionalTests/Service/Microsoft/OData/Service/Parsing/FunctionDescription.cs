@@ -11,6 +11,7 @@ namespace Microsoft.OData.Service.Parsing
     using System.Diagnostics;
     using System.Linq.Expressions;
     using System.Reflection;
+    using System.Text.RegularExpressions;
     using Microsoft.OData.Service.Providers;
     using Microsoft.Spatial;
 
@@ -251,6 +252,23 @@ namespace Microsoft.OData.Service.Parsing
                 new FunctionDescription("Contains", new Type[] { typeof(string), typeof(string) }, Contains)
             };
             result.Add("contains", signatures);
+
+            signatures = new FunctionDescription[]
+            {
+                CreateFunctionDescription(typeof(Regex), false /* instance */, true /* method */, "IsMatch", typeof(string), typeof(string), typeof(RegexOptions))
+            };
+
+            // matchesPattern requires an extra constant argument to be added that will not be provided by the OData query itself, so the function is set manually
+            signatures[0].ConversionFunction = new Func<Expression, Expression[], Expression>((target, arguments) =>
+                {
+                    var fullArguments = new Expression[arguments.Length + 1];
+                    arguments.CopyTo(fullArguments, 0);
+                    fullArguments[arguments.Length] = Expression.Constant(RegexOptions.ECMAScript);
+
+                    return signatures[0].StaticMethodConversionFunction(target, fullArguments);
+                });
+
+            result.Add("matchesPattern", signatures);
 
             signatures = new FunctionDescription[]
             {

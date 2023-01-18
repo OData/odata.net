@@ -468,6 +468,17 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                 Filter = "length('Johny') gt 0",
                 ExpectedFilterCondition = new BinaryOperatorNode(BinaryOperatorKind.GreaterThan, outer9, new ConstantNode(0))
             };
+
+            QueryNode[] args13 = new QueryNode[]
+                {
+                    new ConstantNode("oh"),
+                    new ConstantNode("Joh?ny")
+                };
+            yield return new FilterTestCase
+            {
+                Filter = "matchesPattern('oh','Joh?ny')",
+                ExpectedFilterCondition = new SingleValueFunctionCallNode("matchesPattern", args13, EdmCoreModel.Instance.GetBoolean(false))
+            };
         }
 
         public static IEnumerable<FilterTestCase> BuiltInDateTimeOffsetFunctionCallTestCases(IEdmModel model)

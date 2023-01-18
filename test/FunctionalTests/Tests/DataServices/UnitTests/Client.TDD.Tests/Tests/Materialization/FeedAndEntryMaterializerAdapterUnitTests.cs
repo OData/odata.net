@@ -52,7 +52,8 @@ namespace AstoriaUnitTests.Tests
 
             var responsePipeline = new DataServiceClientResponsePipelineConfiguration(new DataServiceContext());
             var odataReaderWrapper = ODataReaderWrapper.CreateForTest(testODataReader, responsePipeline);
-            FeedAndEntryMaterializerAdapter reader = new FeedAndEntryMaterializerAdapter(ODataFormat.Json, odataReaderWrapper, clientEdmModel, MergeOption.OverwriteChanges);
+            var materializerContext = new TestMaterializerContext();
+            FeedAndEntryMaterializerAdapter reader = new FeedAndEntryMaterializerAdapter(ODataFormat.Json, odataReaderWrapper, clientEdmModel, MergeOption.OverwriteChanges, materializerContext);
 
             int readCounter = 0;
 

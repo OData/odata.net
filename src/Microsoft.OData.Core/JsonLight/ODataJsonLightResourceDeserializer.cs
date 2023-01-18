@@ -1578,7 +1578,19 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
+                if (base.MessageReaderSettings.EnableUntypedCollections && this.JsonReader.NodeType == JsonNodeType.StartArray)
+                {
+                    propertyValue = new ODataCollectionValue()
+                    {
+                        TypeAnnotation = new ODataTypeAnnotation(EdmUntypedStructuredType.Instance.FullName, EdmUntypedStructuredType.Instance),
+                        TypeName = EdmUntypedStructuredType.Instance.FullName,
+                        Items = this.JsonReader.ReadUntypedCollectionValues().ToList(),
+                    };
+                }
+                else
+                {
+                    propertyValue = this.JsonReader.ReadAsUntypedOrNullValue();
+                }
             }
 
             ValidationUtils.ValidateOpenPropertyValue(propertyName, propertyValue);

@@ -6,11 +6,12 @@
 
 namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 {
+    using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
     using System.Linq;
-    using Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference;
     using Microsoft.Test.OData.Services.TestServices;
+    using Microsoft.Test.OData.Services.TestServices.ODataSimplifiedServiceReference;
     using Xunit;
 
     /// <summary>
@@ -19,7 +20,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
     // [Ignore] // Issues: #623
     // [TestClass] // github issuse: #896
     //The whole of this class was ignored in MsTest tests that is why am skipping all the tests in this class. 
-    public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>
+    public class ODataSimplifiedServiceQueryTests : ODataWCFServiceTestsBase<ODataSimplifiedService>, IDisposable
     {
         public ODataSimplifiedServiceQueryTests()
             : base(ServiceDescriptors.ODataSimplifiedServiceDescriptor)
@@ -79,6 +80,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.Detach(person);
             var personReturned = TestClientContext.People.ByKey(new Dictionary<string, object> { { "PersonId", person.PersonId } }).GetValue();
             Assert.Equal(person.PersonId, personReturned.PersonId);
+        }
+
+        public override void Dispose()
+        {
+            base.Dispose();
         }
     }
 }

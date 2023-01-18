@@ -47,7 +47,7 @@ namespace Microsoft.OData
 
 
         /// <summary>Buffer for reading the stream content.</summary>
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private byte[] bytes = Array.Empty<byte>();
 #else
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]

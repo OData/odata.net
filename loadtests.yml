@@ -1,0 +1,74 @@
+imports:
+  - https://raw.githubusercontent.com/dotnet/crank/main/src/Microsoft.Crank.Jobs.Bombardier/bombardier.yml
+
+jobs:
+  server:
+    source:
+      localFolder: .
+      project: test/PerformanceTests/SerializationComparisonsTests/TestServer/TestServer.csproj
+    readyStateText: Application started.
+    variables:
+      port: 5000
+      host: "*"
+    arguments: '--urls=http://{{host}}:{{port}}'
+    
+
+scenarios:
+  SerializationComparisons:
+    application:
+      job: server
+    load:
+      job: bombardier
+      variables:
+        serverPort: 5000
+        connections: 128
+        duration: 30
+        count: 50
+        includeRawValues: false
+        writer: 'ODataMessageWriter'
+        path: /customers/{{writer}}?count={{count}}&includeRawValues={{includeRawValues}}
+
+profiles:
+  local:
+    variables:
+      serverPort: 5000
+      serverAddress: localhost
+      host: localhost
+    jobs:
+      application:
+        endpoints:
+          - http://localhost:5010
+      variables:
+        host: localhost
+      load:
+        endpoints:
+          - http://localhost:5010
+  lab-windows:
+    variables:
+      serverPort: 5000
+      serverAddress: 10.0.0.110
+      cores: 8
+    jobs:
+      application:
+        endpoints:
+          - http://asp-perf-win:5001
+        variables:
+          serverAddress: 10.0.0.110
+      load:
+        endpoints:
+          - http://asp-perf-db:5001
+        variables:
+          serverAddress: 10.0.0.110
+  remote-windows:
+    jobs:
+      application:
+        endpoints:
+          - http://enter-remote-server-address:5010
+      load:
+        endpoints:
+          - http://localhost:5010
+        variables:
+          serverAddress: enter-remote-server-address
+          serverPort: 5000
+          numConnections: 128
+    

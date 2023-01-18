@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Test.OData.DependencyInjection;
@@ -312,6 +313,53 @@ namespace Microsoft.OData.Tests.JsonLight
 
             Assert.Equal(expect, result);
         }
+
+        [Fact]
+        public void WriteStreamValue_WritesStreamValue()
+        {
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+            var streamValue = new ODataBinaryStreamValue(stream);
+
+            var result = this.SetupSerializerAndRunTest(
+                (jsonLightValueSerializer) =>
+                {
+                    jsonLightValueSerializer.WriteStreamValue(streamValue);
+                });
+
+            Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void WriteStreamValue_UsingODataUtf8JsonWriter_WritesStreamValue()
+        {
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+            var streamValue = new ODataBinaryStreamValue(stream);
+
+            var builder = new TestContainerBuilder();
+            builder.AddDefaultODataServices();
+            builder.AddService<IStreamBasedJsonWriterFactory>(
+                ServiceLifetime.Singleton,
+                (sp) => DefaultStreamBasedJsonWriterFactory.Default);
+            var container = builder.BuildContainer();
+
+            var result = this.SetupSerializerAndRunTest(
+                (jsonLightValueSerializer) =>
+                {
+                    jsonLightValueSerializer.WriteStreamValue(streamValue);
+                }, container);
+
+            Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
+        }
+#endif
 
         private ODataJsonLightValueSerializer CreateODataJsonLightValueSerializer(bool writingResponse, IServiceProvider container = null)
         {
