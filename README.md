@@ -113,7 +113,7 @@ You can query the latest nightly NuGet packages using this query: [MAGIC OData q
 
 ### 3.5 Official Release
 
-The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/).
+The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/). Details on the release process are found [here](./release.md)
 
 ### 3.6 Performance benchmarks
 
