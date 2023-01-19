@@ -473,7 +473,18 @@ namespace Microsoft.OData.Client
                                 entityType.AddProperty(property);
                             }
 
-                            entityType.AddKeys(loadedKeyProperties);
+                            // add keys in the same order of "keyProperties"
+                            List<IEdmStructuralProperty> orderedloadedKeyProperties = new List<IEdmStructuralProperty>();
+                            foreach (var orderedKey in keyProperties)
+                            {
+                                var keyProperty = loadedKeyProperties.FirstOrDefault(k => k.Name == orderedKey.Name);
+                                if (keyProperty != null)
+                                {
+                                    orderedloadedKeyProperties.Add(keyProperty);
+                                }
+                            }
+
+                            entityType.AddKeys(orderedloadedKeyProperties);
                         };
 
                         // Creating an entity type

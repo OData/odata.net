@@ -507,9 +507,9 @@ namespace Microsoft.OData.Client
         /// Gets the key properties from KeyPredicateConjuncts
         /// </summary>
         /// <returns>The key properties.</returns>
-        internal Dictionary<PropertyInfo, ConstantExpression> GetKeyProperties()
+        internal IList<KeyValuePair<PropertyInfo, ConstantExpression>> GetKeyProperties()
         {
-            var keyValues = new Dictionary<PropertyInfo, ConstantExpression>(EqualityComparer<PropertyInfo>.Default);
+            var keyValues = new List<KeyValuePair<PropertyInfo, ConstantExpression>>();
             if (this.keyPredicateConjuncts.Count > 0)
             {
                 foreach (Expression predicate in this.keyPredicateConjuncts)
@@ -518,7 +518,7 @@ namespace Microsoft.OData.Client
                     ConstantExpression constantValue;
                     if (ResourceBinder.PatternRules.MatchKeyComparison(predicate, out property, out constantValue))
                     {
-                        keyValues.Add(property, constantValue);
+                        keyValues.Add(new KeyValuePair<PropertyInfo, ConstantExpression>(property, constantValue));
                     }
                 }
             }
