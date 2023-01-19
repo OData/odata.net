@@ -733,13 +733,21 @@ namespace Microsoft.OData.JsonLight
                 Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
                 await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
                 await stream.FlushAsync().ConfigureAwait(false);
+#if NETCOREAPP3_1_OR_GREATER
+                await stream.DisposeAsync();
+#else
                 stream.Dispose();
+#endif
                 await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
             }
 
             if (!streamValue.LeaveOpen)
             {
+#if NETCOREAPP3_1_OR_GREATER
+                await streamValue.Stream.DisposeAsync();
+#else
                 streamValue.Stream.Dispose();
+#endif
             }
         }
 

@@ -20,7 +20,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="stream">Input stream</param>
         public ODataBinaryStreamValue(Stream stream) :
-            this(stream, true) // Leaves the stream open by default, for backward compability.
+            this(stream, true) // Leaves the stream open by default, for backward compatibility.
         {
         }
 
