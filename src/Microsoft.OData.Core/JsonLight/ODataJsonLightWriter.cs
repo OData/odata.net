@@ -660,6 +660,9 @@ namespace Microsoft.OData.JsonLight
 
                 if (this.writingResponse)
                 {
+                    // Write the count if it's available.
+                    this.WriteResourceSetCount(resourceSet.Count, /*propertyName*/null);
+
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, /*propertyName*/null);
 
@@ -687,6 +690,9 @@ namespace Microsoft.OData.JsonLight
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapsed into a single array value.
                     this.jsonWriter.EndArrayScope();
+
+                    // Write the count if it's available.
+                    this.WriteResourceSetCount(resourceSet.Count, propertyName);
 
                     // Write the next link if it's available.
                     this.WriteResourceSetNextLink(resourceSet.NextPageLink, propertyName);
@@ -767,6 +773,9 @@ namespace Microsoft.OData.JsonLight
 
                 // Write custom instance annotations
                 this.instanceAnnotationWriter.WriteInstanceAnnotations(deltaResourceSet.InstanceAnnotations, this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker);
+
+                // Write the count if it's available.
+                this.WriteResourceSetCount(deltaResourceSet.Count, /*propertyName*/ null);
 
                 // Write the next link if it's available.
                 this.WriteResourceSetNextLink(deltaResourceSet.NextPageLink, /*propertynamne*/ null);
@@ -1669,7 +1678,7 @@ namespace Microsoft.OData.JsonLight
                 if (this.writingResponse)
                 {
                     // Write the count if it's available.
-                    await this.WriteResourceSetCountAsync(resourceSet.Count, null)
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, /*propertyName*/null)
                         .ConfigureAwait(false);
 
                     // Write the next link if it's available.
@@ -1705,11 +1714,12 @@ namespace Microsoft.OData.JsonLight
                     await this.asynchronousJsonWriter.EndArrayScopeAsync()
                         .ConfigureAwait(false);
 
-                    // Write the next link if it's available.
-                    await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, propertyName)
+                    // Write the count if it's available.
+                    await this.WriteResourceSetCountAsync(resourceSet.Count, propertyName)
                         .ConfigureAwait(false);
 
-                    await this.WriteResourceSetCountAsync(resourceSet.Count, propertyName)
+                    // Write the next link if it's available.
+                    await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, propertyName)
                         .ConfigureAwait(false);
                 }
             }
