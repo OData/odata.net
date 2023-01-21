@@ -999,7 +999,7 @@ namespace Microsoft.OData.Tests.UriParser
         <Key>
           <PropertyRef Name=""ID"" />
         </Key>
-        <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false"" />
+        <Property Name=""ID"" Type=""Edm.String"" Nullable=""false"" />
         <Property Name=""SSN"" Type=""Edm.String"" />
         <Property Name=""Shoe"" Type=""Edm.String"" />
         <Property Name=""Geography"" Type=""Edm.Geography"" SRID=""4326"" />

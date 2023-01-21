@@ -26,6 +26,22 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
+        [Fact]
+        public void Slash()
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People('asdf')"));
+            var path = uriParser.ParsePath();
+            path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", "asdf"));
+
+            uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People('ec2%2Fmyrolename')"));
+            path = uriParser.ParsePath();
+            path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", "ec2/myrolename"));
+
+            uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/People/ec3%2Fmyotherrolename"));
+            path = uriParser.ParsePath();
+            path.LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", "ec3/myotherrolename"));
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
