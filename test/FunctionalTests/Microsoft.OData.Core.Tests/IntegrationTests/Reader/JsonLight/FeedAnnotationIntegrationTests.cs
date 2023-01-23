@@ -67,6 +67,34 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             }
         }
 
+        #region CountComesAfterTopLevelFeed
+        private void CountComesAfterTopLevelFeedImplementation(string feedText, bool enableReadingODataAnnotationWithoutPrefix, long expectedCount)
+        {
+            foreach (bool isResponse in new[] { true, false })
+            {
+                var feedReader = GetFeedReader(feedText, isResponse, enableReadingODataAnnotationWithoutPrefix);
+                feedReader.Read();
+                Assert.Equal(ODataReaderState.ResourceSetStart, feedReader.State);
+                Assert.Null((feedReader.Item as ODataResourceSet).Count);
+
+                feedReader.Read();
+                Assert.Equal(ODataReaderState.ResourceSetEnd, feedReader.State);
+                Assert.Equal(expectedCount, (feedReader.Item as ODataResourceSet).Count);
+            }
+        }
+
+        [Fact]
+        public void NonZeroCountComesAfterTopLevelFeed()
+        {
+            const string feedText = @"
+                ""value"":[],
+                ""@odata.count"": 2";
+
+            CountComesAfterTopLevelFeedImplementation(feedText, enableReadingODataAnnotationWithoutPrefix: false, expectedCount: 2);
+        }
+
+        #endregion
+
         #region NextLinkComesAfterTopLevelFeed
 
         private void NextLinkComesAfterTopLevelFeedImplementation(string feedText, bool enableReadingODataAnnotationWithoutPrefix)

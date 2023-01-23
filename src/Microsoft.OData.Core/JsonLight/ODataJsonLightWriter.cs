@@ -2473,7 +2473,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         private void WriteResourceSetCount(long? count, string propertyName)
         {
-            if (count.HasValue)
+            bool countWritten = this.State == WriterState.ResourceSet ? this.CurrentResourceSetScope.CountWritten : this.CurrentDeltaResourceSetScope.CountWritten;
+            if (count.HasValue && !countWritten)
             {
                 if (propertyName == null)
                 {
@@ -2485,6 +2486,15 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 this.jsonWriter.WriteValue(count.Value);
+
+                if (this.State == WriterState.ResourceSet)
+                {
+                    this.CurrentResourceSetScope.CountWritten = true;
+                }
+                else
+                {
+                    this.CurrentDeltaResourceSetScope.CountWritten = true;
+                }
             }
         }
 
