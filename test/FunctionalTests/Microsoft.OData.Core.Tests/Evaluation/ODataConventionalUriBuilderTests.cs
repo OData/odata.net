@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.Evaluation
 
             this.model = TestModel.BuildDefaultTestModel();
             this.defaultProductInstance = TestModel.BuildDefaultProductValue(TestModel.GetEntityType(this.model, "TestModel.Product"));
-            this.defaultMultipleKeyInstance = TestModel.BuildDefaultMultipleKeyValue(this.model);
+            this.defaultMultipleKeyInstance = TestModel.BuildDefaultMultipleKeyValue(TestModel.GetEntityType(this.model, "TestModel.MultipleKeyType"));
 
             this.idPropertyList = new Dictionary<string, IEdmValue>()
                 {

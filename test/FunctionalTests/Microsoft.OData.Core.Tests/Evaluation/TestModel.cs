@@ -19,8 +19,10 @@ namespace Microsoft.OData.Tests.Evaluation
         public IEdmEntityType ProductType { get; set; }
         public IEdmEntityType DerivedProductType { get; set; }
         public IEdmEntityType MultipleKeyType { get; set; }
+        public IEdmEntityType DerivedMleMultiKeyType { get; set; }
         public IEdmEntityType ProductWithNavPropsType { get; set; }
         public IEdmStructuredValue OneMultipleKeyValue { get; set; }
+        public IEdmStructuredValue OneDerivedMleMultiKeyValue { get; set; }
         public IEdmStructuredValue OneProductValue { get; set; }
         public IEdmStructuredValue OneDerivedProductValue { get; set; }
         public IEdmStructuredValue OneProductWithNavPropsValue { get; set; }
@@ -64,19 +66,22 @@ namespace Microsoft.OData.Tests.Evaluation
             model.AddElement(multipleKeyType);
             result.MultipleKeysSet = defaultContainer.AddEntitySet("MultipleKeySet", multipleKeyType);
 
+            var derivedMleMultiKeyType = new EdmEntityType("TestModel", "DerivedMleMultiKeyType", multipleKeyType);
+            result.DerivedMleMultiKeyType = derivedMleMultiKeyType;
+
             EdmEntityType productTypeWithNavProps = new EdmEntityType("TestModel", "ProductWithNavProps", productType);
             result.ProductWithNavPropsType = productTypeWithNavProps;
             productTypeWithNavProps.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
                 {
                     Name = "RelatedProducts",
-                    Target = productType,
+                    Target = multipleKeyType,
                     TargetMultiplicity = EdmMultiplicity.Many
                 });
 
             productTypeWithNavProps.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo()
             {
                 Name = "RelatedDerivedProduct",
-                Target = derivedProductType,
+                Target = derivedMleMultiKeyType,
                 TargetMultiplicity = EdmMultiplicity.One
             });
 
@@ -96,8 +101,9 @@ namespace Microsoft.OData.Tests.Evaluation
 
             result.OneProductValue = BuildDefaultProductValue(productType);
             result.OneDerivedProductValue = BuildDefaultProductValue(derivedProductType);
-            result.OneMultipleKeyValue = BuildDefaultMultipleKeyValue(model);
-            result.OneProductWithNavPropsValue = BuildDefaultProductValue(productTypeWithNavProps);
+            result.OneMultipleKeyValue = BuildDefaultMultipleKeyValue(multipleKeyType);
+            result.OneDerivedMleMultiKeyValue = BuildDefaultMultipleKeyValue(derivedMleMultiKeyType);
+            result.OneProductWithNavPropsValue = BuildDefaultMultipleKeyValue(multipleKeyType);
 
             return result;
         }
@@ -113,10 +119,10 @@ namespace Microsoft.OData.Tests.Evaluation
                 });
         }
 
-        internal static IEdmStructuredValue BuildDefaultMultipleKeyValue(IEdmModel defaultModel)
+        internal static IEdmStructuredValue BuildDefaultMultipleKeyValue(IEdmEntityType entityType)
         {
             return new EdmStructuredValueSimulator(
-                GetEntityType(defaultModel, "TestModel.MultipleKeyType"),
+                entityType,
                 new Dictionary<string, IEdmValue>
                 {
                     { "KeyA", new EdmStringConstant(EdmCoreModel.Instance.GetString(false), "keya") },

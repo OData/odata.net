@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
 using Xunit;
@@ -21,6 +22,21 @@ namespace Microsoft.OData.Tests
 
         public ODataNavigationLinkTests()
         {
+            var model = new EdmModel();
+
+            var baseEntityType = new EdmEntityType("ns", "BaseType");
+            baseEntityType.AddKeys(baseEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            baseEntityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            model.AddElement(baseEntityType);
+
+            var derivedEntityType = new EdmEntityType("ns", "DerivedType", baseEntityType);
+            model.AddElement(derivedEntityType);
+
+            var entityContainer = new EdmEntityContainer("ns", "Default");
+            model.AddElement(entityContainer);
+
+            entityContainer.AddEntitySet("Set", baseEntityType);
+
             this.navigationLink = new ODataNestedResourceInfo();
 
             var entry = new ODataResource
@@ -35,7 +51,11 @@ namespace Microsoft.OData.Tests
 
             var serializationInfo = new ODataResourceSerializationInfo { NavigationSourceName = "Set", NavigationSourceEntityTypeName = "ns.BaseType", ExpectedTypeName = "ns.BaseType" };
             var typeContext = ODataResourceTypeContext.Create(serializationInfo, null, null, null, true);
-            var metadataContext = new TestMetadataContext();
+            var metadataContext = new TestMetadataContext
+            {
+                GetModelFunc = () => model,
+                GetServiceBaseUriFunc = () => ServiceUri
+            };
             var entryMetadataContext = ODataResourceMetadataContext.Create(entry, typeContext, serializationInfo, null, metadataContext, new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), null);
             var metadataBuilder = new ODataConventionalEntityMetadataBuilder(entryMetadataContext, metadataContext,
                 new ODataConventionalUriBuilder(ServiceUri, ODataUrlKeyDelimiter.Parentheses));

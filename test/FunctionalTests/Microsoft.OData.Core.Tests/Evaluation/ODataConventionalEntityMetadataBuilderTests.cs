@@ -21,9 +21,15 @@ namespace Microsoft.OData.Tests.Evaluation
 
         private readonly ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(DefaultBaseUri,
             ODataUrlKeyDelimiter.Parentheses);
-        private readonly TestMetadataContext metadataContext = new TestMetadataContext { GetMetadataDocumentUriFunc = () => MetadataDocumentUri, GetModelFunc = () => TestModel.Model, OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false };
+        private readonly TestMetadataContext metadataContext = new TestMetadataContext
+        {
+            GetServiceBaseUriFunc = () => DefaultBaseUri,
+            GetMetadataDocumentUriFunc = () => MetadataDocumentUri,
+            GetModelFunc = () => TestModel.Model,
+            OperationsBoundToStructuredTypeMustBeContainerQualifiedFunc = type => false
+        };
         private ODataResource productEntry;
-        private Dictionary<string, object> sinlgeKeyCollection;
+        private Dictionary<string, object> singleKeyCollection;
         private Dictionary<string, object> multiKeysCollection;
         private ODataConventionalEntityMetadataBuilder productConventionalEntityMetadataBuilder;
         private ODataResource derivedMultiKeyMultiEtagMleEntry;
@@ -32,20 +38,21 @@ namespace Microsoft.OData.Tests.Evaluation
         private ODataConventionalEntityMetadataBuilder containedCollectionProductConventionalEntityMetadataBuilder;
         private ODataResource containedProductEntry;
         private ODataConventionalEntityMetadataBuilder containedProductConventionalEntityMetadataBuilder;
-        private Dictionary<string, object> containedSinlgeKeyCollection;
-        private Dictionary<string, object> containedMultiKeysCollection;
+        private Dictionary<string, object> containedSingleKeyCollection;
 
         private const string EntitySetName = "Products";
         private const string EntityTypeName = "TestModel.Product";
-        private const string DerivedEntityTypeName = "TestModel.DerivedProduct";
-        private const string DerivedMleEntityTypeName = "TestModel.DerivedMleProduct";
+
+        private const string MultiKeyEntitySetName = "MultipleKeySet";
+        private const string MultiKeyEntityTypeName = "TestModel.MultipleKeyType";
+        private const string DerivedMleMultiKeyEntityTypeName = "TestModel.DerivedMleMultiKeyType";
 
         public ODataConventionalEntityMetadataBuilderTests()
         {
             #region Product Entry
 
             this.productEntry = new ODataResource();
-            this.sinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 42 } };
+            this.singleKeyCollection = new Dictionary<string, object>() { { "Id", 42 } };
             this.multiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 1 } };
 
             TestFeedAndEntryTypeContext productTypeContext = new TestFeedAndEntryTypeContext
@@ -63,7 +70,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 TypeContext = productTypeContext,
                 Resource = this.productEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
-                KeyProperties = this.sinlgeKeyCollection,
+                KeyProperties = this.singleKeyCollection,
                 ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
@@ -85,9 +92,9 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleEntry = new ODataResource();
             TestFeedAndEntryTypeContext derivedMultiKeyMultiEtagMleTypeContext = new TestFeedAndEntryTypeContext
             {
-                NavigationSourceName = EntitySetName,
-                NavigationSourceEntityTypeName = EntityTypeName,
-                ExpectedResourceTypeName = DerivedEntityTypeName,
+                NavigationSourceName = MultiKeyEntitySetName,
+                NavigationSourceEntityTypeName = MultiKeyEntityTypeName,
+                ExpectedResourceTypeName = DerivedMleMultiKeyEntityTypeName,
                 IsMediaLinkEntry = true,
                 IsFromCollection = false
             };
@@ -97,7 +104,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 Resource = this.derivedMultiKeyMultiEtagMleEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("ETag1", "ETagValue1"), new KeyValuePair<string, object>("ETag2", "ETagValue2") },
                 KeyProperties = this.multiKeysCollection,
-                ActualResourceTypeName = DerivedMleEntityTypeName,
+                ActualResourceTypeName = DerivedMleMultiKeyEntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[]
                 {
                     action,
@@ -106,7 +113,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 SelectedNavigationProperties = TestModel.ProductWithNavPropsType.NavigationProperties(),
                 SelectedStreamProperties = new Dictionary<string, IEdmStructuralProperty>
                 {
-                    {"Photo", new EdmStructuralProperty(TestModel.ProductType, "Photo", EdmCoreModel.Instance.GetStream( /*isNullable*/true))}
+                    {"Photo", new EdmStructuralProperty(TestModel.MultipleKeyType, "Photo", EdmCoreModel.Instance.GetStream( /*isNullable*/true))}
                 },
             };
 
@@ -118,8 +125,7 @@ namespace Microsoft.OData.Tests.Evaluation
             #region Contained Product Entry
 
             this.containedCollectionProductEntry = new ODataResource();
-            this.containedSinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 43 } };
-            this.containedMultiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 2 } };
+            this.containedSingleKeyCollection = new Dictionary<string, object>() { { "Id", 43 } };
 
             TestFeedAndEntryTypeContext containedCollectionProductTypeContext = new TestFeedAndEntryTypeContext
             {
@@ -136,7 +142,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 TypeContext = containedCollectionProductTypeContext,
                 Resource = this.containedCollectionProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
-                KeyProperties = this.containedSinlgeKeyCollection,
+                KeyProperties = this.containedSingleKeyCollection,
                 ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
@@ -148,8 +154,6 @@ namespace Microsoft.OData.Tests.Evaluation
             this.containedCollectionProductEntry.MetadataBuilder.ParentMetadataBuilder = this.productConventionalEntityMetadataBuilder;
 
             this.containedProductEntry = new ODataResource();
-            this.containedSinlgeKeyCollection = new Dictionary<string, object>() { { "Id", 43 } };
-            this.containedMultiKeysCollection = new Dictionary<string, object>() { { "KeyA", "keya" }, { "KeyB", 2 } };
 
             TestFeedAndEntryTypeContext containedProductTypeContext = new TestFeedAndEntryTypeContext
             {
@@ -164,9 +168,9 @@ namespace Microsoft.OData.Tests.Evaluation
             TestEntryMetadataContext containedProductEntryMetadataContext = new TestEntryMetadataContext
             {
                 TypeContext = containedProductTypeContext,
-                Resource = this.containedCollectionProductEntry,
+                Resource = this.containedProductEntry,
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
-                KeyProperties = this.containedSinlgeKeyCollection,
+                KeyProperties = this.containedSingleKeyCollection,
                 ActualResourceTypeName = EntityTypeName,
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
@@ -228,7 +232,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetEditLinkWithMultipleKeys()
         {
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType"));
         }
 
         [Fact]
@@ -251,7 +255,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             // Verify that the last segment of the edit link is the expected type segment.
             string[] uriSegments = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink().Segments;
-            Assert.Equal("TestModel.DerivedMleProduct", uriSegments[uriSegments.Length - 1]);
+            Assert.Equal("TestModel.DerivedMleMultiKeyType", uriSegments[uriSegments.Length - 1]);
         }
 
 
@@ -259,23 +263,23 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetEditLinkShouldReturnComputedIdWithTypeCastForDerivedEntity()
         {
             Uri id = this.derivedMultiKeyMultiEtagMleEntry.Id;
-            Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleEntityTypeName);
+            Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleMultiKeyEntityTypeName);
             Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), expectedEditLink);
         }
 
         [Fact]
         public void GetEditLinkShouldReturnNonComputedIdUriWithTypeCastForDerivedEntityWhenNonComputedIdIsSet()
         {
-            var id = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
+            var id = new Uri("http://odata.org/base/MultipleKeySet(KeyA='xyz',KeyB=2)");
             this.derivedMultiKeyMultiEtagMleEntry.Id = id;
-            Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleEntityTypeName);
+            Uri expectedEditLink = this.uriBuilder.AppendTypeSegment(id, DerivedMleMultiKeyEntityTypeName);
             Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), expectedEditLink);
         }
 
         [Fact]
         public void GetEditLinkShouldReturnNonComputedIdUriWhenNonComputedIdIsSet()
         {
-            var id = new Uri("http://anotherodata.org/serviceBase/SomeType('xyz')");
+            var id = new Uri("http://odata.org/base/MultipleKeySet(KeyA='xyz',KeyB=2)");
             this.productEntry.Id = id;
             Assert.Equal(this.productConventionalEntityMetadataBuilder.GetEditLink(), id);
         }
@@ -318,7 +322,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetEditLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetEditLink(), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType", entitySetInstanceId)));
         }
 
         [Fact]
@@ -485,7 +489,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetIdWithMultiKeysWhenKeyisLongLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetId(), new Uri(string.Format(@"http://odata.org/base/Products({0})", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetId(), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})", entitySetInstanceId)));
         }
 
         #endregion Tests for GetId()
@@ -500,7 +504,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetReadLinkWithMultipleKeys()
         {
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType"));
         }
 
         [Fact]
@@ -557,7 +561,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetReadLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetReadLink(), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType", entitySetInstanceId)));
         }
 
         [Fact]
@@ -683,7 +687,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetDefaultStreamEditLinkWithMultiKeysWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamEditLink(null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamEditLink(null), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/$value", entitySetInstanceId)));
         }
         #endregion Tests for GetStreamEditLink()
 
@@ -699,8 +703,8 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var mr = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetMediaResource();
             Assert.NotNull(mr);
-            Assert.Equal(mr.EditLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
-            Assert.Equal(mr.ReadLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/$value"));
+            Assert.Equal(mr.EditLink, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/$value"));
+            Assert.Equal(mr.ReadLink, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/$value"));
         }
 
         [Fact]
@@ -783,7 +787,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetDefaultStreamReadLinkWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/$value", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetStreamReadLink(null), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/$value", entitySetInstanceId)));
         }
         #endregion Tests for GetStreamReadLink()
 
@@ -834,7 +838,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var entitySetInstanceId = SetMultiKeyProperties();
             Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetNavigationLinkUri("NavigationProperty", null, false),
-                new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty", entitySetInstanceId)));
+                new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/NavigationProperty", entitySetInstanceId)));
         }
         #endregion Tests for GetNavigationLinkUri()
 
@@ -879,7 +883,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetAssociationLinkUriWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/NavigationProperty/$ref", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetAssociationLinkUri("NavigationProperty", null, false), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/NavigationProperty/$ref", entitySetInstanceId)));
         }
         #endregion Tests for GetAssociationLinkUri()
 
@@ -939,7 +943,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetOperationTargetUriWithInheritance()
         {
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/OperationName"));
         }
 
         [Fact]
@@ -965,7 +969,7 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void GetOperationTargetUriWithParameterTypeAndInheritance()
         {
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/OperationName(p1=@p1)"));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, "p1"), new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/OperationName(p1=@p1)"));
         }
 
         [Fact]
@@ -981,7 +985,7 @@ namespace Microsoft.OData.Tests.Evaluation
         public void GetOperationTargetUriWhenKeyisLFDM()
         {
             var entitySetInstanceId = SetMultiKeyProperties();
-            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/OperationName", entitySetInstanceId)));
+            Assert.Equal(this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetOperationTargetUri("OperationName", null, null), new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/OperationName", entitySetInstanceId)));
         }
         #endregion Tests for GetOperationTargetUri()
 
@@ -1007,8 +1011,8 @@ namespace Microsoft.OData.Tests.Evaluation
             Assert.Equal("Photo", photoProperty.Name);
             var photo = (ODataStreamReferenceValue)photoProperty.Value;
             Assert.NotNull(photo);
-            Assert.Equal(photo.EditLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
-            Assert.Equal(photo.ReadLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
+            Assert.Equal(photo.EditLink, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/Photo"));
+            Assert.Equal(photo.ReadLink, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/Photo"));
         }
 
         [Fact]
@@ -1038,7 +1042,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
             Assert.Equal("TestModel.Action", action.Title);
             Assert.Equal(action.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Action"));
-            Assert.Equal(action.Target, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Action"));
+            Assert.Equal(action.Target, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/TestModel.Action"));
         }
 
         [Fact]
@@ -1046,7 +1050,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var entitySetInstanceId = SetMultiKeyProperties();
             var action = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetActions().Single();
-            Assert.Equal(action.Target, new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Action", entitySetInstanceId)));
+            Assert.Equal(action.Target, new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/TestModel.Action", entitySetInstanceId)));
         }
 
         [Fact]
@@ -1073,7 +1077,7 @@ namespace Microsoft.OData.Tests.Evaluation
             var function = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetFunctions().Single();
             Assert.Equal("TestModel.Function", function.Title);
             Assert.Equal(function.Metadata, new Uri(MetadataDocumentUri, "#TestModel.Function"));
-            Assert.Equal(function.Target, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/TestModel.Function"));
+            Assert.Equal(function.Target, new Uri("http://odata.org/base/MultipleKeySet(KeyA='keya',KeyB=1)/TestModel.DerivedMleMultiKeyType/TestModel.Function"));
         }
 
         [Fact]
@@ -1091,7 +1095,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var entitySetInstanceId = SetMultiKeyProperties();
             var function = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetFunctions().Single();
-            Assert.Equal(function.Target, new Uri(string.Format(@"http://odata.org/base/Products({0})/TestModel.DerivedMleProduct/TestModel.Function", entitySetInstanceId)));
+            Assert.Equal(function.Target, new Uri(string.Format(@"http://odata.org/base/MultipleKeySet({0})/TestModel.DerivedMleMultiKeyType/TestModel.Function", entitySetInstanceId)));
         }
         #endregion Tests for computed Functions
 
@@ -1112,7 +1116,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 TypeContext = singletonEntryTypeContext,
                 Resource = new ODataResource(),
                 ETagProperties = new[] { new KeyValuePair<string, object>("Name", "Value") },
-                KeyProperties = this.sinlgeKeyCollection,
+                KeyProperties = this.singleKeyCollection,
                 ActualResourceTypeName = "BossType",
                 SelectedBindableOperations = new IEdmOperation[0],
                 SelectedNavigationProperties = new IEdmNavigationProperty[0],
@@ -1149,18 +1153,16 @@ namespace Microsoft.OData.Tests.Evaluation
 
         private void SetSingleKeyPropertie(string name, object value)
         {
-            this.sinlgeKeyCollection.Clear();
-            this.sinlgeKeyCollection.Add(name, value);
+            this.singleKeyCollection.Clear();
+            this.singleKeyCollection.Add(name, value);
         }
 
         private string SetMultiKeyProperties()
         {
             this.multiKeysCollection.Clear();
-            this.multiKeysCollection.Add("LongId", -1L);
-            this.multiKeysCollection.Add("FloatId", 1.0f);
-            this.multiKeysCollection.Add("DoubleId", -1.0d);
-            this.multiKeysCollection.Add("DecimalId", -1.0m);
-            return "LongId=-1,FloatId=1,DoubleId=-1.0,DecimalId=-1.0";
+            this.multiKeysCollection.Add("KeyA", "keya");
+            this.multiKeysCollection.Add("KeyB", 1);
+            return "KeyA='keya',KeyB=1";
         }
     }
 
