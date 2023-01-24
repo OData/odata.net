@@ -138,7 +138,7 @@ namespace Microsoft.OData
             builder.AddService<ODataMessageInfo>(ServiceLifetime.Scoped);
             builder.AddServicePrototype(new ODataMessageReaderSettings(odataVersion));
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageReaderSettings>().Clone());
-            builder.AddServicePrototype(new ODataMessageWriterSettings());
+            builder.AddServicePrototype(new ODataMessageWriterSettings { Version = odataVersion });
             builder.AddService(ServiceLifetime.Scoped, sp => sp.GetServicePrototype<ODataMessageWriterSettings>().Clone());
             builder.AddService(ServiceLifetime.Singleton, sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
             builder.AddService<IEdmModel>(ServiceLifetime.Singleton, sp => EdmCoreModel.Instance);
