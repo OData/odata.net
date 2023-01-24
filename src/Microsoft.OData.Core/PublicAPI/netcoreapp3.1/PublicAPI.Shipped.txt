@@ -373,6 +373,7 @@ Microsoft.OData.ODataBatchWriter.WriteStartChangesetAsync() -> System.Threading.
 Microsoft.OData.ODataBatchWriter.WriteStartChangesetAsync(string changesetId) -> System.Threading.Tasks.Task
 Microsoft.OData.ODataBinaryStreamValue
 Microsoft.OData.ODataBinaryStreamValue.ODataBinaryStreamValue(System.IO.Stream stream) -> void
+Microsoft.OData.ODataBinaryStreamValue.ODataBinaryStreamValue(System.IO.Stream stream, bool leaveOpen) -> void
 Microsoft.OData.ODataBinaryStreamValue.Stream.get -> System.IO.Stream
 Microsoft.OData.ODataCollectionReader
 Microsoft.OData.ODataCollectionReader.ODataCollectionReader() -> void
