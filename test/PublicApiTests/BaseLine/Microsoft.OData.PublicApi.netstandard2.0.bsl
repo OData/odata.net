@@ -5222,6 +5222,7 @@ public sealed class Microsoft.OData.ODataBatchOperationResponseMessage : IContai
 
 public sealed class Microsoft.OData.ODataBinaryStreamValue : Microsoft.OData.ODataValue {
     public ODataBinaryStreamValue (System.IO.Stream stream)
+    public ODataBinaryStreamValue (System.IO.Stream stream, bool leaveOpen)
 
     System.IO.Stream Stream  { public get; }
 }
