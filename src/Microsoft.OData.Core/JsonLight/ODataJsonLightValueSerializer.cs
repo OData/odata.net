@@ -390,6 +390,11 @@ namespace Microsoft.OData.JsonLight
                 stream.Dispose();
                 streamWriter.EndStreamValueScope();
             }
+
+            if (!streamValue.LeaveOpen)
+            {
+                streamValue.Stream.Dispose();
+            }
         }
 
         /// <summary>
@@ -720,7 +725,6 @@ namespace Microsoft.OData.JsonLight
             IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
             if (streamWriter == null)
             {
-                // write as a string
                 byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
                 await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
             }
@@ -729,8 +733,21 @@ namespace Microsoft.OData.JsonLight
                 Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
                 await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
                 await stream.FlushAsync().ConfigureAwait(false);
+#if NETCOREAPP3_1_OR_GREATER
+                await stream.DisposeAsync();
+#else
                 stream.Dispose();
+#endif
                 await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
+            }
+
+            if (!streamValue.LeaveOpen)
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                await streamValue.Stream.DisposeAsync();
+#else
+                streamValue.Stream.Dispose();
+#endif
             }
         }
 

@@ -19,16 +19,32 @@ namespace Microsoft.OData
         /// Constructor
         /// </summary>
         /// <param name="stream">Input stream</param>
-        public ODataBinaryStreamValue(Stream stream)
+        public ODataBinaryStreamValue(Stream stream) :
+            this(stream, true) // Leaves the stream open by default, for backward compatibility.
+        {
+        }
+
+        /// <summary>
+        /// Constructor
+        /// </summary>
+        /// <param name="stream">Input stream</param>
+        /// <param name="leaveOpen">Whether the provided stream should be left open.</param>
+        public ODataBinaryStreamValue(Stream stream, bool leaveOpen)
         {
             ExceptionUtils.CheckArgumentNotNull(stream, "stream");
 
             this.Stream = stream;
+            this.LeaveOpen = leaveOpen;
         }
 
         /// <summary>
         /// The Stream wrapped by the ODataBinaryStreamValue
         /// </summary>
         public Stream Stream { get; private set; }
+
+        /// <summary>
+        /// Whether this instance's <see cref="Stream"/> should be left open.
+        /// </summary>
+        internal bool LeaveOpen { get; }
     }
 }
