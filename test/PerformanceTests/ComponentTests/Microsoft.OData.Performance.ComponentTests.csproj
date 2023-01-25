@@ -9,6 +9,7 @@
     <None Remove="Common\Models\AdventureWorksPlus.csdl" />
     <None Remove="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <None Remove="Common\Models\ExchangeAttachment.csdl" />
+    <None Remove="Common\Models\TripPin.csdl" />
     <None Remove="ODataReader\PayloadTemplate\Entry.json" />
     <None Remove="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
     <None Remove="ODataReader\PayloadTemplate\EntryIncludeSpatialWithExpansions.json" />
@@ -19,6 +20,7 @@
     <EmbeddedResource Include="Common\Models\AdventureWorksPlus.csdl" />
     <EmbeddedResource Include="Common\Models\EntityWithDifferentPropertyType.csdl" />
     <EmbeddedResource Include="Common\Models\ExchangeAttachment.csdl" />
+    <EmbeddedResource Include="Common\Models\TripPin.csdl" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\Entry.json" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatial.json" />
     <EmbeddedResource Include="ODataReader\PayloadTemplate\EntryIncludeSpatialWithExpansions.json" />

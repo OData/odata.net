@@ -196,6 +196,13 @@ namespace Microsoft.OData.UriParser
                 return type;
             }
 
+            if (model.IsImmutable())
+            {
+                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+                type = cache.FindSingle<IEdmSchemaType>(typeName, Strings.UriParserMetadata_MultipleMatchingTypesFound);
+                return type;
+            }
+
             IList<IEdmSchemaType> results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
 
             if (results == null || results.Count == 0)
@@ -529,6 +536,24 @@ namespace Microsoft.OData.UriParser
                     }
                 }
             }
+        }
+
+        private static CaseInsensitiveSchemaElementsCache GetCaseInsensitiveSchemaElementsCache(IEdmModel model)
+        {
+            if (model == null)
+            {
+                throw new ArgumentNullException(nameof(model));
+            }
+
+            CaseInsensitiveSchemaElementsCache cache = model.GetAnnotationValue<CaseInsensitiveSchemaElementsCache>(model);
+            if (cache == null)
+            {
+                cache = new CaseInsensitiveSchemaElementsCache();
+                cache.PopulateCache(model);
+                model.SetAnnotationValue<CaseInsensitiveSchemaElementsCache>(model, cache);
+            }
+
+            return cache;
         }
     }
 }
