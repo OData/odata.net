@@ -21,6 +21,7 @@ namespace Microsoft.OData.Performance
     {
         private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
         private static readonly Uri ServiceRoot = new Uri(@"http://odata.org/Perf.svc/");
+        private ODataUriResolver caseInsensitiveResolver= new ODataUriResolver() { EnableCaseInsensitive = true };
 
         [Benchmark]
         public void ParseUri()
@@ -48,6 +49,16 @@ namespace Microsoft.OData.Performance
             int roundPerIteration = 5000;
 
             TestExecution(query, roundPerIteration, parser => parser.ParsePath());
+        }
+
+        [Benchmark]
+        public void ParsePathWithCaseInsensitiveTypeCast()
+        {
+            string query = "Employee(1)/PurchaseOrderHeader/vendor/productVendor/Product/ProductInventory(ProductID = 1,LocationID = 1)/Location/WorkOrderRouting/WorkOrder/Product/BillOfMaterials(1)/UnitMeasure/ModifiedDate";
+
+            int roundPerIteration = 5000;
+
+            TestExecution(query, roundPerIteration, parser => parser.ParsePath(), enableCaseInsensitive: true);
         }
 
         [Benchmark]
@@ -83,11 +94,15 @@ namespace Microsoft.OData.Performance
             TestExecution(query, roundPerIteration, parser => parser.ParseSelectAndExpand());
         }
 
-        private void TestExecution(string query, int roundPerIteration, Action<ODataUriParser> parseAction)
+        private void TestExecution(string query, int roundPerIteration, Action<ODataUriParser> parseAction, bool enableCaseInsensitive = false)
         {
             for (int i = 0; i < roundPerIteration; i++)
             {
                 ODataUriParser parser = new ODataUriParser(Model, ServiceRoot, new Uri(ServiceRoot, query));
+                if (enableCaseInsensitive)
+                {
+                    parser.Resolver = caseInsensitiveResolver;
+                }
                 parseAction(parser);
             }
         }
