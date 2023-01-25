@@ -538,6 +538,18 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        private static T FindSingleCaseInsensitive<T>(IEdmModel model, string qualifiedName, Func<object, string> duplicateErrorFunc) where T : IEdmSchemaElement
+        {
+            CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+            return cache.FindSingle<T>(qualifiedName, duplicateErrorFunc);
+        }
+
+        private static IList<T> FindCaseInsensitiveMatches<T>(IEdmModel model, string qualifiedName) where T : IEdmSchemaElement
+        {
+            CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+            return (IList<T>)cache.FindElement(qualifiedName);
+        }
+
         private static CaseInsensitiveSchemaElementsCache GetCaseInsensitiveSchemaElementsCache(IEdmModel model)
         {
             if (model == null)

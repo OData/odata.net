@@ -32,7 +32,7 @@ namespace Microsoft.OData.Edm
             this.cache = cache;
         }
 
-        public IReadOnlyList<IEdmSchemaElement> FindElement(string qualifiedName)
+        public List<IEdmSchemaElement> FindElement(string qualifiedName)
         {
             if (cache.TryGetValue(qualifiedName.ToUpperInvariant(), out List<IEdmSchemaElement> results))
             {

@@ -312,6 +312,70 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         {
             TestUriParserExtension(originalStr, caseInsensitiveStr, parse, verify, errorMessage, Model, parser => parser.Resolver = new StringAsEnumResolver());
         }
+
+        #region "Resolve type"
+        [Theory]
+        [InlineData("Fully.Qualified.Namespace.Employee", "Employee", false, false)]
+        [InlineData("fully.Qualified.nameSpace.employee", "Employee", true, false)]
+        [InlineData("Fully.Qualified.Namespace.Employee", "Employee", false, true)]
+        [InlineData("fully.Qualified.nameSpace.employee", "Employee", true, true)]
+        public void ResolveTypeName(string input, string expectedType, bool enableCaseInsensitive, bool isImmutable)
+        {
+            var model = HardCodedTestModel.GetEdmModel();
+            if (isImmutable)
+            {
+                model.MarkAsImmutable();
+            }
+
+            var resolver = new ODataUriResolver { EnableCaseInsensitive = enableCaseInsensitive };
+
+            IEdmSchemaType type = resolver.ResolveType(model, input);
+
+            Assert.Equal(expectedType, type.Name);
+        }
+
+        [Theory]
+        [InlineData("fully.Qualified.nameSpace.employee", false, false)]
+        [InlineData("fully.Qualified.nameSpace.employ", true, false)]
+        [InlineData("fully.Qualified.nameSpace.employee", false, true)]
+        [InlineData("fully.Qualified.nameSpace.employ", true, true)]
+        public void ResolveTypeReturnsNullIfNameDoesNotExist(string input, bool enableCaseInsensitive, bool isImmutable)
+        {
+            var model = HardCodedTestModel.GetEdmModel();
+            if (isImmutable)
+            {
+                model.MarkAsImmutable();
+            }
+
+            var resolver = new ODataUriResolver { EnableCaseInsensitive = enableCaseInsensitive };
+
+            var result = resolver.ResolveType(model, input);
+
+            Assert.Null(result);
+        }
+
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public void ResolveTypeThrowsErrorsIfThereAreDuplicates_WithImmutableModel(bool isImmutable)
+        {
+            var model = new EdmModel();
+            var type1 = model.AddEntityType("NS.Models", "Person");
+            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var type2 = model.AddEntityType("NS.Models", "person");
+            type2.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            if (isImmutable)
+            {
+                model.MarkAsImmutable();
+            }
+
+            var resolver = new ODataUriResolver { EnableCaseInsensitive = true };
+
+            var exception = Assert.Throws<ODataException>(() => resolver.ResolveType(model, "ns.models.person"));
+            Assert.Equal(Strings.UriParserMetadata_MultipleMatchingTypesFound("ns.models.person"), exception.Message);
+        }
+        #endregion
     }
 
     class Pos : ODataUriResolver
