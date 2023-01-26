@@ -16,6 +16,8 @@ namespace Microsoft.OData.Tests
         {
             var enumValue = Feature.Feature1.ToODataValue() as ODataEnumValue;
             Assert.Equal("Feature1", enumValue.Value);
+
+            Assert.Equal("Feature1", enumValue.ToString());
         }
 
         [Fact]
