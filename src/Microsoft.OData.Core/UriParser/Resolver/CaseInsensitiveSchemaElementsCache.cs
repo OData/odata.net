@@ -77,7 +77,7 @@ namespace Microsoft.OData.Edm
                 }
             }
 
-            return results as IReadOnlyList<T>;
+            return results;
         }
 
         /// <summary>

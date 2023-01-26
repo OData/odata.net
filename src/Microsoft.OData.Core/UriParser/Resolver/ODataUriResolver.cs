@@ -550,6 +550,13 @@ namespace Microsoft.OData.UriParser
             CaseInsensitiveSchemaElementsCache cache = model.GetAnnotationValue<CaseInsensitiveSchemaElementsCache>(model);
             if (cache == null)
             {
+                // There's a chance 2 or more threads can reach here concurrently
+                // for the first N parallel requests, and each will build the cache.
+                // While that is wasteful, it doesn't affect the behaviour of the cache since the model is immutable.
+                // The last cache to be attached to the model will "win" and be used for all subsequent requests.
+                // We can avoid this waste by providing a method that user can call manually to build
+                // the cache before any request is made. But I did not want to add a new method to the public API.
+                // We revisit this if it turns out to be a problem in practice.
                 cache = new CaseInsensitiveSchemaElementsCache(model);
                 model.SetAnnotationValue(model, cache);
             }
