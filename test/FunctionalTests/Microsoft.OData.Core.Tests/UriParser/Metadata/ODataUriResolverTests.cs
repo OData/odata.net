@@ -319,7 +319,7 @@ namespace Microsoft.OData.Tests.UriParser.Metadata
         [InlineData("fully.Qualified.nameSpace.employee", "Employee", true, false)]
         [InlineData("Fully.Qualified.Namespace.Employee", "Employee", false, true)]
         [InlineData("fully.Qualified.nameSpace.employee", "Employee", true, true)]
-        public void ResolveTypeName(string input, string expectedType, bool enableCaseInsensitive, bool isImmutable)
+        public void ResolveType(string input, string expectedType, bool enableCaseInsensitive, bool isImmutable)
         {
             var model = HardCodedTestModel.GetEdmModel();
             if (isImmutable)

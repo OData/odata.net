@@ -16,7 +16,7 @@ namespace Microsoft.OData.Edm
     /// it doesn't exist in the model. For this reason, it's important that
     /// the model be immutable.
     /// </summary>
-    internal class CaseInsensitiveSchemaElementsCache
+    internal sealed class CaseInsensitiveSchemaElementsCache
     {
         private static readonly List<IEdmSchemaElement> emptyList = new List<IEdmSchemaElement>();
         // This cache is meant to be populate up front and remain read-only
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Edm
         {
             IReadOnlyList<IEdmSchemaElement> elements = FindElements(qualifiedName);
 
-            IList<T> results = new List<T>();
+            List<T> results = new List<T>();
             for (int i = 0; i < elements.Count; i++)
             {
                 if (elements[i] is T element)
