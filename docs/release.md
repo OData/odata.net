@@ -5,14 +5,14 @@
     1. Log into your nuget.org account and link it to your AAD account by signing in with your Microsoft work account.
     2. Ask someone from the team to add you as an administrator on NuGet. You will need to accept this request once it is sent to you via email.
 * NuGet Package Explorer
-    1. Download NuGet Package Explorer from the Windows store.
+    1. Download [NuGet Package Explorer](https://apps.microsoft.com/store/detail/nuget-package-explorer/9WZDNCRDMDM3) from the Windows store.
 * NuGet Command Line Interface
     1. Install according to [these instructions](https://learn.microsoft.com/en-us/nuget/reference/nuget-exe-cli-reference).
 
 ## Directions
 
 ### Initiate the Release
-1. Increment the version number and update the Public API files; both of these steps can usually be accomplished by running the `tools\IncrementVersion.cmd` script. Then create a pull request with these changes and merge it.
+1. Increment the version number and update the Public API files; both of these steps can be accomplished by running the `tools\IncrementVersion.cmd` script. Then create a pull request with these changes and merge it.
     * Increment the version number referenced during build in [`Versioning.props`](tools/CustomMSBuild/Versioning.props) by using [semantic versioning](https://semver.org/).
     * Update the Public API files by copying the contents of any `PublicAPI.Unshipped.txt` file that has changed since the last release into its corresponding `PublicAPI.Shipped.txt` file.
 2. Kick off a new [nightly build](https://identitydivision.visualstudio.com/OData/_build?definitionId=1104) by running the pipeline to generate the NuGet packages that will be published for this release.
