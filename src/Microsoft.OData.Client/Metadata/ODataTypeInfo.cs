@@ -362,6 +362,8 @@ namespace Microsoft.OData.Client.Metadata
                         // If the new order value is same as one item in the list , move to next.
                         break;
                     }
+
+                    ++index;
                 }
 
                 keys.Insert(index, newKeyWithOrder);

@@ -147,6 +147,13 @@ namespace AstoriaUnitTests.Tests.Client
             public List<AnotherEntityWithTwoKeyProperties> NavPropertyCollection { get; set; }
         }
 
+        [Key("ID2", "ID1")]
+        internal class EntityWithTwoDiffOrderKeyProperties
+        {
+            public int ID1 { get; set; }
+            public int ID2 { get; set; }
+        }
+
         [Key("Key1", "Key2")]
         internal class AnotherEntityWithTwoKeyProperties
         {
@@ -164,6 +171,24 @@ namespace AstoriaUnitTests.Tests.Client
 
         [Fact]
         public void TwoWhereClausesForKeysShouldReturnUrlForSingleton()
+        {
+            // Simple case, only two key properties provided
+            string query1 = context.CreateQuery<EntityWithTwoDiffOrderKeyProperties>("Test")
+                .Where(p => p.ID1 == 1)
+                .Where(p => p.ID2 == 2)
+                .ToString();
+
+            string query2 = context.CreateQuery<EntityWithTwoDiffOrderKeyProperties>("Test")
+                .Where(p => p.ID2 == 2)
+                .Where(p => p.ID1 == 1)
+                .ToString();
+
+            Assert.Equal(query1, query2);
+            Assert.Equal(rootUrl + "Test(ID2=2,ID1=1)", query1);
+        }
+
+        [Fact]
+        public void TwoWhereClausesForDiffOrderKeysShouldReturnUrlForSingleton()
         {
             // Simple case, only two key properties provided
             string query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")

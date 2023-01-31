@@ -477,7 +477,8 @@ namespace Microsoft.OData.Client
                             List<IEdmStructuralProperty> orderedloadedKeyProperties = new List<IEdmStructuralProperty>();
                             foreach (var orderedKey in keyProperties)
                             {
-                                var keyProperty = loadedKeyProperties.FirstOrDefault(k => k.Name == orderedKey.Name);
+                                string serverDefinedName = ClientTypeUtil.GetServerDefinedName(orderedKey);
+                                var keyProperty = loadedKeyProperties.FirstOrDefault(k => k.Name == serverDefinedName);
                                 if (keyProperty != null)
                                 {
                                     orderedloadedKeyProperties.Add(keyProperty);

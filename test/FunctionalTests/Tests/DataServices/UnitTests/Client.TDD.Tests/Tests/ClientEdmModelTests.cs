@@ -200,6 +200,30 @@ namespace AstoriaUnitTests.Tests
             Assert.NotNull(enumType.FullName());
         }
 
+        [Fact]
+        public void GetOrCreateEdmTypeShouldWorkForTypesWithMultipleKeys()
+        {
+            var clientModel = new ClientEdmModel(ODataProtocolVersion.V4);
+            var edmType = clientModel.GetOrCreateEdmType(typeof(EntityWithThreeKeyProperties));
+            Assert.NotNull(edmType);
+            Assert.Equal(EdmTypeKind.Entity, edmType.TypeKind);
+            IEdmEntityType entityType = edmType as IEdmEntityType;
+            var keys = entityType.Key();
+            Assert.Collection(keys,
+                e => Assert.Equal("ID1", e.Name),
+                e => Assert.Equal("ID3", e.Name),
+                e => Assert.Equal("ID2", e.Name)
+                );
+        }
+
+        [Key("ID1", "ID3", "ID2")]
+        internal class EntityWithThreeKeyProperties
+        {
+            public int ID1 { get; set; }
+            public string ID2 { get; set; }
+            public DateTimeOffset ID3 { get; set; }
+        }
+
         private class TypeWithCollectionOfObjectProperty
         {
             public ICollection<object> Objects { get; set; }
