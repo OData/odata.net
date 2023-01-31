@@ -5323,6 +5323,8 @@ public sealed class Microsoft.OData.ODataEnumValue : Microsoft.OData.ODataValue 
 
     string TypeName  { public get; }
     string Value  { public get; }
+
+    public virtual string ToString ()
 }
 
 [
@@ -5658,6 +5660,8 @@ public sealed class Microsoft.OData.ODataPrimitiveValue : Microsoft.OData.ODataV
     public ODataPrimitiveValue (object value)
 
     object Value  { public get; }
+
+    public virtual string ToString ()
 }
 
 public sealed class Microsoft.OData.ODataProperty : Microsoft.OData.ODataPropertyInfo {
