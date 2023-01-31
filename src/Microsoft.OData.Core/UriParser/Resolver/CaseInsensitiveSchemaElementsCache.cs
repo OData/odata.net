@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model whose schema elements to cache. This model should be immutable. See <see cref="ExtensionMethods.MarkAsImmutable(IEdmModel)"/>.</param>
         public CaseInsensitiveSchemaElementsCache(IEdmModel model)
         {
-            Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>();
+            Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
 
             PopulateSchemaElements(model, cache);
 
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The list of elements that matched the <paramref name="qualifiedName"/>.</returns>
         public IReadOnlyList<IEdmSchemaElement> FindElements(string qualifiedName)
         {
-            if (cache.TryGetValue(qualifiedName.ToUpperInvariant(), out List<IEdmSchemaElement> results))
+            if (cache.TryGetValue(qualifiedName, out List<IEdmSchemaElement> results))
             {
                 return results;
             }
