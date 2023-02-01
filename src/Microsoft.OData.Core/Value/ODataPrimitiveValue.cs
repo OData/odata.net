@@ -39,5 +39,14 @@ namespace Microsoft.OData
         /// </summary>
         /// <value> The underlying primitive CLR value. </value>
         public object Value { get; private set; }
+
+        /// <summary>
+        /// Returns a string that represents the current primitve.
+        /// </summary>
+        /// <returns>A string that represents the current primitve.</returns>
+        public override string ToString()
+        {
+            return Value.ToString();
+        }
     }
 }

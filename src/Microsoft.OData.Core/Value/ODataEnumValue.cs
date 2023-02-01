@@ -33,5 +33,14 @@ namespace Microsoft.OData
 
         /// <summary>Get the type name in edm model.</summary>
         public string TypeName { get; private set; }
+
+        /// <summary>
+        /// Returns a string that represents the current enum.
+        /// </summary>
+        /// <returns>A string that represents the current enum.</returns>
+        public override string ToString()
+        {
+            return Value;
+        }
     }
 }
