@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
@@ -130,6 +132,47 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.True(!errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
+        }
+
+        [Fact]
+        public void TestOpenTypePropertyConstraint() 
+        {
+            var modelCsdl = @"
+<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
+	<edmx:DataServices>
+		<Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""my.model"" Alias=""model"">
+			<EntityType Name=""OpenType"">
+		        <Annotation Term=""Org.OData.Validation.V1.OpenPropertyTypeConstraint"">
+                  <Collection>
+					  <String>model.OpenPropertyType</String>  
+                  </Collection>
+                </Annotation>
+			</EntityType>
+			<EntityType Name=""OpenPropertyType""/>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            XmlReader reader = XmlReader.Create(new StringReader(modelCsdl));
+            Assert.True(CsdlReader.TryParse(reader, out model, out errors), "Failed to parse model with OpenPropertyTypeConstraint.");
+            Assert.Empty(errors);
+            Assert.True(model.Validate(out errors));
+            Assert.Empty(errors);
+
+            var openType = model.FindType("model.OpenType");
+            var annotations = openType.VocabularyAnnotations(model);
+            Assert.Single(annotations);
+            var annotation = annotations.Single();
+            Assert.Equal("Org.OData.Validation.V1.OpenPropertyTypeConstraint", annotation.Term.FullName());
+            var expression = annotation.Value as IEdmCollectionExpression;
+            Assert.NotNull(expression);
+            var elements = expression.Elements;
+            Assert.Single(elements);
+            var element = elements.Single() as IEdmStringConstantExpression;
+            Assert.NotNull(element);
+            Assert.Equal("model.OpenPropertyType", element.Value);
         }
 
         [Theory]
