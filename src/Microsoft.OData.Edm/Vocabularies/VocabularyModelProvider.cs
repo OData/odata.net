@@ -77,7 +77,7 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             // Validation
             string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml")).FirstOrDefault();
             Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
-            ValidationModel = LoadSchemaEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
+            ValidationModel = LoadCsdlEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
 
             // capabilities
             string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
