@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
 
@@ -22,7 +23,10 @@ namespace Microsoft.OData.Edm
         // This cache is meant to be populate up front and remain read-only
         // after that. Therefore, it doesn't need
         // to be a concurrent dictionary.
-        private readonly Dictionary<string, List<IEdmSchemaElement>> cache;
+        private readonly Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<IEdmSchemaType>> schemaTypesCache = new Dictionary<string, List<IEdmSchemaType>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<IEdmOperation>> operationsCache = new Dictionary<string, List<IEdmOperation>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<IEdmTerm>> termsCache = new Dictionary<string, List<IEdmTerm>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Builds a case-insensitive cache of schema elements from
@@ -31,16 +35,16 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model whose schema elements to cache. This model should be immutable. See <see cref="ExtensionMethods.MarkAsImmutable(IEdmModel)"/>.</param>
         public CaseInsensitiveSchemaElementsCache(IEdmModel model)
         {
-            Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
+            //Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
 
-            PopulateSchemaElements(model, cache);
+            PopulateSchemaElements(model);
 
             foreach (IEdmModel referencedModel in model.ReferencedModels)
             {
-                PopulateSchemaElements(referencedModel, cache);
+                PopulateSchemaElements(referencedModel);
             }
 
-            this.cache = cache;
+            //this.cache = cache;
         }
 
         /// <summary>
@@ -132,5 +136,71 @@ namespace Microsoft.OData.Edm
                 results.Add(element);
             }
         }
+
+        private void PopulateSchemaElements(IEdmModel model)
+        {
+            foreach (IEdmSchemaElement element in model.SchemaElements)
+            {
+                if (element is IEdmSchemaType schemaType)
+                {
+                    AddElementToCache(schemaType, schemaTypesCache);
+                }
+                else if (element is IEdmOperation operation)
+                {
+                    AddElementToCache(operation, operationsCache);
+                }
+                else if (element is IEdmTerm term)
+                {
+                    AddElementToCache(term, termsCache);
+                }
+                else
+                {
+                    AddElementToCache(element, cache);
+                }
+            }
+        }
+
+        private static void AddElementToCache<T>(T element, Dictionary<string, List<T>> cache) where T : IEdmSchemaElement
+        {
+            List<T> results;
+            string normalizedKey = element.FullName();
+            if (!cache.TryGetValue(normalizedKey, out results))
+            {
+                results = new List<T>();
+                cache[normalizedKey] = results;
+            }
+
+            results.Add(element);
+        }
+
+        public List<IEdmSchemaType> FindSchemaTypes(string qualifiedName)
+        {
+            if (schemaTypesCache.TryGetValue(qualifiedName, out var results))
+            {
+                return results;
+            }
+
+            return null;
+        }
+
+        public List<IEdmOperation> FindOperations(string qualifiedName)
+        {
+            if (operationsCache.TryGetValue(qualifiedName, out var results))
+            {
+                return results;
+            }
+
+            return null;
+        }
+        public List<IEdmTerm> FindTerms(string qualifiedName)
+        {
+            if (termsCache.TryGetValue(qualifiedName, out var results))
+            {
+                return results;
+            }
+
+            return null;
+        }
+
     }
 }

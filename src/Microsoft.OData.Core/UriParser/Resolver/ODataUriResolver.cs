@@ -164,7 +164,16 @@ namespace Microsoft.OData.UriParser
                 return term;
             }
 
-            IReadOnlyList<IEdmTerm> results = FindAcrossModels<IEdmTerm>(model, termName, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmTerm> results;
+            if (model.IsImmutable())
+            {
+                var cache = GetCaseInsensitiveSchemaElementsCache(model);
+                results = cache.FindTerms(termName);
+            }
+            else
+            {
+                results = FindAcrossModels<IEdmTerm>(model, termName, /*caseInsensitive*/ true);
+            }
 
             if (results == null || results.Count == 0)
             {
@@ -196,7 +205,17 @@ namespace Microsoft.OData.UriParser
             if (model.IsImmutable())
             {
                 CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
-                return cache.FindSingleOfType<IEdmSchemaType>(typeName, Strings.UriParserMetadata_MultipleMatchingTypesFound);
+                var types = cache.FindSchemaTypes(typeName);
+                if (types.Count == 0)
+                {
+                    return null;
+                }
+                else if (types.Count > 1)
+                {
+                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(typeName));
+                }
+
+                return types[0];
             }
 
             IReadOnlyList<IEdmSchemaType> results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
@@ -229,7 +248,21 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmOperation> operations;
+            if (model.IsImmutable())
+            {
+                var cache = GetCaseInsensitiveSchemaElementsCache(model);
+                operations = cache.FindOperations(identifier);
+                if (operations == null)
+                {
+                    return Enumerable.Empty<IEdmOperation>();
+                }
+            }
+            else
+            {
+                operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            }
+
             if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
