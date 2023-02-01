@@ -121,7 +121,7 @@ namespace Microsoft.OData.Edm
         {
             foreach (IEdmSchemaElement element in model.SchemaElements)
             {
-                string normalizedKey = element.FullName().ToUpperInvariant();
+                string normalizedKey = element.FullName();
                 List<IEdmSchemaElement> results;
                 if (!cache.TryGetValue(normalizedKey, out results))
                 {
