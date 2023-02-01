@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
@@ -19,11 +19,9 @@ namespace Microsoft.OData.Edm
     /// </summary>
     internal sealed class CaseInsensitiveSchemaElementsCache
     {
-        private static readonly List<IEdmSchemaElement> emptyList = new List<IEdmSchemaElement>();
-        // This cache is meant to be populate up front and remain read-only
-        // after that. Therefore, it doesn't need
-        // to be a concurrent dictionary.
-        private readonly Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
+        // We create different caches for different types of schema elements because all current usage request schema elements
+        // of specific types. If we were to use a single dictionary <string, ISchemaElement> we would need
+        // to do additional work (and allocations) during lookups to filter the results to the susbset that matches the request type.
         private readonly Dictionary<string, List<IEdmSchemaType>> schemaTypesCache = new Dictionary<string, List<IEdmSchemaType>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmOperation>> operationsCache = new Dictionary<string, List<IEdmOperation>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmTerm>> termsCache = new Dictionary<string, List<IEdmTerm>>(StringComparer.OrdinalIgnoreCase);
@@ -35,106 +33,57 @@ namespace Microsoft.OData.Edm
         /// <param name="model">The model whose schema elements to cache. This model should be immutable. See <see cref="ExtensionMethods.MarkAsImmutable(IEdmModel)"/>.</param>
         public CaseInsensitiveSchemaElementsCache(IEdmModel model)
         {
-            //Dictionary<string, List<IEdmSchemaElement>> cache = new Dictionary<string, List<IEdmSchemaElement>>(StringComparer.OrdinalIgnoreCase);
-
             PopulateSchemaElements(model);
 
             foreach (IEdmModel referencedModel in model.ReferencedModels)
             {
                 PopulateSchemaElements(referencedModel);
             }
-
-            //this.cache = cache;
         }
 
         /// <summary>
-        /// Find all schema elements that match the specified <paramref name="qualifiedName"/>.
+        /// Find all schema types that match the <paramref name="qualifiedName"/>.
         /// </summary>
         /// <param name="qualifiedName">The case-insensitive fully qualified name to match.</param>
-        /// <returns>The list of elements that matched the <paramref name="qualifiedName"/>.</returns>
-        public IReadOnlyList<IEdmSchemaElement> FindElements(string qualifiedName)
+        /// <returns>A list of matching schema types, or null or no schema type matches.</returns>
+        public List<IEdmSchemaType> FindSchemaTypes(string qualifiedName)
         {
-            if (cache.TryGetValue(qualifiedName, out List<IEdmSchemaElement> results))
+            if (schemaTypesCache.TryGetValue(qualifiedName, out List<IEdmSchemaType> results))
             {
                 return results;
             }
 
-            return emptyList;
+            return null;
         }
 
         /// <summary>
-        /// Find all schema elements of type <typeparamref name="T"/> that match the specified <paramref name="qualifiedName"/>.
+        /// Find all operations that match the <paramref name="qualifiedName"/>.
         /// </summary>
-        /// <typeparam name="T">The type of schema elements to match.</typeparam>
         /// <param name="qualifiedName">The case-insensitive fully qualified name to match.</param>
-        /// <returns>The list of elements of type <typeparamref name="T"/> that matched the <paramref name="qualifiedName"/>.</returns>
-        public IReadOnlyList<T> FindElementsOfType<T>(string qualifiedName) where T : IEdmSchemaElement
+        /// <returns>A list of matching schema types, or null if no operation matches.</returns>
+        public List<IEdmOperation> FindOperations(string qualifiedName)
         {
-            IReadOnlyList<IEdmSchemaElement> elements = FindElements(qualifiedName);
-
-            List<T> results = new List<T>();
-            for (int i = 0; i < elements.Count; i++)
+            if (operationsCache.TryGetValue(qualifiedName, out var results))
             {
-                if (elements[i] is T element)
-                {
-                    results.Add(element);
-                }
+                return results;
             }
 
-            return results;
+            return null;
         }
 
         /// <summary>
-        /// Find a unique element of type <typeparamref name="T"/> that matches the <paramref name="qualifiedName"/>.
-        /// And exception is thrown if duplicates are found.
+        /// Find all vocabulary terms that match the <paramref name="qualifiedName"/>.
         /// </summary>
-        /// <typeparam name="T">The type of element to match.</typeparam>
         /// <param name="qualifiedName">The case-insensitive fully qualified name to match.</param>
-        /// <param name="duplicateErrorFunc">A function that generates an error message if a duplicate is found.</param>
-        /// <returns>The element that was found, or `null` if no match was found.</returns>
-        /// <exception cref="ODataException">Thrown if duplicate matches were found.</exception>
-        public T FindSingleOfType<T>(string qualifiedName, Func<object, string> duplicateErrorFunc) where T : IEdmSchemaElement
+        /// <returns>A list of matching terms, or null if no operation matches.</returns>
+        public List<IEdmTerm> FindTerms(string qualifiedName)
         {
-            IReadOnlyList<IEdmSchemaElement> elements = FindElements(qualifiedName);
-
-            if (elements.Count == 0)
+            if (termsCache.TryGetValue(qualifiedName, out var results))
             {
-                return default;
+                return results;
             }
 
-            T match = default;
-            for (int i = 0; i < elements.Count; i++)
-            {
-                if (elements[i] is T element)
-                {
-                    if (match == null)
-                    {
-                        match = element;
-                    }
-                    else
-                    {
-                        throw new ODataException(duplicateErrorFunc(qualifiedName));
-                    }
-                }
-            }
-
-            return match;
-        }
-        
-        private static void PopulateSchemaElements(IEdmModel model, Dictionary<string, List<IEdmSchemaElement>> cache)
-        {
-            foreach (IEdmSchemaElement element in model.SchemaElements)
-            {
-                string normalizedKey = element.FullName();
-                List<IEdmSchemaElement> results;
-                if (!cache.TryGetValue(normalizedKey, out results))
-                {
-                    results = new List<IEdmSchemaElement>();
-                    cache[normalizedKey] = results;
-                }
-
-                results.Add(element);
-            }
+            return null;
         }
 
         private void PopulateSchemaElements(IEdmModel model)
@@ -153,10 +102,6 @@ namespace Microsoft.OData.Edm
                 {
                     AddElementToCache(term, termsCache);
                 }
-                else
-                {
-                    AddElementToCache(element, cache);
-                }
             }
         }
 
@@ -172,35 +117,5 @@ namespace Microsoft.OData.Edm
 
             results.Add(element);
         }
-
-        public List<IEdmSchemaType> FindSchemaTypes(string qualifiedName)
-        {
-            if (schemaTypesCache.TryGetValue(qualifiedName, out var results))
-            {
-                return results;
-            }
-
-            return null;
-        }
-
-        public List<IEdmOperation> FindOperations(string qualifiedName)
-        {
-            if (operationsCache.TryGetValue(qualifiedName, out var results))
-            {
-                return results;
-            }
-
-            return null;
-        }
-        public List<IEdmTerm> FindTerms(string qualifiedName)
-        {
-            if (termsCache.TryGetValue(qualifiedName, out var results))
-            {
-                return results;
-            }
-
-            return null;
-        }
-
     }
 }

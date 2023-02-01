@@ -1,16 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CaseInsensitiveSchemaElementsCachetESTS.cs" company="Microsoft">
+// <copyright file="CaseInsensitiveSchemaElementsCacheTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using Microsoft.OData.Metadata;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Metadata
@@ -22,7 +16,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         [InlineData("NS.Models.Person")]
         [InlineData("ns.models.person")]
         [InlineData("ns.MODELS.perSon")]
-        public void FindElements_FindsElementBasedOnCaseInsensitiveMatch(string qualifiedName)
+        public void FindSchemaTypes_FindsTypesBasedOnCaseInsensitiveMatch(string qualifiedName)
         {
             var model = new EdmModel();
             var type1 = model.AddEntityType("NS.Models", "Person");
@@ -31,153 +25,142 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
 
-            var matches = cache.FindElements(qualifiedName);
+            var matches = cache.FindSchemaTypes(qualifiedName);
 
-            Assert.Equal(1, matches.Count);
+            Assert.Single(matches);
             Assert.Equal(type1, matches[0]);
         }
 
         [Fact]
-        public void FindElements_ReturnsEmptyList_IfNoMatchesFound()
+        public void FindSchemaTypes_FindsTypesThatMatchName()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
-
-            var matches = cache.FindElements("ns.models.dog");
-
-            Assert.Equal(0, matches.Count);
-        }
-
-        [Fact]
-        public void FindElements_ReturnsAllMatches_IfMultipleMatchesFound()
-        {
-            var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "PERSON", type2.ToTypeReference());
-            model.AddElement(func);
+            var p1 = model.AddEntityType("NS.Models", "Person");
+            p1.AddKeys(p1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddComplexType("NS.Models", "Address");
+            var p2 = model.AddComplexType("NS.Models", "person");
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
-            var matches = cache.FindElements("ns.models.person");
 
-            Assert.Equal(4, matches.Count);
-            Assert.Contains(matches, match => match == type1);
-            Assert.Contains(matches, match => match == type2);
-            Assert.Contains(matches, match => match == type3);
-            Assert.Contains(matches, match => match == func);
+            var matches = cache.FindSchemaTypes("ns.models.person");
+            Assert.Equal(2, matches.Count);
+            Assert.Equal(p1, matches[0]);
+            Assert.Equal(p2, matches[1]);
         }
 
         [Fact]
-        public void FindElementsOfType_ReturnsAllMatches_ThatMatchTheElementType()
+        public void FindSchemaTypes_ReturnsNullIfThereAreNoMatches()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "PERSON", type2.ToTypeReference());
-            model.AddElement(func);
+            var p1 = model.AddEntityType("NS.Models", "Person");
+            p1.AddKeys(p1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddComplexType("NS.Models", "Address");
+            model.AddComplexType("NS.Models", "person");
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
-            var matches = cache.FindElementsOfType<IEdmSchemaType>("ns.models.person");
 
-            Assert.Equal(3, matches.Count);
-            Assert.Contains(matches, match => match == type1);
-            Assert.Contains(matches, match => match == type2);
-            Assert.Contains(matches, match => match == type3);
+            var matches = cache.FindSchemaTypes("ns.models.pers");
+            Assert.Null(matches);
+        }
+
+        [Theory]
+        [InlineData("NS.Models.DoStuff")]
+        [InlineData("ns.models.dostuff")]
+        [InlineData("ns.MODELS.doStuff")]
+        public void FindOperations_FindsOperationsBasedOnCaseInsensitiveMatch(string qualifiedName)
+        {
+            var model = new EdmModel();
+            var operation = new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false));
+            model.AddElement(operation);
+            model.AddElement(new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false)));
+
+            var cache = new CaseInsensitiveSchemaElementsCache(model);
+
+            var matches = cache.FindOperations(qualifiedName);
+
+            Assert.Single(matches);
+            Assert.Equal(operation, matches[0]);
         }
 
         [Fact]
-        public void FindElementsOfType_ReturnsEmptyList_IfNoMatchFound()
+        public void FindOperations_FindsOperationsThatMatchName()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "MostRecent", type2.ToTypeReference());
-            model.AddElement(func);
-            model.AddComplexType("NS.Models", "Address");
+            var operation = new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false));
+            model.AddElement(new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false)));
+            var func1 = new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false));
+            var func2 = new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false));
+            func2.AddParameter("foo", EdmCoreModel.Instance.GetInt32(false));
+            model.AddElement(func1);
+            model.AddElement(func2);
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
 
-            var matches = cache.FindElementsOfType<IEdmSchemaType>("ns.models.dog");
-            Assert.Equal(0, matches.Count);
-
-            var functionMatches = cache.FindElementsOfType<IEdmOperation>("ns.models.person");
-            Assert.Equal(0, functionMatches.Count);
+            var matches = cache.FindOperations("ns.models.computeStuff");
+            Assert.Equal(2, matches.Count);
+            Assert.Contains(matches, match => match == func1);
+            Assert.Contains(matches, match => match == func2);
         }
 
         [Fact]
-        public void FindSingleOfType_ReturnsUniqueElement_ThatMatches()
+        public void FindOperations_ReturnsNullIfThereAreNoMatches()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "PERSON", type2.ToTypeReference());
-            model.AddElement(func);
-            var type4 = model.AddComplexType("NS.Models", "Address");
-
+            var operation = new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false));
+            model.AddElement(operation);
+            model.AddElement(new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false)));
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
-            var match = cache.FindSingleOfType<IEdmSchemaType>("ns.models.address", _ => string.Empty);
 
-            Assert.Equal(type4, match);
+            var matches = cache.FindOperations("ns.models.dost");
+            Assert.Null(matches);
+        }
+
+        [Theory]
+        [InlineData("NS.Models.SomeTerm")]
+        [InlineData("ns.models.someterm")]
+        [InlineData("ns.MODELS.someTerm")]
+        public void FindTerm_FindsTermsBasedOnCaseInsensitiveMatch(string qualifiedName)
+        {
+            var model = new EdmModel();
+            var term = model.AddTerm("NS.Models", "SomeTerm", EdmPrimitiveTypeKind.String);
+            model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
+
+            var cache = new CaseInsensitiveSchemaElementsCache(model);
+
+            var matches = cache.FindTerms(qualifiedName);
+
+            Assert.Single(matches);
+            Assert.Equal(term, matches[0]);
         }
 
         [Fact]
-        public void FindSingleOfType_ReturnsNull_IfNoMatchWasFound()
+        public void FindTerms_FindsAllTermshatMatchName()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "MostRecent", type2.ToTypeReference());
-            model.AddElement(func);
-            var type4 = model.AddComplexType("NS.Models", "Address");
-
+            var term1 = model.AddTerm("NS.Models", "SomeTerm", EdmPrimitiveTypeKind.String);
+            model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
+            var term2 = model.AddTerm("NS.Models", "someTerm", EdmPrimitiveTypeKind.String);
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
-            var match = cache.FindSingleOfType<IEdmSchemaType>("ns.models.dog", _ => string.Empty);
-            Assert.Null(match);
 
-            var functionMatch = cache.FindSingleOfType<IEdmOperation>("ns.models.person", _ => string.Empty);
-            Assert.Null(functionMatch);
+            var matches = cache.FindTerms("ns.models.someTerm");
+            Assert.Equal(2, matches.Count);
+            Assert.Contains(matches, match => match == term1);
+            Assert.Contains(matches, match => match == term2);
         }
 
         [Fact]
-        public void FindSingleOfType_ThrowsException_IfDuplicateFound()
+        public void FindTerms_ReturnsNullIfThereAreNoMatches()
         {
             var model = new EdmModel();
-            var type1 = model.AddEntityType("NS.Models", "Person");
-            type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type2 = model.AddEntityType("NS.Models", "person");
-            type2.AddKeys(type2.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
-            var type3 = model.AddComplexType("NS.Models", "perSon");
-            var func = new EdmFunction("NS.Models", "MostRecent", type2.ToTypeReference());
-            model.AddElement(func);
-            var type4 = model.AddComplexType("NS.Models", "Address");
-
+            model.AddTerm("NS.Models", "SomeTerm", EdmPrimitiveTypeKind.String);
+            model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
 
             var cache = new CaseInsensitiveSchemaElementsCache(model);
-            var exception = Assert.Throws<ODataException>(() =>
-                cache.FindSingleOfType<IEdmSchemaType>("ns.models.person", name => $"Duplicate types matching '{name}'."));
-            Assert.Equal("Duplicate types matching 'ns.models.person'.", exception.Message);
+
+            var matches = cache.FindTerms("ns.models.some");
+            Assert.Null(matches);
         }
     }
 }

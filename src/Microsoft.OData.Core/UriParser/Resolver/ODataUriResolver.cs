@@ -167,7 +167,7 @@ namespace Microsoft.OData.UriParser
             IReadOnlyList<IEdmTerm> results;
             if (model.IsImmutable())
             {
-                var cache = GetCaseInsensitiveSchemaElementsCache(model);
+                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
                 results = cache.FindTerms(termName);
             }
             else
@@ -202,23 +202,16 @@ namespace Microsoft.OData.UriParser
                 return type;
             }
 
+            IReadOnlyList<IEdmSchemaType> results;
             if (model.IsImmutable())
             {
                 CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
-                var types = cache.FindSchemaTypes(typeName);
-                if (types.Count == 0)
-                {
-                    return null;
-                }
-                else if (types.Count > 1)
-                {
-                    throw new ODataException(Strings.UriParserMetadata_MultipleMatchingTypesFound(typeName));
-                }
-
-                return types[0];
+                results = cache.FindSchemaTypes(typeName);
             }
-
-            IReadOnlyList<IEdmSchemaType> results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
+            else
+            {
+                results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
+            }
 
             if (results == null || results.Count == 0)
             {
@@ -251,12 +244,8 @@ namespace Microsoft.OData.UriParser
             IReadOnlyList<IEdmOperation> operations;
             if (model.IsImmutable())
             {
-                var cache = GetCaseInsensitiveSchemaElementsCache(model);
+                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
                 operations = cache.FindOperations(identifier);
-                if (operations == null)
-                {
-                    return Enumerable.Empty<IEdmOperation>();
-                }
             }
             else
             {
@@ -294,7 +283,17 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmOperation> operations;
+            if (model.IsImmutable())
+            {
+                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+                operations = cache.FindOperations(identifier);
+            }
+            else
+            {
+                operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            }
+
             if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
@@ -542,12 +541,6 @@ namespace Microsoft.OData.UriParser
 
         private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
-            if (model.IsImmutable())
-            {
-                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
-                return cache.FindElementsOfType<T>(qualifiedName);
-            }
-
             IList<T> results = new List<T>();
             FindSchemaElements<T>(model, qualifiedName, caseInsensitive, ref results);
 
