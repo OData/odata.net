@@ -2394,6 +2394,14 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "The property ref on type '{0}' with name '{1}' and alias '{2}' could not be resolved."
+        /// </summary>
+        internal static string Bad_UnresolvedPropertyRef(object p0, object p1, object p2)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.Bad_UnresolvedPropertyRef, p0, p1, p2);
+        }
+
+        /// <summary>
         /// A string like "The parameter '{0}' could not be found."
         /// </summary>
         internal static string Bad_UnresolvedParameter(object p0)

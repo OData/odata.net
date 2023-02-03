@@ -145,7 +145,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.BeginElement(element, this.schemaWriter.WriteEntityTypeElementHeader);
             if (element.DeclaredKey != null && element.DeclaredKey.Any())
             {
-                this.VisitEntityTypeDeclaredKey(element.DeclaredKey);
+                this.VisitEntityTypeDeclaredKey(element.DeclaredKeyRef());
             }
 
             this.VisitProperties(element.DeclaredStructuralProperties().Cast<IEdmProperty>());
@@ -680,18 +680,18 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void VisitEntityTypeDeclaredKey(IEnumerable<IEdmStructuralProperty> keyProperties)
+        private void VisitEntityTypeDeclaredKey(IEnumerable<IEdmPropertyRef> keyProperties)
         {
             this.schemaWriter.WriteDeclaredKeyPropertiesElementHeader();
             this.VisitPropertyRefs(keyProperties);
             this.schemaWriter.WriteArrayEndElement();
         }
 
-        private void VisitPropertyRefs(IEnumerable<IEdmStructuralProperty> properties)
+        private void VisitPropertyRefs(IEnumerable<IEdmPropertyRef> properties)
         {
-            foreach (IEdmStructuralProperty property in properties)
+            foreach (IEdmPropertyRef propertyRef in properties)
             {
-                this.schemaWriter.WritePropertyRefElement(property);
+                this.schemaWriter.WritePropertyRefElement(propertyRef);
             }
         }
 

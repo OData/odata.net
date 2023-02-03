@@ -2125,6 +2125,52 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Gets the declared key ref of the most defined entity with a declared key present.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>Key ref of this type.</returns>
+        public static IEnumerable<IEdmPropertyRef> KeyRef(this IEdmEntityType type)
+        {
+            EdmUtil.CheckArgumentNull(type, "type");
+            IEdmEntityType checkingType = type;
+            while (checkingType != null)
+            {
+                IEnumerable<IEdmPropertyRef> keyRefs = checkingType.DeclaredKeyRef();
+
+                if (keyRefs != null)
+                {
+                    return keyRefs;
+                }
+
+                checkingType = checkingType.BaseEntityType();
+            }
+
+            return Enumerable.Empty<IEdmPropertyRef>();
+        }
+
+        /// <summary>
+        /// Gets the declared key ref on a defined entity.
+        /// </summary>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <returns>Key ref of this type.</returns>
+        public static IEnumerable<IEdmPropertyRef> DeclaredKeyRef(this IEdmEntityType entityType)
+        {
+            EdmUtil.CheckArgumentNull(entityType, "entityType");
+
+            if (entityType is IEdmKeyPropertyRef keyPropertyRef)
+            {
+                return keyPropertyRef.DeclaredKeyRef;
+            }
+
+            if (entityType.DeclaredKey == null)
+            {
+                return null;
+            }
+
+            return entityType.DeclaredKey.Select(k => new EdmPropertyRef(k));
+        }
+
+        /// <summary>
         /// Determines whether the specified property is a key for its contained type.
         /// </summary>
         /// <param name="property">The property that may be a key.</param>

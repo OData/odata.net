@@ -150,10 +150,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Key);
         }
 
-        internal override void WritePropertyRefElement(IEdmStructuralProperty property)
+        internal override void WritePropertyRefElement(IEdmPropertyRef propertyRef)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_PropertyRef);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, property.Name, EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, propertyRef.Name, EdmValueWriter.StringAsXml);
+            this.WriteOptionalAttribute(CsdlConstants.Attribute_Alias, propertyRef.PropertyAlias, EdmValueWriter.StringAsXml);
             this.WriteEndElement();
         }
 

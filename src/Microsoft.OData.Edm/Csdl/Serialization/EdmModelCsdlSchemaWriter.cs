@@ -70,7 +70,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal abstract void WriteDeclaredKeyPropertiesElementHeader();
 
-        internal abstract void WritePropertyRefElement(IEdmStructuralProperty property);
+        internal abstract void WritePropertyRefElement(IEdmPropertyRef propertyRef);
 
         internal abstract void WriteNavigationPropertyElementHeader(IEdmNavigationProperty property);
 

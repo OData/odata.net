@@ -299,6 +299,7 @@ namespace Microsoft.OData.Edm
         internal const string Bad_UnresolvedEnumType = "Bad_UnresolvedEnumType";
         internal const string Bad_UnresolvedEnumMember = "Bad_UnresolvedEnumMember";
         internal const string Bad_UnresolvedProperty = "Bad_UnresolvedProperty";
+        internal const string Bad_UnresolvedPropertyRef = "Bad_UnresolvedPropertyRef";
         internal const string Bad_UnresolvedParameter = "Bad_UnresolvedParameter";
         internal const string Bad_UnresolvedReturn = "Bad_UnresolvedReturn";
         internal const string Bad_UnresolvedLabeledElement = "Bad_UnresolvedLabeledElement";

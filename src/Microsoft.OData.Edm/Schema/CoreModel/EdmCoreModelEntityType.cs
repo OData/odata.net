@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm
     /// <summary>
     /// The built-in Edm.EntityType abstract type in the core model.
     /// </summary>
-    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement, IEdmFullNamedElement
+    internal sealed class EdmCoreModelEntityType : EdmType, IEdmEntityType, IEdmCoreModelElement, IEdmFullNamedElement, IEdmKeyPropertyRef
     {
         /// <summary>
         /// The core Edm.EntityType singleton.
@@ -121,6 +121,11 @@ namespace Microsoft.OData.Edm
         {
             get { return Enumerable.Empty<IEdmStructuralProperty>(); }
         }
+
+        /// <summary>
+        /// Gets the key property ref immediately within this type.
+        /// </summary>
+        public IEnumerable<IEdmPropertyRef> DeclaredKeyRef => Enumerable.Empty<IEdmPropertyRef>();
 
         /// <summary>
         /// Searches for a structural or navigation property with the given name in this type.

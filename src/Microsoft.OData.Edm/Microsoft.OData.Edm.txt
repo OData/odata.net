@@ -302,6 +302,7 @@ Bad_UnresolvedEntityContainer=The entity container '{0}' could not be found.
 Bad_UnresolvedEnumType=The enum type '{0}' could not be found.
 Bad_UnresolvedEnumMember=The enum member '{0}' could not be found.
 Bad_UnresolvedProperty=The property '{0}' could not be found.
+Bad_UnresolvedPropertyRef=The property ref on type '{0}' with name '{1}' and alias '{2}' could not be resolved.
 Bad_UnresolvedParameter=The parameter '{0}' could not be found.
 Bad_UnresolvedReturn=The return of operation '{0}' could not be found.
 Bad_UnresolvedLabeledElement=The labeled element '{0}' could not be found.

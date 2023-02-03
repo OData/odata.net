@@ -2157,6 +2157,148 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWriteEntityType_WithASimpleKey_ReferencingAPropertyOfAComplex()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "EntityInfo");
+            var key = complex.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            complex.AddStructuralProperty("Created", EdmCoreModel.Instance.GetDateTimeOffset(true));
+            model.AddElement(complex);
+
+            EdmEntityType entity = new EdmEntityType("NS", "Category");
+            entity.AddStructuralProperty("Info", new EdmComplexTypeReference(complex, false));
+            entity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
+            model.AddElement(entity);
+            entity.AddKeys(new EdmPropertyRef(key, "Info/ID", "EntityInfoID"));
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"EntityInfo\">" +
+                  "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                  "<Property Name=\"Created\" Type=\"Edm.DateTimeOffset\" />" +
+                "</ComplexType>" +
+                "<EntityType Name=\"Category\">" +
+                  "<Key>" +
+                    "<PropertyRef Name=\"Info/ID\" Alias=\"EntityInfoID\" />" +
+                  "</Key>" +
+                  "<Property Name=\"Info\" Type=\"NS.EntityInfo\" Nullable=\"false\" />" +
+                  "<Property Name=\"Name\" Type=\"Edm.String\" />" +
+                "</EntityType></Schema>" +
+              "</edmx:DataServices>" +
+            "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityInfo"": {
+      ""$Kind"": ""ComplexType"",
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Created"": {
+        ""$Type"": ""Edm.DateTimeOffset"",
+        ""$Nullable"": true,
+        ""$Precision"": 0
+      }
+    },
+    ""Category"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        {
+          ""EntityInfoID"": ""Info/ID""
+        }
+      ],
+      ""Info"": {
+        ""$Type"": ""NS.EntityInfo""
+      },
+      ""Name"": {
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
+        public void CanWriteEntityType_WithAMultipleKeys_ReferencingAPropertyOfAComplex()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "EntityInfo");
+            var key = complex.AddStructuralProperty("ID", EdmCoreModel.Instance.GetInt32(false));
+            complex.AddStructuralProperty("Created", EdmCoreModel.Instance.GetDateTimeOffset(true));
+            model.AddElement(complex);
+
+            EdmEntityType entity = new EdmEntityType("NS", "Category");
+            entity.AddStructuralProperty("Info", new EdmComplexTypeReference(complex, false));
+            entity.AddStructuralProperty("Name", EdmCoreModel.Instance.GetString(true));
+            var id = entity.AddStructuralProperty("ID", EdmCoreModel.Instance.GetString(false));
+            model.AddElement(entity);
+            entity.AddKeys(
+                new EdmPropertyRef(id),
+                new EdmPropertyRef(key, "Info/ID", "EntityInfoID"));
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+  "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+    "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+      "<ComplexType Name=\"EntityInfo\">" +
+        "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+        "<Property Name=\"Created\" Type=\"Edm.DateTimeOffset\" />" +
+      "</ComplexType>" +
+      "<EntityType Name=\"Category\">" +
+        "<Key>" +
+          "<PropertyRef Name=\"ID\" />" +
+          "<PropertyRef Name=\"Info/ID\" Alias=\"EntityInfoID\" />" +
+        "</Key>" +
+        "<Property Name=\"Info\" Type=\"NS.EntityInfo\" Nullable=\"false\" />" +
+        "<Property Name=\"Name\" Type=\"Edm.String\" />" +
+        "<Property Name=\"ID\" Type=\"Edm.String\" Nullable=\"false\" />" +
+      "</EntityType>" +
+    "</Schema>" +
+  "</edmx:DataServices>" +
+"</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""EntityInfo"": {
+      ""$Kind"": ""ComplexType"",
+      ""ID"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Created"": {
+        ""$Type"": ""Edm.DateTimeOffset"",
+        ""$Nullable"": true,
+        ""$Precision"": 0
+      }
+    },
+    ""Category"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""ID"",
+        {
+          ""EntityInfoID"": ""Info/ID""
+        }
+      ],
+      ""Info"": {
+        ""$Type"": ""NS.EntityInfo""
+      },
+      ""Name"": {
+        ""$Nullable"": true
+      },
+      ""ID"": {}
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void CanWriteAnnotationPathExpression()
         {
             // Arrange

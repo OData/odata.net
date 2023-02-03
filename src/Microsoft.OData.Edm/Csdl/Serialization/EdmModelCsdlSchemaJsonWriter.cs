@@ -201,15 +201,28 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Write the Key property
+        /// Write the Key property ref
         /// </summary>
-        /// <param name="property"></param>
-        internal override void WritePropertyRefElement(IEdmStructuralProperty property)
+        /// <param name="propertyRef">The property ref.</param>
+        internal override void WritePropertyRefElement(IEdmPropertyRef propertyRef)
         {
-            // Key properties without a key alias are represented as strings containing the property name.
-            // Key properties with a key alias are represented as objects with one member whose name is the key alias and whose value is a string containing the path to the property.
-            // TODO: It seems the second one is not supported.
-            this.jsonWriter.WriteStringValue(property.Name);
+            if (propertyRef.PropertyAlias != null)
+            {
+                // Key properties with a key alias are represented as objects with one member
+                // whose name is the key alias and whose value is a string containing the path to the property.
+                this.jsonWriter.WriteStartObject();
+
+                this.jsonWriter.WritePropertyName(propertyRef.PropertyAlias);
+
+                this.jsonWriter.WriteStringValue(propertyRef.Name);
+
+                this.jsonWriter.WriteEndObject();
+            }
+            else
+            {
+                // Key properties without a key alias are represented as strings containing the property name.
+                this.jsonWriter.WriteStringValue(propertyRef.Name);
+            }
         }
 
         /// <summary>
