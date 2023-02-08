@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CaseInsensitiveSchemaElementsCacheTests.cs" company="Microsoft">
+// <copyright file="NormalizedSchemaElementsCacheTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,7 +9,7 @@ using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Metadata
 {
-    public class CaseInsensitiveSchemaElementsCacheTests
+    public class NormalizedSchemaElementsCacheTests
     {
 
         [Theory]
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             type1.AddKeys(type1.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             model.AddComplexType("NS.Models", "Address");
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindSchemaTypes(qualifiedName);
 
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddComplexType("NS.Models", "Address");
             var p2 = model.AddComplexType("NS.Models", "person");
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindSchemaTypes("ns.models.person");
             Assert.Equal(2, matches.Count);
@@ -57,7 +57,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddComplexType("NS.Models", "Address");
             model.AddComplexType("NS.Models", "person");
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindSchemaTypes("ns.models.pers");
             Assert.Null(matches);
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddElement(operation);
             model.AddElement(new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false)));
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindOperations(qualifiedName);
 
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddElement(func1);
             model.AddElement(func2);
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindOperations("ns.models.computeStuff");
             Assert.Equal(2, matches.Count);
@@ -110,7 +110,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddElement(operation);
             model.AddElement(new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false)));
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindOperations("ns.models.dost");
             Assert.Null(matches);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             var term = model.AddTerm("NS.Models", "SomeTerm", EdmPrimitiveTypeKind.String);
             model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindTerms(qualifiedName);
 
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
             var term2 = model.AddTerm("NS.Models", "someTerm", EdmPrimitiveTypeKind.String);
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindTerms("ns.models.someTerm");
             Assert.Equal(2, matches.Count);
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             model.AddTerm("NS.Models", "SomeTerm", EdmPrimitiveTypeKind.String);
             model.AddTerm("NS.Models", "OtherTerm", EdmPrimitiveTypeKind.String);
 
-            var cache = new CaseInsensitiveSchemaElementsCache(model);
+            var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindTerms("ns.models.some");
             Assert.Null(matches);

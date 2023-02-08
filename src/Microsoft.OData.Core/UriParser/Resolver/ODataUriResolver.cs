@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -164,7 +165,7 @@ namespace Microsoft.OData.UriParser
                 return term;
             }
 
-            IReadOnlyList<IEdmTerm> results = FindElementsCaseInsensitive(model, termName, (cache, key) => cache.FindTerms(key));
+            IReadOnlyList<IEdmTerm> results = FindSchemaElements(model, termName, (cache, key) => cache.FindTerms(key));
 
             if (results == null || results.Count == 0)
             {
@@ -193,7 +194,7 @@ namespace Microsoft.OData.UriParser
                 return type;
             }
 
-            IReadOnlyList<IEdmSchemaType> results = FindElementsCaseInsensitive(model, typeName, (cache, key) => cache.FindSchemaTypes(key));
+            IReadOnlyList<IEdmSchemaType> results = FindSchemaElements(model, typeName, (cache, key) => cache.FindSchemaTypes(key));
 
             if (results == null || results.Count == 0)
             {
@@ -223,7 +224,7 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindElementsCaseInsensitive(model, identifier, (cache, key) => cache.FindOperations(key));
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
 
             if (operations != null && operations.Count > 0)
             {
@@ -256,7 +257,7 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IReadOnlyList<IEdmOperation> operations = FindElementsCaseInsensitive(model, identifier, (cache, key) => cache.FindOperations(key));
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
 
             if (operations != null && operations.Count > 0)
             {
@@ -503,14 +504,14 @@ namespace Microsoft.OData.UriParser
             return container.GetRequiredService<ODataUriResolver>();
         }
 
-        private static IReadOnlyList<T> FindElementsCaseInsensitive<T>(
+        private static IReadOnlyList<T> FindSchemaElements<T>(
             IEdmModel model,
             string identifier,
-            Func<CaseInsensitiveSchemaElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
+            Func<NormalizedSchemaElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
         {
             if (model.IsImmutable())
             {
-                CaseInsensitiveSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+                NormalizedSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
                 return cacheLookupFunc(cache, identifier);
             }
 
@@ -521,17 +522,17 @@ namespace Microsoft.OData.UriParser
         private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
             IList<T> results = new List<T>();
-            FindSchemaElements<T>(model, qualifiedName, caseInsensitive, ref results);
+            FindSchemaElementsInModel<T>(model, qualifiedName, caseInsensitive, ref results);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                FindSchemaElements<T>(reference, qualifiedName, caseInsensitive, ref results);
+                FindSchemaElementsInModel<T>(reference, qualifiedName, caseInsensitive, ref results);
             }
 
             return results as IReadOnlyList<T>;
         }
 
-        private static void FindSchemaElements<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
+        private static void FindSchemaElementsInModel<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
         {
             foreach (IEdmSchemaElement schema in model.SchemaElements)
             {
@@ -545,14 +546,11 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        private static CaseInsensitiveSchemaElementsCache GetCaseInsensitiveSchemaElementsCache(IEdmModel model)
+        private static NormalizedSchemaElementsCache GetCaseInsensitiveSchemaElementsCache(IEdmModel model)
         {
-            if (model == null)
-            {
-                throw new ArgumentNullException(nameof(model));
-            }
+            Debug.Assert(model != null);
 
-            CaseInsensitiveSchemaElementsCache cache = model.GetAnnotationValue<CaseInsensitiveSchemaElementsCache>(model);
+            NormalizedSchemaElementsCache cache = model.GetAnnotationValue<NormalizedSchemaElementsCache>(model);
             if (cache == null)
             {
                 // There's a chance 2 or more threads can reach here concurrently
@@ -562,7 +560,7 @@ namespace Microsoft.OData.UriParser
                 // We can avoid this waste by providing a method that user can call manually to build
                 // the cache before any request is made. But I did not want to add a new method to the public API.
                 // We revisit this if it turns out to be a problem in practice.
-                cache = new CaseInsensitiveSchemaElementsCache(model);
+                cache = new NormalizedSchemaElementsCache(model);
                 model.SetAnnotationValue(model, cache);
             }
 

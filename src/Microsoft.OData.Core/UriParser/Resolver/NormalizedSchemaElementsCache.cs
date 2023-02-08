@@ -1,11 +1,12 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CaseInsensitiveSchemaElementsCache.cs" company="Microsoft">
+// <copyright file="NormalizedSchemaElementsCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
@@ -17,7 +18,7 @@ namespace Microsoft.OData.Edm
     /// it doesn't exist in the model. For this reason, it's important that
     /// the model be immutable.
     /// </summary>
-    internal sealed class CaseInsensitiveSchemaElementsCache
+    internal sealed class NormalizedSchemaElementsCache
     {
         // We create different caches for different types of schema elements because all current usage request schema elements
         // of specific types. If we were to use a single dictionary <string, ISchemaElement> we would need
@@ -31,8 +32,10 @@ namespace Microsoft.OData.Edm
         /// the specified <paramref name="model"/>.
         /// </summary>
         /// <param name="model">The model whose schema elements to cache. This model should be immutable. See <see cref="ExtensionMethods.MarkAsImmutable(IEdmModel)"/>.</param>
-        public CaseInsensitiveSchemaElementsCache(IEdmModel model)
+        public NormalizedSchemaElementsCache(IEdmModel model)
         {
+            Debug.Assert(model != null);
+
             PopulateSchemaElements(model);
 
             foreach (IEdmModel referencedModel in model.ReferencedModels)
