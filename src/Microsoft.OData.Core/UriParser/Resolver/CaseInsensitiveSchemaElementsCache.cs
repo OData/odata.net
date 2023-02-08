@@ -45,7 +45,7 @@ namespace Microsoft.OData.Edm
         /// Find all schema types that match the <paramref name="qualifiedName"/>.
         /// </summary>
         /// <param name="qualifiedName">The case-insensitive fully qualified name to match.</param>
-        /// <returns>A list of matching schema types, or null or no schema type matches.</returns>
+        /// <returns>A list of matching schema types, or null if no schema type matches.</returns>
         public List<IEdmSchemaType> FindSchemaTypes(string qualifiedName)
         {
             if (schemaTypesCache.TryGetValue(qualifiedName, out List<IEdmSchemaType> results))
@@ -60,10 +60,10 @@ namespace Microsoft.OData.Edm
         /// Find all operations that match the <paramref name="qualifiedName"/>.
         /// </summary>
         /// <param name="qualifiedName">The case-insensitive fully qualified name to match.</param>
-        /// <returns>A list of matching schema types, or null if no operation matches.</returns>
+        /// <returns>A list of matching operations, or null if no operation matches.</returns>
         public List<IEdmOperation> FindOperations(string qualifiedName)
         {
-            if (operationsCache.TryGetValue(qualifiedName, out var results))
+            if (operationsCache.TryGetValue(qualifiedName, out List<IEdmOperation> results))
             {
                 return results;
             }
@@ -78,7 +78,7 @@ namespace Microsoft.OData.Edm
         /// <returns>A list of matching terms, or null if no operation matches.</returns>
         public List<IEdmTerm> FindTerms(string qualifiedName)
         {
-            if (termsCache.TryGetValue(qualifiedName, out var results))
+            if (termsCache.TryGetValue(qualifiedName, out List<IEdmTerm> results))
             {
                 return results;
             }

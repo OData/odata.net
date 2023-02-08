@@ -518,7 +518,7 @@ namespace Microsoft.OData.UriParser
 
         }
 
-        private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
             IList<T> results = new List<T>();
             FindSchemaElements<T>(model, qualifiedName, caseInsensitive, ref results);
