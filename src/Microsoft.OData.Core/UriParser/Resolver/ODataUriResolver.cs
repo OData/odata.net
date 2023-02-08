@@ -511,12 +511,11 @@ namespace Microsoft.OData.UriParser
         {
             if (model.IsImmutable())
             {
-                NormalizedSchemaElementsCache cache = GetCaseInsensitiveSchemaElementsCache(model);
+                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
                 return cacheLookupFunc(cache, identifier);
             }
 
             return FindAcrossModels<T>(model, identifier, caseInsensitive: true);
-
         }
 
         private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
@@ -546,7 +545,7 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        private static NormalizedSchemaElementsCache GetCaseInsensitiveSchemaElementsCache(IEdmModel model)
+        private static NormalizedSchemaElementsCache GetNormalizedSchemaElementsCache(IEdmModel model)
         {
             Debug.Assert(model != null);
 
