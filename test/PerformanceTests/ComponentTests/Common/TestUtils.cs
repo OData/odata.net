@@ -51,6 +51,16 @@ namespace Microsoft.OData.Performance
         }
 
         /// <summary>
+        /// Reads the test model based on the sample TripPin service.
+        /// </summary>
+        /// <param name="markAsImmutable">Whether to mark the model as immutable.</param>
+        /// <returns>The IEdmModel representing the TripPin service.</returns>
+        public static IEdmModel GetTripPinModel(bool markAsImmutable = true)
+        {
+            return ReadModelFromResources("TripPin.csdl", markAsImmutable);
+        }
+
+        /// <summary>
         /// Reads a resource from the test assembly.
         /// </summary>
         /// <param name="resourceName">The name of the resource to retrieve.</param>

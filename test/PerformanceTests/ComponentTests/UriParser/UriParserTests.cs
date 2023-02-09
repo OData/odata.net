@@ -20,7 +20,10 @@ namespace Microsoft.OData.Performance
     public class UriParserTests
     {
         private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
+        private static readonly IEdmModel TripPinModelMutable = TestUtils.GetTripPinModel(markAsImmutable: false);
+        private static readonly IEdmModel TripPinModelImmutable = TestUtils.GetTripPinModel();
         private static readonly Uri ServiceRoot = new Uri(@"http://odata.org/Perf.svc/");
+        private ODataUriResolver caseInsensitiveResolver= new ODataUriResolver() { EnableCaseInsensitive = true };
 
         [Benchmark]
         public void ParseUri()
@@ -48,6 +51,36 @@ namespace Microsoft.OData.Performance
             int roundPerIteration = 5000;
 
             TestExecution(query, roundPerIteration, parser => parser.ParsePath());
+        }
+
+        [Benchmark]
+        public void ParsePathWithTypeCast()
+        {
+            string query = "Employee(1)/PurchaseOrderHeader/Vendor/ProductVendor";
+
+            int roundPerIteration = 5000;
+
+            TestExecution(query, roundPerIteration, parser => parser.ParsePath());
+        }
+
+        [Benchmark]
+        public void ParsePathCaseInsensitiveWithMutableModel()
+        {
+            string query = "people('username')/trips(1)/planITems(1)/microsoft.odata.sampleService.Models.trippin.publicTransportation";
+
+            int roundPerIteration = 5000;
+
+            TestExecution(query, roundPerIteration, parser => parser.ParsePath(), model: TripPinModelMutable, enableCaseInsensitive: true);
+        }
+
+        [Benchmark]
+        public void ParsePathCaseInsensitiveWithImmutableModel()
+        {
+            string query = "people('username')/trips(1)/planITems(1)/microsoft.odata.sampleService.Models.trippin.publicTransportation";
+
+            int roundPerIteration = 5000;
+
+            TestExecution(query, roundPerIteration, parser => parser.ParsePath(), model: TripPinModelImmutable, enableCaseInsensitive: true);
         }
 
         [Benchmark]
@@ -83,11 +116,15 @@ namespace Microsoft.OData.Performance
             TestExecution(query, roundPerIteration, parser => parser.ParseSelectAndExpand());
         }
 
-        private void TestExecution(string query, int roundPerIteration, Action<ODataUriParser> parseAction)
+        private void TestExecution(string query, int roundPerIteration, Action<ODataUriParser> parseAction, IEdmModel model = null, bool enableCaseInsensitive = false)
         {
             for (int i = 0; i < roundPerIteration; i++)
             {
-                ODataUriParser parser = new ODataUriParser(Model, ServiceRoot, new Uri(ServiceRoot, query));
+                ODataUriParser parser = new ODataUriParser(model ?? Model, ServiceRoot, new Uri(ServiceRoot, query));
+                if (enableCaseInsensitive)
+                {
+                    parser.Resolver = caseInsensitiveResolver;
+                }
                 parseAction(parser);
             }
         }

@@ -5,13 +5,11 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 
 namespace Microsoft.OData.UriParser
 {
@@ -167,7 +165,7 @@ namespace Microsoft.OData.UriParser
                 return term;
             }
 
-            IList<IEdmTerm> results = FindAcrossModels<IEdmTerm>(model, termName, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmTerm> results = FindSchemaElements(model, termName, (cache, key) => cache.FindTerms(key));
 
             if (results == null || results.Count == 0)
             {
@@ -196,7 +194,7 @@ namespace Microsoft.OData.UriParser
                 return type;
             }
 
-            IList<IEdmSchemaType> results = FindAcrossModels<IEdmSchemaType>(model, typeName, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmSchemaType> results = FindSchemaElements(model, typeName, (cache, key) => cache.FindSchemaTypes(key));
 
             if (results == null || results.Count == 0)
             {
@@ -226,7 +224,8 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
+
             if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
@@ -258,7 +257,8 @@ namespace Microsoft.OData.UriParser
                 return results;
             }
 
-            IList<IEdmOperation> operations = FindAcrossModels<IEdmOperation>(model, identifier, /*caseInsensitive*/ true);
+            IReadOnlyList<IEdmOperation> operations = FindSchemaElements(model, identifier, (cache, key) => cache.FindOperations(key));
+
             if (operations != null && operations.Count > 0)
             {
                 IList<IEdmOperation> matchedOperation = new List<IEdmOperation>();
@@ -504,20 +504,34 @@ namespace Microsoft.OData.UriParser
             return container.GetRequiredService<ODataUriResolver>();
         }
 
-        private static IList<T> FindAcrossModels<T>(IEdmModel model, String qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
+        private static IReadOnlyList<T> FindSchemaElements<T>(
+            IEdmModel model,
+            string identifier,
+            Func<NormalizedSchemaElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
+        {
+            if (model.IsImmutable())
+            {
+                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                return cacheLookupFunc(cache, identifier);
+            }
+
+            return FindAcrossModels<T>(model, identifier, caseInsensitive: true);
+        }
+
+        private static IReadOnlyList<T> FindAcrossModels<T>(IEdmModel model, string qualifiedName, bool caseInsensitive) where T : IEdmSchemaElement
         {
             IList<T> results = new List<T>();
-            FindSchemaElements<T>(model, qualifiedName, caseInsensitive, ref results);
+            FindSchemaElementsInModel<T>(model, qualifiedName, caseInsensitive, ref results);
 
             foreach (IEdmModel reference in model.ReferencedModels)
             {
-                FindSchemaElements<T>(reference, qualifiedName, caseInsensitive, ref results);
+                FindSchemaElementsInModel<T>(reference, qualifiedName, caseInsensitive, ref results);
             }
 
-            return results;
+            return results as IReadOnlyList<T>;
         }
 
-        private static void FindSchemaElements<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
+        private static void FindSchemaElementsInModel<T>(IEdmModel model, string qualifiedName, bool caseInsensitive, ref IList<T> results) where T : IEdmSchemaElement
         {
             foreach (IEdmSchemaElement schema in model.SchemaElements)
             {
@@ -529,6 +543,27 @@ namespace Microsoft.OData.UriParser
                     }
                 }
             }
+        }
+
+        private static NormalizedSchemaElementsCache GetNormalizedSchemaElementsCache(IEdmModel model)
+        {
+            Debug.Assert(model != null);
+
+            NormalizedSchemaElementsCache cache = model.GetAnnotationValue<NormalizedSchemaElementsCache>(model);
+            if (cache == null)
+            {
+                // There's a chance 2 or more threads can reach here concurrently
+                // for the first N parallel requests, and each will build the cache.
+                // While that is wasteful, it doesn't affect the behaviour of the cache since the model is immutable.
+                // The last cache to be attached to the model will "win" and be used for all subsequent requests.
+                // We can avoid this waste by providing a method that user can call manually to build
+                // the cache before any request is made. But I did not want to add a new method to the public API.
+                // We revisit this if it turns out to be a problem in practice.
+                cache = new NormalizedSchemaElementsCache(model);
+                model.SetAnnotationValue(model, cache);
+            }
+
+            return cache;
         }
     }
 }
