@@ -349,6 +349,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Action or function is available"" />
     <Annotation Term=""Core.LongDescription"" String=""The annotation value will usually be an expression, e.g. using properties of the binding parameter type for instance-dependent availability, or using properties of a singleton for global availability. The static value `null` means that availability cannot be determined upfront and is instead expressed as an operation advertisement."" />
   </Term>
+  <Term Name=""RequiresExplicitBinding"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Action Function"">
+    <Annotation Term=""Core.Description"" String=""This bound action or function is only available on model elements annotated with the ExplicitOperationBindings term."" />
+  </Term>
+  <Term Name=""ExplicitOperationBindings"" Type=""Collection(Core.QualifiedBoundOperationName)"">
+    <Annotation Term=""Core.Description"" String=""The qualified names of explicitly bound operations that are supported on the target model element. These operations are in addition to any operations not annotated with RequiresExplicitBinding that are bound to the type of the target model element."" />
+  </Term>
 </Schema>";
 
             var s = coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
@@ -377,6 +383,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             var isLanguageDependentType = isLanguageDependentTerm.Type.Definition as IEdmTypeDefinition;
             Assert.NotNull(isLanguageDependentType);
             Assert.Equal(EdmPrimitiveTypeKind.Boolean, isLanguageDependentType.UnderlyingType.PrimitiveKind);
+
+            var requiresExplicitBindingTerm = coreVocModel.FindTerm("Org.OData.Core.V1.RequiresExplicitBinding");
+            Assert.NotNull(requiresExplicitBindingTerm);
+            var requiresExplicitBindingType = requiresExplicitBindingTerm.Type.Definition as IEdmTypeDefinition;
+            Assert.NotNull(requiresExplicitBindingType);
+            Assert.Equal(EdmPrimitiveTypeKind.Boolean, requiresExplicitBindingType.UnderlyingType.PrimitiveKind);
+
+            var explicitOperationBindingsTerm = coreVocModel.FindTerm("Org.OData.Core.V1.ExplicitOperationBindings");
+            Assert.NotNull(explicitOperationBindingsTerm);
+            var explicitOperationBindingsType = explicitOperationBindingsTerm.Type.Definition;
+            Assert.NotNull(explicitOperationBindingsType);
+            Assert.Equal("Collection(Org.OData.Core.V1.QualifiedBoundOperationName)", explicitOperationBindingsType.FullTypeName());
+            Assert.Equal(EdmTypeKind.Collection, explicitOperationBindingsType.TypeKind);
 
             StringWriter sw = new StringWriter();
             XmlWriterSettings settings = new XmlWriterSettings();
