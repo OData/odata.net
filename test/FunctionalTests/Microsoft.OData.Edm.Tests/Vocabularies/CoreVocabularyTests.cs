@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </TypeDefinition>
   <TypeDefinition Name=""QualifiedBoundOperationName"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""The qualified name of a bound action or function in scope."" />
-    <Annotation Term=""Core.LongDescription"" String=""Either&#xA;- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type,&#xA;- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or&#xA;- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.&#xA;      "" />
+    <Annotation Term=""Core.LongDescription"" String=""Either&#xA;- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type,&#xA;- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or&#xA;- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.&#xA;"" />
   </TypeDefinition>
   <TypeDefinition Name=""LocalDateTime"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A string representing a Local Date-Time value with no offset."" />
