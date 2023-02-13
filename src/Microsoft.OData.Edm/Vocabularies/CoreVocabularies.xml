@@ -391,6 +391,17 @@
     <Annotation Term="Core.Description" String="The qualified name of a type in scope." />
   </TypeDefinition>
 
+  <TypeDefinition Name="QualifiedBoundOperationName" UnderlyingType="Edm.String">
+    <Annotation Term="Core.Description" String="The qualified name of a bound action or function in scope." />
+    <Annotation Term="Core.LongDescription">
+      <String>Either
+- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type,
+- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or
+- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.
+      </String>
+    </Annotation>
+  </TypeDefinition>
+
   <Term Name="Ordered" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property NavigationProperty EntitySet ReturnType">
     <Annotation Term="Core.Description" String="Collection has a stable order. Ordered collections of primitive or complex types can be indexed by ordinal." />
   </Term>

@@ -54,6 +54,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <TypeDefinition Name=""QualifiedTypeName"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""The qualified name of a type in scope."" />
   </TypeDefinition>
+  <TypeDefinition Name=""QualifiedBoundOperationName"" UnderlyingType=""Edm.String"">
+    <Annotation Term=""Core.Description"" String=""The qualified name of a bound action or function in scope."" />
+    <Annotation Term=""Core.LongDescription"" String=""Either&#xA;- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type,&#xA;- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or&#xA;- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.&#xA;      "" />
+  </TypeDefinition>
   <TypeDefinition Name=""LocalDateTime"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A string representing a Local Date-Time value with no offset."" />
     <Annotation Term=""Validation.Pattern"" String=""^[0-9]{4}-(0[1-9]|1[0-2])-(0[1-9]|[12][0-9]|3[01])T([01][0-9]|2[0-3]):[0-5][0-9](:[0-5][0-9](\\.[0-9]+)?)?$"" />
@@ -397,6 +401,10 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.Equal("Collection(Org.OData.Core.V1.QualifiedBoundOperationName)", explicitOperationBindingsType.FullTypeName());
             Assert.Equal(EdmTypeKind.Collection, explicitOperationBindingsType.TypeKind);
 
+            var qualifiedBoundOperationNameType = coreVocModel.FindType("Org.OData.Core.V1.QualifiedBoundOperationName");
+            Assert.NotNull(qualifiedBoundOperationNameType);
+            Assert.Equal(qualifiedBoundOperationNameType, explicitOperationBindingsType.AsElementType());
+
             StringWriter sw = new StringWriter();
             XmlWriterSettings settings = new XmlWriterSettings();
             settings.Indent = true;
@@ -478,6 +486,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
 
         [Theory]
+        [InlineData("ExplicitOperationBindings", "Collection(Org.OData.Core.V1.QualifiedBoundOperationName)", null)]
+        [InlineData("RequiresExplicitBinding", "Org.OData.Core.V1.Tag", "Action Function")]
         [InlineData("OperationAvailable", "Edm.Boolean", "Action Function")]
         [InlineData("OptionalParameter", "Org.OData.Core.V1.OptionalParameterType", "Parameter")]
         [InlineData("AlternateKeys", "Collection(Org.OData.Core.V1.AlternateKey)", "EntityType EntitySet NavigationProperty")]
@@ -529,6 +539,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
 
         [Theory]
+        [InlineData("QualifiedBoundOperationName", "Edm.String")]
         [InlineData("MessageSeverity", "Edm.String")]
         [InlineData("Tag", "Edm.Boolean")]
         [InlineData("QualifiedTermName", "Edm.String")]
