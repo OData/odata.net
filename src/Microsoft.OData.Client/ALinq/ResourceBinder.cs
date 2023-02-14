@@ -387,7 +387,7 @@ namespace Microsoft.OData.Client
 
                     Debug.Assert(schemaType != null, "SchemaType can not be null.");
 
-                    var keys = schemaType.Key().ToArray();
+                    IEdmStructuralProperty[] keys = schemaType.Key().ToArray();
                     // Obtain the key properties from EdmEntityType, and compare them with keys obtained from predicates
                     // By this time we are sure that keyValuesFromPredicates has unique set (i.e. no duplicates), and has all the keys in it.
                     // So just comparing count with EDMModel's keys is enough for validation
@@ -414,6 +414,7 @@ namespace Microsoft.OData.Client
             List<Expression> keyPredicates, Dictionary<Expression, string> expToPropertyNameMap)
         {
             bool needAdjust = false;
+
             for (int i = 0; i < edmKeys.Length; ++i)
             {
                 IEdmStructuralProperty edmKey = edmKeys[i];
@@ -436,6 +437,7 @@ namespace Microsoft.OData.Client
                     foreach (var exp in keyPredicates)
                     {
                         string propertyName = expToPropertyNameMap[exp];
+
                         if (key.Name == propertyName)
                         {
                             foundExp = exp;

@@ -429,6 +429,7 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             kind = KeyKind.AttributedKey;
+
             return true;
         }
     }
