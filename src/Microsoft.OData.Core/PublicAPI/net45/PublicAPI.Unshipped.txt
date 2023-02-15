@@ -1,2 +1,0 @@
-﻿override Microsoft.OData.ODataEnumValue.ToString() -> string
-override Microsoft.OData.ODataPrimitiveValue.ToString() -> string
