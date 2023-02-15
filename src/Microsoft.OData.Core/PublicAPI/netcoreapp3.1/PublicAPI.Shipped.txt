@@ -1,4 +1,6 @@
-﻿abstract Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementation() -> Microsoft.OData.ODataBatchOperationRequestMessage
+override Microsoft.OData.ODataEnumValue.ToString() -> string
+override Microsoft.OData.ODataPrimitiveValue.ToString() -> string
+abstract Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementation() -> Microsoft.OData.ODataBatchOperationRequestMessage
 abstract Microsoft.OData.ODataBatchReader.CreateOperationResponseMessageImplementation() -> Microsoft.OData.ODataBatchOperationResponseMessage
 abstract Microsoft.OData.ODataBatchReader.ReadAtChangesetEndImplementation() -> Microsoft.OData.ODataBatchReaderState
 abstract Microsoft.OData.ODataBatchReader.ReadAtChangesetStartImplementation() -> Microsoft.OData.ODataBatchReaderState
