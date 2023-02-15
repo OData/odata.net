@@ -333,6 +333,7 @@ namespace Microsoft.OData.Client
             Debug.Assert(predicates != null, "predicates != null");
 
             Dictionary<PropertyInfo, ConstantExpression> keyValuesFromPredicates = null;
+            Dictionary<Expression, string> expToPropertyNameMap = null;
             nonKeyPredicates = null;
             List<Expression> keyPredicates = null;
 
@@ -345,6 +346,7 @@ namespace Microsoft.OData.Client
                     if (keyValuesFromPredicates == null)
                     {
                         keyValuesFromPredicates = new Dictionary<PropertyInfo, ConstantExpression>(EqualityComparer<PropertyInfo>.Default);
+                        expToPropertyNameMap = new Dictionary<Expression, string>();
                         keyPredicates = new List<Expression>();
                     }
                     else if (keyValuesFromPredicates.ContainsKey(property))
@@ -356,6 +358,7 @@ namespace Microsoft.OData.Client
 
                     keyValuesFromPredicates.Add(property, constantValue);
                     keyPredicates.Add(predicate);
+                    expToPropertyNameMap.Add(predicate, ClientTypeUtil.GetServerDefinedName(property));
                 }
                 else
                 {
@@ -384,17 +387,79 @@ namespace Microsoft.OData.Client
 
                     Debug.Assert(schemaType != null, "SchemaType can not be null.");
 
+                    IEdmStructuralProperty[] keys = schemaType.Key().ToArray();
                     // Obtain the key properties from EdmEntityType, and compare them with keys obtained from predicates
                     // By this time we are sure that keyValuesFromPredicates has unique set (i.e. no duplicates), and has all the keys in it.
                     // So just comparing count with EDMModel's keys is enough for validation
-                    bool allKeysPresent = schemaType.Key().Count() == keyValuesFromPredicates.Keys.Count;
+                    bool allKeysPresent = keys.Length == keyValuesFromPredicates.Keys.Count;
 
                     if (!allKeysPresent)
                     {
                         keyValuesFromPredicates = null;
                         keyPredicates = null;
                     }
+
+                    if (allKeysPresent && keys.Length > 1)
+                    {
+                        // OData Client generates a request that should be the canonical URL, based on the order of keys in the CSDL.
+                        keyPredicates = AdjustKeyExpressionsBasedOnKeyOrders(keys, keyPredicates, expToPropertyNameMap);
+                    }
                 }
+            }
+
+            return keyPredicates;
+        }
+
+        private static List<Expression> AdjustKeyExpressionsBasedOnKeyOrders(IEdmStructuralProperty[] edmKeys,
+            List<Expression> keyPredicates, Dictionary<Expression, string> expToPropertyNameMap)
+        {
+            bool needAdjust = false;
+
+            for (int i = 0; i < edmKeys.Length; ++i)
+            {
+                IEdmStructuralProperty edmKey = edmKeys[i];
+                Expression keyExpr = keyPredicates[i];
+
+                if (edmKey.Name != expToPropertyNameMap[keyExpr])
+                {
+                    needAdjust = true;
+                    break;
+                }
+            }
+
+            if (needAdjust)
+            {
+                List<Expression> orderedKeyPredicates = new List<Expression>();
+                foreach (var key in edmKeys)
+                {
+                    // find
+                    Expression foundExp = null;
+                    foreach (var exp in keyPredicates)
+                    {
+                        string propertyName = expToPropertyNameMap[exp];
+
+                        if (key.Name == propertyName)
+                        {
+                            foundExp = exp;
+                            break;
+                        }
+                    }
+
+                    // if found
+                    if (foundExp != null)
+                    {
+                        keyPredicates.Remove(foundExp);
+                        orderedKeyPredicates.Add(foundExp);
+                    }
+                }
+
+                // append the remainings
+                foreach (var exp in keyPredicates)
+                {
+                    orderedKeyPredicates.Add(exp);
+                }
+
+                keyPredicates = orderedKeyPredicates;
             }
 
             return keyPredicates;

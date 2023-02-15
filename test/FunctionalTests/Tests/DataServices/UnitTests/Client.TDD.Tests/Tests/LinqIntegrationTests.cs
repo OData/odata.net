@@ -147,6 +147,13 @@ namespace AstoriaUnitTests.Tests.Client
             public List<AnotherEntityWithTwoKeyProperties> NavPropertyCollection { get; set; }
         }
 
+        [Key("ID2", "ID1")]
+        internal class EntityWithTwoDiffOrderKeyProperties
+        {
+            public int ID1 { get; set; }
+            public int ID2 { get; set; }
+        }
+
         [Key("Key1", "Key2")]
         internal class AnotherEntityWithTwoKeyProperties
         {
@@ -166,6 +173,24 @@ namespace AstoriaUnitTests.Tests.Client
         public void TwoWhereClausesForKeysShouldReturnUrlForSingleton()
         {
             // Simple case, only two key properties provided
+            string query1 = context.CreateQuery<EntityWithTwoDiffOrderKeyProperties>("Test")
+                .Where(p => p.ID1 == 1)
+                .Where(p => p.ID2 == 2)
+                .ToString();
+
+            string query2 = context.CreateQuery<EntityWithTwoDiffOrderKeyProperties>("Test")
+                .Where(p => p.ID2 == 2)
+                .Where(p => p.ID1 == 1)
+                .ToString();
+
+            Assert.Equal(query1, query2);
+            Assert.Equal(rootUrl + "Test(ID2=2,ID1=1)", query1);
+        }
+
+        [Fact]
+        public void TwoWhereClausesForDiffOrderKeysShouldReturnUrlForSingleton()
+        {
+            // Simple case, only two key properties provided
             string query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                 .Where(p => p.ID1 == 1)
                 .Where(p => p.ID2 == 2)
@@ -177,10 +202,11 @@ namespace AstoriaUnitTests.Tests.Client
         public void TwoWhereClausesForKeysInDifferentOrderShouldReturnUrlForSingltonInCorrectOrder()
         {
             // Key properties provided in reverse order
+            // The request should be canonical URL (using key order in schema)
             query = context.CreateQuery<EntityWithTwoKeyProperties>("Test")
                             .Where(p => p.ID2 == 1).Where(p => p.ID1 == 2)
                             .ToString();
-            Assert.Equal(rootUrl + "Test(ID2=1,ID1=2)", query);
+            Assert.Equal(rootUrl + "Test(ID1=2,ID2=1)", query);
         }
 
         [Fact]
@@ -419,12 +445,13 @@ namespace AstoriaUnitTests.Tests.Client
         public void ThreeWhereClausesForKeysInDifferentOrderShouldReturnUrlForSingltonInCorrectOrder()
         {
             // Key properties provided in reverse order
+            // The request should be canonical URL (using key order in schema)
             query = context.CreateQuery<EntityWithThreeKeyProperties>("Test")
                             .Where(p => p.ID2 == "bar")
                             .Where(p => p.ID1 == 2)
                             .Where(p => p.ID3 == this.sampleDateTimeOffset)
                             .ToString();
-            Assert.Equal(rootUrl + "Test(ID2='bar',ID1=2,ID3=" + this.sampleDate + ")", query);
+            Assert.Equal(rootUrl + "Test(ID1=2,ID2='bar',ID3=" + this.sampleDate + ")", query);
         }
 
         [Fact]

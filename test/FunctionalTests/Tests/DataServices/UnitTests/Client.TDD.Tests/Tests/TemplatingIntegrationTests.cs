@@ -62,19 +62,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         public void AttachPinningTest()
         {
             const string expectedOutput = @"http://test.org/test/EntityS%C3%A9t1('foo%2B%2Fbar')
-http://test.org/test/EntityS%C3%A9t2(Property1='fo%2Bo',Property2='b%2Far')
+http://test.org/test/EntityS%C3%A9t2(Property2='b%2Far',Property1='fo%2Bo')
 http://test.org/test/EntitySet1('foo')
-http://test.org/test/EntitySet2(Property1='foo',Property2='bar')
+http://test.org/test/EntitySet2(Property2='bar',Property1='foo')
 http://test.org/test/EntitySet1('foo')
-http://test.org/test/EntitySet2(Property1='foo',Property2='bar')
+http://test.org/test/EntitySet2(Property2='bar',Property1='foo')
 http://test.org/test/EntitySet1/Fake(1)('foo')
 http://test.org/test/EntitySet1/Fake(1)('foo')
 http://test.org/test/EntitySet1/Fake(1)('foo')
 http://test.org/test/EntitySet1/Fake(1)('foo')
-http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
+http://test.org/test/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://test.org/test/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://test.org/test/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://test.org/test/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
 ";
             var ctx = new DataServiceContext(new Uri("http://test.org/test"));
             RunAttachPinningTest(ctx, expectedOutput);
@@ -87,19 +87,19 @@ http://test.org/test/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='ba
         public void AttachPinningTestWithEntitySetResolver()
         {
             const string expectedOutput = @"http://resolved.org/EntityS%C3%A9t1('foo%2B%2Fbar')
-http://resolved.org/EntityS%C3%A9t2(Property1='fo%2Bo',Property2='b%2Far')
+http://resolved.org/EntityS%C3%A9t2(Property2='b%2Far',Property1='fo%2Bo')
 http://resolved.org/EntitySet1('foo')
-http://resolved.org/EntitySet2(Property1='foo',Property2='bar')
+http://resolved.org/EntitySet2(Property2='bar',Property1='foo')
 http://resolved.org/EntitySet1('foo')
-http://resolved.org/EntitySet2(Property1='foo',Property2='bar')
+http://resolved.org/EntitySet2(Property2='bar',Property1='foo')
 http://resolved.org/EntitySet1/Fake(1)('foo')
 http://resolved.org/EntitySet1/Fake(1)('foo')
 http://resolved.org/EntitySet1/Fake(1)('foo')
 http://resolved.org/EntitySet1/Fake(1)('foo')
-http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
-http://resolved.org/EntitySet2/Fake(1)/Navigation(Property1='foo',Property2='bar')
+http://resolved.org/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://resolved.org/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://resolved.org/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
+http://resolved.org/EntitySet2/Fake(1)/Navigation(Property2='bar',Property1='foo')
 ";
             var ctx = new TestClientContext { ResolveEntitySet = s => new Uri("http://resolved.org/" + s) };
             RunAttachPinningTest(ctx, expectedOutput);

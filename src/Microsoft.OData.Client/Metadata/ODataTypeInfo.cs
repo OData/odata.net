@@ -271,7 +271,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         private PropertyInfo[] GetKeyProperties()
-        {           
+        {
             if (CommonUtil.IsUnsupportedType(type))
             {
                 throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
@@ -281,25 +281,32 @@ namespace Microsoft.OData.Client.Metadata
             IEnumerable<object> customAttributes = type.GetCustomAttributes(true);
             bool isEntity = customAttributes.OfType<EntityTypeAttribute>().Any();
             KeyAttribute dataServiceKeyAttribute = customAttributes.OfType<KeyAttribute>().FirstOrDefault();
-            List<PropertyInfo> keyProperties = new List<PropertyInfo>();
-            
+
+            List<KeyValuePair<PropertyInfo, int>> keyWithOrders = new List<KeyValuePair<PropertyInfo, int>>();
+
             KeyKind currentKeyKind = KeyKind.NotKey;
             KeyKind newKeyKind = KeyKind.NotKey;
             foreach (PropertyInfo propertyInfo in Properties)
             {
-                if ((newKeyKind = IsKeyProperty(propertyInfo, dataServiceKeyAttribute)) != KeyKind.NotKey)
+                if ((newKeyKind = IsKeyProperty(propertyInfo, dataServiceKeyAttribute, out int order)) != KeyKind.NotKey)
                 {
                     if (newKeyKind > currentKeyKind)
                     {
-                        keyProperties.Clear();
+                        keyWithOrders.Clear();
                         currentKeyKind = newKeyKind;
-                        keyProperties.Add(propertyInfo);
+                        InserKeyBasedOnOrder(keyWithOrders, propertyInfo, order);
                     }
                     else if (newKeyKind == currentKeyKind)
                     {
-                        keyProperties.Add(propertyInfo);
+                        InserKeyBasedOnOrder(keyWithOrders, propertyInfo, order);
                     }
                 }
+            }
+
+            List<PropertyInfo> keyProperties = new List<PropertyInfo>();
+            foreach (var item in keyWithOrders)
+            {
+                keyProperties.Add(item.Key);
             }
 
             Type keyPropertyDeclaringType = null;
@@ -336,26 +343,56 @@ namespace Microsoft.OData.Client.Metadata
             return keyProperties.Count > 0 ? keyProperties.ToArray() : (isEntity ? ClientTypeUtil.EmptyPropertyInfoArray : null);
         }
 
+        private static void InserKeyBasedOnOrder(List<KeyValuePair<PropertyInfo, int>> keys, PropertyInfo keyPi, int order)
+        {
+            var newKeyWithOrder = new KeyValuePair<PropertyInfo, int>(keyPi, order);
+            if (order < 0)
+            {
+                // order < 0 means there's no order value setting, append this key at the end of list.
+                keys.Add(newKeyWithOrder);
+            }
+            else
+            {
+                int index = 0;
+                foreach (var key in keys)
+                {
+                    if (key.Value < 0 || key.Value > order)
+                    {
+                        // Insert the new key before the first negative order or first order bigger than new order.
+                        // If the new order value is same as one item in the list , move to next.
+                        break;
+                    }
+
+                    ++index;
+                }
+
+                keys.Insert(index, newKeyWithOrder);
+            }
+        }
+
         /// <summary>
         /// Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.
         /// </summary>
         /// <param name="propertyInfo">Property in question.</param>
         /// <param name="dataServiceKeyAttribute">DataServiceKeyAttribute instance.</param>
         /// <returns>Returns the KeyKind if <paramref name="propertyInfo"/> is declared as a key in <paramref name="dataServiceKeyAttribute"/> or it follows the key naming convention.</returns>
-        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute)
+        private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, out int order)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
 
             string propertyName = ClientTypeUtil.GetServerDefinedName(propertyInfo);
 
+            order = -1;
             KeyKind keyKind = KeyKind.NotKey;
             if (dataServiceKeyAttribute != null && dataServiceKeyAttribute.KeyNames.Contains(propertyName))
             {
+                order = dataServiceKeyAttribute.KeyNames.IndexOf(propertyName);
                 keyKind = KeyKind.AttributedKey;
             }
-            else if (propertyInfo.GetCustomAttributes().OfType<System.ComponentModel.DataAnnotations.KeyAttribute>().Any())
+            else if (IsDataAnnotationsKeyProperty(propertyInfo, out KeyKind newKind, out int newOrder))
             {
-                keyKind = KeyKind.AttributedKey;
+                order = newOrder;
+                keyKind = newKind;
             }
             else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
             {
@@ -373,6 +410,27 @@ namespace Microsoft.OData.Client.Metadata
             }
 
             return keyKind;
+        }
+
+        private static bool IsDataAnnotationsKeyProperty(PropertyInfo propertyInfo, out KeyKind kind, out int order)
+        {
+            order = -1;
+            kind = KeyKind.NotKey;
+            var attributes = propertyInfo.GetCustomAttributes();
+            if(!attributes.Any(a => a is System.ComponentModel.DataAnnotations.KeyAttribute))
+            {
+                return false;
+            }
+
+            var columnAttribute = attributes.OfType<System.ComponentModel.DataAnnotations.Schema.ColumnAttribute>().FirstOrDefault();
+            if (columnAttribute != null)
+            {
+                order = columnAttribute.Order;
+            }
+
+            kind = KeyKind.AttributedKey;
+
+            return true;
         }
     }
 }
