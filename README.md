@@ -115,7 +115,7 @@ You can query the latest nightly NuGet packages using this query: [MAGIC OData q
 
 The release of the component binaries is carried out regularly through [Nuget](http://www.nuget.org/). A new version is released every 2 months. A new [milestone](https://github.com/OData/odata.net/milestones) item will be created after each release. It will correspond to the work that is expected to be included in the next release. Any work that has been completed by the due date for the milestone will be shipped regardless of if the entire milestone is completed. Work that is not completed by the due date will be moved to another milestone. 
 
-Details on the release process are found [here](./release.md)
+Details on the release process are found [here](./docs/release.md)
 
 ### 3.6 Performance benchmarks
 
