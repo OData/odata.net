@@ -13,10 +13,11 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
+#if NETCOREAPP3_1_OR_GREATER
+    using System.Text.Json;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -407,6 +408,13 @@ namespace Microsoft.OData.Json
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value, this.wrappedBuffer, this.ArrayPool);
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public void WriteValue(JsonElement value)
+        {
+            throw new NotImplementedException();
+        }
+#endif
 
         /// <summary>
         /// Write a raw value.

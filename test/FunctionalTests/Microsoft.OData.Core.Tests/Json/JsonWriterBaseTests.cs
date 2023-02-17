@@ -4,6 +4,9 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -12,7 +15,9 @@ namespace Microsoft.OData.Tests.Json
     /// </summary>
     public abstract class JsonWriterBaseTests
     {
-        const string MixedObjectJson = "{\"StringProp\":\"John\",\"IntProp\":10,\"BoolPropFalse\":false,\"DateProp\":\"2014-12-31\",\"RawStringProp\":\"foobar\",\"BoolPropTrue\":false,\"RawArrayProp\":[1, 2, 3, 4, 5],\"DateTimeOffsetProp\":\"2014-12-31T12:42:30+01:20\",\"DateProp\":\"2014-12-31\",\"TimeSpanProp\":\"PT12H42M30S\",\"TimeOfDayProp\":\"12:42:30.1000000\",\"ObjectProp\":{\"FloatProp\":3.1,\"NestedRawValue\":\"test\",\"ShortProp\":1124,\"ByteProp\":10,\"LongProp\":234234,\"SignedByteProp\":-10,\"GuidProp\":\"00000012-0000-0000-0000-012345678900\",\"ArrayPropWithEveryOtherValueRaw\":[\"test\",\"raw\",10,\"raw\",true,\"raw\",\"2014-12-31\",\"raw\",\"2014-12-31T12:42:30+01:20\",\"raw\",[1,2,3],1124,\"raw\",10,\"raw\",-10,\"raw\",25253,\"raw\",\"00000012-0000-0000-0000-012345678900\",\"raw\",\"foo\",\"raw\",12.3,\"raw\",2.6,\"raw\",{},\"raw\",[\"rawAtArrayStartBeforeString\",\"test\"],[\"rawAtArrayStartBeforeBool\",false],[\"rawAtArrayStartBeforeByte\",10],[\"rawAtArrayStartBeforeSignedByte\",-10],[\"rawAtArrayStartBeforeShort\",10],[\"rawAtArrayStartBeforeInt\",10],[\"rawAtArrayStartBeforeLong\",10],[\"rawAtArrayStartBeforeDouble\",10.2],[\"rawAtArrayStartBeforeFloat\",10.2],[\"rawAtArrayStartBeforeDecimal\",10.2],[\"rawAtArrayStartBeforeGuid\",\"00000012-0000-0000-0000-012345678900\"],[\"rawAtArrayStartBeforeObject\",{}],[\"rawAtArrayStartBeforeDateTimeOffset\",\"2014-12-31T12:42:30+01:20\"],[\"rawAtArrayStartBeforeDate\",\"2014-12-31\"],[\"rawAtArrayStartBeforeTimeOfDay\",\"12:42:30.1000000\"],[\"rawAtArrayStartBeforeTimeSpan\",\"PT12H42M30S\"],[\"rawAtArrayStartBeforeArray\",[]],[\"rawAtArrayStartBeforeRaw\",\"raw\",\"test\",\"raw\"],\"raw\",\"raw\",\"raw\"]},\"ArrayProp\":[10,\"baz\",20,12.3,2.6,{\"RawObjectInArray\": true }],\"UntypedObjectProp\":{\"foo\":\"bar\"}}";
+        const string MixedObjectJson = "{\"StringProp\":\"John\",\"IntProp\":10,\"BoolPropFalse\":false,\"DateProp\":\"2014-12-31\",\"RawStringProp\":\"foobar\",\"BoolPropTrue\":false,\"RawArrayProp\":[1, 2, 3, 4, 5],\"DateTimeOffsetProp\":\"2014-12-31T12:42:30+01:20\",\"DateProp\":\"2014-12-31\",\"TimeSpanProp\":\"PT12H42M30S\",\"TimeOfDayProp\":\"12:42:30.1000000\",\"ObjectProp\":{\"FloatProp\":3.1,\"NestedRawValue\":\"test\",\"ShortProp\":1124,\"ByteProp\":10,\"LongProp\":234234,\"SignedByteProp\":-10,\"GuidProp\":\"00000012-0000-0000-0000-012345678900\",\"ArrayPropWithEveryOtherValueRaw\":[\"test\",\"raw\",10,\"raw\",true,\"raw\",\"2014-12-31\",\"raw\",\"2014-12-31T12:42:30+01:20\",\"raw\",[1,2,3],1124,\"raw\",10,\"raw\",-10,\"raw\",25253,\"raw\",\"00000012-0000-0000-0000-012345678900\",\"raw\",\"foo\",\"raw\",12.3,\"raw\",2.6,\"raw\",{},\"raw\",[\"rawAtArrayStartBeforeString\",\"test\"],[\"rawAtArrayStartBeforeBool\",false],[\"rawAtArrayStartBeforeByte\",10],[\"rawAtArrayStartBeforeSignedByte\",-10],[\"rawAtArrayStartBeforeShort\",10],[\"rawAtArrayStartBeforeInt\",10],[\"rawAtArrayStartBeforeLong\",10],[\"rawAtArrayStartBeforeDouble\",10.2],[\"rawAtArrayStartBeforeFloat\",10.2],[\"rawAtArrayStartBeforeDecimal\",10.2],[\"rawAtArrayStartBeforeGuid\",\"00000012-0000-0000-0000-012345678900\"],[\"rawAtArrayStartBeforeObject\",{}],[\"rawAtArrayStartBeforeDateTimeOffset\",\"2014-12-31T12:42:30+01:20\"],[\"rawAtArrayStartBeforeDate\",\"2014-12-31\"],[\"rawAtArrayStartBeforeTimeOfDay\",\"12:42:30.1000000\"],[\"rawAtArrayStartBeforeTimeSpan\",\"PT12H42M30S\"],[\"rawAtArrayStartBeforeArray\",[]],[\"rawAtArrayStartBeforeNull\",null],[\"rawAtArrayStartBeforeByteArray\",\"TWFu\"],[\"rawAtArrayStartBeforeRaw\",\"raw\",\"test\",\"raw\"],\"raw\",\"raw\",\"raw\"]},\"ArrayProp\":[10,\"baz\",20,12.3,2.6,{\"RawObjectInArray\": true }],\"UntypedObjectProp\":{\"foo\":\"bar\"}}";
+        const string SampleJsonInput = "{\"jsonInput\":{\"foo\":\"bar\"}}";
+        const string MixedJsonInputAndRawValue = "{\"StringProp\":\"John\",\"JsonInputProp\":{\"jsonInput\":{\"foo\":\"bar\"}},\"RawStringProp\":\"foobar\",\"JsonInputAfterRawValue\":{\"jsonInput\":{\"foo\":\"bar\"}},\"ArrayProp\":[\"raw\",{\"jsonInput\":{\"foo\":\"bar\"}},\"foobar\",{\"jsonInput\":{\"foo\":\"bar\"}},\"raw\"]}";
         protected abstract IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
 
         [Fact]
@@ -176,6 +181,14 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.EndArrayScope();
                 jsonWriter.EndArrayScope();
                 jsonWriter.StartArrayScope();
+                jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeNull""");
+                jsonWriter.WriteValue((string)null);
+                jsonWriter.EndArrayScope();
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeByteArray""");
+                jsonWriter.WriteValue(new byte[] { 77, 97, 110 });
+                jsonWriter.EndArrayScope();
+                jsonWriter.StartArrayScope();
                 jsonWriter.WriteRawValue(@"""rawAtArrayStartBeforeRaw""");
                 jsonWriter.WriteRawValue(@"""raw""");
                 jsonWriter.WriteValue("test");
@@ -214,6 +227,49 @@ namespace Microsoft.OData.Tests.Json
                 }
             }
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void WriteObjectWithJsonInputAndRawValuesCorrectly()
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+                jsonWriter.StartObjectScope();
+
+                jsonWriter.WriteName("StringProp");
+                jsonWriter.WriteValue("John");
+                jsonWriter.WriteName("JsonInputProp");
+                JsonDocument jsonInput = JsonDocument.Parse(SampleJsonInput);
+                jsonWriter.WriteValue(jsonInput.RootElement);
+                jsonWriter.WriteName("RawStringProp");
+                jsonWriter.WriteRawValue(@"""foobar""");
+                jsonWriter.WriteName("JsonInputAfterRawValue");
+                jsonWriter.WriteValue(jsonInput.RootElement);
+
+                jsonWriter.WriteName("ArrayProp");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteRawValue(@"""raw""");
+                jsonWriter.WriteValue(jsonInput.RootElement);
+                jsonWriter.WriteValue("foobar");
+                jsonWriter.WriteValue(jsonInput.RootElement);
+                jsonWriter.WriteRawValue(@"""raw""");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    string normalizedOutput = NormalizeJsonText(rawOutput);
+                    string normalizedExpectedOutput = NormalizeJsonText(MixedJsonInputAndRawValue);
+                    Assert.Equal(normalizedExpectedOutput, normalizedOutput);
+                }
+            }
+        }
+#endif
 
 
         /// <summary>

@@ -7,6 +7,10 @@
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
+
 namespace Microsoft.OData
 #endif
 {
@@ -45,6 +49,13 @@ namespace Microsoft.OData
                 return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ","));
             }
 
+#if NETCOREAPP3_1_OR_GREATER
+            if (objectToConvert is JsonElement jsonElement)
+            {
+                return new ODataJsonElementValue(jsonElement);
+            }
+#endif
+
             // Otherwise treat it as a primitive and wrap in an ODataPrimitiveValue. This includes spatial types.
             return new ODataPrimitiveValue(objectToConvert);
         }
@@ -67,6 +78,13 @@ namespace Microsoft.OData
             {
                 return primitiveValue.Value;
             }
+
+#if NETCOREAPP3_1_OR_GREATER
+            if (odataValue is ODataJsonElementValue jsonElementValue)
+            {
+                return jsonElementValue.Value;
+            }
+#endif
 
             return odataValue;
         }

@@ -218,6 +218,14 @@ namespace Microsoft.OData.JsonLight
                 this.WriteStreamProperty(streamValue, isOpenPropertyType);
                 return;
             }
+
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                this.WriteJsonElementProperty(jsonElementValue);
+                return;
+            }
+#endif
         }
 
 
@@ -812,6 +820,15 @@ namespace Microsoft.OData.JsonLight
                 }
             }
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        private void WriteJsonElementProperty(ODataJsonElementValue jsonElementvalue)
+        {
+            this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
+            this.JsonWriter.WriteValue(jsonElementvalue.Value);
+        }
+
+#endif
 
         /// <summary>
         /// Writes the type name on the wire.

@@ -1,0 +1,3 @@
+Microsoft.OData.ODataJsonElementValue
+Microsoft.OData.ODataJsonElementValue.ODataJsonElementValue(System.Text.Json.JsonElement value) -> void
+Microsoft.OData.ODataJsonElementValue.Value.get -> System.Text.Json.JsonElement

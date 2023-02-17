@@ -448,6 +448,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
 
+#if NETCOREAPP3_1_OR_GREATER
+            public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
+#endif
+
             public void WriteRawValue(string rawValue) => throw new NotImplementedException();
 
             public void Flush()

@@ -82,6 +82,10 @@ namespace Microsoft.OData.Tests.Json
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
+#endif
+
         public void WriteRawValue(string rawValue)
         {
             Assert.NotNull(this.WriteValueVerifier);

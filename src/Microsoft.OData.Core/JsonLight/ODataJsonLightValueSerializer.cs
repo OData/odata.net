@@ -17,8 +17,11 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
+#if NETCOREAPP3_0_OR_GREATER
+    using System.Text.Json;
+#endif
 
-    #endregion Namespaces
+#endregion Namespaces
 
     /// <summary>
     /// OData JsonLight serializer for value types.
@@ -356,6 +359,13 @@ namespace Microsoft.OData.JsonLight
                 this.JsonWriter.WritePrimitiveValue(value);
             }
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public virtual void WriteJsonElementValue(JsonElement value)
+        {
+            this.JsonWriter.WriteValue(value);
+        }
+#endif
 
         /// <summary>
         /// Writes an untyped value.
