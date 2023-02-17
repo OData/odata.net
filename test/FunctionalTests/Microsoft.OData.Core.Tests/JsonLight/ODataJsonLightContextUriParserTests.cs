@@ -31,13 +31,29 @@ namespace Microsoft.OData.Tests.JsonLight
             return model;
         }
 
-        // TODO: Support relative context uri and resolving other relative uris
         [Fact]
-        public void ParseRelativeContextUrlShouldThrowException()
+        public void ParseRelativeContextUrlShouldNotThrowException()
         {
-            string relativeUrl = "$metadata#R";
-            Action parseContextUri = () => ODataJsonLightContextUriParser.Parse(new EdmModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true);
-            parseContextUri.Throws<ODataException>(ErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(relativeUrl));
+            string relativeUrl = "$metadata#People";
+            var parsedContextUrl = ODataJsonLightContextUriParser.Parse(this.GetModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true, true, new Uri("https://www.example.com/api/"));
+            Assert.Equal(new Uri("https://www.example.com/api/$metadata#People"), parsedContextUrl.ContextUri);
+        }
+
+        [Fact]
+        public void ParseRelativeContextUrlWithoutMetadataShouldNotThrowException()
+        {
+            string relativeUrl = "People";
+            var parsedContextUrl = ODataJsonLightContextUriParser.Parse(this.GetModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true, true, new Uri("https://www.example.com/api/"));
+            Assert.Equal(new Uri("https://www.example.com/api/$metadata#People"), parsedContextUrl.ContextUri);
+        }
+
+        [Fact]
+        public void ParseRelativeContextUrlWithOnlyDeltaSegmentShouldNotThrowException()
+        {
+            string relativeUrl = "#$delta";
+            IEdmNavigationSource navigationSource = this.GetModel().FindDeclaredEntitySet("People") as IEdmNavigationSource;
+            var parsedContextUrl = ODataJsonLightContextUriParser.Parse(this.GetModel(), relativeUrl, ODataPayloadKind.Unsupported, null, true, true, new Uri("https://www.example.com/api/"), navigationSource);
+            Assert.Equal(new Uri("https://www.example.com/api/$metadata#People"), parsedContextUrl.ContextUri);
         }
 
 

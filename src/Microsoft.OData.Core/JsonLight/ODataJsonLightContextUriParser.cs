@@ -71,19 +71,55 @@ namespace Microsoft.OData.JsonLight
             ODataPayloadKind payloadKind,
             Func<IEdmType, string, IEdmType> clientCustomTypeResolver,
             bool needParseFragment,
-            bool throwIfMetadataConflict = true)
+            bool throwIfMetadataConflict = true,
+            Uri baseUri = null,
+            IEdmNavigationSource navigationSource = null)
         {
             if (contextUriFromPayload == null)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_NullMetadataDocumentUri);
             }
 
-            // Create an absolute URI from the payload string
-            // TODO: Support relative context uri and resolving other relative uris
+            // Create a context URI from the payload string.
             Uri contextUri;
             if (!Uri.TryCreate(contextUriFromPayload, UriKind.Absolute, out contextUri))
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(contextUriFromPayload));
+                if (baseUri == null)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                }
+                else
+                {
+                    ODataUri oDataUri = new ODataUri() { ServiceRoot = baseUri };
+
+                    // This caters for this format: #$delta.
+                    if (contextUriFromPayload == ODataConstants.HashDeltaResourceSet)
+                    {
+                        if (string.IsNullOrEmpty(navigationSource?.Name))
+                        {
+                            throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                        }
+                        else
+                        {
+                            contextUriFromPayload = oDataUri.MetadataDocumentUri.ToString() + 
+                                ODataConstants.ContextUriFragmentIndicator +
+                                navigationSource.Name +
+                                ODataConstants.UriSegmentSeparator +
+                                ODataConstants.DeltaResourceSet;
+                        }      
+                    }
+                    else
+                    {
+                        contextUriFromPayload = contextUriFromPayload.StartsWith(ODataConstants.UriMetadataSegmentHash, StringComparison.Ordinal)
+                        ? baseUri + contextUriFromPayload
+                        : oDataUri.MetadataDocumentUri.ToString() + ODataConstants.ContextUriFragmentIndicator + contextUriFromPayload;
+                    }
+
+                    if (!Uri.TryCreate(baseUri, contextUriFromPayload, out contextUri))
+                    {
+                        throw new ODataException(ODataErrorStrings.ODataJsonLightContextUriParser_InvalidContextUrl(contextUriFromPayload));
+                    }
+                }         
             }
 
             ODataJsonLightContextUriParser parser = new ODataJsonLightContextUriParser(model, contextUri);

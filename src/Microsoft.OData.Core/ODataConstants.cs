@@ -147,6 +147,9 @@ namespace Microsoft.OData
         /// <summary>A segment name in a URI that indicates metadata is being requested.</summary>
         internal const string UriMetadataSegment = "$metadata";
 
+        /// <summary>A segment name in a URI that indicates metadata is being requested and that has a # suffix. Exa. $metadata#.</summary>
+        internal const string UriMetadataSegmentHash = UriMetadataSegment + TypeNamePrefix;
+
         /// <summary>The OData prefix</summary>
         internal const string ODataPrefix = "odata";
 
@@ -190,6 +193,9 @@ namespace Microsoft.OData
 
         /// <summary>The $delta token indicates delta resource set.</summary>
         internal const string ContextUriDeltaResourceSet = UriSegmentSeparator + DeltaResourceSet;
+
+        /// <summary>The $delta token indicates delta resource set.</summary>
+        internal const string HashDeltaResourceSet = TypeNamePrefix + DeltaResourceSet;
 
         /// <summary>The $deletedEntity token indicates deleted resource.</summary>
         internal const string DeletedEntry = "$deletedEntity";
