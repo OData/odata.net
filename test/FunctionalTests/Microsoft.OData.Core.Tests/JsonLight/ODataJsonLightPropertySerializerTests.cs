@@ -581,7 +581,23 @@ namespace Microsoft.OData.Tests.JsonLight
 
 #if NETCOREAPP3_1_OR_GREATER
         [Fact]
-        public void WritingJsonElementPropertiesShouldSerializeJsonInputAsIs()
+        public void WritingJsonElementProperties_ShouldSerializeJsonInput()
+        {
+            string jsonInputString = "{\"foo\":\"bar\"}";
+            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
+
+            var property = new ODataProperty()
+            {
+                Name = "JsonProp",
+                Value = new ODataJsonElementValue(jsonDocument.RootElement)
+            };
+
+            var result = SerializeProperty(null, property);
+            Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
+        }
+
+        [Fact]
+        public void WritingJsonElementProperties_ShouldSerializeJsonInput_WithODataUtf8JsonWriter()
         {
             string jsonInputString = "{\"foo\":\"bar\"}";
             var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
