@@ -9,6 +9,9 @@ namespace Microsoft.OData.Json
     using System;
     using System.Threading.Tasks;
     using Microsoft.OData.Edm;
+#if NETCOREAPP3_1_OR_GREATER
+    using System.Text.Json;
+#endif
 
     /// <summary>
     /// Interface for a class that can write arbitrary JSON asynchronously.
@@ -177,6 +180,16 @@ namespace Microsoft.OData.Json
         /// <param name="value">TimeOfDay value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         Task WriteValueAsync(TimeOfDay value);
+
+#if NETCOREAPP3_1_OR_GREATER
+
+        /// <summary>
+        /// Asynchronously writes a <see cref="JsonElement"/> value.
+        /// </summary>
+        /// <param name="value">The <see cref="JsonElement"/> value to be written.</param>
+        /// <returns>A task that represents the asynchronous write operation.</returns>
+        Task WriteValueAsync(JsonElement value);
+#endif
 
         /// <summary>
         /// Asynchronously writes a raw value.

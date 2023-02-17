@@ -760,6 +760,13 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
+        public async Task WriteValueAsync(JsonElement value)
+        {
+            this.WriteSeparatorIfNecessary();
+            value.WriteTo(utf8JsonWriter);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
         public async Task WriteRawValueAsync(string rawValue)
         {
             this.WriteRawValueCore(rawValue);

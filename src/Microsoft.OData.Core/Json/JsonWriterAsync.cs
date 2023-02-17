@@ -17,6 +17,9 @@ namespace Microsoft.OData.Json
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
+#if NETCOREAPP3_1_OR_GREATER
+    using System.Text.Json;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -244,6 +247,134 @@ namespace Microsoft.OData.Json
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public async Task WriteValueAsync(JsonElement value)
+        {
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.Null:
+                    await this.WriteValueAsync((string)null).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.False:
+                    await this.WriteValueAsync(false).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.True:
+                    await this.WriteValueAsync(true).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.String:
+                    await this.WriteValueAsync(value.GetString()).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.Array:
+                    await this.WriteJsonElementArrayAsync(value).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.Object:
+                    await this.WriteJsonElementObjectAsync(value).ConfigureAwait(false);
+                    break;
+                case JsonValueKind.Number:
+                    await this.WriteJsonElementNumberAsync(value).ConfigureAwait(false);
+                    break;
+            }
+        }
+
+        private async Task WriteJsonElementArrayAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Array);
+
+            await this.StartArrayScopeAsync().ConfigureAwait(false);
+            foreach (JsonElement item in value.EnumerateArray())
+            {
+                await this.WriteValueAsync(item).ConfigureAwait(false);
+            }
+
+            await this.EndArrayScopeAsync().ConfigureAwait(false);
+        }
+
+        private async Task WriteJsonElementObjectAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Object);
+
+            await this.StartObjectScopeAsync().ConfigureAwait(false);
+            foreach (JsonProperty property in value.EnumerateObject())
+            {
+                await this.WriteNameAsync(property.Name).ConfigureAwait(false);
+                await this.WriteValueAsync(property.Value).ConfigureAwait(false);
+            }
+
+            await this.EndObjectScopeAsync().ConfigureAwait(false);
+        }
+
+        private async Task WriteJsonElementNumberAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Number);
+
+            if (value.TryGetByte(out byte byteValue))
+            {
+                await this.WriteValueAsync(byteValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetDecimal(out decimal decimalValue))
+            {
+                await this.WriteValueAsync(decimalValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetDouble(out double doubleValue))
+            {
+                await this.WriteValueAsync(doubleValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetInt16(out short shortValue))
+            {
+                await this.WriteValueAsync(shortValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetInt32(out int intValue))
+            {
+                await this.WriteValueAsync(intValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetInt64(out long longValue))
+            {
+                await this.WriteValueAsync(longValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetSByte(out sbyte sbyteValue))
+            {
+                await this.WriteValueAsync(sbyteValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetSingle(out float floatValue))
+            {
+                await this.WriteValueAsync(floatValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetUInt16(out ushort ushortValue))
+            {
+                await this.WriteValueAsync(ushortValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetUInt32(out uint uintValue))
+            {
+                await this.WriteValueAsync(uintValue).ConfigureAwait(false);
+                return;
+            }
+
+            if (value.TryGetUInt64(out ulong ulongValue))
+            {
+                await this.WriteValueAsync((decimal)ulongValue).ConfigureAwait(false);
+                return;
+            }
+        }
+#endif
 
         /// <inheritdoc/>
         public async Task WriteRawValueAsync(string rawValue)

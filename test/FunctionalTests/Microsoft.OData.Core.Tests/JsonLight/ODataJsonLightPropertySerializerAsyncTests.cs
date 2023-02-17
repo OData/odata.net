@@ -11,7 +11,9 @@ using System.IO;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -271,10 +273,73 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"value\":13}", result);
         }
 
-        private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonLightPropertySerializer, Task> func)
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public async Task WritingJsonElementPropertiesAsync_ShouldSerializeJsonInput()
+        {
+            string jsonInputString = "{\"foo\":\"bar\"}";
+            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
+
+            var property = new ODataProperty()
+            {
+                Name = "JsonProp",
+                Value = new ODataJsonElementValue(jsonDocument.RootElement)
+            };
+
+            var result = await this.SetupSerializerAndRunTestAsync(
+                async (jsonLightPropertySerializer) =>
+                {
+                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.WritePropertyAsync(
+                        property,
+                        owningType: null,
+                        isTopLevel: false,
+                        duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
+                        metadataBuilder: null);
+                    await jsonLightPropertySerializer.AsynchronousJsonWriter.EndObjectScopeAsync();
+                });
+
+            Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
+        }
+
+        [Fact]
+        public async Task WritingJsonElementPropertiesAsync_ShouldSerializeJsonInput_WithODataUtf8JsonWriter()
+        {
+            string jsonInputString = "{\"foo\":\"bar\"}";
+            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
+
+            var property = new ODataProperty()
+            {
+                Name = "JsonProp",
+                Value = new ODataJsonElementValue(jsonDocument.RootElement)
+            };
+
+            Action<IContainerBuilder> configureServices = (IContainerBuilder builder) =>
+            {
+                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+            };
+
+            var result = await this.SetupSerializerAndRunTestAsync(
+               async (jsonLightPropertySerializer) =>
+               {
+                   await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                   await jsonLightPropertySerializer.WritePropertyAsync(
+                       property,
+                       owningType: null,
+                       isTopLevel: false,
+                       duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
+                       metadataBuilder: null);
+                   await jsonLightPropertySerializer.AsynchronousJsonWriter.EndObjectScopeAsync();
+               }, configureServices);
+
+            Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
+        }
+#endif
+
+        private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonLightPropertySerializer, Task> func, Action<IContainerBuilder> configureServices = null)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream);
+            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, configureServices);
             var jsonLightPropertySerializer = new ODataJsonLightPropertySerializer(jsonLightOutputContext, /* initContextUriBuilder */ true);
 
             await func(jsonLightPropertySerializer);
@@ -286,7 +351,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return await new StreamReader(outputStream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, Action<IContainerBuilder> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -301,6 +366,14 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsAsync = true,
                 Model = this.model
             };
+
+            if (configureServices != null)
+            {
+                TestContainerBuilder containerBuilder = new TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                configureServices(containerBuilder);
+                messageInfo.Container = containerBuilder.BuildContainer();
+            }
 
             return new ODataJsonLightOutputContext(messageInfo, settings);
         }

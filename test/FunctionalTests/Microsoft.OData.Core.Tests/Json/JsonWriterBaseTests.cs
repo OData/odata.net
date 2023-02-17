@@ -294,7 +294,6 @@ namespace Microsoft.OData.Tests.Json
         }
 #endif
 
-
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make
