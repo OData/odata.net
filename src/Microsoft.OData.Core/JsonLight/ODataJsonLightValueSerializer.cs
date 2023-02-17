@@ -360,13 +360,6 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
-        public virtual void WriteJsonElementValue(JsonElement value)
-        {
-            this.JsonWriter.WriteValue(value);
-        }
-#endif
-
         /// <summary>
         /// Writes an untyped value.
         /// </summary>
