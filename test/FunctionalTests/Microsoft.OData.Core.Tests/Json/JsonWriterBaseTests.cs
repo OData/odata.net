@@ -233,10 +233,9 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WritesJsonElementCorrectly()
         {
+            using (JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson))
             using (MemoryStream stream = new MemoryStream())
             {
-                JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson);
-
                 IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
                 jsonWriter.WriteValue(jsonDoc.RootElement);
 
@@ -255,6 +254,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WriteObjectWithJsonInputAndRawValuesCorrectly()
         {
+            using (JsonDocument jsonInput = JsonDocument.Parse(SampleJsonInput))
             using (MemoryStream stream = new MemoryStream())
             {
                 IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
@@ -263,7 +263,6 @@ namespace Microsoft.OData.Tests.Json
                 jsonWriter.WriteName("StringProp");
                 jsonWriter.WriteValue("John");
                 jsonWriter.WriteName("JsonInputProp");
-                JsonDocument jsonInput = JsonDocument.Parse(SampleJsonInput);
                 jsonWriter.WriteValue(jsonInput.RootElement);
                 jsonWriter.WriteName("RawStringProp");
                 jsonWriter.WriteRawValue(@"""foobar""");

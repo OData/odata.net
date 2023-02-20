@@ -435,7 +435,9 @@ namespace Microsoft.OData.Json
                 case JsonValueKind.Object:
                     this.WriteJsonElementObject(value);
                     break;
-                
+                default:
+                    // We have already exhausted all known JSON types. Treat this case undefined behaviour and do nothing.
+                    break;
             }
         }
 
