@@ -414,6 +414,9 @@ namespace Microsoft.OData.Json
         {
             switch (value.ValueKind)
             {
+                case JsonValueKind.String:
+                    this.WriteValue(value.GetString());
+                    break;
                 case JsonValueKind.Null:
                     this.WriteValue((string)null);
                     break;
@@ -423,8 +426,8 @@ namespace Microsoft.OData.Json
                 case JsonValueKind.True:
                     this.WriteValue(true);
                     break;
-                case JsonValueKind.String:
-                    this.WriteValue(value.GetString());
+                case JsonValueKind.Number:
+                    this.WriteJsonElementNumber(value);
                     break;
                 case JsonValueKind.Array:
                     this.WriteJsonElementArray(value);
@@ -432,9 +435,7 @@ namespace Microsoft.OData.Json
                 case JsonValueKind.Object:
                     this.WriteJsonElementObject(value);
                     break;
-                case JsonValueKind.Number:
-                    this.WriteJsonElementNumber(value);
-                    break;
+                
             }
         }
 
@@ -469,6 +470,18 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(value.ValueKind == JsonValueKind.Number);
 
+            if (value.TryGetInt32(out int intValue))
+            {
+                this.WriteValue(intValue);
+                return;
+            }
+
+            if (value.TryGetDouble(out double doubleValue))
+            {
+                this.WriteValue(doubleValue);
+                return;
+            }
+
             if (value.TryGetByte(out byte byteValue))
             {
                 this.WriteValue(byteValue);
@@ -481,21 +494,9 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            if (value.TryGetDouble(out double doubleValue))
-            {
-                this.WriteValue(doubleValue);
-                return;
-            }
-
             if (value.TryGetInt16(out short shortValue))
             {
                 this.WriteValue(shortValue);
-                return;
-            }
-
-            if (value.TryGetInt32(out int intValue))
-            {
-                this.WriteValue(intValue);
                 return;
             }
 

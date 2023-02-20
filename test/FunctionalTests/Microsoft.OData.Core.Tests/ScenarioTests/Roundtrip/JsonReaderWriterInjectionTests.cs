@@ -538,10 +538,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
 
 #if NETCOREAPP3_1_OR_GREATER
-            public Task WriteValueAsync(JsonElement value)
-            {
-                throw new NotImplementedException();
-            }
+            public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
 #endif
         }
 

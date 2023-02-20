@@ -170,10 +170,7 @@ namespace Microsoft.OData.Tests.Json
         public Task FlushAsync() => throw new NotImplementedException();
 
 #if NETCOREAPP3_1_OR_GREATER
-        public Task WriteValueAsync(JsonElement value)
-        {
-            throw new NotImplementedException();
-        }
+        public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
 #endif
     }
 }
