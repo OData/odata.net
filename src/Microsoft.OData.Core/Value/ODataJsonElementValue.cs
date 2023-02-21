@@ -11,7 +11,7 @@ namespace Microsoft.OData
 {
     /// <summary>
     /// Represents a <see cref="JsonElement"/> value.
-    /// Useful for writingparsed  JSON inputs directly without reading them first, which would result in double allocations.
+    /// Useful for writing parsed  JSON inputs directly without reading them first, which would result in double allocations.
     /// </summary>
     public sealed class ODataJsonElementValue : ODataValue
     {
