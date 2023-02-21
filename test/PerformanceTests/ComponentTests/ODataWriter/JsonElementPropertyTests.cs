@@ -9,21 +9,20 @@ using System.IO;
 using BenchmarkDotNet.Attributes;
 using Microsoft.OData.Edm;
 using System.Text.Json;
-using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Json;
 
-namespace Microsoft.OData.Performance
+namespace Microsoft.OData.Performance.Writer
 {
     [MemoryDiagnoser]
     public class JsonElementPropertyTests
     {
         private static readonly IEdmModel Model = TestUtils.GetAdventureWorksModel();
-        private static readonly byte[] JsonPayload = TestUtils.ReadTestResource("EntryWithExpansions.json");
+        private static readonly byte[] JsonPayload = TestUtils.ReadTestResource("Entry.json");
         private static readonly IEdmEntitySet entitySet = Model.FindDeclaredEntitySet("Product");
         private const int MaxStreamSize = 220000000;
-        private const int NumEntries = 100;
+        private const int NumEntries = 500;
         private JsonDocument ParsedPayload;
 
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
@@ -38,6 +37,7 @@ namespace Microsoft.OData.Performance
         public void Teardown()
         {
             ParsedPayload.Dispose();
+            
         }
 
         [IterationSetup]
@@ -55,10 +55,7 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void WriteParsedJsonWithJsonElementValues_Utf8JsonWriter()
         {
-            WriteParsedJsonWithJsonElementValues(builder =>
-            {
-                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
-            });
+            WriteParsedJsonWithJsonElementValues(ConfigureUtf8JsonWriter);
         }
 
         [Benchmark]
@@ -70,11 +67,11 @@ namespace Microsoft.OData.Performance
         [Benchmark]
         public void WriteParsedJsonWithoutJsonElementValues_Utf8JsonWriter()
         {
-            WriteParsedJsonWithoutJsonElementValues(builder =>
-            {
-                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
-            });
+            WriteParsedJsonWithoutJsonElementValues(ConfigureUtf8JsonWriter);
         }
+
+        private static void ConfigureUtf8JsonWriter(IContainerBuilder builder) =>
+            builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
 
         private void WriteParsedJsonWithJsonElementValues(Action<IContainerBuilder> configureServices = null)
         {
@@ -85,21 +82,41 @@ namespace Microsoft.OData.Performance
 
                 for (int i = 0; i < NumEntries; i++)
                 {
-                    List<ODataProperty> properties = new List<ODataProperty>();
-                    foreach (var property in ParsedPayload.RootElement.EnumerateObject())
+                    var root = ParsedPayload.RootElement;
+                    ODataResource entry = new ODataResource
                     {
-                        if (property.Name.Contains('@'))
+                        Properties = new[]
                         {
-                            continue;
+                            CreateJsonProperty("ProductID", root),
+                            CreateJsonProperty("Name", root),
+                            CreateJsonProperty("ProductNumber", root),
+                            CreateJsonProperty("MakeFlag", root),
+                            CreateJsonProperty("FinishedGoodsFlag", root),
+                            CreateJsonProperty("Color", root),
+                            CreateJsonProperty("SafetyStockLevel", root),
+                            CreateJsonProperty("ReorderPoint", root),
+                            CreateJsonProperty("StandardCost", root),
+                            CreateJsonProperty("ListPrice", root),
+                            CreateJsonProperty("Size", root),
+                            CreateJsonProperty("SizeUnitMeasureCode", root),
+                            CreateJsonProperty("WeightUnitMeasureCode", root),
+                            CreateJsonProperty("Weight", root),
+                            CreateJsonProperty("DaysToManufacture", root),
+                            CreateJsonProperty("ProductLine", root),
+                            CreateJsonProperty("Class", root),
+                            CreateJsonProperty("Style", root),
+                            CreateJsonProperty("ProductSubcategoryID", root),
+                            CreateJsonProperty("ProductModelID", root),
+                            CreateJsonProperty("SellStartDate", root),
+                            CreateJsonProperty("SellEndDate", root),
+                            CreateJsonProperty("DiscontinuedDate", root),
+                            CreateJsonProperty("rowguid", root),
+                            CreateJsonProperty("ModifiedDate", root),
+                            CreateJsonProperty("LuckyNumbers", root),
+                            CreateJsonProperty("TimeZones", root)
                         }
-                        properties.Add(new ODataProperty
-                        {
-                            Name = property.Name,
-                            Value = new ODataJsonElementValue(property.Value)
-                        });
-                    }
+                    };
 
-                    ODataResource entry = new ODataResource { Properties = properties };
                     writer.WriteStart(entry);
                     writer.WriteEnd();
                 }
@@ -149,10 +166,6 @@ namespace Microsoft.OData.Performance
                             CreateDateProperty("DiscontinuedDate", root),
                             CreateGuidProperty("rowguid", root),
                             CreateDateProperty("ModifiedDate", root),
-                            CreateIntProperty("OpenProperty0", root),
-                            CreateIntProperty("OpenProperty1", root),
-                            CreateDecimalProperty("OpenProperty2", root),
-                            CreateIntProperty("OpenProperty4", root),
                             CreateProperty("LuckyNumbers",
                                 new ODataCollectionValue {
                                     TypeName = "Collection(Edm.Int64)",
@@ -216,9 +229,6 @@ namespace Microsoft.OData.Performance
             return CreateProperty(name, value);
         }
 
-        private static ODataProperty CreateDoubleProperty(string name, JsonElement json) =>
-            CreateProperty(name, json.GetProperty(name).GetDouble());
-
         private static ODataProperty CreateDecimalProperty(string name, JsonElement json) =>
             CreateProperty(name, json.GetProperty(name).GetDecimal());
 
@@ -227,6 +237,9 @@ namespace Microsoft.OData.Performance
 
         private static ODataProperty CreateTimeSpanProperty(string name, JsonElement json) =>
             CreateProperty(name, XmlConvert.ToTimeSpan(json.GetProperty(name).GetString()));
+
+        private static ODataProperty CreateJsonProperty(string name, JsonElement parent) =>
+            CreateProperty(name, new ODataJsonElementValue(parent.GetProperty(name)));
 
         private static ODataProperty CreateProperty(string name, object value) => new ODataProperty { Name = name, Value = value };
     }

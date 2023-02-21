@@ -50,6 +50,9 @@ namespace Microsoft.OData
             }
 
 #if NETCOREAPP3_1_OR_GREATER
+            // Ideally, the JsonElement should be wrapped inside an ODataJsonElementValue
+            // when being assigned to an ODataProperty, that will avoid
+            // this conversion and avoid boxing the JsonElement.
             if (objectToConvert is JsonElement jsonElement)
             {
                 return new ODataJsonElementValue(jsonElement);

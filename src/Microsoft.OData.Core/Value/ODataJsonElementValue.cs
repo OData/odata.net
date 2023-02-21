@@ -21,7 +21,8 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="value">The <see cref="JsonElement"/> to wrap.</param>
         /// <remarks>
-        /// The caller is responsible for ensuring the contents of the <see cref="JsonElement"/> are valid.
+        /// The caller is responsible for ensuring the contents of the <see cref="JsonElement"/> are valid
+        /// and contain any necessary annotations. The contents are not be inspected by the <see cref="ODataWriter"/>.
         /// </remarks>
         public ODataJsonElementValue(JsonElement value)
         {
