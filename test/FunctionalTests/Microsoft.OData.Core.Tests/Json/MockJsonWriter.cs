@@ -85,9 +85,7 @@ namespace Microsoft.OData.Tests.Json
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
-#endif
 
         public void WriteRawValue(string rawValue)
         {
@@ -169,8 +167,6 @@ namespace Microsoft.OData.Tests.Json
 
         public Task FlushAsync() => throw new NotImplementedException();
 
-#if NETCOREAPP3_1_OR_GREATER
         public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
-#endif
     }
 }

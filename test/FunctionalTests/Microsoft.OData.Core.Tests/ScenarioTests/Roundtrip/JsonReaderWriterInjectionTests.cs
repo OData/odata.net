@@ -450,10 +450,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             public void WriteValue(Date value) => throw new NotImplementedException();
 
             public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
-
-#if NETCOREAPP3_1_OR_GREATER
             public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
-#endif
 
             public void WriteRawValue(string rawValue) => throw new NotImplementedException();
 
@@ -537,9 +534,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 return this.textWriter.FlushAsync();
             }
 
-#if NETCOREAPP3_1_OR_GREATER
             public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
-#endif
         }
 
         private class TestJsonReader : IJsonReader
