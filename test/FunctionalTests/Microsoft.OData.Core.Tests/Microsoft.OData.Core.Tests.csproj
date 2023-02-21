@@ -19,6 +19,10 @@
     <OutputPath>..\..\..\bin\AnyCPU\Release\Test\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
+  </PropertyGroup>
   
   <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
