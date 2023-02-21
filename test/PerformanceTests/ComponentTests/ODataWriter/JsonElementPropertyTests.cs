@@ -22,10 +22,13 @@ namespace Microsoft.OData.Performance.Writer
         private static readonly byte[] JsonPayload = TestUtils.ReadTestResource("Entry.json");
         private static readonly IEdmEntitySet entitySet = Model.FindDeclaredEntitySet("Product");
         private const int MaxStreamSize = 220000000;
-        private const int NumEntries = 500;
+        private const int NumEntries = 300;
         private JsonDocument ParsedPayload;
 
         private static readonly Stream WriteStream = new MemoryStream(MaxStreamSize);
+
+        [Params(true, false)]
+        public bool enableValidation;
 
         [GlobalSetup]
         public void Setup()
@@ -75,7 +78,7 @@ namespace Microsoft.OData.Performance.Writer
 
         private void WriteParsedJsonWithJsonElementValues(Action<IContainerBuilder> configureServices = null)
         {
-            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true, configureServices: configureServices))
+            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, enableValidation, configureServices))
             {
                 ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
                 writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
@@ -128,7 +131,7 @@ namespace Microsoft.OData.Performance.Writer
 
         private void WriteParsedJsonWithoutJsonElementValues(Action<IContainerBuilder> configureServices = null)
         {
-            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, isFullValidation: true, configureServices: configureServices))
+            using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, enableValidation, configureServices))
             {
                 ODataWriter writer = messageWriter.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
                 writer.WriteStart(new ODataResourceSet { Id = new Uri("http://www.odata.org/Perf.svc") });
