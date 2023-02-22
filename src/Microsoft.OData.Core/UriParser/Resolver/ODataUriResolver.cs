@@ -91,6 +91,27 @@ namespace Microsoft.OData.UriParser
                 return navSource;
             }
 
+            if (model.IsImmutable())
+            {
+                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                IList<IEdmNavigationSource> cachedResults = cache.FindNavigationSources(identifier);
+
+                if (cachedResults != null)
+                {
+                    if (cachedResults.Count == 1)
+                    {
+                        return cachedResults[0];
+                    }
+
+                    if (cachedResults.Count > 1)
+                    {
+                        throw new ODataException(Strings.UriParserMetadata_MultipleMatchingNavigationSourcesFound(identifier));
+                    }
+                }
+
+                return null;
+            }
+
             IEdmEntityContainer container = model.EntityContainer;
             if (container == null)
             {
@@ -288,6 +309,19 @@ namespace Microsoft.OData.UriParser
             if (results.Any() || !EnableCaseInsensitive)
             {
                 return results;
+            }
+
+            if (model.IsImmutable())
+            {
+                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                IEnumerable<IEdmOperationImport> cachedResults = cache.FindOperationImports(identifier);
+
+                if (cachedResults != null)
+                {
+                    return cachedResults;
+                }
+
+                return Enumerable.Empty<IEdmOperationImport>();
             }
 
             IEdmEntityContainer container = model.EntityContainer;

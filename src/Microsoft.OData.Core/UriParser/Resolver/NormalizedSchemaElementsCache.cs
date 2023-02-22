@@ -7,7 +7,9 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Net.NetworkInformation;
 using Microsoft.OData.Edm.Vocabularies;
+using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.Edm
 {
@@ -26,6 +28,8 @@ namespace Microsoft.OData.Edm
         private readonly Dictionary<string, List<IEdmSchemaType>> schemaTypesCache = new Dictionary<string, List<IEdmSchemaType>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmOperation>> operationsCache = new Dictionary<string, List<IEdmOperation>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmTerm>> termsCache = new Dictionary<string, List<IEdmTerm>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<IEdmNavigationSource>> navigationSourcesCache = new Dictionary<string, List<IEdmNavigationSource>>(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<string, List<IEdmOperationImport>> operationImportsCache = new Dictionary<string, List<IEdmOperationImport>>(StringComparer.OrdinalIgnoreCase);
 
         /// <summary>
         /// Builds a case-insensitive cache of schema elements from
@@ -35,6 +39,8 @@ namespace Microsoft.OData.Edm
         public NormalizedSchemaElementsCache(IEdmModel model)
         {
             Debug.Assert(model != null);
+
+            PopulateContainerElements(model);
 
             PopulateSchemaElements(model);
 
@@ -89,6 +95,26 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
+        public List<IEdmNavigationSource> FindNavigationSources(string name)
+        {
+            if (navigationSourcesCache.TryGetValue(name, out List<IEdmNavigationSource> results))
+            {
+                return results;
+            }
+
+            return null;
+        }
+
+        public List<IEdmOperationImport> FindOperationImports(string name)
+        {
+            if (operationImportsCache.TryGetValue(name, out List<IEdmOperationImport> results))
+            {
+                return results;
+            }
+
+            return null;
+        }
+
         private void PopulateSchemaElements(IEdmModel model)
         {
             foreach (IEdmSchemaElement element in model.SchemaElements)
@@ -108,10 +134,43 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        private void PopulateContainerElements(IEdmModel model)
+        {
+            if (model.EntityContainer is null)
+            {
+                return;
+            }
+
+            foreach (IEdmEntityContainerElement element in model.EntityContainer.Elements)
+            {
+                if (element is IEdmOperationImport operationImport)
+                {
+                    AddContainerElementToCache(operationImport, operationImportsCache);
+                }
+                else if (element is IEdmNavigationSource navigationSource)
+                {
+                    AddContainerElementToCache(navigationSource, navigationSourcesCache);
+                }
+            }
+        }
+
         private static void AddElementToCache<T>(T element, Dictionary<string, List<T>> cache) where T : IEdmSchemaElement
         {
             List<T> results;
             string normalizedKey = element.FullName();
+            if (!cache.TryGetValue(normalizedKey, out results))
+            {
+                results = new List<T>();
+                cache[normalizedKey] = results;
+            }
+
+            results.Add(element);
+        }
+
+        private static void AddContainerElementToCache<T>(T element, Dictionary<string, List<T>> cache) where T : IEdmNamedElement
+        {
+            List<T> results;
+            string normalizedKey = element.Name;
             if (!cache.TryGetValue(normalizedKey, out results))
             {
                 results = new List<T>();
