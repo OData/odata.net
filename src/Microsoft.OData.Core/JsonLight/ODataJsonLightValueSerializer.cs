@@ -17,9 +17,6 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
-#if NETCOREAPP3_0_OR_GREATER
-    using System.Text.Json;
-#endif
 
 #endregion Namespaces
 

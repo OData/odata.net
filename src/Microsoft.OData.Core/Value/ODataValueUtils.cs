@@ -82,13 +82,6 @@ namespace Microsoft.OData
                 return primitiveValue.Value;
             }
 
-#if NETCOREAPP3_1_OR_GREATER
-            if (odataValue is ODataJsonElementValue jsonElementValue)
-            {
-                return jsonElementValue.Value;
-            }
-#endif
-
             return odataValue;
         }
     }

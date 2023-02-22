@@ -18,6 +18,9 @@ using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -584,7 +587,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void WritingJsonElementProperties_ShouldSerializeJsonInput()
         {
             string jsonInputString = "{\"foo\":\"bar\"}";
-            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
+            var jsonDocument = JsonDocument.Parse(jsonInputString);
 
             var property = new ODataProperty()
             {
@@ -600,7 +603,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public void WritingJsonElementProperties_ShouldSerializeJsonInput_WithODataUtf8JsonWriter()
         {
             string jsonInputString = "{\"foo\":\"bar\"}";
-            var jsonDocument = System.Text.Json.JsonDocument.Parse(jsonInputString);
+            var jsonDocument = JsonDocument.Parse(jsonInputString);
 
             var property = new ODataProperty()
             {

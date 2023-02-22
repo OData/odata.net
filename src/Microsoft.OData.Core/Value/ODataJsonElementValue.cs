@@ -16,7 +16,7 @@ namespace Microsoft.OData
     public sealed class ODataJsonElementValue : ODataValue
     {
         /// <summary>
-        /// Creates an intsance of <see cref="ODataJsonElementValue"/> based
+        /// Creates an instance of <see cref="ODataJsonElementValue"/> based
         /// on the specified <see cref="JsonElement"/> value.
         /// </summary>
         /// <param name="value">The <see cref="JsonElement"/> to wrap.</param>
