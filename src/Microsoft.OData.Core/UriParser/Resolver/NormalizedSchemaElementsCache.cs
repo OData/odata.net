@@ -7,7 +7,6 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.Net.NetworkInformation;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Metadata;
 
@@ -24,7 +23,7 @@ namespace Microsoft.OData.Edm
     {
         // We create different caches for different types of schema elements because all current usage request schema elements
         // of specific types. If we were to use a single dictionary <string, ISchemaElement> we would need
-        // to do additional work (and allocations) during lookups to filter the results to the susbset that matches the request type.
+        // to do additional work (and allocations) during lookups to filter the results to the subset that matches the request type.
         private readonly Dictionary<string, List<IEdmSchemaType>> schemaTypesCache = new Dictionary<string, List<IEdmSchemaType>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmOperation>> operationsCache = new Dictionary<string, List<IEdmOperation>>(StringComparer.OrdinalIgnoreCase);
         private readonly Dictionary<string, List<IEdmTerm>> termsCache = new Dictionary<string, List<IEdmTerm>>(StringComparer.OrdinalIgnoreCase);

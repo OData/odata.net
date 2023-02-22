@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
+using System.Xml.Linq;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.UriParser.Metadata
@@ -160,6 +161,111 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             var cache = new NormalizedSchemaElementsCache(model);
 
             var matches = cache.FindTerms("ns.models.some");
+            Assert.Null(matches);
+        }
+
+        [Theory]
+        [InlineData("People")]
+        [InlineData("people")]
+        public void FindNavigationSources_ReturnsNavigationSourcesThatMatcheName(string name)
+        {
+            var model = new EdmModel();
+            var person = model.AddEntityType("NS", "People");
+            person.AddKeys(person.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            var container = model.AddEntityContainer("NS", "Container");
+            var entitySet1 = container.AddEntitySet("People", person);
+            var entitySet2 = container.AddSingleton("peoPle", person);
+            container.AddEntitySet("Persons", person);
+
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindNavigationSources(name);
+
+            Assert.Equal(2, matches.Count);
+            Assert.Contains(matches, match => match == entitySet1);
+            Assert.Contains(matches, match => match == entitySet2);
+        }
+
+        [Fact]
+        public void FindNavigationSources_ReturnsNullIfTHereAreNoMatches()
+        {
+            var model = new EdmModel();
+            var person = model.AddEntityType("NS", "People");
+            person.AddKeys(person.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            var container = model.AddEntityContainer("NS", "Container");
+            container.AddEntitySet("People", person);
+
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindNavigationSources("Products");
+
+            Assert.Null(matches);
+        }
+
+        [Fact]
+        public void FindNavigationSources_ReturnsNull_IfThereIsNotContainer()
+        {
+            var model = new EdmModel();
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindNavigationSources("Products");
+
+            Assert.Null(matches);
+        }
+
+        [Theory]
+        [InlineData("DoStuff")]
+        [InlineData("doStuff")]
+        public void FindOperationImports_ReturnsOperationImportsThatMatchName(string name)
+        {
+            var model = new EdmModel();
+            var action1 = new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false));
+            var func1 = new EdmFunction("Ns.Models", "Dostuff", EdmCoreModel.Instance.GetBoolean(false));
+            var func2 = new EdmFunction("Ns.Models", "ComputeStuff", EdmCoreModel.Instance.GetBoolean(false));
+            model.AddElement(action1);
+            model.AddElement(func1);
+            model.AddElement(func2);
+
+            var container = model.AddEntityContainer("NS", "Container");
+            var operationImport1 = container.AddActionImport(action1);
+            var operationImport2 = container.AddFunctionImport(func1);
+            container.AddFunctionImport(func2);
+
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindOperationImports(name);
+
+            Assert.Equal(2, matches.Count);
+            Assert.Contains(matches, match => match == operationImport1);
+            Assert.Contains(matches, match => match == operationImport2);
+        }
+
+        [Fact]
+        public void FindOperationImports_ReturnsNull_IfNoMatchFound()
+        {
+            var model = new EdmModel();
+            var action1 = new EdmAction("NS.Models", "DoStuff", EdmCoreModel.Instance.GetBoolean(false));
+            model.AddElement(action1);
+            var container = model.AddEntityContainer("NS", "Container");
+            container.AddActionImport(action1);
+
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindOperationImports("ComputeStuff");
+
+            Assert.Null(matches);
+        }
+
+        [Fact]
+        public void FindOperationImports_ReturnsNull_IfNoContainer()
+        {
+            var model = new EdmModel();
+            var cache = new NormalizedSchemaElementsCache(model);
+
+            var matches = cache.FindOperationImports("DoStuff");
+
             Assert.Null(matches);
         }
     }
