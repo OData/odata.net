@@ -93,7 +93,7 @@ namespace Microsoft.OData.UriParser
 
             if (model.IsImmutable())
             {
-                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
                 IList<IEdmNavigationSource> cachedResults = cache.FindNavigationSources(identifier);
 
                 if (cachedResults != null)
@@ -313,7 +313,7 @@ namespace Microsoft.OData.UriParser
 
             if (model.IsImmutable())
             {
-                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
                 IEnumerable<IEdmOperationImport> cachedResults = cache.FindOperationImports(identifier);
 
                 if (cachedResults != null)
@@ -541,11 +541,11 @@ namespace Microsoft.OData.UriParser
         private static IReadOnlyList<T> FindSchemaElements<T>(
             IEdmModel model,
             string identifier,
-            Func<NormalizedSchemaElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
+            Func<NormalizedModelElementsCache, string, List<T>> cacheLookupFunc) where T : IEdmSchemaElement
         {
             if (model.IsImmutable())
             {
-                NormalizedSchemaElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
                 return cacheLookupFunc(cache, identifier);
             }
 
@@ -579,11 +579,11 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        private static NormalizedSchemaElementsCache GetNormalizedSchemaElementsCache(IEdmModel model)
+        private static NormalizedModelElementsCache GetNormalizedSchemaElementsCache(IEdmModel model)
         {
             Debug.Assert(model != null);
 
-            NormalizedSchemaElementsCache cache = model.GetAnnotationValue<NormalizedSchemaElementsCache>(model);
+            NormalizedModelElementsCache cache = model.GetAnnotationValue<NormalizedModelElementsCache>(model);
             if (cache == null)
             {
                 // There's a chance 2 or more threads can reach here concurrently
@@ -593,7 +593,7 @@ namespace Microsoft.OData.UriParser
                 // We can avoid this waste by providing a method that user can call manually to build
                 // the cache before any request is made. But I did not want to add a new method to the public API.
                 // We revisit this if it turns out to be a problem in practice.
-                cache = new NormalizedSchemaElementsCache(model);
+                cache = new NormalizedModelElementsCache(model);
                 model.SetAnnotationValue(model, cache);
             }
 

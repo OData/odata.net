@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NormalizedSchemaElementsCache.cs" company="Microsoft">
+// <copyright file="NormalizedModelElementsCache.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,18 +8,17 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData.Edm
 {
     /// <summary>
-    /// Cache used to store schema elements using case-normalized names
+    /// Cache used to store model elements using case-normalized names
     /// to speed up case-insensitive model lookups. The cache is populated
     /// up front so that if an item is not found in the cache, we can assume
     /// it doesn't exist in the model. For this reason, it's important that
     /// the model be immutable.
     /// </summary>
-    internal sealed class NormalizedSchemaElementsCache
+    internal sealed class NormalizedModelElementsCache
     {
         // We create different caches for different types of schema elements because all current usage request schema elements
         // of specific types. If we were to use a single dictionary <string, ISchemaElement> we would need
@@ -35,7 +34,7 @@ namespace Microsoft.OData.Edm
         /// the specified <paramref name="model"/>.
         /// </summary>
         /// <param name="model">The model whose schema elements to cache. This model should be immutable. See <see cref="ExtensionMethods.MarkAsImmutable(IEdmModel)"/>.</param>
-        public NormalizedSchemaElementsCache(IEdmModel model)
+        public NormalizedModelElementsCache(IEdmModel model)
         {
             Debug.Assert(model != null);
 
@@ -94,6 +93,11 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
+        /// <summary>
+        /// Find all navigation sources that match the <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The case-insensitive name to match.</param>
+        /// <returns>A list of matching navigation sources, or null if no navigation source matches the name.</returns>
         public List<IEdmNavigationSource> FindNavigationSources(string name)
         {
             if (navigationSourcesCache.TryGetValue(name, out List<IEdmNavigationSource> results))
@@ -104,6 +108,11 @@ namespace Microsoft.OData.Edm
             return null;
         }
 
+        /// <summary>
+        /// Find all operation imports that match the <paramref name="name"/>.
+        /// </summary>
+        /// <param name="name">The case-insensitive name to match.</param>
+        /// <returns>A list of matching operation imports, or null if no operation import matches the name.</returns>
         public List<IEdmOperationImport> FindOperationImports(string name)
         {
             if (operationImportsCache.TryGetValue(name, out List<IEdmOperationImport> results))
@@ -120,15 +129,15 @@ namespace Microsoft.OData.Edm
             {
                 if (element is IEdmSchemaType schemaType)
                 {
-                    AddElementToCache(schemaType, schemaTypesCache);
+                    AddSchemaElementToCache(schemaType, schemaTypesCache);
                 }
                 else if (element is IEdmOperation operation)
                 {
-                    AddElementToCache(operation, operationsCache);
+                    AddSchemaElementToCache(operation, operationsCache);
                 }
                 else if (element is IEdmTerm term)
                 {
-                    AddElementToCache(term, termsCache);
+                    AddSchemaElementToCache(term, termsCache);
                 }
             }
         }
@@ -153,7 +162,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private static void AddElementToCache<T>(T element, Dictionary<string, List<T>> cache) where T : IEdmSchemaElement
+        private static void AddSchemaElementToCache<T>(T element, Dictionary<string, List<T>> cache) where T : IEdmSchemaElement
         {
             List<T> results;
             string normalizedKey = element.FullName();
