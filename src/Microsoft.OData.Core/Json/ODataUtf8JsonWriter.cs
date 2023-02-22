@@ -346,6 +346,7 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(byte[] value)
         {
+            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
                 this.utf8JsonWriter.WriteNullValue();
@@ -355,6 +356,13 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
             
+            this.FlushIfBufferThresholdReached();
+        }
+
+        public void WriteValue(JsonElement value)
+        {
+            this.WriteSeparatorIfNecessary();
+            value.WriteTo(this.utf8JsonWriter);
             this.FlushIfBufferThresholdReached();
         }
 
@@ -749,6 +757,13 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
 
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        public async Task WriteValueAsync(JsonElement value)
+        {
+            this.WriteSeparatorIfNecessary();
+            value.WriteTo(utf8JsonWriter);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 

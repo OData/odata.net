@@ -14,6 +14,9 @@ using Microsoft.OData.Json;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
@@ -448,6 +451,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
 
+#if NETCOREAPP3_1_OR_GREATER
+            public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
+#endif
+
             public void WriteRawValue(string rawValue) => throw new NotImplementedException();
 
             public void Flush()
@@ -529,6 +536,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 return this.textWriter.FlushAsync();
             }
+
+#if NETCOREAPP3_1_OR_GREATER
+            public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
+#endif
         }
 
         private class TestJsonReader : IJsonReader

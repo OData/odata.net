@@ -13,9 +13,14 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
+using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
+using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests.JsonLight
 {
@@ -577,15 +582,55 @@ namespace Microsoft.OData.Tests.JsonLight
                 result);
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        [Fact]
+        public void WritingJsonElementProperties_ShouldSerializeJsonInput()
+        {
+            string jsonInputString = "{\"foo\":\"bar\"}";
+            var jsonDocument = JsonDocument.Parse(jsonInputString);
+
+            var property = new ODataProperty()
+            {
+                Name = "JsonProp",
+                Value = new ODataJsonElementValue(jsonDocument.RootElement)
+            };
+
+            var result = SerializeProperty(null, property);
+            Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
+        }
+
+        [Fact]
+        public void WritingJsonElementProperties_ShouldSerializeJsonInput_WithODataUtf8JsonWriter()
+        {
+            string jsonInputString = "{\"foo\":\"bar\"}";
+            var jsonDocument = JsonDocument.Parse(jsonInputString);
+
+            var property = new ODataProperty()
+            {
+                Name = "JsonProp",
+                Value = new ODataJsonElementValue(jsonDocument.RootElement)
+            };
+
+            Action<IContainerBuilder> configureServices = (IContainerBuilder builder) =>
+            {
+                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+            };
+
+            var result = SerializeProperty(null, property, configureServices);
+            Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
+        }
+#endif
+
         /// <summary>
         /// Serialize the given property as a non-top-level property in JSON Light.
         /// </summary>
         /// <param name="odataProperty">The property to serialize.</param>
+        /// <param name="configureServices">Action to add custom services to the service provider.</param>
         /// <returns>A string of JSON text, where the given ODataProperty has been serialized and wrapped in a JSON object.</returns>
-        private string SerializeProperty(IEdmStructuredType owningType, ODataProperty odataProperty)
+        private string SerializeProperty(IEdmStructuredType owningType, ODataProperty odataProperty, Action<IContainerBuilder> configureServices = null)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream);
+            ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, configureServices);
             var serializer = new ODataJsonLightPropertySerializer(jsonLightOutputContext);
 
             jsonLightOutputContext.JsonWriter.StartObjectScope();
@@ -604,7 +649,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return result;
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, Action<IContainerBuilder> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -619,6 +664,14 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsAsync = false,
                 Model = this.model
             };
+
+            if (configureServices != null)
+            {
+                TestContainerBuilder containerBuilder = new TestContainerBuilder();
+                containerBuilder.AddDefaultODataServices();
+                configureServices(containerBuilder);
+                messageInfo.Container = containerBuilder.BuildContainer();
+            }
 
             return new ODataJsonLightOutputContext(messageInfo, settings);
         }

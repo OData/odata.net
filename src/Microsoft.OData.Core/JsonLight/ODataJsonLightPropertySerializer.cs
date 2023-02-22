@@ -218,6 +218,14 @@ namespace Microsoft.OData.JsonLight
                 this.WriteStreamProperty(streamValue, isOpenPropertyType);
                 return;
             }
+
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                this.WriteJsonElementProperty(jsonElementValue);
+                return;
+            }
+#endif
         }
 
 
@@ -431,6 +439,15 @@ namespace Microsoft.OData.JsonLight
                     .ConfigureAwait(false);
                 return;
             }
+
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                await this.WriteJsonElementPropertyAsync(jsonElementValue)
+                    .ConfigureAwait(false);
+                return;
+            }
+#endif
         }
 
 
@@ -504,6 +521,19 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightValueSerializer.WriteUntypedValue(untypedValue);
             return;
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Writes a <see cref="System.Text.Json.JsonElement"/> property.
+        /// </summary>
+        /// <param name="jsonElementvalue">The value to be written.</param>
+        private void WriteJsonElementProperty(ODataJsonElementValue jsonElementvalue)
+        {
+            this.JsonWriter.WriteName(this.currentPropertyInfo.WireName);
+            this.JsonWriter.WriteValue(jsonElementvalue.Value);
+        }
+
+#endif
 
         private void WriteStreamValue(IODataStreamReferenceInfo streamInfo, string propertyName, ODataResourceMetadataBuilder metadataBuilder)
         {
@@ -900,6 +930,21 @@ namespace Microsoft.OData.JsonLight
             await this.jsonLightValueSerializer.WriteUntypedValueAsync(untypedValue)
                 .ConfigureAwait(false);
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously writes an <see cref="System.Text.Json.JsonElement"/> value.
+        /// </summary>
+        /// <param name="jsonElementvalue">The value to be written.</param>
+        private async Task WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementvalue)
+        {
+            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+                .ConfigureAwait(false);
+            await this.AsynchronousJsonWriter.WriteValueAsync(jsonElementvalue.Value)
+                .ConfigureAwait(false);
+        }
+
+#endif
 
         /// <summary>
         /// Asynchronosly writes a stream reference value.

@@ -70,5 +70,9 @@ namespace Microsoft.OData.Tests.Json
         public void WriteValue(Date value) => throw new NotImplementedException();
 
         public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
+
+#if NETCOREAPP3_1_OR_GREATER
+        public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
+#endif
     }
 }

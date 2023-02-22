@@ -18,7 +18,7 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
-    #endregion Namespaces
+#endregion Namespaces
 
     /// <summary>
     /// OData JsonLight serializer for value types.

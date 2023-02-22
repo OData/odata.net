@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.OData.Performance
+namespace Microsoft.OData.Performance.Writer
 {
     using System;
     using System.IO;

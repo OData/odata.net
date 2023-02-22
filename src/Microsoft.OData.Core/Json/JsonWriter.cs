@@ -13,10 +13,11 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Text;
-    using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
+#if NETCOREAPP3_1_OR_GREATER
+    using System.Text.Json;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -407,6 +408,137 @@ namespace Microsoft.OData.Json
             this.WriteValueSeparator();
             JsonValueUtils.WriteValue(this.writer, value, this.wrappedBuffer, this.ArrayPool);
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public void WriteValue(JsonElement value)
+        {
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.String:
+                    this.WriteValue(value.GetString());
+                    break;
+                case JsonValueKind.Null:
+                    this.WriteValue((string)null);
+                    break;
+                case JsonValueKind.False:
+                    this.WriteValue(false);
+                    break;
+                case JsonValueKind.True:
+                    this.WriteValue(true);
+                    break;
+                case JsonValueKind.Number:
+                    this.WriteJsonElementNumber(value);
+                    break;
+                case JsonValueKind.Array:
+                    this.WriteJsonElementArray(value);
+                    break;
+                case JsonValueKind.Object:
+                    this.WriteJsonElementObject(value);
+                    break;
+                default:
+                    // We have already exhausted all known JSON types. Treat this case undefined behaviour and do nothing.
+                    break;
+            }
+        }
+
+        private void WriteJsonElementArray(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Array);
+
+            this.StartArrayScope();
+            foreach (JsonElement item in value.EnumerateArray())
+            {
+                this.WriteValue(item);
+            }
+
+            this.EndArrayScope();
+        }
+
+        private void WriteJsonElementObject(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Object);
+
+            this.StartObjectScope();
+            foreach (JsonProperty property in value.EnumerateObject())
+            {
+                this.WriteName(property.Name);
+                this.WriteValue(property.Value);
+            }
+
+            this.EndObjectScope();
+        }
+
+        private void WriteJsonElementNumber(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Number);
+
+            if (value.TryGetInt32(out int intValue))
+            {
+                this.WriteValue(intValue);
+                return;
+            }
+
+            if (value.TryGetDouble(out double doubleValue))
+            {
+                this.WriteValue(doubleValue);
+                return;
+            }
+
+            if (value.TryGetByte(out byte byteValue))
+            {
+                this.WriteValue(byteValue);
+                return;
+            }
+
+            if (value.TryGetDecimal(out decimal decimalValue))
+            {
+                this.WriteValue(decimalValue);
+                return;
+            }
+
+            if (value.TryGetInt16(out short shortValue))
+            {
+                this.WriteValue(shortValue);
+                return;
+            }
+
+            if (value.TryGetInt64(out long longValue))
+            {
+                this.WriteValue(longValue);
+                return;
+            }
+
+            if (value.TryGetSByte(out sbyte sbyteValue))
+            {
+                this.WriteValue(sbyteValue);
+                return;
+            }
+
+            if (value.TryGetSingle(out float floatValue))
+            {
+                this.WriteValue(floatValue);
+                return;
+            }
+
+            if (value.TryGetUInt16(out ushort ushortValue))
+            {
+                this.WriteValue(ushortValue);
+                return;
+            }
+
+            if (value.TryGetUInt32(out uint uintValue))
+            {
+                this.WriteValue(uintValue);
+                return;
+            }
+
+            if (value.TryGetUInt64(out ulong ulongValue))
+            {
+                this.WriteValue((decimal)ulongValue);
+                return;
+            }
+        }
+#endif
 
         /// <summary>
         /// Write a raw value.

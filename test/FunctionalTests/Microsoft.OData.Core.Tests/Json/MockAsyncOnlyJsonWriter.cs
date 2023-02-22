@@ -8,6 +8,9 @@ using System;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -69,5 +72,12 @@ namespace Microsoft.OData.Tests.Json
         public Task WriteValueAsync(Date value) => throw new NotImplementedException();
 
         public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
+
+#if NETCOREAPP3_1_OR_GREATER
+        public Task WriteValueAsync(JsonElement value)
+        {
+            throw new NotImplementedException();
+        }
+#endif
     }
 }

@@ -17,6 +17,9 @@ namespace Microsoft.OData.Json
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
+#if NETCOREAPP3_1_OR_GREATER
+    using System.Text.Json;
+#endif
     #endregion Namespaces
 
     /// <summary>
@@ -244,6 +247,124 @@ namespace Microsoft.OData.Json
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public Task WriteValueAsync(JsonElement value)
+        {
+            switch (value.ValueKind)
+            {
+                case JsonValueKind.Null:
+                    return this.WriteValueAsync((string)null);
+                case JsonValueKind.False:
+                    return this.WriteValueAsync(false);
+                case JsonValueKind.True:
+                    return this.WriteValueAsync(true);
+                case JsonValueKind.String:
+                    return this.WriteValueAsync(value.GetString());
+                case JsonValueKind.Array:
+                    return this.WriteJsonElementArrayAsync(value);
+                case JsonValueKind.Object:
+                    return this.WriteJsonElementObjectAsync(value);
+                case JsonValueKind.Number:
+                    return this.WriteJsonElementNumberAsync(value);
+                default:
+                    // we've exhausted all known JSON types, if we get
+                    // to this point, then it's undefined behavior
+                    Debug.Fail($"Unexpected JSON ValueKind {value.ValueKind}");
+                    return Task.CompletedTask;
+            }
+        }
+
+        private async Task WriteJsonElementArrayAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Array);
+
+            await this.StartArrayScopeAsync().ConfigureAwait(false);
+            foreach (JsonElement item in value.EnumerateArray())
+            {
+                await this.WriteValueAsync(item).ConfigureAwait(false);
+            }
+
+            await this.EndArrayScopeAsync().ConfigureAwait(false);
+        }
+
+        private async Task WriteJsonElementObjectAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Object);
+
+            await this.StartObjectScopeAsync().ConfigureAwait(false);
+            foreach (JsonProperty property in value.EnumerateObject())
+            {
+                await this.WriteNameAsync(property.Name).ConfigureAwait(false);
+                await this.WriteValueAsync(property.Value).ConfigureAwait(false);
+            }
+
+            await this.EndObjectScopeAsync().ConfigureAwait(false);
+        }
+
+        private Task WriteJsonElementNumberAsync(JsonElement value)
+        {
+            Debug.Assert(value.ValueKind == JsonValueKind.Number);
+
+            if (value.TryGetByte(out byte byteValue))
+            {
+                return this.WriteValueAsync(byteValue);
+            }
+
+            if (value.TryGetDecimal(out decimal decimalValue))
+            {
+                return this.WriteValueAsync(decimalValue);
+            }
+
+            if (value.TryGetDouble(out double doubleValue))
+            {
+                return WriteValueAsync(doubleValue);
+            }
+
+            if (value.TryGetInt16(out short shortValue))
+            {
+                return this.WriteValueAsync(shortValue);
+            }
+
+            if (value.TryGetInt32(out int intValue))
+            {
+                return this.WriteValueAsync(intValue);
+            }
+
+            if (value.TryGetInt64(out long longValue))
+            {
+                return this.WriteValueAsync(longValue);
+            }
+
+            if (value.TryGetSByte(out sbyte sbyteValue))
+            {
+                return this.WriteValueAsync(sbyteValue);
+            }
+
+            if (value.TryGetSingle(out float floatValue))
+            {
+                return this.WriteValueAsync(floatValue);
+            }
+
+            if (value.TryGetUInt16(out ushort ushortValue))
+            {
+                return this.WriteValueAsync(ushortValue);
+            }
+
+            if (value.TryGetUInt32(out uint uintValue))
+            {
+                return this.WriteValueAsync(uintValue);
+            }
+
+            if (value.TryGetUInt64(out ulong ulongValue))
+            {
+                return this.WriteValueAsync((decimal)ulongValue);
+            }
+
+            Debug.Fail($"Exhausted all known JSON number types and did not find match.");
+            return Task.CompletedTask;
+        }
+#endif
 
         /// <inheritdoc/>
         public async Task WriteRawValueAsync(string rawValue)
