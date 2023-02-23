@@ -825,6 +825,22 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             Assert.Equal(-10, computer.ComputerId);
         }
 
+        [Fact]
+        public async Task Linq_ProjectPropertiesFromNestedComplexTypeToADifferentTargetTypeFromTheSource()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var query = context.Customer.Where(c => c.CustomerId == -10)
+                .Select(c => new ContactDetails
+                {
+                    HomePhone = c.PrimaryContactInfo.HomePhone
+                }) as DataServiceQuery<ContactDetails>;
+
+            var result = await query.ExecuteAsync();
+
+            var contactDetails = result.First();
+            Assert.Equal("jqjklhnnkyhujailcedbguyectpuamgbghreatqvobbtj", contactDetails.HomePhone.Extension);
+        }
+
         /// <summary>
         /// LINQ query Project Name Stream Property
         /// </summary>
