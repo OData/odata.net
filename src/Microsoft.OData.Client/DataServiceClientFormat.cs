@@ -362,10 +362,10 @@ namespace Microsoft.OData.Client
         {
             if (hasSelectQueryOption)
             {
-                return MimeApplicationJsonODataLightWithAllMetadata;
+                return MimeApplicationJsonODataLight;
             }
 
-            return MimeApplicationJsonODataLight;
+            return MimeApplicationJsonODataLightWithAllMetadata;
         }
 
         /// <summary>
