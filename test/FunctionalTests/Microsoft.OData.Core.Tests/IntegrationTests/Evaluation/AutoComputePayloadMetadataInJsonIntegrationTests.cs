@@ -2149,7 +2149,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 "} ] }";
 
             InMemoryMessage message = new InMemoryMessage();
-            message.SetHeader("Content-Type", "application/json;odata.metadata=mini");
+            message.SetHeader("Content-Type", "application/json;odata.metadata=minimal");
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
 
             ODataResource topLevelEntry = null;
