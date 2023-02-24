@@ -811,7 +811,8 @@ namespace Microsoft.OData.Client
                 result = CallMaterializer(
                     nameof(ODataEntityMaterializerInvoker.ProjectionGetEntry),
                     result ?? this.pathBuilder.ParameterEntryInScope,
-                    Expression.Constant(((MemberExpression)path[pathIndex]).Member.Name, typeof(string)));
+                    Expression.Constant(((MemberExpression)path[pathIndex]).Member.Name, typeof(string)),
+                    Expression.Constant(this.materializerContext));
                 pathIndex++;
             }
             while (pathIndex < path.Length);

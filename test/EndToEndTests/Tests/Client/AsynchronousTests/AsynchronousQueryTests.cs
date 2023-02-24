@@ -797,6 +797,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
                         .Select(c => new Computer
                          {
                              ComputerId = c.ComputerId,
+                             // this contrived expression is to get the plan compiler to perform
+                             // a null check against an expanded entity
                              ComputerDetail = c.ComputerDetail == null ? null : c.ComputerDetail,
                          }) as DataServiceQuery<Computer>;
 
@@ -805,6 +807,38 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             var computer = result.First();
             Assert.Equal(-10, computer.ComputerId);
             Assert.Equal(-10, computer.ComputerDetail.ComputerDetailId);
+        }
+
+        [Fact]
+        public async Task Linq_ProjectPropertiesFromNestedExpandedEntityToADifferentTargetTypeFromTheSource()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var query = context.ComputerDetail.Where(c => c.ComputerDetailId == -10)
+                .Select(c => new Computer
+                {
+                    ComputerId = c.Computer.ComputerId,
+                }) as DataServiceQuery<Computer>;
+
+            var result = await query.ExecuteAsync();
+
+            var computer = result.First();
+            Assert.Equal(-10, computer.ComputerId);
+        }
+
+        [Fact]
+        public async Task Linq_ProjectPropertiesFromNestedComplexTypeToADifferentTargetTypeFromTheSource()
+        {
+            var context = this.CreateWrappedContext<DefaultContainer>().Context;
+            var query = context.Customer.Where(c => c.CustomerId == -10)
+                .Select(c => new ContactDetails
+                {
+                    HomePhone = c.PrimaryContactInfo.HomePhone
+                }) as DataServiceQuery<ContactDetails>;
+
+            var result = await query.ExecuteAsync();
+
+            var contactDetails = result.First();
+            Assert.Equal("jqjklhnnkyhujailcedbguyectpuamgbghreatqvobbtj", contactDetails.HomePhone.Extension);
         }
 
         /// <summary>
