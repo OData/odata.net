@@ -173,8 +173,8 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             person.AddKeys(person.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
 
             var container = model.AddEntityContainer("NS", "Container");
-            var entitySet1 = container.AddEntitySet("People", person);
-            var entitySet2 = container.AddSingleton("peoPle", person);
+            var entitySet = container.AddEntitySet("People", person);
+            var singleton = container.AddSingleton("peoPle", person);
             container.AddEntitySet("Persons", person);
 
             var cache = new NormalizedModelElementsCache(model);
@@ -182,12 +182,12 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
             var matches = cache.FindNavigationSources(name);
 
             Assert.Equal(2, matches.Count);
-            Assert.Contains(matches, match => match == entitySet1);
-            Assert.Contains(matches, match => match == entitySet2);
+            Assert.Contains(matches, match => match == entitySet);
+            Assert.Contains(matches, match => match == singleton);
         }
 
         [Fact]
-        public void FindNavigationSources_ReturnsNullIfTHereAreNoMatches()
+        public void FindNavigationSources_ReturnsNullIfThereAreNoMatches()
         {
             var model = new EdmModel();
             var person = model.AddEntityType("NS", "People");
@@ -204,7 +204,7 @@ namespace Microsoft.OData.Core.Tests.UriParser.Metadata
         }
 
         [Fact]
-        public void FindNavigationSources_ReturnsNull_IfThereIsNotContainer()
+        public void FindNavigationSources_ReturnsNull_IfThereIsNoContainer()
         {
             var model = new EdmModel();
             var cache = new NormalizedModelElementsCache(model);
