@@ -258,7 +258,8 @@ namespace Microsoft.OData.JsonLight
             ODataPayloadKind payloadKind,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool isReadingNestedPayload,
-            bool allowEmptyPayload)
+            bool allowEmptyPayload,
+            IEdmNavigationSource navigationSource = null)
         {
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(isReadingNestedPayload || this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: JSON reader must not have been used yet when not reading a nested payload.");
@@ -298,7 +299,9 @@ namespace Microsoft.OData.JsonLight
                     payloadKind,
                     this.MessageReaderSettings.ClientCustomTypeResolver,
                     this.JsonLightInputContext.ReadingResponse || payloadKind == ODataPayloadKind.Delta,
-                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                    this.BaseUri, 
+                    navigationSource);
             }
 
             this.contextUriParseResult = parseResult;
@@ -325,7 +328,8 @@ namespace Microsoft.OData.JsonLight
             ODataPayloadKind payloadKind,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector,
             bool isReadingNestedPayload,
-            bool allowEmptyPayload)
+            bool allowEmptyPayload, 
+            IEdmNavigationSource navigationSource = null)
         {
             this.JsonReader.AssertNotBuffering();
             Debug.Assert(
@@ -349,7 +353,9 @@ namespace Microsoft.OData.JsonLight
                     payloadKind,
                     this.MessageReaderSettings.ClientCustomTypeResolver,
                     this.JsonLightInputContext.ReadingResponse || payloadKind == ODataPayloadKind.Delta,
-                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata);
+                    this.JsonLightInputContext.MessageReaderSettings.ThrowIfTypeConflictsWithMetadata,
+                    this.BaseUri, 
+                    navigationSource);
             }
 
 #if DEBUG

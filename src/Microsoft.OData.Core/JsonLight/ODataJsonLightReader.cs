@@ -211,7 +211,8 @@ namespace Microsoft.OData.JsonLight
                 payloadKind,
                 propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
-                allowEmptyPayload: false).ConfigureAwait(false);
+                allowEmptyPayload: false,
+                this.CurrentNavigationSource).ConfigureAwait(false);
 
             ResolveScopeInfoFromContextUrl();
 
@@ -1231,7 +1232,10 @@ namespace Microsoft.OData.JsonLight
                     UriUtils.UriToString(nestedInfo.ContextUrl),
                     payloadKind,
                     this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.jsonLightResourceDeserializer.JsonLightInputContext.ReadingResponse).Path;
+                    this.jsonLightResourceDeserializer.JsonLightInputContext.ReadingResponse,
+                    true,
+                    this.jsonLightResourceDeserializer.MessageReaderSettings.BaseUri,
+                    this.CurrentNavigationSource).Path;
 
                 return new ODataUri() { Path = odataPath };
             }
@@ -1931,7 +1935,11 @@ namespace Microsoft.OData.JsonLight
                         contextUriStr,
                         this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
                         this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                        this.jsonLightInputContext.ReadingResponse || this.ReadingDelta);
+                        this.jsonLightInputContext.ReadingResponse || this.ReadingDelta,
+                        true,
+                        this.jsonLightResourceDeserializer.BaseUri, 
+                        this.CurrentNavigationSource);
+
                     if (parseResult != null)
                     {
                         // a top-level (deleted) resource in a delta response can come from any entity set
@@ -3459,7 +3467,10 @@ namespace Microsoft.OData.JsonLight
                         contextUriFromPayload: contextUriStr,
                         payloadKind: this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
                         clientCustomTypeResolver: this.jsonLightResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                        needParseFragment: this.jsonLightInputContext.ReadingResponse || this.ReadingDelta);
+                        needParseFragment: this.jsonLightInputContext.ReadingResponse || this.ReadingDelta,
+                        true,
+                        this.jsonLightResourceDeserializer.BaseUri, 
+                        this.CurrentNavigationSource);
 
                     if (parseResult != null)
                     {

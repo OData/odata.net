@@ -88,17 +88,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 },
                 new ContextUriParserTestCase
                 {
-                    DebugDescription = "empty string is a relative URI; context URIs have to absolute",
+                    DebugDescription = "empty string is a relative URI; relative context URLs should not be null.",
                     ContextUri = string.Empty,
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute", "")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl")
                 },
                 new ContextUriParserTestCase
                 {
-                    DebugDescription = "another relative URI; context URIs have to absolute",
+                    DebugDescription = "another relative URI; context URIs should have null baseUri",
                     ContextUri = "relativeUri",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute", "relativeUri")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl")
                 },
                 new ContextUriParserTestCase
                 {
