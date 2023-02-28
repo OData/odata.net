@@ -6,7 +6,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Vocabularies;
@@ -85,6 +84,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved navigation source.</returns>
         public virtual IEdmNavigationSource ResolveNavigationSource(IEdmModel model, string identifier)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(identifier, nameof(identifier));
+
             IEdmNavigationSource navSource = model.FindDeclaredNavigationSource(identifier);
             if (navSource != null || !EnableCaseInsensitive)
             {
@@ -146,6 +148,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved <see cref="IEdmProperty"/></returns>
         public virtual IEdmProperty ResolveProperty(IEdmStructuredType type, string propertyName)
         {
+            ExceptionUtils.CheckArgumentNotNull(type, nameof(type));
+            ExceptionUtils.CheckArgumentNotNull(propertyName, nameof(propertyName));
+
             IEdmProperty property = type.FindProperty(propertyName);
             if (property != null || !EnableCaseInsensitive)
             {
@@ -180,6 +185,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved term.</returns>
         public virtual IEdmTerm ResolveTerm(IEdmModel model, string termName)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(termName, nameof(termName));
+
             IEdmTerm term = model.FindTerm(termName);
             if (term != null || !EnableCaseInsensitive)
             {
@@ -209,6 +217,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved type.</returns>
         public virtual IEdmSchemaType ResolveType(IEdmModel model, string typeName)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(typeName, nameof(typeName));
+
             IEdmSchemaType type = model.FindType(typeName);
             if (type != null || !EnableCaseInsensitive)
             {
@@ -239,6 +250,10 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved operation list.</returns>
         public virtual IEnumerable<IEdmOperation> ResolveBoundOperations(IEdmModel model, string identifier, IEdmType bindingType)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(identifier, nameof(identifier));
+            ExceptionUtils.CheckArgumentNotNull(bindingType, nameof(bindingType));
+
             IEnumerable<IEdmOperation> results = model.FindBoundOperations(identifier, bindingType);
             if (results.Any() || !EnableCaseInsensitive)
             {
@@ -272,6 +287,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved operation list.</returns>
         public virtual IEnumerable<IEdmOperation> ResolveUnboundOperations(IEdmModel model, string identifier)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(identifier, nameof(identifier));
+
             IEnumerable<IEdmOperation> results = model.FindOperations(identifier);
             if (results.Any() || !EnableCaseInsensitive)
             {
@@ -305,6 +323,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>All operation imports that can be found by the specified name, returns an empty enumerable if no operation import exists.</returns>
         public virtual IEnumerable<IEdmOperationImport> ResolveOperationImports(IEdmModel model, string identifier)
         {
+            ExceptionUtils.CheckArgumentNotNull(model, nameof(model));
+            ExceptionUtils.CheckArgumentNotNull(identifier, nameof(identifier));
+
             IEnumerable<IEdmOperationImport> results = model.FindDeclaredOperationImports(identifier);
             if (results.Any() || !EnableCaseInsensitive)
             {
@@ -342,6 +363,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>A dictionary containing resolved parameters.</returns>
         public virtual IDictionary<IEdmOperationParameter, SingleValueNode> ResolveOperationParameters(IEdmOperation operation, IDictionary<string, SingleValueNode> input)
         {
+            ExceptionUtils.CheckArgumentNotNull(operation, nameof(operation));
+            ExceptionUtils.CheckArgumentNotNull(input, nameof(input));
+
             Dictionary<IEdmOperationParameter, SingleValueNode> result = new Dictionary<IEdmOperationParameter, SingleValueNode>(EqualityComparer<IEdmOperationParameter>.Default);
             foreach (var item in input)
             {
@@ -376,6 +400,10 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IList<string> positionalValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
+            ExceptionUtils.CheckArgumentNotNull(type, nameof(type));
+            ExceptionUtils.CheckArgumentNotNull(positionalValues, nameof(positionalValues));
+            ExceptionUtils.CheckArgumentNotNull(convertFunc, nameof(convertFunc));
+
             // Throw an error if key size from url doesn't match that from model.
             // Other derived ODataUriResolver intended for alternative key resolution, such as the built in AlternateKeysODataUriResolver,
             // should override this ResolveKeys method.
@@ -412,6 +440,10 @@ namespace Microsoft.OData.UriParser
         /// <returns>The resolved key list.</returns>
         public virtual IEnumerable<KeyValuePair<string, object>> ResolveKeys(IEdmEntityType type, IDictionary<string, string> namedValues, Func<IEdmTypeReference, string, object> convertFunc)
         {
+            ExceptionUtils.CheckArgumentNotNull(type, nameof(type));
+            ExceptionUtils.CheckArgumentNotNull(namedValues, nameof(namedValues));
+            ExceptionUtils.CheckArgumentNotNull(convertFunc, nameof(convertFunc));
+
             if (!TryResolveKeys(type, namedValues, convertFunc, out IEnumerable<KeyValuePair<string, object>> resolvedKeys))
             {
                 throw ExceptionUtil.CreateBadRequestError(Strings.BadRequest_KeyMismatch(type.FullName()));
@@ -581,8 +613,6 @@ namespace Microsoft.OData.UriParser
 
         private static NormalizedModelElementsCache GetNormalizedModelElementsCache(IEdmModel model)
         {
-            Debug.Assert(model != null);
-
             NormalizedModelElementsCache cache = model.GetAnnotationValue<NormalizedModelElementsCache>(model);
             if (cache == null)
             {
