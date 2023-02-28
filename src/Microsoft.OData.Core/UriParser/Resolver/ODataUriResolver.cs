@@ -93,7 +93,7 @@ namespace Microsoft.OData.UriParser
 
             if (model.IsImmutable())
             {
-                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedModelElementsCache(model);
                 IList<IEdmNavigationSource> cachedResults = cache.FindNavigationSources(identifier);
 
                 if (cachedResults != null)
@@ -313,7 +313,7 @@ namespace Microsoft.OData.UriParser
 
             if (model.IsImmutable())
             {
-                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedModelElementsCache(model);
                 IEnumerable<IEdmOperationImport> cachedResults = cache.FindOperationImports(identifier);
 
                 if (cachedResults != null)
@@ -545,7 +545,7 @@ namespace Microsoft.OData.UriParser
         {
             if (model.IsImmutable())
             {
-                NormalizedModelElementsCache cache = GetNormalizedSchemaElementsCache(model);
+                NormalizedModelElementsCache cache = GetNormalizedModelElementsCache(model);
                 return cacheLookupFunc(cache, identifier);
             }
 
@@ -579,7 +579,7 @@ namespace Microsoft.OData.UriParser
             }
         }
 
-        private static NormalizedModelElementsCache GetNormalizedSchemaElementsCache(IEdmModel model)
+        private static NormalizedModelElementsCache GetNormalizedModelElementsCache(IEdmModel model)
         {
             Debug.Assert(model != null);
 
