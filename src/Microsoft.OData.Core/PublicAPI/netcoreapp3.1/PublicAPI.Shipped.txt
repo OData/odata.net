@@ -1,3 +1,8 @@
+Microsoft.OData.Json.IJsonWriter.WriteValue(System.Text.Json.JsonElement value) -> void
+Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.Task
+Microsoft.OData.ODataJsonElementValue
+Microsoft.OData.ODataJsonElementValue.ODataJsonElementValue(System.Text.Json.JsonElement value) -> void
+Microsoft.OData.ODataJsonElementValue.Value.get -> System.Text.Json.JsonElement
 override Microsoft.OData.ODataEnumValue.ToString() -> string
 override Microsoft.OData.ODataPrimitiveValue.ToString() -> string
 abstract Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementation() -> Microsoft.OData.ODataBatchOperationRequestMessage
