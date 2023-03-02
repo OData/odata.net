@@ -3562,13 +3562,13 @@ namespace Microsoft.OData.Client
             // UseRelativeUri can only be used in Batch Requests
             if (Util.IsFlagSet(options, SaveChangesOptions.UseRelativeUri) && !Util.IsBatch(options))
             {
-                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseRelativeUri", "DataServiceCollection"));
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
 
             // UseJsonBatch can only be used in Batch Requests
             if (Util.IsFlagSet(options, SaveChangesOptions.UseJsonBatch) && !Util.IsBatch(options))
             {
-                throw Error.InvalidOperation(Strings.Context_MustBeUsedWith("SaveChangesOptions.UseJsonBatch", "DataServiceCollection"));
+                throw Error.ArgumentOutOfRange(nameof(options));
             }
         }
 
