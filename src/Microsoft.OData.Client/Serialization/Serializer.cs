@@ -630,13 +630,8 @@ namespace Microsoft.OData.Client
 
                 navigationLink.Name = relatedEnd.SourceProperty;
                 bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
-                bool started = false;
 
-                if (!started)
-                {
-                    odataWriter.WriteNestedResourceInfoStart(navigationLink);
-                    started = true;
-                }
+                odataWriter.WriteNestedResourceInfoStart(navigationLink);
 
                 odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
 

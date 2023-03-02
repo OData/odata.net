@@ -157,7 +157,7 @@ namespace Microsoft.OData.Client
             ApplyPreferences(headers, httpMethod, this.RequestInfo.AddAndUpdateResponsePreference, ref requestVersion);
 
             headers.SetHeader("OData-Version", ODataVersion.V401.ToString());
-            headers.SetHeader("OData-MaxVersion", "4.01");
+            headers.SetHeader("OData-MaxVersion", ODataVersion.V401.ToString());
 
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 

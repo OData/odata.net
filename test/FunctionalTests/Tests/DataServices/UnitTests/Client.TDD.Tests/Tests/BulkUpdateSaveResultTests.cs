@@ -471,7 +471,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             payload.Should().Be("{\"@context\":\"http://www.odata.org/service.svc/$metadata#Cars/$delta\",\"value\":[{\"ID\":100,\"Owners@delta\":[{\"@id\":\"http://www.odata.org/service.svc/Persons(200)\",\"Name\":\"Bing\"}]}]}");
         }
 
-
         private BulkUpdateGraph GetBulkUpdateGraph<T>(params T[] objects)
         {
             List<Descriptor> changedEntries = this.context.EntityTracker.Entities.Cast<Descriptor>()
