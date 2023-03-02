@@ -3588,7 +3588,7 @@ namespace Microsoft.OData.Client
             }
 
             // BulkUpdate cannot be used in Batch Requests
-            if (Util.IsFlagSet(options, SaveChangesOptions.BulkUpdate | SaveChangesOptions.BatchWithIndependentOperations | SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch))
+            if (Util.IsFlagSet(options, SaveChangesOptions.BulkUpdate) && Util.IsBatch(options))
             {
                 throw Error.ArgumentOutOfRange(nameof(options));
             }

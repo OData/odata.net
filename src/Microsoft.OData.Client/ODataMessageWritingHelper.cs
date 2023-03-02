@@ -71,6 +71,7 @@ namespace Microsoft.OData.Client
             };
 
             writerSettings.Version = ODataVersion.V401;
+
             return writerSettings;
         }
 
