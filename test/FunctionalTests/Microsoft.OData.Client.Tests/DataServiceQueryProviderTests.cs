@@ -180,13 +180,13 @@ namespace Microsoft.OData.Client.Tests
             localDsc.ResolveName = (t) => "ServiceNamespace.Product";
             var sut = new DataServiceQueryProvider(localDsc);
             var products = localDsc.CreateQuery<Product>("Products")
-                .Where(product => Product.StaticFunction(product.Name));
+                .Where(product => true && Product.StaticFunction(product.Name));
 
             // Act
             var queryComponents = sut.Translate(products.Expression);
 
             // Assert
-            Assert.Equal(@"http://root/Products?$filter=ServiceNamespace.StaticFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+            Assert.Equal(@"http://root/Products?$filter=true and ServiceNamespace.StaticFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
         }
 
         [Fact]
@@ -197,13 +197,93 @@ namespace Microsoft.OData.Client.Tests
             localDsc.ResolveName = (t) => "ServiceNamespace.Product";
             var sut = new DataServiceQueryProvider(localDsc);
             var products = localDsc.CreateQuery<Product>("Products")
-                .Where(product => product.InstanceFunction(product.Name));
+                .Where(product => true && product.InstanceFunction(product.Name));
 
             // Act
             var queryComponents = sut.Translate(products.Expression);
 
             // Assert
-            Assert.Equal(@"http://root/Products?$filter=$it/ServiceNamespace.InstanceFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+            Assert.Equal(@"http://root/Products?$filter=true and $it/ServiceNamespace.InstanceFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceUriFunction()
+        {
+            // Arrange - products selling more than 1000 in year 2022
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.YearSale(2022) > 1000);
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=sale($it,2022) gt 1000", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceUriFunctionOfProperty()
+        {
+            // Arrange - products selling more than 1000 the year it was launched
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.YearSale(product.LaunchDate.Year) > 1000);
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=sale($it,year(LaunchDate)) gt 1000", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunction()
+        {
+            // Arrange - products launched 7 days ago, evaluated on server
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.LaunchDate == UriFunctions.ServerDate(UriFunctions.ServerNow() - TimeSpan.FromDays(7)));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=LaunchDate eq date(now() sub duration'P7D')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunctionCanResolve()
+        {
+            // Arrange - client evaluated Even()
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => UriFunctions.Even(2));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=true", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunctionOfProperty()
+        {
+            // Arrange - products with Even Id
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => UriFunctions.Even(product.Id));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Even(Id)", queryComponents.Uri.ToString());
         }
 
         #endregion
@@ -218,11 +298,34 @@ namespace Microsoft.OData.Client.Tests
 
             public decimal Price { get; set; }
 
+            public Edm.Date LaunchDate { get; set; }
+
             public IEnumerable<string> Comments { get; set; }
 
             public static bool StaticFunction(string parameter) { return true; }
 
             public bool InstanceFunction(string parameter) { return true; }
+
+            [OriginalName("sale")]
+            [UriFunction]
+            public int YearSale(int year) => throw new NotSupportedException();
+        }
+
+        private static class UriFunctions
+        {
+            [OriginalName("now")]
+            [UriFunction]
+            public static DateTimeOffset ServerNow() => throw new NotSupportedException();
+
+            [OriginalName("date")]
+            [UriFunction]
+            public static Edm.Date ServerDate(DateTimeOffset value) => throw new NotSupportedException();
+
+            [UriFunction(true)]
+            public static bool Even(int value)
+            {
+                return value % 2 == 0;
+            }
         }
     }
 }

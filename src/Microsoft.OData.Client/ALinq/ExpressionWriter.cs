@@ -257,8 +257,9 @@ namespace Microsoft.OData.Client
                 // The implementation in .NET of "matchesPattern" is unique in that the
                 // invoked method requires an additional hard-coded parameter to match
                 // the spec (RegexOptions.ECMAScript). Therefore we handle it as a special
-                // case
-                if (methodName == "matchesPattern")
+                // case. To not conflict with a potential Custom Uri Function overload we also
+                // check the methods declaring type.
+                if (methodName == "matchesPattern" && m.Method.DeclaringType == typeof(Regex))
                 {
                     Debug.Assert(m.Method.Name == "IsMatch", "m.Method.Name == 'IsMatch'");
                     Debug.Assert(m.Object == null, "m.Object == null");
@@ -272,8 +273,9 @@ namespace Microsoft.OData.Client
                 }
                 // There is a single function, 'contains', which reorders its argument with
                 // respect to the CLR method. Thus handling it as a special case rather than
-                // using a more general argument reordering mechanism.
-                else if (methodName == "contains")
+                // using a more general argument reordering mechanism. To not conflict with
+                // a potential Custom Uri Function overload we also check the methods declaring type.
+                else if (methodName == "contains" && m.Method.DeclaringType == typeof(string))
                 {
                     Debug.Assert(m.Method.Name == "Contains", "m.Method.Name == 'Contains'");
                     Debug.Assert(m.Object != null, "m.Object != null");
@@ -413,7 +415,7 @@ namespace Microsoft.OData.Client
 
                     if (m.Method.Name != "GetValue" && m.Method.Name != "GetValueAsync")
                     {
-                        if (this.parent != null)
+                        if (m.Object != null && (this.InSubScope || this.parent?.NodeType == ExpressionType.Call))
                         {
                             this.builder.Append(UriHelper.FORWARDSLASH);
                         }

@@ -8850,6 +8850,15 @@ public sealed class Microsoft.OData.Client.OriginalNameAttribute : System.Attrib
     string OriginalName  { public get; }
 }
 
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.UriFunctionAttribute : System.Attribute {
+    public UriFunctionAttribute (bool canBeEvaluated = false)
+
+    bool CanBeEvaluated  { public get; }
+}
+
 public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.OData.Client.QueryOperationResponse, IEnumerable`1, IEnumerable {
     long Count  { public virtual get; }
     [
