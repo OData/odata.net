@@ -354,7 +354,7 @@ namespace Microsoft.OData.Client
         /// FireSendingRequest2 event.
         /// </summary>
         /// <param name="descriptor">Descriptor for which this request is getting generated.</param>
-        internal void FireSendingRequest2(Descriptor descriptor)
+        internal void FireSendingRequest2(Descriptor descriptor, bool isBulkUpdate = false)
         {
 #if DEBUG
             Debug.Assert(!this.fireSendingRequest2MethodCalled, "!this.fireSendingRequest2MethodCalled");
@@ -383,7 +383,7 @@ namespace Microsoft.OData.Client
 
                 try
                 {
-                    this.requestInfo.FireSendingRequest2(new SendingRequest2EventArgs(this.requestMessage, descriptor, this.IsBatchPartRequest));
+                    this.requestInfo.FireSendingRequest2(new SendingRequest2EventArgs(this.requestMessage, descriptor, this.IsBatchPartRequest, isBulkUpdate));
                 }
                 finally
                 {

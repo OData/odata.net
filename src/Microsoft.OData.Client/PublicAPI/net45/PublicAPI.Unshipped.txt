@@ -1,0 +1,2 @@
+Microsoft.OData.Client.SaveChangesOptions.BulkUpdate = 128 -> Microsoft.OData.Client.SaveChangesOptions
+Microsoft.OData.Client.SendingRequest2EventArgs.IsBulkUpdate.get -> bool

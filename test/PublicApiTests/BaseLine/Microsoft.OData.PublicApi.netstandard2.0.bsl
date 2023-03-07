@@ -7923,6 +7923,7 @@ FlagsAttribute(),
 public enum Microsoft.OData.Client.SaveChangesOptions : int {
     BatchWithIndependentOperations = 16
     BatchWithSingleChangeset = 1
+    BulkUpdate = 128
     ContinueOnError = 2
     None = 0
     PostOnlySetProperties = 8
@@ -8221,6 +8222,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.IAsyncResult BeginLoadProperty (object entity, string propertyName, System.Uri nextLinkUri, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (Microsoft.OData.Client.SaveChangesOptions options, System.AsyncCallback callback, object state)
+    internal virtual void BulkUpdate (T[] objects)
     public virtual void CancelRequest (System.IAsyncResult asyncResult)
     public virtual void ChangeState (object entity, Microsoft.OData.Client.EntityStates state)
     public virtual DataServiceQuery`1 CreateFunctionQuery ()
@@ -8539,6 +8541,7 @@ public class Microsoft.OData.Client.ReceivingResponseEventArgs : System.EventArg
 public class Microsoft.OData.Client.SendingRequest2EventArgs : System.EventArgs {
     Microsoft.OData.Client.Descriptor Descriptor  { public get; }
     bool IsBatchPart  { public get; }
+    bool IsBulkUpdate  { public get; }
     Microsoft.OData.IODataRequestMessage RequestMessage  { public get; }
 }
 

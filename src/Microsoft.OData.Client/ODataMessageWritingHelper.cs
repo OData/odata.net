@@ -60,6 +60,22 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Create message writer settings for producing bulk update requests.
+        /// <returns>Newly created message writer settings.</returns>
+        internal ODataMessageWriterSettings CreateDeltaSettings()
+        {
+            ODataMessageWriterSettings writerSettings = this.CreateSettings(isBatchPartRequest: false, enableWritingODataAnnotationWithoutPrefix: true);
+            writerSettings.ODataUri = new ODataUri
+            {
+                ServiceRoot = this.requestInfo.BaseUriResolver.BaseUriOrNull == null ? null : this.requestInfo.BaseUriResolver.GetBaseUriWithSlash()
+            };
+
+            writerSettings.Version = ODataVersion.V401;
+
+            return writerSettings;
+        }
+
+        /// <summary>
         /// Creates a writer for the given request message and settings.
         /// </summary>
         /// <param name="requestMessage">The request message.</param>

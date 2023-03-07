@@ -590,7 +590,7 @@ namespace Microsoft.OData.Client
                              if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
                              {
                                 throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
-                             }                      
+                             }
                         }
 
                         // Verify the id value if present. Otherwise we should use the location header
