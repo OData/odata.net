@@ -2790,7 +2790,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
         /// <param name="objects">The top-level objects of the type to be deep updated.</param>
-        internal virtual void DeepUpdate<T>(params T[] objects)
+        internal virtual void BulkUpdate<T>(params T[] objects)
         {
             if (objects.Length == 0)
             {

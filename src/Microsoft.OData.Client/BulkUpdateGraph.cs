@@ -56,7 +56,6 @@ namespace Microsoft.OData.Client
                 if (string.IsNullOrEmpty(this.entitySetName))
                 {
                     ComputeEntitySetName();
-                    return this.entitySetName;
                 }
 
                 return this.entitySetName;
@@ -69,7 +68,12 @@ namespace Microsoft.OData.Client
         /// </summary>
         private void ComputeEntitySetName()
         {
-            EntityDescriptor parentDescriptor = this.TopLevelDescriptors[0] as EntityDescriptor;
+            if (this.TopLevelDescriptors.Count == 0)
+            {
+                this.entitySetName = string.Empty;
+            }
+
+            EntityDescriptor parentDescriptor = this.TopLevelDescriptors[0];
 
             if (!string.IsNullOrEmpty(parentDescriptor.EntitySetName))
             {
