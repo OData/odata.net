@@ -10,15 +10,12 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Globalization;
     using System.Linq;
-    using System.Reflection;
     using System.Text;
-    using System.Xml;
-    using System.Xml.Linq;
     using Microsoft.OData;
-    using Microsoft.OData.UriParser;
     using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     #endregion Namespaces
@@ -161,13 +158,26 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates an instance of ODataMessageWriter for delta requests.
+        /// </summary>
+        /// <param name="requestMessage">Instance of IODataRequestMessage.</param>
+        /// <param name="requestInfo">RequestInfo containing information about the client settings.</param>
+        /// <param name="isParameterPayload">true if the writer is intended to for a parameter payload, false otherwise.</param>
+        /// <returns>An instance of ODataMessageWriter.</returns>
+        internal static ODataMessageWriter CreateDeltaMessageWriter(ODataRequestMessageWrapper requestMessage, RequestInfo requestInfo, bool isParameterPayload)
+        {
+            ODataMessageWriterSettings writerSettings = requestInfo.WriteHelper.CreateDeltaSettings();
+            return requestMessage.CreateWriter(writerSettings, isParameterPayload);
+        }
+
+        /// <summary>
         /// Creates an ODataResource for the given EntityDescriptor and fills in its ODataLib metadata.
         /// </summary>
         /// <param name="entityDescriptor">The entity descriptor.</param>
         /// <param name="serverTypeName">Name of the server type.</param>
         /// <param name="entityType">The client-side entity type.</param>
         /// <param name="clientFormat">The current client format.</param>
-        /// <returns>An odata entry with its metadata filled in.</returns>
+        /// <returns>An OData entry with its metadata filled in.</returns>
         internal static ODataResource CreateODataEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType, DataServiceClientFormat clientFormat)
         {
             ODataResource entry = new ODataResource();
@@ -190,6 +200,32 @@ namespace Microsoft.OData.Client
                 // what the metadata says.
                 entry.MediaResource = new ODataStreamReferenceValue();
             }
+
+            return entry;
+        }
+
+        /// <summary>
+        /// Creates an ODataDeletedResource for the given EntityDescriptor and fills in its ODataLib metadata.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity descriptor.</param>
+        /// <param name="serverTypeName">Name of the server type.</param>
+        /// <param name="entityType">The client-side entity type.</param>
+        /// <param name="clientFormat">The current client format.</param>
+        /// <returns>An odata entry with its metadata filled in.</returns>
+        internal static ODataDeletedResource CreateODataDeletedEntry(EntityDescriptor entityDescriptor, string serverTypeName, ClientTypeAnnotation entityType)
+        {
+            ODataDeletedResource entry = new ODataDeletedResource();
+
+            // If the client type name is different from the server type name, then add SerializationTypeNameAnnotation
+            // which tells ODataLib to write the type name in the annotation in the payload.
+            if (entityType.ElementTypeName != serverTypeName)
+            {
+                entry.TypeAnnotation = new ODataTypeAnnotation(serverTypeName);
+            }
+
+            // We always need to write the client type name, since this is the type name used by ODataLib
+            // to resolve the entity type using EdmModel.FindSchemaElement.
+            entry.TypeName = entityType.ElementTypeName;
 
             return entry;
         }
@@ -287,6 +323,7 @@ namespace Microsoft.OData.Client
                 string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
 
                 var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+
                 if (serverTypeName == null)
                 {
                     serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(entityDescriptor);
@@ -319,6 +356,160 @@ namespace Microsoft.OData.Client
 
                 entryWriter.WriteEnd(entry, entityDescriptor.Entity);
             }
+        }
+
+        /// <summary>
+        /// Writes the feed entry
+        /// </summary>
+        /// <param name="objects">A list of descriptors to be written</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
+        /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
+        internal void WriteDeltaResourceSet(IReadOnlyList<Descriptor> descriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        {
+            ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
+            oDataWriter.WriteStart(resourceSet);
+
+            for (int i = 0; i < descriptors.Count; ++i)
+            {
+                Descriptor descriptor = descriptors[i];
+
+                if (descriptor is EntityDescriptor entityDescriptor)
+                {
+                    if (entityDescriptor.State == EntityStates.Deleted)
+                    {
+                        WriteDeltaDeletedEntry(entityDescriptor, oDataWriter);
+                    }
+                    else
+                    {
+                        this.WriteDeltaEntry(entityDescriptor, bulkUpdateGraph, oDataWriter);
+                    }
+                }
+                else if (descriptor is LinkDescriptor linkDescriptor)
+                {
+                    if (linkDescriptor.State == EntityStates.Deleted)
+                    {
+                        var targetEntityDescriptor = this.requestInfo.EntityTracker.GetEntityDescriptor(linkDescriptor.Target);
+                        WriteDeltaDeletedEntry(targetEntityDescriptor, oDataWriter);
+                    }
+                    else
+                    {
+                        WriteODataId(linkDescriptor, oDataWriter);
+                    }
+                }
+            }
+
+            oDataWriter.WriteEnd();
+        }
+
+        /// <summary>
+        /// Writes @odata.id or @id.
+        /// </summary>
+        /// <param name="linkDescriptor">The linkDescriptor of the resource to be referenced by another resource.</param>
+        /// <param name="oDataWriter">An instance of <see cref="ODataWriterHelper"/> to use to write the resource.</param>
+        private void WriteODataId(LinkDescriptor linkDescriptor, ODataWriterWrapper oDataWriter)
+        {
+            EntityDescriptor targetEntityDescriptor = this.requestInfo.EntityTracker.GetEntityDescriptor(linkDescriptor.Target);
+            Uri link = targetEntityDescriptor.GetLatestEditLink();
+            
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(targetEntityDescriptor.Entity.GetType()));
+            string serverTypeName = this.requestInfo.GetServerTypeName(targetEntityDescriptor);
+            
+            if (serverTypeName == null)
+            {
+                serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(targetEntityDescriptor);
+            }
+
+            IEnumerable<ClientPropertyAnnotation> properties;
+            
+            if (link == null)
+            {
+                properties = entityType.PropertiesToSerialize();
+            }
+            else
+            { 
+                properties = entityType.PropertiesToSerialize().Where(prop => targetEntityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+            }
+
+            ODataResource resource = new ODataResource
+            {
+                Id = link,
+                TypeName = serverTypeName,
+                Properties = this.propertyConverter.PopulateProperties(targetEntityDescriptor.Entity, serverTypeName, properties)
+            };
+            
+            oDataWriter.WriteStart(resource, targetEntityDescriptor.Entity);
+            oDataWriter.WriteEnd();
+        }
+
+        /// <summary>
+        /// Write the delta entry element.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity descriptor.</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
+        /// <param name="oDataWriter">The writer.</param>
+        internal void WriteDeltaEntry(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        {
+            ClientEdmModel model = this.requestInfo.Model;          
+            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+
+            // Get the server type name using the type resolver or from the entity descriptor
+            string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
+            ODataResource entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+            
+            if (serverTypeName == null)
+            {
+                serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(entityDescriptor);
+            }
+
+            IEnumerable<ClientPropertyAnnotation> properties;
+
+            if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
+                entityDescriptor.State == EntityStates.Modified &&
+                entityDescriptor.PropertiesToSerialize.Any()) ||
+                (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
+                entityDescriptor.State == EntityStates.Added))
+            {
+                properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+            }
+            else
+            {
+                properties = entityType.PropertiesToSerialize();
+            }
+
+            entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, properties);
+
+            oDataWriter.WriteStart(entry, entityDescriptor.Entity);
+
+            this.WriteNestedComplexProperties(entityDescriptor.Entity, serverTypeName, properties, oDataWriter);
+
+            this.WriteDeltaNestedResourceInfo(entityDescriptor, bulkUpdateGraph, oDataWriter);
+
+            oDataWriter.WriteEnd(entry, entityDescriptor.Entity);
+        }
+
+        /// <summary>
+        /// Write the delta deleted entry element.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity descriptor of the deleted resource.</param>
+        /// <param name="oDataWriter">The OData writer.</param>
+        internal void WriteDeltaDeletedEntry(EntityDescriptor entityDescriptor, ODataWriterWrapper oDataWriter)
+        {
+            ClientEdmModel model = this.requestInfo.Model;
+
+            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+
+            // Get the server type name using the type resolver or from the entity descriptor
+            string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
+
+            ODataDeletedResource entry = CreateODataDeletedEntry(entityDescriptor, serverTypeName, entityType);
+
+            entry.Reason = DeltaDeletedEntryReason.Changed;
+            entry.Id = entityDescriptor.Identity;
+
+            oDataWriter.WriteStart(entry);
+
+            oDataWriter.WriteEnd();
         }
 
         /// <summary>
@@ -403,6 +594,122 @@ namespace Microsoft.OData.Client
 
                 odataWriter.WriteNestedResourceInfoEnd();
             }
+        }
+
+        /// <summary>
+        /// Writes a nested resource
+        /// </summary>
+        /// <param name="entityDescriptor">The entity</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
+        /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
+        internal void WriteDeltaNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        {
+            HashSet<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
+            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors);
+
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+
+            foreach (KeyValuePair<string, List<Descriptor>> relatedLinks in groupedRelatedLinks)
+            {
+                LinkDescriptor relatedEnd = null;
+                ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
+                
+                //these items will all be of the same type ~ we'll be using the 
+                //first item in determining the type of the descriptor.
+                Descriptor item = relatedLinks.Value.FirstOrDefault();
+
+                if (item is EntityDescriptor entDescriptor)
+                {
+                    relatedEnd = new LinkDescriptor(entDescriptor.ParentEntity, entDescriptor.ParentProperty, entDescriptor.Entity, this.requestInfo.Model);
+                }
+                else
+                {
+                    relatedEnd = item as LinkDescriptor;
+                }
+
+                navigationLink.Name = relatedEnd.SourceProperty;
+                bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
+
+                odataWriter.WriteNestedResourceInfoStart(navigationLink);
+
+                odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+
+                if (isCollection)
+                {
+                    WriteDeltaResourceSet(relatedLinks.Value, bulkUpdateGraph, odataWriter);
+                }
+                else
+                {
+                    //we can have a related single entry ~ this will automatically be a replace operation.
+                    if (item.DescriptorKind == DescriptorKind.Entity)
+                    {
+                        EntityDescriptor relatedEntityDescriptor = item as EntityDescriptor;
+                        WriteDeltaEntry(relatedEntityDescriptor, bulkUpdateGraph, odataWriter);
+                    }
+                    else if (item.DescriptorKind == DescriptorKind.Link)
+                    {
+                        odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink() { Url = navigationLink.Url }, relatedEnd.Source, relatedEnd.Target);
+                    }
+                }
+
+                odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
+                odataWriter.WriteNestedResourceInfoEnd();
+            }
+        }
+
+        /// <summary>
+        /// This method groups a descriptor's related links by their navigation properties.
+        /// </summary>
+        /// <param name="relatedDescriptors">A descriptor's related ungrouped descriptors.</param>
+        /// <returns> A dictionary with the grouped descriptors by their navigation property name. </returns>
+        private static Dictionary<string, List<Descriptor>> GroupRelatedLinksByNavigationProperty(HashSet<Descriptor> relatedDescriptors)
+        {
+            Dictionary<string, List<Descriptor>> groupedRelatedLinks = new Dictionary<string, List<Descriptor>>(EqualityComparer<string>.Default);
+
+            foreach (Descriptor link in relatedDescriptors)
+            {
+                if (link is EntityDescriptor entityObject)
+                {
+                    string parentProperty = entityObject.ParentProperty;
+
+                    if (groupedRelatedLinks.TryGetValue(parentProperty, out List<Descriptor> relatedLinks))
+                    {
+                        relatedLinks.Add(entityObject);
+                    }
+                    else
+                    {
+                        if (relatedLinks == null)
+                        {
+                            relatedLinks = new List<Descriptor>();
+                        }
+
+                        relatedLinks.Add(entityObject);
+                        groupedRelatedLinks.Add(parentProperty, relatedLinks);
+                    }
+                }
+                else if (link is LinkDescriptor linkObject)
+                {
+                    string linkName = linkObject.SourceProperty;
+
+                    if (groupedRelatedLinks.TryGetValue(linkName, out List<Descriptor> relatedLinks))
+                    {
+                        relatedLinks.Add(linkObject);
+                    }
+                    else
+                    {
+                        if (relatedLinks == null)
+                        {
+                            relatedLinks = new List<Descriptor>();
+                        }
+
+                        relatedLinks.Add(linkObject);
+                        groupedRelatedLinks.Add(linkName, relatedLinks);
+                    }
+                }
+            }
+
+            return groupedRelatedLinks;
         }
 
 #if DEBUG

@@ -1,3 +1,5 @@
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.CanBeEvaluated.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool canBeEvaluated = false) -> void
+Microsoft.OData.Client.SaveChangesOptions.BulkUpdate = 128 -> Microsoft.OData.Client.SaveChangesOptions
+Microsoft.OData.Client.SendingRequest2EventArgs.IsBulkUpdate.get -> bool

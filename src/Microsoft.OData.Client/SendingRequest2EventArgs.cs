@@ -18,11 +18,13 @@ namespace Microsoft.OData.Client
         /// <param name="requestMessage">request message.</param>
         /// <param name="descriptor">Descriptor that represents this change.</param>
         /// <param name="isBatchPart">True if this args represents a request within a batch, otherwise false.</param>
-        internal SendingRequest2EventArgs(IODataRequestMessage requestMessage, Descriptor descriptor, bool isBatchPart)
+        /// <param name="isBulkUpdate">True if this args represents a request within a bulk update, otherwise false.</param>
+        internal SendingRequest2EventArgs(IODataRequestMessage requestMessage, Descriptor descriptor, bool isBatchPart, bool isBulkUpdate = false)
         {
             this.RequestMessage = requestMessage;
             this.Descriptor = descriptor;
             this.IsBatchPart = isBatchPart;
+            this.IsBulkUpdate = isBulkUpdate;
         }
 
         /// <summary>The web request reported through this event. The handler may modify it.</summary>
@@ -41,6 +43,13 @@ namespace Microsoft.OData.Client
 
         /// <summary> Returns true if this event is fired for request within a batch, otherwise returns false. </summary>
         public bool IsBatchPart
+        {
+            get;
+            private set;
+        }
+
+        /// <summary> Returns true if this event is fired for a bulk update request, otherwise returns false. </summary>
+        public bool IsBulkUpdate
         {
             get;
             private set;

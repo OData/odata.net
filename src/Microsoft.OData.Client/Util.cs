@@ -442,6 +442,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Checks whether any bulk update flag is set on the options
+        /// </summary>
+        /// <param name="options">Options as specified by the user.</param>
+        /// <returns>true if the given flag is set, otherwise false.</returns>
+        internal static bool IsBulkUpdate(SaveChangesOptions options)
+        {
+            return Util.IsFlagSet(options, SaveChangesOptions.BulkUpdate);
+        }
+
+        /// <summary>
         /// checks whether the batch flag is set on the options for the single changeset
         /// </summary>
         /// <param name="options">options as specified by the user.</param>

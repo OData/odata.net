@@ -45,6 +45,11 @@ namespace Microsoft.OData.Client
         /// Allow usage of Json in batch requests.
         /// Note it can only be used in a batch request.
         /// </summary>
-        UseJsonBatch = 64
+        UseJsonBatch = 64,
+
+        /// <summary>
+        /// A bulk update operation.
+        /// </summary>
+        BulkUpdate = 128
     }
 }

@@ -6,9 +6,10 @@
 
 namespace Microsoft.OData.Client
 {
+    using System;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using Microsoft.OData;
+    using Microsoft.OData.Edm;
 
     /// <summary>
     /// Forwards calls to an OData Writer
@@ -48,6 +49,38 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Creates the OData delta feed writer.
+        /// </summary>
+        /// <param name="messageWriter">The message writer.</param>
+        /// <param name="entitySetName">The entity set name of the top-level descriptor.</param>
+        /// <param name="requestPipeline">The request pipeline configuration.</param>
+        /// <param name="messageWrapper">The messagewrapper.</param>
+        /// <param name="requestInfo">Where to pull changes from.</param>
+        /// <returns>The OData writer wrapper.</returns>
+        internal static ODataWriterWrapper CreateForDeltaFeed(ODataMessageWriter messageWriter, string entitySetName, DataServiceClientRequestPipelineConfiguration requestPipeline, ODataRequestMessageWrapper messageWrapper, RequestInfo requestInfo)
+        {
+            EntityDescriptor entityDescriptor = messageWrapper.Descriptor as EntityDescriptor;
+            IEdmEntityContainer entityContainer = requestInfo.Format.ServiceModel.EntityContainer;
+            IEdmStructuredType entityType = requestInfo.Model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()) as IEdmStructuredType;
+            
+            Debug.Assert(entityType != null, "entityType != null");
+
+            if (!string.IsNullOrEmpty(entityDescriptor.EntitySetName))
+            {
+                entitySetName = entityDescriptor.EntitySetName;
+            }
+
+            IEdmEntitySet edmEntitySet = new EdmEntitySet(entityContainer, entitySetName, entityType as IEdmEntityType);
+  
+            if (edmEntitySet == null)
+            {
+                throw Error.InvalidOperation(Strings.DataBinding_Util_UnknownEntitySetName(entityDescriptor.Entity.GetType().FullName));
+            }
+
+            return new ODataWriterWrapper(messageWriter.CreateODataDeltaResourceSetWriter(edmEntitySet, entityType), requestPipeline);
+        }
+
+        /// <summary>
         /// Creates the odata entry writer for testing purposes only
         /// </summary>
         /// <param name="writer">The odata writer.</param>
@@ -63,6 +96,24 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="resourceSet">The resource set.</param>
         internal void WriteStart(ODataResourceSet resourceSet)
+        {
+            this.odataWriter.WriteStart(resourceSet);
+        }
+
+        /// <summary>
+        /// Writes the start of the deleted resource.
+        /// </summary>
+        /// <param name="deletedResource">The deleted resource.</param>
+        internal void WriteStart(ODataDeletedResource deletedResource)
+        {
+            this.odataWriter.WriteStart(deletedResource);
+        }
+
+        /// <summary>
+        /// Writes the start of the delta resource set.
+        /// </summary>
+        /// <param name="resourceSet">The delta resource set.</param>
+        internal void WriteStart(ODataDeltaResourceSet resourceSet)
         {
             this.odataWriter.WriteStart(resourceSet);
         }
