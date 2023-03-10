@@ -912,6 +912,7 @@ namespace Microsoft.OData.Tests.UriParser
             // Act
             var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/" + functionPath));
             var pathSegments = parser.ParsePath().ToList();
+            parser.Validate(OData.UriParser.Validation.ODataUrlValidationRuleSet.AllRules, out var messages);
 
             // Assert
             Assert.Single(pathSegments);
