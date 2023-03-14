@@ -258,7 +258,8 @@ namespace Microsoft.OData.Client
                 // invoked method requires an additional hard-coded parameter to match
                 // the spec (RegexOptions.ECMAScript). Therefore we handle it as a special
                 // case. To not conflict with a potential Custom Uri Function overload we also
-                // check the methods declaring type.
+                // check the method's declaring type.
+
                 if (methodName == "matchesPattern" && m.Method.DeclaringType == typeof(Regex))
                 {
                     Debug.Assert(m.Method.Name == "IsMatch", "m.Method.Name == 'IsMatch'");
