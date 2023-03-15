@@ -167,10 +167,7 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
             foreach (IEdmOperationImport operation in segment.OperationImports)
             {
                 ValidateItem(operation);
-                if (operation.EntitySet != null)
-                {
-                    ValidateItem(operation.EntitySet);
-                }
+                ValidateItem(operation.Operation.ReturnType);                
             }
         }
 
