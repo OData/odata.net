@@ -257,7 +257,7 @@ namespace Microsoft.OData.Client
         /// <returns>true/ false</returns>
         private static bool TryResolveUriFunction(MethodInfo mi, out string methodName)
         {
-            UriFunctionAttribute uriFunctionAttribute = (UriFunctionAttribute)mi.GetCustomAttributes(typeof(UriFunctionAttribute), false).SingleOrDefault();
+            UriFunctionAttribute uriFunctionAttribute = (UriFunctionAttribute)mi.GetCustomAttributes(typeof(UriFunctionAttribute), false).FirstOrDefault();
             if (uriFunctionAttribute != null)
             {
                 methodName = ClientTypeUtil.GetServerDefinedName(mi);

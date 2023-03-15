@@ -8857,9 +8857,9 @@ public sealed class Microsoft.OData.Client.OriginalNameAttribute : System.Attrib
 AttributeUsageAttribute(),
 ]
 public sealed class Microsoft.OData.Client.UriFunctionAttribute : System.Attribute {
-    public UriFunctionAttribute (bool canBeEvaluated = false)
+    public UriFunctionAttribute (bool allowClientSideEvaluation = false)
 
-    bool CanBeEvaluated  { public get; }
+    bool AllowClientSideEvaluation  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.OData.Client.QueryOperationResponse, IEnumerable`1, IEnumerable {

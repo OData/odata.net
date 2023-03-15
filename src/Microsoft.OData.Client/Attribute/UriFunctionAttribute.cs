@@ -13,20 +13,20 @@ namespace Microsoft.OData.Client
     public sealed class UriFunctionAttribute : Attribute
     {
         /// <summary>Allow client side evaluation.</summary>
-        private readonly bool canBeEvaluated;
+        private readonly bool allowClientSideEvaluation;
 
         /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.Client.UriFunctionAttribute" /> class. </summary>
-        /// <param name="canBeEvaluated">Use client side evaluation when possible. Default is false.</param>
-        public UriFunctionAttribute(bool canBeEvaluated = false)
+        /// <param name="allowClientSideEvaluation">Use client side evaluation when possible. Default is false.</param>
+        public UriFunctionAttribute(bool allowClientSideEvaluation = false)
         {
-            this.canBeEvaluated = canBeEvaluated;
+            this.allowClientSideEvaluation = allowClientSideEvaluation;
         }
 
         /// <summary>Can client side evaluation be used.</summary>
         /// <returns>Boolean value indicating if client side evaluation can be used. </returns>
-        public bool CanBeEvaluated
+        public bool AllowClientSideEvaluation
         {
-            get { return this.canBeEvaluated; }
+            get { return this.allowClientSideEvaluation; }
         }
     }
 }

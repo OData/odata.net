@@ -174,7 +174,7 @@ namespace Microsoft.OData.Client
             internal override Expression VisitMethodCall(MethodCallExpression m)
             {
                 UriFunctionAttribute uriFunctionAttribute = (UriFunctionAttribute)m.Method.GetCustomAttributes(typeof(UriFunctionAttribute), false).SingleOrDefault();
-                if (uriFunctionAttribute != null && !uriFunctionAttribute.CanBeEvaluated)
+                if (uriFunctionAttribute != null && !uriFunctionAttribute.AllowClientSideEvaluation)
                 {
                     this.cannotBeEvaluated = true;
                 }
