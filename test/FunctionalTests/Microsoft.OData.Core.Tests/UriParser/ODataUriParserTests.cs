@@ -13,6 +13,7 @@ using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.UriParser.Validation;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -912,6 +913,7 @@ namespace Microsoft.OData.Tests.UriParser
             // Act
             var parser = new ODataUriParser(model, new Uri("http://host"), new Uri("http://host/" + functionPath));
             var pathSegments = parser.ParsePath().ToList();
+            parser.Validate(ODataUrlValidationRuleSet.AllRules, out IEnumerable<ODataUrlValidationMessage> messages);
 
             // Assert
             Assert.Single(pathSegments);
