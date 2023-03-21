@@ -449,7 +449,6 @@ namespace Microsoft.OData
                 this);
             }
 #else
-                activity?.AddEvent(new ActivityEvent("End process"));
                 return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam) => thisParam.WriteEnd(),
                 this);
