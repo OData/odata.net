@@ -188,10 +188,22 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         public virtual Task WriteStartAsync(ODataResource resource)
         {
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+            using (Activity activity = source.StartActivity("OData Resource"))
+            {
+                activity?.SetTag("Writing ODataResource", resource);
+                activity?.AddEvent(new ActivityEvent("Started writing odata resource"));
+                return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
+                this,
+                resource);
+            }
+#else
             return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
                 this,
                 resource);
+#endif
         }
 
 
@@ -428,9 +440,20 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteEndAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+            using (Activity activity = source.StartActivity("End"))
+            {
+                activity?.AddEvent(new ActivityEvent("End process"));
+                return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam) => thisParam.WriteEnd(),
                 this);
+            }
+#else
+                activity?.AddEvent(new ActivityEvent("End process"));
+                return TaskUtils.GetTaskForSynchronousOperation(
+                (thisParam) => thisParam.WriteEnd(),
+                this);
+#endif
         }
 
         /// <summary> Writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
