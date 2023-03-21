@@ -9,16 +9,22 @@ namespace Microsoft.OData
     #region Namespaces
 
     using System;
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+    using System.Diagnostics;
+#endif
     using System.IO;
     using System.Threading.Tasks;
 
-    #endregion Namespaces
+#endregion Namespaces
 
     /// <summary>
     /// Base class for OData writers.
     /// </summary>
     public abstract class ODataWriter
     {
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+        private static readonly ActivitySource source = new ActivitySource("Microsoft.OData.Core", "1.0.0");
+#endif
         /// <summary>Starts the writing of a resource set.</summary>
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public abstract void WriteStart(ODataResourceSet resourceSet);
@@ -28,9 +34,21 @@ namespace Microsoft.OData
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
         public ODataWriter Write(ODataResourceSet resourceSet)
         {
+#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
+            using (Activity activity = source.StartActivity("Start Writing ODataResourceSet"))
+            {
+                activity?.SetTag("Writing ODataResourceSet", resourceSet);
+                activity?.AddEvent(new ActivityEvent("Started writing odata resource set"));
+                WriteStart(resourceSet);
+                activity?.AddEvent(new ActivityEvent("Finished writing odata resource set"));
+                WriteEnd();
+                return this;
+            }
+#else
             WriteStart(resourceSet);
             WriteEnd();
             return this;
+#endif
         }
 
         /// <summary>Writes a resource set and performs an action in-between.</summary>
