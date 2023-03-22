@@ -9,9 +9,6 @@ namespace Microsoft.OData
     #region Namespaces
 
     using System;
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-    using System.Diagnostics;
-#endif
     using System.IO;
     using System.Threading.Tasks;
 
@@ -22,9 +19,6 @@ namespace Microsoft.OData
     /// </summary>
     public abstract class ODataWriter
     {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-        private static readonly ActivitySource source = new ActivitySource("Microsoft.OData.Core", "1.0.0");
-#endif
         /// <summary>Starts the writing of a resource set.</summary>
         /// <param name="resourceSet">The resource set or collection to write.</param>
         public abstract void WriteStart(ODataResourceSet resourceSet);
@@ -50,7 +44,6 @@ namespace Microsoft.OData
             WriteEnd();
             return this;
         }
-
 
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
@@ -176,13 +169,6 @@ namespace Microsoft.OData
         /// <param name="resource">The resource or item to write.</param>
         public virtual Task WriteStartAsync(ODataResource resource)
         {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-            using (Activity activity = source.StartActivity("OData Resource"))
-            {
-                activity?.SetTag("Writing ODataResource", resource);
-                activity?.AddEvent(new ActivityEvent("Started writing odata resource"));
-            }
-#endif
             return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
                 this,
@@ -423,12 +409,6 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public virtual Task WriteEndAsync()
         {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-            using (Activity activity = source.StartActivity("End"))
-            {
-                activity?.AddEvent(new ActivityEvent("End process"));
-            }
-#endif
             return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam) => thisParam.WriteEnd(),
                 this);
