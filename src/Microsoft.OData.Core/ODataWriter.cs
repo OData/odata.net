@@ -12,7 +12,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Threading.Tasks;
 
-#endregion Namespaces
+    #endregion Namespaces
 
     /// <summary>
     /// Base class for OData writers.
@@ -44,6 +44,7 @@ namespace Microsoft.OData
             WriteEnd();
             return this;
         }
+
 
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
