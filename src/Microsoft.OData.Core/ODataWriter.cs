@@ -34,21 +34,9 @@ namespace Microsoft.OData
         /// <returns>This ODataWriter, allowing for chaining operations.</returns>
         public ODataWriter Write(ODataResourceSet resourceSet)
         {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-            using (Activity activity = source.StartActivity("Start Writing ODataResourceSet"))
-            {
-                activity?.SetTag("Writing ODataResourceSet", resourceSet);
-                activity?.AddEvent(new ActivityEvent("Started writing odata resource set"));
-                WriteStart(resourceSet);
-                activity?.AddEvent(new ActivityEvent("Finished writing odata resource set"));
-                WriteEnd();
-                return this;
-            }
-#else
             WriteStart(resourceSet);
             WriteEnd();
             return this;
-#endif
         }
 
         /// <summary>Writes a resource set and performs an action in-between.</summary>
@@ -193,17 +181,12 @@ namespace Microsoft.OData
             {
                 activity?.SetTag("Writing ODataResource", resource);
                 activity?.AddEvent(new ActivityEvent("Started writing odata resource"));
-                return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
-                this,
-                resource);
             }
-#else
+#endif
             return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
                 this,
                 resource);
-#endif
         }
 
 
@@ -444,15 +427,11 @@ namespace Microsoft.OData
             using (Activity activity = source.StartActivity("End"))
             {
                 activity?.AddEvent(new ActivityEvent("End process"));
-                return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEnd(),
-                this);
             }
-#else
-                return TaskUtils.GetTaskForSynchronousOperation(
+#endif
+            return TaskUtils.GetTaskForSynchronousOperation(
                 (thisParam) => thisParam.WriteEnd(),
                 this);
-#endif
         }
 
         /// <summary> Writes an entity reference link, which is used to represent binding to an existing resource in a request payload. </summary>
