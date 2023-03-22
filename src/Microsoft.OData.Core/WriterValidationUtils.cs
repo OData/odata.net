@@ -12,9 +12,7 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
     using Microsoft.OData.Core.Telemetry;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 #endregion Namespaces
@@ -24,9 +22,6 @@ namespace Microsoft.OData
     /// </summary>
     internal static class WriterValidationUtils
     {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-        private static readonly ActivitySource source = TelemetryProvider.ActivitySourceODataCore;
-#endif
         /// <summary>
         /// Validates that message writer settings are correct.
         /// </summary>
@@ -38,26 +33,14 @@ namespace Microsoft.OData
 
             if (messageWriterSettings.BaseUri != null && !messageWriterSettings.BaseUri.IsAbsoluteUri)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
 
                 throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
             }
 
             if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
 
                 throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
             }
@@ -71,13 +54,7 @@ namespace Microsoft.OData
         {
             if (property == null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_PropertyMustNotBeNull);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_PropertyMustNotBeNull);
 
                 throw new ODataException(Strings.WriterValidationUtils_PropertyMustNotBeNull);
             }
@@ -92,13 +69,7 @@ namespace Microsoft.OData
             // Properties must have a non-empty name
             if (string.IsNullOrEmpty(propertyName))
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
 
                 throw new ODataException(Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
             }
@@ -132,13 +103,7 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && !owningStructuredType.IsOpen && property == null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
 
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
             }
@@ -160,13 +125,7 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && propertyInfo.MetadataType.IsUndeclaredProperty && !propertyInfo.MetadataType.IsOpenProperty)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
 
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
             }
@@ -198,13 +157,7 @@ namespace Microsoft.OData
 
             if (property.PropertyKind != EdmPropertyKind.Navigation)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
 
                 // The property must be a navigation property
                 throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
@@ -230,13 +183,7 @@ namespace Microsoft.OData
             // Make sure the entity types are compatible
             if (!parentNavigationPropertyType.IsAssignableFrom(resourceType))
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
 
                 throw new ODataException(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
             }
@@ -254,13 +201,7 @@ namespace Microsoft.OData
             // Operations are only valid in responses; we fail on them in requests
             if (!writingResponse)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
 
                 throw new ODataException(Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
             }
@@ -281,13 +222,7 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_NextPageLinkInRequest);
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NextPageLinkInRequest);
 
                     throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
                 }
@@ -309,13 +244,7 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_NextPageLinkInRequest);
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NextPageLinkInRequest);
 
                     throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
                 }
@@ -360,39 +289,21 @@ namespace Microsoft.OData
 
             if (streamReference.ContentType != null && streamReference.ContentType.Length == 0)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
 
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
             }
 
             if (isDefaultStream && streamReference.ReadLink == null && streamReference.ContentType != null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
 
                 throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
             }
 
             if (isDefaultStream && streamReference.ReadLink != null && streamReference.ContentType == null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
 
                 throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
             }
@@ -405,26 +316,14 @@ namespace Microsoft.OData
             // That will cause the ATOM writer to write the properties outside the content without producing any content element.
             if (streamReference.EditLink == null && streamReference.ReadLink == null && !isDefaultStream)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
 
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
             }
 
             if (streamReference.EditLink == null && streamReference.ETag != null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
 
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
             }
@@ -449,13 +348,7 @@ namespace Microsoft.OData
                 // Read/Write links and ETags on Stream properties are only valid in responses; writers fail if they encounter them in requests.
                 if (streamPropertyInfo != null && streamPropertyInfo.EditLink != null || streamPropertyInfo.ReadLink != null || streamPropertyInfo.ETag != null)
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
 
                     throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
                 }
@@ -504,13 +397,7 @@ namespace Microsoft.OData
                 }
             }
 
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-            using (Activity activity = source.StartActivity("Validation Error"))
-            {
-                activity?.SetTag("Validation Type", "Writer Validation");
-                activity?.SetTag("Message", Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
-            }
-#endif
+            TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
 
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
         }
@@ -524,13 +411,7 @@ namespace Microsoft.OData
         {
             if (entityReferenceLink == null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
 
                 throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
             }
@@ -546,13 +427,7 @@ namespace Microsoft.OData
 
             if (entityReferenceLink.Url == null)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
 
                 throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
             }
@@ -584,13 +459,7 @@ namespace Microsoft.OData
             // Navigation link must have a non-empty name
             if (string.IsNullOrEmpty(nestedResourceInfo.Name))
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.ValidationUtils_LinkMustSpecifyName);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_LinkMustSpecifyName);
 
                 throw new ODataException(Strings.ValidationUtils_LinkMustSpecifyName);
             }
@@ -653,13 +522,7 @@ namespace Microsoft.OData
             {
                 string uri = nestedResourceInfo.Url == null ? "null" : UriUtils.UriToString(nestedResourceInfo.Url);
 
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", errorTemplate(uri));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(errorTemplate(uri));
 
                 throw new ODataException(errorTemplate(uri));
             }
@@ -693,13 +556,7 @@ namespace Microsoft.OData
                 }
             }
 
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-            using (Activity activity = source.StartActivity("Validation Error"))
-            {
-                activity?.SetTag("Validation Type", "Writer Validation");
-                activity?.SetTag("Message", Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
-            }
-#endif
+            TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
 
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
         }
@@ -714,13 +571,7 @@ namespace Microsoft.OData
 
             if (!nestedResourceInfo.IsCollection.HasValue)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
 
                 throw new ODataException(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
             }
@@ -740,50 +591,26 @@ namespace Microsoft.OData
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
 
                     throw new ODataException(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
                 }
 
                 if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
 
                     throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsODataEnumTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
 
                     throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                    using (Activity activity = source.StartActivity("Validation Error"))
-                    {
-                        activity?.SetTag("Validation Type", "Writer Validation");
-                        activity?.SetTag("Message", Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
-                    }
-#endif
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
 
                     throw new ODataException(Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
                 }
@@ -792,13 +619,7 @@ namespace Microsoft.OData
                     IEdmComplexTypeReference complexTypeReference = expectedPropertyTypeReference.AsComplex();
                     if (!complexTypeReference.IsNullable)
                     {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                        using (Activity activity = source.StartActivity("Validation Error"))
-                        {
-                            activity?.SetTag("Validation Type", "Writer Validation");
-                            activity?.SetTag("Message", Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
-                        }
-#endif
+                        TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
 
                         throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                     }
@@ -816,13 +637,7 @@ namespace Microsoft.OData
             // TODO: it always passes. Will add more validation or remove the validation after supporting relative Uri.
             if (id != null && UriUtils.UriToString(id).Length == 0)
             {
-#if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-                using (Activity activity = source.StartActivity("Validation Error"))
-                {
-                    activity?.SetTag("Validation Type", "Writer Validation");
-                    activity?.SetTag("Message", Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
-                }
-#endif
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
 
                 throw new ODataException(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
             }

@@ -1,3 +1,0 @@
-Microsoft.OData.Core.Telemetry.TelemetryProvider
-static readonly Microsoft.OData.Core.Telemetry.TelemetryProvider.ActivitySourceEdmLib -> System.Diagnostics.ActivitySource
-static readonly Microsoft.OData.Core.Telemetry.TelemetryProvider.ActivitySourceODataCore -> System.Diagnostics.ActivitySource
