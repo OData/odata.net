@@ -1304,6 +1304,9 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected override Task StartPayloadAsync()
         {
+#if NETCOREAPP3_1_OR_GREATER
+            Telemetry.ActivitySource.StartActivity("StartPayload");
+#endif
             return this.jsonLightResourceSerializer.WritePayloadStartAsync();
         }
 
@@ -1313,6 +1316,9 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected override Task EndPayloadAsync()
         {
+#if NETCOREAPP3_1_OR_GREATER
+            Activity.Current?.Stop();
+#endif
             return this.jsonLightResourceSerializer.WritePayloadEndAsync();
         }
 
