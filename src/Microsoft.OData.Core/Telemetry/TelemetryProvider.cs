@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataJsonLightValidationUtils.cs" company="Microsoft">
+// <copyright file="TelemetryProvider.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -21,19 +21,27 @@ namespace Microsoft.OData.Core.Telemetry
     internal static class TelemetryProvider
     {
 #if NETCOREAPP3_1_OR_GREATER || NETSTANDARD2_0_OR_GREATER
-        private static readonly ActivitySource source = new ActivitySource("Microsoft.OData.Core");
-
         private const string VALIDATION_ERROR = "Validation Error";
         private const string TAG_VALIDATION_TYPE = "Validation Type";
         private const string TAG_MESSAGE = "Message";
+        private const string TAG_WRITER_VALIDATION = "Writer validation";
+        //private const string TAG_READER_VALIDATION = "Reader validation";
+        //private const string TAG_URL_VALIDATION = "Url validation";
 
         public static void AddValidationEvent(string message)
         {
-            using (Activity activity = source.StartActivity(VALIDATION_ERROR))
+            Activity activity = Activity.Current;
+
+            if (activity == null)
             {
-                activity?.SetTag(TAG_VALIDATION_TYPE, "Writer Validation");
-                activity?.SetTag(TAG_MESSAGE, message);
+                return;
             }
+
+            ActivityTagsCollection tags = new ActivityTagsCollection();
+            tags.Add(TAG_VALIDATION_TYPE, TAG_WRITER_VALIDATION); // TODO: Use enums in validation types.
+            tags.Add(TAG_MESSAGE, message);
+            ActivityEvent exEvent = new ActivityEvent(VALIDATION_ERROR, default, tags);
+            activity.AddEvent(exEvent);
         }
 #else
         public static void AddValidationEvent(string message)
