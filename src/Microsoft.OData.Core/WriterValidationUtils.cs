@@ -12,9 +12,10 @@ namespace Microsoft.OData
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using Microsoft.OData.Core.Telemetry;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
-    #endregion Namespaces
+#endregion Namespaces
 
     /// <summary>
     /// Class with utility methods for validating OData content when writing.
@@ -32,11 +33,15 @@ namespace Microsoft.OData
 
             if (messageWriterSettings.BaseUri != null && !messageWriterSettings.BaseUri.IsAbsoluteUri)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
+
                 throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsBaseUriMustBeNullOrAbsolute(UriUtils.UriToString(messageWriterSettings.BaseUri)));
             }
 
             if (messageWriterSettings.HasJsonPaddingFunction() && !writingResponse)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
+
                 throw new ODataException(Strings.WriterValidationUtils_MessageWriterSettingsJsonPaddingOnRequestMessage);
             }
         }
@@ -49,6 +54,8 @@ namespace Microsoft.OData
         {
             if (property == null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_PropertyMustNotBeNull);
+
                 throw new ODataException(Strings.WriterValidationUtils_PropertyMustNotBeNull);
             }
         }
@@ -62,6 +69,8 @@ namespace Microsoft.OData
             // Properties must have a non-empty name
             if (string.IsNullOrEmpty(propertyName))
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
+
                 throw new ODataException(Strings.WriterValidationUtils_PropertiesMustHaveNonEmptyName);
             }
 
@@ -94,6 +103,8 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && !owningStructuredType.IsOpen && property == null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
+
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyName, owningStructuredType.FullTypeName()));
             }
 
@@ -114,6 +125,8 @@ namespace Microsoft.OData
 
             if (throwOnUndeclaredProperty && propertyInfo.MetadataType.IsUndeclaredProperty && !propertyInfo.MetadataType.IsOpenProperty)
             {
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
+
                 throw new ODataException(Strings.ValidationUtils_PropertyDoesNotExistOnType(propertyInfo.PropertyName, propertyInfo.MetadataType.OwningType.FullTypeName()));
             }
         }
@@ -144,6 +157,8 @@ namespace Microsoft.OData
 
             if (property.PropertyKind != EdmPropertyKind.Navigation)
             {
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
+
                 // The property must be a navigation property
                 throw new ODataException(Strings.ValidationUtils_NavigationPropertyExpected(propertyName, owningType.FullTypeName(), property.PropertyKind.ToString()));
             }
@@ -168,6 +183,8 @@ namespace Microsoft.OData
             // Make sure the entity types are compatible
             if (!parentNavigationPropertyType.IsAssignableFrom(resourceType))
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
+
                 throw new ODataException(Strings.WriterValidationUtils_NestedResourceTypeNotCompatibleWithParentPropertyType(resourceType.FullTypeName(), parentNavigationPropertyType.FullTypeName()));
             }
         }
@@ -184,6 +201,8 @@ namespace Microsoft.OData
             // Operations are only valid in responses; we fail on them in requests
             if (!writingResponse)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
+
                 throw new ODataException(Strings.WriterValidationUtils_OperationInRequest(operation.Metadata));
             }
         }
@@ -203,6 +222,8 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NextPageLinkInRequest);
+
                     throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
                 }
             }
@@ -223,6 +244,8 @@ namespace Microsoft.OData
                 // Check that NextPageLink is not set for requests
                 if (writingRequest)
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NextPageLinkInRequest);
+
                     throw new ODataException(Strings.WriterValidationUtils_NextPageLinkInRequest);
                 }
             }
@@ -266,16 +289,22 @@ namespace Microsoft.OData
 
             if (streamReference.ContentType != null && streamReference.ContentType.Length == 0)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
+
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueEmptyContentType);
             }
 
             if (isDefaultStream && streamReference.ReadLink == null && streamReference.ContentType != null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
+
                 throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithContentTypeWithoutReadLink);
             }
 
             if (isDefaultStream && streamReference.ReadLink != null && streamReference.ContentType == null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
+
                 throw new ODataException(Strings.WriterValidationUtils_DefaultStreamWithReadLinkWithoutContentType);
             }
 
@@ -287,11 +316,15 @@ namespace Microsoft.OData
             // That will cause the ATOM writer to write the properties outside the content without producing any content element.
             if (streamReference.EditLink == null && streamReference.ReadLink == null && !isDefaultStream)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
+
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);
             }
 
             if (streamReference.EditLink == null && streamReference.ETag != null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
+
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkToHaveETag);
             }
         }
@@ -315,6 +348,8 @@ namespace Microsoft.OData
                 // Read/Write links and ETags on Stream properties are only valid in responses; writers fail if they encounter them in requests.
                 if (streamPropertyInfo != null && streamPropertyInfo.EditLink != null || streamPropertyInfo.ReadLink != null || streamPropertyInfo.ETag != null)
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
+
                     throw new ODataException(Strings.WriterValidationUtils_StreamPropertyInRequest(propertyName));
                 }
             }
@@ -362,6 +397,8 @@ namespace Microsoft.OData
                 }
             }
 
+            TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
+
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, "property", propertySerializationInfo.PropertyName));
         }
 
@@ -374,6 +411,8 @@ namespace Microsoft.OData
         {
             if (entityReferenceLink == null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
+
                 throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull);
             }
         }
@@ -388,6 +427,8 @@ namespace Microsoft.OData
 
             if (entityReferenceLink.Url == null)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
+
                 throw new ODataException(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull);
             }
         }
@@ -418,6 +459,8 @@ namespace Microsoft.OData
             // Navigation link must have a non-empty name
             if (string.IsNullOrEmpty(nestedResourceInfo.Name))
             {
+                TelemetryProvider.AddValidationEvent(Strings.ValidationUtils_LinkMustSpecifyName);
+
                 throw new ODataException(Strings.ValidationUtils_LinkMustSpecifyName);
             }
 
@@ -478,6 +521,9 @@ namespace Microsoft.OData
             if (errorTemplate != null)
             {
                 string uri = nestedResourceInfo.Url == null ? "null" : UriUtils.UriToString(nestedResourceInfo.Url);
+
+                TelemetryProvider.AddValidationEvent(errorTemplate(uri));
+
                 throw new ODataException(errorTemplate(uri));
             }
 
@@ -510,6 +556,8 @@ namespace Microsoft.OData
                 }
             }
 
+            TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
+
             throw new ODataException(Strings.WriterValidationUtils_ValueTypeNotAllowedInDerivedTypeConstraint(fullTypeName, itemKind, itemName));
         }
 
@@ -523,6 +571,8 @@ namespace Microsoft.OData
 
             if (!nestedResourceInfo.IsCollection.HasValue)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
+
                 throw new ODataException(Strings.WriterValidationUtils_NestedResourceInfoMustSpecifyIsCollection(nestedResourceInfo.Name));
             }
         }
@@ -541,19 +591,27 @@ namespace Microsoft.OData
             {
                 if (expectedPropertyTypeReference.IsNonEntityCollectionType())
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
+
                     throw new ODataException(Strings.WriterValidationUtils_CollectionPropertiesMustNotHaveNullValue(propertyName));
                 }
 
                 if (expectedPropertyTypeReference.IsODataPrimitiveTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+
                     throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsODataEnumTypeKind() && !expectedPropertyTypeReference.IsNullable)
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+
                     throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                 }
                 else if (expectedPropertyTypeReference.IsStream())
                 {
+                    TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
+
                     throw new ODataException(Strings.WriterValidationUtils_StreamPropertiesMustNotHaveNullValue(propertyName));
                 }
                 else if (expectedPropertyTypeReference.IsODataComplexTypeKind())
@@ -561,6 +619,8 @@ namespace Microsoft.OData
                     IEdmComplexTypeReference complexTypeReference = expectedPropertyTypeReference.AsComplex();
                     if (!complexTypeReference.IsNullable)
                     {
+                        TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
+
                         throw new ODataException(Strings.WriterValidationUtils_NonNullablePropertiesMustNotHaveNullValue(propertyName, expectedPropertyTypeReference.FullName()));
                     }
                 }
@@ -577,6 +637,8 @@ namespace Microsoft.OData
             // TODO: it always passes. Will add more validation or remove the validation after supporting relative Uri.
             if (id != null && UriUtils.UriToString(id).Length == 0)
             {
+                TelemetryProvider.AddValidationEvent(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
+
                 throw new ODataException(Strings.WriterValidationUtils_EntriesMustHaveNonEmptyId);
             }
         }
