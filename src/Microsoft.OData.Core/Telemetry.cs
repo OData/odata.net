@@ -12,9 +12,7 @@ namespace Microsoft.OData
 {
     internal static class Telemetry
     {
-
-
-#if NETCOREAPP3_1_OR_GREATER
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private static readonly Assembly Assembly = typeof(Telemetry).Assembly;
         private static readonly AssemblyName AssemblyName = Assembly.GetName();
 
@@ -40,7 +38,7 @@ namespace Microsoft.OData
 
         public static void EndCurrentActivity()
         {
-#if NETCOREAPP3_1_OR_GREATER
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             Activity.Current?.Stop();
 #endif
         }
