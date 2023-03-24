@@ -6,6 +6,9 @@
 
 namespace Microsoft.OData
 {
+    using System;
+    using System.Diagnostics;
+    using System.Reflection;
 #if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
     using Activity = System.Diagnostics.Activity;
     using ActivitySource = System.Diagnostics.ActivitySource;
@@ -16,7 +19,10 @@ namespace Microsoft.OData
     internal static class TelemetryHelper
     {
 #if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
-        public static readonly ActivitySource ODataTelemetrySource = new ActivitySource("Microsoft.OData.Core");
+        private static readonly Assembly Assembly = typeof(TelemetryHelper).Assembly;
+        private static readonly AssemblyName AssemblyName = Assembly.GetName();
+
+        public static ActivitySource ODataTelemetrySource = new ActivitySource(AssemblyName.Name, AssemblyName.Version.ToString());
 #endif
 
         public static Activity StartActivity(string displayName)
@@ -39,6 +45,45 @@ namespace Microsoft.OData
         {
 #if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             Activity.Current?.Dispose(); // Stops and disposes activity
+#endif
+        }
+
+        public static void AddValidationEvent(string message)
+        {
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+            Activity activity = Activity.Current;
+
+            if (activity == null)
+            {
+                return;
+            }
+
+            ActivityTagsCollection tags = new ActivityTagsCollection
+            {
+                { TelemetryConstants.ValidationTypeTag, TelemetryConstants.WriterValidationTag }, // TODO: Use enums in validation types.
+                { TelemetryConstants.MessageTag, message }
+            };
+            ActivityEvent exEvent = new ActivityEvent(TelemetryConstants.ValidationErrorEvent, default, tags);
+            activity.AddEvent(exEvent);     
+#endif
+        }
+
+        public static void LogException(Exception exception)
+        {
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+            Activity activity = Activity.Current;
+            if (activity == null)
+            {
+                return;
+            }
+
+            ActivityTagsCollection tags = new ActivityTagsCollection
+            {
+                { TelemetryConstants.MessageTag, exception.Message }
+            };
+            ActivityEvent exEvent = new ActivityEvent("Exception", default, tags);
+
+            activity.AddEvent(exEvent);
 #endif
         }
     }

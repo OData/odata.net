@@ -6,7 +6,7 @@
 
 namespace Microsoft.OData
 {
-    internal class TelemetryConstants
+    internal static class TelemetryConstants
     {
         public const string WriteResourceSet = "OData.WriteResourceSet";
         public const string WriteDeltaResourceSet = "OData.WriteDeltaResourceSet";
@@ -21,5 +21,11 @@ namespace Microsoft.OData
         public const string WritePrimitiveValue = "OData.WritePrimitiveValue";
         public const string WriteBinaryStream = "OData.WriteBinaryStream";
         public const string WriteTextValue = "OData.WriteTextValue";
+        public const string ValidationErrorEvent = "OData.ValidationError";
+        public const string ExceptionEvent = "OData.Exception";
+        public const string ValidationTypeTag = "ValidationType";
+        public const string MessageTag = "Message";
+        public const string WriterValidationTag = "WriterValidation";
+        public const string IsAsyncTag = "IsAsync";
     }
 }

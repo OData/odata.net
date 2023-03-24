@@ -2429,8 +2429,8 @@ namespace Microsoft.OData
             }
             catch (Exception ex)
             {
-                Telemetry.LogException(ex);
-                Telemetry.EndCurrentActivity();
+                TelemetryHelper.LogException(ex);
+                TelemetryHelper.StopAndDisposeActivity();
 
                 if (!IsErrorState(this.State))
                 {
@@ -2460,8 +2460,8 @@ namespace Microsoft.OData
             }
             catch (Exception ex)
             {
-                Telemetry.LogException(ex);
-                Telemetry.EndCurrentActivity();
+                TelemetryHelper.LogException(ex);
+                TelemetryHelper.StopAndDisposeActivity();
 
                 if (!IsErrorState(this.State))
                 {
@@ -2493,8 +2493,8 @@ namespace Microsoft.OData
             }
             catch (Exception ex)
             {
-                Telemetry.LogException(ex);
-                Telemetry.EndCurrentActivity();
+                TelemetryHelper.LogException(ex);
+                TelemetryHelper.StopAndDisposeActivity();
 
                 if (!IsErrorState(this.State))
                 {
@@ -2524,8 +2524,8 @@ namespace Microsoft.OData
             }
             catch (Exception ex)
             {
-                Telemetry.LogException(ex);
-                Telemetry.EndCurrentActivity();
+                TelemetryHelper.LogException(ex);
+                TelemetryHelper.StopAndDisposeActivity();
 
                 if (!IsErrorState(this.State))
                 {
@@ -2556,8 +2556,8 @@ namespace Microsoft.OData
             }
             catch (Exception ex)
             {
-                Telemetry.LogException(ex);
-                Telemetry.EndCurrentActivity();
+                TelemetryHelper.LogException(ex);
+                TelemetryHelper.StopAndDisposeActivity();
 
                 if (!IsErrorState(this.State))
                 {
