@@ -2427,8 +2427,11 @@ namespace Microsoft.OData
             {
                 action(this);
             }
-            catch
+            catch (Exception ex)
             {
+                Telemetry.LogException(ex);
+                Telemetry.EndCurrentActivity();
+
                 if (!IsErrorState(this.State))
                 {
                     this.EnterScope(WriterState.Error, this.CurrentScope.Item);
@@ -2455,8 +2458,11 @@ namespace Microsoft.OData
             {
                 action(this, arg0);
             }
-            catch
+            catch (Exception ex)
             {
+                Telemetry.LogException(ex);
+                Telemetry.EndCurrentActivity();
+
                 if (!IsErrorState(this.State))
                 {
                     this.EnterScope(WriterState.Error, this.CurrentScope.Item);
@@ -2485,8 +2491,11 @@ namespace Microsoft.OData
             {
                 action(this, arg0, arg1);
             }
-            catch
+            catch (Exception ex)
             {
+                Telemetry.LogException(ex);
+                Telemetry.EndCurrentActivity();
+
                 if (!IsErrorState(this.State))
                 {
                     this.EnterScope(WriterState.Error, this.CurrentScope.Item);
@@ -2513,8 +2522,11 @@ namespace Microsoft.OData
             {
                 await action(this).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
+                Telemetry.LogException(ex);
+                Telemetry.EndCurrentActivity();
+
                 if (!IsErrorState(this.State))
                 {
                     this.EnterScope(WriterState.Error, currentScopeItem);
@@ -2542,8 +2554,11 @@ namespace Microsoft.OData
             {
                 await action(this, arg0).ConfigureAwait(false);
             }
-            catch
+            catch (Exception ex)
             {
+                Telemetry.LogException(ex);
+                Telemetry.EndCurrentActivity();
+
                 if (!IsErrorState(this.State))
                 {
                     this.EnterScope(WriterState.Error, this.CurrentScope.Item);
