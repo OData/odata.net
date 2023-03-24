@@ -7,10 +7,12 @@ trigger:
   branches:
     include:
     - master
+    - telemetry
    
 # Pull request (PR) triggers
 pr:
 - master
+- telemetry
 
 pool:
   vmImage: 'windows-2019'
