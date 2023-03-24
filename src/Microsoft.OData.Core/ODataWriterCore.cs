@@ -446,6 +446,8 @@ namespace Microsoft.OData
         /// <param name="resourceSet">Resource Set/collection to write.</param>
         public sealed override void WriteStart(ODataResourceSet resourceSet)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteResourceSet)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteStartResourceSet(true, resourceSet);
             this.WriteStartResourceSetImplementation(resourceSet);
         }
@@ -457,6 +459,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override async Task WriteStartAsync(ODataResourceSet resourceSet)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteResourceSet)?.AddTag("IsAsync", true);
+
             await this.VerifyCanWriteStartResourceSetAsync(false, resourceSet)
                 .ConfigureAwait(false);
             await this.WriteStartResourceSetImplementationAsync(resourceSet)
@@ -469,6 +473,8 @@ namespace Microsoft.OData
         /// <param name="deltaResourceSet">Resource Set/collection to write.</param>
         public sealed override void WriteStart(ODataDeltaResourceSet deltaResourceSet)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaResourceSet)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteStartDeltaResourceSet(true, deltaResourceSet);
             this.WriteStartDeltaResourceSetImplementation(deltaResourceSet);
         }
@@ -480,6 +486,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override async Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaResourceSet)?.AddTag("IsAsync", true);
+
             await this.VerifyCanWriteStartDeltaResourceSetAsync(false, deltaResourceSet)
                 .ConfigureAwait(false);
             await this.WriteStartDeltaResourceSetImplementationAsync(deltaResourceSet)
@@ -492,6 +500,8 @@ namespace Microsoft.OData
         /// <param name="resource">Resource/item to write.</param>
         public sealed override void WriteStart(ODataResource resource)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteResource)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteStartResource(true, resource);
             this.WriteStartResourceImplementation(resource);
         }
@@ -503,6 +513,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteStartAsync(ODataResource resource)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteResource)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteStartResource(false, resource);
             return this.WriteStartResourceImplementationAsync(resource);
         }
@@ -513,6 +525,8 @@ namespace Microsoft.OData
         /// <param name="deletedResource">The delta deleted resource to write.</param>
         public sealed override void WriteStart(ODataDeletedResource deletedResource)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeletedResource)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteStartDeletedResource(true, deletedResource);
             this.WriteStartDeletedResourceImplementation(deletedResource);
         }
@@ -524,6 +538,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteStartAsync(ODataDeletedResource deletedResource)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeletedResource)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteStartDeletedResource(false, deletedResource);
             return this.WriteStartDeletedResourceImplementationAsync(deletedResource);
         }
@@ -534,6 +550,8 @@ namespace Microsoft.OData
         /// <param name="deltaLink">The delta link to write.</param>
         public override void WriteDeltaLink(ODataDeltaLink deltaLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaLink)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteLink(true, deltaLink);
             this.WriteDeltaLinkImplementation(deltaLink);
         }
@@ -545,6 +563,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaLink)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteLink(false, deltaLink);
             return this.WriteDeltaLinkImplementationAsync(deltaLink);
         }
@@ -555,6 +575,8 @@ namespace Microsoft.OData
         /// <param name="deltaLink">The delta link to write.</param>
         public override void WriteDeltaDeletedLink(ODataDeltaDeletedLink deltaLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaDeletedLink)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteLink(true, deltaLink);
             this.WriteDeltaLinkImplementation(deltaLink);
         }
@@ -566,6 +588,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteDeltaDeletedLink)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteLink(false, deltaLink);
             return this.WriteDeltaLinkImplementationAsync(deltaLink);
         }
@@ -576,6 +600,8 @@ namespace Microsoft.OData
         /// <param name="primitiveValue">Primitive value to write.</param>
         public sealed override void WritePrimitive(ODataPrimitiveValue primitiveValue)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WritePrimitiveValue)?.AddTag("IsAsync", false);
+
             this.VerifyCanWritePrimitive(true, primitiveValue);
             this.WritePrimitiveValueImplementation(primitiveValue);
         }
@@ -587,6 +613,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WritePrimitiveValue)?.AddTag("IsAsync", true);
+
             this.VerifyCanWritePrimitive(false, primitiveValue);
             return this.WritePrimitiveValueImplementationAsync(primitiveValue);
         }
@@ -595,6 +623,8 @@ namespace Microsoft.OData
         /// <param name="primitiveProperty">The primitive property to write.</param>
         public sealed override void WriteStart(ODataPropertyInfo primitiveProperty)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WritePropertyInfo)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteProperty(true, primitiveProperty);
             this.WriteStartPropertyImplementation(primitiveProperty);
         }
@@ -604,6 +634,8 @@ namespace Microsoft.OData
         /// <param name="primitiveProperty">The primitive property to write.</param>
         public sealed override Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WritePropertyInfo)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteProperty(false, primitiveProperty);
             return this.WriteStartPropertyImplementationAsync(primitiveProperty);
         }
@@ -612,6 +644,8 @@ namespace Microsoft.OData
         /// <returns>A stream to write a binary value to.</returns>
         public sealed override Stream CreateBinaryWriteStream()
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteBinaryStream)?.AddTag("IsAsync", false);
+
             this.VerifyCanCreateWriteStream(true);
             return this.CreateWriteStreamImplementation();
         }
@@ -621,6 +655,8 @@ namespace Microsoft.OData
         /// The value of the TResult parameter contains a <see cref="Stream"/> to write a binary value to.</returns>
         public sealed override Task<Stream> CreateBinaryWriteStreamAsync()
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteBinaryStream)?.AddTag("IsAsync", true);
+
             this.VerifyCanCreateWriteStream(false);
             return this.CreateWriteStreamImplementationAsync();
         }
@@ -629,6 +665,8 @@ namespace Microsoft.OData
         /// <returns>A TextWriter to write a string value to.</returns>
         public sealed override TextWriter CreateTextWriter()
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteTextValue)?.AddTag("IsAsync", false);
+
             this.VerifyCanCreateTextWriter(true);
             return this.CreateTextWriterImplementation();
         }
@@ -638,6 +676,8 @@ namespace Microsoft.OData
         /// The value of the TResult parameter contains a <see cref="TextWriter"/> to write a string value to.</returns>
         public sealed override Task<TextWriter> CreateTextWriterAsync()
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteTextValue)?.AddTag("IsAsync", true);
+
             this.VerifyCanCreateWriteStream(false);
             return this.CreateTextWriterImplementationAsync();
         }
@@ -648,6 +688,8 @@ namespace Microsoft.OData
         /// <param name="nestedResourceInfo">Navigation link to write.</param>
         public sealed override void WriteStart(ODataNestedResourceInfo nestedResourceInfo)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteNestedResourceInfo)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteStartNestedResourceInfo(true, nestedResourceInfo);
             this.WriteStartNestedResourceInfoImplementation(nestedResourceInfo);
         }
@@ -660,6 +702,8 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         public sealed override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteNestedResourceInfo)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteStartNestedResourceInfo(false, nestedResourceInfo);
             // Currently, no asynchronous operation is involved when commencing with writing a nested resource info
             return TaskUtils.GetTaskForSynchronousOperation(
@@ -681,6 +725,8 @@ namespace Microsoft.OData
                 // Note that we intentionally go through the public API so that if the Flush fails the writer moves to the Error state.
                 this.Flush();
             }
+
+            TelemetryHelper.StopAndDisposeActivity();
         }
 
 
@@ -699,6 +745,8 @@ namespace Microsoft.OData
                 await this.FlushAsync()
                     .ConfigureAwait(false);
             }
+
+            TelemetryHelper.StopAndDisposeActivity();
         }
 
         /// <summary>
@@ -713,6 +761,8 @@ namespace Microsoft.OData
         /// </remarks>
         public sealed override void WriteEntityReferenceLink(ODataEntityReferenceLink entityReferenceLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteEntityReferenceLink)?.AddTag("IsAsync", false);
+
             this.VerifyCanWriteEntityReferenceLink(entityReferenceLink, true);
             this.WriteEntityReferenceLinkImplementation(entityReferenceLink);
         }
@@ -731,6 +781,8 @@ namespace Microsoft.OData
         /// </remarks>
         public sealed override Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
+            TelemetryHelper.StartActivity(TelemetryConstants.WriteEntityReferenceLink)?.AddTag("IsAsync", true);
+
             this.VerifyCanWriteEntityReferenceLink(entityReferenceLink, false);
             return this.WriteEntityReferenceLinkImplementationAsync(entityReferenceLink);
         }

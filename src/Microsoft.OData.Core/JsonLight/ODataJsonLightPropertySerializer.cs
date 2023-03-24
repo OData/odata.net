@@ -143,89 +143,92 @@ namespace Microsoft.OData.JsonLight
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
         {
-            this.WritePropertyInfo(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder);
-
-            ODataValue value = property.ODataValue;
-
-            // handle ODataUntypedValue
-            ODataUntypedValue untypedValue = value as ODataUntypedValue;
-            if (untypedValue != null)
+            using (Activity activity = TelemetryHelper.StartActivity(TelemetryConstants.WriteProperty)?.AddTag("IsAsync", false))
             {
-                WriteUntypedValue(untypedValue);
-                return;
-            }
+                this.WritePropertyInfo(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder);
 
-            ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
-            if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
-            {
-                Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                WriteStreamValue(streamReferenceValue, property.Name, metadataBuilder);
-                return;
-            }
+                ODataValue value = property.ODataValue;
 
-            if (value is ODataNullValue || value == null)
-            {
-                this.WriteNullProperty(property);
-                return;
-            }
-
-            bool isOpenPropertyType = this.IsOpenProperty(property);
-
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-            if (primitiveValue != null)
-            {
-                this.WritePrimitiveProperty(primitiveValue, isOpenPropertyType);
-                return;
-            }
-
-            ODataEnumValue enumValue = value as ODataEnumValue;
-            if (enumValue != null)
-            {
-                this.WriteEnumProperty(enumValue, isOpenPropertyType);
-                return;
-            }
-
-            ODataResourceValue resourceValue = value as ODataResourceValue;
-            if (resourceValue != null)
-            {
-                if (isTopLevel)
+                // handle ODataUntypedValue
+                ODataUntypedValue untypedValue = value as ODataUntypedValue;
+                if (untypedValue != null)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    WriteUntypedValue(untypedValue);
+                    return;
                 }
 
-                this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
-                return;
-            }
-
-            ODataCollectionValue collectionValue = value as ODataCollectionValue;
-            if (collectionValue != null)
-            {
-                if (isTopLevel)
+                ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
+                if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                 {
-                    if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                    Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
+                    WriteStreamValue(streamReferenceValue, property.Name, metadataBuilder);
+                    return;
+                }
+
+                if (value is ODataNullValue || value == null)
+                {
+                    this.WriteNullProperty(property);
+                    return;
+                }
+
+                bool isOpenPropertyType = this.IsOpenProperty(property);
+
+                ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+                if (primitiveValue != null)
+                {
+                    this.WritePrimitiveProperty(primitiveValue, isOpenPropertyType);
+                    return;
+                }
+
+                ODataEnumValue enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    this.WriteEnumProperty(enumValue, isOpenPropertyType);
+                    return;
+                }
+
+                ODataResourceValue resourceValue = value as ODataResourceValue;
+                if (resourceValue != null)
+                {
+                    if (isTopLevel)
                     {
                         throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
                     }
+
+                    this.WriteResourceProperty(property, resourceValue, isOpenPropertyType);
+                    return;
                 }
 
-                this.WriteCollectionProperty(collectionValue, isOpenPropertyType);
-                return;
-            }
+                ODataCollectionValue collectionValue = value as ODataCollectionValue;
+                if (collectionValue != null)
+                {
+                    if (isTopLevel)
+                    {
+                        if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                        {
+                            throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        }
+                    }
 
-            ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
-            if (streamValue != null)
-            {
-                this.WriteStreamProperty(streamValue, isOpenPropertyType);
-                return;
-            }
+                    this.WriteCollectionProperty(collectionValue, isOpenPropertyType);
+                    return;
+                }
+
+                ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
+                if (streamValue != null)
+                {
+                    this.WriteStreamProperty(streamValue, isOpenPropertyType);
+                    return;
+                }
 
 #if NETCOREAPP3_1_OR_GREATER
-            if (value is ODataJsonElementValue jsonElementValue)
-            {
-                this.WriteJsonElementProperty(jsonElementValue);
-                return;
-            }
+                if (value is ODataJsonElementValue jsonElementValue)
+                {
+                    this.WriteJsonElementProperty(jsonElementValue);
+                    return;
+                }
 #endif
+            }
         }
 
 
@@ -357,97 +360,100 @@ namespace Microsoft.OData.JsonLight
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
         {
-            await this.WritePropertyInfoAsync(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder)
-                .ConfigureAwait(false);
-
-            ODataValue value = property.ODataValue;
-
-            // handle ODataUntypedValue
-            ODataUntypedValue untypedValue = value as ODataUntypedValue;
-            if (untypedValue != null)
+            using (Activity activity = TelemetryHelper.StartActivity(TelemetryConstants.WriteProperty)?.AddTag("IsAsync", true))
             {
-                await WriteUntypedValueAsync(untypedValue).ConfigureAwait(false);
-                return;
-            }
-
-            ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
-            if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
-            {
-                Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
-                await WriteStreamValueAsync(streamReferenceValue, property.Name, metadataBuilder)
+                await this.WritePropertyInfoAsync(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder)
                     .ConfigureAwait(false);
-                return;
-            }
 
-            if (value is ODataNullValue || value == null)
-            {
-                await this.WriteNullPropertyAsync(property).ConfigureAwait(false);
-                return;
-            }
+                ODataValue value = property.ODataValue;
 
-            bool isOpenPropertyType = this.IsOpenProperty(property);
-
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-            if (primitiveValue != null)
-            {
-                await this.WritePrimitivePropertyAsync(primitiveValue, isOpenPropertyType)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            ODataEnumValue enumValue = value as ODataEnumValue;
-            if (enumValue != null)
-            {
-                await this.WriteEnumPropertyAsync(enumValue, isOpenPropertyType)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            ODataResourceValue resourceValue = value as ODataResourceValue;
-            if (resourceValue != null)
-            {
-                if (isTopLevel)
+                // handle ODataUntypedValue
+                ODataUntypedValue untypedValue = value as ODataUntypedValue;
+                if (untypedValue != null)
                 {
-                    throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                    await WriteUntypedValueAsync(untypedValue).ConfigureAwait(false);
+                    return;
                 }
 
-                await this.WriteResourcePropertyAsync(property, resourceValue, isOpenPropertyType)
-                    .ConfigureAwait(false);
-                return;
-            }
-
-            ODataCollectionValue collectionValue = value as ODataCollectionValue;
-            if (collectionValue != null)
-            {
-                if (isTopLevel)
+                ODataStreamReferenceValue streamReferenceValue = value as ODataStreamReferenceValue;
+                if (streamReferenceValue != null && !(this.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
                 {
-                    if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                    Debug.Assert(!isTopLevel, "Stream properties are not allowed at the top level.");
+                    await WriteStreamValueAsync(streamReferenceValue, property.Name, metadataBuilder)
+                        .ConfigureAwait(false);
+                    return;
+                }
+
+                if (value is ODataNullValue || value == null)
+                {
+                    await this.WriteNullPropertyAsync(property).ConfigureAwait(false);
+                    return;
+                }
+
+                bool isOpenPropertyType = this.IsOpenProperty(property);
+
+                ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
+                if (primitiveValue != null)
+                {
+                    await this.WritePrimitivePropertyAsync(primitiveValue, isOpenPropertyType)
+                        .ConfigureAwait(false);
+                    return;
+                }
+
+                ODataEnumValue enumValue = value as ODataEnumValue;
+                if (enumValue != null)
+                {
+                    await this.WriteEnumPropertyAsync(enumValue, isOpenPropertyType)
+                        .ConfigureAwait(false);
+                    return;
+                }
+
+                ODataResourceValue resourceValue = value as ODataResourceValue;
+                if (resourceValue != null)
+                {
+                    if (isTopLevel)
                     {
                         throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
                     }
+
+                    await this.WriteResourcePropertyAsync(property, resourceValue, isOpenPropertyType)
+                        .ConfigureAwait(false);
+                    return;
                 }
 
-                await this.WriteCollectionPropertyAsync(collectionValue, isOpenPropertyType)
-                    .ConfigureAwait(false);
-                return;
-            }
+                ODataCollectionValue collectionValue = value as ODataCollectionValue;
+                if (collectionValue != null)
+                {
+                    if (isTopLevel)
+                    {
+                        if (collectionValue.Items != null && collectionValue.Items.Any(i => i is ODataResourceValue))
+                        {
+                            throw new ODataException(Strings.ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue(property.Name));
+                        }
+                    }
 
-            ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
-            if (streamValue != null)
-            {
-                await this.WriteStreamPropertyAsync(streamValue, isOpenPropertyType)
-                    .ConfigureAwait(false);
-                return;
-            }
+                    await this.WriteCollectionPropertyAsync(collectionValue, isOpenPropertyType)
+                        .ConfigureAwait(false);
+                    return;
+                }
+
+                ODataBinaryStreamValue streamValue = value as ODataBinaryStreamValue;
+                if (streamValue != null)
+                {
+                    await this.WriteStreamPropertyAsync(streamValue, isOpenPropertyType)
+                        .ConfigureAwait(false);
+                    return;
+                }
 
 #if NETCOREAPP3_1_OR_GREATER
-            if (value is ODataJsonElementValue jsonElementValue)
-            {
-                await this.WriteJsonElementPropertyAsync(jsonElementValue)
-                    .ConfigureAwait(false);
-                return;
-            }
+                if (value is ODataJsonElementValue jsonElementValue)
+                {
+                    await this.WriteJsonElementPropertyAsync(jsonElementValue)
+                        .ConfigureAwait(false);
+                    return;
+                }
 #endif
+            }
         }
 
 
