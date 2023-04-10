@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Tests.Json;
 using System.Text;
 using Microsoft.Test.OData.DependencyInjection;
+using Microsoft.OData.UriParser;
 
 namespace Microsoft.OData.Tests
 {
@@ -487,6 +488,135 @@ namespace Microsoft.OData.Tests
         #endregion "ODataUtf8JsonWriter support"
 #endif
 
+#if NETCOREAPP3_1_OR_GREATER
+        #region "ODataJsonElementValue support"
+        [Fact]
+        public void WriteEntityWithJsonElementValues()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person");
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            EdmComplexType addressType = model.AddComplexType("ns", "Address");
+            addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("Country", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, isNullable: false));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+
+
+            string source = "{" +
+                @"""Id"": 1," +
+                @"""Name"": ""John""," +
+                @"""Emails"":[""john@mailer.com"",""john@work.com""]," +
+                @"""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}" +
+                @"}";
+            var json = System.Text.Json.JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) },
+                    new ODataProperty { Name = "Emails", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Emails")) },
+                    new ODataProperty { Name = "Address", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Address")) }
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Emails"":[""john@mailer.com"",""john@work.com""],""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}}";
+            Assert.Equal(expected, result);
+        }
+
+
+        [Fact]
+        public void WriteContainedNestedEntityWithJsonElementValues()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person");
+            IEdmStructuralProperty idProperty = personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddKeys(idProperty);
+            personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "Friend",
+                ContainsTarget = true,
+                Target = personType,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+            
+
+            string source = @"{""Id"": 1,""Name"": ""John""}";
+            var json = System.Text.Json.JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            var nestedResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+
+                    resourceWriter.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "Friend",
+                        IsCollection = false
+                    });
+                    resourceWriter.WriteStart(nestedResource);
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Friend"":{""Id"":1,""Name"":""John""}}";
+            Assert.Equal(expected, result);
+        }
+        #endregion
+#endif
+
         [Fact]
         public void WriteMetadataDocument_WorksForJsonCsdl()
         {
@@ -657,6 +787,9 @@ namespace Microsoft.OData.Tests
         /// Action to inject services to the dependency-injection container.
         /// If this is set, then the generated <see cref="IServiceProvider"/> will be added to the <paramref name="message"/>.Container property.
         /// </param>
+        /// <param name="path">
+        /// The OData Uri path.
+        /// </param>
         /// <returns>The written output.</returns>
         private string WriteAndGetPayload(
             IEdmModel edmModel,
@@ -664,7 +797,8 @@ namespace Microsoft.OData.Tests
             Action<ODataMessageWriter> test,
             InMemoryMessage message = null,
             Encoding encoding = null,
-            Action<IContainerBuilder> configureServices = null)
+            Action<IContainerBuilder> configureServices = null,
+            ODataPath path = null)
         {
             message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
 
@@ -683,6 +817,15 @@ namespace Microsoft.OData.Tests
             writerSettings.EnableMessageStreamDisposal = false;
             writerSettings.BaseUri = new Uri("http://www.example.com/");
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            if (path != null)
+            {
+                writerSettings.ODataUri = new ODataUri
+                {
+                    ServiceRoot = writerSettings.BaseUri,
+                    Path = path
+                };
+            }
 
             using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
             {
