@@ -337,6 +337,14 @@ namespace Microsoft.OData.JsonLight
                 actualTypeReference = EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType());
             }
 
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                this.JsonWriter.WriteValue(jsonElementValue.Value);
+                return;
+            }
+#endif
+
             ODataPayloadValueConverter converter = this.JsonLightOutputContext.PayloadValueConverter;
 
             // Skip validation if user has set custom PayloadValueConverter

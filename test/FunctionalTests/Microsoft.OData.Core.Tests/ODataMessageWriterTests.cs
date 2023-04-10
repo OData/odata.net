@@ -15,6 +15,9 @@ using Microsoft.OData.Tests.Json;
 using System.Text;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.OData.UriParser;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests
 {
@@ -495,7 +498,7 @@ namespace Microsoft.OData.Tests
         {
             // Arrange
             EdmModel model = new EdmModel();
-            EdmEntityType personType = model.AddEntityType("ns", "Person");
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
             personType.AddKeys(
                 personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
@@ -612,6 +615,57 @@ namespace Microsoft.OData.Tests
 
             // Result
             string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Friend"":{""Id"":1,""Name"":""John""}}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void WriteJsonElementValuesInCollectionProperties()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service")
+                .AddEntitySet("People", personType);
+
+            string source = @"{""Email"":""john@mailer.com""}";
+            JsonDocument json = JsonDocument.Parse(source);
+            JsonElement jsonRoot = json.RootElement;
+            ODataResource resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty {
+                        Name = "Emails",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Collection(Edm.String)",
+                            Items = new object[] { new ODataJsonElementValue(jsonRoot.GetProperty("Email")) }
+                        }
+                    },
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Emails"":[""john@mailer.com""]}";
             Assert.Equal(expected, result);
         }
         #endregion
