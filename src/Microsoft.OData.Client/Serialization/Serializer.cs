@@ -359,11 +359,161 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Write the deep insert entry element.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity.</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
+        /// <param name="oDataWriter">The OData writer.</param>
+        internal void WriteDeepInsertEntry(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        {
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+
+            // Get the server type name using the type resolver or from the entity descriptor
+            string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
+
+            var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+
+            if (serverTypeName == null)
+            {
+                serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(entityDescriptor);
+            }
+
+            IEnumerable<ClientPropertyAnnotation> properties;
+            if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
+                entityDescriptor.State == EntityStates.Modified &&
+                entityDescriptor.PropertiesToSerialize.Any()) ||
+                (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
+                entityDescriptor.State == EntityStates.Added))
+            {
+                properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
+            }
+            else
+            {
+                properties = entityType.PropertiesToSerialize();
+            }
+
+            entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, properties);
+
+            oDataWriter.WriteStart(entry, entityDescriptor.Entity);
+
+            this.WriteNestedComplexProperties(entityDescriptor.Entity, serverTypeName, properties, oDataWriter);
+            this.WriteNestedResourceInfo(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
+
+            oDataWriter.WriteEnd(entry, entityDescriptor.Entity);
+        }
+
+        /// <summary>
+        /// Writes a nested resource.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity.</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
+        /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
+        internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        {
+            List<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
+            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, linkDescriptors);
+
+            ClientEdmModel model = this.requestInfo.Model;
+            ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
+
+            foreach (KeyValuePair<string, List<Descriptor>> relatedLinks in groupedRelatedLinks)
+            {
+                LinkDescriptor relatedEnd = null;
+                ODataNestedResourceInfo navigationLink = new ODataNestedResourceInfo();
+
+                //these items will all be of the same type ~ we'll be using the
+                //first item in determining the type of the descriptor.
+                Descriptor item = relatedLinks.Value.FirstOrDefault();
+
+                if (item is EntityDescriptor entDescriptor)
+                {
+                    relatedEnd = new LinkDescriptor(entDescriptor.ParentEntity, entDescriptor.ParentProperty, entDescriptor.Entity, this.requestInfo.Model);
+                }
+                else
+                {
+                    relatedEnd = item as LinkDescriptor;
+                }
+
+                navigationLink.Name = relatedEnd.SourceProperty;
+                bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
+
+                odataWriter.WriteNestedResourceInfoStart(navigationLink);
+
+                odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+
+                if (isCollection)
+                {
+                    WriteResourceSet(relatedLinks.Value, linkDescriptors, bulkUpdateGraph, odataWriter);
+                }
+                else
+                {
+                    //we can have a related single entry ~ this will automatically be a replace operation.
+                    if (item.DescriptorKind == DescriptorKind.Entity)
+                    {
+                        EntityDescriptor relatedEntityDescriptor = item as EntityDescriptor;
+                        WriteDeepInsertEntry(relatedEntityDescriptor, linkDescriptors, bulkUpdateGraph, odataWriter);
+                    }
+                    else if (item.DescriptorKind == DescriptorKind.Link)
+                    {
+                        odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink() { Url = navigationLink.Url }, relatedEnd.Source, relatedEnd.Target);
+                    }
+                }
+
+                odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
+                odataWriter.WriteNestedResourceInfoEnd();
+            }
+        }
+
+        /// <summary>
         /// Writes the feed entry
         /// </summary>
-        /// <param name="descriptors">A list of descriptors to be written</param>
-        /// <param name="linkDescriptors">Descriptor links for some descriptors.</param>
-        /// /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
+        /// <param name="descriptors">A list of descriptors to be written.</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
+        /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
+        internal void WriteResourceSet(IReadOnlyList<Descriptor> descriptors, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        {
+            ODataResourceSet resourceSet = new ODataResourceSet();
+            oDataWriter.WriteStart(resourceSet);
+
+            for (int i = 0; i < descriptors.Count; ++i)
+            {
+                Descriptor descriptor = descriptors[i];
+
+                if (descriptor is EntityDescriptor entityDescriptor)
+                {
+                    if (entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified)
+                    {
+                        // We don't support Delete or Update in Deep insert
+                        // Throw exception?
+                    }
+                    else
+                    {
+                        this.WriteDeepInsertEntry(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
+                    }
+                }
+                else if (descriptor is LinkDescriptor linkDescriptor)
+                {
+                    if (linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
+                    {
+                        /// We don't support Delete or Update in Deep insert
+                        // Throw exception?
+                    }
+                    else
+                    {
+                        WriteODataId(linkDescriptor, oDataWriter);
+                    }
+                }
+            }
+
+            oDataWriter.WriteEnd();
+        }
+
+        /// <summary>
+        /// Writes the feed entry
+        /// </summary>
+        /// <param name="descriptors">A list of descriptors to be written.</param>
+        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
         internal void WriteDeltaResourceSet(IReadOnlyList<Descriptor> descriptors, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {

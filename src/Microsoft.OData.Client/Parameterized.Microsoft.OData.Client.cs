@@ -728,6 +728,28 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "Deep insert can only have one top level entity."
+        /// </summary>
+        internal static string Context_DeepInsertOneTopLevelEntity
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertOneTopLevelEntity);
+            }
+        }
+
+        /// <summary>
+        /// A string like "For deep insert ChangeState cannot be Deleted or Modified."
+        /// </summary>
+        internal static string Context_DeepInsertDeletedOrModified
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertDeletedOrModified);
+            }
+        }
+
+        /// <summary>
         /// A string like "When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance."
         /// </summary>
         internal static string DataServiceClientFormat_LoadServiceModelRequired
@@ -902,9 +924,9 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type.  Only entity types can contain navigation properties."
         /// </summary>
-        internal static string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(object p0, object p1)
+        internal static string ClientTypeCache_NonEntityTypeCannotContainEntityProperties(object p0, object p1)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties, p0, p1);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeCannotContainEntityProperties, p0, p1);
         }
 
         /// <summary>

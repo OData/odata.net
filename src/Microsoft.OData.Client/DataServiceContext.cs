@@ -2852,6 +2852,22 @@ namespace Microsoft.OData.Client
 
             return identity != null;
         }
+        
+        /// <summary>
+        /// Processes deep insert requests.
+        /// </summary>
+        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        internal virtual void DeepInsert<T>(T resource)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
+            result.DeepInsertRequest(resource);
+        }
 
         #endregion
 
