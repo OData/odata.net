@@ -6,15 +6,15 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Xunit;
-using System.Threading.Tasks;
 using Microsoft.OData.Tests.Json;
-using System.Text;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.OData.UriParser;
+using Xunit;
 #if NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
 #endif
@@ -544,7 +544,7 @@ namespace Microsoft.OData.Tests
                 },
                 path: new ODataPath(new EntitySetSegment(peopleSet)));
 
-            // Result
+            // Assert
             string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Emails"":[""john@mailer.com"",""john@work.com""],""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}}";
             Assert.Equal(expected, result);
         }
@@ -567,7 +567,6 @@ namespace Microsoft.OData.Tests
             addressType.AddStructuralProperty("Country", EdmPrimitiveTypeKind.String);
             personType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, isNullable: false));
             IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
-
 
             string source = "{" +
                 @"""Id"": 1," +
@@ -600,11 +599,10 @@ namespace Microsoft.OData.Tests
                 },
                 path: new ODataPath(new EntitySetSegment(peopleSet)));
 
-            // Result
+            // Assert
             string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Emails"":[""john@mailer.com"",""john@work.com""],""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}}";
             Assert.Equal(expected, result);
         }
-
 
         [Fact]
         public void WriteContainedNestedEntityWithJsonElementValues()
@@ -625,7 +623,6 @@ namespace Microsoft.OData.Tests
 
             IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
             
-
             string source = @"{""Id"": 1,""Name"": ""John""}";
             var json = JsonDocument.Parse(source);
             var jsonRoot = json.RootElement;
@@ -692,7 +689,6 @@ namespace Microsoft.OData.Tests
             });
 
             IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
-
 
             string source = @"{""Id"": 1,""Name"": ""John""}";
             var json = JsonDocument.Parse(source);
