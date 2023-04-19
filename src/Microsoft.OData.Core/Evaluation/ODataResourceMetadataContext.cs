@@ -10,6 +10,7 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
     using Microsoft.OData.Edm.Vocabularies.V1;
@@ -260,6 +261,12 @@ namespace Microsoft.OData.Evaluation
 
             if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
             {
+#if NETCOREAPP3_1_OR_GREATER
+                if (propertyValue is ODataJsonElementValue)
+                {
+                    return propertyValue;
+                }
+#endif
                 throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, entityTypeName));
             }
 

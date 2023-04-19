@@ -330,6 +330,16 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(value != null, "value != null");
 
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                // We don't perform validation for ODataJsonElementValue.
+                // We assume the content is valid.
+                this.JsonWriter.WriteValue(jsonElementValue.Value);
+                return;
+            }
+#endif
+
             if (actualTypeReference == null)
             {
                 // Try convert primitive values from their actual CLR types to their underlying CLR types.
@@ -663,6 +673,16 @@ namespace Microsoft.OData.JsonLight
             IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(value != null, "value != null");
+
+#if NETCOREAPP3_1_OR_GREATER
+            if (value is ODataJsonElementValue jsonElementValue)
+            {
+                // We don't perform validation for ODataJsonElementValue.
+                // We assume the content is valid.
+                await this.AsynchronousJsonWriter.WriteValueAsync(jsonElementValue.Value).ConfigureAwait(false);
+                return;
+            }
+#endif
 
             if (actualTypeReference == null)
             {
