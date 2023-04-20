@@ -361,10 +361,11 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Writes the feed entry
         /// </summary>
-        /// <param name="objects">A list of descriptors to be written</param>
-        /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
+        /// <param name="descriptors">A list of descriptors to be written</param>
+        /// <param name="linkDescriptors">Descriptor links for some descriptors.</param>
+        /// /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
         /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
-        internal void WriteDeltaResourceSet(IReadOnlyList<Descriptor> descriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        internal void WriteDeltaResourceSet(IReadOnlyList<Descriptor> descriptors, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {
             ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
             oDataWriter.WriteStart(resourceSet);
@@ -381,7 +382,7 @@ namespace Microsoft.OData.Client
                     }
                     else
                     {
-                        this.WriteDeltaEntry(entityDescriptor, bulkUpdateGraph, oDataWriter);
+                        this.WriteDeltaEntry(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
                     }
                 }
                 else if (descriptor is LinkDescriptor linkDescriptor)
@@ -414,7 +415,9 @@ namespace Microsoft.OData.Client
             ClientEdmModel model = this.requestInfo.Model;
             ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(targetEntityDescriptor.Entity.GetType()));
             string serverTypeName = this.requestInfo.GetServerTypeName(targetEntityDescriptor);
-            
+
+            ODataResource resource = CreateODataEntry(targetEntityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+
             if (serverTypeName == null)
             {
                 serverTypeName = this.requestInfo.InferServerTypeNameFromServerModel(targetEntityDescriptor);
@@ -431,12 +434,8 @@ namespace Microsoft.OData.Client
                 properties = entityType.PropertiesToSerialize().Where(prop => targetEntityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
             }
 
-            ODataResource resource = new ODataResource
-            {
-                Id = link,
-                TypeName = serverTypeName,
-                Properties = this.propertyConverter.PopulateProperties(targetEntityDescriptor.Entity, serverTypeName, properties)
-            };
+            resource.Id = link;
+            resource.Properties = this.propertyConverter.PopulateProperties(targetEntityDescriptor.Entity, serverTypeName, properties);
             
             oDataWriter.WriteStart(resource, targetEntityDescriptor.Entity);
             oDataWriter.WriteEnd();
@@ -446,9 +445,10 @@ namespace Microsoft.OData.Client
         /// Write the delta entry element.
         /// </summary>
         /// <param name="entityDescriptor">The entity descriptor.</param>
+        /// <param name="linkDescriptors">Descriptor links for some descriptors.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
         /// <param name="oDataWriter">The writer.</param>
-        internal void WriteDeltaEntry(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        internal void WriteDeltaEntry(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {
             ClientEdmModel model = this.requestInfo.Model;          
             ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -483,7 +483,7 @@ namespace Microsoft.OData.Client
 
             this.WriteNestedComplexProperties(entityDescriptor.Entity, serverTypeName, properties, oDataWriter);
 
-            this.WriteDeltaNestedResourceInfo(entityDescriptor, bulkUpdateGraph, oDataWriter);
+            this.WriteDeltaNestedResourceInfo(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
 
             oDataWriter.WriteEnd(entry, entityDescriptor.Entity);
         }
@@ -600,12 +600,13 @@ namespace Microsoft.OData.Client
         /// Writes a nested resource
         /// </summary>
         /// <param name="entityDescriptor">The entity</param>
+        /// <param name="linkDescriptors">Descriptor links for some descriptors.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/></param>
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
-        internal void WriteDeltaNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        internal void WriteDeltaNestedResourceInfo(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
         {
-            HashSet<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
-            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors);
+            List<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
+            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, linkDescriptors);
 
             ClientEdmModel model = this.requestInfo.Model;
             ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -621,7 +622,19 @@ namespace Microsoft.OData.Client
 
                 if (item is EntityDescriptor entDescriptor)
                 {
-                    relatedEnd = new LinkDescriptor(entDescriptor.ParentEntity, entDescriptor.ParentProperty, entDescriptor.Entity, this.requestInfo.Model);
+                    if (entDescriptor.ParentEntity == null && linkDescriptors.Count > 0)
+                    {
+                        linkDescriptors.TryGetValue(entDescriptor, out List<LinkDescriptor> descriptorLink);
+                        
+                        if (descriptorLink != null)
+                        {
+                            relatedEnd = descriptorLink.FirstOrDefault(a => a.Target == entDescriptor.Entity);
+                        }
+                    }
+                    else
+                    {
+                        relatedEnd = new LinkDescriptor(entDescriptor.ParentEntity, entDescriptor.ParentProperty, entDescriptor.Entity, this.requestInfo.Model);
+                    }          
                 }
                 else
                 {
@@ -637,7 +650,7 @@ namespace Microsoft.OData.Client
 
                 if (isCollection)
                 {
-                    WriteDeltaResourceSet(relatedLinks.Value, bulkUpdateGraph, odataWriter);
+                    WriteDeltaResourceSet(relatedLinks.Value, linkDescriptors, bulkUpdateGraph, odataWriter);
                 }
                 else
                 {
@@ -645,7 +658,7 @@ namespace Microsoft.OData.Client
                     if (item.DescriptorKind == DescriptorKind.Entity)
                     {
                         EntityDescriptor relatedEntityDescriptor = item as EntityDescriptor;
-                        WriteDeltaEntry(relatedEntityDescriptor, bulkUpdateGraph, odataWriter);
+                        WriteDeltaEntry(relatedEntityDescriptor, linkDescriptors, bulkUpdateGraph, odataWriter);
                     }
                     else if (item.DescriptorKind == DescriptorKind.Link)
                     {
@@ -662,8 +675,9 @@ namespace Microsoft.OData.Client
         /// This method groups a descriptor's related links by their navigation properties.
         /// </summary>
         /// <param name="relatedDescriptors">A descriptor's related ungrouped descriptors.</param>
+        /// <param name="descriptorLinks">The descriptor links for the various descriptors.</param>
         /// <returns> A dictionary with the grouped descriptors by their navigation property name. </returns>
-        private static Dictionary<string, List<Descriptor>> GroupRelatedLinksByNavigationProperty(HashSet<Descriptor> relatedDescriptors)
+        private static Dictionary<string, List<Descriptor>> GroupRelatedLinksByNavigationProperty(List<Descriptor> relatedDescriptors, Dictionary<Descriptor, List<LinkDescriptor>> descriptorLinks)
         {
             Dictionary<string, List<Descriptor>> groupedRelatedLinks = new Dictionary<string, List<Descriptor>>(EqualityComparer<string>.Default);
 
@@ -673,19 +687,28 @@ namespace Microsoft.OData.Client
                 {
                     string parentProperty = entityObject.ParentProperty;
 
-                    if (groupedRelatedLinks.TryGetValue(parentProperty, out List<Descriptor> relatedLinks))
+                    if (string.IsNullOrEmpty(parentProperty) && descriptorLinks.Count > 0)
                     {
-                        relatedLinks.Add(entityObject);
+                        descriptorLinks.TryGetValue(entityObject, out List<LinkDescriptor> descriptorLink);
+                        parentProperty = descriptorLink.FirstOrDefault(a=>a.Target == entityObject.Entity).SourceProperty;
                     }
-                    else
-                    {
-                        if (relatedLinks == null)
-                        {
-                            relatedLinks = new List<Descriptor>();
-                        }
 
-                        relatedLinks.Add(entityObject);
-                        groupedRelatedLinks.Add(parentProperty, relatedLinks);
+                    if (parentProperty != null)
+                    {
+                        if (groupedRelatedLinks.TryGetValue(parentProperty, out List<Descriptor> relatedLinks))
+                        {
+                            relatedLinks.Add(entityObject);
+                        }
+                        else
+                        {
+                            if (relatedLinks == null)
+                            {
+                                relatedLinks = new List<Descriptor>();
+                            }
+
+                            relatedLinks.Add(entityObject);
+                            groupedRelatedLinks.Add(parentProperty, relatedLinks);
+                        }
                     }
                 }
                 else if (link is LinkDescriptor linkObject)

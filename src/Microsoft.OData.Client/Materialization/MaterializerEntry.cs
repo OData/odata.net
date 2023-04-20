@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client.Materialization
     /// <summary>
     /// Materializer state for a given ODataResource
     /// </summary>
-    internal class MaterializerEntry
+    internal class MaterializerEntry : IMaterializerState
     {
         /// <summary>The entry.</summary>
         private readonly ODataResource entry;
@@ -32,6 +32,9 @@ namespace Microsoft.OData.Client.Materialization
 
         /// <summary>List of navigation links for this entry.</summary>
         private ICollection<ODataNestedResourceInfo> navigationLinks = ODataMaterializer.EmptyLinks;
+
+        /// <summary>List of navigation links for this entry.</summary>
+        private List<IMaterializerState> nestedItems = new List<IMaterializerState>();    
 
         /// <summary>
         /// Creates a new instance of MaterializerEntry.
@@ -113,6 +116,14 @@ namespace Microsoft.OData.Client.Materialization
         public ODataResource Entry
         {
             get { return this.entry; }
+        }
+
+        /// <summary>
+        /// Gets the nested <see cref="IMaterializerState"/> items.
+        /// </summary>
+        internal List<IMaterializerState> NestedItems
+        {
+            get { return this.nestedItems; }
         }
 
         /// <summary>
@@ -366,6 +377,15 @@ namespace Microsoft.OData.Client.Materialization
 
                 this.EntityDescriptorUpdated = true;
             }
+        }
+
+        /// <summary>
+        /// Adds a <see cref="IMaterializerState"/> item to the entry's nested items.
+        /// </summary>
+        /// <param name="nestedItem">The <see cref="IMaterializerState"/> item to add to the entry's nested items.</param>
+        internal void AddNestedItem(IMaterializerState nestedItem)
+        {
+            this.nestedItems.Add(nestedItem);
         }
 
         #region Private methods.

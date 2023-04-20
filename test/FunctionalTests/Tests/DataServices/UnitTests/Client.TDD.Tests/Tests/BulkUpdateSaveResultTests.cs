@@ -24,6 +24,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private readonly Serializer serializer;
         private readonly HeaderCollection headers;
         private BulkUpdateGraph bulkUpdateGraph;
+        private readonly Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors;
 
         public BulkUpdateSaveResultTests()
         {
@@ -32,6 +33,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.serializer = new Serializer(this.requestInfo);
             this.headers = new HeaderCollection();
             bulkUpdateGraph = new BulkUpdateGraph(this.requestInfo);
+            this.linkDescriptors = new Dictionary<Descriptor, List<LinkDescriptor>>();
         }
 
         [Fact]
@@ -60,7 +62,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -95,7 +97,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -131,7 +133,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -164,7 +166,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -205,7 +207,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -240,7 +242,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -282,7 +284,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Persons", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -319,7 +321,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Cars", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -362,7 +364,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Cars", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -461,7 +463,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateDeltaMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForDeltaFeed(messageWriter, "Cars", this.requestInfo.Configurations.RequestPipeline, odataRequestMessageWrapper, this.requestInfo);
-                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeltaResourceSet(this.bulkUpdateGraph.TopLevelDescriptors, this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);

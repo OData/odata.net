@@ -10,12 +10,11 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using DSClient = Microsoft.OData.Client;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
-    using DSClient = Microsoft.OData.Client;
 
     /// <summary>
     /// Use this class to materialize objects provided from an <see cref="ODataMessageReader"/>.
@@ -77,6 +76,9 @@ namespace Microsoft.OData.Client.Materialization
 
         /// <summary>Feed being materialized; possibly null.</summary>
         internal abstract ODataResourceSet CurrentFeed { get; }
+
+        /// <summary>OData delta resource set being materialized; possibly null.</summary>
+        internal abstract ODataDeltaResourceSet CurrentDeltaFeed { get; }
 
         /// <summary>Entry being materialized; possibly null.</summary>
         internal abstract ODataResource CurrentEntry { get; }
@@ -350,6 +352,16 @@ namespace Microsoft.OData.Client.Materialization
         {
             ODataMessageReaderSettings settings = responseInfo.ReadHelper.CreateSettings();
 
+            // We use v401 to read delta payloads.
+            if (payloadKind == ODataPayloadKind.Delta)
+            {
+                settings.Version = ODataVersion.V401;
+                settings.ShouldIncludeAnnotation = (annotation) =>
+                {
+                    return true;
+                };
+            }
+            
             ODataMessageReader odataMessageReader = responseInfo.ReadHelper.CreateReader(responseMessage, settings);
 
             if (payloadKind == ODataPayloadKind.Unsupported)
