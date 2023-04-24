@@ -2271,6 +2271,74 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+        #region BulkUpdate, BulkUpdateAsync, BeginBulkUpdate, EndBulkUpdate
+        
+        /// <summary>
+        /// Processes bulk update requests
+        /// </summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        public virtual DataServiceResponse BulkUpdate<T>(params T[] objects)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
+            result.BulkUpdateRequest(objects);
+
+            return result.EndRequest();
+        }
+
+        /// <summary>
+        /// Asynchronously processes a bulk update request. 
+        /// </summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated. </param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation. </returns>
+        public virtual Task<DataServiceResponse> BulkUpdateAsync<T>(params T[] objects)
+        {
+            return this.BulkUpdateAsync(CancellationToken.None, objects);
+        }
+
+        /// <summary>Asynchronously processes a bulk update request</summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation.</returns>
+        public virtual Task<DataServiceResponse> BulkUpdateAsync<T>(CancellationToken cancellationToken, params T[] objects)
+        {
+            return FromAsync((objectsArg, callback, state) => BeginBulkUpdate(callback, state, objectsArg), EndBulkUpdate, objects, cancellationToken);
+        }
+
+        /// <summary>Asynchronously submits top-level objects to be deep-updated to the data service.</summary>
+        /// <param name="callback">The delegate that is called when a response to the bulk update request is received.</param>
+        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
+        /// <returns>An<see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        internal virtual IAsyncResult BeginBulkUpdate<T>(AsyncCallback callback, object state, params T[] objects)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback, state);
+            result.BeginBulkUpdateRequest(objects);
+
+            return result;
+        }
+
+        /// <summary>Called to complete the <see cref="BeginBulkUpdate{T}(AsyncCallback, object, T[])"/>.</summary>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <returns>The DataServiceResponse object that holds the result of the bulk update operation.</returns>
+        internal virtual DataServiceResponse EndBulkUpdate(IAsyncResult asyncResult)
+        {
+            BulkUpdateSaveResult result = BaseAsyncResult.EndExecute<BulkUpdateSaveResult>(this, Util.BulkUpdateMethodName, asyncResult);
+            return result.EndRequest();
+        }
+
+        #endregion
+
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
         /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
@@ -2783,24 +2851,6 @@ namespace Microsoft.OData.Client
             }
 
             return identity != null;
-        }
-
-        /// <summary>
-        /// Processes bulk update requests
-        /// </summary>
-        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
-        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
-        public virtual DataServiceResponse BulkUpdate<T>(params T[] objects)
-        {
-            if (objects == null || objects.Length == 0)
-            {
-                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
-            }
-
-            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
-            result.BulkUpdateRequest(objects);
-
-            return result.EndRequest();
         }
 
         #endregion

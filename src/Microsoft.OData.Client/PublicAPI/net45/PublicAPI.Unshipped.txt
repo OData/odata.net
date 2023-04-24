@@ -6,3 +6,5 @@ Microsoft.OData.Client.ReadingDeltaFeedArgs.ReadingDeltaFeedArgs(Microsoft.OData
 Microsoft.OData.Client.SaveChangesOptions.BulkUpdate = 128 -> Microsoft.OData.Client.SaveChangesOptions
 Microsoft.OData.Client.SendingRequest2EventArgs.IsBulkUpdate.get -> bool
 virtual Microsoft.OData.Client.DataServiceContext.BulkUpdate<T>(params T[] objects) -> Microsoft.OData.Client.DataServiceResponse
+virtual Microsoft.OData.Client.DataServiceContext.BulkUpdateAsync<T>(params T[] objects) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
+virtual Microsoft.OData.Client.DataServiceContext.BulkUpdateAsync<T>(System.Threading.CancellationToken cancellationToken, params T[] objects) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>

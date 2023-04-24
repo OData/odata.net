@@ -34,6 +34,9 @@ namespace Microsoft.OData.Client
         /// <summary>Method name for the SaveChanges method.</summary>
         internal const string SaveChangesMethodName = "SaveChanges";
 
+        /// <summary>Method name for the BulkUpdate method.</summary>
+        internal const string BulkUpdateMethodName = "BulkUpdate";
+
         /// <summary>
         /// The number of components of version.
         /// </summary>
