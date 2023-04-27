@@ -275,7 +275,11 @@ namespace Microsoft.OData.JsonLight
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    headers.Add(headerName, headerValue);
+                                    // Don't add already existing headers
+                                    if (!headers.ContainsKeyOrdinal(headerName))
+                                    {
+                                        headers.Add(headerName, headerValue);
+                                    }
                                 }
 
                                 this.jsonReader.ReadEndObject();
@@ -415,7 +419,11 @@ namespace Microsoft.OData.JsonLight
                                     contentTypeHeader = headerValue;
                                 }
 
-                                headers.Add(headerName, headerValue);
+                                // Don't add already existing headers
+                                if (!headers.ContainsKeyOrdinal(headerName))
+                                {
+                                    headers.Add(headerName, headerValue);
+                                }
                             }
 
                             await this.asynchronousJsonReader.ReadEndObjectAsync()
