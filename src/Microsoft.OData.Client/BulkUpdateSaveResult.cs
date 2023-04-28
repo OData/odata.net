@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -18,6 +19,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Handles the bulk update requests and responses (both sync and async)
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "The response stream is disposed by the message reader we create over it which we dispose inside the enumerator.")]
     internal class BulkUpdateSaveResult : BaseSaveResult
     {
         #region Private Fields
@@ -100,10 +102,69 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
+        /// Asynchronous bulk update request.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level objects to be deep-updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        internal void BeginBulkUpdateRequest<T>(params T[] objects)
+        {
+            PerRequest pereq = null;
+
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, objects);
+            
+            try 
+            {
+                ODataRequestMessageWrapper bulkUpdateRequestMessage = this.GenerateBulkUpdateRequest();
+                this.Abortable = bulkUpdateRequestMessage;
+
+                if (bulkUpdateRequestMessage != null)
+                {
+                    bulkUpdateRequestMessage.SetContentLengthHeader();
+                    this.perRequest = pereq = new PerRequest();
+                    pereq.Request = bulkUpdateRequestMessage;
+                    pereq.RequestContentStream = bulkUpdateRequestMessage.CachedRequestStream;
+
+                    AsyncStateBag asyncStateBag = new AsyncStateBag(pereq);
+
+                    this.responseStream = new MemoryStream();
+
+                    IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(bulkUpdateRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+                    
+                    pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
+                }
+                else 
+                {
+                    this.SetCompleted();
+
+                    if (this.CompletedSynchronously)
+                    {
+                        this.HandleCompleted(pereq);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(pereq, e);
+                throw; 
+            }
+            finally
+            {
+                this.HandleCompleted(pereq);
+            }
+
+            Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
+        }
+
+        /// <summary>
         /// Synchronous bulk update request.
         /// </summary>
-        /// <typeparam name="T"> The type of the top-level objects to be deep-updated.</typeparam>
-        /// <param name="objects"> The top-level objects of the type to be deep updated.</param>
+        /// <typeparam name="T">The type of the top-level objects to be deep-updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
         internal void BulkUpdateRequest<T>(params T[] objects)
         {
             if (objects == null || objects.Length == 0)
@@ -134,6 +195,31 @@ namespace Microsoft.OData.Client
 
                 throw exception;
             }
+        }
+
+        /// <summary>Reads and stores response data for the bulk update request.</summary>
+        /// <param name="pereq">The completed per request object.</param>
+        protected override void FinishCurrentChange(PerRequest pereq)
+        {
+            base.FinishCurrentChange(pereq);
+
+            Debug.Assert(this.ResponseStream != null, "this.HttpWebResponseStream != null");
+            Debug.Assert((this.ResponseStream as MemoryStream) != null, "(this.HttpWebResponseStream as MemoryStream) != null");
+
+            if (this.ResponseStream.Position != 0)
+            {
+                // Set the stream to the start position and then parse the response and cache it
+                this.ResponseStream.Position = 0;
+                this.HandleBulkUpdateResponse(this.batchResponseMessage, this.ResponseStream);
+            }
+            else
+            {
+                this.HandleBulkUpdateResponse(this.batchResponseMessage, null);
+            }
+
+            pereq.Dispose();
+            this.perRequest = null;
+            this.SetCompleted();
         }
 
         /// <summary>

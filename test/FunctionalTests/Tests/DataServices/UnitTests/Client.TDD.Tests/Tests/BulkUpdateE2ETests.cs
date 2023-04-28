@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 using AstoriaUnitTests.Tests;
@@ -125,6 +126,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public async Task CallingBulkUpdateAsync_WithNullArguments_ShouldThrowAnException()
+        {
+            await Assert.ThrowsAsync<ArgumentException>(async () => await this.context.BulkUpdateAsync<Person>(null));
+        }
+
+        [Fact]
         public void BulkUpdateAnEntry_WithOneLevelOfNesting_ReturnsOne_OperationResponse()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"ID\":\"1001\",\"Name\":\"A\"}]}]}";
@@ -166,6 +173,29 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public async Task BulkUpdateAsync_ShouldThrowExceptions_RaisedDuringSeriliazation()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\"}]}";
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse);
+
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            this.context.AttachTo("Persons", person);
+
+            var entitydesc = this.context.Entities[0] as EntityDescriptor;
+            entitydesc.Entity = null;
+
+            await Assert.ThrowsAsync<NullReferenceException>(() => this.context.BulkUpdateAsync(person));
+        }
+
+        [Fact]
         public void HandleResponse_Of_AnInvalidResponse_ThrowsException()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"ID\":null,\"Name\":null}]}]}";
@@ -191,6 +221,41 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.context.AddRelatedObject(person, "Cars", car);
 
             Assert.Throws<DataServiceRequestException>(() => this.context.BulkUpdate<Person>(person));
+        }
+
+        [Fact]
+        public async Task AsyncHandlingOf_AnInvalidResponse_ThrowsException()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"ID\":null,\"Name\":null}]}]}";
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse);
+
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            var car = new Car
+            {
+                ID = 1001,
+                Name = "A"
+            };
+
+            this.context.AttachTo("Persons", person);
+
+            this.context.AddRelatedObject(person, "Cars", car);
+
+            var exception = await Assert.ThrowsAsync<DataServiceRequestException>(async () => await this.context.BulkUpdateAsync<Person>(person));
+
+            var exceptionMessage = "An error occurred while processing this request.";
+            var expectedInnerException = "The key property 'ID' on type 'Microsoft.OData.Client.TDDUnitTests.Tests.BulkUpdateE2ETests.Car' has a null value. Key properties must not have null values.";
+            
+            Assert.Empty(exception.Response);
+            Assert.Equal(expectedInnerException, exception.InnerException.Message);
+            Assert.Equal(exceptionMessage, exception.Message);
         }
 
         [Fact]
@@ -320,6 +385,57 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public async Task BulkUpdateAsyncTwoTopLevelObjects_WithTheSameNestedObject_DeserializesSuccessfully()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"@id\":\"http://localhost:8000/Cars(1001)\"}]},{\"ID\":200,\"Name\":\"Edge\",\"Cars@delta\":[{\"@id\":\"http://localhost:8000/Cars(1001)\"}]}]}";
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse);
+
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            var person2 = new Person
+            {
+                ID = 200,
+                Name = "Edge"
+            };
+
+            var car = new Car
+            {
+                ID = 1002,
+                Name = "CarA"
+            };
+
+            this.context.AttachTo("Persons", person);
+            this.context.AttachTo("Persons", person2);
+            this.context.AttachTo("Cars", car);
+
+            this.context.AddLink(person, "Cars", car);
+            this.context.AddLink(person2, "Cars", car);
+
+            DataServiceResponse response = await this.context.BulkUpdateAsync(person, person2);
+
+            var personOperationResponse = response.First() as ChangeOperationResponse;
+            var person1 = (personOperationResponse.Descriptor as EntityDescriptor).Entity as Person;
+            var personcarOperationResponse = personOperationResponse.NestedResponses.FirstOrDefault() as ChangeOperationResponse;
+            var carTargetEntity = (personcarOperationResponse.Descriptor as LinkDescriptor).Target as Car;
+            var person2OperationResponse = response.Last() as ChangeOperationResponse;
+            var person2Response = (person2OperationResponse.Descriptor as EntityDescriptor).Entity as Person;
+            var person2carOperationResponse = personOperationResponse.NestedResponses.FirstOrDefault() as ChangeOperationResponse;
+            var car2TargetEntity = (person2carOperationResponse.Descriptor as LinkDescriptor).Target as Car;
+
+            Assert.Equal(2, response.Count());
+            Assert.Equal("Bing", person1.Name);
+            Assert.Equal("Edge", person2Response.Name);
+            Assert.Equal(carTargetEntity, car2TargetEntity);
+        }
+
+        [Fact]
         public void TwoTopLevelObjects_WithNestedProperties_UpdatedSuccessfully()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"@id\":\"http://localhost:8000/Cars(1001)\"}]},{\"ID\":200,\"Name\":\"Edge\",\"Cars@delta\":[{\"@id\":\"http://www.odata.org/service.svc/Cars(1002)\"}, {\"@id\":\"http://www.odata.org/service.svc/Cars(1003)\"}]}]}";
@@ -355,6 +471,52 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.context.AddLink(person2, "Cars", car3);
 
             DataServiceResponse response = this.context.BulkUpdate(person, person2);
+
+            Assert.Equal(2, response.Count());
+
+            var personOperationResponse = response.FirstOrDefault() as ChangeOperationResponse;
+            var person2OperationResponse = response.LastOrDefault() as ChangeOperationResponse;
+
+            Assert.Single(personOperationResponse.NestedResponses);
+            Assert.Equal(2, person2OperationResponse.NestedResponses.Count);
+        }
+
+        [Fact]
+        public async Task TwoTopLevelObjects_WithNestedProperties_UpdatedSuccessfullyAsync()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"@id\":\"http://localhost:8000/Cars(1001)\"}]},{\"ID\":200,\"Name\":\"Edge\",\"Cars@delta\":[{\"@id\":\"http://www.odata.org/service.svc/Cars(1002)\"}, {\"@id\":\"http://www.odata.org/service.svc/Cars(1003)\"}]}]}";
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse);
+
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            var person2 = new Person
+            {
+                ID = 200,
+                Name = "Edge"
+            };
+
+            var car1 = new Car { ID = 1001 };
+            var car2 = new Car { ID = 1002 };
+            var car3 = new Car { ID = 1003 };
+
+            this.context.AttachTo("Persons", person);
+            this.context.AttachTo("Persons", person2);
+            this.context.AttachTo("Cars", car1);
+            this.context.AttachTo("Cars", car2);
+            this.context.AttachTo("Cars", car3);
+
+            this.context.AddLink(person, "Cars", car1);
+            this.context.AddLink(person2, "Cars", car2);
+            this.context.AddLink(person2, "Cars", car3);
+
+            DataServiceResponse response = await this.context.BulkUpdateAsync(person, person2);
 
             Assert.Equal(2, response.Count());
 

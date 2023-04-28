@@ -494,7 +494,11 @@ namespace Microsoft.OData.Client
                 if (!this.IsBatchRequest)
                 {
                     this.HandleOperationResponse(responseMessage);
-                    this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
+
+                    if (!Util.IsBulkUpdate(this.Options))
+                    {
+                        this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
+                    }  
                 }
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeGetStream");
