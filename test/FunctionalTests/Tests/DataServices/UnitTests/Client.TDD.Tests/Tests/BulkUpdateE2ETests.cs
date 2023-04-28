@@ -254,8 +254,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             var expectedInnerException = "The key property 'ID' on type 'Microsoft.OData.Client.TDDUnitTests.Tests.BulkUpdateE2ETests.Car' has a null value. Key properties must not have null values.";
             
             Assert.Empty(exception.Response);
-            Assert.NotNull(exception.Message);
-            Assert.NotNull(exception.InnerException);
             Assert.Equal(expectedInnerException, exception.InnerException.Message);
             Assert.Equal(exceptionMessage, exception.Message);
         }
