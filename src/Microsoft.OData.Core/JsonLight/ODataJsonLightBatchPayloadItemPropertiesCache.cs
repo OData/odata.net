@@ -233,14 +233,26 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameMethod:
                         case PropertyNameUrl:
                             {
-                                jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
+                                string propertyValueString = this.jsonReader.ReadStringValue();
+
+                                // Skip duplicate json properties
+                                if (!jsonProperties.ContainsKey(propertyName))
+                                {
+                                    jsonProperties.Add(propertyName, propertyValueString);
+                                }
                             }
 
                             break;
 
                         case PropertyNameStatus:
                             {
-                                jsonProperties.Add(propertyName, this.jsonReader.ReadPrimitiveValue());
+                                object propertyValueObject = this.jsonReader.ReadPrimitiveValue();
+
+                                // Skip duplicate json properties
+                                if (!jsonProperties.ContainsKey(propertyName))
+                                {
+                                    jsonProperties.Add(propertyName, propertyValueObject);
+                                }
                             }
 
                             break;
@@ -256,7 +268,11 @@ namespace Microsoft.OData.JsonLight
 
                                 this.jsonReader.ReadEndArray();
 
-                                jsonProperties.Add(propertyName, dependsOnIds);
+                                // Skip duplicate json properties
+                                if (!jsonProperties.ContainsKey(propertyName))
+                                {
+                                    jsonProperties.Add(propertyName, dependsOnIds);
+                                }
                             }
 
                             break;
@@ -287,12 +303,20 @@ namespace Microsoft.OData.JsonLight
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    headers.Add(headerName, headerValue);
+                                    // Skip duplicate http headers
+                                    if (!headers.ContainsKeyOrdinal(headerName))
+                                    {
+                                        headers.Add(headerName, headerValue);
+                                    }
                                 }
 
                                 this.jsonReader.ReadEndObject();
 
-                                jsonProperties.Add(propertyName, headers);
+                                // Skip duplicate json properties
+                                if (!jsonProperties.ContainsKey(propertyName))
+                                {
+                                    jsonProperties.Add(propertyName, headers);
+                                }
 
                                 if (!this.isStreamPopulated && bodyContentStream != null)
                                 {
@@ -306,7 +330,12 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameBody:
                             {
                                 bodyContentStream = CreateJsonPayloadBodyContentStream(contentTypeHeader);
-                                jsonProperties.Add(propertyName, bodyContentStream);
+
+                                // Skip duplicate json properties
+                                if (!jsonProperties.ContainsKey(propertyName))
+                                {
+                                    jsonProperties.Add(propertyName, bodyContentStream);
+                                }
                             }
 
                             break;
@@ -383,16 +412,24 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameAtomicityGroup:
                         case PropertyNameMethod:
                         case PropertyNameUrl:
-                            jsonProperties.Add(
-                                propertyName,
-                                await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
+                            string propertyValueString = await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false);
+
+                            // Skip duplicate json properties
+                            if (!jsonProperties.ContainsKey(propertyName))
+                            {
+                                jsonProperties.Add(propertyName, propertyValueString);
+                            }
 
                             break;
 
                         case PropertyNameStatus:
-                            jsonProperties.Add(
-                                propertyName,
-                                await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
+                            object propertyValueObject = await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false);
+
+                            // Skip duplicate json properties
+                            if (!jsonProperties.ContainsKey(propertyName))
+                            {
+                                jsonProperties.Add(propertyName, propertyValueObject);
+                            }
 
                             break;
 
@@ -408,7 +445,11 @@ namespace Microsoft.OData.JsonLight
                             await this.asynchronousJsonReader.ReadEndArrayAsync()
                                 .ConfigureAwait(false);
 
-                            jsonProperties.Add(propertyName, dependsOnIds);
+                            // Skip duplicate json properties
+                            if (!jsonProperties.ContainsKey(propertyName))
+                            {
+                                jsonProperties.Add(propertyName, dependsOnIds);
+                            }
 
                             break;
 
@@ -439,13 +480,21 @@ namespace Microsoft.OData.JsonLight
                                     contentTypeHeader = headerValue;
                                 }
 
-                                headers.Add(headerName, headerValue);
+                                // Skip duplicate http headers
+                                if (!headers.ContainsKeyOrdinal(headerName))
+                                {
+                                    headers.Add(headerName, headerValue);
+                                }
                             }
 
                             await this.asynchronousJsonReader.ReadEndObjectAsync()
                                 .ConfigureAwait(false);
 
-                            jsonProperties.Add(propertyName, headers);
+                            // Skip duplicate json properties
+                            if (!jsonProperties.ContainsKey(propertyName))
+                            {
+                                jsonProperties.Add(propertyName, headers);
+                            }
 
                             if (!this.isStreamPopulated && bodyContentStream != null)
                             {
@@ -459,7 +508,12 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameBody:
                             bodyContentStream = await CreateJsonPayloadBodyContentStreamAsync(contentTypeHeader)
                                 .ConfigureAwait(false);
-                            jsonProperties.Add(propertyName, bodyContentStream);
+
+                            // Skip duplicate json properties
+                            if (!jsonProperties.ContainsKey(propertyName))
+                            {
+                                jsonProperties.Add(propertyName, bodyContentStream);
+                            }
 
                             break;
 
