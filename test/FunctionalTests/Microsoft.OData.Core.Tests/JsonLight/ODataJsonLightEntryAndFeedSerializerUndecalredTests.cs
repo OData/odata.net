@@ -66,7 +66,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
         [Fact]
         public void WriteResourceDeclaredSingleUntypedProperty_WorksForUntypedValue()
         {
-            var property = new ODataProperty { Name = "Data", Value = new ODataUntypedValue { RawValue = "'#lje324$$'" } };
+            var property = new ODataProperty { Name = "Data", Value = new ODataUntypedValue { RawValue = "\"#lje324$$\"" } };
             string result = WriteDeclaredUntypedProperty(property);
             Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"#lje324$$\"}", result);
         }
