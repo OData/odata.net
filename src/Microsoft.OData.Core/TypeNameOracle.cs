@@ -318,7 +318,10 @@ namespace Microsoft.OData
                 return typeReferenceFromMetadata;
             }
 
-            Debug.Assert(typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind(), "typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind()");
+            if (!typeReferenceFromMetadata.IsUntyped())
+            {
+                Debug.Assert(typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind(), "typeReferenceFromValue.TypeKind() == typeReferenceFromMetadata.TypeKind()");
+            }
 
             writerValidator.ValidateTypeReference(typeReferenceFromMetadata, typeReferenceFromValue);
 

@@ -302,6 +302,13 @@ namespace Microsoft.OData
             }
 
             Debug.Assert(valuePrimitiveTypeReference.IsEquivalentTo(EdmLibraryExtensions.GetPrimitiveTypeReference(value.GetType())), "The value and valuePrimitiveTypeReference don't match.");
+
+            // If the expected type is 'Edm.Untyped', we don't need to verify the value type.
+            if (expectedTypeReference.IsUntyped())
+            {
+                return;
+            }
+
             if (!expectedTypeReference.IsODataPrimitiveTypeKind() && !expectedTypeReference.IsODataTypeDefinitionTypeKind())
             {
                 // non-primitive type found for primitive value.
