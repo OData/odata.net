@@ -392,7 +392,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     }
                     catch (ArgumentException ex)
                     {
-                        Assert.True(false, ex.Message);
+                        Assert.False(true, ex.Message);
                     }
                 },
                 isResponse: false);
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     }
                     catch (ArgumentException ex)
                     {
-                        Assert.True(false, ex.Message);
+                        Assert.False(true, ex.Message);
                     }
                 },
                 isResponse: false);
@@ -460,7 +460,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     }
                     catch (ArgumentException ex)
                     {
-                        Assert.True(false, ex.Message);
+                        Assert.False(true, ex.Message);
                     }
                 },
                 isResponse: false);
