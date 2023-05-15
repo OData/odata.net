@@ -40,9 +40,9 @@ steps:
 
 - task: DotNetCoreCLI@2
   displayName: 'Test'
+  timeoutInMinutes: 120
   inputs:
     command: 'test'
-    timeoutInMinutes: 120
     arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
@@ -50,9 +50,9 @@ steps:
 - task: DotNetCoreCLI@2
   condition: eq(variables.BuildConfiguration, 'Release')
   displayName: 'Test'
+  timeoutInMinutes: 120
   inputs:
     command: 'test'
-    timeoutInMinutes: 120
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
