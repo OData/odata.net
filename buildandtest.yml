@@ -42,6 +42,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
+    timeoutInMinutes: 120
     arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
@@ -51,6 +52,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
+    timeoutInMinutes: 120
     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
