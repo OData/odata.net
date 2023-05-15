@@ -1,3 +1,13 @@
+Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedEnded(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
+Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedStarted(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
+Microsoft.OData.Client.ReadingDeltaFeedArgs
+Microsoft.OData.Client.ReadingDeltaFeedArgs.DeltaFeed.get -> Microsoft.OData.ODataDeltaResourceSet
+Microsoft.OData.Client.ReadingDeltaFeedArgs.ReadingDeltaFeedArgs(Microsoft.OData.ODataDeltaResourceSet deltaFeed) -> void
+Microsoft.OData.Client.SaveChangesOptions.BulkUpdate = 128 -> Microsoft.OData.Client.SaveChangesOptions
+Microsoft.OData.Client.SendingRequest2EventArgs.IsBulkUpdate.get -> bool
+virtual Microsoft.OData.Client.DataServiceContext.BulkUpdate<T>(params T[] objects) -> Microsoft.OData.Client.DataServiceResponse
+virtual Microsoft.OData.Client.DataServiceContext.BulkUpdateAsync<T>(params T[] objects) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
+virtual Microsoft.OData.Client.DataServiceContext.BulkUpdateAsync<T>(System.Threading.CancellationToken cancellationToken, params T[] objects) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
 virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.get -> bool
 virtual Microsoft.OData.Client.DataServiceContext.AutoNullPropagation.set -> void
 abstract Microsoft.OData.Client.ALinq.UriParser.PathSegmentToken.Accept(Microsoft.OData.Client.ALinq.UriParser.IPathSegmentTokenVisitor visitor) -> void
