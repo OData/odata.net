@@ -2932,7 +2932,7 @@ namespace Microsoft.OData
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
 
             this.scopeStack.Push(newScope);
-            if (newScope.ItemType == null && content != null && !SkipWriting && !(content is ODataPrimitiveValue))
+            if ((newScope.ItemType == null || newScope.ItemType.IsUntyped()) && content != null && !SkipWriting && !(content is ODataPrimitiveValue))
             {
                 ODataPrimitiveValue primitiveValue = content as ODataPrimitiveValue;
                 if (primitiveValue != null)
