@@ -196,6 +196,45 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Infos\":[\"abc\",null,42]}", result);
         }
 
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void WriteResourceCollectionUntypedProperty_WorksResourceInNestedCollectionOfCollection2(bool isOpen)
+        {
+            string typeName = isOpen ? "Server.NS.ServerOpenEntityType" : "Server.NS.ServerEntityType";
+            EdmEntitySet entitySet = isOpen ? this.serverOpenEntitySet : this.serverEntitySet;
+            EdmEntityType entityType = isOpen ? this.serverOpenEntityType : this.serverEntityType;
+            string propertyName = isOpen ? "AnyDynamic" : "Infos";
+
+            string actual = WriteEntryPayload(entitySet, entityType,
+                writer =>
+                {
+                    writer.WriteStart(new ODataResource { TypeName = typeName });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = propertyName, IsCollection = true });
+                    writer.WriteStart(new ODataResourceSet { TypeName = "Collection(Edm.Untyped)" });
+                    writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(new ODataResource
+                    {
+                        TypeName = "Edm.Untyped",
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "FirstName", Value = "Kerry"}
+                        }
+                    });
+                    writer.WriteEnd(); // End of "Edm.Untyped"
+                    writer.WriteEnd();
+                    writer.WriteEnd(); // End of "Infos" / AnyDynamic
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            string result = isOpen ?
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"AnyDynamic\":[[{\"FirstName\":\"Kerry\"}]]}" :
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Infos\":[[{\"FirstName\":\"Kerry\"}]]}";
+
+            Assert.Equal(result, actual);
+        }
+
         private string WriteDeclaredUntypedProperty(ODataProperty untypedProperty)
         {
             var entry = new ODataResource
