@@ -364,7 +364,7 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">The entity.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="oDataWriter">The OData writer.</param>
-        internal void WriteDeepInsertEntry(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        internal void WriteDeepInsertEntry(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {
             ClientEdmModel model = this.requestInfo.Model;
             ClientTypeAnnotation entityType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Client
             oDataWriter.WriteStart(entry, entityDescriptor.Entity);
 
             this.WriteNestedComplexProperties(entityDescriptor.Entity, serverTypeName, properties, oDataWriter);
-            this.WriteNestedResourceInfo(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
+            this.WriteNestedResourceInfo(entityDescriptor, bulkUpdateGraph, oDataWriter);
 
             oDataWriter.WriteEnd(entry, entityDescriptor.Entity);
         }
@@ -409,10 +409,10 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">The entity.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
-        internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
         {
             List<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
-            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, linkDescriptors);
+            Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, null);
 
             ClientEdmModel model = this.requestInfo.Model;
             ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
@@ -438,13 +438,16 @@ namespace Microsoft.OData.Client
                 navigationLink.Name = relatedEnd.SourceProperty;
                 bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
 
-                odataWriter.WriteNestedResourceInfoStart(navigationLink);
+                //odataWriter.WriteNestedResourceInfoStart(navigationLink);
 
-                odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+                //odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+
+                odataWriter.WriteStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+
 
                 if (isCollection)
                 {
-                    WriteResourceSet(relatedLinks.Value, linkDescriptors, bulkUpdateGraph, odataWriter);
+                    WriteResourceSet(relatedLinks.Value, bulkUpdateGraph, odataWriter);
                 }
                 else
                 {
@@ -452,7 +455,7 @@ namespace Microsoft.OData.Client
                     if (item.DescriptorKind == DescriptorKind.Entity)
                     {
                         EntityDescriptor relatedEntityDescriptor = item as EntityDescriptor;
-                        WriteDeepInsertEntry(relatedEntityDescriptor, linkDescriptors, bulkUpdateGraph, odataWriter);
+                        WriteDeepInsertEntry(relatedEntityDescriptor, bulkUpdateGraph, odataWriter);
                     }
                     else if (item.DescriptorKind == DescriptorKind.Link)
                     {
@@ -460,8 +463,10 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
-                odataWriter.WriteNestedResourceInfoEnd();
+                //odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
+                //odataWriter.WriteNestedResourceInfoEnd();
+
+                odataWriter.WriteEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
             }
         }
 
@@ -471,7 +476,7 @@ namespace Microsoft.OData.Client
         /// <param name="descriptors">A list of descriptors to be written.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
-        internal void WriteResourceSet(IReadOnlyList<Descriptor> descriptors, Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        internal void WriteResourceSet(IReadOnlyList<Descriptor> descriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {
             ODataResourceSet resourceSet = new ODataResourceSet();
             oDataWriter.WriteStart(resourceSet);
@@ -482,27 +487,11 @@ namespace Microsoft.OData.Client
 
                 if (descriptor is EntityDescriptor entityDescriptor)
                 {
-                    if (entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified)
-                    {
-                        // We don't support Delete or Update in Deep insert
-                        // Throw exception?
-                    }
-                    else
-                    {
-                        this.WriteDeepInsertEntry(entityDescriptor, linkDescriptors, bulkUpdateGraph, oDataWriter);
-                    }
+                    this.WriteDeepInsertEntry(entityDescriptor, bulkUpdateGraph, oDataWriter);
                 }
                 else if (descriptor is LinkDescriptor linkDescriptor)
                 {
-                    if (linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
-                    {
-                        /// We don't support Delete or Update in Deep insert
-                        // Throw exception?
-                    }
-                    else
-                    {
-                        WriteODataId(linkDescriptor, oDataWriter);
-                    }
+                    WriteODataId(linkDescriptor, oDataWriter);
                 }
             }
 
@@ -837,7 +826,7 @@ namespace Microsoft.OData.Client
                 {
                     string parentProperty = entityObject.ParentProperty;
 
-                    if (string.IsNullOrEmpty(parentProperty) && descriptorLinks.Count > 0)
+                    if (string.IsNullOrEmpty(parentProperty) && descriptorLinks != null && descriptorLinks.Count > 0)
                     {
                         descriptorLinks.TryGetValue(entityObject, out List<LinkDescriptor> descriptorLink);
                         parentProperty = descriptorLink.FirstOrDefault(a=>a.Target == entityObject.Entity).SourceProperty;

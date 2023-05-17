@@ -24,7 +24,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private readonly Serializer serializer;
         private readonly HeaderCollection headers;
         private BulkUpdateGraph bulkUpdateGraph;
-        private readonly Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors;
 
         public DeepInsertSaveResultTests()
         {
@@ -33,7 +32,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.serializer = new Serializer(this.requestInfo);
             this.headers = new HeaderCollection();
             bulkUpdateGraph = new BulkUpdateGraph(this.requestInfo);
-            this.linkDescriptors = new Dictionary<Descriptor, List<LinkDescriptor>>();
 
             ConfigureHeaders();
         }
@@ -74,7 +72,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, requestInfo.Configurations.RequestPipeline);
-                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], this.linkDescriptors, bulkUpdateGraph, entryWriter);
+                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
@@ -109,7 +107,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
             {
                 ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, this.requestInfo.Configurations.RequestPipeline);
-                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], this.linkDescriptors, this.bulkUpdateGraph, entryWriter);
+                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], this.bulkUpdateGraph, entryWriter);
             }
 
             MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);

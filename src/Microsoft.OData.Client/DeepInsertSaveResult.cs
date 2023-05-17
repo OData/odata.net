@@ -29,19 +29,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         private readonly BulkUpdateGraph bulkUpdateGraph;
 
-        /// <summary> 
-        /// Link descriptors associated with entity descriptors that were added to the entity tracker during an $expand operation.
-        /// </summary>
-        /// <remarks>
-        /// If we expand the related resources to some resources when we are fetching data from an OData endpoint, 
-        /// OData client creates descriptors for the retrieved descriptors and creates links for 
-        /// the related descriptors. If we want to update the related objects, we'll get the related resources
-        /// make changes to them then call the `UpdateObject` to update the descriptors then save the changes.
-        /// The updated descriptors do not have any information that routes them to the parent descriptors but 
-        /// we can get that information from the Links object in the entitytracker.
-        /// </remarks>
-        private readonly Dictionary<Descriptor, List<LinkDescriptor>> linkDescriptors;
-
         #endregion
 
         /// <summary>
@@ -57,7 +44,6 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(Util.IsDeepInsert(options), "the options must have deep insert flag set");
             this.bulkUpdateGraph = new BulkUpdateGraph(this.RequestInfo);
-            this.linkDescriptors = new Dictionary<Descriptor, List<LinkDescriptor>>();
         }
 
         /// <summary>
@@ -66,14 +52,6 @@ namespace Microsoft.OData.Client
         internal BulkUpdateGraph BulkUpdateGraph
         {
             get { return this.bulkUpdateGraph; }
-        }
-
-        /// <summary>
-        /// Returns an instance of the link descriptors.
-        /// </summary>
-        internal Dictionary<Descriptor, List<LinkDescriptor>> LinkDescriptors
-        {
-            get { return this.linkDescriptors; }
         }
 
         protected override Stream ResponseStream => throw new NotImplementedException();
@@ -159,27 +137,6 @@ namespace Microsoft.OData.Client
                             bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, entityDescriptor);
                             this.BuildDescriptorGraph(descriptors, false, entityDescriptor.Entity);
                         }
-                        else
-                        {
-                            // We check if the link representation of the descriptor exists in the entity tracker and it is unchanged. 
-                            LinkDescriptor linkDescriptor = this.RequestInfo.EntityTracker.Links.Where(
-                                a => a.Source == topLevelDescriptor.Entity &&
-                                this.RequestInfo.EntityTracker.GetEntityDescriptor(a.Target) == entityDescriptor &&
-                                a.State == EntityStates.Unchanged).FirstOrDefault();
-                            if (linkDescriptor != null)
-                            {
-                                // We don't support delete and update in deep insert.
-                                // We check if the linkDescriptor or the descriptor of the target entity is Deleted or Modified
-                                if (entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified || linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
-                                {
-                                    throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
-                                }
-
-                                bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, entityDescriptor);
-                                this.GetLinkDescriptors(entityDescriptor).Add(linkDescriptor);
-                                this.BuildDescriptorGraph(descriptors, false, entityDescriptor.Entity);
-                            }
-                        }
                     }
                     else if (descriptor is LinkDescriptor linkDescriptor)
                     {
@@ -204,24 +161,6 @@ namespace Microsoft.OData.Client
                     }
                 }
             }
-        }
-
-        /// <summary>
-        /// Gets the link descriptor representations for the provided descriptor.
-        /// </summary>
-        /// <param name="descriptor">The descriptor.</param>
-        /// <returns>All the link descriptors to a given key descriptor.</returns>
-        public List<LinkDescriptor> GetLinkDescriptors(Descriptor descriptor)
-        {
-            if (this.linkDescriptors.TryGetValue(descriptor, out List<LinkDescriptor> relatedLinkDescriptors))
-            {
-                return relatedLinkDescriptors;
-            }
-
-            relatedLinkDescriptors = new List<LinkDescriptor>();
-            this.linkDescriptors[descriptor] = relatedLinkDescriptors;
-
-            return relatedLinkDescriptors;
         }
 
         /// <summary>
@@ -267,7 +206,7 @@ namespace Microsoft.OData.Client
             {
                 this.writer = ODataWriterWrapper.CreateForEntry(messageWriter, this.RequestInfo.Configurations.RequestPipeline);
                 EntityDescriptor topLevelDescriptor = this.bulkUpdateGraph.TopLevelDescriptors[0];
-                this.SerializerInstance.WriteDeepInsertEntry(topLevelDescriptor, this.linkDescriptors, this.bulkUpdateGraph, this.writer);
+                this.SerializerInstance.WriteDeepInsertEntry(topLevelDescriptor, this.bulkUpdateGraph, this.writer);
             }
 
             return deepInsertRequestMessage;
