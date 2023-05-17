@@ -372,7 +372,7 @@ namespace Microsoft.OData.Client
             // Get the server type name using the type resolver or from the entity descriptor
             string serverTypeName = this.requestInfo.GetServerTypeName(entityDescriptor);
 
-            var entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
+            ODataResource entry = CreateODataEntry(entityDescriptor, serverTypeName, entityType, this.requestInfo.Format);
 
             if (serverTypeName == null)
             {

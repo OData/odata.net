@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// If we expand the related resources to some resources when we are fetching data from an OData endpoint, 
         /// OData client creates descriptors for the retrieved descriptors and creates links for 
-        /// the related descriptors. If we want to update the related objects' we'll get the related resources
+        /// the related descriptors. If we want to update the related objects, we'll get the related resources
         /// make changes to them then call the `UpdateObject` to update the descriptors then save the changes.
         /// The updated descriptors do not have any information that routes them to the parent descriptors but 
         /// we can get that information from the Links object in the entitytracker.
@@ -87,18 +87,18 @@ namespace Microsoft.OData.Client
         {
             BuildDescriptorGraph(this.ChangedEntries, true, resource);
 
-            ODataRequestMessageWrapper deeepInsertRequestMessage = this.GenerateDeepInsertRequest();
+            ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
 
-            if (deeepInsertRequestMessage == null)
+            if (deepInsertRequestMessage == null)
             {
                 return;
             }
 
-            deeepInsertRequestMessage.SetRequestStream(deeepInsertRequestMessage.CachedRequestStream);
+            deepInsertRequestMessage.SetRequestStream(deepInsertRequestMessage.CachedRequestStream);
 
             try
             {
-                this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(deeepInsertRequestMessage, false);
+                this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(deepInsertRequestMessage, false);
             }
             catch (DataServiceTransportException ex)
             {
@@ -181,25 +181,25 @@ namespace Microsoft.OData.Client
                             }
                         }
                     }
-                    else if (descriptor is LinkDescriptor link)
+                    else if (descriptor is LinkDescriptor linkDescriptor)
                     {
-                        if (link.Source.Equals(topLevelDescriptor.Entity) && !bulkUpdateGraph.Contains(link))
+                        if (linkDescriptor.Source.Equals(topLevelDescriptor.Entity) && !bulkUpdateGraph.Contains(linkDescriptor))
                         {
                             // We don't support delete and update in deep insert.
-                            if (link.State == EntityStates.Deleted || link.State == EntityStates.Modified)
+                            if (linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
                             {
                                 throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
                             }
 
-                            EntityDescriptor targetDescriptor = this.RequestInfo.Context.GetEntityDescriptor(link.Target);
+                            EntityDescriptor targetDescriptor = this.RequestInfo.Context.GetEntityDescriptor(linkDescriptor.Target);
 
                             if (targetDescriptor != null && (targetDescriptor.State == EntityStates.Deleted || targetDescriptor.State == EntityStates.Modified))
                             {
                                 throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
                             }
 
-                            bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, link);
-                            this.BuildDescriptorGraph(descriptors, false, link.Target);
+                            bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, linkDescriptor);
+                            this.BuildDescriptorGraph(descriptors, false, linkDescriptor.Target);
                         }
                     }
                 }
@@ -238,12 +238,12 @@ namespace Microsoft.OData.Client
 
             this.RequestInfo.Context.Format.SetRequestContentTypeForEntry(headers);
 
-            headers.SetHeader("OData-Version", "4.01");
-            headers.SetHeader("OData-MaxVersion", "4.01");
+            headers.SetHeader(XmlConstants.HttpODataVersion, ODataVersion.V401.ToString());
+            headers.SetHeader(XmlConstants.HttpODataMaxVersion, ODataVersion.V401.ToString());
 
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 
-            return this.CreateRequestMessage(httpMethod, requestUri, headers, this.RequestInfo.HttpStack, baseDescriptor, this.IsBatchRequest ? baseDescriptor.ChangeOrder.ToString(CultureInfo.InvariantCulture) : null);
+            return this.CreateRequestMessage(httpMethod, requestUri, headers, this.RequestInfo.HttpStack, baseDescriptor, null);
         }
 
         /// <summary>
