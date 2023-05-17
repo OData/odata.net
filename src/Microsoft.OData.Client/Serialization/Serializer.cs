@@ -438,10 +438,6 @@ namespace Microsoft.OData.Client
                 navigationLink.Name = relatedEnd.SourceProperty;
                 bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
 
-                //odataWriter.WriteNestedResourceInfoStart(navigationLink);
-
-                //odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
-
                 odataWriter.WriteStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
 
 
@@ -462,9 +458,6 @@ namespace Microsoft.OData.Client
                         odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink() { Url = navigationLink.Url }, relatedEnd.Source, relatedEnd.Target);
                     }
                 }
-
-                //odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
-                //odataWriter.WriteNestedResourceInfoEnd();
 
                 odataWriter.WriteEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
             }
@@ -783,9 +776,7 @@ namespace Microsoft.OData.Client
                 navigationLink.Name = relatedEnd.SourceProperty;
                 bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
 
-                odataWriter.WriteNestedResourceInfoStart(navigationLink);
-
-                odataWriter.WriteNestedResourceInfoStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
+                odataWriter.WriteStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
 
                 if (isCollection)
                 {
@@ -805,8 +796,7 @@ namespace Microsoft.OData.Client
                     }
                 }
 
-                odataWriter.WriteNestedResourceInfoEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
-                odataWriter.WriteNestedResourceInfoEnd();
+                odataWriter.WriteEnd(navigationLink, relatedEnd.Source, relatedEnd.Target);
             }
         }
 
