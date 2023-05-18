@@ -547,7 +547,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             var manufacturer = new Manufacturer { ID = 101, Name = "ManufactureA" };
 
             this.context.AttachTo("Persons", person);
-
             this.context.AddRelatedObject(person, "Cars", car);
             this.context.AddRelatedObject(car, "Manufacturers", manufacturer);
 
