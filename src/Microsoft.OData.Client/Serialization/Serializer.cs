@@ -380,18 +380,8 @@ namespace Microsoft.OData.Client
             }
 
             IEnumerable<ClientPropertyAnnotation> properties;
-            if ((!Util.IsFlagSet(this.options, SaveChangesOptions.ReplaceOnUpdate) &&
-                entityDescriptor.State == EntityStates.Modified &&
-                entityDescriptor.PropertiesToSerialize.Any()) ||
-                (Util.IsFlagSet(this.options, SaveChangesOptions.PostOnlySetProperties) &&
-                entityDescriptor.State == EntityStates.Added))
-            {
-                properties = entityType.PropertiesToSerialize().Where(prop => entityDescriptor.PropertiesToSerialize.Contains(prop.PropertyName));
-            }
-            else
-            {
-                properties = entityType.PropertiesToSerialize();
-            }
+
+            properties = entityType.PropertiesToSerialize();
 
             entry.Properties = this.propertyConverter.PopulateProperties(entityDescriptor.Entity, serverTypeName, properties);
 
@@ -816,7 +806,7 @@ namespace Microsoft.OData.Client
                 {
                     string parentProperty = entityObject.ParentProperty;
 
-                    if (string.IsNullOrEmpty(parentProperty) && descriptorLinks != null && descriptorLinks.Count > 0)
+                    if (string.IsNullOrEmpty(parentProperty) && descriptorLinks?.Count > 0)
                     {
                         descriptorLinks.TryGetValue(entityObject, out List<LinkDescriptor> descriptorLink);
                         parentProperty = descriptorLink.FirstOrDefault(a=>a.Target == entityObject.Entity).SourceProperty;

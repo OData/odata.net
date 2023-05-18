@@ -101,13 +101,6 @@ namespace Microsoft.OData.Client
             {
                 EntityDescriptor topLevelDescriptor = this.RequestInfo.EntityTracker.GetEntityDescriptor(obj);
 
-                // If we do not find an EntityDescriptor in the entitytracker
-                // for any of the provided objects then we throw an exception. 
-                if (topLevelDescriptor == null)
-                {
-                    throw Error.InvalidOperation(Strings.Context_EntityNotContained);
-                }
-
                 // If it's a top-level object sent by the user.
                 if (isRootObject)
                 {
@@ -191,12 +184,6 @@ namespace Microsoft.OData.Client
         /// <returns>Returns the instance of ODataRequestMessage containing all the headers and payload for the delta request.</returns>
         private ODataRequestMessageWrapper GenerateDeepInsertRequest()
         {
-            if (this.bulkUpdateGraph.TopLevelDescriptors.Count == 0)
-            {
-                this.SetCompleted();
-                return null;
-            }
- 
             ODataRequestMessageWrapper deepInsertRequestMessage = this.CreateDeepInsertRequest(this.bulkUpdateGraph);
 
             // we need to fire request after the headers have been written, but before we write the payload

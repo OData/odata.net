@@ -83,6 +83,35 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public void SerializeEntry_With_NoNavigationLinks()
+        {
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            this.context.AttachTo("Persons", person);
+
+            this.bulkUpdateGraph = this.GetBulkUpdateGraph(person);
+
+            var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.odata.org/service.svc/Persons"), this.headers, this.bulkUpdateGraph.TopLevelDescriptors[0], HttpStack.Auto);
+            var odataRequestMessageWrapper = ODataRequestMessageWrapper.CreateRequestMessageWrapper(requestMessageArgs, this.requestInfo);
+
+            using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
+            {
+                ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, requestInfo.Configurations.RequestPipeline);
+                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], bulkUpdateGraph, entryWriter);
+            }
+
+            MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
+            stream.Position = 0;
+
+            string payload = (new StreamReader(stream)).ReadToEnd();
+            payload.Should().Be("{\"ID\":100,\"Name\":\"Bing\"}");
+        }
+
+        [Fact]
         public void SerializEntry_With4LevelsOfNesting()
         {
             var person = new Person
@@ -140,6 +169,33 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             };
 
             action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified);
+        }
+
+        [Fact]
+        public void SerializeEntry_With_No_TopLevelDescriptor_Fails()
+        {
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            var car1 = new Car { ID = 1001 };
+            var car2 = new Car { ID = 1002 };
+
+            this.context.AttachTo("Persons", person);
+            this.context.AttachTo("Cars", car1);
+            this.context.AttachTo("Cars", car2);
+
+            EntityDescriptor personDescriptor = this.context.GetEntityDescriptor(person);
+            this.context.EntityTracker.DetachResource(personDescriptor);
+
+            Action action = () =>
+            {
+                this.GetBulkUpdateGraph(person);
+            };
+
+            action.ShouldThrow<InvalidOperationException>(Strings.Context_EntityNotContained);
         }
 
         [Fact]
