@@ -528,7 +528,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             Assert.Equal(2, person2OperationResponse.NestedResponses.Count);
         }
 
-        [Fact(Skip = "Ignore")]
+        [Fact]
         public void DeepUpdateAnElement_WithThreeLevelsOfNesting_UpdatesSuccessfully()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:8000/$metadata#Persons/$delta\",\"value\":[{\"ID\":100,\"Name\":\"Bing\",\"Cars@delta\":[{\"ID\":1001,\"Name\":\"CarA\",\"Manufacturers@delta\":[{\"ID\":101,\"Name\":\"ManufactureA\"}]}]}]}";
