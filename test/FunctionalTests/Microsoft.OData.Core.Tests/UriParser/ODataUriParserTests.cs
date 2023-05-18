@@ -27,6 +27,13 @@ namespace Microsoft.OData.Tests.UriParser
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
 
+        [Fact]
+        public void NonQueryOptionShouldWork2()
+        {
+            var uriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, new Uri("http://host/Lions?$expand=DogThatIAte($expand=FastestOwner)"));
+            var uri = uriParser.ParseUri();
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
