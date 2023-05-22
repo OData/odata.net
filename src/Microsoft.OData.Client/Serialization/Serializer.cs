@@ -388,7 +388,7 @@ namespace Microsoft.OData.Client
             oDataWriter.WriteStart(entry, entityDescriptor.Entity);
 
             this.WriteNestedComplexProperties(entityDescriptor.Entity, serverTypeName, properties, oDataWriter);
-            this.WriteNestedResourceInfo(entityDescriptor, bulkUpdateGraph, oDataWriter);
+            this.WriteNestedResourceInfo(entityDescriptor, bulkUpdateGraph, oDataWriter, entityType);
 
             oDataWriter.WriteEnd(entry, entityDescriptor.Entity);
         }
@@ -399,13 +399,10 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">The entity.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
-        private void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        private void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter, ClientTypeAnnotation clientType)
         {
             List<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
             Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, null);
-
-            ClientEdmModel model = this.requestInfo.Model;
-            ClientTypeAnnotation clientType = model.GetClientTypeAnnotation(model.GetOrCreateEdmType(entityDescriptor.Entity.GetType()));
 
             foreach (KeyValuePair<string, List<Descriptor>> relatedLinks in groupedRelatedLinks)
             {
