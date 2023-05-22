@@ -49,6 +49,8 @@ Context_UpdateRelatedObjectNonCollectionOnly=UpdateRelatedObject method only wor
 Context_SetLinkReferenceOnly=SetLink method only works when the sourceProperty is not a collection.
 Context_SetRelatedObjectNonCollectionOnly=SetRelatedObject method only works when the sourceProperty is not a collection.
 Context_SetRelatedObjectSourceDeleted=SetRelatedObject method only works if the source entity is in a non-deleted state.
+Context_SetRelatedObjectLinkNonCollectionOnly=SetRelatedObjectLink method only works when the sourceProperty is not a collection.
+Context_SetRelatedObjectLinkSourceDeleted=SetRelatedObjectLink method only works if the source entity is in a non-deleted state.
 
 Context_NoContentTypeForMediaLink=Media link object of type '{0}' is configured to use the MIME type specified in the property '{1}'. However, that property's value is null or empty.
 Context_BatchNotSupportedForMediaLink=Saving entities with the [MediaEntry] attribute is not currently supported in batch mode. Use non-batched mode instead.

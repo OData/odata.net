@@ -423,6 +423,28 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "SetRelatedObjectLink method only works when the sourceProperty is not a collection."
+        /// </summary>
+        internal static string Context_SetRelatedObjectLinkNonCollectionOnly
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectLinkNonCollectionOnly);
+            }
+        }
+
+        /// <summary>
+        /// A string like "SetRelatedObjectLink method only works if the source entity is in a non-deleted state."
+        /// </summary>
+        internal static string Context_SetRelatedObjectLinkSourceDeleted
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectLinkSourceDeleted);
+            }
+        }
+
+        /// <summary>
         /// A string like "Media link object of type '{0}' is configured to use the MIME type specified in the property '{1}'. However, that property's value is null or empty."
         /// </summary>
         internal static string Context_NoContentTypeForMediaLink(object p0, object p1)

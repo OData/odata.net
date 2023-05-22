@@ -2483,6 +2483,72 @@ namespace Microsoft.OData.Client
             }
         }
 
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <param name="source">The source object for the new link.</param>
+        /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
+        /// <param name="target">he object related to the source object by the new link.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" /> or <paramref name="target" /> are null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the specified link already exists.-or-When the objects supplied as <paramref name="source" /> or <paramref name="target" /> are in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-When <paramref name="sourceProperty" /> is not a navigation property that defines a reference to a single related object.</exception>
+        /// <remarks>
+        /// The sourceProperty MUST be a single-value navigation property.
+        /// </remarks>
+        public virtual void SetRelatedObjectLink(object source, string sourceProperty, object target)
+        {
+            Util.CheckArgumentNull(source, "source");
+            Util.CheckArgumentNullAndEmpty(sourceProperty, "sourceProperty");
+            Util.CheckArgumentNull(target, "target");
+
+            // Validate that the source is an entity and is already tracked by the context.
+            ValidateEntityType(source, this.Model);
+
+            EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
+
+            // Check for deleted source entity
+            if (sourceResource.State == EntityStates.Deleted)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkSourceDeleted);
+            }
+
+            // Validate that the property is valid and exists on the source
+            ClientTypeAnnotation type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
+            Debug.Assert(type.IsEntityType, "should be an entity type");
+
+            // will throw InvalidOperationException if property doesn't exist
+            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+
+            if (property.IsKnownType || property.IsEntityCollection)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkNonCollectionOnly);
+            }
+
+            // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
+            // either way you can only have a relation ship between keyed objects
+            type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
+            Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
+
+            if ((target != null) && !type.ElementType.IsInstanceOfType(target))
+            {
+                // target is not of the correct type
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+            }
+
+            LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
+            this.entityTracker.AddLink(descriptor);
+            descriptor.State = EntityStates.Added;
+            this.entityTracker.IncrementChange(descriptor);
+
+            /*LinkDescriptor relation = this.entityTracker.DetachReferenceLink(source, sourceProperty, target, MergeOption.NoTracking);
+
+            if (relation == null)
+            {
+                relation = new LinkDescriptor(source, sourceProperty, target, this.model);
+                this.entityTracker.AddLink(relation);
+            }
+
+            relation.State = EntityStates.Added;
+            this.entityTracker.IncrementChange(relation);*/
+        }
+
         #endregion
 
         #region AddObject, AttachTo, DeleteObject, Detach, TryGetEntity, TryGetUri
@@ -2600,6 +2666,7 @@ namespace Microsoft.OData.Client
             // Validate that the property is valid and exists on the source
             ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
             ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+
             if (property.IsKnownType || property.IsEntityCollection)
             {
                 throw Error.InvalidOperation(Strings.Context_SetRelatedObjectNonCollectionOnly);
@@ -2611,6 +2678,7 @@ namespace Microsoft.OData.Client
 
             // Validate that the property type matches with the target type
             ClientTypeAnnotation propertyElementType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.PropertyType));
+
             if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
             {
                 // target is not of the correct type

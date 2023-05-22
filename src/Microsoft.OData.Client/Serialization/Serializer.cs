@@ -423,6 +423,7 @@ namespace Microsoft.OData.Client
                 }
 
                 navigationLink.Name = relatedEnd.SourceProperty;
+                navigationLink.Url = this.requestInfo.EntityTracker.GetEntityDescriptor(relatedEnd.Target).GetLatestEditLink();
                 bool isCollection = clientType.GetProperty(relatedEnd.SourceProperty, UndeclaredPropertyBehavior.ThrowException).IsEntityCollection;
 
                 odataWriter.WriteStart(navigationLink, relatedEnd.Source, relatedEnd.Target);
@@ -442,7 +443,7 @@ namespace Microsoft.OData.Client
                     }
                     else if (item.DescriptorKind == DescriptorKind.Link)
                     {
-                        odataWriter.WriteEntityReferenceLink(new ODataEntityReferenceLink() { Url = navigationLink.Url }, relatedEnd.Source, relatedEnd.Target);
+                        WriteODataId(relatedEnd, odataWriter);
                     }
                 }
 

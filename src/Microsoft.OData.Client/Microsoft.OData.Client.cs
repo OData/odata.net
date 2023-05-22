@@ -62,6 +62,8 @@ namespace Microsoft.OData.Client
         internal const string Context_SetLinkReferenceOnly = "Context_SetLinkReferenceOnly";
         internal const string Context_SetRelatedObjectNonCollectionOnly = "Context_SetRelatedObjectNonCollectionOnly";
         internal const string Context_SetRelatedObjectSourceDeleted = "Context_SetRelatedObjectSourceDeleted";
+        internal const string Context_SetRelatedObjectLinkNonCollectionOnly = "Context_SetRelatedObjectLinkNonCollectionOnly";
+        internal const string Context_SetRelatedObjectLinkSourceDeleted = "Context_SetRelatedObjectLinkSourceDeleted";
         internal const string Context_NoContentTypeForMediaLink = "Context_NoContentTypeForMediaLink";
         internal const string Context_BatchNotSupportedForMediaLink = "Context_BatchNotSupportedForMediaLink";
         internal const string Context_UnexpectedZeroRawRead = "Context_UnexpectedZeroRawRead";
