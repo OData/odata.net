@@ -2573,6 +2573,68 @@ namespace Microsoft.OData.Client
             this.entityTracker.IncrementChange(targetResource);
         }
 
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request.</summary>
+        /// <param name="source">The parent object that is being tracked by the context.</param>
+        /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
+        /// <param name="target">The related object that is being added.</param>
+        /// /// <remarks>
+        /// The sourceProperty MUST be a single-value object, not a collection.
+        /// </remarks>
+        public virtual void SetRelatedObject(object source, string sourceProperty, object target)
+        {
+            Util.CheckArgumentNull(source, "source");
+            Util.CheckArgumentNullAndEmpty(sourceProperty, "sourceProperty");
+            Util.CheckArgumentNull(target, "target");
+
+            // Validate that the source is an entity and is already tracked by the context.
+            ValidateEntityType(source, this.Model);
+
+            EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
+
+            // Check for deleted source entity
+            if (sourceResource.State == EntityStates.Deleted)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectSourceDeleted);
+            }
+
+            // Validate that the property is valid and exists on the source
+            ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+            if (property.IsKnownType || property.IsEntityCollection)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectNonCollectionOnly);
+            }
+
+            // Validate that the target is an entity
+            ClientTypeAnnotation childType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(target.GetType()));
+            ValidateEntityType(target, this.Model);
+
+            // Validate that the property type matches with the target type
+            ClientTypeAnnotation propertyElementType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.PropertyType));
+            if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
+            {
+                // target is not of the correct type
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+            }
+
+            var targetResource = new EntityDescriptor(this.model)
+            {
+                Entity = target,
+                State = EntityStates.Added
+            };
+
+            targetResource.SetParentForInsert(sourceResource, sourceProperty);
+
+            this.EntityTracker.AddEntityDescriptor(targetResource);
+
+            // Add the link in the added state.
+            LinkDescriptor end = targetResource.GetRelatedEnd();
+            end.State = EntityStates.Added;
+            this.entityTracker.AddLink(end);
+
+            this.entityTracker.IncrementChange(targetResource);
+        }
+
         /// <summary>Notifies the <see cref="Microsoft.OData.Client.DataServiceContext" /> to start tracking the specified resource and supplies the location of the resource within the specified resource set.</summary>
         /// <param name="entitySetName">The name of the set that contains the resource.</param>
         /// <param name="entity">The resource to be tracked by the <see cref="Microsoft.OData.Client.DataServiceContext" />. The resource is attached in the Unchanged state.</param>

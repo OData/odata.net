@@ -83,6 +83,38 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public void SerializeEntry_With_SingleValueNavigation()
+        {
+            var vipPerson = new VipPerson
+            {
+                ID = 100,
+                Name = "Bing",
+            };
+
+            var car1 = new Car { ID = 1001 };
+
+            this.context.AttachTo("Persons", vipPerson);
+            this.context.SetRelatedObject(vipPerson, "Car", car1);
+
+            this.bulkUpdateGraph = this.GetBulkUpdateGraph(vipPerson);
+
+            var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.odata.org/service.svc/VipPersons"), this.headers, this.bulkUpdateGraph.TopLevelDescriptors[0], HttpStack.Auto);
+            var odataRequestMessageWrapper = ODataRequestMessageWrapper.CreateRequestMessageWrapper(requestMessageArgs, this.requestInfo);
+
+            using (ODataMessageWriter messageWriter = Serializer.CreateMessageWriter(odataRequestMessageWrapper, this.requestInfo, false /*isParameterPayload*/))
+            {
+                ODataWriterWrapper entryWriter = ODataWriterWrapper.CreateForEntry(messageWriter, requestInfo.Configurations.RequestPipeline);
+                serializer.WriteDeepInsertEntry(this.bulkUpdateGraph.TopLevelDescriptors[0], bulkUpdateGraph, entryWriter);
+            }
+
+            MemoryStream stream = (MemoryStream)(odataRequestMessageWrapper.CachedRequestStream.Stream);
+            stream.Position = 0;
+
+            string payload = (new StreamReader(stream)).ReadToEnd();
+            payload.Should().Be("{\"ID\":100,\"Name\":\"Bing\",\"Car\":{\"ID\":1001,\"Name\":null}}");
+        }
+
+        [Fact]
         public void SerializeEntry_With_NoNavigationLinks()
         {
             var person = new Person
@@ -366,6 +398,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                     this.PropertyChanged(this, new PropertyChangedEventArgs(property));
                 }
             }
+        }
+
+        public class VipPerson
+        {
+            public int ID { get; set; }
+            public string Name { get; set; }
+            public Car Car { get; set; }
         }
     }
 }
