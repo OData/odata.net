@@ -170,8 +170,8 @@ namespace Microsoft.OData.Client
 
             this.RequestInfo.Context.Format.SetRequestContentTypeForEntry(headers);
 
-            headers.SetHeader(XmlConstants.HttpODataVersion, ODataVersion.V401.ToString());
-            headers.SetHeader(XmlConstants.HttpODataMaxVersion, ODataVersion.V401.ToString());
+            headers.SetHeader(XmlConstants.HttpODataVersion, XmlConstants.ODataVersion401);
+            headers.SetHeader(XmlConstants.HttpODataMaxVersion, XmlConstants.ODataVersion401);
 
             this.RequestInfo.Format.SetRequestAcceptHeader(headers);
 

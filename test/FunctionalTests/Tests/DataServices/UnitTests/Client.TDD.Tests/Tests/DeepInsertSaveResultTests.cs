@@ -209,7 +209,8 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             var cars = new List<Car>
             {
-                new Car{
+                new Car
+                {
                     ID = 200,
                     Name = "Car 1",
                 }

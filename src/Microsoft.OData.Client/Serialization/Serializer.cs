@@ -399,7 +399,7 @@ namespace Microsoft.OData.Client
         /// <param name="entityDescriptor">The entity.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="odataWriter">The ODataWriter used to write the navigation link.</param>
-        internal void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
+        private void WriteNestedResourceInfo(EntityDescriptor entityDescriptor, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper odataWriter)
         {
             List<Descriptor> relatedDescriptors = bulkUpdateGraph.GetRelatedDescriptors(entityDescriptor);
             Dictionary<string, List<Descriptor>> groupedRelatedLinks = GroupRelatedLinksByNavigationProperty(relatedDescriptors, null);
@@ -459,7 +459,7 @@ namespace Microsoft.OData.Client
         /// <param name="descriptors">A list of descriptors to be written.</param>
         /// <param name="bulkUpdateGraph">An instance of the <see cref="BulkUpdateGraph"/>.</param>
         /// <param name="oDataWriter">An instance of the <see cref="ODataWriterWrapper"/>.</param>
-        internal void WriteResourceSet(IReadOnlyList<Descriptor> descriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
+        private void WriteResourceSet(IReadOnlyList<Descriptor> descriptors, BulkUpdateGraph bulkUpdateGraph, ODataWriterWrapper oDataWriter)
         {
             ODataResourceSet resourceSet = new ODataResourceSet();
             oDataWriter.WriteStart(resourceSet);
