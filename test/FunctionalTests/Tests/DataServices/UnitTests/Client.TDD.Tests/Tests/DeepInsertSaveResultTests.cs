@@ -177,7 +177,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
-        public void SerializEntry_With4LevelsOfNesting()
+        public void SerializEntry_With3LevelsOfNesting()
         {
             var person = new Person
             {
