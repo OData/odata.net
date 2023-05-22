@@ -8304,6 +8304,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (System.Threading.CancellationToken cancellationToken)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken)
     public virtual void SetLink (object source, string sourceProperty, object target)
+    public virtual void SetRelatedObject (object source, string sourceProperty, object target)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug)
     public virtual void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
