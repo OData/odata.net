@@ -39,6 +39,8 @@
     <DebugAppConfigPath>$(MSBuildThisFileDirectory)\$(DebugAppConfigFileName)</DebugAppConfigPath>
   </PropertyGroup>
 
+  <!--TODO fail tests that fail assertions-->
+  <!--TODO git clean-->
   <!--TODO use choose-->
   <PropertyGroup Condition="Exists($(NativeBaseAppConfigPath))">
     <BaseAppConfigPath>$(NativeBaseAppConfigPath)</BaseAppConfigPath>
@@ -61,7 +63,7 @@
 
   <Target Name="Transform" AfterTargets="Build">
     <Error Condition="!Exists($(TransformTaskPath))" Text="Transform task not found $(TransformTaskPath)" />
-    <TransformXml Source="$(BaseAppConfigPath)" Transform="$(DebugAppConfigPath)" Destination="$(OutputPath)\$(TargetFileName).config" />
+    <TransformXml Source="$(OutputPath)\$(TargetFileName).config" Transform="$(DebugAppConfigPath)" Destination="$(OutputPath)\$(TargetFileName).config" />
   </Target>
   
   <Import Project="..\Build.props" />
