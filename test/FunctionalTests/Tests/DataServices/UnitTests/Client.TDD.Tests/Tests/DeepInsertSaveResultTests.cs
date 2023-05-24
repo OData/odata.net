@@ -64,6 +64,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.context.AddLink(person, "Cars", car1);
             this.context.AddLink(person, "Cars", car2);
 
+            EntityDescriptor car1Descriptor = context.GetEntityDescriptor(car1);
+            EntityDescriptor car2Descriptor = context.GetEntityDescriptor(car2);
+
+            Assert.Equal(EntityStates.Unchanged, car1Descriptor.State);
+            Assert.Equal(EntityStates.Unchanged, car2Descriptor.State);
+
             this.bulkUpdateGraph = this.GetBulkUpdateGraph(person);
 
             var requestMessageArgs = new BuildingRequestEventArgs("POST", new Uri("http://www.odata.org/service.svc/Persons"), this.headers, this.bulkUpdateGraph.TopLevelDescriptors[0], HttpStack.Auto);
@@ -177,7 +183,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
-        public void SerializEntry_With3LevelsOfNesting()
+        public void SerializeEntry_With3LevelsOfNesting()
         {
             var person = new Person
             {

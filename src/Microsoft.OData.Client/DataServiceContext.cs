@@ -2536,17 +2536,6 @@ namespace Microsoft.OData.Client
             this.entityTracker.AddLink(descriptor);
             descriptor.State = EntityStates.Added;
             this.entityTracker.IncrementChange(descriptor);
-
-            /*LinkDescriptor relation = this.entityTracker.DetachReferenceLink(source, sourceProperty, target, MergeOption.NoTracking);
-
-            if (relation == null)
-            {
-                relation = new LinkDescriptor(source, sourceProperty, target, this.model);
-                this.entityTracker.AddLink(relation);
-            }
-
-            relation.State = EntityStates.Added;
-            this.entityTracker.IncrementChange(relation);*/
         }
 
         #endregion
