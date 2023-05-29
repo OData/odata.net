@@ -88,7 +88,7 @@ Context_MustBeUsedWith='{0}' must be used with '{1}'.
 Context_EntityMediaLinksNotTrackedInEntity=The context is currently in no tracking mode, in order to use streams make sure your entities extend BaseEntityType and query the Item again from the server to populate the read link or enable tracking.
 Context_EntityInNonTrackedContextLacksMediaLinks=The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType.
 Context_DeepInsertOneTopLevelEntity=Deep insert can only have one top level entity.
-Context_DeepInsertDeletedOrModified=For deep insert ChangeState cannot be Deleted or Modified.
+Context_DeepInsertDeletedOrModified=For deep insert, ChangeState for '{0}' cannot be Deleted or Modified.
 
 DataServiceClientFormat_LoadServiceModelRequired=When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance.
 DataServiceClientFormat_ValidServiceModelRequiredForJson=To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model.

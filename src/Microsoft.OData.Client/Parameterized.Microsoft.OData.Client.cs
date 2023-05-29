@@ -783,14 +783,11 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "For deep insert ChangeState cannot be Deleted or Modified."
+        /// A string like "For deep insert, ChangeState for '{0}' cannot be Deleted or Modified."
         /// </summary>
-        internal static string Context_DeepInsertDeletedOrModified
+        internal static string Context_DeepInsertDeletedOrModified(object p0)
         {
-            get
-            {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertDeletedOrModified);
-            }
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertDeletedOrModified, p0);
         }
 
         /// <summary>

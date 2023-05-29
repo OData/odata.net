@@ -239,7 +239,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 this.GetBulkUpdateGraph(person);
             };
 
-            action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified);
+            action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified("Cars(1002)"));
         }
 
         [Fact]
@@ -301,7 +301,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 this.GetBulkUpdateGraph(person);
             };
 
-            action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified);
+            action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified("Cars(200)"));
         }
 
         [Fact]

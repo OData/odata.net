@@ -10,6 +10,8 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Client
 {
@@ -124,7 +126,8 @@ namespace Microsoft.OData.Client
                             // We don't support delete and update in deep insert.
                             if (entityDescriptor.State == EntityStates.Deleted || entityDescriptor.State == EntityStates.Modified)
                             {
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
+                                string entitySetAndKey = GetEntitySetAndKey(entityDescriptor);
+                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
                             }
 
                             bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, entityDescriptor);
@@ -135,17 +138,19 @@ namespace Microsoft.OData.Client
                     {
                         if (linkDescriptor.Source.Equals(topLevelDescriptor.Entity) && !bulkUpdateGraph.Contains(linkDescriptor))
                         {
+                            EntityDescriptor targetDescriptor = this.RequestInfo.Context.GetEntityDescriptor(linkDescriptor.Target);
+
                             // We don't support delete and update in deep insert.
                             if (linkDescriptor.State == EntityStates.Deleted || linkDescriptor.State == EntityStates.Modified)
                             {
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
+                                string entitySetAndKey = GetEntitySetAndKey(targetDescriptor);
+                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
                             }
-
-                            EntityDescriptor targetDescriptor = this.RequestInfo.Context.GetEntityDescriptor(linkDescriptor.Target);
 
                             if (targetDescriptor != null && (targetDescriptor.State == EntityStates.Deleted || targetDescriptor.State == EntityStates.Modified))
                             {
-                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified);
+                                string entitySetAndKey = GetEntitySetAndKey(targetDescriptor);
+                                throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
                             }
 
                             bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, linkDescriptor);
@@ -154,6 +159,15 @@ namespace Microsoft.OData.Client
                     }
                 }
             }
+        }
+
+        private string GetEntitySetAndKey(EntityDescriptor entityDescriptor)
+        {
+            var baseUriString = this.RequestInfo.BaseUriResolver.GetBaseUriWithSlash().ToString();
+            IEdmModel model = this.RequestInfo.Format.ServiceModel;
+            string entitySetUri = entityDescriptor.EditLink.ToString().TrimStart(baseUriString.ToCharArray());
+
+            return entitySetUri;
         }
 
         /// <summary>

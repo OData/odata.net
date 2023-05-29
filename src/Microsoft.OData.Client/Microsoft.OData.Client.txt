@@ -86,7 +86,7 @@ Context_OnMessageCreatingReturningNull=DataServiceContext.Configurations.Request
 Context_SendingRequest_InvalidWhenUsingOnMessageCreating=SendingRequest cannot be used in combination with the DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property. Please use SendingRequest2 with DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property instead.
 Context_MustBeUsedWith='{0}' must be used with '{1}'.
 Context_DeepInsertOneTopLevelEntity=Deep insert can only have one top level entity.
-Context_DeepInsertDeletedOrModified=For deep insert ChangeState cannot be Deleted or Modified.
+Context_DeepInsertDeletedOrModified=For deep insert, ChangeState for '{0}' cannot be Deleted or Modified.
 
 DataServiceClientFormat_LoadServiceModelRequired=When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance.
 DataServiceClientFormat_ValidServiceModelRequiredForJson=To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model.
