@@ -2341,7 +2341,7 @@ namespace Microsoft.OData.Client
 
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The sourceProperty MUST be a collection navigation property.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
         /// <param name="target">The object related to the source object by the new link. </param>
@@ -2483,20 +2483,17 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The sourceProperty MUST be a single-value navigation property.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
-        /// <param name="target">he object related to the source object by the new link.</param>
+        /// <param name="target">The object related to the source object by the new link.</param>
         /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" /> or <paramref name="target" /> are null.</exception>
         /// <exception cref="System.InvalidOperationException">When the specified link already exists.-or-When the objects supplied as <paramref name="source" /> or <paramref name="target" /> are in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-When <paramref name="sourceProperty" /> is not a navigation property that defines a reference to a single related object.</exception>
-        /// <remarks>
-        /// The sourceProperty MUST be a single-value navigation property.
-        /// </remarks>
         public virtual void SetRelatedObjectLink(object source, string sourceProperty, object target)
         {
-            Util.CheckArgumentNull(source, "source");
-            Util.CheckArgumentNullAndEmpty(sourceProperty, "sourceProperty");
-            Util.CheckArgumentNull(target, "target");
+            Util.CheckArgumentNull(source, nameof(source));
+            Util.CheckArgumentNullAndEmpty(sourceProperty, nameof(sourceProperty));
+            Util.CheckArgumentNull(target, nameof(target));
 
             // Validate that the source is an entity and is already tracked by the context.
             ValidateEntityType(source, this.Model);
@@ -2510,11 +2507,11 @@ namespace Microsoft.OData.Client
             }
 
             // Validate that the property is valid and exists on the source
-            ClientTypeAnnotation type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
-            Debug.Assert(type.IsEntityType, "should be an entity type");
+            ClientTypeAnnotation sourceType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
+            Debug.Assert(sourceType.IsEntityType, "should be an entity type");
 
             // will throw InvalidOperationException if property doesn't exist
-            ClientPropertyAnnotation property = type.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+            ClientPropertyAnnotation property = sourceType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
 
             if (property.IsKnownType || property.IsEntityCollection)
             {
@@ -2523,13 +2520,13 @@ namespace Microsoft.OData.Client
 
             // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
             // either way you can only have a relation ship between keyed objects
-            type = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
-            Debug.Assert(type.IsEntityType, "should be enforced by just adding an object");
+            ClientTypeAnnotation sourcePropertyType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
+            Debug.Assert(sourcePropertyType.IsEntityType, "should be an entity type.");
 
-            if ((target != null) && !type.ElementType.IsInstanceOfType(target))
+            if (!sourcePropertyType.ElementType.IsInstanceOfType(target))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
             }
 
             LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
@@ -2569,7 +2566,7 @@ namespace Microsoft.OData.Client
             this.EntityTracker.IncrementChange(resource);
         }
 
-        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request.</summary>
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The sourceProperty MUST be a collection navigation property.</summary>
         /// <param name="source">The parent object that is being tracked by the context.</param>
         /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
         /// <param name="target">The related object that is being added.</param>
@@ -2628,13 +2625,10 @@ namespace Microsoft.OData.Client
             this.entityTracker.IncrementChange(targetResource);
         }
 
-        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request.</summary>
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The sourceProperty MUST be a single-value navigation property.</summary>
         /// <param name="source">The parent object that is being tracked by the context.</param>
         /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
         /// <param name="target">The related object that is being added.</param>
-        /// /// <remarks>
-        /// The sourceProperty MUST be a single-value object, not a collection.
-        /// </remarks>
         public virtual void SetRelatedObject(object source, string sourceProperty, object target)
         {
             Util.CheckArgumentNull(source, "source");
@@ -2671,7 +2665,7 @@ namespace Microsoft.OData.Client
             if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
             {
                 // target is not of the correct type
-                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
             }
 
             var targetResource = new EntityDescriptor(this.model)
@@ -2971,9 +2965,9 @@ namespace Microsoft.OData.Client
 
             return identity != null;
         }
-        
+
         /// <summary>
-        /// Processes deep insert requests.
+        /// Processes deep insert requests. Creates an object and creates related navigation items or link existing navigation items in a single request. 
         /// </summary>
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
