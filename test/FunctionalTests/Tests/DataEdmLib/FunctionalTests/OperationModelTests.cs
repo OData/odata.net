@@ -17,10 +17,12 @@ namespace EdmLibTests.FunctionalTests
     [TestClass]
     [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("FunctionalTests")]
+    [DeploymentItem("Microsoft.OData.TestCommon.dll")]
     public class OperationModelTests : EdmLibTestCaseBase
     {
         public OperationModelTests()
         {
+            var dir = System.Environment.CurrentDirectory;
             this.EdmVersion = EdmVersion.V40;
         }
 

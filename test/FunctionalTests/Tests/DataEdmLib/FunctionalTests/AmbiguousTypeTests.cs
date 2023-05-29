@@ -43,6 +43,7 @@ namespace EdmLibTests.FunctionalTests
         [TestMethod]
         public void AmbiguousEntitySetTest()
         {
+            var curretnDirectory = System.Environment.CurrentDirectory;
             EdmEntityContainer container = new EdmEntityContainer("NS1", "Baz");
 
             IEdmEntitySet set1 = new StubEdmEntitySet("Foo", container);

@@ -32,6 +32,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         [Fact, Asynchronous]
         public async Task SaveChangesTest()
         {
+            var full = typeof(Microsoft.OData.TestCommon.DebugAssertTraceListener).AssemblyQualifiedName;
+
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
             context.MergeOption = MergeOption.OverwriteChanges;
             bool checkEntry = true;

@@ -25,6 +25,7 @@ namespace EdmLibTests
         [TestMethod]
         public void DummyTest_Succeed()
         {
+            var curretnDirectory = System.Environment.CurrentDirectory;
 		    // to ensure running in the lab, please use Assert
 			// do not use Assert in MsTest!
             Assert.IsTrue(true, "Should always suceed.");

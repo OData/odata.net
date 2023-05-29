@@ -22,6 +22,8 @@ namespace Microsoft.Spatial
         /// <param name="action">the action to be execute on dispose</param>
         public ActionOnDispose(Action action)
         {
+            System.Diagnostics.Debug.Assert(false, "gdebruin");
+
             Util.CheckArgumentNull(action, "action");
             this.action = action;
         }

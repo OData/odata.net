@@ -56,12 +56,16 @@
     </None>
   </ItemGroup>
 
+  <!--<ItemGroup>
+    <ProjectReference Include="$(MSBuildThisFileDirectory)\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
+  </ItemGroup>-->
+
   <PropertyGroup>
     <TransformTaskPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v16.0\Web\Microsoft.Web.Publishing.Tasks.dll</TransformTaskPath>
   </PropertyGroup>
   <UsingTask TaskName="TransformXml" AssemblyFile="$(TransformTaskPath)" />
 
-  <Target Name="Transform" AfterTargets="Build">
+  <Target Name="Transform" AfterTargets="CopyFilesToOutputDirectory">
     <Error Condition="!Exists($(TransformTaskPath))" Text="Transform task not found $(TransformTaskPath)" />
     <TransformXml Source="$(OutputPath)\$(TargetFileName).config" Transform="$(DebugAppConfigPath)" Destination="$(OutputPath)\$(TargetFileName).config" />
   </Target>
