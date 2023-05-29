@@ -56,9 +56,9 @@
     </None>
   </ItemGroup>
 
-  <!--<ItemGroup>
+  <ItemGroup>
     <ProjectReference Include="$(MSBuildThisFileDirectory)\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
-  </ItemGroup>-->
+  </ItemGroup>
 
   <PropertyGroup>
     <TransformTaskPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v16.0\Web\Microsoft.Web.Publishing.Tasks.dll</TransformTaskPath>
