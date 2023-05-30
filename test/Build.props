@@ -50,6 +50,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Include="$(EnlistmentRoot)\test\ClassLibrary1\Fake.cs" Link="App_Config\Fake.cs" />
     <None Include="$(BaseAppConfigPath)" Link="$(BaseAppConfigFileName)" Condition="!Exists($(BaseAppConfigFileName))" />
     <None Include="$(DebugAppConfigPath)" Link="App_Config\$(DebugAppConfigFileName)">
       <DependentUpon>$(BaseAppConfigPath)</DependentUpon>
@@ -57,7 +58,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="$(MSBuildThisFileDirectory)\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
+    <ProjectReference Include="$(EnlistmentRoot)\test\ClassLibrary1\ClassLibrary1.csproj" />
   </ItemGroup>
 
   <PropertyGroup>

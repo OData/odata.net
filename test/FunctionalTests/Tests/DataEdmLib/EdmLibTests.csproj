@@ -11,6 +11,7 @@
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+    <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>
   <Import Project="..\Build.props" />
 
@@ -27,10 +28,7 @@
   <ItemGroup>
     <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />
     <ProjectReference Include="..\TestUtils\Common\Microsoft.Test.OData.Utils\Microsoft.Test.OData.Utils.csproj" />
-    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.csproj" />
-    <Reference Include="$(NugetPack)\FluentAssertions.2.0.0.1\lib\net40\FluentAssertions.dll">
-      <Name>FluentAssertions</Name>
-    </Reference>     
+    <ProjectReference Include="$(EnlistmentRoot)\test\EndToEndTests\Framework\Core\Microsoft.Test.OData.Framework.csproj" />     
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EdmLibTestCaseBase.cs" />
