@@ -1,0 +1,3 @@
+Microsoft.OData.Client.SaveChangesOptions.DeepInsert = 256 -> Microsoft.OData.Client.SaveChangesOptions
+virtual Microsoft.OData.Client.DataServiceContext.SetRelatedObject(object source, string sourceProperty, object target) -> void
+virtual Microsoft.OData.Client.DataServiceContext.SetRelatedObjectLink(object source, string sourceProperty, object target) -> void

@@ -16,6 +16,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
     using Microsoft.OData.Tests;
     using ClientStrings = Microsoft.OData.Client.Strings;
     using Xunit;
+    using System.Collections.Generic;
 
     public class DataServiceContextTests
     {
@@ -164,6 +165,71 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             this.testSubject.ChangeState(entity, EntityStates.Detached);
             descriptor.State.Should().Be(EntityStates.Detached);
             this.testSubject.GetEntityDescriptor(entity).Should().BeNull();
+        }
+
+        [Fact]
+        public void SetRelatedObjectShouldFailWhenSourceIsDeleted()
+        {
+            var entity = new TestCustomer();
+            var target = new TestOrder();
+            var descriptor = this.AttachAndGetDescriptor(entity);
+            descriptor.State = EntityStates.Deleted;
+
+            Action action = () => this.testSubject.SetRelatedObject(entity, "SpecialOrder", target);
+            action.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_SetRelatedObjectSourceDeleted);
+        }
+
+        [Fact]
+        public void SetRelatedObjectShouldFailWhenSourcePropertyIsCollection()
+        {
+            var entity = new TestCustomer();
+            var target = new TestOrder();
+            var descriptor = this.AttachAndGetDescriptor(entity);
+
+            Action action = () => this.testSubject.SetRelatedObject(entity, "Orders", target);
+            action.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_SetRelatedObjectNonCollectionOnly);
+        }
+
+        [Fact]
+        public void SetRelatedObjectTargetDescriptorStateShouldBeAdded()
+        {
+            var entity = new TestCustomer();
+            var target = new TestOrder();
+            var descriptor = this.AttachAndGetDescriptor(entity);
+
+            this.testSubject.SetRelatedObject(entity, "SpecialOrder", target);
+            this.testSubject.GetEntityDescriptor(target).State.Should().Be(EntityStates.Added);
+        }
+
+        [Fact]
+        public void SetRelatedObjectLinkShouldFailWhenSourceIsDeleted()
+        {
+            var entity = new TestCustomer();
+            var target = new TestOrder() { ID = 1000 };
+            var sourceDescriptor = this.AttachAndGetDescriptor(entity);
+            sourceDescriptor.State = EntityStates.Deleted;
+
+            this.testSubject.AttachTo("OtherThings", target);
+            var targetDescriptordescriptor = this.testSubject.GetEntityDescriptor(target);
+            targetDescriptordescriptor.Should().NotBeNull();
+
+            Action action = () => this.testSubject.SetRelatedObjectLink(entity, "SpecialOrder", target);
+            action.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_SetRelatedObjectLinkSourceDeleted);
+        }
+
+        [Fact]
+        public void SetRelatedObjectLinkShouldFailWhenSourcePropertyIsCollection()
+        {
+            var entity = new TestCustomer();
+            var target = new TestOrder() { ID = 1000 };
+            var sourceDescriptor = this.AttachAndGetDescriptor(entity);
+
+            this.testSubject.AttachTo("OtherThings", target);
+            var targetDescriptordescriptor = this.testSubject.GetEntityDescriptor(target);
+            targetDescriptordescriptor.Should().NotBeNull();
+
+            Action action = () => this.testSubject.SetRelatedObjectLink(entity, "Orders", target);
+            action.ShouldThrow<InvalidOperationException>().WithMessage(ClientStrings.Context_SetRelatedObjectLinkNonCollectionOnly);
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
@@ -337,6 +403,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         private class TestEntityType
+        {
+            public int ID { get; set; }
+        }
+
+        private class TestCustomer
+        {
+            public int ID { get; set; }
+            public TestOrder SpecialOrder { get; set; }
+            public List<TestOrder> Orders { get; set; }
+        }
+
+        private class TestOrder
         {
             public int ID { get; set; }
         }

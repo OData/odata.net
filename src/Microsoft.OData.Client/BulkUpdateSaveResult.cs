@@ -28,7 +28,7 @@ namespace Microsoft.OData.Client
         private ODataWriterWrapper writer;
 
         /// <summary>
-        /// Instance of the BulkUpdateGraph that contains descriptors with their 
+        /// Instance of the BulkUpdateGraph that contains descriptors with their
         /// related descriptors to be used in writing bulk update requests.
         /// </summary>
         private readonly BulkUpdateGraph bulkUpdateGraph;
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Returns an instance of the <see cref="BulkUpdateGraph"/>
+        /// Returns an instance of the <see cref="Client.BulkUpdateGraph"/>
         /// </summary>
         internal BulkUpdateGraph BulkUpdateGraph
         {
@@ -236,7 +236,7 @@ namespace Microsoft.OData.Client
             foreach (object obj in objects)
             {
                 EntityDescriptor topLevelDescriptor = this.RequestInfo.EntityTracker.GetEntityDescriptor(obj);
-                
+
                 // If we do not find an EntityDescriptor in the entitytracker
                 // for any of the provided objects then we throw an exception. 
                 if (topLevelDescriptor == null)
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Client
                 // meaning that it was sent as top-level object by the user
                 // then we add it to graph's top-level objects. 
                 if (isRootObject)
-                { 
+                {
                     bulkUpdateGraph.AddTopLevelDescriptor(topLevelDescriptor);
                 }
 
