@@ -49,8 +49,14 @@
     <BaseAppConfigPath>$(SharedBaseAppConfigPath)</BaseAppConfigPath>
   </PropertyGroup>
 
-  <ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.csproj'">
     <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\Fake.cs" Link="App_Config\Fake.cs" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
+    <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\Fake.vb" Link="App_Config\Fake.vb" />
+  </ItemGroup>
+  
+  <ItemGroup>
     <None Include="$(BaseAppConfigPath)" Link="$(BaseAppConfigFileName)" Condition="!Exists($(BaseAppConfigFileName))" />
     <None Include="$(DebugAppConfigPath)" Link="App_Config\$(DebugAppConfigFileName)">
       <DependentUpon>$(BaseAppConfigPath)</DependentUpon>

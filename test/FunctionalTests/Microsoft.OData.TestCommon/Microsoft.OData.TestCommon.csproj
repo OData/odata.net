@@ -16,4 +16,9 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Fake.cs" />
+    <None Include="Fake.vb" />
+  </ItemGroup>
+
 </Project>
