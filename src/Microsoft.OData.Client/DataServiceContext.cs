@@ -2341,7 +2341,7 @@ namespace Microsoft.OData.Client
 
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The sourceProperty MUST be a collection navigation property.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The <paramref source="sourceProperty"/> MUST be a collection navigation property.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
         /// <param name="target">The object related to the source object by the new link. </param>
@@ -2483,7 +2483,7 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The sourceProperty MUST be a single-value navigation property.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The <paramref source="sourceProperty"/> MUST be a single-value navigation property.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
         /// <param name="target">The object related to the source object by the new link.</param>
@@ -2566,7 +2566,7 @@ namespace Microsoft.OData.Client
             this.EntityTracker.IncrementChange(resource);
         }
 
-        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The sourceProperty MUST be a collection navigation property.</summary>
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The <paramref source="sourceProperty"/> MUST be a collection navigation property.</summary>
         /// <param name="source">The parent object that is being tracked by the context.</param>
         /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
         /// <param name="target">The related object that is being added.</param>
@@ -2625,7 +2625,7 @@ namespace Microsoft.OData.Client
             this.entityTracker.IncrementChange(targetResource);
         }
 
-        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The sourceProperty MUST be a single-value navigation property.</summary>
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The <paramref source="sourceProperty"/> MUST be a single-value navigation property.</summary>
         /// <param name="source">The parent object that is being tracked by the context.</param>
         /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
         /// <param name="target">The related object that is being added.</param>
