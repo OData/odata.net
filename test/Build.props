@@ -68,7 +68,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <TransformTaskPath>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Web\Microsoft.Web.Publishing.Tasks.dll</TransformTaskPath>
+    <TransformTaskPath>$(MSBuildThisFileDirectory)\CommonAssemblies\Transform\Microsoft.Web.Publishing.Tasks.dll</TransformTaskPath>
   </PropertyGroup>
   <UsingTask TaskName="TransformXml" AssemblyFile="$(TransformTaskPath)" />
 
