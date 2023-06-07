@@ -294,19 +294,14 @@ namespace Microsoft.OData
                 return null;
             }
 
-            string navigationPath = null;
-            if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri != null && odataUri.Path != null)
+            if (odataUri == null)
             {
-                ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
-                if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
-                {
-                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
-                }
-
-                navigationPath = odataPath.ToContextUrlPathString();
+                return navigationSource;
             }
-
-            return navigationPath ?? navigationSource;
+            else
+            {
+                return ComputeNavigationPathImpl(kind, new ODataUriSlim(odataUri), navigationSource);
+            }
         }
 
         private static string ComputeNavigationPath(EdmNavigationSourceKind kind, in ODataUriSlim odataUri, string navigationSource)
@@ -319,10 +314,15 @@ namespace Microsoft.OData
                 return null;
             }
 
+            return ComputeNavigationPathImpl(kind, odataUri, navigationSource);
+        }
+
+        private static string ComputeNavigationPathImpl(EdmNavigationSourceKind kind, in ODataUriSlim odataUri, string navigationSource)
+        {
             string navigationPath = null;
             if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri.Path != null)
             {
-                ODataPath odataPath = odataUri.Path.TrimEndingTypeSegment().TrimEndingKeySegment();
+                ODataPath odataPath = odataUri.Path.TrimEndingTypeAndKeySegments();
                 if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
                 {
                     throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
