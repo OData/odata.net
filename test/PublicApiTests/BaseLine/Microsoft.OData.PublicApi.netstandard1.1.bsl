@@ -6416,11 +6416,6 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     [
     ExtensionAttribute(),
     ]
-    public static Microsoft.OData.UriParser.ODataPath TrimEnd (Microsoft.OData.UriParser.ODataPath path, System.Func`2[[Microsoft.OData.UriParser.ODataPathSegment],[System.Boolean]] predicate)
-
-    [
-    ExtensionAttribute(),
-    ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
 
     [
