@@ -16,7 +16,7 @@
         /// The zero-based index of the last occurrence of an element that matches the conditions defined by <paramref name="predicate"/>, if found; otherwise, -1
         /// </returns>
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="list"/> or <paramref name="predicate"/> is <see langword="null"/></exception>
-        public static int FindLastIndex<T>(this IReadOnlyList<T> list, Predicate<T> predicate)
+        public static int FindLastIndex<T>(this IReadOnlyList<T> list, Func<T, bool> predicate)
         {
             if (list == null)
             {
