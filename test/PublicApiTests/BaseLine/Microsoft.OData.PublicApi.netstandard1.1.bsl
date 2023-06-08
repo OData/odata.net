@@ -588,6 +588,16 @@ public class Microsoft.Spatial.SpatialPipeline {
     public virtual Microsoft.Spatial.SpatialPipeline ChainTo (Microsoft.Spatial.SpatialPipeline destination)
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class System.Collections.Generic.ReadOnlyCollectionExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
+}
+
 >>>Microsoft.OData.Edm
 public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
     ActionImport = 2
@@ -6406,7 +6416,17 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     [
     ExtensionAttribute(),
     ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEnd (Microsoft.OData.UriParser.ODataPath path, System.Func`2[[Microsoft.OData.UriParser.ODataPathSegment],[System.Boolean]] predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeAndKeySegments (Microsoft.OData.UriParser.ODataPath path)
 
     [
     ExtensionAttribute(),

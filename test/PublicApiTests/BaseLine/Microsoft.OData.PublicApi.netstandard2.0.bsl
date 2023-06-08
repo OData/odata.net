@@ -588,6 +588,16 @@ public class Microsoft.Spatial.SpatialPipeline {
     public virtual Microsoft.Spatial.SpatialPipeline ChainTo (Microsoft.Spatial.SpatialPipeline destination)
 }
 
+[
+ExtensionAttribute(),
+]
+public sealed class System.Collections.Generic.ReadOnlyCollectionExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
+}
+
 >>>Microsoft.OData.Edm
 public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
     ActionImport = 2
@@ -6406,7 +6416,17 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     [
     ExtensionAttribute(),
     ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEnd (Microsoft.OData.UriParser.ODataPath path, System.Func`2[[Microsoft.OData.UriParser.ODataPathSegment],[System.Boolean]] predicate)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeAndKeySegments (Microsoft.OData.UriParser.ODataPath path)
 
     [
     ExtensionAttribute(),
@@ -7925,7 +7945,6 @@ public enum Microsoft.OData.Client.SaveChangesOptions : int {
     BatchWithSingleChangeset = 1
     BulkUpdate = 128
     ContinueOnError = 2
-    DeepInsert = 256
     None = 0
     PostOnlySetProperties = 8
     ReplaceOnUpdate = 4
@@ -8237,7 +8256,6 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
-    internal virtual void DeepInsert (T resource)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
@@ -8304,8 +8322,6 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (System.Threading.CancellationToken cancellationToken)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken)
     public virtual void SetLink (object source, string sourceProperty, object target)
-    public virtual void SetRelatedObject (object source, string sourceProperty, object target)
-    public virtual void SetRelatedObjectLink (object source, string sourceProperty, object target)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug)
     public virtual void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
