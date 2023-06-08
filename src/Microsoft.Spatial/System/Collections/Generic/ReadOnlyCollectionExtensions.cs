@@ -11,7 +11,7 @@
         /// </summary>
         /// <typeparam name="T">The type of the elements in <paramref name="list"/></typeparam>
         /// <param name="list">The <see cref="IReadOnlyList{T}"/> to find the index of the last element of</param>
-        /// <param name="predicate">The <see cref="Predicate{T}"/> delegate that defines the conditions of the element to search for.</param>
+        /// <param name="predicate">The <see cref="Func{T, TResult}"/> delegate that defines the conditions of the element to search for.</param>
         /// <returns>
         /// The zero-based index of the last occurrence of an element that matches the conditions defined by <paramref name="predicate"/>, if found; otherwise, -1
         /// </returns>
