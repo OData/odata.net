@@ -322,12 +322,8 @@ namespace Microsoft.OData
             string navigationPath = null;
             if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri.Path != null)
             {
-                ODataPath odataPath = odataUri.Path.TrimEndingTypeAndKeySegments();
-                if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
-                {
-                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
-                }
-
+                ODataPath odataPath = odataUri.Path; ////.TrimEndingTypeAndKeySegments();
+                Debug.Assert(odataPath.LastSegment is NavigationPropertySegment || odataPath.LastSegment is OperationSegment, Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
                 navigationPath = odataPath.ToContextUrlPathString();
             }
 
