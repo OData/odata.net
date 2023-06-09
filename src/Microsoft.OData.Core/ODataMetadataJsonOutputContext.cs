@@ -176,21 +176,54 @@ namespace Microsoft.OData
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                try
+                {
+                    if (this.jsonWriter != null)
+                    {
+                        if (this.asynchronousOutputStream != null)
+                        {
+                            DisposeOutputStreamAsync().Wait();
+                        }
+                        else
+                        {
+                            this.jsonWriter.Flush();
+                            this.jsonWriter.Dispose();
+                        }
+
+                        this.messageOutputStream.Dispose();
+                    }
+                }
+                finally
+                {
+                    this.messageOutputStream = null;
+                    this.asynchronousOutputStream = null;
+                    this.jsonWriter = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        protected override async ValueTask DisposeAsyncCore()
+        {
             try
             {
                 if (this.jsonWriter != null)
                 {
                     if (this.asynchronousOutputStream != null)
                     {
-                        DisposeOutputStreamAsync().Wait();
+                        await DisposeOutputStreamAsync().ConfigureAwait(false);
                     }
                     else
                     {
-                        this.jsonWriter.Flush();
-                        this.jsonWriter.Dispose();
+                        await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+                        await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
                     }
 
-                    this.messageOutputStream.Dispose();
+                    await this.messageOutputStream.DisposeAsync().ConfigureAwait(false);
                 }
             }
             finally
@@ -200,8 +233,9 @@ namespace Microsoft.OData
                 this.jsonWriter = null;
             }
 
-            base.Dispose(disposing);
+            await base.DisposeAsyncCore().ConfigureAwait(false);
         }
+#endif
 
         private void WriteMetadataDocumentImplementation()
         {
