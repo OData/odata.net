@@ -266,7 +266,11 @@ namespace Microsoft.OData
 
             await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
+#if NETCOREAPP3_1_OR_GREATER
+            await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
+#else
             this.asynchronousOutputStream.Dispose();
+#endif
         }
     }
 }

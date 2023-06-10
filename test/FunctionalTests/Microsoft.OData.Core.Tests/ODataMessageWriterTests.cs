@@ -1096,7 +1096,7 @@ namespace Microsoft.OData.Tests
             Action<IContainerBuilder> configureServices = null,
             ODataPath path = null)
         {
-            message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
+            message = message ?? new InMemoryMessage() { Stream = new AsyncOnlyStreamWrapper(new MemoryStream()) };
 
             if (contentType != null)
             {
@@ -1123,18 +1123,34 @@ namespace Microsoft.OData.Tests
                 };
             }
 
-            using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+            try
             {
                 await test(msgWriter);
             }
+            finally
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                await msgWriter.DisposeAsync();
+#else
+                msgWriter.Dispose();
+#endif
+            }
 
             message.Stream.Seek(0, SeekOrigin.Begin);
-            using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8))
+            using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8, true, bufferSize: -1, leaveOpen: true))
             {
                 string contents = await reader.ReadToEndAsync();
 
+                // dispose the stream manually to void synchronous disposal and I/O
+#if NETCOREAPP3_1_OR_GREATER
+                await message.Stream.DisposeAsync();
+#else
+                message.Stream.Dispose();
+#endif
                 return contents;
             }
+
         }
 
         private static IServiceProvider CreateTestServiceContainer(Action<IContainerBuilder> configureServices)

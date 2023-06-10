@@ -924,11 +924,13 @@ namespace Microsoft.OData.JsonLight
                 if (this.messageOutputStream != null)
                 {
                     // The IJsonWriter will flush the underlying stream
-                    this.jsonWriter.Flush();
-
                     if (this.jsonWriter is IAsyncDisposable disposableWriter)
                     {
                         await disposableWriter.DisposeAsync().ConfigureAwait(false);
+                    }
+                    else
+                    {
+                        this.jsonWriter.Flush();
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
