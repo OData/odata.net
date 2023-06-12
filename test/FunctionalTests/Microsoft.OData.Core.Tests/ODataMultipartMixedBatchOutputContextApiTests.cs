@@ -17,7 +17,7 @@ namespace Microsoft.OData.Tests
     public class ODataMultipartMixedBatchOutputContextApiTests
     {
         private const string ServiceUri = "http://tempuri.org";
-        private readonly MemoryStream asyncStream;
+        private readonly Stream asyncStream;
         private readonly MemoryStream syncStream;
         private readonly ODataMessageWriterSettings writerSettings;
         private const string batchBoundary = "batch_aed653ab";
@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests
         public ODataMultipartMixedBatchOutputContextApiTests()
         {
             this.InitializeEdmModel();
-            this.asyncStream = new MemoryStream();
+            this.asyncStream = new AsyncOnlyStreamWrapper(new MemoryStream());
             this.syncStream = new MemoryStream();
             this.writerSettings = new ODataMessageWriterSettings
             {
@@ -53,7 +53,8 @@ namespace Microsoft.OData.Tests
             var orderResource = CreateOrderResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+            var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings);
+            try
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -61,14 +62,32 @@ namespace Microsoft.OData.Tests
                 var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+                var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage);
+                try
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await writer.WriteStartAsync(orderResource);
                     await writer.WriteEndAsync();
                 }
+                finally
+                {
+#if NETCOREAPP3_1_OR_GREATER
+                    await nestedMessageWriter.DisposeAsync();
+#else
+                    nestedMessageWriter.Dispose();
+#endif
+                }
+
 
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
+            }
+            finally
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                await messageWriter.DisposeAsync();
+#else
+                messageWriter.Dispose();
+#endif
             }
 
             this.asyncStream.Position = 0;
@@ -78,9 +97,9 @@ namespace Microsoft.OData.Tests
             var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
             {
                 IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
                     multipartMixedBatchWriter.WriteStartBatch();
 
                     var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
@@ -125,7 +144,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var customerResource = CreateCustomerResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#else
             using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -134,7 +157,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage1 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+#else
                 using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+#endif
                 {
                     var jsonLightWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -145,7 +172,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage2 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Customers"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+#else
                 using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+#endif
                 {
                     var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                     await jsonLightWriter.WriteStartAsync(customerResource);
@@ -238,7 +269,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var customerResource = CreateCustomerResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#else
             using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -247,7 +282,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage1 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "PUT", new Uri($"{ServiceUri}/Orders(1)"), "1");
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+#else
                 using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+#endif
                 {
                     var jsonLightWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -260,7 +299,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage2 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "PUT", new Uri($"{ServiceUri}/Customers(1)"), "2");
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+#else
                 using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+#endif
                 {
                     var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                     await jsonLightWriter.WriteStartAsync(customerResource);
@@ -360,7 +403,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var changesetBoundary = "changeset_ec3a8d4f";
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+            var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings);
+            try
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -369,15 +413,32 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+                var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage);
+                try
                 {
                     var jsonLightWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
                     await jsonLightWriter.WriteEndAsync();
                 }
+                finally
+                {
+#if NETCOREAPP3_1_OR_GREATER
+                    await nestedMessageWriter.DisposeAsync();
+#else
+                    nestedMessageWriter.Dispose();
+#endif
+                }
 
-                await multipartMixedBatchWriter.WriteEndChangesetAsync();
+            await multipartMixedBatchWriter.WriteEndChangesetAsync();
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
+            }
+            finally
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                await messageWriter.DisposeAsync();
+#else
+                messageWriter.Dispose();
+#endif
             }
 
             this.asyncStream.Position = 0;
@@ -389,9 +450,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
             {
                 IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                using (var syncMessageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    var multipartMixedBatchWriter = syncMessageWriter.CreateODataBatchWriter();
                     multipartMixedBatchWriter.WriteStartBatch();
                     multipartMixedBatchWriter.WriteStartChangeset();
 
@@ -445,7 +506,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var orderResource = CreateOrderResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#else
+            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -453,7 +518,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+#else
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+#endif
                 {
                     var jsonLightWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -516,7 +585,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var orderResource = CreateOrderResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+            var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings);
+            try
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -524,14 +594,32 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null, BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+                var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage);
+                try
                 {
                     var jsonLightWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
                     await jsonLightWriter.WriteEndAsync();
                 }
+                finally
+                {
+#if NETCOREAPP3_1_OR_GREATER
+                    await nestedMessageWriter.DisposeAsync();
+#else
+                    nestedMessageWriter.Dispose();
+#endif
+                }
+
 
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
+            }
+            finally
+            {
+#if NETCOREAPP3_1_OR_GREATER
+                await messageWriter.DisposeAsync();
+#else
+                messageWriter.Dispose();
+#endif
             }
 
             this.asyncStream.Position = 0;
@@ -541,9 +629,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var syncResult = await TaskUtils.GetTaskForSynchronousOperation(() =>
             {
                 IODataRequestMessage syncRequestMessage = new InMemoryMessage { Stream = this.syncStream };
-                using (var messageWriter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
+                using (var syncMessageWiter = new ODataMessageWriter(syncRequestMessage, this.writerSettings))
                 {
-                    var multipartMixedBatchWriter = messageWriter.CreateODataBatchWriter();
+                    var multipartMixedBatchWriter = syncMessageWiter.CreateODataBatchWriter();
                     multipartMixedBatchWriter.WriteStartBatch();
 
                     var operationRequestMessage = multipartMixedBatchWriter.CreateOperationRequestMessage(
@@ -588,7 +676,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var orderResource = CreateOrderResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#else
+            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -596,7 +688,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri("/Orders", UriKind.Relative), /*contentId*/ null, BatchPayloadUriOption.RelativeUri);
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+#else
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
+#endif
                 {
                     var jsonLightWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -657,7 +753,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
         public async Task WriteMultipartMixedBatchRequest_APIsYieldSameResultForReportMessageCompleted()
         {
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#else
             using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -716,15 +816,22 @@ POST http://tempuri.org/Orders HTTP/1.1
             };
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+#else
             using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
 
                 var operationResponseMessage = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("1");
                 operationResponseMessage.StatusCode = 200;
-
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
+#else
                 using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
+#endif
                 {
                     var jsonLightWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -793,7 +900,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             };
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+#else
             using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
+#endif
             {
                 var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -802,7 +913,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationResponseMessage1 = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("1");
                 operationResponseMessage1.StatusCode = 200;
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
+#else
                 using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
+#endif
                 {
                     var jsonLightWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     await jsonLightWriter.WriteStartAsync(orderResource);
@@ -815,7 +930,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationResponseMessage2 = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("2");
                 operationResponseMessage2.StatusCode = 200;
 
+#if NETCOREAPP3_1_OR_GREATER
+                await using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
+#else
                 using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
+#endif
                 {
                     var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                     await jsonLightWriter.WriteStartAsync(customerResource);
@@ -917,7 +1036,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 async () =>
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
+#if NETCOREAPP3_1_OR_GREATER
+                    await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#else
                     using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#endif
                     {
                         var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                         await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -956,7 +1079,11 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 async () =>
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+#if NETCOREAPP3_1_OR_GREATER
+                    await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#else
+                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, writerSettings))
+#endif
                     {
                         var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                         await multipartMixedBatchWriter.WriteStartBatchAsync();
@@ -1003,11 +1130,20 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 async () =>
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
+                    var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings);
+                    try
                     {
                         var multipartMixedBatchWriter = await messageWriter.CreateODataBatchWriterAsync();
                         await multipartMixedBatchWriter.WriteStartBatchAsync();
                         await multipartMixedBatchWriter.OnInStreamErrorAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                messageWriter.Dispose();
+#endif
                     }
                 });
 

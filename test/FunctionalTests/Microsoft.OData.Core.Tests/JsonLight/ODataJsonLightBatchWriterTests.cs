@@ -14,6 +14,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -23,7 +24,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
     {
         private const string ServiceUri = "http://tempuri.org";
         private EdmModel model;
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
         private ODataMediaType mediaType;
         private Encoding encoding;
@@ -109,13 +110,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -142,13 +152,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndChangesetAsync();
@@ -176,7 +195,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage1 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+                    var messageWriter1 = new ODataMessageWriter(operationRequestMessage1);
+                    try
                     {
                         var jsonLightWriter = await messageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -184,19 +204,36 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
                     }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter1.DisposeAsync();
+#else
+                        messageWriter1.Dispose();
+#endif
+                    }
 
                     // Operation request depends on the previous (Content ID: 1)
                     var dependsOnIds = new List<string> { "1" };
                     var operationRequestMessage2 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+                    var messageWriter2 = new ODataMessageWriter(operationRequestMessage2);
+                    try
                     {
                         var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
                         var orderResource = CreateOrderResource(1);
                         await jsonLightWriter.WriteStartAsync(orderResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter2.DisposeAsync();
+#else
+                        messageWriter2.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -229,7 +266,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage1 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
+                    var messageWriter1 = new ODataMessageWriter(operationRequestMessage1);
+                    try
                     {
                         var jsonLightWriter = await messageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -237,19 +275,36 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
                     }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter1.DisposeAsync();
+#else
+                        messageWriter1.Dispose();
+#endif
+                    }
 
                     // Operation request depends on the previous (Content ID: 1)
                     var dependsOnIds = new List<string> { "1" };
                     var operationRequestMessage2 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
+                    var messageWriter2 = new ODataMessageWriter(operationRequestMessage2);
+                    try
                     {
                         var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
                         var orderResource = CreateOrderResource(1);
                         await jsonLightWriter.WriteStartAsync(orderResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter2.DisposeAsync();
+#else
+                        messageWriter2.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndChangesetAsync();
@@ -286,13 +341,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndChangesetAsync();
@@ -322,13 +386,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), /*contentId*/ null);
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -354,13 +427,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                     var operationResponseMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
+                    var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -386,13 +468,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                     var operationResponseMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
+                    var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndChangesetAsync();
@@ -526,13 +617,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -560,13 +660,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
@@ -754,13 +863,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         var customerResource = CreateCustomerResource(1);
                         await jsonLightWriter.WriteStartAsync(customerResource);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
 
                     // Try to start writing batch after operation stream disposed
@@ -782,12 +900,21 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
+                    try
                     {
                         await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
                         // Try to end writing batch after operation stream requested
                         await jsonLightBatchWriter.WriteEndBatchAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
                 }));
 
@@ -966,6 +1093,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             bool writingRequest = true,
             Action<IContainerBuilder> configureServices = null)
         {
+            this.stream = new AsyncOnlyStreamWrapper(this.stream);
             var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, asynchronous: true, configureServices: configureServices);
             var jsonLightBatchWriter = new ODataJsonLightBatchWriter(jsonLightOutputContext);
 

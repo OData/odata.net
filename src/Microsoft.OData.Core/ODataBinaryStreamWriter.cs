@@ -245,6 +245,20 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        public override async ValueTask DisposeAsync()
+        {
+            // write any trailing bytes to stream
+            if (this.trailingBytes != null && this.trailingBytes.Length > 0)
+            {
+                await this.Writer.WriteAsync(Convert.ToBase64String(this.trailingBytes, 0, this.trailingBytes.Length)).ConfigureAwait(false);
+                this.trailingBytes = null;
+            }
+
+            await this.Writer.FlushAsync().ConfigureAwait(false);
+        }
+#endif
+
         /// <summary>
         /// Prepares bytes to be written for the particular write event
         /// </summary>

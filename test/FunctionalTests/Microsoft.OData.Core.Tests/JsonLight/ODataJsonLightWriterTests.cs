@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.OData.Tests;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -1047,7 +1048,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteStartAsync(addressResource);
                     await jsonLightWriter.WriteStartAsync(streamProperty);
 
-                    using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
+                    var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync();
+                    try
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
@@ -1055,6 +1057,14 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         await stream.WriteAsync(bytes, 4, 4);
                         await stream.WriteAsync(bytes, 8, 2);
                         await stream.FlushAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await stream.DisposeAsync();
+#else
+                        stream.Dispose();
+#endif
                     }
 
                     await jsonLightWriter.WriteEndAsync();
@@ -2031,9 +2041,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 container = containerBuilder.BuildContainer();
             }
 
+            Stream stream = this.stream;
+            if (isAsync)
+            {
+                stream = new AsyncOnlyStreamWrapper(stream);
+            }
+
             var messageInfo = new ODataMessageInfo
             {
-                MessageStream = this.stream,
+                MessageStream = stream,
                 MediaType = new ODataMediaType("application", "json"),
 #if NETCOREAPP1_1
                 Encoding = Encoding.GetEncoding(0),
