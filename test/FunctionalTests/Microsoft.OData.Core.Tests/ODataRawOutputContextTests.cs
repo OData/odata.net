@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests
     public class ODataRawOutputContextTests
     {
         private const string ServiceUri = "http://tempuri.org";
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
         private ODataError nullReferenceError;
 
@@ -69,7 +69,8 @@ namespace Microsoft.OData.Tests
 
                     writerSettings.SetServiceDocumentUri(new Uri(ServiceUri));
 
-                    using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))
+                    var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model);
+                    try
                     {
                         var jsonLightWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                         var customerResponse = new ODataResource
@@ -89,6 +90,14 @@ namespace Microsoft.OData.Tests
 
                         await jsonLightWriter.WriteStartAsync(customerResponse);
                         await jsonLightWriter.WriteEndAsync();
+                    }
+                    finally
+                    {
+#if NETCOREAPP3_1_OR_GREATER
+                        await messageWriter.DisposeAsync();
+#else
+                        messageWriter.Dispose();
+#endif
                     }
                 });
 
@@ -135,7 +144,7 @@ OData-Version: 4.0
         {
             var messageInfo = new ODataMessageInfo
             {
-                MessageStream = this.stream,
+                MessageStream = new AsyncOnlyStreamWrapper(this.stream),
                 MediaType = new ODataMediaType(MimeConstants.MimeTextType, MimeConstants.MimePlainSubType),
                 Encoding = MediaTypeUtils.EncodingUtf8NoPreamble,
                 IsResponse = true,

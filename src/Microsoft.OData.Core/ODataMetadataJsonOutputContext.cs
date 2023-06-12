@@ -213,14 +213,12 @@ namespace Microsoft.OData
             {
                 if (this.jsonWriter != null)
                 {
+                    await this.jsonWriter.FlushAsync().ConfigureAwait(false);
+                    await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
+
                     if (this.asynchronousOutputStream != null)
                     {
-                        await DisposeOutputStreamAsync().ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await this.jsonWriter.FlushAsync().ConfigureAwait(false);
-                        await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
+                        await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
                     }
 
                     await this.messageOutputStream.DisposeAsync().ConfigureAwait(false);

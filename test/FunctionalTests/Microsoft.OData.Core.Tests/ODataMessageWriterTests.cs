@@ -15,6 +15,7 @@ using Microsoft.OData.Tests.Json;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.OData.UriParser;
 using Xunit;
+using System.Xml;
 #if NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
 #endif
@@ -907,8 +908,20 @@ namespace Microsoft.OData.Tests
             // See: https://github.com/OData/odata.net/issues/2684
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/json", async omWriter =>
             {
-                await omWriter.WriteMetadataDocumentAsync();
-            }, allowSyncIO: true);
+                try
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                }
+                catch (Exception e)
+                {
+                    // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                    // it relies on EdmLib's CsdlWriter which is still synchronous.
+                    // We should disable synchronous I/O here once CsdlWriter has an async API.
+                    // See: https://github.com/OData/odata.net/issues/2684
+                    // However, disposing the writer should still be truly async.
+                    Assert.Contains("Synchronous I/O", e.Message);
+                }
+            });
 
             // Assert
             Assert.Equal(@"{
@@ -944,14 +957,22 @@ namespace Microsoft.OData.Tests
             IEdmModel edmModel = GetEdmModel();
 
             // Act - XML
-            // We allow synchronous I/O for WriteMetadataDocumentAsync because
-            // it relies on EdmLib's CsdlWriter which is still synchronous.
-            // We should disable synchronous I/O here once CsdlWriter has an async API.
-            // See: https://github.com/OData/odata.net/issues/2684
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/xml", async omWriter =>
             {
-                await omWriter.WriteMetadataDocumentAsync();
-            }, allowSyncIO: true);
+                try
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                }
+                catch (Exception e)
+                {
+                    // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                    // it relies on EdmLib's CsdlWriter which is still synchronous.
+                    // We should disable synchronous I/O here once CsdlWriter has an async API.
+                    // See: https://github.com/OData/odata.net/issues/2684
+                    // However, disposing the writer should still be truly async.
+                    Assert.Contains("Synchronous I/O", e.Message);
+                }
+            });
 
             // Assert - XML
             Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
@@ -972,6 +993,160 @@ namespace Microsoft.OData.Tests
                   "</edmx:DataServices>" +
                 "</edmx:Edmx>", payload);
         }
+
+        #region "DisposeAsync"
+#if NETCOREAPP3_1_OR_GREATER
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously()
+        {
+            // Arrange
+            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            var resource = new ODataResource()
+            {
+                TypeName = "NS.Customer",
+                Properties = new[]
+                {
+                    new ODataProperty
+                    {
+                        Name = "Id",
+                        Value = 10
+                    },
+                    new ODataProperty
+                    {
+                        Name = "Name",
+                        Value = "John"
+                    }
+                }
+            };
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/json");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            // Act
+            var writer = await msgWriter.CreateODataResourceWriterAsync(edmModel.FindDeclaredEntitySet("Customers"));
+            await writer.WriteStartAsync(resource);
+            await writer.WriteEndAsync();
+
+            await msgWriter.DisposeAsync();
+
+            // Assert
+            Assert.True(stream.Disposed);
+        }
+
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingJsonMetadata()
+        {
+            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/json");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            try
+            {
+                await msgWriter.WriteMetadataDocumentAsync();
+            }
+            catch (Exception e)
+            {
+                // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                // it relies on EdmLib's CsdlWriter which is still synchronous.
+                // We should disable synchronous I/O here once CsdlWriter has an async API.
+                // See: https://github.com/OData/odata.net/issues/2684
+                // However, disposing the writer should still be truly async.
+                Assert.Contains("Synchronous I/O", e.Message);
+            }
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingXmlMetadata()
+        {
+            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/xml");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            try
+            {
+                await msgWriter.WriteMetadataDocumentAsync();
+            }
+            catch (Exception e)
+            {
+                // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                // it relies on EdmLib's CsdlWriter which is still synchronous.
+                // We should disable synchronous I/O here once CsdlWriter has an async API.
+                // See: https://github.com/OData/odata.net/issues/2684
+                // However, disposing the writer should still be truly async.
+                Assert.Contains("Synchronous I/O", e.Message);
+            }
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
+        public async void DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingRawValue()
+        {
+            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+            var settings = new ODataMessageWriterSettings
+            {
+                EnableMessageStreamDisposal = true,
+            };
+
+            var writer = new ODataMessageWriter((IODataResponseMessageAsync)message, settings, edmModel);
+            await writer.WriteValueAsync(123);
+            await writer.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+#endif
+        #endregion
+
 
         private static IEdmModel _edmModel;
 

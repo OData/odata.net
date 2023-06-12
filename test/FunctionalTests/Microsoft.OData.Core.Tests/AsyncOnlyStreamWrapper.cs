@@ -39,6 +39,8 @@ namespace Microsoft.OData.Tests
 
         public override long Length => this.innerStream.Length;
 
+        public bool Disposed { get; private set; }
+
         public override long Position {
             get => this.innerStream.Position;
             set => this.innerStream.Position = value;
@@ -144,26 +146,32 @@ namespace Microsoft.OData.Tests
         public override Task FlushAsync(CancellationToken cancellationToken) => this.innerStream.FlushAsync(cancellationToken);
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override ValueTask DisposeAsync() => this.innerStream.DisposeAsync();
+        public override async ValueTask DisposeAsync()
+        {
+            await this.innerStream.DisposeAsync();
+            this.Disposed = true;
+        }
 #endif
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken) =>
             this.innerStream.CopyToAsync(destination, bufferSize, cancellationToken);
 
+#if NETCOREAPP3_1_OR_GREATER
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state) =>
             this.innerStream.BeginRead(buffer, offset, count, callback, state);
 
-        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object? state) =>
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object state) =>
             this.innerStream.BeginWrite(buffer, offset, count, callback, state);
 
         public override int EndRead(IAsyncResult asyncResult) => this.innerStream.EndRead(asyncResult);
 
         public override void EndWrite(IAsyncResult asyncResult) => this.innerStream.EndWrite(asyncResult);
+#endif
 
         public override string ToString() => this.innerStream.ToString();
 
         private void ThrowSyncIOException()
         {
-            throw new Exception("Synchronous I/O is not allowed for asynchronous stream.");
+            throw new Exception("Synchronous I/O is not allowed in asynchronous code paths.");
         }
     }
 }
