@@ -35,11 +35,25 @@ namespace Microsoft.OData.Tests
 
         public override bool CanWrite => this.innerStream.CanWrite;
 
+        public override bool CanTimeout => this.innerStream.CanTimeout;
+
         public override long Length => this.innerStream.Length;
 
         public override long Position {
             get => this.innerStream.Position;
             set => this.innerStream.Position = value;
+        }
+
+        public override int ReadTimeout
+        {
+            get => this.innerStream.ReadTimeout;
+            set => this.innerStream.ReadTimeout = value;
+        }
+
+        public override int WriteTimeout
+        {
+            get => this.innerStream.WriteTimeout;
+            set => this.innerStream.ReadTimeout = value;
         }
 
         public override void Flush()
@@ -54,6 +68,23 @@ namespace Microsoft.OData.Tests
             // because an exception will be thrown. But the compiler can't see that.
             return -1;
         }
+        public override int ReadByte()
+        {
+            ThrowSyncIOException();
+            // The return statement won't be reached
+            // because an exception will be thrown. But the compiler can't see that.
+            return -1;
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        public override int Read(Span<byte> buffer)
+        {
+            ThrowSyncIOException();
+            // The return statement won't be reached
+            // because an exception will be thrown. But the compiler can't see that.
+            return -1;
+        }
+#endif
 
         public override void WriteByte(byte value) => ThrowSyncIOException();
 
@@ -75,6 +106,7 @@ namespace Microsoft.OData.Tests
         protected override void Dispose(bool disposing) => ThrowSyncIOException();
 #else
         // in .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
+        // So let's allow sync Dispose there cause there's no alternative
         protected override void Dispose(bool disposing) => this.innerStream.Dispose();
 #endif
 
@@ -116,6 +148,18 @@ namespace Microsoft.OData.Tests
 #endif
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken) =>
             this.innerStream.CopyToAsync(destination, bufferSize, cancellationToken);
+
+        public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state) =>
+            this.innerStream.BeginRead(buffer, offset, count, callback, state);
+
+        public override IAsyncResult BeginWrite(byte[] buffer, int offset, int count, AsyncCallback callback, object? state) =>
+            this.innerStream.BeginWrite(buffer, offset, count, callback, state);
+
+        public override int EndRead(IAsyncResult asyncResult) => this.innerStream.EndRead(asyncResult);
+
+        public override void EndWrite(IAsyncResult asyncResult) => this.innerStream.EndWrite(asyncResult);
+
+        public override string ToString() => this.innerStream.ToString();
 
         private void ThrowSyncIOException()
         {

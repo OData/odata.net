@@ -901,10 +901,14 @@ namespace Microsoft.OData.Tests
 
 
             // Act - JSON
+            // We allow synchronous I/O for WriteMetadataDocumentAsync because
+            // it relies on EdmLib's CsdlWriter which is still synchronous.
+            // We should disable synchronous I/O here once CsdlWriter has an async API.
+            // See: https://github.com/OData/odata.net/issues/2684
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/json", async omWriter =>
             {
                 await omWriter.WriteMetadataDocumentAsync();
-            });
+            }, allowSyncIO: true);
 
             // Assert
             Assert.Equal(@"{
@@ -940,10 +944,14 @@ namespace Microsoft.OData.Tests
             IEdmModel edmModel = GetEdmModel();
 
             // Act - XML
+            // We allow synchronous I/O for WriteMetadataDocumentAsync because
+            // it relies on EdmLib's CsdlWriter which is still synchronous.
+            // We should disable synchronous I/O here once CsdlWriter has an async API.
+            // See: https://github.com/OData/odata.net/issues/2684
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/xml", async omWriter =>
             {
                 await omWriter.WriteMetadataDocumentAsync();
-            });
+            }, allowSyncIO: true);
 
             // Assert - XML
             Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
@@ -1087,6 +1095,11 @@ namespace Microsoft.OData.Tests
         /// <param name="path">
         /// The OData Uri path.
         /// </param>
+        /// <param name="allowSyncIO">
+        /// Whether to allow synchronous I/O. When set to false, an exception will be thrown if
+        /// the writer attempts to perform synchronous I/O on the underlying stream.
+        /// Setting it false helps to detect and remove synchronous I/O in async code paths.
+        /// </param>
         /// <returns>A task representing the asynchrnous operation. The result of the task will be the written output.</returns>
         private async Task<string> WriteAndGetPayloadAsync(
             IEdmModel edmModel, string contentType,
@@ -1094,9 +1107,18 @@ namespace Microsoft.OData.Tests
             InMemoryMessage message = null,
             Encoding encoding = null,
             Action<IContainerBuilder> configureServices = null,
-            ODataPath path = null)
+            ODataPath path = null,
+            bool allowSyncIO = false)
         {
-            message = message ?? new InMemoryMessage() { Stream = new AsyncOnlyStreamWrapper(new MemoryStream()) };
+            Stream stream = new MemoryStream();
+            if (!allowSyncIO)
+            {
+                stream = new AsyncOnlyStreamWrapper(stream);
+            }
+
+            message = message ?? new InMemoryMessage() {
+                Stream = stream
+            };
 
             if (contentType != null)
             {
