@@ -60,7 +60,14 @@ namespace Microsoft.OData.Tests
 
         public override void Flush()
         {
+#if NETCOREAPP3_1_OR_GREATER
             ThrowSyncIOException();
+#else
+            // We allow synchronous flushing in older frameworks
+            // because we also allow synchronous Dispose()
+            // which often calls Flush()
+            this.innerStream.Flush();
+#endif
         }
 
         public override int Read(byte[] buffer, int offset, int count)
