@@ -99,7 +99,14 @@ namespace Microsoft.OData.Tests
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            this.ThrowSyncIOException();
+#if NETCOREAPP3_1_OR_GREATER
+            ThrowSyncIOException();
+#else
+            // We allow synchronous flushing in older frameworks
+            // because we also allow synchronous Dispose()
+            // which often calls Flush()
+            this.innerStream.Write(buffer, offset, count);
+#endif
         }
 
 #if NETCOREAPP3_1_OR_GREATER
@@ -114,7 +121,7 @@ namespace Microsoft.OData.Tests
 #if NETCOREAPP3_1_OR_GREATER
         protected override void Dispose(bool disposing) => ThrowSyncIOException();
 #else
-        // in .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
+        // In .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
         // So let's allow sync Dispose there cause there's no alternative
         protected override void Dispose(bool disposing) => this.innerStream.Dispose();
 #endif
