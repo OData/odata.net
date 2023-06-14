@@ -6,22 +6,9 @@
     using Microsoft.HttpServer;
     using Microsoft.OData.OData;
 
-    internal static class Program
+    public static class Program //// TODO public for tests only?
     {
-        private static readonly HttpRequestHandler handler = async (request) =>
-        {
-            var stream = new MemoryStream();
-            await stream.WriteAsync(Encoding.ASCII.GetBytes("ack"));
-            stream.Position = 0;
-            return new HttpServerResponse()
-            {
-                StatusCode = 207,
-                Headers = new[] { "Test: did this work?" },
-                Body = stream,
-            };
-        };
-
-        private static async Task Main(string[] args)
+        public static async Task Main(string[] args) //// TODO public for tests only?
         {
             var odata = new MockOData();
             await new HttpListenerHttpServer(odata.HandleRequestAsync).ListenAsync();
