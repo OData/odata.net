@@ -18,7 +18,11 @@
             var csdlResourceName = assembly.GetManifestResourceNames().Where(name => name.EndsWith("epm.csdl")).Single();
             using (var csdlResourceStream = assembly.GetManifestResourceStream(csdlResourceName))
             {
-                var epm = new Peachy(csdlResourceStream);
+                var peachySettings = new Peachy.Settings()
+                {
+                    FeatureGapOData = new Epm(),
+                };
+                var epm = new Peachy(csdlResourceStream, peachySettings);
 
                 var port = 8080;
                 await new HttpListenerHttpServer(
@@ -28,6 +32,21 @@
                         Port = port,
                     })
                     .ListenAsync();
+            }
+        }
+
+        private sealed class Epm : IOData
+        {
+            public Epm()
+            {
+            }
+
+            public async Task<Stream> GetAsync(string url, Stream request)
+            {
+                var stream = new MemoryStream(); //// TODO error handling
+                await stream.WriteAsync(Encoding.UTF8.GetBytes("TODO this should really be a 404")); //// TODO is this the right encoding?
+                stream.Position = 0;
+                return stream;
             }
         }
     }
