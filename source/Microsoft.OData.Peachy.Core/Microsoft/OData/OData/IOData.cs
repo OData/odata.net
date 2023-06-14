@@ -5,7 +5,7 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// 
+    /// TODO: ? <threadsafety static="true" instance="true"/>
     /// </summary>
     public interface IOData
     {

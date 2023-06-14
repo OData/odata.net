@@ -9,6 +9,7 @@
     /// <summary>
     /// An <see cref="IOData"/> implementation that leverages HTTP to make requests to the backing service
     /// </summary>
+    /// <threadsafety static="true" instance="true"/>
     public sealed class HttpOData : IOData
     {
         private readonly Func<HttpClient> httpClientFactory;
