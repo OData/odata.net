@@ -1343,7 +1343,6 @@ namespace Microsoft.OData.Tests
 #endif
                 return contents;
             }
-
         }
 
         private static IServiceProvider CreateTestServiceContainer(Action<IContainerBuilder> configureServices)
