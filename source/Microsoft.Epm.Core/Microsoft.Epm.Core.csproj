@@ -6,8 +6,4 @@
     <RootNamespace />
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="Microsoft\Epm\" />
-  </ItemGroup>
-
 </Project>
