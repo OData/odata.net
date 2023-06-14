@@ -8,6 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="epm.csdl" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="epm.csdl" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\Microsoft.Epm.Core\Microsoft.Epm.Core.csproj" />
     <ProjectReference Include="..\Microsoft.OData.Peachy.Core\Microsoft.OData.Peachy.Core.csproj" />
   </ItemGroup>

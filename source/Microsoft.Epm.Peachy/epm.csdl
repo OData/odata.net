@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0"
+  xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  xmlns:ags="http://aggregator.microsoft.com/internal"
+ >
+  <edmx:DataServices>
+    <Schema Namespace="microsoft.graph.externalConnectors" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+        <EntityType Name="external">
+          <NavigationProperty Name="authorizationSystems" Type="Collection(microsoft.graph.authorizationSystem)" ContainsTarget="true" />
+      </EntityType>
+    </Schema>
+
+    <Schema Namespace="microsoft.graph" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+      <EntityContainer Name="Container">
+        <Singleton Name="external" Type="microsoft.graph.externalConnectors.external" />
+      </EntityContainer>
+
+      <EntityType Name="authorizationSystem">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="authorizationSystemName" Type="Edm.String" Nullable="false"/>
+        <Property Name="authorizationSystemType" Type="Edm.String" Nullable="false"/>
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
+

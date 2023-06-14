@@ -15,16 +15,24 @@
     {
         private readonly HttpRequestHandler httpRequestHandler;
 
-        public HttpListenerHttpServer(HttpRequestHandler httpRequestHandler)
+        private readonly int port;
+
+        public sealed class Settings
+        {
+            public int Port { get; set; } = 80;
+        }
+
+        public HttpListenerHttpServer(HttpRequestHandler httpRequestHandler, Settings settings)
         {
             this.httpRequestHandler = httpRequestHandler;
+            this.port = settings.Port;
         }
 
         public async Task ListenAsync()
         {
             using (var listener = new HttpListener())
             {
-                listener.Prefixes.Add("http://+:8080/");
+                listener.Prefixes.Add($"http://+:{this.port}/");
                 listener.Start();
 
                 while (true)
