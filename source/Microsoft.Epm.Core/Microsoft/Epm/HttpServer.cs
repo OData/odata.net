@@ -35,7 +35,7 @@
                     HttpListenerContext context;
                     try
                     {
-                        context = await listener.GetContextAsync();
+                        context = await listener.GetContextAsync().ConfigureAwait(false);
                     }
                     catch (HttpListenerException)
                     {
@@ -50,7 +50,7 @@
             }
         }
 
-        private static void HandleRequest(object? contextObject)
+        private static async Task HandleRequest(object? contextObject)
         {
             if (contextObject == null)
             {
@@ -75,7 +75,7 @@
 
             SetHeaders(context.Context.Response.Headers, response.Headers);
             context.Context.Response.StatusCode = response.StatusCode;
-            response.Body.CopyTo(context.Context.Response.OutputStream);
+            await response.Body.CopyToAsync(context.Context.Response.OutputStream);
             context.Context.Response.OutputStream.Dispose(); //// TODO disposes aren't called correctly for exception cases
         }
 
