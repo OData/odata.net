@@ -10,7 +10,7 @@
     /// </summary>
     public static class ODataExtensions
     {
-        public static async Task<Stream> SendAsync(this IOData odata, string url, IEnumerable<string> headers, string body)
+        public static async Task<Stream> SendAsync(this IOData odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
         {
             using (var stream = new MemoryStream())
             {
