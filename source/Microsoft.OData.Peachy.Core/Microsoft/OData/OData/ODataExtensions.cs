@@ -1,5 +1,6 @@
 ﻿namespace Microsoft.OData.OData
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Text;
@@ -10,8 +11,23 @@
     /// </summary>
     public static class ODataExtensions
     {
-        public static async Task<Stream> SendAsync(this IOData odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
+        public static async Task<Stream> GetAsync(this IOData odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
         {
+            if (odata == null)
+            {
+                throw new ArgumentNullException(nameof(odata));
+            }
+
+            if (url == null)
+            {
+                throw new ArgumentNullException(nameof(url));
+            }
+
+            if (headers == null)
+            {
+                throw new ArgumentNullException(nameof(headers));
+            }
+
             using (var stream = new MemoryStream())
             {
                 using (var streamWriter = new StreamWriter(stream, Encoding.UTF8)) //// TODO is this encoding an odata requirement?
@@ -27,7 +43,7 @@
 
                 //// TODO why do we have to wait to write everything to the stream before sending? implement a different stream so we don't have to wait
                 stream.Position = 0;
-                return await odata.SendAsync(url, stream).ConfigureAwait(false);
+                return await odata.GetAsync(url, stream).ConfigureAwait(false);
             }
         }
     }
