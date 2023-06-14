@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <RootNamespace />
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.Epm.Core\Microsoft.Epm.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.OData.Peachy.Core\Microsoft.OData.Peachy.Core.csproj" />
+  </ItemGroup>
+
+</Project>
