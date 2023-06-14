@@ -9,6 +9,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Microsoft.Epm.Core\Microsoft.Epm.Core.csproj" />
+    <ProjectReference Include="..\Microsoft.Epm.Peachy\Microsoft.Epm.Peachy.csproj" />
   </ItemGroup>
 
 </Project>

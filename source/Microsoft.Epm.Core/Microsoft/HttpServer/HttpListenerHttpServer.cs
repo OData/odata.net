@@ -61,11 +61,17 @@
                 throw new InvalidOperationException("TODO");
             }
 
+            if (context.Handler == null)
+            {
+                throw new InvalidOperationException("TODO");
+            }
+
             //// TODO handle all exceptions that could happen
 
             var request = new HttpServerRequest()
             {
                 HttpMethod = context.Context.Request.HttpMethod,
+                Url = context.Context.Request.RawUrl,
                 Headers = GetHeaders(context.Context.Request.Headers),
                 Body = context.Context.Request.InputStream,
             };

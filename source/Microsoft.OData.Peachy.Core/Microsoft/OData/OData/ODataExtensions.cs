@@ -30,7 +30,7 @@
 
             using (var stream = new MemoryStream())
             {
-                using (var streamWriter = new StreamWriter(stream, Encoding.UTF8)) //// TODO is this encoding an odata requirement?
+                using (var streamWriter = new StreamWriter(stream, Encoding.UTF8, -1, true)) //// TODO is this encoding an odata requirement?
                 {
                     foreach (var header in headers)
                     {
