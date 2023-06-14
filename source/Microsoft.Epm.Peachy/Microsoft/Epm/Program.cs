@@ -43,10 +43,24 @@
 
             public async Task<Stream> GetAsync(string url, Stream request)
             {
-                var stream = new MemoryStream(); //// TODO error handling
-                await stream.WriteAsync(Encoding.UTF8.GetBytes("TODO this should really be a 501")); //// TODO is this the right encoding?
-                stream.Position = 0;
-                return stream;
+                var authSystems = "/authorizationSystems/";
+                int index;
+                if ((index = url.IndexOf(authSystems)) != -1)
+                {
+                    var id = url.Substring(index + authSystems.Length);
+                    var response = new
+                    {
+                        id = id,
+                        authorizationSystemName = "christof",
+                        authorizationSystemType = "supremewizard",
+                    };
+                    var serialzied = System.Text.Json.JsonSerializer.Serialize(response);
+                    var stream = new MemoryStream(Encoding.UTF8.GetBytes(serialzied));
+                    stream.Position = 0;
+                    return stream;
+                }
+
+                return await Peachy.EmptyOData.Instance.GetAsync(url, request);
             }
         }
     }

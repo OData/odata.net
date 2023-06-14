@@ -57,7 +57,7 @@
                 stream.Position = 0;
                 return stream; //// TODO why do we have to get the whole byte array before we even start stream back the response?
             }
-
+            
             //// TODO handle other urls here by reading the CSDL
 
             return await this.featureGapOdata.GetAsync(url, request);
