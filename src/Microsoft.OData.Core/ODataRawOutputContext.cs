@@ -354,7 +354,7 @@ namespace Microsoft.OData
                         if (this.asynchronousOutputStream != null)
                         {
 #if NETSTANDARD1_1
-                        this.asynchronousOutputStream.FlushSync();
+                            this.asynchronousOutputStream.FlushSync();
 #else
                             this.asynchronousOutputStream.Flush();
 #endif

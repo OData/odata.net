@@ -555,7 +555,7 @@ namespace Microsoft.OData.Tests.JsonLight
             IEdmModel model,
             IEdmTypeReference itemTypeReference)
         {
-            var stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            var stream = new AsyncStream(new MemoryStream());
             var jsonLightOutputContext = CreateJsonLightOutputContext(stream, model, /* writingResponse */ true, /* synchronous */ false);
             var jsonLightCollectionWriter = new ODataJsonLightCollectionWriter(jsonLightOutputContext, itemTypeReference);
             await func(jsonLightCollectionWriter);

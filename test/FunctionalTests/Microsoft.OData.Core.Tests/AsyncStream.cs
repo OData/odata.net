@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AsyncOnlyStreamWrapper.cs" company="Microsoft">
+// <copyright file="AsyncStream.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,15 +17,19 @@ namespace Microsoft.OData.Tests
     /// This is meant for testing asynchronous code paths
     /// where synchronous I/O is not allowed.
     /// </summary>
-    internal class AsyncOnlyStreamWrapper : Stream
+    internal class AsyncStream : Stream
     {
         private Stream innerStream;
 
         /// <summary>
-        /// Creates a new instance of <see cref="AsyncOnlyStreamWrapper"/>.
+        /// Creates a new instance of <see cref="AsyncStream"/>,
+        /// a test stream wrapper that that throws an
+        /// exception when synchronous I/O methods are called.
+        /// This is meant for testing asynchronous code paths
+        /// where synchronous I/O is not allowed.
         /// </summary>
         /// <param name="innerStream">The stream to be wrapped. All I/O will be handled by this stream.</param>
-        public AsyncOnlyStreamWrapper(Stream innerStream)
+        public AsyncStream(Stream innerStream)
         {
             this.innerStream = innerStream;
         }
@@ -61,7 +65,7 @@ namespace Microsoft.OData.Tests
         public override void Flush()
         {
 #if NETCOREAPP3_1_OR_GREATER
-            ThrowSyncIOException();
+            throw new ODataSynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
             // because we also allow synchronous Dispose()
@@ -72,35 +76,26 @@ namespace Microsoft.OData.Tests
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            ThrowSyncIOException();
-            // The return statement won't be reached
-            // because an exception will be thrown. But the compiler can't see that.
-            return -1;
+            throw new ODataSynchronousIOException();
         }
         public override int ReadByte()
         {
-            ThrowSyncIOException();
-            // The return statement won't be reached
-            // because an exception will be thrown. But the compiler can't see that.
-            return -1;
+            throw new ODataSynchronousIOException();
         }
 
 #if NETCOREAPP3_1_OR_GREATER
         public override int Read(Span<byte> buffer)
         {
-            ThrowSyncIOException();
-            // The return statement won't be reached
-            // because an exception will be thrown. But the compiler can't see that.
-            return -1;
+            throw new ODataSynchronousIOException();
         }
 #endif
 
-        public override void WriteByte(byte value) => ThrowSyncIOException();
+        public override void WriteByte(byte value) => throw new ODataSynchronousIOException();
 
         public override void Write(byte[] buffer, int offset, int count)
         {
 #if NETCOREAPP3_1_OR_GREATER
-            ThrowSyncIOException();
+            throw new ODataSynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
             // because we also allow synchronous Dispose()
@@ -110,16 +105,16 @@ namespace Microsoft.OData.Tests
         }
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void CopyTo(Stream destination, int bufferSize) => ThrowSyncIOException();
+        public override void CopyTo(Stream destination, int bufferSize) => throw new ODataSynchronousIOException();
 #endif
 
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void Write(ReadOnlySpan<byte> buffer) => ThrowSyncIOException();
+        public override void Write(ReadOnlySpan<byte> buffer) => throw new ODataSynchronousIOException();
 #endif
 
 #if NETCOREAPP3_1_OR_GREATER
-        protected override void Dispose(bool disposing) => ThrowSyncIOException();
+        protected override void Dispose(bool disposing) => throw new ODataSynchronousIOException();
 #else
         // In .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
         // So let's allow sync Dispose there cause there's no alternative
@@ -127,7 +122,7 @@ namespace Microsoft.OData.Tests
 #endif
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void Close() => ThrowSyncIOException();
+        public override void Close() => throw new ODataSynchronousIOException();
 #endif
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -182,11 +177,6 @@ namespace Microsoft.OData.Tests
 #endif
 
         public override string ToString() => this.innerStream.ToString();
-
-        private void ThrowSyncIOException()
-        {
-            throw new Exception("Synchronous I/O is not allowed in asynchronous code paths.");
-        }
     }
 }
 

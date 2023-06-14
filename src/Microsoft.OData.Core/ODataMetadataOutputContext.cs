@@ -192,8 +192,8 @@ namespace Microsoft.OData
                         // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                         if (this.asynchronousOutputStream != null)
                         {
-                            this.xmlWriter.FlushAsync().Wait();
-                            this.asynchronousOutputStream.FlushAsync().Wait();
+                            this.xmlWriter.Flush();
+                            this.asynchronousOutputStream.Flush();
                             this.asynchronousOutputStream.Dispose();
                         }
                         else

@@ -438,22 +438,17 @@ namespace Microsoft.OData.Tests.JsonLight
                     var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-                    var messageWriter = new ODataMessageWriter(operationRequestMessage);
-                    try
+#if NETCOREAPP3_1_OR_GREATER
+                    await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+#else
+                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+#endif
                     {
                         var resourceWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                         var orderResource = CreateOrderResource();
 
                         await resourceWriter.WriteStartAsync(orderResource);
                         await resourceWriter.WriteEndAsync();
-                    }
-                    finally
-                    {
-#if NETCOREAPP3_1_OR_GREATER
-                        await messageWriter.DisposeAsync();
-#else
-                        messageWriter.Dispose();
-#endif
                     }
 
                     await batchWriter.WriteEndBatchAsync();
@@ -819,7 +814,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Func<ODataJsonLightOutputContext, Task> func,
             bool writingResponse = true)
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             var messageInfo = CreateMessageInfo(this.model, asynchronous: true, writingResponse: writingResponse);
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);
 

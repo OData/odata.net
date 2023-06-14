@@ -782,7 +782,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             Func<ODataMultipartMixedBatchWriter, Task> func,
             bool writingRequest = true)
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             var multipartMixedBatchOutputContext = CreateMultipartMixedBatchOutputContext(writingRequest, /*asynchronous*/ true);
             var multipartMixedBatchWriter = new ODataMultipartMixedBatchWriter(multipartMixedBatchOutputContext, batchBoundary);
 

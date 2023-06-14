@@ -224,7 +224,7 @@ namespace Microsoft.OData.Tests
 
         private async Task<string> SetupRawValueWriterAndRunTestAsync(Func<RawValueWriter, Task> func)
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             var rawValueWriter = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
 
             await func(rawValueWriter);

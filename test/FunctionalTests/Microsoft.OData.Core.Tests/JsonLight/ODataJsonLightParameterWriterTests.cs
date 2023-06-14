@@ -939,7 +939,7 @@ namespace Microsoft.OData.Tests.JsonLight
             IEdmOperation edmOperation = null,
             bool writingResponse = true)
         {
-            var stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            var stream = new AsyncStream(new MemoryStream());
 
             var jsonLightOutputContext = CreateJsonLightOutputContext(
                 stream,

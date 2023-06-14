@@ -332,7 +332,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private async Task<string> SetupJsonLightServiceDocumentSerializerAndRunTestAsync(Func<ODataJsonLightServiceDocumentSerializer, Task> func)
         {
-            Stream memoryStream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            Stream memoryStream = new AsyncStream(new MemoryStream());
             var jsonLightServiceDocumentSerializer = CreateODataJsonLightServiceDocumentSerializer(memoryStream, /* urlResolver */ null, true);
             await func(jsonLightServiceDocumentSerializer);
             await jsonLightServiceDocumentSerializer.JsonLightOutputContext.FlushAsync();

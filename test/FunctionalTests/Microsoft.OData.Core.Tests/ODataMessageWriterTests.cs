@@ -912,14 +912,13 @@ namespace Microsoft.OData.Tests
                 {
                     await omWriter.WriteMetadataDocumentAsync();
                 }
-                catch (Exception e)
+                catch (ODataSynchronousIOException)
                 {
                     // We allow synchronous I/O for WriteMetadataDocumentAsync because
                     // it relies on EdmLib's CsdlWriter which is still synchronous.
                     // We should disable synchronous I/O here once CsdlWriter has an async API.
                     // See: https://github.com/OData/odata.net/issues/2684
                     // However, disposing the writer should still be truly async.
-                    Assert.Contains("Synchronous I/O", e.Message);
                 }
             });
 
@@ -1001,7 +1000,7 @@ namespace Microsoft.OData.Tests
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously()
         {
             // Arrange
-            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            AsyncStream stream = new AsyncStream(new MemoryStream());
             InMemoryMessage message = new InMemoryMessage()
             {
                 Stream = stream
@@ -1050,7 +1049,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingJsonMetadata()
         {
-            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            AsyncStream stream = new AsyncStream(new MemoryStream());
             InMemoryMessage message = new InMemoryMessage()
             {
                 Stream = stream
@@ -1088,7 +1087,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingXmlMetadata()
         {
-            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            AsyncStream stream = new AsyncStream(new MemoryStream());
             InMemoryMessage message = new InMemoryMessage()
             {
                 Stream = stream
@@ -1126,7 +1125,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async void DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingRawValue()
         {
-            AsyncOnlyStreamWrapper stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            AsyncStream stream = new AsyncStream(new MemoryStream());
             InMemoryMessage message = new InMemoryMessage()
             {
                 Stream = stream
@@ -1288,7 +1287,7 @@ namespace Microsoft.OData.Tests
             Stream stream = new MemoryStream();
             if (!allowSyncIO)
             {
-                stream = new AsyncOnlyStreamWrapper(stream);
+                stream = new AsyncStream(stream);
             }
 
             message = message ?? new InMemoryMessage() {

@@ -2036,15 +2036,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 container = containerBuilder.BuildContainer();
             }
 
-            Stream stream = this.stream;
+            Stream messageStream = this.stream;
             if (isAsync)
             {
-                stream = new AsyncOnlyStreamWrapper(stream);
+                messageStream = new AsyncStream(messageStream);
             }
 
             var messageInfo = new ODataMessageInfo
             {
-                MessageStream = stream,
+                MessageStream = messageStream,
                 MediaType = new ODataMediaType("application", "json"),
 #if NETCOREAPP1_1
                 Encoding = Encoding.GetEncoding(0),

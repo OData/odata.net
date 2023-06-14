@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.Json
 
         public ODataUtf8JsonWriterAsyncTests()
         {
-            this.stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            this.stream = new AsyncStream(new MemoryStream());
 
             try
             {
@@ -45,6 +45,11 @@ namespace Microsoft.OData.Tests.Json
 
         public async ValueTask DisposeAsync()
         {
+            if (this.disposed)
+            {
+                return;
+            }
+
             await (this.writer as ODataUtf8JsonWriter).DisposeAsync();
             await this.stream.DisposeAsync();
         }

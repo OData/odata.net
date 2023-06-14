@@ -3117,7 +3117,7 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataVersion odataVersion = ODataVersion.V4,
             bool writingRequest = false)
         {
-            this.stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            this.stream = new AsyncStream(new MemoryStream());
             var jsonLightOutputContext = CreateJsonLightOutputContext(
                     this.stream,
                     this.GetModel(),

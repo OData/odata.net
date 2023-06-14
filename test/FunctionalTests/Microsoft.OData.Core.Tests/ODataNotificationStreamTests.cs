@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             await using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener)) // `synchronous` argument becomes irrelevant
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationStreamDisposeAsyncShouldBeIdempotentAsync()
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener);

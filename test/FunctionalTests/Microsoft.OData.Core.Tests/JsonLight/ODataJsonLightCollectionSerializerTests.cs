@@ -230,7 +230,7 @@ namespace Microsoft.OData.Tests.JsonLight
         /// </summary>
         private async Task<string> SetupODataJsonLightCollectionSerializerAndRunTestAsync(Func<ODataJsonLightCollectionSerializer, Task> func, IServiceProvider container = null, bool writingTopLevelCollection = false)
         {
-            this.stream = new AsyncOnlyStreamWrapper(this.stream);
+            this.stream = new AsyncStream(this.stream);
             var jsonLightCollectionSerializer = CreateODataJsonLightCollectionSerializer(true, container, true, writingTopLevelCollection);
             await func(jsonLightCollectionSerializer);
             await jsonLightCollectionSerializer.JsonLightOutputContext.FlushAsync();

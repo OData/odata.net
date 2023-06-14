@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests
         public ODataRawOutputContextApiTests()
         {
             this.InitializeEdmModel();
-            this.asyncStream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            this.asyncStream = new AsyncStream(new MemoryStream());
             this.syncStream = new MemoryStream();
             this.writerSettings = new ODataMessageWriterSettings
             {

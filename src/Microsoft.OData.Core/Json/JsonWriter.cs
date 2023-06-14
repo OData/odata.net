@@ -28,7 +28,7 @@ namespace Microsoft.OData.Json
 #if NETCOREAPP3_1_OR_GREATER
     internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable, IAsyncDisposable
 #else
-    internal sealed partial class JsonWriter :IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable
+    internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable
 #endif
     {
         /// <summary>

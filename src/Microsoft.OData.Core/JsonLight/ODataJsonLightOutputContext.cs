@@ -966,9 +966,6 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter = null;
                 this.StringWriter = null;
             }
-
-            // won't this inadvertently call
-            await base.DisposeAsyncCore().ConfigureAwait(false);
         }
 #endif
 

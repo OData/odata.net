@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.Json
             mealComplexType.AddStructuralProperty("Dessert", EdmPrimitiveTypeKind.String);
             this.model.AddElement(this.mealComplexType);
 
-            this.stream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            this.stream = new AsyncStream(new MemoryStream());
             this.settings = new ODataMessageWriterSettings
             {
                 EnableMessageStreamDisposal = false,

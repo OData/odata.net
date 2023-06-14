@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.Json
             string expected = JavaScriptEncoder.Default.Encode(message);
 
             var memoryStream = new MemoryStream();
-            var stream = new AsyncOnlyStreamWrapper(memoryStream);
+            var stream = new AsyncStream(memoryStream);
 
             await using var transcodingStream = new TranscodingWriteStream(stream, targetEncoding, inputEncoding);
             await transcodingStream.WriteAsync(inputEncoding.GetBytes(JavaScriptEncoder.Default.Encode(message)), default);

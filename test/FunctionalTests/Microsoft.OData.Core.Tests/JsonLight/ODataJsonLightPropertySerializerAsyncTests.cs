@@ -338,7 +338,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonLightPropertySerializer, Task> func, Action<IContainerBuilder> configureServices = null)
         {
-            Stream outputStream = new AsyncOnlyStreamWrapper(new MemoryStream());
+            Stream outputStream = new AsyncStream(new MemoryStream());
             ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, configureServices);
             var jsonLightPropertySerializer = new ODataJsonLightPropertySerializer(jsonLightOutputContext, /* initContextUriBuilder */ true);
 
