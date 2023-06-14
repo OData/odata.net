@@ -24,7 +24,7 @@
         private static async Task Main(string[] args)
         {
             var odata = new MockOData();
-            await new HttpListenerHttpServer(odata.HandleRequest).ListenAsync();
+            await new HttpListenerHttpServer(odata.HandleRequestAsync).ListenAsync();
         }
 
         private sealed class MockOData : IOData

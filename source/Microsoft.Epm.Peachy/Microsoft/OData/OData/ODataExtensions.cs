@@ -10,7 +10,7 @@
 
     public static class ODataExtensions
     {
-        public static async Task<HttpServerResponse> HandleRequest(this IOData source, HttpServerRequest request)
+        public static async Task<HttpServerResponse> HandleRequestAsync(this IOData source, HttpServerRequest request)
         {
             if (string.Equals(request.HttpMethod, "GET", System.StringComparison.OrdinalIgnoreCase))
             {
