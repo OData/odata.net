@@ -753,12 +753,6 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
-        [Fact]
-        public async Task DisposeAsync_ShouldDisposeStream_Writer_Asynchronously()
-        {
-            
-        }
-
 #endregion Async Tests
 
         private static void WriteAndValidate(

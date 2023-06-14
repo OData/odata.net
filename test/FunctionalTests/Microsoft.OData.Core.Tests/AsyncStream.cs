@@ -65,7 +65,7 @@ namespace Microsoft.OData.Tests
         public override void Flush()
         {
 #if NETCOREAPP3_1_OR_GREATER
-            throw new ODataSynchronousIOException();
+            throw new SynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
             // because we also allow synchronous Dispose()
@@ -76,26 +76,26 @@ namespace Microsoft.OData.Tests
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            throw new ODataSynchronousIOException();
+            throw new SynchronousIOException();
         }
         public override int ReadByte()
         {
-            throw new ODataSynchronousIOException();
+            throw new SynchronousIOException();
         }
 
 #if NETCOREAPP3_1_OR_GREATER
         public override int Read(Span<byte> buffer)
         {
-            throw new ODataSynchronousIOException();
+            throw new SynchronousIOException();
         }
 #endif
 
-        public override void WriteByte(byte value) => throw new ODataSynchronousIOException();
+        public override void WriteByte(byte value) => throw new SynchronousIOException();
 
         public override void Write(byte[] buffer, int offset, int count)
         {
 #if NETCOREAPP3_1_OR_GREATER
-            throw new ODataSynchronousIOException();
+            throw new SynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
             // because we also allow synchronous Dispose()
@@ -105,16 +105,16 @@ namespace Microsoft.OData.Tests
         }
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void CopyTo(Stream destination, int bufferSize) => throw new ODataSynchronousIOException();
+        public override void CopyTo(Stream destination, int bufferSize) => throw new SynchronousIOException();
 #endif
 
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void Write(ReadOnlySpan<byte> buffer) => throw new ODataSynchronousIOException();
+        public override void Write(ReadOnlySpan<byte> buffer) => throw new SynchronousIOException();
 #endif
 
 #if NETCOREAPP3_1_OR_GREATER
-        protected override void Dispose(bool disposing) => throw new ODataSynchronousIOException();
+        protected override void Dispose(bool disposing) => throw new SynchronousIOException();
 #else
         // In .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
         // So let's allow sync Dispose there cause there's no alternative
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Tests
 #endif
 
 #if NETCOREAPP3_1_OR_GREATER
-        public override void Close() => throw new ODataSynchronousIOException();
+        public override void Close() => throw new SynchronousIOException();
 #endif
 
         public override long Seek(long offset, SeekOrigin origin)

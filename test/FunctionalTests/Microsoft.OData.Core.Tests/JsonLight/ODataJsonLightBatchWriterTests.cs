@@ -208,13 +208,13 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 #else
                     using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
 #endif
-                        {
-                            var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    {
+                        var jsonLightWriter = await messageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
-                            var orderResource = CreateOrderResource(1);
-                            await jsonLightWriter.WriteStartAsync(orderResource);
-                            await jsonLightWriter.WriteEndAsync();
-                        }
+                        var orderResource = CreateOrderResource(1);
+                        await jsonLightWriter.WriteStartAsync(orderResource);
+                        await jsonLightWriter.WriteEndAsync();
+                    }
 
                     await jsonLightBatchWriter.WriteEndBatchAsync();
                 });
