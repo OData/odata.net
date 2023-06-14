@@ -11,7 +11,7 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public delegate HttpServerResponse HttpRequestHandler(HttpServerRequest request);
+    public delegate Task<HttpServerResponse> HttpRequestHandler(HttpServerRequest request);
 
     public class HttpServer
     {
@@ -71,7 +71,7 @@
                 Headers = GetHeaders(context.Context.Request.Headers),
                 Body = context.Context.Request.InputStream,
             };
-            var response = context.Handler(request);
+            var response = await context.Handler(request);
 
             SetHeaders(context.Context.Response.Headers, response.Headers);
             context.Context.Response.StatusCode = response.StatusCode;

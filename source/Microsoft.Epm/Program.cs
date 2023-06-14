@@ -8,10 +8,10 @@
     {
         private static async Task Main(string[] args)
         {
-            HttpRequestHandler handler = (request) =>
+            HttpRequestHandler handler = async (request) =>
             {
                 var stream = new MemoryStream();
-                stream.Write(Encoding.ASCII.GetBytes("ack"));
+                await stream.WriteAsync(Encoding.ASCII.GetBytes("ack"));
                 stream.Position = 0;
                 return new HttpServerResponse()
                 {
