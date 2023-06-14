@@ -22,7 +22,7 @@
                 {
                     FeatureGapOData = new Epm(),
                 };
-                var epm = new Peachy(csdlResourceStream, peachySettings);
+                var epm = new Peachy(csdlResourceStream, peachySettings); //// TODO does webapi require running tests synchronously
 
                 var port = 8080;
                 await new HttpListenerHttpServer(
