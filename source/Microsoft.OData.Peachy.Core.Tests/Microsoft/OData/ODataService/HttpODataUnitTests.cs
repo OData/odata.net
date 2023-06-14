@@ -1,9 +1,9 @@
-﻿namespace Microsoft.OData.Peachy.Core.Tests
+﻿namespace Microsoft.OData.ODataService //// TODO make sure all namespaces follow folder structure
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class HttpODataUnitTests
+    public sealed class HttpODataUnitTests
     {
         [TestMethod]
         public void TestMethod1()

@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System.IO;
     using System.Linq;
@@ -28,7 +28,7 @@
             Assert.AreEqual("ack", await new StreamReader(response.Body).ReadToEndAsync()); //// TODO dispose
         }
 
-        private sealed class MockOData : IOData
+        private sealed class MockOData : IODataService
         {
             public async Task<Stream> GetAsync(string url, Stream request)
             {

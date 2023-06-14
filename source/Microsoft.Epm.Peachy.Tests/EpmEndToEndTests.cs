@@ -26,6 +26,7 @@
         {
             using (var httpClient = new HttpClient())
             {
+                //// TODO make this look more like the api.md
                 using (var httpResponse = await httpClient.GetAsync(new Uri(this.rootUri, "foo")))
                 {
                     Assert.AreEqual(208, (int)httpResponse.StatusCode);

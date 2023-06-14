@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System;
     using System.IO;
@@ -7,10 +7,10 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// An <see cref="IOData"/> implementation that leverages HTTP to make requests to the backing service
+    /// An <see cref="IODataService"/> implementation that leverages HTTP to make requests to the backing service
     /// </summary>
     /// <threadsafety static="true" instance="true"/>
-    public sealed class HttpOData : IOData
+    public sealed class HttpOData : IODataService
     {
         private readonly Func<HttpClient> httpClientFactory;
 

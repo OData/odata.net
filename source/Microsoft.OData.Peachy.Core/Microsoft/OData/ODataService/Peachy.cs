@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System;
     using System.IO;
@@ -6,11 +6,11 @@
     using System.Threading.Tasks;
     using System.Xml;
 
-    public sealed partial class Peachy : IOData
+    public sealed partial class Peachy : IODataService
     {
         private readonly string csdl; //// TODO is readonly correct here if we generalize beyond epm?
 
-        private readonly IOData featureGapOdata;
+        private readonly IODataService featureGapOdata;
 
         public Peachy(Stream csdl)
             : this(csdl, new Settings())
@@ -55,15 +55,17 @@
                 var stream = new MemoryStream(); //// TODO error handling
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(this.csdl)); //// TODO is this the right encoding?
                 stream.Position = 0;
-                return stream;
+                return stream; //// TODO why do we have to get the whole byte array before we even start stream back the response?
             }
+
+            //// TODO handle other urls here by reading the CSDL
 
             return await this.featureGapOdata.GetAsync(url, request);
         }
 
         public sealed class Settings
         {
-            public IOData FeatureGapOData { get; set; } = EmptyOData.Instance;
+            public IODataService FeatureGapOData { get; set; } = EmptyOData.Instance;
         }
     }
 }

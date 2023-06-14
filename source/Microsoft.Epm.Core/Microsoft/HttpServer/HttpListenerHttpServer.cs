@@ -51,7 +51,7 @@
 
                     Console.WriteLine($"Received: TODO");
 
-                    _ = Task.Factory.StartNew(HandleRequest, (context, httpRequestHandler), CancellationToken.None);
+                    _ = Task.Factory.StartNew(HandleRequest, (context, this.httpRequestHandler), CancellationToken.None);
                 }
             }
         }

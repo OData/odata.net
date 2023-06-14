@@ -8,7 +8,7 @@
     using System.Threading.Tasks;
     using System.Xml;
     using Microsoft.HttpServer;
-    using Microsoft.OData.OData;
+    using Microsoft.OData.ODataService;
 
     public static class Program //// TODO public for tests only?
     {
@@ -35,7 +35,7 @@
             }
         }
 
-        private sealed class Epm : IOData
+        private sealed class Epm : IODataService
         {
             public Epm()
             {
@@ -44,7 +44,7 @@
             public async Task<Stream> GetAsync(string url, Stream request)
             {
                 var stream = new MemoryStream(); //// TODO error handling
-                await stream.WriteAsync(Encoding.UTF8.GetBytes("TODO this should really be a 404")); //// TODO is this the right encoding?
+                await stream.WriteAsync(Encoding.UTF8.GetBytes("TODO this should really be a 501")); //// TODO is this the right encoding?
                 stream.Position = 0;
                 return stream;
             }

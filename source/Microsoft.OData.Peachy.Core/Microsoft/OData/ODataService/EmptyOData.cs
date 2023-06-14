@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System.IO;
     using System.Text;
@@ -6,7 +6,7 @@
 
     public sealed partial class Peachy
     {
-        public sealed class EmptyOData : IOData
+        public sealed class EmptyOData : IODataService
         {
             private EmptyOData()
             {

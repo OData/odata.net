@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System;
     using System.IO;
@@ -7,7 +7,7 @@
     /// <summary>
     /// TODO: ? <threadsafety static="true" instance="true"/>
     /// </summary>
-    public interface IOData
+    public interface IODataService
     {
         /// <summary>
         /// 

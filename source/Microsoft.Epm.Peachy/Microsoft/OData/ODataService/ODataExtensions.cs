@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System;
     using System.IO;
@@ -10,7 +10,7 @@
 
     public static class ODataExtensions
     {
-        public static async Task<HttpServerResponse> HandleRequestAsync(this IOData source, HttpServerRequest request)
+        public static async Task<HttpServerResponse> HandleRequestAsync(this IODataService source, HttpServerRequest request)
         {
             if (string.Equals(request.HttpMethod, "GET", System.StringComparison.OrdinalIgnoreCase))
             {

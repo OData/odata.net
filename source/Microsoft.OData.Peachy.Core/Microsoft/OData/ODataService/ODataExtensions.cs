@@ -1,4 +1,4 @@
-﻿namespace Microsoft.OData.OData
+﻿namespace Microsoft.OData.ODataService
 {
     using System;
     using System.Collections.Generic;
@@ -7,11 +7,11 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// Extension methods for <see cref="IOData"/>
+    /// Extension methods for <see cref="IODataService"/>
     /// </summary>
     public static class ODataExtensions
     {
-        public static async Task<Stream> GetAsync(this IOData odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
+        public static async Task<Stream> GetAsync(this IODataService odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
         {
             if (odata == null)
             {
