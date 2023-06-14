@@ -22,6 +22,11 @@
             public int Port { get; set; } = 80;
         }
 
+        public HttpListenerHttpServer(HttpRequestHandler httpRequestHandler)
+            : this(httpRequestHandler, new Settings())
+        {
+        }
+
         public HttpListenerHttpServer(HttpRequestHandler httpRequestHandler, Settings settings)
         {
             this.httpRequestHandler = httpRequestHandler;

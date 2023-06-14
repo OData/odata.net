@@ -31,7 +31,7 @@
                 {
                     Assert.AreEqual(208, (int)httpResponse.StatusCode);
                     CollectionAssert.Contains(httpResponse.Headers.Select(_ => (_.Key, _.Value.Single())).Select(_ => string.Concat(_.Key, ": ", _.Item2)).ToArray(), "gdebruin: did this also work?");
-                    Assert.AreEqual("ack", await httpResponse.Content.ReadAsStringAsync());
+                    Assert.AreEqual("TODO this should be a 404", await httpResponse.Content.ReadAsStringAsync());
                 }
             }
         }

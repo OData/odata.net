@@ -25,7 +25,7 @@ namespace Microsoft.HttpServer
             
             using (var httpClient = new HttpClient())
             {
-                var response = await httpClient.GetAsync("http://localhost:8080/foo");
+                var response = await httpClient.GetAsync("http://localhost/foo");
                 Assert.AreEqual(statusCode, (int)response.StatusCode);
 
                 Assert.AreEqual(headerValue, response.Headers.GetValues(headerName).Single());
