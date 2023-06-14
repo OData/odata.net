@@ -1,4 +1,4 @@
-﻿namespace Microsoft.Epm
+﻿namespace Microsoft.HttpServer
 {
     using System;
     using System.Collections.Generic;
@@ -11,13 +11,11 @@
     using System.Threading;
     using System.Threading.Tasks;
 
-    public delegate Task<HttpServerResponse> HttpRequestHandler(HttpServerRequest request);
-
-    public class HttpServer
+    public class HttpListenerHttpServer : IHttpServer
     {
         private readonly HttpRequestHandler httpRequestHandler;
 
-        public HttpServer(HttpRequestHandler httpRequestHandler)
+        public HttpListenerHttpServer(HttpRequestHandler httpRequestHandler)
         {
             this.httpRequestHandler = httpRequestHandler;
         }
@@ -45,7 +43,7 @@
 
                     Console.WriteLine($"Received: TODO");
 
-                    _ = Task.Factory.StartNew(HandleRequest, (context, this.httpRequestHandler), CancellationToken.None);
+                    _ = Task.Factory.StartNew(HandleRequest, (context, httpRequestHandler), CancellationToken.None);
                 }
             }
         }

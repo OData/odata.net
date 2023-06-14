@@ -3,6 +3,7 @@
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.HttpServer;
 
     internal static class Program
     {
@@ -20,7 +21,7 @@
                     Body = stream,
                 };
             };
-            await new HttpServer(handler).ListenAsync();
+            await new HttpListenerHttpServer(handler).ListenAsync();
         }
     }
 }
