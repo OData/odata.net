@@ -74,57 +74,116 @@
                     throw new InvalidOperationException("TODO no segments");
                 }
 
-                //// TODO how would they know what key sets they need to support?
+                //// TODO how would they know what key sets they need to support? TODO we could tell them by having them add "hooks" to a builder, and when they "build" we validate that they have all the necessary hooks
                 var keys = new List<(EdmElementLookup Property, string Key)>();
                 var editUrlSegments = new List<string>();
                 TraverseUriSegments(segmentsEnumerator, this.entityDataModel.RootElementLookup, keys, editUrlSegments);
             }*/
+
+
+            using (var segmentsEnumerator = odataUri.Segments.Select(segment => segment.Trim('/')).GetEnumerator())
+            {
+                if (!segmentsEnumerator.MoveNext() || !segmentsEnumerator.MoveNext())
+                {
+                    throw new InvalidOperationException("TODO no segments");
+                }
+
+                //// TODO how would they know what key sets they need to support? TODO we could tell them by having them add "hooks" to a builder, and when they "build" we validate that they have all the necessary hooks
+                var keys = new List<(EdmElement Property, string PropertyValue)>();
+                var editUrlSegments = new List<string>();
+                var path = new List<string>();
+                return TraverseUriSegments(segmentsEnumerator, this.entityDataModel.RootElement, this.entityDataModel.RootElementLookup, path, keys, editUrlSegments);
+            }
 
             //// TODO handle other urls here by reading the CSDL
 
             return await this.featureGapOdata.GetAsync(request);
         }
 
-        private void TraverseUriSegments(IEnumerator<string> segmentsEnumerator, EdmElementLookup rootElement, List<(EdmElementLookup Property, string Key)> keys, List<string> editUrlSegments)
+        private ODataResponse TraverseUriSegments(IEnumerator<string> segmentsEnumerator, EdmElement edmElement, EdmElementLookupBase rootElementLookup, List<string> path, List<(EdmElement Property, string PropertyValue)> keys, List<string> editUrlSegments)
         {
             var segment = segmentsEnumerator.Current;
-            editUrlSegments.Add(segment);
-            EdmElementLookup edmElement;
-            if (rootElement.SingletonElements.TryGetValue(segment, out edmElement))
+            if (rootElementLookup.SingletonElements.TryGetValue(segment, out var singleValuedElementLookup))
             {
+                path.Add(segment);
                 if (segmentsEnumerator.MoveNext())
                 {
-                    TraverseUriSegments(segmentsEnumerator, edmElement, keys, editUrlSegments);
+                    return TraverseUriSegments(segmentsEnumerator, singleValuedElementLookup.Element, singleValuedElementLookup, path, keys, editUrlSegments);
                 }
                 else
                 {
-                    return;
+                    return null;
                 }
             }
-            else if (rootElement.CollectionElements.TryGetValue(segment, out edmElement))
+            else if (rootElementLookup.CollectionElements.TryGetValue(segment, out var multiValuedElementLookup))
             {
-                editUrlSegments.Clear();
+                path.Add(segment);
                 if (segmentsEnumerator.MoveNext())
                 {
-                    keys.Add((edmElement, segmentsEnumerator.Current));
+                    segment = segmentsEnumerator.Current;
+                    keys.Add((multiValuedElementLookup.Element, segment));
+                    var dataStore = multiValuedElementLookup.Element.DataStore;
+                    //// TODO do we really want to give a 404 if there's an entity in the middle of a path that can't be found?
+                    if (!dataStore.TryGet(keys.ToDictionary(key => key.Property.Name, key => key.PropertyValue), out var entity))
+                    {
+                        return new ODataResponse(
+                            404,
+                            Enumerable.Empty<string>(),
+                            GenerateStream(new ODataError(
+                                "NotFound",
+                                $"No entity with key '{segment}' found in the collection at '/{string.Join('/', path)}'.",
+                                null,
+                                null)));
+                    }
+
                     if (segmentsEnumerator.MoveNext())
                     {
-                        TraverseUriSegments(segmentsEnumerator, edmElement, keys, editUrlSegments);
+                        path.Add(segment);
+                        return TraverseUriSegments(segmentsEnumerator, multiValuedElementLookup.Element, multiValuedElementLookup, path, keys, editUrlSegments);
                     }
                     else
                     {
-                        return;
+                        return new ODataResponse(
+                            200,
+                            Enumerable.Empty<string>(),
+                            GenerateStream(multiValuedElementLookup.Element.Selector(entity)));
                     }
                 }
                 else
                 {
-                    return;
+                    var dataStore = multiValuedElementLookup.Element.DataStore;
+                    var entities = dataStore.GetAll();
+                    return new ODataResponse(
+                        200,
+                        Enumerable.Empty<string>(),
+                        GenerateCollectionStream(entities.Select(multiValuedElementLookup.Element.Selector)));
                 }
             }
             else
             {
-                throw new Exception($"TODO the type doesn't contain a property with name {segment}");
+                var entityTypeName = edmElement.ElementType;
+                return new ODataResponse(
+                    404, //// TODO 404 or 400?
+                    Enumerable.Empty<string>(),
+                    GenerateStream(new ODataError(
+                        "NotFound", //// TODO NotFound or BadRequest?
+                        $"The path '/{string.Join('/', path)}' refers to an instance of the type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                        null,
+                        null)));
             }
+        }
+
+        private static Stream GenerateCollectionStream<T>(IEnumerable<T> values)
+        {
+            return GenerateStream(new { value = values });
+        }
+
+        private static Stream GenerateStream<T>(T response)
+        {
+            var serialzied = System.Text.Json.JsonSerializer.Serialize(response);
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(serialzied));
+            stream.Position = 0;
+            return stream;
         }
 
         public sealed class Settings
