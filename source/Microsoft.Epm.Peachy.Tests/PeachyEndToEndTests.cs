@@ -15,5 +15,13 @@
             var tests = new EpmEndToEndTests(new Uri("http://localhost:8080"));
             await tests.GetAuthorizationSystem();
         }
+
+        [TestMethod]
+        public async Task GetInvalidSegment()
+        {
+            var serverTask = Program.Main(new string[0]); //// TODO wait for the servertask to compelte
+            var tests = new EpmEndToEndTests(new Uri("http://localhost:8080"));
+            await tests.GetInvalidSegment();
+        }
     }
 }
