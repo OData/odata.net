@@ -31,17 +31,6 @@
 
         public async Task GetAuthorizationSystem()
         {
-            /*using (var httpClient = new HttpClient())
-            {
-                //// TODO make this look more like the api.md
-                using (var httpResponse = await httpClient.GetAsync(new Uri(this.rootUri, "authorizationSystems/1")))
-                {
-                    Assert.AreEqual(208, (int)httpResponse.StatusCode);
-                    CollectionAssert.Contains(httpResponse.Headers.Select(_ => (_.Key, _.Value.Single())).Select(_ => string.Concat(_.Key, ": ", _.Item2)).ToArray(), "gdebruin: did this also work?");
-                    Assert.AreEqual("TODO this should be a 404", await httpResponse.Content.ReadAsStringAsync());
-                }
-            }*/
-
             await SampleAsync(
 """
 GET /external/authorizationSystems/1 HTTP/1.1
