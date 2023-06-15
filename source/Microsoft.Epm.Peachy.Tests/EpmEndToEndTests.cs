@@ -36,7 +36,7 @@
 GET /external/authorizationSystems/1 HTTP/1.1
 
 
-HTTP/1.1 208 AlreadyReported
+HTTP/1.1 200 OK
 ****
 
 {
@@ -342,9 +342,8 @@ HTTP/1.1 208 AlreadyReported
                 //// TODO make this look more like the api.md
                 using (var httpResponse = await httpClient.GetAsync(new Uri(this.rootUri, "foo")))
                 {
-                    Assert.AreEqual(208, (int)httpResponse.StatusCode);
-                    CollectionAssert.Contains(httpResponse.Headers.Select(_ => (_.Key, _.Value.Single())).Select(_ => string.Concat(_.Key, ": ", _.Item2)).ToArray(), "gdebruin: did this also work?");
-                    Assert.AreEqual("TODO this should be a 404", await httpResponse.Content.ReadAsStringAsync());
+                    Assert.AreEqual(501, (int)httpResponse.StatusCode);
+                    Assert.AreEqual("TODO this portion of the OData standard has not been implemented", await httpResponse.Content.ReadAsStringAsync());
                 }
             }
         }

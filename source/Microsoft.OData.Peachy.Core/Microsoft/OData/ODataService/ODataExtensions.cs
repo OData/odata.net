@@ -11,7 +11,7 @@
     /// </summary>
     public static class ODataExtensions
     {
-        public static async Task<Stream> GetAsync(this IODataService odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
+        public static async Task<ODataResponse> GetAsync(this IODataService odata, string url, IEnumerable<string> headers, string body) //// TODO this extension method is probably not the "ultimate" in structured typing, feel free to throw it away or add other overloads (for example, response codes aren't part of this method signature)
         {
             if (odata == null)
             {
@@ -43,7 +43,8 @@
 
                 //// TODO why do we have to wait to write everything to the stream before sending? implement a different stream so we don't have to wait
                 stream.Position = 0;
-                return await odata.GetAsync(url, stream).ConfigureAwait(false);
+                var request = new ODataRequest(url, headers, stream);
+                return await odata.GetAsync(request).ConfigureAwait(false);
             }
         }
     }

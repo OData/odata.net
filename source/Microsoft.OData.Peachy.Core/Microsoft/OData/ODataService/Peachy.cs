@@ -55,15 +55,15 @@
             }*/
         }
 
-        public async Task<Stream> GetAsync(string url, Stream request)
+        public async Task<ODataResponse> GetAsync(ODataRequest request)
         {
-            var odataUri = new Uri($"http://testing{url}", UriKind.Absolute);
+            var odataUri = new Uri($"http://testing{request.Url}", UriKind.Absolute);
             if (odataUri.ToString() == "/$metadata") //// TODO case sensitive?
             {
                 var stream = new MemoryStream(); //// TODO error handling
                 await stream.WriteAsync(Encoding.UTF8.GetBytes(this.csdl)); //// TODO is this the right encoding?
                 stream.Position = 0;
-                return stream; //// TODO why do we have to get the whole byte array before we even start stream back the response?
+                return new ODataResponse(200, Enumerable.Empty<string>(), stream); //// TODO why do we have to get the whole byte array before we even start stream back the response?
             }
 
             //// TODO finish the generalized segment stuff below
@@ -82,7 +82,7 @@
 
             //// TODO handle other urls here by reading the CSDL
 
-            return await this.featureGapOdata.GetAsync(url, request);
+            return await this.featureGapOdata.GetAsync(request);
         }
 
         private void TraverseUriSegments(IEnumerator<string> segmentsEnumerator, EdmElementLookup rootElement, List<(EdmElementLookup Property, string Key)> keys, List<string> editUrlSegments)
@@ -129,7 +129,7 @@
 
         public sealed class Settings
         {
-            public IODataService FeatureGapOData { get; set; } = EmptyOData.Instance;
+            public IODataService FeatureGapOData { get; set; } = EmptyODataService.Instance;
         }
     }
 }

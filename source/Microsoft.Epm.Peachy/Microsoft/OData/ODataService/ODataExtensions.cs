@@ -19,9 +19,9 @@
                     var odataResponse = await source.GetAsync(request.Url, request.Headers, await streamReader.ReadToEndAsync());
                     return new HttpServerResponse()
                     {
-                        StatusCode = 208, //// TODO
-                        Headers = new[] { "gdebruin: did this also work?" }, //// TODO
-                        Body = odataResponse,
+                        StatusCode = odataResponse.StatusCode,
+                        Headers = odataResponse.Headers,
+                        Body = odataResponse.Body,
                     };
                 }
             }

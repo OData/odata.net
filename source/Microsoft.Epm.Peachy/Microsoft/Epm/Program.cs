@@ -131,9 +131,9 @@
                 }.ToDictionary(element => element.id);
             }
 
-            public async Task<Stream> GetAsync(string url, Stream request)
+            public async Task<ODataResponse> GetAsync(ODataRequest request)
             {
-                var odataUri = new Uri($"http://testing{url}", UriKind.Absolute);
+                var odataUri = new Uri($"http://testing{request.Url}", UriKind.Absolute);
 
                 using (var segmentsEnumerator = odataUri.Segments.Select(segment => segment.Trim('/')).GetEnumerator())
                 {
@@ -147,9 +147,12 @@
                     {
                         if (!segmentsEnumerator.MoveNext())
                         {
-                            return GenerateStream(new
-                            {
-                            });
+                            return new ODataResponse(
+                                200, 
+                                Enumerable.Empty<string>(),
+                                GenerateStream(new
+                                {
+                                }));
                         }
 
                         segment = segmentsEnumerator.Current;
@@ -162,7 +165,10 @@
                                 AuthorizationSystem authorizationSystem;
                                 if (!this.authorizationSystems.TryGetValue(authorizationSystemKey, out authorizationSystem))
                                 {
-                                    return GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" });
+                                    return new ODataResponse(
+                                        404,
+                                        Enumerable.Empty<string>(), 
+                                        GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
                                 }
 
                                 if (segmentsEnumerator.MoveNext())
@@ -170,15 +176,24 @@
                                     segment = segmentsEnumerator.Current;
                                     if (string.Equals(segment, "id"))
                                     {
-                                        return GeneratePrimitiveStream(authorizationSystem.id);
+                                            return new ODataResponse(
+                                            200,
+                                            Enumerable.Empty<string>(),
+                                            GeneratePrimitiveStream(authorizationSystem.id));
                                     }
                                     else if (string.Equals(segment, "authorizationSystemName"))
                                     {
-                                        return GeneratePrimitiveStream(authorizationSystem.authorizationSystemName);
+                                        return new ODataResponse(
+                                            200,
+                                            Enumerable.Empty<string>(),
+                                            GeneratePrimitiveStream(authorizationSystem.authorizationSystemName));
                                     }
                                     else if (string.Equals(segment, "authorizationSystemType"))
                                     {
-                                        return GeneratePrimitiveStream(authorizationSystem.authorizationSystemType);
+                                        return new ODataResponse(
+                                            200,
+                                            Enumerable.Empty<string>(),
+                                            GeneratePrimitiveStream(authorizationSystem.authorizationSystemType));
                                     }
                                     else if (string.Equals(segment, "associatedIdentities"))
                                     {
@@ -194,7 +209,10 @@
                                                     AuthorizationSystemIdentity authorizationSystemIdentity;
                                                     if (!authorizationSystem.associatedIdentities.all.TryGetValue(authorizationSystemIdentityKey, out authorizationSystemIdentity))
                                                     {
-                                                        return GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" });
+                                                        return new ODataResponse(
+                                                            404,
+                                                            Enumerable.Empty<string>(),
+                                                            GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
                                                     }
 
                                                     if (segmentsEnumerator.MoveNext())
@@ -203,11 +221,17 @@
                                                         segment = segmentsEnumerator.Current;
                                                         if (string.Equals("id", segment))
                                                         {
-                                                            return GeneratePrimitiveStream(authorizationSystemIdentity.id);
+                                                            return new ODataResponse(
+                                                                200,
+                                                                Enumerable.Empty<string>(),
+                                                                GeneratePrimitiveStream(authorizationSystemIdentity.id));
                                                         }
                                                         else if (string.Equals("displayName", segment))
                                                         {
-                                                            return GeneratePrimitiveStream(authorizationSystemIdentity.displayName);
+                                                            return new ODataResponse(
+                                                                200,
+                                                                Enumerable.Empty<string>(),
+                                                                GeneratePrimitiveStream(authorizationSystemIdentity.displayName));
                                                         }
                                                         else if (string.Equals("graph.awsUser", segment) && authorizationSystemIdentity is AwsUser awsUser)
                                                         {
@@ -224,7 +248,10 @@
                                                                         AwsRole assumableRole;
                                                                         if (!awsUser.assumableRoles.TryGetValue(assumableRoleKey, out assumableRole))
                                                                         {
-                                                                            return GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" });
+                                                                            return new ODataResponse(
+                                                                                404,
+                                                                                Enumerable.Empty<string>(),
+                                                                                GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
                                                                         }
 
                                                                         if (segmentsEnumerator.MoveNext())
@@ -233,12 +260,18 @@
                                                                         }
                                                                         else
                                                                         {
-                                                                            return GenerateStream(awsRoleSelector(assumableRole));
+                                                                            return new ODataResponse(
+                                                                                200,
+                                                                                Enumerable.Empty<string>(),
+                                                                                GenerateStream(awsRoleSelector(assumableRole)));
                                                                         }
                                                                     }
                                                                     else
                                                                     {
-                                                                        return GenerateCollectionStream(awsUser.assumableRoles.Values.Select(awsRoleSelector));
+                                                                        return new ODataResponse(
+                                                                            200,
+                                                                            Enumerable.Empty<string>(),
+                                                                            GenerateCollectionStream(awsUser.assumableRoles.Values.Select(awsRoleSelector)));
                                                                     }
                                                                 }
                                                                 else
@@ -248,7 +281,10 @@
                                                             }
                                                             else
                                                             {
-                                                                GenerateStream(awsUserSelector(awsUser));
+                                                                return new ODataResponse(
+                                                                    200,
+                                                                    Enumerable.Empty<string>(),
+                                                                    GenerateStream(awsUserSelector(awsUser)));
                                                             }
                                                         }
                                                         else
@@ -258,12 +294,18 @@
                                                     }
                                                     else
                                                     {
-                                                        return GenerateStream(authorizationSystemIdentitySelector(authorizationSystemIdentity));
+                                                        return new ODataResponse(
+                                                            200,
+                                                            Enumerable.Empty<string>(),
+                                                            GenerateStream(authorizationSystemIdentitySelector(authorizationSystemIdentity)));
                                                     }
                                                 }
                                                 else
                                                 {
-                                                    return GenerateCollectionStream(authorizationSystem.associatedIdentities.all.Values.Select(authorizationSystemIdentitySelector));
+                                                    return new ODataResponse(
+                                                        200,
+                                                        Enumerable.Empty<string>(),
+                                                        GenerateCollectionStream(authorizationSystem.associatedIdentities.all.Values.Select(authorizationSystemIdentitySelector)));
                                                 }
                                             }
                                             else
@@ -273,9 +315,12 @@
                                         }
                                         else
                                         {
-                                            return GenerateStream(new
-                                            {
-                                            });
+                                            return new ODataResponse(
+                                                200,
+                                                Enumerable.Empty<string>(),
+                                                GenerateStream(new
+                                                    {
+                                                    }));
                                         }
                                     }
                                     else
@@ -285,18 +330,24 @@
                                 }
                                 else
                                 {
-                                    return GenerateStream(authorizationSystemSelector(authorizationSystem));
+                                    return new ODataResponse(
+                                        200,
+                                        Enumerable.Empty<string>(),
+                                        GenerateStream(authorizationSystemSelector(authorizationSystem)));
                                 }
                             }
                             else
                             {
-                                return GenerateCollectionStream(this.authorizationSystems.Values.Select(authorizationSystemSelector));
+                                return new ODataResponse(
+                                    200,
+                                    Enumerable.Empty<string>(),
+                                    GenerateCollectionStream(this.authorizationSystems.Values.Select(authorizationSystemSelector)));
                             }
                         }
                     }
                 }
 
-                return await EmptyOData.Instance.GetAsync(url, request);
+                return await EmptyODataService.Instance.GetAsync(request);
             }
 
             private static Stream GeneratePrimitiveStream<T>(T value)

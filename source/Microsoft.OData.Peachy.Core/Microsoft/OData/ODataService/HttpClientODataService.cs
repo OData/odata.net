@@ -7,10 +7,10 @@
     using System.Threading.Tasks;
 
     /// <summary>
-    /// An <see cref="IODataService"/> implementation that leverages HTTP to make requests to the backing service
+    /// An <see cref="IODataService"/> implementation that leverages HTTP clients to make requests to the backing service
     /// </summary>
     /// <threadsafety static="true" instance="true"/>
-    public sealed class HttpOData : IODataService
+    public sealed class HttpClientODataService : IODataService
     {
         private readonly Func<HttpClient> httpClientFactory;
 
@@ -19,7 +19,7 @@
         /// </summary>
         /// <param name="httpClient"></param>
         /// <exception cref="ArgumentNullException">httpclientfactory</exception>
-        public HttpOData(Func<HttpClient> httpClientFactory)
+        public HttpClientODataService(Func<HttpClient> httpClientFactory)
         {
             if (httpClientFactory == null)
             {
@@ -52,6 +52,32 @@
                     {
                         return await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false);
                     }
+                }
+            }
+        }
+
+        public async Task<ODataResponse> GetAsync(ODataRequest request)
+        {
+            using (var httpClient = this.httpClientFactory())
+            {
+                foreach (var header in request.Headers)
+                {
+                    var headerParts = header.Split(':', 2);
+                    if (headerParts.Length < 1)
+                    {
+                        throw new InvalidOperationException("TODO document this in the interface");
+                    }
+
+                    httpClient.DefaultRequestHeaders.Add(headerParts[0], headerParts.ElementAtOrDefault(1, string.Empty));
+                }
+
+                //// TODO need to return response code
+                using (var httpResponse = await httpClient.GetAsync(request.Url).ConfigureAwait(false))
+                {
+                    return new ODataResponse(
+                        (int)httpResponse.StatusCode, 
+                        httpResponse.Headers.SelectMany(header => header.Value.Select(value => $"{header.Key}: {value}")), 
+                        await httpResponse.Content.ReadAsStreamAsync().ConfigureAwait(false)); //// TODO will this call actually read stuff? are you effectively blocking the caller on I/O and storing it in memory?
                 }
             }
         }
