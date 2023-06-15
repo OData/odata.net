@@ -182,7 +182,6 @@
                                 if (segmentsEnumerator.MoveNext())
                                 {
                                     segment = segmentsEnumerator.Current;
-                                    path.Add(segment);
                                     if (string.Equals(segment, "id"))
                                     {
                                         return new ODataResponse(
@@ -206,6 +205,7 @@
                                     }
                                     else if (string.Equals(segment, "associatedIdentities"))
                                     {
+                                        path.Add(segment);
                                         if (segmentsEnumerator.MoveNext())
                                         {
                                             segment = segmentsEnumerator.Current;

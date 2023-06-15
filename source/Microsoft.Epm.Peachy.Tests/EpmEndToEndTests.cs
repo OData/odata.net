@@ -149,7 +149,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"Not entity with key 'doesntexist' found in the collection at '/external/authorizationSystems'.",
+  "message":"No entity with key 'doesntexist' found in the collection at '/external/authorizationSystems'.",
   "target":null,
   "details":null
 }
