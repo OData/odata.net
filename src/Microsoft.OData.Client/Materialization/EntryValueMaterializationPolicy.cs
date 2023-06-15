@@ -591,7 +591,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 foreach (ODataNestedResourceInfo link in entry.NestedResourceInfos)
                 {
-                    MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link, this.MaterializerContext);
+                    MaterializerNestedEntry linkState = MaterializerNestedEntry.GetNestedEntry(link, this.MaterializerContext);
 
                     if (linkState == null)
                     {
@@ -611,7 +611,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
 
                     // includeLinks is for Navigation property, so we should handle complex property when includeLinks equals false;
-                    if (!includeLinks && (prop.IsEntityCollection || prop.EntityCollectionItemType != null))
+                    if (!includeLinks && prop.EdmProperty is IEdmNavigationProperty)
                     {
                         continue;
                     }
@@ -722,7 +722,8 @@ namespace Microsoft.OData.Client.Materialization
                 return;
             }
 
-            MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link, this.MaterializerContext);
+            MaterializerNestedEntry linkState = MaterializerNestedEntry.GetNestedEntry(link, this.MaterializerContext);
+
             if (linkState == null || (linkState.Entry == null && linkState.Feed == null))
             {
                 return;

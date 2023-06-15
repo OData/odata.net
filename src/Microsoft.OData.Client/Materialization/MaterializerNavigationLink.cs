@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The navigation link.</summary>
         private readonly ODataNestedResourceInfo link;
 
-        /// <summary>An object field for the feed or enty.</summary>
+        /// <summary>An object field for the feed or entry.</summary>
         private readonly object feedOrEntry;
 
         /// <summary>

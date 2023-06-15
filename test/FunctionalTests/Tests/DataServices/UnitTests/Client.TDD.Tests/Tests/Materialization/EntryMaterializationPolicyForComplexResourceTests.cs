@@ -211,7 +211,8 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
                 innerMaterializerEntry = MaterializerEntry.CreateEmpty();
             }
 
-            MaterializerNavigationLink.CreateLink(innerComplexP, innerMaterializerEntry, materializerContext);
+            var nestedEntry = MaterializerNestedEntry.CreateNestedEntry(innerComplexP, new List<IMaterializerState>(), materializerContext);
+            nestedEntry.Entry = innerMaterializerEntry;
             materializerEntry.AddNestedResourceInfo(innerComplexP);
 
             var policy = this.CreateEntryMaterializationPolicy(materializerContext);
