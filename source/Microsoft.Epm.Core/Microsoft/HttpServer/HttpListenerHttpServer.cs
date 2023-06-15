@@ -88,7 +88,20 @@
                 Headers = GetHeaders(context.Context.Request.Headers),
                 Body = context.Context.Request.InputStream,
             };
-            var response = await context.Handler(request);
+            HttpServerResponse response;
+            try
+            {
+                response = await context.Handler(request);
+            }
+            catch (Exception e)
+            {
+                response = new HttpServerResponse()
+                {
+                    StatusCode = 500,
+                    Headers = Enumerable.Empty<string>(),
+                    Body = new MemoryStream(Encoding.UTF8.GetBytes(e.ToString())),
+                };
+            }
 
             SetHeaders(context.Context.Response.Headers, response.Headers);
             context.Context.Response.StatusCode = response.StatusCode;
