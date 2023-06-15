@@ -2,9 +2,11 @@ ALL DECISIONS SHOULD REFER TO THE STANDARD!
 PERSONAS: WORKLOAD OWNER, REVIEWER, AGGREGATOR, CLIENT
 
 
-add epm endtoendtests (and actually implement odata along the way, things like @odata.type, @odata.context, etc)
-do code quality for peachy, endtoendtests, and iodata
+
 move code from epm to peachy
+update epm endtoendtests to actually implement odata along the way, things like @odata.type, @odata.context, etc
+do code quality for peachy, endtoendtests, and iodata
+
 
 add xml doc + warnings + todos + configureawait everywhere + other code quality stuff
 increase test coverage
