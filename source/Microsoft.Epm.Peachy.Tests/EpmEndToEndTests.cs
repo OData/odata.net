@@ -452,6 +452,10 @@ HTTP/1.1 404 NotFound
 ****
 
 {
+  "code":"NotFound",
+  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the entity type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'assumableRoles' defined on 'microsoft.graph.authorizationSystemIdentity'.",
+  "target":null,
+  "details":null
 }
 """
 );
@@ -482,11 +486,14 @@ HTTP/1.1 200 OK
 GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/id HTTP/1.1
 
 
-HTTP/1.1 200 OK
+HTTP/1.1 501 NotImplemented
 ****
 
 {
-  "value": "first"
+  "code":"NotImplemented",
+  "message":"TODO this functionality has nopt been implemented in peachy",
+  "target":null,
+  "details":null
 }
 """
 );
@@ -499,11 +506,14 @@ HTTP/1.1 200 OK
 GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/displayName HTTP/1.1
 
 
-HTTP/1.1 200 OK
+HTTP/1.1 501 NotImplemented
 ****
 
 {
-  "value": "adam"
+  "code":"NotImplemented",
+  "message":"TODO this functionality has nopt been implemented in peachy",
+  "target":null,
+  "details":null
 }
 """
 );
@@ -542,7 +552,10 @@ HTTP/1.1 404 NotFound
 ****
 
 {
-}
+  "code":"NotFound",
+  "message":"No entity with key 'doesntexist' found in the collection at '/external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/assumableRoles'.",
+  "target":null,
+  "details":null}
 """
 );
         }
@@ -554,7 +567,7 @@ HTTP/1.1 404 NotFound
 GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/assumableRoles/third HTTP/1.1
 
 
-HTTP/1.1 404 NotFound
+HTTP/1.1 200 OK
 ****
 
 {

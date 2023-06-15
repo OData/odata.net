@@ -173,7 +173,7 @@
                                         Enumerable.Empty<string>(),
                                         GenerateStream(new ODataError(
                                             "NotFound",
-                                            $"Not entity with key '{authorizationSystemKey}' found in the collection at '/{string.Join('/', path)}'.",
+                                            $"No entity with key '{authorizationSystemKey}' found in the collection at '/{string.Join('/', path)}'.",
                                             null,
                                             null)));
                                 }
@@ -224,7 +224,7 @@
                                                             Enumerable.Empty<string>(),
                                                             GenerateStream(new ODataError(
                                                                 "NotFound",
-                                                                $"Not entity with key '{authorizationSystemIdentityKey}' found in the collection at '/{string.Join('/', path)}'.",
+                                                                $"No entity with key '{authorizationSystemIdentityKey}' found in the collection at '/{string.Join('/', path)}'.",
                                                                 null,
                                                                 null)));
                                                     }
@@ -234,6 +234,7 @@
                                                     {
                                                         //// TODO http://localhost:8080/external/authorizationSystems/1/associatedIdentities/all/second/graph.awsUser/assumableRoles/third <- is this a 404?
                                                         segment = segmentsEnumerator.Current;
+                                                        path.Add(segment);
                                                         if (string.Equals("id", segment))
                                                         {
                                                             return new ODataResponse(
@@ -254,6 +255,7 @@
                                                             if (segmentsEnumerator.MoveNext())
                                                             {
                                                                 segment = segmentsEnumerator.Current;
+                                                                path.Add(segment);
                                                                 if (string.Equals("assumableRoles", segment))
                                                                 {
                                                                     var awsRoleSelector = (AuthorizationSystemIdentity _) => new { _.id, _.displayName };
@@ -266,7 +268,11 @@
                                                                             return new ODataResponse(
                                                                                 404,
                                                                                 Enumerable.Empty<string>(),
-                                                                                GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
+                                                                                GenerateStream(new ODataError(
+                                                                                    "NotFound",
+                                                                                    $"No entity with key '{assumableRoleKey}' found in the collection at '/{string.Join('/', path)}'.",
+                                                                                    null,
+                                                                                    null)));
                                                                         }
 
                                                                         if (segmentsEnumerator.MoveNext())
@@ -291,7 +297,15 @@
                                                                 }
                                                                 else
                                                                 {
-                                                                    //// TODO 404
+                                                                    //// TODO we are now recursing on authorizationsystemidentity
+                                                                    return new ODataResponse(
+                                                                        501,
+                                                                        Enumerable.Empty<string>(),
+                                                                        GenerateStream(new ODataError(
+                                                                            "NotImplemented",
+                                                                            $"TODO this functionality has nopt been implemented in peachy",
+                                                                            null,
+                                                                            null)));
                                                                 }
                                                             }
                                                             else
