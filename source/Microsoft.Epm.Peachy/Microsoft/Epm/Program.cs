@@ -209,9 +209,9 @@
                                         if (segmentsEnumerator.MoveNext())
                                         {
                                             segment = segmentsEnumerator.Current;
-                                            path.Add(segment);
                                             if (string.Equals(segment, "all"))
                                             {
+                                                path.Add(segment);
                                                 var authorizationSystemIdentitySelector = (AuthorizationSystemIdentity _) => new { _.id, _.displayName };
                                                 if (segmentsEnumerator.MoveNext())
                                                 {
@@ -234,7 +234,6 @@
                                                     {
                                                         //// TODO http://localhost:8080/external/authorizationSystems/1/associatedIdentities/all/second/graph.awsUser/assumableRoles/third <- is this a 404?
                                                         segment = segmentsEnumerator.Current;
-                                                        path.Add(segment);
                                                         if (string.Equals("id", segment))
                                                         {
                                                             return new ODataResponse(

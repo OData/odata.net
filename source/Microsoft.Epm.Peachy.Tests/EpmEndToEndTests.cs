@@ -275,7 +275,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external/authorizationSystems/2/associatedIdentities' refers to an entity of type 'microsoft.graph.associatedIdentities'. There is no property with name 'foo' defined on 'microsoft.graph.associatedIdentities'.",
+  "message":"The path '/external/authorizationSystems/2/associatedIdentities' refers to an instance of the complex type with name 'microsoft.graph.associatedIdentities'. There is no property with name 'foo' defined on 'microsoft.graph.associatedIdentities'.",
   "target":null,
   "details":null
 }
@@ -343,7 +343,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"Not entity with key 'doesntexist' found in the collection at '/external/authorizationSystems/1/associatedIdentities'.",
+  "message":"No entity with key 'doesntexist' found in the collection at '/external/authorizationSystems/1/associatedIdentities/all'.",
   "target":null,
   "details":null
 }
