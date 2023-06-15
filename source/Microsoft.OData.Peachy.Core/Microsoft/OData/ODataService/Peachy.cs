@@ -92,7 +92,7 @@
                 var keys = new List<(EdmElement Property, string PropertyValue)>();
                 var editUrlSegments = new List<string>();
                 var path = new List<string>();
-                return TraverseUriSegments(segmentsEnumerator, this.entityDataModel.RootElement, this.entityDataModel.RootElementLookup, path, keys, editUrlSegments);
+                return TraverseUriSegments(segmentsEnumerator, this.entityDataModel.RootElement, this.entityDataModel.RootElementLookup, path, keys, editUrlSegments, null);
             }
 
             //// TODO handle other urls here by reading the CSDL
@@ -100,7 +100,7 @@
             return await this.featureGapOdata.GetAsync(request);
         }
 
-        private ODataResponse TraverseUriSegments(IEnumerator<string> segmentsEnumerator, EdmElement edmElement, EdmElementLookupBase rootElementLookup, List<string> path, List<(EdmElement Property, string PropertyValue)> keys, List<string> editUrlSegments)
+        private ODataResponse TraverseUriSegments(IEnumerator<string> segmentsEnumerator, EdmElement edmElement, EdmElementLookupBase rootElementLookup, List<string> path, List<(EdmElement Property, string PropertyValue)> keys, List<string> editUrlSegments, object? entity)
         {
             var segment = segmentsEnumerator.Current;
             if (rootElementLookup.SingletonElements.TryGetValue(segment, out var singleValuedElementLookup))
@@ -108,11 +108,15 @@
                 path.Add(segment);
                 if (segmentsEnumerator.MoveNext())
                 {
-                    return TraverseUriSegments(segmentsEnumerator, singleValuedElementLookup.Element, singleValuedElementLookup, path, keys, editUrlSegments);
+                    return TraverseUriSegments(segmentsEnumerator, singleValuedElementLookup.Element, singleValuedElementLookup, path, keys, editUrlSegments, entity);
                 }
                 else
                 {
-                    return null;
+                    var selected = singleValuedElementLookup.Element.Selector(entity);
+                    return new ODataResponse(
+                        200,
+                        Enumerable.Empty<string>(),
+                        singleValuedElementLookup.Element.ElementType.StartsWith("Edm", StringComparison.OrdinalIgnoreCase) ? GeneratePrimitiveStream(selected) : GenerateStream(selected)); //// TODO terrible way to check for primitives
                 }
             }
             else if (rootElementLookup.CollectionElements.TryGetValue(segment, out var multiValuedElementLookup))
@@ -124,7 +128,7 @@
                     keys.Add((multiValuedElementLookup.Element, segment));
                     var dataStore = multiValuedElementLookup.Element.DataStore;
                     //// TODO do we really want to give a 404 if there's an entity in the middle of a path that can't be found?
-                    if (!dataStore.TryGet(keys.ToDictionary(key => key.Property.Name, key => key.PropertyValue), out var entity))
+                    if (!dataStore.TryGet(keys.ToDictionary(key => key.Property.Name, key => key.PropertyValue), out entity))
                     {
                         return new ODataResponse(
                             404,
@@ -139,7 +143,7 @@
                     if (segmentsEnumerator.MoveNext())
                     {
                         path.Add(segment);
-                        return TraverseUriSegments(segmentsEnumerator, multiValuedElementLookup.Element, multiValuedElementLookup, path, keys, editUrlSegments);
+                        return TraverseUriSegments(segmentsEnumerator, multiValuedElementLookup.Element, multiValuedElementLookup, path, keys, editUrlSegments, entity);
                     }
                     else
                     {
@@ -171,6 +175,11 @@
                         null,
                         null)));
             }
+        }
+
+        private static Stream GeneratePrimitiveStream<T>(T value)
+        {
+            return GenerateStream(new { value = value });
         }
 
         private static Stream GenerateCollectionStream<T>(IEnumerable<T> values)

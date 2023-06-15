@@ -183,7 +183,7 @@
                         {
                             Name = "external", //// TODO a singleton/single-valued contained navigation also needs to tell you where to get the data from
                             ElementType = "microsoft.graph.externalConnectors.external",
-                            Selector = _ => _, //// TODO
+                            Selector = _ => new {},
                             MultiValuedElements = new[]
                             {
                                 new EdmElement.MultiValuedElement()
@@ -199,25 +199,25 @@
                                         {
                                             Name = "id",
                                             ElementType = "Edm.String",
-                                            Selector = _ => _, //// TODO
+                                            Selector = _ => ((AuthorizationSystem)_).id,
                                         },
                                         new EdmElement.SingleValuedElement()
                                         {
                                             Name = "authorizationSystemName",
                                             ElementType = "Edm.String",
-                                            Selector = _ => _, //// TODO
+                                            Selector = _ => ((AuthorizationSystem)_).authorizationSystemName,
                                         },
                                         new EdmElement.SingleValuedElement()
                                         {
                                             Name = "authorizationSystemType",
                                             ElementType = "Edm.String",
-                                            Selector = _ => _, //// TODO
+                                            Selector = _ => ((AuthorizationSystem)_).authorizationSystemType,
                                         },
                                         new EdmElement.SingleValuedElement()
                                         {
                                             Name = "associatedIdentities",
                                             ElementType = "microsoft.graph.associatedIdentities",
-                                            Selector = _ => _, //// TODO
+                                            Selector = _ => new {},
                                             MultiValuedElements = new[]
                                             {
                                                 new EdmElement.MultiValuedElement()
@@ -232,13 +232,13 @@
                                                         {
                                                             Name = "id",
                                                             ElementType = "Edm.String",
-                                                            Selector = _ => _, //// TODO
+                                                            Selector = _ => ((AuthorizationSystemIdentity)_).id,
                                                         },
                                                         new EdmElement.SingleValuedElement()
                                                         {
                                                             Name = "displayName",
                                                             ElementType = "Edm.String",
-                                                            Selector = _ => _, //// TODO
+                                                            Selector = _ => ((AuthorizationSystemIdentity)_).displayName,
                                                         },
                                                     },
                                                     MultiValuedElements = new[]
