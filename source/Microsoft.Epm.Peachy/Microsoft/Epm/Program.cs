@@ -29,7 +29,7 @@
 
                 var port = 8080;
                 await new HttpListenerHttpServer(
-                    epm.HandleRequestAsync,
+                    new Epm().HandleRequestAsync,
                     new HttpListenerHttpServer.Settings()
                     {
                         Port = port,
@@ -324,7 +324,7 @@
                                                                 Enumerable.Empty<string>(),
                                                                 GenerateStream(new ODataError(
                                                                     "NotFound", //// TODO NotFound or BadRequest?
-                                                                    $"The path '/{string.Join('/', path)}' refers to an instance of the entity type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                                                    $"The path '/{string.Join('/', path)}' refers to an instance of the type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
                                                                     null,
                                                                     null)));
                                                         }
@@ -353,7 +353,7 @@
                                                     Enumerable.Empty<string>(),
                                                     GenerateStream(new ODataError(
                                                         "NotFound", //// TODO NotFound or BadRequest?
-                                                        $"The path '/{string.Join('/', path)}' refers to an instance of the complex type with name '{complexTypeName}'. There is no property with name '{segment}' defined on '{complexTypeName}'.",
+                                                        $"The path '/{string.Join('/', path)}' refers to an instance of the type with name '{complexTypeName}'. There is no property with name '{segment}' defined on '{complexTypeName}'.",
                                                         null,
                                                         null)));
                                             }
@@ -376,7 +376,7 @@
                                             Enumerable.Empty<string>(),
                                             GenerateStream(new ODataError(
                                                 "NotFound", //// TODO NotFound or BadRequest?
-                                                $"The path '/{string.Join('/', path)}' refers to an entity of type '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                                $"The path '/{string.Join('/', path)}' refers to an instance of the type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
                                                 null,
                                                 null)));
                                     }
@@ -405,7 +405,7 @@
                                 Enumerable.Empty<string>(),
                                 GenerateStream(new ODataError(
                                     "NotFound", //// TODO NotFound or BadRequest?
-                                    $"The path '/{string.Join('/', path)}' refers to an entity of type '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                    $"The path '/{string.Join('/', path)}' refers to an instance of the type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
                                     null,
                                     null)));
                         }

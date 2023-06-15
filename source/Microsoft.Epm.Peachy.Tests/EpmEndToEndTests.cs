@@ -96,7 +96,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external' refers to an entity of type 'microsoft.graph.externalConnectors.external'. There is no property with name 'auth' defined on 'microsoft.graph.externalConnectors.external'.",
+  "message":"The path '/external' refers to an instance of the type with name 'microsoft.graph.externalConnectors.external'. There is no property with name 'auth' defined on 'microsoft.graph.externalConnectors.external'.",
   "target":null,
   "details":null
 }
@@ -188,7 +188,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external/authorizationSystems/2' refers to an entity of type 'microsoft.graph.authorizationSystem'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystem'.",
+  "message":"The path '/external/authorizationSystems/2' refers to an instance of the type with name 'microsoft.graph.authorizationSystem'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystem'.",
   "target":null,
   "details":null
 }
@@ -275,7 +275,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external/authorizationSystems/2/associatedIdentities' refers to an instance of the complex type with name 'microsoft.graph.associatedIdentities'. There is no property with name 'foo' defined on 'microsoft.graph.associatedIdentities'.",
+  "message":"The path '/external/authorizationSystems/2/associatedIdentities' refers to an instance of the type with name 'microsoft.graph.associatedIdentities'. There is no property with name 'foo' defined on 'microsoft.graph.associatedIdentities'.",
   "target":null,
   "details":null
 }
@@ -399,7 +399,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the entity type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystemIdentity'.",
+  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystemIdentity'.",
   "target":null,
   "details":null
 }
@@ -453,7 +453,7 @@ HTTP/1.1 404 NotFound
 
 {
   "code":"NotFound",
-  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the entity type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'assumableRoles' defined on 'microsoft.graph.authorizationSystemIdentity'.",
+  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'assumableRoles' defined on 'microsoft.graph.authorizationSystemIdentity'.",
   "target":null,
   "details":null
 }
