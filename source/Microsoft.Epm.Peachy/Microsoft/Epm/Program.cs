@@ -209,6 +209,7 @@
                                         if (segmentsEnumerator.MoveNext())
                                         {
                                             segment = segmentsEnumerator.Current;
+                                            path.Add(segment);
                                             if (string.Equals(segment, "all"))
                                             {
                                                 var authorizationSystemIdentitySelector = (AuthorizationSystemIdentity _) => new { _.id, _.displayName };
@@ -221,9 +222,14 @@
                                                         return new ODataResponse(
                                                             404,
                                                             Enumerable.Empty<string>(),
-                                                            GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
+                                                            GenerateStream(new ODataError(
+                                                                "NotFound",
+                                                                $"Not entity with key '{authorizationSystemIdentityKey}' found in the collection at '/{string.Join('/', path)}'.",
+                                                                null,
+                                                                null)));
                                                     }
 
+                                                    path.Add(authorizationSystemIdentityKey);
                                                     if (segmentsEnumerator.MoveNext())
                                                     {
                                                         //// TODO http://localhost:8080/external/authorizationSystems/1/associatedIdentities/all/second/graph.awsUser/assumableRoles/third <- is this a 404?
@@ -298,7 +304,15 @@
                                                         }
                                                         else
                                                         {
-                                                            //// TODO 404
+                                                            var entityTypeName = "microsoft.graph.authorizationSystemIdentity";
+                                                            return new ODataResponse(
+                                                                404, //// TODO 404 or 400?
+                                                                Enumerable.Empty<string>(),
+                                                                GenerateStream(new ODataError(
+                                                                    "NotFound", //// TODO NotFound or BadRequest?
+                                                                    $"The path '/{string.Join('/', path)}' refers to an instance of the entity type with name '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                                                    null,
+                                                                    null)));
                                                         }
                                                     }
                                                     else
@@ -325,7 +339,7 @@
                                                     Enumerable.Empty<string>(),
                                                     GenerateStream(new ODataError(
                                                         "NotFound", //// TODO NotFound or BadRequest?
-                                                        $"The path '/{string.Join('/', path)}' refers to an entity of type '{complexTypeName}'. There is no property with name '{segment}' defined on '{complexTypeName}'.",
+                                                        $"The path '/{string.Join('/', path)}' refers to an instance of the complex type with name '{complexTypeName}'. There is no property with name '{segment}' defined on '{complexTypeName}'.",
                                                         null,
                                                         null)));
                                             }

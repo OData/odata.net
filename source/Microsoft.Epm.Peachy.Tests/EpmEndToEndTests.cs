@@ -342,6 +342,10 @@ HTTP/1.1 404 NotFound
 ****
 
 {
+  "code":"NotFound",
+  "message":"Not entity with key 'doesntexist' found in the collection at '/external/authorizationSystems/1/associatedIdentities'.",
+  "target":null,
+  "details":null
 }
 """
 );
@@ -394,6 +398,10 @@ HTTP/1.1 404 NotFound
 ****
 
 {
+  "code":"NotFound",
+  "message":"The path '/external/authorizationSystems/1/associatedIdentities/all/first' refers to an instance of the entity type with name 'microsoft.graph.authorizationSystemIdentity'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystemIdentity'.",
+  "target":null,
+  "details":null
 }
 """
 );
