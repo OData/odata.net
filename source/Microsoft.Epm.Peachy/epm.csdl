@@ -22,11 +22,12 @@
         <Property Name="id" Type="Edm.String" Nullable="false" />
         <Property Name="authorizationSystemName" Type="Edm.String" Nullable="false"/>
         <Property Name="authorizationSystemType" Type="Edm.String" Nullable="false"/>
+        <NavigationProperty Name="associatedIdentities" Type="self.associatedIdentities" Nullable="false" ContainsTarget="true" />
       </EntityType>
 
-      <ComplexType Name="associatedIdentities">
+      <EntityType Name="associatedIdentities">
         <NavigationProperty Name="all" Type="Collection(self.authorizationSystemIdentity)" Nullable="false" ContainsTarget="true" />
-      </ComplexType>
+      </EntityType>
 
       <EntityType Name="authorizationSystemIdentity">
         <Key>
@@ -43,7 +44,7 @@
       <EntityType Name="awsRole" BaseType="authorizationSystemIdentity">
       </EntityType>
       
-    </Schema>
+  </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
 
