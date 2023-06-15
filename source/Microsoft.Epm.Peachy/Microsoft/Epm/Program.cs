@@ -250,6 +250,7 @@
                                                         }
                                                         else if (string.Equals("graph.awsUser", segment) && authorizationSystemIdentity is AwsUser awsUser)
                                                         {
+                                                            path.Add(segment);
                                                             var awsUserSelector = authorizationSystemIdentitySelector;
                                                             if (segmentsEnumerator.MoveNext())
                                                             {
