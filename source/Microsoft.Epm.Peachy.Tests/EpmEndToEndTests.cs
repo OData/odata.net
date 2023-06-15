@@ -48,6 +48,515 @@ HTTP/1.1 200 OK
 );
         }
 
+        public async Task _1()
+        {
+            await SampleAsync(
+"""
+GET /extern HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "code":"NotFound",
+  "message":"There is no singleton or entity set defined with name 'extern'.",
+  "target":null,
+  "details":null
+}
+"""
+);
+        }
+
+        public async Task _2()
+        {
+            await SampleAsync(
+"""
+GET /external HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _3()
+        {
+            await SampleAsync(
+"""
+GET /external/auth HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "code":"NotFound",
+  "message":"The path '/external' refers to an entity of type 'microsoft.graph.externalConnectors.external'. There is no property with name 'auth' defined on 'microsoft.graph.externalConnectors.external'.",
+  "target":null,
+  "details":null
+}
+"""
+);
+        }
+
+        public async Task _4()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": [
+    {
+      "id": "1",
+      "authorizationSystemName": "chrispre auth system",
+      "authorizationSystemType": "aws"
+    },
+    {
+      "id": "2",
+      "authorizationSystemName": "mikep auth system",
+      "authorizationSystemType": "azure"
+    },
+    {
+      "id": "3",
+      "authorizationSystemName": "gdebruin auth system",
+      "authorizationSystemType": "gcp"
+    }
+  ]
+}
+"""
+);
+        }
+
+        public async Task _5()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/doesntexist HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "code":"NotFound",
+  "message":"Not entity with key 'doesntexist' found in the collection at '/external/authorizationSystems'.",
+  "target":null,
+  "details":null
+}
+"""
+);
+        }
+
+        public async Task _6()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2 HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "id": "2",
+  "authorizationSystemName": "mikep auth system",
+  "authorizationSystemType": "azure"
+}
+"""
+);
+        }
+
+        public async Task _7()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/foo HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "code":"NotFound",
+  "message":"The path '/external/authorizationSystems/2' refers to an entity of type 'microsoft.graph.authorizationSystem'. There is no property with name 'foo' defined on 'microsoft.graph.authorizationSystem'.",
+  "target":null,
+  "details":null
+}
+"""
+);
+        }
+
+        public async Task _8()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/id HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "2"
+}
+"""
+);
+        }
+
+        public async Task _9()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/authorizationSystemName HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "mikep auth system"
+}
+"""
+);
+        }
+
+        public async Task _10()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/authorizationSystemType HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "azure"
+}
+"""
+);
+        }
+
+        public async Task _11()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/associatedIdentities HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _12()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/associatedIdentities/foo HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "code":"NotFound",
+  "message":"The path '/external/authorizationSystems/2/associatedIdentities' refers to an entity of type 'microsoft.graph.associatedIdentities'. There is no property with name 'foo' defined on 'microsoft.graph.associatedIdentities'.",
+  "target":null,
+  "details":null
+}
+"""
+);
+        }
+
+        public async Task _13()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/2/associatedIdentities/all HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": [
+  ]
+}
+"""
+);
+        }
+
+        public async Task _14()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": [
+    {
+      "id":"first",
+      "displayName":"adam"
+    },
+    {
+      "id":"second",
+      "displayName":"jessie"
+    },
+    {
+      "id":"third",
+      "displayName":"a role"
+    }
+  ]
+}
+"""
+);
+        }
+
+        public async Task _15()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/doesntexist HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _16()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/third HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "id":"third",
+  "displayName":"a role"
+}
+"""
+);
+        }
+
+        public async Task _17()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "id":"first",
+  "displayName":"adam"
+}
+"""
+);
+        }
+
+        public async Task _18()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/foo HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _19()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/id HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "first"
+}
+"""
+);
+        }
+
+        public async Task _20()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/displayName HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "adam"
+}
+"""
+);
+        }
+
+        public async Task _21()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/assumableRoles HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _22()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "id":"first",
+  "displayName":"adam"
+}
+"""
+);
+        }
+
+        public async Task _23()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/id HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "first"
+}
+"""
+);
+        }
+
+        public async Task _24()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/displayName HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": "adam"
+}
+"""
+);
+        }
+
+        public async Task _25()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/assumableRoles HTTP/1.1
+
+
+HTTP/1.1 200 OK
+****
+
+{
+  "value": [
+    {
+      "id": "third",
+      "displayName": "a role"
+    }
+  ]
+}
+"""
+);
+        }
+
+        public async Task _26()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/assumableRoles/doesntexist HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+}
+"""
+);
+        }
+
+        public async Task _27()
+        {
+            await SampleAsync(
+"""
+GET /external/authorizationSystems/1/associatedIdentities/all/first/graph.awsUser/assumableRoles/third HTTP/1.1
+
+
+HTTP/1.1 404 NotFound
+****
+
+{
+  "id": "third",
+  "displayName": "a role"
+}
+"""
+);
+        }
+
         private async Task SampleAsync(string sampleText)
         {
             var sample = await ParseSampleAsync(sampleText).ConfigureAwait(false);

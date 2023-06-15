@@ -142,13 +142,15 @@
                         throw new InvalidOperationException("TODO no segments");
                     }
 
+                    var path = new List<string>();
                     var segment = segmentsEnumerator.Current;
                     if (string.Equals(segment, "external"))
                     {
+                        path.Add(segment);
                         if (!segmentsEnumerator.MoveNext())
                         {
                             return new ODataResponse(
-                                200, 
+                                200,
                                 Enumerable.Empty<string>(),
                                 GenerateStream(new
                                 {
@@ -158,6 +160,7 @@
                         segment = segmentsEnumerator.Current;
                         if (string.Equals(segment, "authorizationSystems"))
                         {
+                            path.Add(segment);
                             var authorizationSystemSelector = (AuthorizationSystem _) => new { _.id, _.authorizationSystemName, _.authorizationSystemType };
                             if (segmentsEnumerator.MoveNext())
                             {
@@ -167,19 +170,25 @@
                                 {
                                     return new ODataResponse(
                                         404,
-                                        Enumerable.Empty<string>(), 
-                                        GenerateStream(new { error = "this is a 404 because the entity with that id can't be found" }));
+                                        Enumerable.Empty<string>(),
+                                        GenerateStream(new ODataError(
+                                            "NotFound",
+                                            $"Not entity with key '{authorizationSystemKey}' found in the collection at '/{string.Join('/', path)}'.",
+                                            null,
+                                            null)));
                                 }
 
+                                path.Add(authorizationSystemKey);
                                 if (segmentsEnumerator.MoveNext())
                                 {
                                     segment = segmentsEnumerator.Current;
+                                    path.Add(segment);
                                     if (string.Equals(segment, "id"))
                                     {
-                                            return new ODataResponse(
-                                            200,
-                                            Enumerable.Empty<string>(),
-                                            GeneratePrimitiveStream(authorizationSystem.id));
+                                        return new ODataResponse(
+                                        200,
+                                        Enumerable.Empty<string>(),
+                                        GeneratePrimitiveStream(authorizationSystem.id));
                                     }
                                     else if (string.Equals(segment, "authorizationSystemName"))
                                     {
@@ -310,7 +319,15 @@
                                             }
                                             else
                                             {
-                                                //// TODO 404
+                                                var complexTypeName = "microsoft.graph.associatedIdentities";
+                                                return new ODataResponse(
+                                                    404, //// TODO 404 or 400?
+                                                    Enumerable.Empty<string>(),
+                                                    GenerateStream(new ODataError(
+                                                        "NotFound", //// TODO NotFound or BadRequest?
+                                                        $"The path '/{string.Join('/', path)}' refers to an entity of type '{complexTypeName}'. There is no property with name '{segment}' defined on '{complexTypeName}'.",
+                                                        null,
+                                                        null)));
                                             }
                                         }
                                         else
@@ -319,13 +336,21 @@
                                                 200,
                                                 Enumerable.Empty<string>(),
                                                 GenerateStream(new
-                                                    {
-                                                    }));
+                                                {
+                                                }));
                                         }
                                     }
                                     else
                                     {
-                                        //// TODO 404
+                                        var entityTypeName = "microsoft.graph.authorizationSystem";
+                                        return new ODataResponse(
+                                            404, //// TODO 404 or 400?
+                                            Enumerable.Empty<string>(),
+                                            GenerateStream(new ODataError(
+                                                "NotFound", //// TODO NotFound or BadRequest?
+                                                $"The path '/{string.Join('/', path)}' refers to an entity of type '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                                null,
+                                                null)));
                                     }
                                 }
                                 else
@@ -344,6 +369,29 @@
                                     GenerateCollectionStream(this.authorizationSystems.Values.Select(authorizationSystemSelector)));
                             }
                         }
+                        else
+                        {
+                            var entityTypeName = "microsoft.graph.externalConnectors.external";
+                            return new ODataResponse(
+                                404, //// TODO 404 or 400?
+                                Enumerable.Empty<string>(),
+                                GenerateStream(new ODataError(
+                                    "NotFound", //// TODO NotFound or BadRequest?
+                                    $"The path '/{string.Join('/', path)}' refers to an entity of type '{entityTypeName}'. There is no property with name '{segment}' defined on '{entityTypeName}'.",
+                                    null,
+                                    null)));
+                        }
+                    }
+                    else
+                    {
+                        return new ODataResponse(
+                            404, //// TODO 404 or 400?
+                            Enumerable.Empty<string>(),
+                            GenerateStream(new ODataError(
+                                "NotFound", //// TODO NotFound or BadRequest?
+                                $"There is no singleton or entity set defined with name '{segment}'.", 
+                                null, 
+                                null)));
                     }
                 }
 
