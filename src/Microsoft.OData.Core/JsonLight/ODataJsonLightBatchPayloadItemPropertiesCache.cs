@@ -220,12 +220,6 @@ namespace Microsoft.OData.JsonLight
                     // Convert to upper case to support case-insensitive request property names
                     string propertyName = Normalize(this.jsonReader.ReadPropertyName());
 
-                    // Throw an ODataException, if a duplicate json property was detected
-                    if (jsonProperties.ContainsKey(propertyName))
-                    {
-                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
-                    }
-
                     switch (propertyName)
                     {
                         case PropertyNameId:
@@ -233,26 +227,14 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameMethod:
                         case PropertyNameUrl:
                             {
-                                string propertyValueString = this.jsonReader.ReadStringValue();
-
-                                // Skip duplicate json properties
-                                if (!jsonProperties.ContainsKey(propertyName))
-                                {
-                                    jsonProperties.Add(propertyName, propertyValueString);
-                                }
+                                jsonProperties.Add(propertyName, this.jsonReader.ReadStringValue());
                             }
 
                             break;
 
                         case PropertyNameStatus:
                             {
-                                object propertyValueObject = this.jsonReader.ReadPrimitiveValue();
-
-                                // Skip duplicate json properties
-                                if (!jsonProperties.ContainsKey(propertyName))
-                                {
-                                    jsonProperties.Add(propertyName, propertyValueObject);
-                                }
+                                jsonProperties.Add(propertyName, this.jsonReader.ReadPrimitiveValue());
                             }
 
                             break;
@@ -268,11 +250,7 @@ namespace Microsoft.OData.JsonLight
 
                                 this.jsonReader.ReadEndArray();
 
-                                // Skip duplicate json properties
-                                if (!jsonProperties.ContainsKey(propertyName))
-                                {
-                                    jsonProperties.Add(propertyName, dependsOnIds);
-                                }
+                                jsonProperties.Add(propertyName, dependsOnIds);
                             }
 
                             break;
@@ -303,20 +281,19 @@ namespace Microsoft.OData.JsonLight
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    // Skip duplicate http headers
                                     if (!headers.ContainsKeyOrdinal(headerName))
                                     {
                                         headers.Add(headerName, headerValue);
+                                    }
+                                    else
+                                    {
+                                        headers[propertyName] = headerValue;
                                     }
                                 }
 
                                 this.jsonReader.ReadEndObject();
 
-                                // Skip duplicate json properties
-                                if (!jsonProperties.ContainsKey(propertyName))
-                                {
-                                    jsonProperties.Add(propertyName, headers);
-                                }
+                                jsonProperties.Add(propertyName, headers);
 
                                 if (!this.isStreamPopulated && bodyContentStream != null)
                                 {
@@ -330,12 +307,7 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameBody:
                             {
                                 bodyContentStream = CreateJsonPayloadBodyContentStream(contentTypeHeader);
-
-                                // Skip duplicate json properties
-                                if (!jsonProperties.ContainsKey(propertyName))
-                                {
-                                    jsonProperties.Add(propertyName, bodyContentStream);
-                                }
+                                jsonProperties.Add(propertyName, bodyContentStream);
                             }
 
                             break;
@@ -403,7 +375,7 @@ namespace Microsoft.OData.JsonLight
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
+                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch(propertyName));
                     }
 
                     switch (propertyName)
@@ -412,24 +384,16 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameAtomicityGroup:
                         case PropertyNameMethod:
                         case PropertyNameUrl:
-                            string propertyValueString = await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false);
-
-                            // Skip duplicate json properties
-                            if (!jsonProperties.ContainsKey(propertyName))
-                            {
-                                jsonProperties.Add(propertyName, propertyValueString);
-                            }
+                            jsonProperties.Add(
+                                propertyName,
+                                await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
 
                             break;
 
                         case PropertyNameStatus:
-                            object propertyValueObject = await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false);
-
-                            // Skip duplicate json properties
-                            if (!jsonProperties.ContainsKey(propertyName))
-                            {
-                                jsonProperties.Add(propertyName, propertyValueObject);
-                            }
+                            jsonProperties.Add(
+                                propertyName,
+                                await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
 
                             break;
 
@@ -445,11 +409,7 @@ namespace Microsoft.OData.JsonLight
                             await this.asynchronousJsonReader.ReadEndArrayAsync()
                                 .ConfigureAwait(false);
 
-                            // Skip duplicate json properties
-                            if (!jsonProperties.ContainsKey(propertyName))
-                            {
-                                jsonProperties.Add(propertyName, dependsOnIds);
-                            }
+                            jsonProperties.Add(propertyName, dependsOnIds);
 
                             break;
 
@@ -480,21 +440,13 @@ namespace Microsoft.OData.JsonLight
                                     contentTypeHeader = headerValue;
                                 }
 
-                                // Skip duplicate http headers
-                                if (!headers.ContainsKeyOrdinal(headerName))
-                                {
-                                    headers.Add(headerName, headerValue);
-                                }
+                                headers[headerName] = headerValue;
                             }
 
                             await this.asynchronousJsonReader.ReadEndObjectAsync()
                                 .ConfigureAwait(false);
 
-                            // Skip duplicate json properties
-                            if (!jsonProperties.ContainsKey(propertyName))
-                            {
-                                jsonProperties.Add(propertyName, headers);
-                            }
+                            jsonProperties.Add(propertyName, headers);
 
                             if (!this.isStreamPopulated && bodyContentStream != null)
                             {
@@ -508,12 +460,7 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameBody:
                             bodyContentStream = await CreateJsonPayloadBodyContentStreamAsync(contentTypeHeader)
                                 .ConfigureAwait(false);
-
-                            // Skip duplicate json properties
-                            if (!jsonProperties.ContainsKey(propertyName))
-                            {
-                                jsonProperties.Add(propertyName, bodyContentStream);
-                            }
+                            jsonProperties.Add(propertyName, bodyContentStream);
 
                             break;
 
