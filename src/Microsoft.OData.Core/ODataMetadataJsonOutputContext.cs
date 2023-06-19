@@ -218,6 +218,7 @@ namespace Microsoft.OData
 
                     if (this.asynchronousOutputStream != null)
                     {
+                        await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
                         await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
                     }
 

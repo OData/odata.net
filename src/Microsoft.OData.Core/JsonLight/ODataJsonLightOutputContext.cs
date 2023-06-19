@@ -877,8 +877,8 @@ namespace Microsoft.OData.JsonLight
                         if (this.asynchronousOutputStream != null)
                         {
 #if NETSTANDARD1_1
-                        this.asynchronousOutputStream.FlushSync();
-                        this.asynchronousOutputStream.Dispose();
+                            this.asynchronousOutputStream.FlushSync();
+                            this.asynchronousOutputStream.Dispose();
 #else
                             this.asynchronousOutputStream.Flush();
                             // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
@@ -923,14 +923,13 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.messageOutputStream != null)
                 {
-                    // The IJsonWriter will flush the underlying stream
-                    if (this.jsonWriter is IAsyncDisposable disposableWriter)
+
+                    // The IJsonWriterAsync will flush the underlying stream
+                    await this.asynchronousJsonWriter.FlushAsync().ConfigureAwait(false);
+
+                    if (this.asynchronousJsonWriter is IAsyncDisposable asyncDisposableWriter)
                     {
-                        await disposableWriter.DisposeAsync().ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        this.jsonWriter.Flush();
+                        await asyncDisposableWriter.DisposeAsync().ConfigureAwait(false);
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.

@@ -699,6 +699,9 @@ namespace Microsoft.OData
         {
             await this.DisposeAsyncCore().ConfigureAwait(false);
 
+            // Calling Dispose(disposing: false) releases unmanaged resources if any
+            // but does not perform synchronous I/O (e.g. does not call Flush())
+            // See: https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#the-disposeasync-method
             this.Dispose(false);
 
             GC.SuppressFinalize(this);
