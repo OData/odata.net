@@ -273,8 +273,7 @@ namespace Microsoft.OData.JsonLight
                                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                                 {
                                     string headerName = this.jsonReader.ReadPropertyName();
-                                    object headerValueObject = this.jsonReader.ReadPrimitiveValue();
-                                    string headerValue = headerValueObject?.ToString();
+                                    string headerValue = this.jsonReader.ReadPrimitiveValue()?.ToString();
 
                                     // Remember the Content-Type header value.
                                     if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
@@ -282,14 +281,7 @@ namespace Microsoft.OData.JsonLight
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    if (!headers.ContainsKeyOrdinal(headerName))
-                                    {
-                                        headers.Add(headerName, headerValue);
-                                    }
-                                    else
-                                    {
-                                        headers[propertyName] = headerValue;
-                                    }
+                                    headers[propertyName] = headerValue;
                                 }
 
                                 this.jsonReader.ReadEndObject();
@@ -427,8 +419,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 string headerName = await this.asynchronousJsonReader.ReadPropertyNameAsync()
                                     .ConfigureAwait(false);
-                                object headerValueObject = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
-                                string headerValue = headerValueObject?.ToString();
+                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
 
                                 // Remember the Content-Type header value.
                                 if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
