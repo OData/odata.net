@@ -183,6 +183,49 @@ namespace Microsoft.OData
         /// <param name="disposing">If 'true' this method is called from user code; if 'false' it is called by the runtime.</param>
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                try
+                {
+                    if (this.xmlWriter != null)
+                    {
+                        // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
+                        if (this.asynchronousOutputStream != null)
+                        {
+                            this.xmlWriter.Flush();
+                            this.asynchronousOutputStream.Flush();
+                            this.asynchronousOutputStream.Dispose();
+                        }
+                        else
+                        {
+                            // XmlWriter.Flush will call the underlying Stream.Flush.
+                            this.xmlWriter.Flush();
+                        }
+
+                        // XmlWriter.Dispose calls XmlWriter.Close which writes missing end elements.
+                        // Thus we can't dispose the XmlWriter since that might end up writing more data into the stream right here
+                        // and thus callers would have no way to prevent us from writing synchronously into the underlying stream.
+                        // Also in case of in-stream error we intentionally want to not write the end elements to keep the payload invalid.
+                        // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
+
+                        // Dispose the message stream (note that we OWN this stream, so we always dispose it).
+                        this.messageOutputStream.Dispose();
+                    }
+                }
+                finally
+                {
+                    this.messageOutputStream = null;
+                    this.asynchronousOutputStream = null;
+                    this.xmlWriter = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        protected override async ValueTask DisposeAsyncCore()
+        {
             try
             {
                 if (this.xmlWriter != null)
@@ -190,14 +233,14 @@ namespace Microsoft.OData
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-                        this.xmlWriter.FlushAsync().Wait();
-                        this.asynchronousOutputStream.FlushAsync().Wait();
-                        this.asynchronousOutputStream.Dispose();
+                        await this.xmlWriter.FlushAsync().ConfigureAwait(false);
+                        await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
+                        await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
                     }
                     else
                     {
                         // XmlWriter.Flush will call the underlying Stream.Flush.
-                        this.xmlWriter.Flush();
+                        await this.xmlWriter.FlushAsync().ConfigureAwait(false);
                     }
 
                     // XmlWriter.Dispose calls XmlWriter.Close which writes missing end elements.
@@ -207,7 +250,7 @@ namespace Microsoft.OData
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
-                    this.messageOutputStream.Dispose();
+                    await this.messageOutputStream.DisposeAsync().ConfigureAwait(false);
                 }
             }
             finally
@@ -217,8 +260,9 @@ namespace Microsoft.OData
                 this.xmlWriter = null;
             }
 
-            base.Dispose(disposing);
+            await base.DisposeAsyncCore().ConfigureAwait(false);
         }
+#endif
 
         private void WriteMetadataDocumentImplementation()
         {

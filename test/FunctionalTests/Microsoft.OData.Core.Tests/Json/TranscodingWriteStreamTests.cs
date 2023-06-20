@@ -67,13 +67,14 @@ namespace Microsoft.OData.Tests.Json
         {
             string expected = JavaScriptEncoder.Default.Encode(message);
 
-            var stream = new MemoryStream();
+            var memoryStream = new MemoryStream();
+            var stream = new AsyncStream(memoryStream);
 
-            using var transcodingStream = new TranscodingWriteStream(stream, targetEncoding, inputEncoding);
+            await using var transcodingStream = new TranscodingWriteStream(stream, targetEncoding, inputEncoding);
             await transcodingStream.WriteAsync(inputEncoding.GetBytes(JavaScriptEncoder.Default.Encode(message)), default);
             await transcodingStream.FlushAsync();
 
-            string actual = targetEncoding.GetString(stream.ToArray());
+            string actual = targetEncoding.GetString(memoryStream.ToArray());
             Assert.Equal(expected, actual, StringComparer.OrdinalIgnoreCase);
         }
 

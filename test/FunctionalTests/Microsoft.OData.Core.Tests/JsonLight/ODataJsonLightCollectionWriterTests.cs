@@ -527,7 +527,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(payload, expectedPayload);
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel model, bool writingResponse = true, bool synchronous = true)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, IEdmModel model, bool writingResponse = true, bool synchronous = true)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -555,7 +555,7 @@ namespace Microsoft.OData.Tests.JsonLight
             IEdmModel model,
             IEdmTypeReference itemTypeReference)
         {
-            var stream = new MemoryStream();
+            var stream = new AsyncStream(new MemoryStream());
             var jsonLightOutputContext = CreateJsonLightOutputContext(stream, model, /* writingResponse */ true, /* synchronous */ false);
             var jsonLightCollectionWriter = new ODataJsonLightCollectionWriter(jsonLightOutputContext, itemTypeReference);
             await func(jsonLightCollectionWriter);

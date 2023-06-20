@@ -72,7 +72,7 @@ namespace Microsoft.OData.Tests
         public async Task WriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
             await using (Stream writeStream = new ODataWriteStream(
-                new MemoryStream(),
+                new AsyncStream(new MemoryStream()),
                 this.streamListener)) // `synchronous` argument becomes irrelevant
             {
             }
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests
         public async Task WriteStreamDisposeAsyncShouldBeIdempotentAsync()
         {
             Stream writeStream = new ODataWriteStream(
-                new MemoryStream(),
+                new AsyncStream(new MemoryStream()),
                 this.streamListener);
 
             // 1st call to DisposeAsync

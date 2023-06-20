@@ -292,7 +292,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(exceptionMessage, exception.Message);
         }
 
-        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(MemoryStream memoryStream, IODataPayloadUriConverter urlResolver = null, bool isAsync = false)
+        private static ODataJsonLightServiceDocumentSerializer CreateODataJsonLightServiceDocumentSerializer(Stream memoryStream, IODataPayloadUriConverter urlResolver = null, bool isAsync = false)
         {
             var model = new EdmModel();
             var messageWriterSettings = new ODataMessageWriterSettings();
@@ -332,7 +332,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private async Task<string> SetupJsonLightServiceDocumentSerializerAndRunTestAsync(Func<ODataJsonLightServiceDocumentSerializer, Task> func)
         {
-            MemoryStream memoryStream = new MemoryStream();
+            Stream memoryStream = new AsyncStream(new MemoryStream());
             var jsonLightServiceDocumentSerializer = CreateODataJsonLightServiceDocumentSerializer(memoryStream, /* urlResolver */ null, true);
             await func(jsonLightServiceDocumentSerializer);
             await jsonLightServiceDocumentSerializer.JsonLightOutputContext.FlushAsync();
