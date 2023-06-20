@@ -269,26 +269,13 @@ namespace Microsoft.OData.JsonLight
                                     string headerName = this.jsonReader.ReadPropertyName();
                                     string headerValue = this.jsonReader.ReadPrimitiveValue()?.ToString();
 
-                                    // Throw an ODataException, if a duplicate header was detected
-                                    if (headers.ContainsKeyOrdinal(headerName))
-                                    {
-                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
-                                    }
-
                                     // Remember the Content-Type header value.
                                     if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
                                     {
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    if (!headers.ContainsKeyOrdinal(headerName))
-                                    {
-                                        headers.Add(headerName, headerValue);
-                                    }
-                                    else
-                                    {
-                                        headers[propertyName] = headerValue;
-                                    }
+                                    headers[propertyName] = headerValue;
                                 }
 
                                 this.jsonReader.ReadEndObject();
@@ -426,6 +413,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 string headerName = await this.asynchronousJsonReader.ReadPropertyNameAsync()
                                     .ConfigureAwait(false);
+                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
                                 string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
 
                                 // Throw an ODataException, if a duplicate header was detected
