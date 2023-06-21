@@ -4,6 +4,7 @@ PERSONAS: WORKLOAD OWNER, REVIEWER, AGGREGATOR, CLIENT
 
 
 move code from epm to peachy
+end to end tests should use an odata instead of an http client
 update epm endtoendtests to actually implement odata along the way, things like @odata.type, @odata.context, etc
 do code quality for peachy, endtoendtests, and iodata
 
