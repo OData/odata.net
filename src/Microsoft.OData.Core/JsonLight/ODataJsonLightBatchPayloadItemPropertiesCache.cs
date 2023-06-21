@@ -275,7 +275,7 @@ namespace Microsoft.OData.JsonLight
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    headers[propertyName] = headerValue;
+                                    headers[headerName] = headerValue;
                                 }
 
                                 this.jsonReader.ReadEndObject();
