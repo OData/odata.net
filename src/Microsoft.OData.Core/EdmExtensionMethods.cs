@@ -86,7 +86,14 @@ namespace Microsoft.OData
                 }
             }
 
-            return new UnknownEntitySet(navigationSource, navigationProperty);
+            if (typeof(IEdmUnknownEntitySet).IsAssignableFrom(navigationSource.GetType()))
+            {
+                return new UnknownEntitySet(navigationSource, navigationProperty);
+            }
+            else
+            {
+                return navigationSource.FindNavigationTarget(navigationProperty);
+            }
         }
 
         /// <summary>
