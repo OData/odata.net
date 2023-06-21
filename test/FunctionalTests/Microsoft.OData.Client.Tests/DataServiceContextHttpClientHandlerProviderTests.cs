@@ -20,6 +20,76 @@ namespace Microsoft.OData.Client.Tests
 {
     public class DataServiceContextHttpClientHandlerProviderTests
     {
+        private const string FakeCsdl = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
+  <edmx:DataServices>
+    <Schema Namespace=""microsoft.graph"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
+      <EntityType Name=""printUsage"">
+        <Key>
+          <PropertyRef Name=""id"" />
+        </Key>
+        <Property Name=""id"" Type=""Edm.String"" />
+      </EntityType>
+      <EntityContainer Name=""Container"">
+        <EntitySet Name=""printUsages"" EntityType=""microsoft.graph.printUsage"" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>";
+
+        public abstract class PrintUsage
+        {
+            public string id { get; set; }
+        }
+
+        [Fact]
+        public async Task AbstractRemovalTest()
+        {
+            // added a test method where a service has changed an entity from abstract to concrete, while the client remains unchanged; the test fails, demonstrating that such a csdl change is a breaking change for clients
+            using (var handler = new MockHttpClientHandler(HandleAbstractRequest))
+            {
+                var provider = new MockHttpClientHandlerProvider(handler);
+
+                var context = new DataServiceContext(new Uri("https://graph.microsoft.com/v1.0"));
+                context.HttpClientHandlerProvider = provider;
+                context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
+
+                var printUsageQuery = new DataServiceQuerySingle<PrintUsage>(context, "printUsages/someid");
+                PrintUsage printUsage = await printUsageQuery.GetValueAsync();
+                Assert.Equal("someid", printUsage.id);
+            }
+        }
+
+        private HttpResponseMessage HandleAbstractRequest(HttpRequestMessage request)
+        {
+            string contents;
+            if (request.RequestUri.AbsolutePath.EndsWith("$metadata"))
+            {
+                contents = FakeCsdl;
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(contents),
+                };
+            }
+            else if (request.RequestUri.AbsolutePath.EndsWith("someid"))
+            {
+                contents =
+@"{
+  ""@odata.context"": ""http://service.org/$metadata#printUsages/$entity"",
+  ""id"": ""someid""
+}";
+
+                return new HttpResponseMessage(HttpStatusCode.OK)
+                {
+                    Content = new StringContent(contents, Encoding.UTF8, "application/json"),
+                };
+            }
+            else
+            {
+                return new HttpResponseMessage(HttpStatusCode.NotFound);
+            }
+        }
+
         private const string BaseUri = "http://service.org";
         private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
