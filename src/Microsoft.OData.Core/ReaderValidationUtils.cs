@@ -815,7 +815,7 @@ namespace Microsoft.OData
                         if (!expectedTypeReference.IsUntyped())
                         {
                             // The payload type must be compatible to the expected type.
-                            VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ true);
+                            VerifyComplexType(expectedTypeReference, payloadType, failIfNotRelated: true);
                         }
 
                         // Use the payload type
