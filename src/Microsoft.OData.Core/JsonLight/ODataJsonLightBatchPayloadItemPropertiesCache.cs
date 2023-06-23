@@ -269,13 +269,19 @@ namespace Microsoft.OData.JsonLight
                                     string headerName = this.jsonReader.ReadPropertyName();
                                     string headerValue = this.jsonReader.ReadPrimitiveValue()?.ToString();
 
+                                    // Throw an ODataException, if a duplicate header was detected
+                                    if (headers.ContainsKeyOrdinal(headerName))
+                                    {
+                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
+                                    }
+
                                     // Remember the Content-Type header value.
                                     if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
                                     {
                                         contentTypeHeader = headerValue;
                                     }
 
-                                    headers[headerName] = headerValue;
+                                    headers.Add(headerName, headerValue);
                                 }
 
                                 this.jsonReader.ReadEndObject();
@@ -422,13 +428,19 @@ namespace Microsoft.OData.JsonLight
                                     throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
                                 }
 
+                                // Throw an ODataException, if a duplicate header was detected
+                                if (headers.ContainsKeyOrdinal(headerName))
+                                {
+                                    throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
+                                }
+
                                 // Remember the Content-Type header value.
                                 if (headerName.Equals(ODataConstants.ContentTypeHeader, StringComparison.OrdinalIgnoreCase))
                                 {
                                     contentTypeHeader = headerValue;
                                 }
 
-                                headers[headerName] = headerValue;
+                                headers.Add(headerName, headerValue);
                             }
 
                             await this.asynchronousJsonReader.ReadEndObjectAsync()
