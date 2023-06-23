@@ -364,40 +364,6 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
-        public async Task ReadBatchRequestWithDuplicateHeadersAsync()
-        {
-            var payload = "{\"requests\": [{" +
-                "\"id\": \"1\"," +
-                "\"method\": \"POST\"," +
-                "\"url\": \"http://tempuri.org/Customers\"," +
-                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\",\"duplicate-header\":\"value1\",\"duplicate-header\":\"value2\"}, " +
-                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
-
-            await SetupJsonLightBatchReaderAndRunTestAsync(
-                payload,
-                async (jsonLightBatchReader) =>
-                {
-                    try
-                    {
-                        while (await jsonLightBatchReader.ReadAsync())
-                        {
-                            if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
-                            {
-                                await jsonLightBatchReader.CreateOperationRequestMessageAsync();
-                            }
-                        }
-
-                        Assert.True(true, "The test was successful, because no ArgumentException was thrown");
-                    }
-                    catch (ArgumentException ex)
-                    {
-                        Assert.False(true, ex.Message);
-                    }
-                },
-                isResponse: false);
-        }
-
-        [Fact]
         public async Task ReadBatchRequestWithNullHeadersAsync()
         {
             var payload = "{\"requests\": [{" +

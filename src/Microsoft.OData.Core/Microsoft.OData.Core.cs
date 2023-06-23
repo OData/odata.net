@@ -195,6 +195,7 @@ namespace Microsoft.OData
         internal const string ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached = "ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached";
         internal const string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch = "ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch";
         internal const string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch = "ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch";
+        internal const string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch = "ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch";
         internal const string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType = "ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType";
         internal const string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader = "ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader";
         internal const string ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse = "ODataAsyncWriter_CannotCreateResponseWhenNotWritingResponse";

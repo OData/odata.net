@@ -1664,6 +1664,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "Duplicate header name '{0}' for message in batch."
+        /// </summary>
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch, p0);
+        }
+
+        /// <summary>
         /// A string like "Unexpected reader.NodeType: {0}."
         /// </summary>
         internal static string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
