@@ -223,7 +223,7 @@ namespace Microsoft.OData.JsonLight
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch(propertyName));
+                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
                     }
 
                     switch (propertyName)
@@ -278,7 +278,7 @@ namespace Microsoft.OData.JsonLight
                                     // Throw an ODataException, if a duplicate header was detected
                                     if (headers.ContainsKeyOrdinal(headerName))
                                     {
-                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
+                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
                                     }
 
                                     // Remember the Content-Type header value.
@@ -374,7 +374,7 @@ namespace Microsoft.OData.JsonLight
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch(propertyName));
+                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
                     }
 
                     switch (propertyName)
@@ -430,7 +430,7 @@ namespace Microsoft.OData.JsonLight
                                 // Throw an ODataException, if a duplicate header was detected
                                 if (headers.ContainsKeyOrdinal(headerName))
                                 {
-                                    throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
+                                    throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
                                 }
 
                                 // Remember the Content-Type header value.

@@ -1648,14 +1648,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Duplicate property name '{0}' for message in batch."
-        /// </summary>
-        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch, p0);
-        }
-
-        /// <summary>
         /// A string like "Unknown property name '{0}' for message in batch."
         /// </summary>
         internal static string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
@@ -1664,11 +1656,19 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Duplicate header name '{0}' for message in batch."
+        /// A string like "Duplicate property name '{0}' for request in batch."
         /// </summary>
-        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(object p0)
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, p0);
+        }
+
+        /// <summary>
+        /// A string like "Duplicate header name '{0}' for request in batch."
+        /// </summary>
+        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, p0);
         }
 
         /// <summary>
