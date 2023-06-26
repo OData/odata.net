@@ -220,6 +220,12 @@ namespace Microsoft.OData.JsonLight
                     // Convert to upper case to support case-insensitive request property names
                     string propertyName = Normalize(this.jsonReader.ReadPropertyName());
 
+                    // Throw an ODataException, if a duplicate json property was detected
+                    if (jsonProperties.ContainsKey(propertyName))
+                    {
+                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
+                    }
+
                     switch (propertyName)
                     {
                         case PropertyNameId:
@@ -272,7 +278,7 @@ namespace Microsoft.OData.JsonLight
                                     // Throw an ODataException, if a duplicate header was detected
                                     if (headers.ContainsKeyOrdinal(headerName))
                                     {
-                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
+                                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
                                     }
 
                                     // Remember the Content-Type header value.
@@ -368,7 +374,7 @@ namespace Microsoft.OData.JsonLight
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
                     {
-                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForMessageInBatch(propertyName));
+                        throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(propertyName));
                     }
 
                     switch (propertyName)
@@ -426,12 +432,6 @@ namespace Microsoft.OData.JsonLight
                                 if (headers.ContainsKeyOrdinal(headerName))
                                 {
                                     throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(headerName));
-                                }
-
-                                // Throw an ODataException, if a duplicate header was detected
-                                if (headers.ContainsKeyOrdinal(headerName))
-                                {
-                                    throw new ODataException(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForMessageInBatch(headerName));
                                 }
 
                                 // Remember the Content-Type header value.
