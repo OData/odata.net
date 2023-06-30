@@ -220,7 +220,7 @@ namespace Microsoft.OData.Client
                 }
                 else if (EntityStates.Modified == link.State)
                 {
-                    // Modified implies reference
+                    
                     object target = link.Target;
                     if (MergeOption.PreserveChanges == this.mergeOption)
                     {
