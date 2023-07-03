@@ -383,15 +383,89 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                         {
                             if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
                             {
-                                await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                                // Verify that the Property "null-header" exists and it's value is set to NULL
+                                var nullHeaderProperty = operationRequestMessage.Headers.FirstOrDefault(p => p.Key == "null-header");
+                                Assert.NotNull(nullHeaderProperty.Key);
+                                Assert.Null(nullHeaderProperty.Value);
                             }
                         }
-
-                        Assert.True(true, "The test was successful, because no ArgumentException was thrown");
                     }
                     catch (ArgumentException ex)
                     {
                         Assert.False(true, ex.Message);
+                    }
+                },
+                isResponse: false);
+        }
+
+        [Fact]
+        public async Task ReadBatchRequestWithDuplicatePropertiesAsync()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"atomicityGroup\": \"g1\"," +
+                "\"atomicityGroup\": \"g2\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+
+            await SetupJsonLightBatchReaderAndRunTestAsync(
+                payload,
+                async (jsonLightBatchReader) =>
+                {
+                    try
+                    {
+                        while (await jsonLightBatchReader.ReadAsync())
+                        {
+                            if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                            {
+                                // The json properties are just iterated through and have no purpose for this test case
+                                await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                            }
+                        }
+                        Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                    }
+                    catch (ODataException ex)
+                    {
+                        // Verify that the correct duplicate property has raised the ODataException
+                        Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch("ATOMICITYGROUP"), ex.Message);
+                    }
+                },
+                isResponse: false);
+        }
+
+        [Fact]
+        public async Task ReadBatchRequestWithDuplicateHeadersAsync()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\",\"duplicate-header\":\"value1\",\"duplicate-header\":\"value2\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+
+            await SetupJsonLightBatchReaderAndRunTestAsync(
+                payload,
+                async (jsonLightBatchReader) =>
+                {
+                    try
+                    {
+                        while (await jsonLightBatchReader.ReadAsync())
+                        {
+                            if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                            {
+                                // The json properties are just iterated through and have no purpose for this test case
+                                await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                            }
+                        }
+                        Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                    }
+                    catch (ODataException ex)
+                    {
+                        // Verify that the correct duplicate header has raised the ODataException
+                        Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch("duplicate-header"), ex.Message);
                     }
                 },
                 isResponse: false);
