@@ -7,6 +7,7 @@
 namespace Microsoft.OData.Client.Materialization
 {
     using System;
+    using System.Collections.Generic;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
@@ -53,6 +54,14 @@ namespace Microsoft.OData.Client.Materialization
         internal override ODataResourceSet CurrentFeed
         {
             get { return this.feedEntryAdapter.CurrentFeed; }
+        }
+
+        /// <summary>
+        /// OData delta resource set being materialized; possibly null.
+        /// </summary>
+        internal override ODataDeltaResourceSet CurrentDeltaFeed
+        {
+            get { return this.feedEntryAdapter.CurrentDeltaFeed; }
         }
 
         /// <summary>
@@ -156,6 +165,54 @@ namespace Microsoft.OData.Client.Materialization
                 }
 
                 return MaterializerEntry.GetEntry(entry, materializerContext);
+            }
+        }
+
+        /// <summary>
+        /// This method is for parsing the various operations in a bulk update response.
+        /// </summary>
+        /// <param name="message">The <see cref="IODataResponseMessage"/> for the payload.</param>
+        /// <param name="responseInfo">The current response info object.</param>
+        /// <param name="expectedType">The expected type.</param>
+        /// <param name="materializerContext">The materializer context.</param>
+        /// <returns>The <see cref="MaterializerDeltaFeed"/> that contains the <see cref="ODataDeltaResourceSet"/> that was read.</returns>
+        internal static MaterializerDeltaFeed ParseDeltaResourceSetPayload(IODataResponseMessage message, ResponseInfo responseInfo, Type expectedType, IODataMaterializerContext materializerContext)
+        {
+            ODataPayloadKind messageType = ODataPayloadKind.Delta;
+            using (ODataMessageReader messageReader = CreateODataMessageReader(message, responseInfo, ref messageType))
+            {
+                IEdmType edmType = responseInfo.TypeResolver.ResolveExpectedTypeForReading(expectedType);
+                ODataReaderWrapper reader = ODataReaderWrapper.Create(messageReader, messageType, edmType, responseInfo.ResponsePipeline);
+
+                FeedAndEntryMaterializerAdapter parser = new FeedAndEntryMaterializerAdapter(messageReader, reader, responseInfo.Model, responseInfo.MergeOption, materializerContext, true);
+
+                ODataDeltaResourceSet deltaResourceSet = null;
+                MaterializerDeltaFeed deltaFeed = null;
+                bool readDeltaResourceSet = true;
+
+                while (parser.Read())
+                {
+                    readDeltaResourceSet |= parser.CurrentDeltaFeed != null;
+                    if (parser.CurrentDeltaFeed != null)
+                    { 
+                        deltaResourceSet = parser.CurrentDeltaFeed;
+                        deltaFeed = MaterializerDeltaFeed.GetDeltaFeed(deltaResourceSet, materializerContext);
+                    }
+                }
+
+                if (deltaResourceSet == null)
+                {
+                    if (readDeltaResourceSet)
+                    {
+                        throw new InvalidOperationException(DSClient.Strings.AtomParser_SingleEntry_NoneFound);
+                    }
+                    else
+                    {
+                        throw new InvalidOperationException(DSClient.Strings.AtomParser_SingleEntry_ExpectedFeedOrEntry);
+                    }
+                }
+
+                return deltaFeed;
             }
         }
 

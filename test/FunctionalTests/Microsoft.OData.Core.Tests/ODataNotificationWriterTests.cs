@@ -68,6 +68,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationWriterDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
+            this.writer = new StreamWriter(new AsyncStream(this.stream));
             await using (TextWriter notificationWriter = new ODataNotificationWriter(
                 this.writer,
                 this.streamListener)) // `synchronous` argument becomes irrelevant since we'll directly call DisposeAsync
@@ -82,6 +83,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationWriterDisposeAsyncShouldBeIdempotentAsync()
         {
+            this.writer = new StreamWriter(new AsyncStream(this.stream));
             TextWriter notificationWriter = new ODataNotificationWriter(
                 this.writer,
                 this.streamListener);

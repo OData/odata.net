@@ -6,14 +6,19 @@
 
 using System;
 using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Xunit;
-using System.Threading.Tasks;
 using Microsoft.OData.Tests.Json;
-using System.Text;
 using Microsoft.Test.OData.DependencyInjection;
+using Microsoft.OData.UriParser;
+using Xunit;
+using System.Xml;
+#if NETCOREAPP3_1_OR_GREATER
+using System.Text.Json;
+#endif
 
 namespace Microsoft.OData.Tests
 {
@@ -487,6 +492,357 @@ namespace Microsoft.OData.Tests
         #endregion "ODataUtf8JsonWriter support"
 #endif
 
+#if NETCOREAPP3_1_OR_GREATER
+        #region "ODataJsonElementValue support"
+        [Fact]
+        public void WriteEntityWithJsonElementValues()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            EdmComplexType addressType = model.AddComplexType("ns", "Address");
+            addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("Country", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, isNullable: false));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+
+
+            string source = "{" +
+                @"""Id"": 1," +
+                @"""Name"": ""John""," +
+                @"""Emails"":[""john@mailer.com"",""john@work.com""]," +
+                @"""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}" +
+                @"}";
+            var json = JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) },
+                    new ODataProperty { Name = "Emails", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Emails")) },
+                    new ODataProperty { Name = "Address", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Address")) }
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Assert
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Emails"":[""john@mailer.com"",""john@work.com""],""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task WriteEntityWithJsonElementValues_Async()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            EdmComplexType addressType = model.AddComplexType("ns", "Address");
+            addressType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
+            addressType.AddStructuralProperty("Country", EdmPrimitiveTypeKind.String);
+            personType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, isNullable: false));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+
+            string source = "{" +
+                @"""Id"": 1," +
+                @"""Name"": ""John""," +
+                @"""Emails"":[""john@mailer.com"",""john@work.com""]," +
+                @"""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}" +
+                @"}";
+            var json = JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) },
+                    new ODataProperty { Name = "Emails", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Emails")) },
+                    new ODataProperty { Name = "Address", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Address")) }
+                }
+            };
+
+            // Act
+            string result = await WriteAndGetPayloadAsync(
+                model,
+                "application/json; charset=utf-8",
+                async writer =>
+                {
+                    var resourceWriter = await writer.CreateODataResourceWriterAsync(peopleSet);
+                    await resourceWriter.WriteStartAsync(resource);
+                    await resourceWriter.WriteEndAsync();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Assert
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Emails"":[""john@mailer.com"",""john@work.com""],""Address"":{""City"":""Nairobi"",""Country"":""Kenya""}}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void WriteContainedNestedEntityWithJsonElementValues()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person");
+            IEdmStructuralProperty idProperty = personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddKeys(idProperty);
+            personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "Friend",
+                ContainsTarget = true,
+                Target = personType,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+            
+            string source = @"{""Id"": 1,""Name"": ""John""}";
+            var json = JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            var nestedResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+
+                    resourceWriter.WriteStart(new ODataNestedResourceInfo
+                    {
+                        Name = "Friend",
+                        IsCollection = false
+                    });
+                    resourceWriter.WriteStart(nestedResource);
+                    resourceWriter.WriteEnd();
+                    resourceWriter.WriteEnd();
+
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Friend"":{""Id"":1,""Name"":""John""}}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task WriteContainedNestedEntityWithJsonElementValues_Async()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person");
+            IEdmStructuralProperty idProperty = personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32);
+            personType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            personType.AddKeys(idProperty);
+            personType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "Friend",
+                ContainsTarget = true,
+                Target = personType,
+                TargetMultiplicity = EdmMultiplicity.One
+            });
+
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service").AddEntitySet("People", personType);
+
+            string source = @"{""Id"": 1,""Name"": ""John""}";
+            var json = JsonDocument.Parse(source);
+            var jsonRoot = json.RootElement;
+            var resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            var nestedResource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Id")) },
+                    new ODataProperty { Name = "Name", Value = new ODataJsonElementValue(jsonRoot.GetProperty("Name")) }
+                }
+            };
+
+            // Act
+            string result = await WriteAndGetPayloadAsync(
+                model,
+                "application/json; charset=utf-8",
+                async writer =>
+                {
+                    var resourceWriter = await writer.CreateODataResourceWriterAsync(peopleSet);
+                    await resourceWriter.WriteStartAsync(resource);
+
+                    await resourceWriter.WriteStartAsync(new ODataNestedResourceInfo
+                    {
+                        Name = "Friend",
+                        IsCollection = false
+                    });
+                    await resourceWriter.WriteStartAsync(nestedResource);
+                    await resourceWriter.WriteEndAsync();
+                    await resourceWriter.WriteEndAsync();
+
+                    await resourceWriter.WriteEndAsync();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Name"":""John"",""Friend"":{""Id"":1,""Name"":""John""}}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public void WriteJsonElementValuesInCollectionProperties()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service")
+                .AddEntitySet("People", personType);
+
+            string source = @"{""Email"":""john@mailer.com""}";
+            JsonDocument json = JsonDocument.Parse(source);
+            JsonElement jsonRoot = json.RootElement;
+            ODataResource resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty {
+                        Name = "Emails",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Collection(Edm.String)",
+                            Items = new object[] { new ODataJsonElementValue(jsonRoot.GetProperty("Email")) }
+                        }
+                    },
+                }
+            };
+
+            // Act
+            string result = WriteAndGetPayload(
+                model,
+                "application/json; charset=utf-8",
+                writer =>
+                {
+                    var resourceWriter = writer.CreateODataResourceWriter(peopleSet);
+                    resourceWriter.WriteStart(resource);
+                    resourceWriter.WriteEnd();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Emails"":[""john@mailer.com""]}";
+            Assert.Equal(expected, result);
+        }
+
+        [Fact]
+        public async Task WriteJsonElementValuesInCollectionProperties_Async()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType personType = model.AddEntityType("ns", "Person", baseType: null, isAbstract: false, isOpen: true);
+            personType.AddKeys(
+                personType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            personType.AddStructuralProperty(
+                "Emails",
+                new EdmCollectionTypeReference(
+                    new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: false))));
+            IEdmEntitySet peopleSet = model.AddEntityContainer("ns", "Service")
+                .AddEntitySet("People", personType);
+
+            string source = @"{""Email"":""john@mailer.com""}";
+            JsonDocument json = JsonDocument.Parse(source);
+            JsonElement jsonRoot = json.RootElement;
+            ODataResource resource = new ODataResource
+            {
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty {
+                        Name = "Emails",
+                        Value = new ODataCollectionValue
+                        {
+                            TypeName = "Collection(Edm.String)",
+                            Items = new object[] { new ODataJsonElementValue(jsonRoot.GetProperty("Email")) }
+                        }
+                    },
+                }
+            };
+
+            // Act
+            string result = await WriteAndGetPayloadAsync(
+                model,
+                "application/json; charset=utf-8",
+                async writer =>
+                {
+                    var resourceWriter = await writer.CreateODataResourceWriterAsync(peopleSet);
+                    await resourceWriter.WriteStartAsync(resource);
+                    await resourceWriter.WriteEndAsync();
+                },
+                path: new ODataPath(new EntitySetSegment(peopleSet)));
+
+            // Result
+            string expected = @"{""@odata.context"":""http://www.example.com/$metadata#People/$entity"",""Id"":1,""Emails"":[""john@mailer.com""]}";
+            Assert.Equal(expected, result);
+        }
+        #endregion
+#endif
+
         [Fact]
         public void WriteMetadataDocument_WorksForJsonCsdl()
         {
@@ -546,9 +902,24 @@ namespace Microsoft.OData.Tests
 
 
             // Act - JSON
+            // We allow synchronous I/O for WriteMetadataDocumentAsync because
+            // it relies on EdmLib's CsdlWriter which is still synchronous.
+            // We should disable synchronous I/O here once CsdlWriter has an async API.
+            // See: https://github.com/OData/odata.net/issues/2684
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/json", async omWriter =>
             {
-                await omWriter.WriteMetadataDocumentAsync();
+                try
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                }
+                catch (SynchronousIOException)
+                {
+                    // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                    // it relies on EdmLib's CsdlWriter which is still synchronous.
+                    // We should disable synchronous I/O here once CsdlWriter has an async API.
+                    // See: https://github.com/OData/odata.net/issues/2684
+                    // However, disposing the writer should still be truly async.
+                }
             });
 
             // Assert
@@ -587,7 +958,18 @@ namespace Microsoft.OData.Tests
             // Act - XML
             string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/xml", async omWriter =>
             {
-                await omWriter.WriteMetadataDocumentAsync();
+                try
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                }
+                catch (SynchronousIOException)
+                {
+                    // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                    // it relies on EdmLib's CsdlWriter which is still synchronous.
+                    // We should disable synchronous I/O here once CsdlWriter has an async API.
+                    // See: https://github.com/OData/odata.net/issues/2684
+                    // However, disposing the writer should still be truly async.
+                }
             });
 
             // Assert - XML
@@ -609,6 +991,157 @@ namespace Microsoft.OData.Tests
                   "</edmx:DataServices>" +
                 "</edmx:Edmx>", payload);
         }
+
+        #region "DisposeAsync"
+#if NETCOREAPP3_1_OR_GREATER
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously()
+        {
+            // Arrange
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            var resource = new ODataResource()
+            {
+                TypeName = "NS.Customer",
+                Properties = new[]
+                {
+                    new ODataProperty
+                    {
+                        Name = "Id",
+                        Value = 10
+                    },
+                    new ODataProperty
+                    {
+                        Name = "Name",
+                        Value = "John"
+                    }
+                }
+            };
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/json");
+
+            // Act
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+            {
+                var writer = await msgWriter.CreateODataResourceWriterAsync(edmModel.FindDeclaredEntitySet("Customers"));
+                await writer.WriteStartAsync(resource);
+                await writer.WriteEndAsync();
+            }
+
+            // Assert
+            Assert.True(stream.Disposed);
+        }
+
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingJsonMetadata()
+        {
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/json");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            try
+            {
+                await msgWriter.WriteMetadataDocumentAsync();
+            }
+            catch (SynchronousIOException)
+            {
+                // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                // it relies on EdmLib's CsdlWriter which is still synchronous.
+                // We should disable synchronous I/O here once CsdlWriter has an async API.
+                // See: https://github.com/OData/odata.net/issues/2684
+                // However, disposing the writer should still be truly async.
+            }
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingXmlMetadata()
+        {
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/xml");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            try
+            {
+                await msgWriter.WriteMetadataDocumentAsync();
+            }
+            catch (SynchronousIOException)
+            {
+                // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                // it relies on EdmLib's CsdlWriter which is still synchronous.
+                // We should disable synchronous I/O here once CsdlWriter has an async API.
+                // See: https://github.com/OData/odata.net/issues/2684
+                // However, disposing the writer should still be truly async.
+            }
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
+        public async void DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingRawValue()
+        {
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+            var settings = new ODataMessageWriterSettings
+            {
+                EnableMessageStreamDisposal = true,
+            };
+
+            var writer = new ODataMessageWriter((IODataResponseMessageAsync)message, settings, edmModel);
+            await writer.WriteValueAsync(123);
+            await writer.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+#endif
+        #endregion
+
 
         private static IEdmModel _edmModel;
 
@@ -657,6 +1190,9 @@ namespace Microsoft.OData.Tests
         /// Action to inject services to the dependency-injection container.
         /// If this is set, then the generated <see cref="IServiceProvider"/> will be added to the <paramref name="message"/>.Container property.
         /// </param>
+        /// <param name="path">
+        /// The OData Uri path.
+        /// </param>
         /// <returns>The written output.</returns>
         private string WriteAndGetPayload(
             IEdmModel edmModel,
@@ -664,7 +1200,8 @@ namespace Microsoft.OData.Tests
             Action<ODataMessageWriter> test,
             InMemoryMessage message = null,
             Encoding encoding = null,
-            Action<IContainerBuilder> configureServices = null)
+            Action<IContainerBuilder> configureServices = null,
+            ODataPath path = null)
         {
             message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
 
@@ -683,6 +1220,15 @@ namespace Microsoft.OData.Tests
             writerSettings.EnableMessageStreamDisposal = false;
             writerSettings.BaseUri = new Uri("http://www.example.com/");
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            if (path != null)
+            {
+                writerSettings.ODataUri = new ODataUri
+                {
+                    ServiceRoot = writerSettings.BaseUri,
+                    Path = path
+                };
+            }
 
             using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
             {
@@ -716,10 +1262,33 @@ namespace Microsoft.OData.Tests
         /// Action to inject services to the dependency-injection container.
         /// If this is set, then the generated <see cref="IServiceProvider"/> will be added to the <paramref name="message"/>.Container property.
         /// </param>
+        /// <param name="path">
+        /// The OData Uri path.
+        /// </param>
+        /// <param name="allowSyncIO">
+        /// Whether to allow synchronous I/O. When set to false, an exception will be thrown if
+        /// the writer attempts to perform synchronous I/O on the underlying stream.
+        /// Setting it false helps to detect and remove synchronous I/O in async code paths.
+        /// </param>
         /// <returns>A task representing the asynchrnous operation. The result of the task will be the written output.</returns>
-        private async Task<string> WriteAndGetPayloadAsync(IEdmModel edmModel, string contentType, Func<ODataMessageWriter, Task> test, InMemoryMessage message = null, Encoding encoding = null, Action<IContainerBuilder> configureServices = null)
+        private async Task<string> WriteAndGetPayloadAsync(
+            IEdmModel edmModel, string contentType,
+            Func<ODataMessageWriter, Task> test,
+            InMemoryMessage message = null,
+            Encoding encoding = null,
+            Action<IContainerBuilder> configureServices = null,
+            ODataPath path = null,
+            bool allowSyncIO = false)
         {
-            message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
+            Stream stream = new MemoryStream();
+            if (!allowSyncIO)
+            {
+                stream = new AsyncStream(stream);
+            }
+
+            message = message ?? new InMemoryMessage() {
+                Stream = stream
+            };
 
             if (contentType != null)
             {
@@ -737,16 +1306,41 @@ namespace Microsoft.OData.Tests
             writerSettings.BaseUri = new Uri("http://www.example.com/");
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
+            if (path != null)
+            {
+                writerSettings.ODataUri = new ODataUri
+                {
+                    ServiceRoot = writerSettings.BaseUri,
+                    Path = path
+                };
+            }
+
+#if NETCOREAPP3_1_OR_GREATER
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+#else
             using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+#endif
             {
                 await test(msgWriter);
             }
 
             message.Stream.Seek(0, SeekOrigin.Begin);
-            using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8))
+
+            using (
+                StreamReader reader = new StreamReader(
+                    message.Stream, encoding: encoding ?? Encoding.UTF8,
+                    detectEncodingFromByteOrderMarks: true,
+                    bufferSize: 1024, leaveOpen: true)
+            )
             {
                 string contents = await reader.ReadToEndAsync();
 
+                // Dispose stream manually to avoid synchronous I/O
+#if NETCOREAPP3_1_OR_GREATER
+                await message.Stream.DisposeAsync();
+#else
+                message.Stream.Dispose();
+#endif
                 return contents;
             }
         }

@@ -151,8 +151,12 @@ namespace Microsoft.OData
         {
             if (settings.ThrowIfTypeConflictsWithMetadata)
             {
+                if (typeReferenceFromMetadata.IsUntyped())
+                {
+                    ; // do nothing here
+                }
                 // Make sure the types are the same
-                if (typeReferenceFromValue.IsODataPrimitiveTypeKind())
+                else if (typeReferenceFromValue.IsODataPrimitiveTypeKind())
                 {
                     // Primitive types must match exactly except for nullability
                     ValidationUtils.ValidateMetadataPrimitiveType(typeReferenceFromMetadata,
@@ -172,14 +176,17 @@ namespace Microsoft.OData
                 }
                 else if (typeReferenceFromMetadata.IsCollection())
                 {
-                    // Collection types must match exactly.
-                    if (!typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(
-                            typeReferenceFromValue.Definition))
+                    if (!typeReferenceFromMetadata.AsCollection().ElementType().IsUntyped())
                     {
-                        throw new ODataException(
-                            Strings.ValidationUtils_IncompatibleType(
-                                typeReferenceFromValue.FullName(),
-                                typeReferenceFromMetadata.FullName()));
+                        // Collection types must match exactly.
+                        if (!typeReferenceFromMetadata.Definition.IsElementTypeEquivalentTo(
+                                typeReferenceFromValue.Definition))
+                        {
+                            throw new ODataException(
+                                Strings.ValidationUtils_IncompatibleType(
+                                    typeReferenceFromValue.FullName(),
+                                    typeReferenceFromMetadata.FullName()));
+                        }
                     }
                 }
                 else

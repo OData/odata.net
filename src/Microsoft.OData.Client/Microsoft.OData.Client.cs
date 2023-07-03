@@ -60,6 +60,10 @@ namespace Microsoft.OData.Client
         internal const string Context_AddRelatedObjectSourceDeleted = "Context_AddRelatedObjectSourceDeleted";
         internal const string Context_UpdateRelatedObjectNonCollectionOnly = "Context_UpdateRelatedObjectNonCollectionOnly";
         internal const string Context_SetLinkReferenceOnly = "Context_SetLinkReferenceOnly";
+        internal const string Context_SetRelatedObjectNonCollectionOnly = "Context_SetRelatedObjectNonCollectionOnly";
+        internal const string Context_SetRelatedObjectSourceDeleted = "Context_SetRelatedObjectSourceDeleted";
+        internal const string Context_SetRelatedObjectLinkNonCollectionOnly = "Context_SetRelatedObjectLinkNonCollectionOnly";
+        internal const string Context_SetRelatedObjectLinkSourceDeleted = "Context_SetRelatedObjectLinkSourceDeleted";
         internal const string Context_NoContentTypeForMediaLink = "Context_NoContentTypeForMediaLink";
         internal const string Context_BatchNotSupportedForMediaLink = "Context_BatchNotSupportedForMediaLink";
         internal const string Context_UnexpectedZeroRawRead = "Context_UnexpectedZeroRawRead";
@@ -93,6 +97,8 @@ namespace Microsoft.OData.Client
         internal const string Context_MustBeUsedWith = "Context_MustBeUsedWith";
         internal const string Context_EntityMediaLinksNotTrackedInEntity = "Context_EntityMediaLinksNotTrackedInEntity";
         internal const string Context_EntityInNonTrackedContextLacksMediaLinks = "Context_EntityInNonTrackedContextLacksMediaLinks";
+        internal const string Context_DeepInsertOneTopLevelEntity = "Context_DeepInsertOneTopLevelEntity";
+        internal const string Context_DeepInsertDeletedOrModified = "Context_DeepInsertDeletedOrModified";
         internal const string DataServiceClientFormat_LoadServiceModelRequired = "DataServiceClientFormat_LoadServiceModelRequired";
         internal const string DataServiceClientFormat_ValidServiceModelRequiredForJson = "DataServiceClientFormat_ValidServiceModelRequiredForJson";
         internal const string Collection_NullCollectionReference = "Collection_NullCollectionReference";
@@ -113,7 +119,7 @@ namespace Microsoft.OData.Client
         internal const string ClientType_MultipleTypesWithSameName = "ClientType_MultipleTypesWithSameName";
         internal const string WebUtil_TypeMismatchInCollection = "WebUtil_TypeMismatchInCollection";
         internal const string WebUtil_TypeMismatchInNonPropertyCollection = "WebUtil_TypeMismatchInNonPropertyCollection";
-        internal const string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties = "ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties";
+        internal const string ClientTypeCache_NonEntityTypeCannotContainEntityProperties = "ClientTypeCache_NonEntityTypeCannotContainEntityProperties";
         internal const string DataServiceException_GeneralError = "DataServiceException_GeneralError";
         internal const string Deserialize_GetEnumerator = "Deserialize_GetEnumerator";
         internal const string Deserialize_Current = "Deserialize_Current";

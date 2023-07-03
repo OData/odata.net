@@ -859,45 +859,101 @@ namespace Microsoft.OData.JsonLight
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "textWriter", Justification = "We don't dispose the jsonWriter or textWriter, instead we dispose the underlying stream directly.")]
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                try
+                {
+                    if (this.messageOutputStream != null)
+                    {
+                        // The IJsonWriter will flush the underlying stream
+                        this.jsonWriter.Flush();
+
+                        if (this.jsonWriter is IDisposable disposableWriter)
+                        {
+                            disposableWriter.Dispose();
+                        }
+
+                        // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
+                        if (this.asynchronousOutputStream != null)
+                        {
+#if NETSTANDARD1_1
+                            this.asynchronousOutputStream.FlushSync();
+                            this.asynchronousOutputStream.Dispose();
+#else
+                            this.asynchronousOutputStream.Flush();
+                            // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
+                            // inner stream as well.
+#endif
+                        }
+
+                        // Dispose the message stream (note that we OWN this stream, so we always dispose it).
+                        this.messageOutputStream.Dispose();
+                    }
+
+                    if (this.BinaryValueStream != null)
+                    {
+                        this.BinaryValueStream.Flush();
+                        this.BinaryValueStream.Dispose();
+                    }
+
+                    if (this.StringWriter != null)
+                    {
+                        this.StringWriter.Flush();
+                        this.StringWriter.Dispose();
+                    }
+                }
+                finally
+                {
+                    this.messageOutputStream = null;
+                    this.asynchronousOutputStream = null;
+                    this.BinaryValueStream = null;
+                    this.textWriter = null;
+                    this.jsonWriter = null;
+                    this.StringWriter = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        protected override async ValueTask DisposeAsyncCore()
+        {
             try
             {
                 if (this.messageOutputStream != null)
                 {
-                    // The IJsonWriter will flush the underlying stream
-                    this.jsonWriter.Flush();
 
-                    if (this.jsonWriter is IDisposable disposableWriter)
+                    // The IJsonWriterAsync will flush the underlying stream
+                    await this.asynchronousJsonWriter.FlushAsync().ConfigureAwait(false);
+
+                    if (this.asynchronousJsonWriter is IAsyncDisposable asyncDisposableWriter)
                     {
-                        disposableWriter.Dispose();
+                        await asyncDisposableWriter.DisposeAsync().ConfigureAwait(false);
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-#if NETSTANDARD1_1
-                        this.asynchronousOutputStream.FlushSync();
-                        this.asynchronousOutputStream.Dispose();
-#else
-                        this.asynchronousOutputStream.Flush();
+                        await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
                         // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
                         // inner stream as well.
-#endif
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
-                    this.messageOutputStream.Dispose();
+                    await this.messageOutputStream.DisposeAsync().ConfigureAwait(false);
                 }
 
                 if (this.BinaryValueStream != null)
                 {
-                    this.BinaryValueStream.Flush();
-                    this.BinaryValueStream.Dispose();
+                    await this.BinaryValueStream.FlushAsync().ConfigureAwait(false);
+                    await this.BinaryValueStream.DisposeAsync().ConfigureAwait(false);
                 }
 
                 if (this.StringWriter != null)
                 {
-                    this.StringWriter.Flush();
-                    this.StringWriter.Dispose();
+                    await this.StringWriter.FlushAsync().ConfigureAwait(false);
+                    await this.StringWriter.DisposeAsync().ConfigureAwait(false);
                 }
             }
             finally
@@ -909,9 +965,8 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter = null;
                 this.StringWriter = null;
             }
-
-            base.Dispose(disposing);
         }
+#endif
 
         /// <summary>
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>.

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     internal sealed class BulkUpdateGraph
     {
         /// <summary>Set of related descriptors.</summary>
-        private readonly Dictionary<Descriptor, HashSet<Descriptor>> descriptorGraph;
+        private readonly Dictionary<Descriptor, List<Descriptor>> descriptorGraph;
 
         /// <summary>Set of top level descriptors.</summary>
         private readonly List<EntityDescriptor> topLevelDescriptors;
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client
 
         public BulkUpdateGraph(RequestInfo requestInfo)
         { 
-            this.descriptorGraph = new Dictionary<Descriptor, HashSet<Descriptor>>(); 
+            this.descriptorGraph = new Dictionary<Descriptor, List<Descriptor>>(); 
             this.topLevelDescriptors = new List<EntityDescriptor>();
             this.requestInfo = requestInfo;
         }
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
         /// <param name="relatedDescriptor">The related descriptor to the parent descriptor.</param>
         public void AddRelatedDescriptor(Descriptor parent, Descriptor relatedDescriptor)
         {
-            HashSet<Descriptor> childrenDescriptors = this.GetRelatedDescriptors(parent);
+            List<Descriptor> childrenDescriptors = this.GetRelatedDescriptors(parent);
             childrenDescriptors.Add(relatedDescriptor);
         }
 
@@ -123,14 +123,14 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="descriptor">The descriptor.</param>
         /// <returns>All the related descriptors to a given key descriptor.</returns>
-        public HashSet<Descriptor> GetRelatedDescriptors(Descriptor descriptor)
+        public List<Descriptor> GetRelatedDescriptors(Descriptor descriptor)
         {
-            if (this.descriptorGraph.TryGetValue(descriptor, out HashSet<Descriptor> relatedDescriptors))
+            if (this.descriptorGraph.TryGetValue(descriptor, out List<Descriptor> relatedDescriptors))
             {
                 return relatedDescriptors;
             }
 
-            relatedDescriptors = new HashSet<Descriptor>();
+            relatedDescriptors = new List<Descriptor>();
             this.descriptorGraph[descriptor] = relatedDescriptors;
 
             return relatedDescriptors;

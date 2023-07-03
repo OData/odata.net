@@ -34,6 +34,9 @@ namespace Microsoft.OData.Client
         /// <summary>Method name for the SaveChanges method.</summary>
         internal const string SaveChangesMethodName = "SaveChanges";
 
+        /// <summary>Method name for the BulkUpdate method.</summary>
+        internal const string BulkUpdateMethodName = "BulkUpdate";
+
         /// <summary>
         /// The number of components of version.
         /// </summary>
@@ -86,6 +89,8 @@ namespace Microsoft.OData.Client
             {
                 case ODataProtocolVersion.V4:
                     return Util.ODataVersion4;
+                case ODataProtocolVersion.V401:
+                    return Util.ODataVersion401;
                 default:
                     Debug.Assert(false, "Unexpected max protocol version values.");
                     return Util.ODataVersion4;
@@ -449,6 +454,16 @@ namespace Microsoft.OData.Client
         internal static bool IsBulkUpdate(SaveChangesOptions options)
         {
             return Util.IsFlagSet(options, SaveChangesOptions.BulkUpdate);
+        }
+
+        /// <summary>
+        /// Checks whether any deep insert flag is set on the options
+        /// </summary>
+        /// <param name="options">Options as specified by the user.</param>
+        /// <returns>true if the given flag is set, otherwise false.</returns>
+        internal static bool IsDeepInsert(SaveChangesOptions options)
+        {
+            return Util.IsFlagSet(options, SaveChangesOptions.DeepInsert);
         }
 
         /// <summary>

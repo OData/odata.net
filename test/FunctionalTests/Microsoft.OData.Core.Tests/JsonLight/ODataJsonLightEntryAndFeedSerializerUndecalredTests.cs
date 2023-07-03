@@ -35,6 +35,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             this.serverEntityType = new EdmEntityType("Server.NS", "ServerEntityType");
             this.serverModel.AddElement(this.serverEntityType);
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            this.serverEntityType.AddStructuralProperty("Data", EdmCoreModel.Instance.GetUntyped());
+            this.serverEntityType.AddStructuralProperty("Infos", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
 
             // open entity type
@@ -48,6 +50,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             this.serverEntitySet = container.AddEntitySet("serverEntitySet", this.serverEntityType);
             this.serverOpenEntitySet = container.AddEntitySet("serverOpenEntitySet", this.serverOpenEntityType);
             this.serverModel.AddElement(container);
+
+            EdmEnumType enumType = new EdmEnumType("Server.NS", "EnumType");
+            enumType.AddMember(new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1)));
+            enumType.AddMember(new EdmEnumMember(enumType, "Green", new EdmEnumMemberValue(2)));
+            this.serverModel.AddElement(enumType);
         }
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
@@ -55,8 +62,228 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
         };
 
-        #region non-open entity's property unknown name + known value type
+        #region Declared Untyped Properties
+        [Fact]
+        public void WriteResourceDeclaredSingleUntypedProperty_WorksForUntypedValue()
+        {
+            var property = new ODataProperty { Name = "Data", Value = new ODataUntypedValue { RawValue = "\"#lje324$$\"" } };
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"#lje324$$\"}", result);
+        }
 
+        [Fact]
+        public void WriteResourceDeclaredSingleUntypedProperty_WorksForPrimitiveValue()
+        {
+            // String is one of default type
+            var property = new ODataProperty { Name = "Data", Value = new ODataPrimitiveValue("41") };
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data@odata.type\":\"#String\",\"Data\":\"41\"}", result);
+
+            // not-default type
+            property = new ODataProperty { Name = "Data", Value = new ODataPrimitiveValue(41) };
+            result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data@odata.type\":\"#Int32\",\"Data\":41}", result);
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredSingleUntypedProperty_WorksForEnumValue()
+        {
+            // Without type name
+            var property = new ODataProperty { Name = "Data", Value = new ODataEnumValue("AnyMem") };
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"AnyMem\"}", result);
+
+            // with type name
+            property = new ODataProperty { Name = "Data", Value = new ODataEnumValue("Green", "Server.NS.EnumType") };
+            result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"Green\"}", result);
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredSingleUntypedProperty_WorksForBinaryStreamValue()
+        {
+            // With type name
+            // ODataBinaryStreamValue
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+
+            var property = new ODataProperty
+            {
+                Name = "Data",
+                Value = new ODataBinaryStreamValue(stream)
+            };
+
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"CjEyMzQ1Njc4OTA=\"}", result);
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredSingleUntypedProperty_WorksForCollectionValue()
+        {
+            // With type name
+            var property = new ODataProperty
+            {
+                Name = "Data",
+                Value = new ODataCollectionValue
+                {
+                    TypeName = "Collection(Edm.String)",
+                    Items = new[]
+                    {
+                        "abc",
+                        "xyz"
+                    }
+                }
+            };
+
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":[\"abc\",\"xyz\"]}", result);
+
+            // without type name
+            property = new ODataProperty
+            {
+                Name = "Data",
+                Value = new ODataCollectionValue
+                {
+                    Items = new object[]
+                    {
+                        "abc",
+                        null,
+                        42
+                    }
+                }
+            };
+
+            result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":[\"abc\",null,42]}", result);
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredCollectionUntypedProperty_ThrowsForNonCollectionValue()
+        {
+            // With type name
+            var property = new ODataProperty
+            {
+                Name = "Infos",
+                Value = new ODataPrimitiveValue(42)
+            };
+
+            Action test = () => WriteDeclaredUntypedProperty(property);
+            ODataException exception = Assert.Throws<ODataException>(test);
+            Assert.Equal(Strings.ValidationUtils_NonPrimitiveTypeForPrimitiveValue("Collection(Edm.Untyped)"), exception.Message);
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredCollectionUntypedProperty_WorksForCollectionValue()
+        {
+            var property = new ODataProperty
+            {
+                Name = "Infos",
+                Value = new ODataCollectionValue
+                {
+                    Items = new object[]
+                    {
+                        "abc",
+                        null,
+                        42
+                    }
+                }
+            };
+
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Infos\":[\"abc\",null,42]}", result);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void WriteResourceCollectionUntypedProperty_WorksResourceInNestedCollectionOfCollection2(bool isOpen)
+        {
+            string typeName = isOpen ? "Server.NS.ServerOpenEntityType" : "Server.NS.ServerEntityType";
+            EdmEntitySet entitySet = isOpen ? this.serverOpenEntitySet : this.serverEntitySet;
+            EdmEntityType entityType = isOpen ? this.serverOpenEntityType : this.serverEntityType;
+            string propertyName = isOpen ? "AnyDynamic" : "Infos";
+
+            string actual = WriteEntryPayload(entitySet, entityType,
+                writer =>
+                {
+                    writer.WriteStart(new ODataResource { TypeName = typeName });
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = propertyName, IsCollection = true });
+                    writer.WriteStart(new ODataResourceSet { TypeName = "Collection(Edm.Untyped)" });
+                    writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(new ODataResource
+                    {
+                        TypeName = "Edm.Untyped",
+                        Properties = new ODataProperty[]
+                        {
+                            new ODataProperty { Name = "FirstName", Value = "Kerry"}
+                        }
+                    });
+                    writer.WriteEnd(); // End of "Edm.Untyped"
+                    writer.WriteEnd();
+                    writer.WriteEnd(); // End of "Infos" / AnyDynamic
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            string result = isOpen ?
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverOpenEntitySet/$entity\",\"AnyDynamic\":[[{\"FirstName\":\"Kerry\"}]]}" :
+                "{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Infos\":[[{\"FirstName\":\"Kerry\"}]]}";
+
+            Assert.Equal(result, actual);
+        }
+
+        private string WriteDeclaredUntypedProperty(ODataProperty untypedProperty)
+        {
+            var entry = new ODataResource
+            {
+                TypeName = "Server.NS.ServerEntityType",
+                Properties = new[]
+                {
+                    untypedProperty
+                }
+            };
+
+            return this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType,
+                writer =>
+                {
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
+                });
+        }
+
+        [Fact]
+        public void WriteResourceDeclaredUntypedProperty_WorksForNestedResourceInfo()
+        {
+            string result = WriteEntryPayload(this.serverEntitySet, this.serverEntityType,
+                writer =>
+                {
+                    writer.WriteStart(new ODataResource());
+
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "Data", IsCollection = true });
+                    writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(new ODataResource { TypeName = "Edm.Untyped" });
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+
+                    writer.WriteStart(new ODataNestedResourceInfo { Name = "Infos", IsCollection = true });
+                    writer.WriteStart(new ODataResourceSet());
+                    writer.WriteStart(resource: null);
+                    writer.WriteEnd();
+                    writer.Write(new ODataPrimitiveValue(32));
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                    writer.WriteEnd();
+                });
+
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":[{}],\"Infos\":[null,32]}", result);
+        }
+        #endregion
+
+        #region non-open entity's property unknown name + known value type
         [Fact]
         public void WriteEntryUndeclaredPropertiesTest()
         {

@@ -20,15 +20,15 @@ namespace Microsoft.OData.Tests.Json
     /// <summary>
     /// Unit tests for the ODataUtf8JsonWriter class
     /// </summary>
-    public sealed class ODataUtf8JsonWriterAsyncTests: JsonWriterAsyncBaseTests, IDisposable
+    public sealed class ODataUtf8JsonWriterAsyncTests: JsonWriterAsyncBaseTests, IAsyncDisposable
     {
         private IJsonWriterAsync writer;
-        private MemoryStream stream;
+        private Stream stream;
         private bool disposed;
 
         public ODataUtf8JsonWriterAsyncTests()
         {
-            this.stream = new MemoryStream();
+            this.stream = new AsyncStream(new MemoryStream());
 
             try
             {
@@ -43,17 +43,15 @@ namespace Microsoft.OData.Tests.Json
             this.disposed = false;
         }
 
-        public void Dispose()
+        public async ValueTask DisposeAsync()
         {
             if (this.disposed)
             {
                 return;
             }
 
-            this.stream.Dispose();
-            (this.writer as ODataUtf8JsonWriter).Dispose();
-
-            this.disposed = true;
+            await (this.writer as ODataUtf8JsonWriter).DisposeAsync();
+            await this.stream.DisposeAsync();
         }
 
         [Fact]

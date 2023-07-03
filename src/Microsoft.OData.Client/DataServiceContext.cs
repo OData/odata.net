@@ -2271,9 +2271,77 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+        #region BulkUpdate, BulkUpdateAsync, BeginBulkUpdate, EndBulkUpdate
+        
+        /// <summary>
+        /// Processes bulk update requests
+        /// </summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        public virtual DataServiceResponse BulkUpdate<T>(params T[] objects)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
+            result.BulkUpdateRequest(objects);
+
+            return result.EndRequest();
+        }
+
+        /// <summary>
+        /// Asynchronously processes a bulk update request. 
+        /// </summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated. </param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation. </returns>
+        public virtual Task<DataServiceResponse> BulkUpdateAsync<T>(params T[] objects)
+        {
+            return this.BulkUpdateAsync(CancellationToken.None, objects);
+        }
+
+        /// <summary>Asynchronously processes a bulk update request</summary>
+        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
+        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation.</returns>
+        public virtual Task<DataServiceResponse> BulkUpdateAsync<T>(CancellationToken cancellationToken, params T[] objects)
+        {
+            return FromAsync((objectsArg, callback, state) => BeginBulkUpdate(callback, state, objectsArg), EndBulkUpdate, objects, cancellationToken);
+        }
+
+        /// <summary>Asynchronously submits top-level objects to be deep-updated to the data service.</summary>
+        /// <param name="callback">The delegate that is called when a response to the bulk update request is received.</param>
+        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
+        /// <returns>An<see cref="System.IAsyncResult" /> object that is used to track the status of the asynchronous operation. </returns>
+        internal virtual IAsyncResult BeginBulkUpdate<T>(AsyncCallback callback, object state, params T[] objects)
+        {
+            if (objects == null || objects.Length == 0)
+            {
+                throw Error.Argument(Strings.Util_EmptyArray, nameof(objects));
+            }
+
+            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.BulkUpdateMethodName, SaveChangesOptions.BulkUpdate, callback, state);
+            result.BeginBulkUpdateRequest(objects);
+
+            return result;
+        }
+
+        /// <summary>Called to complete the <see cref="BeginBulkUpdate{T}(AsyncCallback, object, T[])"/>.</summary>
+        /// <param name="asyncResult">An <see cref="System.IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <returns>The DataServiceResponse object that holds the result of the bulk update operation.</returns>
+        internal virtual DataServiceResponse EndBulkUpdate(IAsyncResult asyncResult)
+        {
+            BulkUpdateSaveResult result = BaseAsyncResult.EndExecute<BulkUpdateSaveResult>(this, Util.BulkUpdateMethodName, asyncResult);
+            return result.EndRequest();
+        }
+
+        #endregion
+
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
-        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking.</summary>
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The <paramref source="sourceProperty"/> MUST be a collection navigation property.</summary>
         /// <param name="source">The source object for the new link.</param>
         /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
         /// <param name="target">The object related to the source object by the new link. </param>
@@ -2415,6 +2483,58 @@ namespace Microsoft.OData.Client
             }
         }
 
+        /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The <paramref source="sourceProperty"/> MUST be a single-value navigation property.</summary>
+        /// <param name="source">The source object for the new link.</param>
+        /// <param name="sourceProperty">The name of the navigation property on the source object that returns the related object.</param>
+        /// <param name="target">The object related to the source object by the new link.</param>
+        /// <exception cref="System.ArgumentNullException">When <paramref name="source" />, <paramref name="sourceProperty" /> or <paramref name="target" /> are null.</exception>
+        /// <exception cref="System.InvalidOperationException">When the specified link already exists.-or-When the objects supplied as <paramref name="source" /> or <paramref name="target" /> are in the <see cref="Microsoft.OData.Client.EntityStates.Detached" /> or <see cref="Microsoft.OData.Client.EntityStates.Deleted" /> state.-or-When <paramref name="sourceProperty" /> is not a navigation property that defines a reference to a single related object.</exception>
+        public virtual void SetRelatedObjectLink(object source, string sourceProperty, object target)
+        {
+            Util.CheckArgumentNull(source, nameof(source));
+            Util.CheckArgumentNullAndEmpty(sourceProperty, nameof(sourceProperty));
+            Util.CheckArgumentNull(target, nameof(target));
+
+            // Validate that the source is an entity and is already tracked by the context.
+            ValidateEntityType(source, this.Model);
+
+            EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
+
+            // Check for deleted source entity
+            if (sourceResource.State == EntityStates.Deleted)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkSourceDeleted);
+            }
+
+            // Validate that the property is valid and exists on the source
+            ClientTypeAnnotation sourceType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
+            Debug.Assert(sourceType.IsEntityType, "should be an entity type");
+
+            // will throw InvalidOperationException if property doesn't exist
+            ClientPropertyAnnotation property = sourceType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+
+            if (property.IsKnownType || property.IsEntityCollection)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectLinkNonCollectionOnly);
+            }
+
+            // if (property.IsEntityCollection) then property.PropertyType is the collection elementType
+            // either way you can only have a relation ship between keyed objects
+            ClientTypeAnnotation sourcePropertyType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.EntityCollectionItemType ?? property.PropertyType));
+            Debug.Assert(sourcePropertyType.IsEntityType, "should be an entity type.");
+
+            if (!sourcePropertyType.ElementType.IsInstanceOfType(target))
+            {
+                // target is not of the correct type
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
+            }
+
+            LinkDescriptor descriptor = new LinkDescriptor(source, sourceProperty, target, this.model);
+            this.entityTracker.AddLink(descriptor);
+            descriptor.State = EntityStates.Added;
+            this.entityTracker.IncrementChange(descriptor);
+        }
+
         #endregion
 
         #region AddObject, AttachTo, DeleteObject, Detach, TryGetEntity, TryGetUri
@@ -2446,7 +2566,7 @@ namespace Microsoft.OData.Client
             this.EntityTracker.IncrementChange(resource);
         }
 
-        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request.</summary>
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The <paramref source="sourceProperty"/> MUST be a collection navigation property.</summary>
         /// <param name="source">The parent object that is being tracked by the context.</param>
         /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
         /// <param name="target">The related object that is being added.</param>
@@ -2485,6 +2605,67 @@ namespace Microsoft.OData.Client
             {
                 // target is not of the correct type
                 throw Error.Argument(Strings.Context_RelationNotRefOrCollection, "target");
+            }
+
+            var targetResource = new EntityDescriptor(this.model)
+            {
+                Entity = target,
+                State = EntityStates.Added
+            };
+
+            targetResource.SetParentForInsert(sourceResource, sourceProperty);
+
+            this.EntityTracker.AddEntityDescriptor(targetResource);
+
+            // Add the link in the added state.
+            LinkDescriptor end = targetResource.GetRelatedEnd();
+            end.State = EntityStates.Added;
+            this.entityTracker.AddLink(end);
+
+            this.entityTracker.IncrementChange(targetResource);
+        }
+
+        /// <summary>Adds a related object to the context and creates the link that defines the relationship between the two objects in a single request. The <paramref source="sourceProperty"/> MUST be a single-value navigation property.</summary>
+        /// <param name="source">The parent object that is being tracked by the context.</param>
+        /// <param name="sourceProperty">The name of the navigation property that returns the related object based on an association between the two entities.</param>
+        /// <param name="target">The related object that is being added.</param>
+        public virtual void SetRelatedObject(object source, string sourceProperty, object target)
+        {
+            Util.CheckArgumentNull(source, "source");
+            Util.CheckArgumentNullAndEmpty(sourceProperty, "sourceProperty");
+            Util.CheckArgumentNull(target, "target");
+
+            // Validate that the source is an entity and is already tracked by the context.
+            ValidateEntityType(source, this.Model);
+
+            EntityDescriptor sourceResource = this.entityTracker.GetEntityDescriptor(source);
+
+            // Check for deleted source entity
+            if (sourceResource.State == EntityStates.Deleted)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectSourceDeleted);
+            }
+
+            // Validate that the property is valid and exists on the source
+            ClientTypeAnnotation parentType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(source.GetType()));
+            ClientPropertyAnnotation property = parentType.GetProperty(sourceProperty, UndeclaredPropertyBehavior.ThrowException);
+
+            if (property.IsKnownType || property.IsEntityCollection)
+            {
+                throw Error.InvalidOperation(Strings.Context_SetRelatedObjectNonCollectionOnly);
+            }
+
+            // Validate that the target is an entity
+            ClientTypeAnnotation childType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(target.GetType()));
+            ValidateEntityType(target, this.Model);
+
+            // Validate that the property type matches with the target type
+            ClientTypeAnnotation propertyElementType = this.model.GetClientTypeAnnotation(this.model.GetOrCreateEdmType(property.PropertyType));
+
+            if (!propertyElementType.ElementType.IsAssignableFrom(childType.ElementType))
+            {
+                // target is not of the correct type
+                throw Error.Argument(Strings.Context_RelationNotRefOrCollection, nameof(target));
             }
 
             var targetResource = new EntityDescriptor(this.model)
@@ -2786,19 +2967,19 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Processes bulk update requests
+        /// Processes deep insert requests. Creates an object and creates related navigation items or link existing navigation items in a single request. 
         /// </summary>
-        /// <typeparam name="T">The type of top-level objects to be deep updated.</typeparam>
-        /// <param name="objects">The top-level objects of the type to be deep updated.</param>
-        internal virtual void BulkUpdate<T>(params T[] objects)
+        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        internal virtual void DeepInsert<T>(T resource)
         {
-            if (objects.Length == 0)
+            if (resource == null)
             {
-                throw Error.Argument(Strings.Util_EmptyArray, "top-level objects");
+                throw Error.ArgumentNull(nameof(resource));
             }
 
-            BulkUpdateSaveResult result = new BulkUpdateSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.BulkUpdate, callback: null, state: null);
-            result.BulkUpdateRequest(objects);
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
+            result.DeepInsertRequest(resource);
         }
 
         #endregion

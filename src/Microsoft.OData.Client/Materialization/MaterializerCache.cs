@@ -54,8 +54,11 @@ namespace Microsoft.OData.Client.Materialization
             if (this.cache.TryGetValue(annotatable, out object value))
             {
                 T valueAsT = value as T;
-                Debug.Assert(valueAsT != null, "valueAsT != null");
-                return valueAsT;
+
+                if (valueAsT != null)
+                {
+                    return valueAsT;
+                }
             }
 
             return default(T);

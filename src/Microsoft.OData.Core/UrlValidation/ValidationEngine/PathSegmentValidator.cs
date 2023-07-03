@@ -164,10 +164,10 @@ namespace Microsoft.OData.UriParser.Validation.ValidationEngine
                 ValidateItem(parameter);
             }
 
-            foreach (IEdmOperation operation in segment.OperationImports)
+            foreach (IEdmOperationImport operation in segment.OperationImports)
             {
                 ValidateItem(operation);
-                ValidateItem(operation.ReturnType);
+                ValidateItem(operation.Operation.ReturnType);
             }
         }
 

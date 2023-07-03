@@ -602,7 +602,7 @@ namespace Microsoft.OData.Client
                 {
                     if (declaringType as IEdmEntityType == null && declaringType as IEdmComplexType == null)
                     {
-                        throw c.Error.InvalidOperation(c.Strings.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
+                        throw c.Error.InvalidOperation(c.Strings.ClientTypeCache_NonEntityTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
                     }
 
                     // Create a navigation property representing one side of an association.

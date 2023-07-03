@@ -61,6 +61,28 @@ namespace AstoriaUnitTests.Tests
         }
 
         [Fact]
+        public void ShouldRaiseDeltaFeedStart()
+        {
+            this.TestConfigureAction<ODataDeltaResourceSet>((config) =>
+            {
+                config.OnDeltaFeedStarted((ReadingDeltaFeedArgs args) => args.DeltaFeed.Id = new Uri("urn:foo"));
+                return ODataReaderState.DeltaResourceSetStart;
+            },
+            (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
+        }
+
+        [Fact]
+        public void ShouldRaiseDeltaFeedEnd()
+        {
+            this.TestConfigureAction<ODataDeltaResourceSet>((config) =>
+            {
+                config.OnDeltaFeedEnded((ReadingDeltaFeedArgs args) => args.DeltaFeed.Id = new Uri("urn:foo"));
+                return ODataReaderState.DeltaResourceSetEnd;
+            },
+            (feed) => feed.Id.Should().Be(new Uri("urn:foo")));
+        }
+
+        [Fact]
         public void ShouldRaiseNestedResourceInfoStart()
         {
             this.TestConfigureAction<ODataNestedResourceInfo>((config) =>
