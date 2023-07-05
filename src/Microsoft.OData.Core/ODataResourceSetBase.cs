@@ -75,6 +75,8 @@ namespace Microsoft.OData
             set;
         }
 
+        public bool SkipWritingResources { get; set; } = false;
+
         /// <summary>Gets or sets the URI representing the next page link.</summary>
         /// <returns>The URI representing the next page link.</returns>
         public Uri NextPageLink

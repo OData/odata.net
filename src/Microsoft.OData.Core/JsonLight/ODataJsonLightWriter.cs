@@ -1555,13 +1555,16 @@ namespace Microsoft.OData.JsonLight
                     resourceSet.InstanceAnnotations,
                     this.CurrentResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
-                // "value":
-                await this.asynchronousJsonWriter.WriteValuePropertyNameAsync()
-                    .ConfigureAwait(false);
+                if (!resourceSet.SkipWritingResources)
+                {
+                    // "value":
+                    await this.asynchronousJsonWriter.WriteValuePropertyNameAsync()
+                        .ConfigureAwait(false);
 
-                // Start array which will hold the entries in the resource set.
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
-                    .ConfigureAwait(false);
+                    // Start array which will hold the entries in the resource set.
+                    await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                        .ConfigureAwait(false);
+                }
             }
             else
             {
@@ -1595,13 +1598,16 @@ namespace Microsoft.OData.JsonLight
                         expectedResourceTypeName,
                         isUndeclared).ConfigureAwait(false);
 
-                    // And then write the property name to start the value.
-                    await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
-                        .ConfigureAwait(false);
+                    if (!resourceSet.SkipWritingResources)
+                    {
+                        // And then write the property name to start the value.
+                        await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
+                            .ConfigureAwait(false);
 
-                    // Start array which will hold the entries in the resource set.
-                    await this.asynchronousJsonWriter.StartArrayScopeAsync()
-                        .ConfigureAwait(false);
+                        // Start array which will hold the entries in the resource set.
+                        await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                            .ConfigureAwait(false);
+                    }
                 }
                 else
                 {
@@ -1622,13 +1628,16 @@ namespace Microsoft.OData.JsonLight
                             expectedResourceTypeName,
                             isUndeclared).ConfigureAwait(false);
 
-                        // And then write the property name to start the value.
-                        await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
-                            .ConfigureAwait(false);
+                        if (!resourceSet.SkipWritingResources)
+                        {
+                            // And then write the property name to start the value.
+                            await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
+                                .ConfigureAwait(false);
 
-                        // Start array which will hold the entries in the resource set.
-                        await this.asynchronousJsonWriter.StartArrayScopeAsync()
-                            .ConfigureAwait(false);
+                            // Start array which will hold the entries in the resource set.
+                            await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                                .ConfigureAwait(false);
+                        }
 
                         navigationLinkScope.ResourceSetWritten = true;
                     }

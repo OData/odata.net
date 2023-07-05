@@ -1,0 +1,2 @@
+Microsoft.OData.ODataResourceSetBase.SkipWritingResources.get -> bool
+Microsoft.OData.ODataResourceSetBase.SkipWritingResources.set -> void
