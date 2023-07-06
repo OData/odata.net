@@ -1667,8 +1667,12 @@ namespace Microsoft.OData.JsonLight
             else if (this.ParentNestedResourceInfo == null)
             {
                 // End the array which holds the entries in the resource set.
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                    .ConfigureAwait(false);
+                if (!resourceSet.SkipWritingResources)
+                {
+                    //// TODO do these for non async methods?
+                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                        .ConfigureAwait(false);
+                }
 
                 // Write custom instance annotations
                 await this.instanceAnnotationWriter.WriteInstanceAnnotationsAsync(
@@ -1707,8 +1711,11 @@ namespace Microsoft.OData.JsonLight
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapsed into a single array value.
-                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
-                        .ConfigureAwait(false);
+                    if (!resourceSet.SkipWritingResources)
+                    {
+                        await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                            .ConfigureAwait(false);
+                    }
 
                     // Write the next link if it's available.
                     await this.WriteResourceSetNextLinkAsync(resourceSet.NextPageLink, propertyName)
