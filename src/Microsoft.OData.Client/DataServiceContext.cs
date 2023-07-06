@@ -2342,7 +2342,7 @@ namespace Microsoft.OData.Client
         #region DeepInsert
 
         /// <summary>
-        /// Processes deep insert requests. Creates an object and creates related navigation items or link existing navigation items in a single request. 
+        /// Processes deep insert requests. Creates a resource and its related resources or creates a resource and links it to its related existing resources in a single request.
         /// </summary>
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
