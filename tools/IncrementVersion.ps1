@@ -31,7 +31,7 @@ if ($lastReleaseCommit -eq "")
   $lastReleaseCommit = git log -n 1 --pretty=format:%H -- $versionPath
 }
 
-Write-Host "The last release's commit was $lastReleaseCommit"
+Write-Host -ForegroundColor Green "The last release's commit was $lastReleaseCommit"
 
 # use git to find the list of file paths that have been changed since the last commit
 $changedFiles = git diff --name-only HEAD $lastReleaseCommit
@@ -77,25 +77,28 @@ foreach ($propertyGroup in $versions.Project.PropertyGroup)
 {
   if ($propertyGroup.VersionRelease -ne $null)
   {
+    $versionMajor = [int] $propertyGroup.VersionMajor.'#text'
+    $versionMinor = [int] $propertyGroup.VersionMinor.'#text'
+    $versionBuildNumber = [int] $propertyGroup.VersionBuildNumber.'#text'
+
     # if there are api changes or the caller requested a minor version increment
     if ($apiChanges -or $forceMinorIncrement)
     {
-      [int] $currentVersion = $propertyGroup.VersionMinor.'#text';
-      $currentVersion = $currentVersion + 1
-      Write-Host "Incrementing the VersionMinor in $versionPath to $currentVersion"
+      $nextVersion = $versionMinor + 1
+      Write-Host "Because there were API changes, incrementing the VersionMinor in $versionPath to $nextVersion"
 
-      $propertyGroup.VersionMinor.'#text' = [string] $currentVersion
+      $propertyGroup.VersionMinor.'#text' = [string] $nextVersion
       $propertyGroup.VersionBuildNumber.'#text' = '0'
     }
 
     # if there are not api changes or the caller requested a revision version increment
     if ((-not $apiChanges -and $breaks.Length -eq 0) -or $forceRevisionIncrement)
     {
-      [int] $currentVersion = $propertyGroup.VersionBuildNumber.'#text';
-      $currentVersion = $currentVersion + 1
-      Write-Host "Incrementing the VersionBuildNumber in $versionPath to $currentVersion"
+      $nextVersion = $versionBuildNumber + 1
+      Write-Host "Because there were no API changes, incrementing the VersionBuildNumber in $versionPath to $nextVersion"
+      Write-Host
 
-      $propertyGroup.VersionBuildNumber.'#text' = [string] $currentVersion
+      $propertyGroup.VersionBuildNumber.'#text' = [string] $nextVersion
     }
 
     break;
@@ -103,3 +106,5 @@ foreach ($propertyGroup in $versions.Project.PropertyGroup)
 }
 
 $versions.Save($versionPath)
+
+Write-Host -ForegroundColor Green "The previous version number was '$versionMajor.$versionMinor.$versionBuildNumber'. The new version number is '$($propertyGroup.VersionMajor.'#text').$($propertyGroup.VersionMinor.'#text').$($propertyGroup.VersionBuildNumber.'#text')'"
