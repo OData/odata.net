@@ -2,6 +2,8 @@ ALL DECISIONS SHOULD REFER TO THE STANDARD!
 PERSONAS: WORKLOAD OWNER, REVIEWER, AGGREGATOR, CLIENT
 
 
+implement cast segments, implement csdl parser, then do an api review version; then do write operations; at this point, show it to reviewers; get query options from christof somewhere along the way
+
 
 move code from epm to peachy
 end to end tests should use an odata instead of an http client
