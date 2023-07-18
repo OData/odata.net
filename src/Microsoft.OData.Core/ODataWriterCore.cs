@@ -2932,7 +2932,7 @@ namespace Microsoft.OData
             NestedResourceInfoScope newScope = previousScope.Clone(WriterState.NestedResourceInfoWithContent);
 
             this.scopeStack.Push(newScope);
-            if (newScope.ItemType == null && content != null && !SkipWriting && !(content is ODataPrimitiveValue))
+            if ((newScope.ItemType == null || newScope.ItemType.IsUntyped()) && content != null && !SkipWriting && !(content is ODataPrimitiveValue))
             {
                 ODataPrimitiveValue primitiveValue = content as ODataPrimitiveValue;
                 if (primitiveValue != null)
@@ -2941,10 +2941,18 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    ODataResourceBase resource = content as ODataResourceBase;
-                    newScope.ResourceType = resource != null
-                                            ? GetResourceType(resource)
-                                            : GetResourceSetType(content as ODataResourceSetBase);
+                    if (content is ODataResourceBase resource)
+                    {
+                        newScope.ResourceType = string.IsNullOrEmpty(resource.TypeName) ?
+                            EdmUntypedStructuredType.Instance :
+                            GetResourceType(resource);
+                    }
+                    else if (content is ODataResourceSetBase resourceSet)
+                    {
+                        newScope.ResourceType = string.IsNullOrEmpty(resourceSet.TypeName) ?
+                            EdmUntypedStructuredType.Instance :
+                            GetResourceSetType(resourceSet);
+                    }
                 }
             }
         }

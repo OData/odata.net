@@ -364,6 +364,134 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
         [Fact]
+        public void ReadBatchRequestWithDuplicateProperties()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"atomicityGroup\": \"g1\"," +
+                "\"atomicityGroup\": \"g2\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+
+            var exception = Assert.Throws<ODataException>(
+                () => SetupJsonLightBatchReaderAndRunTest(
+                payload,
+                (jsonLightBatchReader) =>
+                {
+                    while (jsonLightBatchReader.Read())
+                    {
+                        if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                        {
+                            // The json properties are just iterated through and have no purpose for this test case
+                            jsonLightBatchReader.CreateOperationRequestMessage();
+                        }
+                    }
+                    Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
+                },
+                isResponse: false));
+
+            // Verify that the correct duplicate property has raised the ODataException
+            Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch("ATOMICITYGROUP"), exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadBatchRequestWithDuplicatePropertiesAsync()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"atomicityGroup\": \"g1\"," +
+                "\"atomicityGroup\": \"g2\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+            
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightBatchReaderAndRunTestAsync(
+                payload,
+                async (jsonLightBatchReader) =>
+                {
+                    while (await jsonLightBatchReader.ReadAsync())
+                    {
+                        if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                        {
+                            // The json properties are just iterated through and have no purpose for this test case
+                            await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                        }
+                    }
+                    Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
+                },
+                isResponse: false));
+
+            // Verify that the correct duplicate property has raised the ODataException
+            Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch("ATOMICITYGROUP"), exception.Message);
+        }
+
+        [Fact]
+        public void ReadBatchRequestWithDuplicateHeaders()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\",\"duplicate-header\":\"value1\",\"duplicate-header\":\"value2\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+
+            var exception = Assert.Throws<ODataException>(
+                () => SetupJsonLightBatchReaderAndRunTest(
+                payload,
+                (jsonLightBatchReader) =>
+                {
+                    while (jsonLightBatchReader.Read())
+                    {
+                        if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                        {
+                            // The json properties are just iterated through and have no purpose for this test case
+                            jsonLightBatchReader.CreateOperationRequestMessage();
+                        }
+                    }
+                    Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                },
+                isResponse: false));
+
+            // Verify that the correct duplicate header has raised the ODataException
+            Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch("duplicate-header"), exception.Message);
+        }
+
+        [Fact]
+        public async Task ReadBatchRequestWithDuplicateHeadersAsync()
+        {
+            var payload = "{\"requests\": [{" +
+                "\"id\": \"1\"," +
+                "\"method\": \"POST\"," +
+                "\"url\": \"http://tempuri.org/Customers\"," +
+                "\"headers\": {\"odata-version\":\"4.0\",\"content-type\":\"application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8\",\"duplicate-header\":\"value1\",\"duplicate-header\":\"value2\"}, " +
+                "\"body\": {\"@odata.type\":\"#NS.Customer\",\"Id\":1,\"Name\":\"Customer 1\",\"Type\":\"Retail\"}}]}";
+
+            var exception = await Assert.ThrowsAsync<ODataException>(
+                () => SetupJsonLightBatchReaderAndRunTestAsync(
+                payload,
+                async (jsonLightBatchReader) =>
+                {
+                        while (await jsonLightBatchReader.ReadAsync())
+                        {
+                            if (jsonLightBatchReader.State == ODataBatchReaderState.Operation)
+                            {
+                                // The json properties are just iterated through and have no purpose for this test case
+                                await jsonLightBatchReader.CreateOperationRequestMessageAsync();
+                            }
+                        }
+                        Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
+                },
+                isResponse: false));
+
+            // Verify that the correct duplicate header has raised the ODataException
+            Assert.Equal(Strings.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch("duplicate-header"), exception.Message);
+        }
+
+        [Fact]
         public async Task ReadBatchResponseAsync()
         {
             var payload = "{\"responses\":[{" +
@@ -974,6 +1102,22 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     default:
                         break;
                 }
+            }
+        }
+
+        /// <summary>
+        /// Sets up an ODataJsonLightBatchReader, then runs the given test code synchronously
+        /// </summary>
+        private void SetupJsonLightBatchReaderAndRunTest(
+            string payload,
+            Action<ODataJsonLightBatchReader> func,
+            bool isResponse = true)
+        {
+            using (var jsonLightInputContext = CreateJsonLightInputContext(payload, isAsync: false, isResponse: isResponse))
+            {
+                var jsonLightBatchReader = new ODataJsonLightBatchReader(jsonLightInputContext, synchronous: true);
+
+                func(jsonLightBatchReader);
             }
         }
 

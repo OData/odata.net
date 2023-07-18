@@ -207,6 +207,8 @@ ODataBatchReaderStream_UnexpectedEndOfInput=Encountered an unexpected end of inp
 ODataBatchReaderStreamBuffer_BoundaryLineSecurityLimitReached=Too many white spaces after a boundary delimiter and before the terminating line resource set. For security reasons, the total number of characters for a boundary including white spaces must not exceed {0}.
 
 ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch=Unknown property name '{0}' for message in batch.
+ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch=Duplicate property name '{0}' for request in batch.
+ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch=Duplicate header name '{0}' for request in batch.
 
 ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType=Unexpected reader.NodeType: {0}.
 ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader=Unknown/undefined type, new type that needs to be supported: {0}?
