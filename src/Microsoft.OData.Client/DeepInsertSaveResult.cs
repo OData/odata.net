@@ -313,7 +313,7 @@ namespace Microsoft.OData.Client
                 // We are setting the MaxProtocolVersion to v4.01 when reading deep insert responses.
                 this.RequestInfo.Context.MaxProtocolVersion = ODataProtocolVersion.V401;
                 Version responseVersion;
-                Exception exception = HandleResponse(
+                HandleResponse(
                     this.RequestInfo,
                     (HttpStatusCode)this.batchResponseMessage.StatusCode,
                     this.batchResponseMessage.GetHeader(XmlConstants.HttpODataVersion),
@@ -354,7 +354,7 @@ namespace Microsoft.OData.Client
 
         private void HandleDeepInsertResponseInternal(MaterializerEntry entry, bool isTopLevelDescriptor, Descriptor descriptor, OperationResponse parentOperationResponse)
         {
-            OperationResponse response = CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
+            OperationResponse response = this.CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
 
             List<Descriptor> relatedDescriptors = this.BulkUpdateGraph.GetRelatedDescriptors(descriptor);
 
@@ -362,13 +362,14 @@ namespace Microsoft.OData.Client
             {
                 if (nestedItem is MaterializerNestedEntry materializerNestedEntry)
                 {
-                    foreach (IMaterializerState nestedEntries in materializerNestedEntry?.NestedItems)
+                    foreach (IMaterializerState nestedEntries in materializerNestedEntry.NestedItems)
                     {
                         if (nestedEntries is MaterializerFeed feed)
                         {
                             for (int i = 0; i < feed.Items.Count; i++)
                             {
-                                if (relatedDescriptors.Count == 0 || relatedDescriptors.Count < i + 1)
+                                // Ensures the count of the descriptors matches the feed.Items count.
+                                if (relatedDescriptors.Count < i + 1)
                                 {
                                     break;
                                 }
@@ -376,7 +377,7 @@ namespace Microsoft.OData.Client
                                 HandleDeepInsertResponseInternal(feed.Items[i] as MaterializerEntry, false, relatedDescriptors[i], response);
                             }
                         }
-                        else if (nestedEntries is MaterializerEntry matEntry)
+                        else if (nestedEntries is MaterializerEntry nestedEntry)
                         {
                             // In single value navigation property, the related descriptors count must be 1.
                             if (relatedDescriptors.Count == 0)
@@ -384,7 +385,7 @@ namespace Microsoft.OData.Client
                                 break;
                             }
 
-                            HandleDeepInsertResponseInternal(matEntry, false, relatedDescriptors[0], response);
+                            HandleDeepInsertResponseInternal(nestedEntry, false, relatedDescriptors[0], response);
                         }
                     }
                 }
@@ -407,45 +408,45 @@ namespace Microsoft.OData.Client
 
             try
             {
-                if (descriptor != null)
+                if (descriptor == null)
                 {
-                    this.SaveResultProcessed(descriptor, HasFailedOperation(materializerState));
-
-                    operationResponse = new ChangeOperationResponse(this.headers, descriptor)
-                    {
-                        StatusCode = this.batchResponseMessage.StatusCode
-                    };
-
-                    this.materializerStateForDescriptor.Add(descriptor, materializerState);
-
-                    if (isTopLevelResponse)
-                    {
-                        this.operationResponses.Add(operationResponse);
-                        this.HandleLocationHeaders(descriptor, (HttpStatusCode)this.batchResponseMessage.StatusCode, this.headers);
-                    }
-                    else
-                    {
-                        // In POST request, we have a location header from the response.
-                        // We should not use the location header for nested descriptors since the location header only applies for the top level resource/descriptor.
-                        string location;
-                        this.headers.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
-
-                        if (location != null)
-                        {
-                            this.headers.UnderlyingDictionary.Remove(XmlConstants.HttpResponseLocation);
-                        }
-
-                        parentOperationResponse.NestedResponses.Add(operationResponse);
-                    }
-#if DEBUG
-                    this.HandleOperationResponse(descriptor, this.headers, (HttpStatusCode)this.batchResponseMessage.StatusCode);
-#else
-                    this.HandleOperationResponse(descriptor, this.headers);
-#endif
-                    return operationResponse;
+                    return null;
                 }
 
-                return null;
+                this.SaveResultProcessed(descriptor, HasFailedOperation(materializerState));
+
+                operationResponse = new ChangeOperationResponse(this.headers, descriptor)
+                {
+                    StatusCode = this.batchResponseMessage.StatusCode
+                };
+
+                this.materializerStateForDescriptor.Add(descriptor, materializerState);
+
+                if (isTopLevelResponse)
+                {
+                    this.operationResponses.Add(operationResponse);
+                    this.HandleLocationHeaders(descriptor, (HttpStatusCode)this.batchResponseMessage.StatusCode, this.headers);
+                }
+                else
+                {
+                    // In POST request, we have a location header from the response.
+                    // We should not use the location header for nested descriptors since the location header only applies for the top level resource/descriptor.
+                    string location;
+                    this.headers.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
+
+                    if (location != null)
+                    {
+                        this.headers.UnderlyingDictionary.Remove(XmlConstants.HttpResponseLocation);
+                    }
+
+                    parentOperationResponse.NestedResponses.Add(operationResponse);
+                }
+#if DEBUG
+                this.HandleOperationResponse(descriptor, this.headers, (HttpStatusCode)this.batchResponseMessage.StatusCode);
+#else
+                this.HandleOperationResponse(descriptor, this.headers);
+#endif
+                return operationResponse;
             }
             catch (InvalidOperationException e)
             {
