@@ -273,7 +273,7 @@ namespace Microsoft.OData.JsonLight
                                 while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                                 {
                                     string headerName = this.jsonReader.ReadPropertyName();
-                                    string headerValue = this.jsonReader.ReadPrimitiveValue().ToString();
+                                    string headerValue = this.jsonReader.ReadPrimitiveValue()?.ToString();
 
                                     // Throw an ODataException, if a duplicate header was detected
                                     if (headers.ContainsKeyOrdinal(headerName))
@@ -425,7 +425,7 @@ namespace Microsoft.OData.JsonLight
                             {
                                 string headerName = await this.asynchronousJsonReader.ReadPropertyNameAsync()
                                     .ConfigureAwait(false);
-                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false)).ToString();
+                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
 
                                 // Throw an ODataException, if a duplicate header was detected
                                 if (headers.ContainsKeyOrdinal(headerName))
