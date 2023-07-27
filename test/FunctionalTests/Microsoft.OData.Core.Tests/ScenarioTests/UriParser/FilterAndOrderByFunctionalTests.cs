@@ -2851,12 +2851,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("example in ('', \"  \")")]
-        [InlineData("example in (' ', \"\")")]
-        [InlineData("example in ( '   ', '' )")]
-        [InlineData("example in ( \"  \", \"\" )")]
-        [InlineData("example in ( \"    \", ' ' )")]
-        public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString)
+        [InlineData("example in ('', \"  \")", "\"\"", "  ")]
+        [InlineData("example in (' ', \"\")", " ", "\"\"")]
+        [InlineData("example in ( '   ', '' )", "   ", "\"\"")]
+        [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
+        [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
+        public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)
         {
             FilterClause filter = ParseFilter(filterQueryString,
                 HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
@@ -2864,6 +2864,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             var inNode = Assert.IsType<InNode>(filter.Expression);
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
             Assert.Equal(2, collectionNode.Collection.Count);
+
+            ConstantNode constantNode1 = collectionNode.Collection.First();
+            Assert.Equal(expectedFirstLiteral, constantNode1.LiteralText);
+
+            ConstantNode constantNode2 = collectionNode.Collection.Last();
+            Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
         }
 
         #endregion
