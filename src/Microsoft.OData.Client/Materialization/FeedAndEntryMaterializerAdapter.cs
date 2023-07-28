@@ -382,7 +382,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds an <see cref="IMaterializerState"/> entry to a parent entry.
         /// </summary>
         /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
-        private void AddResourceToParent(IMaterializerState materializerState)
+        private void AddDeltaResourceToParent(IMaterializerState materializerState)
         {
             IMaterializerState topItem = this.deltaMaterializerStateItems.Peek();
 
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds an <see cref="IMaterializerState"/> entry to a parent entry.
         /// </summary>
         /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
-        private void AddResourceToParentEntry(IMaterializerState materializerState)
+        private void AddResourceToParent(IMaterializerState materializerState)
         {
             IMaterializerState topItem = this.entryMaterializerStateItems.Peek();
 
@@ -559,7 +559,7 @@ namespace Microsoft.OData.Client.Materialization
                     }
 
                     nestedEntry.AddNestedItem(materializerFeed);
-                    AddResourceToParentEntry(nestedEntry);
+                    AddResourceToParent(nestedEntry);
                 }
                 else if (deltaFeed != null)
                 {
@@ -574,7 +574,7 @@ namespace Microsoft.OData.Client.Materialization
 
                     if (this.deltaMaterializerStateItems.Count > 0)
                     {
-                        AddResourceToParent(nestedEntry);    
+                        AddDeltaResourceToParent(nestedEntry);
                     }                     
                 }
                 else
@@ -589,7 +589,7 @@ namespace Microsoft.OData.Client.Materialization
                     nestedEntry.Entry = entry;
 
                     nestedEntry.AddNestedItem(entry);
-                    AddResourceToParentEntry(nestedEntry);
+                    AddResourceToParent(nestedEntry);
                 }
 
                 this.ReadAndExpectState(ODataReaderState.NestedResourceInfoEnd);

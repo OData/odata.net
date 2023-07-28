@@ -299,7 +299,7 @@ namespace Microsoft.OData.Client
                 return this.HandleDeepInsertResponse();
             }
 
-            return new DataServiceResponse(null, (int)WebExceptionStatus.Success, new List<OperationResponse>(0), batchResponse: true);
+            return new DataServiceResponse(null, (int)WebExceptionStatus.Success, new List<OperationResponse>(0), batchResponse: this.IsBatchRequest);
         }
 
         private DataServiceResponse HandleDeepInsertResponse()
@@ -335,10 +335,6 @@ namespace Microsoft.OData.Client
                 this.headers = headers;
                 this.topLevelEntry = entry;
             }
-            catch (DataServiceRequestException)
-            {
-                throw;
-            }
             catch (InvalidOperationException ex)
             {
                 HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
@@ -347,7 +343,7 @@ namespace Microsoft.OData.Client
                 throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
             }
 
-            HandleDeepInsertResponseInternal(entry, true, entityDescriptor, null);
+            HandleDeepInsertResponseInternal(entry : entry, isTopLevelDescriptor : true, descriptor : entityDescriptor, parentOperationResponse : null);
 
             return response;
         }

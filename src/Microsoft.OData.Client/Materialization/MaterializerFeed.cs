@@ -67,7 +67,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets the entries.
+        /// Gets the items.
         /// </summary>
         public List<IMaterializerState> Items
         {
@@ -75,9 +75,9 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Adds an <see cref="IMaterializerState"/> entry to the entries collection.
+        /// Adds an <see cref="IMaterializerState"/> item to the items collection.
         /// </summary>
-        /// <param name="entry">The <see cref="IMaterializerState"/> entry to be added.</param>
+        /// <param name="item">The <see cref="IMaterializerState"/> item to be added.</param>
         public void AddItem(IMaterializerState item)
         {
             this.items.Add(item);
