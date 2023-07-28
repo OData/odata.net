@@ -1,6 +1,19 @@
 ALL DECISIONS SHOULD REFER TO THE STANDARD!
 PERSONAS: WORKLOAD OWNER, REVIEWER, AGGREGATOR, CLIENT
 
+inversion of control for validator logic:
+{
+multiplicity:
+    a single item
+type:
+    the model element Identity
+keys:
+    new Dictionary<string,Key>{
+        "authSystemId": 45
+        "identityId": 72
+    }
+}
+
 
 implement cast segments, implement csdl parser, then do an api review version; then do write operations; at this point, show it to reviewers; get query options from christof somewhere along the way
 
