@@ -182,6 +182,52 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public void DeepInsertAnEntry_WithOneLevelOfNestingAndServerGeneratedId()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
+            var headers = new Dictionary<string, string>()
+                        {
+                            {"Content-Type", "application/json;charset=utf-8"},
+                            {"Location", "http://localhost:5000/Persons(100)"},
+                        };
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse,
+                headers);
+
+            var person = new Person
+            {
+                Name = "Person 100",
+            };
+
+            var car = new Car
+            {
+                Name = "Car 1001"
+            };
+
+            this.context.AddObject("Persons", person);
+
+            this.context.AddRelatedObject(person, "Cars", car);
+
+            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+
+            Assert.Single(response);
+            Assert.Single(response.Single().NestedResponses);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+            var nestedResponse = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor carDescriptor = nestedResponse.Descriptor as EntityDescriptor;
+            var returnedCar = carDescriptor.Entity as Car;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(100, returnedPerson.ID);
+            Assert.Equal(1001, returnedCar.ID);
+        }
+
+        [Fact]
         public void DeepInsertAnEntry_WithNestedResponseWithNoRelatedDescriptors()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(Countries())))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
