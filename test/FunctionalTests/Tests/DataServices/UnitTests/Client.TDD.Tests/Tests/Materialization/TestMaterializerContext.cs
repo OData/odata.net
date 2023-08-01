@@ -55,5 +55,6 @@ namespace AstoriaUnitTests.Tests
         public MaterializerCache MaterializerCache { get; private set; }
 
         public bool AutoNullPropagation { get; set; }
+        public bool IncludeLinks { get; set; }
     }
 }

@@ -58,6 +58,7 @@
     <Compile Include="DateTimePrimitiveTypeReference.cs" />
     <Compile Include="Tests\Annotation\AnnotationTargetingOperationTestsProxy.cs" />
     <Compile Include="Tests\Annotation\ClientAnnotationTests.cs" />
+    <Compile Include="Tests\DeepInsertE2ETests.cs" />
     <Compile Include="Tests\BulkUpdateE2ETests.cs" />
     <Compile Include="Tests\DeepInsertSaveResultTests.cs" />
     <Compile Include="Tests\BulkUpdateSaveResultTests.cs" />

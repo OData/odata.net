@@ -389,7 +389,7 @@ namespace Microsoft.OData.Client
         /// <returns>An instance of <see cref="MaterializeAtom"/> that can be used to materialize the response.</returns>
         protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
-            Debug.Assert(this.cachedResponse.Exception == null && this.materializerStateForDescriptor != null, "this.cachedResponse.Exception == null && this.descriptorForMaterializer != null");
+            Debug.Assert(this.cachedResponse.Exception == null && this.materializerStateForDescriptor != null, "this.cachedResponse.Exception == null && this.materializerStateForDescriptor != null");
 
             if (this.materializerStateForDescriptor.TryGetValue(entityDescriptor, out IMaterializerState materializerState) && materializerState is MaterializerEntry materializerEntry)
             {

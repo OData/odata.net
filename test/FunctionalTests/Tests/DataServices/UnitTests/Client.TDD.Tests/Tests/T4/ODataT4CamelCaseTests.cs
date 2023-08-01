@@ -325,9 +325,12 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = context };
             var materializerEntry = MaterializerEntry.CreateEntry(odataEntry, OData.ODataFormat.Json, true, clientEdmModel, materializerContext);
 
-            MaterializerNavigationLink.CreateLink(complexP, MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel, materializerContext), materializerContext);
+            MaterializerNestedEntry complexPMaterializerNestedEntry = MaterializerNestedEntry.CreateNestedEntry(complexP, new List<IMaterializerState>(), materializerContext);
+            complexPMaterializerNestedEntry.Entry = MaterializerEntry.CreateEntry(complexResource, OData.ODataFormat.Json, true, clientEdmModel, materializerContext);
+
             MaterializerFeed.CreateFeed(complexColResourceSet, items, materializerContext);
-            MaterializerNavigationLink.CreateLink(complexColP, complexColResourceSet, materializerContext);
+            MaterializerNestedEntry complexColPMaterializerNestedEntry = MaterializerNestedEntry.CreateNestedEntry(complexColP, new List<IMaterializerState>(), materializerContext);
+            complexColPMaterializerNestedEntry.Feed = complexColResourceSet;
 
             var adapter = new EntityTrackingAdapter(new TestEntityTracker(), MergeOption.OverwriteChanges, clientEdmModel, context, materializerContext);
             QueryComponents components = new QueryComponents(new Uri("http://foo.com/Service"), new Version(4, 0), typeof(EntityType), null, new Dictionary<Expression, Expression>());

@@ -2339,6 +2339,28 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+        #region DeepInsert
+
+        /// <summary>
+        /// Processes deep insert requests. Creates a resource and its related resources or creates a resource and links it to its related existing resources in a single request.
+        /// </summary>
+        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        public virtual DataServiceResponse DeepInsert<T>(T resource)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
+            result.DeepInsertRequest(resource);
+
+            return result.EndRequest();
+        }
+
+        #endregion
+
         #region Add, Attach, Delete, Detach, Update, TryGetEntity, TryGetUri
 
         /// <summary>Adds the specified link to the set of objects the <see cref="Microsoft.OData.Client.DataServiceContext" /> is tracking. The <paramref source="sourceProperty"/> MUST be a collection navigation property.</summary>
@@ -2964,22 +2986,6 @@ namespace Microsoft.OData.Client
             }
 
             return identity != null;
-        }
-
-        /// <summary>
-        /// Processes deep insert requests. Creates an object and creates related navigation items or link existing navigation items in a single request. 
-        /// </summary>
-        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
-        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
-        internal virtual void DeepInsert<T>(T resource)
-        {
-            if (resource == null)
-            {
-                throw Error.ArgumentNull(nameof(resource));
-            }
-
-            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
-            result.DeepInsertRequest(resource);
         }
 
         #endregion
