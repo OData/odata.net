@@ -75,8 +75,9 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="synchronous">If the reader should be created for synchronous or asynchronous API.</param>
         /// <returns>The newly created <see cref="ODataCollectionReader"/>.</returns>
         private ODataBatchReader CreateBatchReaderImplementation(bool synchronous)
-        {
-            return new ODataMultipartMixedBatchReader(this, this.batchBoundary, this.Encoding, synchronous);
+        {            
+            return new ODataMultipartMixedBatchReader(this, this.batchBoundary, this.Encoding, synchronous,
+                this.MessageReaderSettings.ThrowIfMissingContentIdInChangeset);
         }
     }
 }

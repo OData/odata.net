@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.MultipartMixed;
@@ -203,6 +204,42 @@ OData-Version: 4.0
             Assert.Empty(verifyUrlStack);
             Assert.Empty(verifyDependsOnIdsStack);
             Assert.Empty(verifyResourceStack);
+        }
+
+        [Fact]
+        public void ReadMultipartMixedBatchRequestWthoutContentId()
+        {
+            var payload = Regex.Replace(batchRequestPayload, "Content-ID: .", "");
+            Assert.NotEqual(payload, batchRequestPayload);
+            SetupMultipartMixedBatchReaderAndRunTest(
+                batchRequestPayload,
+                (multipartMixedBatchReader) =>
+                {
+                    var operationCount = 0;
+
+                    while (multipartMixedBatchReader.Read())
+                    {
+                        switch (multipartMixedBatchReader.State)
+                        {
+                            case ODataBatchReaderState.Operation:
+                                var operationRequestMessage = multipartMixedBatchReader.CreateOperationRequestMessage();
+                                using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
+                                {
+                                    if (operationCount == 3)
+                                    {
+                                        var entityReferenceLink = messageReader.ReadEntityReferenceLink();
+                                    }
+                                    else
+                                    {
+                                        var jsonLightResourceReader = messageReader.CreateODataResourceReader();
+                                        while (jsonLightResourceReader.Read()) {}
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                },
+                batchRequestBoundary);
         }
 
         [Fact]
@@ -704,7 +741,8 @@ OData-Version: 4.0
                 multipartMixedBatchInputContext,
                 batchBoundary,
                 MediaTypeUtils.EncodingUtf8NoPreamble,
-                synchronous: true);
+                synchronous: true,
+                requireContentId: false);
 
             action(multipartMixedBatchReader);
         }
@@ -726,7 +764,8 @@ OData-Version: 4.0
                 multipartMixedBatchInputContext,
                 batchBoundary,
                 MediaTypeUtils.EncodingUtf8NoPreamble,
-                synchronous: false);
+                synchronous: false,
+                requireContentId: false);
 
             await func(multipartMixedBatchReader);
         }
