@@ -498,7 +498,8 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Writes an escaped string to the buffer.
         /// </summary>
-        /// <param name="writer">The text writer to write the output to.</param>
+        /// <param name="writer">The text writer to write the output.</param>
+
         /// <param name="inputString">Input string value.</param>
         /// <param name="currentIndex">The index in the string at which copying should begin.</param>
         /// <param name="buffer">Char buffer to use for streaming data.</param>
