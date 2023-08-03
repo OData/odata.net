@@ -108,7 +108,8 @@ namespace Microsoft.OData.UriParser
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
-                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal))
+
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
