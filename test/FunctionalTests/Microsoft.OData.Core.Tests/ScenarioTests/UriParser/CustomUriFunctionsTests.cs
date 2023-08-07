@@ -267,6 +267,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             }
         }
 
+        [Fact]
+        public void AddCustomFunction_OnModelScope_AddAndRemove()
+        {
+            EdmModel model = new EdmModel();
+            string customFunctionName = "my.ExistingCustomFunction";
+
+            // Prepare
+            FunctionSignatureWithReturnType existingCustomFunctionSignature =
+                new FunctionSignatureWithReturnType(EdmCoreModel.Instance.GetDouble(false), EdmCoreModel.Instance.GetBoolean(false));
+            CustomUriFunctions.AddCustomUriFunction(customFunctionName, existingCustomFunctionSignature, model);
+
+            // Assert
+            CustomUriFunctions.CustomUriFunctionsContainer container = CustomUriFunctions.GetCustomUriFunctionsContainer(model);
+            KeyValuePair<string, FunctionSignatureWithReturnType[]> singleItem = Assert.Single(container.CustomFunctions);
+            Assert.Equal(customFunctionName, singleItem.Key);
+
+            // Test - removing
+            CustomUriFunctions.RemoveCustomUriFunction(customFunctionName, model);
+            container = CustomUriFunctions.GetCustomUriFunctionsContainer(model);
+            Assert.Empty(container.CustomFunctions);
+        }
+
         #endregion
 
         #region Remove Custom Function

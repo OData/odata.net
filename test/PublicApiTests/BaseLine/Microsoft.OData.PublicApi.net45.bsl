@@ -6369,9 +6369,9 @@ public abstract class Microsoft.OData.UriParser.SingleValueNode : Microsoft.ODat
 }
 
 public sealed class Microsoft.OData.UriParser.CustomUriFunctions {
-    public static void AddCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature)
-    public static bool RemoveCustomUriFunction (string functionName)
-    public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature)
+    public static void AddCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature, params Microsoft.OData.Edm.IEdmModel model)
+    public static bool RemoveCustomUriFunction (string functionName, params Microsoft.OData.Edm.IEdmModel model)
+    public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature, params Microsoft.OData.Edm.IEdmModel model)
 }
 
 public sealed class Microsoft.OData.UriParser.CustomUriLiteralPrefixes {
@@ -7925,7 +7925,6 @@ public enum Microsoft.OData.Client.SaveChangesOptions : int {
     BatchWithSingleChangeset = 1
     BulkUpdate = 128
     ContinueOnError = 2
-    DeepInsert = 256
     None = 0
     PostOnlySetProperties = 8
     ReplaceOnUpdate = 4
@@ -8237,7 +8236,6 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
-    public virtual Microsoft.OData.Client.DataServiceResponse DeepInsert (T resource)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
@@ -8304,8 +8302,6 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (System.Threading.CancellationToken cancellationToken)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken)
     public virtual void SetLink (object source, string sourceProperty, object target)
-    public virtual void SetRelatedObject (object source, string sourceProperty, object target)
-    public virtual void SetRelatedObjectLink (object source, string sourceProperty, object target)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug)
     public virtual void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)

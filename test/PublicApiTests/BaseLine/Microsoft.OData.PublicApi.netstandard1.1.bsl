@@ -6369,9 +6369,9 @@ public abstract class Microsoft.OData.UriParser.SingleValueNode : Microsoft.ODat
 }
 
 public sealed class Microsoft.OData.UriParser.CustomUriFunctions {
-    public static void AddCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature)
-    public static bool RemoveCustomUriFunction (string functionName)
-    public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature)
+    public static void AddCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature, params Microsoft.OData.Edm.IEdmModel model)
+    public static bool RemoveCustomUriFunction (string functionName, params Microsoft.OData.Edm.IEdmModel model)
+    public static bool RemoveCustomUriFunction (string functionName, Microsoft.OData.UriParser.FunctionSignatureWithReturnType functionSignature, params Microsoft.OData.Edm.IEdmModel model)
 }
 
 public sealed class Microsoft.OData.UriParser.CustomUriLiteralPrefixes {

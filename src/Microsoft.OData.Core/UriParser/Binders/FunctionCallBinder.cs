@@ -144,9 +144,11 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="functionCallToken">The function call token to get the signatures for.</param>
         /// <param name="enableCaseInsensitive">Optional flag for whether case insensitive match is enabled.</param>
+        /// <param name="model">Optional model for whether the custom function is from model scoped or global scoped. In 8.x, it will always from model scoped.</param>
         /// <returns>The signatures which match the supplied function name.</returns>
         [SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "need to use lower characters for built-in functions.")]
-        internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(string functionCallToken, bool enableCaseInsensitive = false)
+        internal static IList<KeyValuePair<string, FunctionSignatureWithReturnType>> GetUriFunctionSignatures(string functionCallToken,
+            bool enableCaseInsensitive = false, IEdmModel model = null)
         {
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> customUriFunctionsNameSignatures = null;
             string builtInUriFunctionName = null;
@@ -155,7 +157,15 @@ namespace Microsoft.OData.UriParser
 
             // Try to find the function in the user custom functions
             bool customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
-                enableCaseInsensitive);
+                enableCaseInsensitive, model);
+
+            // for back-compatibility, we first find custom functions from model scope
+            // If not found, try to find from global scope
+            if (!customFound)
+            {
+                customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
+                    enableCaseInsensitive, model: null);
+            }
 
             bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionCallToken, enableCaseInsensitive, out builtInUriFunctionName, 
                 out builtInUriFunctionsSignatures);
@@ -301,7 +311,7 @@ namespace Microsoft.OData.UriParser
 
             // Do some validation and get potential Uri functions that could match what we saw
             IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures = GetUriFunctionSignatures(functionCallToken.Name,
-                this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                this.state.Configuration.EnableCaseInsensitiveUriFunctionIdentifier, this.state.Model);
 
             SingleValueNode[] argumentNodeArray = ValidateArgumentsAreSingleValue(functionCallToken.Name, argumentNodes);
             KeyValuePair<string, FunctionSignatureWithReturnType> nameSignature = MatchSignatureToUriFunction(functionCallToken.Name, argumentNodeArray, nameSignatures);

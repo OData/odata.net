@@ -41,11 +41,12 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="functionName">The new custom function name</param>
         /// <param name="functionSignature">The new custom function signature</param>
+        /// <param name="model">The provided model. If it's non-null, the custom Uri functions will be model scoped, otherwise, it's global scoped.</param>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
         /// <exception cref="ODataException">Throws if built-in function name already exists.</exception>
         /// <exception cref="ODataException">Throws if built-in function signature overload already exists.</exception>
         /// <exception cref="ODataException">Throws if custom function signature overload already exists</exception>
-        public static void AddCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
+        public static void AddCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature, IEdmModel model = null)
         {
             // Parameters validation
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
@@ -70,18 +71,21 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                AddCustomFunction(functionName, functionSignature);
+                AddCustomFunction(functionName, functionSignature, model);
             }
         }
+
 
         /// <summary>
         /// Removes the specific function overload from the custom uri functions.
         /// </summary>
         /// <param name="functionName">Custom function name to remove</param>
         /// <param name="functionSignature">The specific signature overload of the function to remove</param>
+        /// <param name="model">The provided model. If it's non-null, the custom Uri functions will be model scoped, otherwise, it's global scoped.</param>
         /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "<Pending>")]
+        public static bool RemoveCustomUriFunction(string functionName, FunctionSignatureWithReturnType functionSignature, IEdmModel model = null)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
             ExceptionUtils.CheckArgumentNotNull(functionSignature, "functionSignature");
@@ -90,8 +94,10 @@ namespace Microsoft.OData.UriParser
 
             lock (Locker)
             {
+                Dictionary<string, FunctionSignatureWithReturnType[]> functionsDict = GetFunctionsDict(model);
+
                 FunctionSignatureWithReturnType[] existingCustomFunctionOverloads;
-                if (!CustomFunctions.TryGetValue(functionName, out existingCustomFunctionOverloads))
+                if (!functionsDict.TryGetValue(functionName, out existingCustomFunctionOverloads))
                 {
                     return false;
                 }
@@ -109,31 +115,35 @@ namespace Microsoft.OData.UriParser
                 // No overloads have left in this function name. Delete the function name
                 if (customFunctionOverloadsWithoutTheOneToRemove.Length == 0)
                 {
-                    return CustomFunctions.Remove(functionName);
+                    return functionsDict.Remove(functionName);
                 }
                 else
                 {
                     // Requested overload has been removed.
                     // Update the custom functions to the overloads without that one requested to be removed
-                    CustomFunctions[functionName] = customFunctionOverloadsWithoutTheOneToRemove;
+                    functionsDict[functionName] = customFunctionOverloadsWithoutTheOneToRemove;
                     return true;
                 }
             }
         }
 
+
         /// <summary>
         /// Removes all the function overloads from the custom uri functions.
         /// </summary>
         /// <param name="functionName">The custom function name</param>
+        /// <param name="model">The provided model. If it's non-null, the custom Uri functions will be model scoped, otherwise, it's global scoped.</param>
         /// <returns>'False' if custom function signature doesn't exist. 'True' if function has been removed successfully</returns>
         /// <exception cref="ArgumentNullException">Arguments are null, or function signature return type is null</exception>
-        public static bool RemoveCustomUriFunction(string functionName)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("ApiDesign", "RS0026:Do not add multiple public overloads with optional parameters", Justification = "<Pending>")]
+        public static bool RemoveCustomUriFunction(string functionName, IEdmModel model = null)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(functionName, "functionName");
 
             lock (Locker)
             {
-                return CustomFunctions.Remove(functionName);
+                Dictionary<string, FunctionSignatureWithReturnType[]> functionsDict = GetFunctionsDict(model);
+                return functionsDict.Remove(functionName);
             }
         }
 
@@ -150,9 +160,10 @@ namespace Microsoft.OData.UriParser
         /// null if no matches found.
         /// </param>
         /// <param name="enableCaseInsensitive">Whether to perform case-insensitive match for function name.</param>
+        /// <param name="model">The provided model. If it's non-null, the custom Uri functions will be model scoped, otherwise, it's global scoped.</param>
         /// <returns>true if the function was found, or false otherwise.</returns>
         internal static bool TryGetCustomFunction(string functionCallToken, out IList<KeyValuePair<string, FunctionSignatureWithReturnType>> nameSignatures,
-            bool enableCaseInsensitive = false)
+            bool enableCaseInsensitive = false, IEdmModel model = null)
         {
             Debug.Assert(functionCallToken != null, "name != null");
 
@@ -161,7 +172,9 @@ namespace Microsoft.OData.UriParser
                 IList<KeyValuePair<string, FunctionSignatureWithReturnType>> bufferedKeyValuePairs
                     = new List<KeyValuePair<string, FunctionSignatureWithReturnType>>();
 
-                foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in CustomFunctions)
+                Dictionary<string, FunctionSignatureWithReturnType[]> functionsDict = GetFunctionsDict(model);
+
+                foreach (KeyValuePair<string, FunctionSignatureWithReturnType[]> func in functionsDict)
                 {
                     if (func.Key.Equals(functionCallToken, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal))
                     {
@@ -183,14 +196,16 @@ namespace Microsoft.OData.UriParser
 
         #region Private Methods
 
-        private static void AddCustomFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature)
+        private static void AddCustomFunction(string customFunctionName, FunctionSignatureWithReturnType newCustomFunctionSignature, IEdmModel model)
         {
             FunctionSignatureWithReturnType[] existingCustomFunctionOverloads;
 
+            Dictionary<string, FunctionSignatureWithReturnType[]> functionsDict = GetFunctionsDict(model);
+
             // In case the function doesn't already exist
-            if (!CustomFunctions.TryGetValue(customFunctionName, out existingCustomFunctionOverloads))
+            if (!functionsDict.TryGetValue(customFunctionName, out existingCustomFunctionOverloads))
             {
-                CustomFunctions.Add(customFunctionName, new FunctionSignatureWithReturnType[] { newCustomFunctionSignature });
+                functionsDict.Add(customFunctionName, new FunctionSignatureWithReturnType[] { newCustomFunctionSignature });
             }
             else
             {
@@ -206,7 +221,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // Add the custom function as an overload to the same function name
-                CustomFunctions[customFunctionName] =
+                functionsDict[customFunctionName] =
                     existingCustomFunctionOverloads.Concat(new FunctionSignatureWithReturnType[] { newCustomFunctionSignature }).ToArray();
             }
         }
@@ -255,6 +270,30 @@ namespace Microsoft.OData.UriParser
             ExceptionUtils.CheckArgumentNotNull(functionSignature.ReturnType, "functionSignatureWithReturnType must contain a return type");
         }
 
+        private static Dictionary<string, FunctionSignatureWithReturnType[]> GetFunctionsDict(IEdmModel model)
+        {
+            return model == null ? CustomFunctions : GetCustomUriFunctionsContainer(model).CustomFunctions;
+        }
+
         #endregion
+
+        // The below should be private, set it as internal for unit test only.
+        internal static CustomUriFunctionsContainer GetCustomUriFunctionsContainer(IEdmModel model)
+        {
+            CustomUriFunctionsContainer container = model.GetAnnotationValue<CustomUriFunctionsContainer>(model);
+            if (container == null)
+            {
+                container = new CustomUriFunctionsContainer();
+                model.SetAnnotationValue(model, container);
+            }
+
+            return container;
+        }
+
+        internal class CustomUriFunctionsContainer
+        {
+            public Dictionary<string, FunctionSignatureWithReturnType[]> CustomFunctions { get; }
+                = new Dictionary<string, FunctionSignatureWithReturnType[]>(StringComparer.Ordinal);
+        }
     }
 }
