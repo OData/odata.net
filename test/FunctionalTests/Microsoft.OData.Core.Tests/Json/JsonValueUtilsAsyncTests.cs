@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteEmptyStringShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Empty, stringEscapeOption, this.buffer);
-            Assert.Equal("\"\"", await this.StreamToString());
+            Assert.Equal("\"\"", await this.StreamToStringAsync());
         }
 
         [Theory]
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteNonSpecialCharactersShouldWork(ODataStringEscapeOption stringEscapeOption)
         {
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "abcdefg123", stringEscapeOption, this.buffer);
-            Assert.Equal("\"abcdefg123\"", await this.StreamToString());
+            Assert.Equal("\"abcdefg123\"", await this.StreamToStringAsync());
         }
 
         [Theory]
@@ -77,21 +77,21 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteLowSpecialCharactersShouldWorkForEscapeOption(ODataStringEscapeOption stringEscapeOption)
         {
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "cA_\n\r\b", stringEscapeOption, this.buffer);
-            Assert.Equal("\"cA_\\n\\r\\b\"", await this.StreamToString());
+            Assert.Equal("\"cA_\\n\\r\\b\"", await this.StreamToStringAsync());
         }
 
         [Fact]
         public async Task WriteHighSpecialCharactersShouldWorkForEscapeNonAsciiOption()
         {
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-            Assert.Equal("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"", await this.StreamToString());
+            Assert.Equal("\"cA_\\u0420\\u043e\\u0441\\u0441\\u0438\\u044f\"", await this.StreamToStringAsync());
         }
 
         [Fact]
         public async Task WriteHighSpecialCharactersShouldWorkForEscapeOnlyControlsOption()
         {
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "cA_Россия", ODataStringEscapeOption.EscapeOnlyControls, this.buffer);
-            Assert.Equal("\"cA_Россия\"", await this.StreamToString());
+            Assert.Equal("\"cA_Россия\"", await this.StreamToStringAsync());
         }
 
         [Fact]
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.Json
                 this.Reset();
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-                Assert.Equal(string.Format("\"{0}\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"{0}\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.Json
                 this.Reset();
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("{0}MiddleEnd", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-                Assert.Equal(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"{0}MiddleEnd\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Tests.Json
                 this.Reset();
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("Start{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-                Assert.Equal(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"Start{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Tests.Json
                 this.Reset();
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("StartMiddle{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-                Assert.Equal(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"StartMiddle{0}\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Tests.Json
                 this.Reset();
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("{0}Start{0}Middle{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, this.buffer);
-                Assert.Equal(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"{0}Start{0}Middle{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Tests.Json
                 Ref<char[]> charBuffer = new Ref<char[]>(new char[10]);
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("StartMiddle{0}End", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, charBuffer);
-                Assert.Equal(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"StartMiddle{0}End\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Tests.Json
                 Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("Start{0}Middle{0}End{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, charBuffer);
-                Assert.Equal(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"Start{0}Middle{0}End{0}\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Tests.Json
                 Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("Start{0}", specialChar),
                     ODataStringEscapeOption.EscapeNonAscii, charBuffer);
-                Assert.Equal(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"Start{0}\"", this.escapedCharMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -204,7 +204,7 @@ namespace Microsoft.OData.Tests.Json
                 Ref<char[]> charBuffer = new Ref<char[]>(new char[6]);
                 await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, string.Format("S{0}M{0}E{0}", specialChar),
                     escapeOption, charBuffer);
-                Assert.Equal(string.Format("\"S{0}M{0}E{0}\"", this.controlCharsMap[specialChar]), await this.StreamToString());
+                Assert.Equal(string.Format("\"S{0}M{0}E{0}\"", this.controlCharsMap[specialChar]), await this.StreamToStringAsync());
             }
         }
 
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Tests.Json
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, value,
                 ODataStringEscapeOption.EscapeNonAscii, charBuffer);
             string expected = "\"" + string.Join("\\t", Enumerable.Repeat("\\n", 95000)) + "\"";
-            Assert.Equal(expected, await this.StreamToString());
+            Assert.Equal(expected, await this.StreamToStringAsync());
         }
 
         [Fact]
@@ -234,7 +234,7 @@ namespace Microsoft.OData.Tests.Json
                 charBuffer,
                 null);
             string expected = string.Join("\\t", Enumerable.Repeat("\\n", 95000));
-            Assert.Equal(expected, await this.StreamToString());
+            Assert.Equal(expected, await this.StreamToStringAsync());
         }
 
         [Theory]
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Tests.Json
             this.Reset();
             Ref<char[]> charBuffer = new Ref<char[]>(null);
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "StartMiddleEnd", stringEscapeOption, charBuffer);
-            Assert.Equal("\"StartMiddleEnd\"", await this.StreamToString());
+            Assert.Equal("\"StartMiddleEnd\"", await this.StreamToStringAsync());
             Assert.Null(charBuffer.Value);
         }
 
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             await JsonValueUtils.WriteEscapedJsonStringAsync(this.writer, "StartVeryVeryLongMiddleEnd", stringEscapeOption, charBuffer);
-            Assert.Equal("\"StartVeryVeryLongMiddleEnd\"", await this.StreamToString());
+            Assert.Equal("\"StartVeryVeryLongMiddleEnd\"", await this.StreamToStringAsync());
         }
 
         [Fact]
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var byteArray = new byte[] { 1, 2, 3 };
             await JsonValueUtils.WriteValueAsync(this.writer, byteArray, this.buffer);
-            Assert.Equal("\"AQID\"", await this.StreamToString());
+            Assert.Equal("\"AQID\"", await this.StreamToStringAsync());
         }
 
         [Fact]
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Tests.Json
 
             // Act, Get Base64 string from OData library
             await JsonValueUtils.WriteValueAsync(this.writer, byteArray, this.buffer);
-            string convertedBase64String = await this.StreamToString();
+            string convertedBase64String = await this.StreamToStringAsync();
 
             // Get Base64 string directly calling the converter.
             string actualBase64String = JsonConstants.QuoteCharacter + Convert.ToBase64String(byteArray) + JsonConstants.QuoteCharacter;
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Tests.Json
 
             // Act, Get Base64 string from OData library
             await JsonValueUtils.WriteValueAsync(this.writer, byteArray, this.buffer);
-            string convertedBase64String = await this.StreamToString();
+            string convertedBase64String = await this.StreamToStringAsync();
 
             // Get Base64 string directly calling the converter.
             string actualBase64String = JsonConstants.QuoteCharacter + Convert.ToBase64String(byteArray) + JsonConstants.QuoteCharacter;
@@ -328,14 +328,14 @@ namespace Microsoft.OData.Tests.Json
         {
             var byteArray = new byte[] { };
             await JsonValueUtils.WriteValueAsync(this.writer, byteArray, this.buffer);
-            Assert.Equal("\"\"", await this.StreamToString());
+            Assert.Equal("\"\"", await this.StreamToStringAsync());
         }
 
         [Fact]
         public async Task WriteNullByteShouldWork()
         {
             await JsonValueUtils.WriteValueAsync(this.writer, (byte[])null, this.buffer);
-            Assert.Equal("null", await this.StreamToString());
+            Assert.Equal("null", await this.StreamToStringAsync());
         }
 
         private void Reset()
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Tests.Json
             this.writer = new NonIndentedTextWriter(innerWriter);
         }
 
-        private async Task<string> StreamToString()
+        private async Task<string> StreamToStringAsync()
         {
             await this.writer.FlushAsync();
             this.stream.Position = 0;
