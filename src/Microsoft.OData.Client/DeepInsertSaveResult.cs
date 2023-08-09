@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Handles the deep insert requests and responses (both sync and async).
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "The response stream is disposed by the message reader we create over it which we dispose inside the enumerator.")]
     internal class DeepInsertSaveResult : BaseSaveResult
     {
         #region Private Fields
@@ -116,6 +118,65 @@ namespace Microsoft.OData.Client
 
                 throw exception;
             }
+        }
+
+        /// <summary>
+        /// Asynchronous deep insert request.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        internal void BeginDeepInsertRequest<T>(T resource)
+        {
+            PerRequest pereq = null;
+
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            BuildDescriptorGraph(this.ChangedEntries, true, resource);
+
+            try
+            {
+                ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
+                this.Abortable = deepInsertRequestMessage;
+
+                if (deepInsertRequestMessage != null)
+                {
+                    deepInsertRequestMessage.SetContentLengthHeader();
+                    this.perRequest = pereq = new PerRequest();
+                    pereq.Request = deepInsertRequestMessage;
+                    pereq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
+
+                    AsyncStateBag asyncStateBag = new AsyncStateBag(pereq);
+
+                    this.responseStream = new MemoryStream();
+
+                    IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+
+                    pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
+                }
+                else
+                {
+                    this.SetCompleted();
+
+                    if (this.CompletedSynchronously)
+                    {
+                        this.HandleCompleted(pereq);
+                    }
+                }
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(pereq, e);
+                throw;
+            }
+            finally
+            {
+                this.HandleCompleted(pereq);
+            }
+
+            Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
         /// <summary>

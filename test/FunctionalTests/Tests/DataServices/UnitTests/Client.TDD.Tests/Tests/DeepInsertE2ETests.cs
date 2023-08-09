@@ -578,6 +578,64 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified("Cars(200)"));
         }
 
+        [Fact]
+        public async Task CallingDeepInsertAsync_WithNullArguments_ShouldThrowAnException()
+        {
+            await Assert.ThrowsAsync<ArgumentNullException>(async () => await this.context.DeepInsertAsync<Person>(null));
+        }
+
+        [Fact]
+        public async Task DeepInsertAsyncAnEntry_WithMultipleLinks()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"},{\"ID\":\"1002\",\"Name\":\"Car 1002\"}]}";
+            var headers = new Dictionary<string, string>()
+                        {
+                            {"Content-Type", "application/json;charset=utf-8"},
+                            {"Location", "http://localhost:5000/Persons(100)"},
+                        };
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse,
+                headers);
+
+            var person = new Person
+            {
+                ID = 100,
+                Name = "Person 100",
+            };
+
+            var car1 = new Car { ID = 1001, Name = "Car 1001" };
+            var car2 = new Car { ID = 1002, Name = "Car 1002" };
+
+            this.context.AddObject("Persons", person);
+            this.context.AttachTo("Cars", car1);
+            this.context.AttachTo("Cars", car2);
+            this.context.AddLink(person, "Cars", car1);
+            this.context.AddLink(person, "Cars", car2);
+
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+
+            Assert.Single(response);
+            Assert.Equal(2, response.Single().NestedResponses.Count);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+
+            var nestedResponseCars1 = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            LinkDescriptor carDescriptor1 = nestedResponseCars1.Descriptor as LinkDescriptor;
+            var returnedCar1 = carDescriptor1.Target as Car;
+
+            var nestedResponseCars2 = changeOperationResponse.NestedResponses[1] as ChangeOperationResponse;
+            LinkDescriptor carDescriptor2 = nestedResponseCars2.Descriptor as LinkDescriptor;
+            var returnedCar2 = carDescriptor2.Target as Car;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(1001, returnedCar1.ID);
+            Assert.Equal(1002, returnedCar2.ID);
+        }
+
         private void SetupContextWithRequestPipelineForSaving(DataServiceContext dataServiceContext, string response, Dictionary<string, string> headers)
         {
             dataServiceContext.Configurations.RequestPipeline.OnMessageCreating =

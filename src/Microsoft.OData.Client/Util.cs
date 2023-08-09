@@ -37,6 +37,9 @@ namespace Microsoft.OData.Client
         /// <summary>Method name for the BulkUpdate method.</summary>
         internal const string BulkUpdateMethodName = "BulkUpdate";
 
+        /// <summary>Method name for the DeepInsert method.</summary>
+        internal const string DeepInsertMethodName = "DeepInsert";
+
         /// <summary>
         /// The number of components of version.
         /// </summary>

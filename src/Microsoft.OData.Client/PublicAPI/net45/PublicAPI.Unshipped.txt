@@ -1,1 +1,3 @@
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
