@@ -329,6 +329,21 @@ namespace Microsoft.OData.Client
             return this.CreateTopLevelRequest(method, requestUri, headers, httpStack, descriptor);
         }
 
+        /// <summary>Read and store response data for the current change</summary>
+        /// <param name="pereq">The completed per request object</param>
+        /// <remarks>This is called only from the async code paths, when the response to the batch has been read fully.</remarks>
+        protected override void FinishCurrentChange(PerRequest pereq)
+        {
+            base.FinishCurrentChange(pereq);
+
+            // This resets the position in the buffered response stream to the beginning
+            // so that we can start reading the response.
+            // In this case the ResponseStream is always a MemoryStream since we cache the async response.
+            this.ResponseStream.Position = 0;
+            this.perRequest = null;
+            this.SetCompleted();
+        }
+
         /// <summary>
         /// Gets the materializer state to process the response.
         /// </summary>
