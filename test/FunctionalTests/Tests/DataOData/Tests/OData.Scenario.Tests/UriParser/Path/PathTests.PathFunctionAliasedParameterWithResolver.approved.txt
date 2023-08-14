@@ -1,1 +1,0 @@
-Path[(EntitySet: Customers)/(Operation: InCity(City = ParameterAliasNode(Type Name = [Edm.String Nullable=True Unicode=True], Alias Name = @a)))]
