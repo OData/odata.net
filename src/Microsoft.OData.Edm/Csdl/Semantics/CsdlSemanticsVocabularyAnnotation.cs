@@ -307,9 +307,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 string target = this.annotationsContext.Annotations.Target;
                 string[] targetSegments = target.Split('/');
                 int targetSegmentsCount = targetSegments.Length;
-                IEdmEntityContainer container;
+                //IEdmEntityContainer container;
 
-                if (targetSegmentsCount == 1)
+                if (targetSegmentsCount < 1 || targetSegmentsCount > 3)
+                {
+                    return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });
+                }
+
+                return HandleTargetSegments(targetSegments, targetSegmentsCount, 0);
+
+                /*if (targetSegmentsCount == 1)
                 {
                     string elementName = targetSegments[0];
                     IEdmSchemaType type = this.model.FindType(elementName);
@@ -462,8 +469,176 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
                 }
 
-                return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });
+                return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });*/
             }
+        }
+
+        /*
+                 * IEdmEntityContainer
+                 * IEdmSchemaType
+                 * IEdmTerm
+                 * IEdmOperation
+                 * IEdmEntityContainerElement
+                 * IEdmOperationImport
+                 */
+
+        private IEdmVocabularyAnnotatable HandleTargetSegments(string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            string elementName = targetSegments[0];
+            IEdmSchemaType type = this.model.FindType(elementName);
+            if (type != null)
+            {
+                if (targetSegmentsCount -1 > level)
+                {
+                    return HandleIEdmSchemaType(type, targetSegments, targetSegmentsCount, level+1);
+                }
+                else
+                {
+                    return type;
+                }
+            }
+
+            IEdmTerm term = this.model.FindTerm(elementName);
+            if (term != null)
+            {
+                return term;
+            }
+
+            IEdmOperation operation = this.FindParameterizedOperation(elementName, this.model.FindOperations, this.CreateAmbiguousOperation);
+            if (operation != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmOperation(operation, targetSegments, targetSegmentsCount, level+1);
+                }
+                else
+                {
+                    return operation;
+                }
+            }
+
+            IEdmEntityContainer container = this.model.FindEntityContainer(elementName);
+            if (container != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmEntityContainer(container, targetSegments, targetSegmentsCount, level+1);
+                }
+                else
+                {
+                    return container;
+                }
+            }
+
+            return new UnresolvedType(this.model.ReplaceAlias(targetSegments[0]), this.Location);
+        }
+
+        private IEdmVocabularyAnnotatable HandleIEdmEntityContainer(IEdmEntityContainer edmEntityContainer, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            IEdmEntityContainerElement containerElement = edmEntityContainer.FindEntitySetExtended(targetSegments[level])
+                                                                      ?? edmEntityContainer.FindSingletonExtended(targetSegments[level]) as IEdmEntityContainerElement;
+            if (containerElement != null)
+            {
+                return containerElement;
+            }
+
+            IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[level], edmEntityContainer.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+            if (operationImport != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmOperationImport(operationImport, targetSegments, targetSegmentsCount, level++);
+                }
+                else
+                {
+                    return operationImport;
+                }
+            }
+
+            return new UnresolvedEntitySet(targetSegments[level], edmEntityContainer, this.Location);
+        }
+
+        private IEdmVocabularyAnnotatable HandleIEdmSchemaType(IEdmSchemaType edmSchemaType, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            IEdmStructuredType structuredType;
+            IEdmEnumType enumType;
+            if ((structuredType = edmSchemaType as IEdmStructuredType) != null)
+            {
+                IEdmProperty property = structuredType.FindProperty(targetSegments[level]);
+                if (property != null)
+                {
+                    return property;
+                }
+
+                return new UnresolvedProperty(structuredType, targetSegments[level], this.Location);
+            }
+            else if ((enumType = edmSchemaType as IEdmEnumType) != null)
+            {
+                foreach (IEdmEnumMember member in enumType.Members)
+                {
+                    if (String.Equals(member.Name, targetSegments[level], StringComparison.OrdinalIgnoreCase))
+                    {
+                        return member;
+                    }
+                }
+
+                return new UnresolvedEnumMember(targetSegments[level], enumType, this.Location);
+            }
+
+            return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[level-1]), this.Location), targetSegments[level], this.Location);
+        }
+
+        //private IEdmVocabularyAnnotatable HandleIEdmTerm(IEdmTerm edmTerm, string[] targetSegments, int targetSegmentsCount, int level)
+        //{
+        //}
+
+        private IEdmVocabularyAnnotatable HandleIEdmOperation(IEdmOperation edmOperation, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            // $ReturnType
+            if (targetSegments[level] == CsdlConstants.OperationReturnExternalTarget)
+            {
+                if (edmOperation.ReturnType != null)
+                {
+                    return edmOperation.GetReturn();
+                }
+
+                return new UnresolvedReturn(edmOperation, this.Location);
+            }
+
+            IEdmOperationParameter parameter = edmOperation.FindParameter(targetSegments[level]);
+            if (parameter != null)
+            {
+                return parameter;
+            }
+
+            return new UnresolvedParameter(edmOperation, targetSegments[level], this.Location);
+        }
+
+        //private IEdmVocabularyAnnotatable HandleIEdmEntityContainerElement(IEdmEntityContainerElement edmEntityContainerElement, string[] targetSegments, int targetSegmentsCount, int level)
+        //{
+        //}
+
+        private IEdmVocabularyAnnotatable HandleIEdmOperationImport(IEdmOperationImport edmOperationImport, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            string parameterName = targetSegments[level + 1];
+            // $ReturnType
+            if (parameterName == CsdlConstants.OperationReturnExternalTarget)
+            {
+                if (edmOperationImport.Operation.ReturnType != null)
+                {
+                    return edmOperationImport.Operation.GetReturn();
+                }
+
+                return new UnresolvedReturn(edmOperationImport.Operation, this.Location);
+            }
+
+            IEdmOperationParameter parameter = edmOperationImport.Operation.FindParameter(parameterName);
+            if (parameter != null)
+            {
+                return parameter;
+            }
+
+            return new UnresolvedParameter(edmOperationImport.Operation, parameterName, this.Location);
         }
 
         private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
