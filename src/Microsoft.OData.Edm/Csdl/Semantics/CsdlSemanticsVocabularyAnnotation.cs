@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.RegularExpressions;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -403,7 +404,10 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[level], edmEntityContainer.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
+            Regex regex = new Regex("\\(.*?\\)");
+            string operationName = regex.Replace(targetSegments[level], string.Empty);
+
+            IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, edmEntityContainer.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
             if (operationImport != null)
             {
                 if (targetSegmentsCount - 1 > level)
@@ -415,6 +419,22 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     return operationImport;
                 }
             }
+
+            // Funky implementation below with the assumption that 3 parts and functions
+
+            //if (targetSegmentsCount - 1 > level)
+            //{
+            //    string qualifiedOperationName = edmEntityContainer.Name + "/" + targetSegments[level];
+            //    UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
+            //    if (targetSegments[level + 1] == CsdlConstants.OperationReturnExternalTarget)
+            //    {
+            //        return new UnresolvedReturn(unresolvedOperation, this.Location);
+            //    }
+            //    else
+            //    {
+            //        return new UnresolvedParameter(unresolvedOperation, targetSegments[level + 1], this.Location);
+            //    }
+            //}
 
             return new UnresolvedEntitySet(targetSegments[level], edmEntityContainer, this.Location);
         }
