@@ -365,6 +365,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
+            if (targetSegmentsCount - 1 > level)
+            {
+                return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[level]), this.Location), targetSegments[level + 1], this.Location);
+            }
+
             return new UnresolvedType(this.model.ReplaceAlias(targetSegments[0]), this.Location);
         }
 
