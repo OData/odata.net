@@ -307,7 +307,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 string target = this.annotationsContext.Annotations.Target;
                 string[] targetSegments = target.Split('/');
                 int targetSegmentsCount = targetSegments.Length;
-                //IEdmEntityContainer container;
 
                 if (targetSegmentsCount < 1 || targetSegmentsCount > 3)
                 {
@@ -315,172 +314,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
 
                 return HandleTargetSegments(targetSegments, targetSegmentsCount, 0);
-
-                /*if (targetSegmentsCount == 1)
-                {
-                    string elementName = targetSegments[0];
-                    IEdmSchemaType type = this.model.FindType(elementName);
-                    if (type != null)
-                    {
-                        return type;
-                    }
-
-                    IEdmTerm term = this.model.FindTerm(elementName);
-                    if (term != null)
-                    {
-                        return term;
-                    }
-
-                    IEdmOperation operation = this.FindParameterizedOperation(elementName, this.model.FindOperations, this.CreateAmbiguousOperation);
-                    if (operation != null)
-                    {
-                        return operation;
-                    }
-
-                    container = this.model.FindEntityContainer(elementName);
-                    if (container != null)
-                    {
-                        return container;
-                    }
-
-                    return new UnresolvedType(this.model.ReplaceAlias(targetSegments[0]), this.Location);
-                }
-
-                if (targetSegmentsCount == 2)
-                {
-                    container = this.model.FindEntityContainer(targetSegments[0]);
-                    if (container != null)
-                    {
-                        // Using the methods here results in a much faster lookup as it uses a dictionary instead of using the list of container elements.
-                        IEdmEntityContainerElement containerElement = container.FindEntitySetExtended(targetSegments[1])
-                                                                      ?? container.FindSingletonExtended(targetSegments[1]) as IEdmEntityContainerElement;
-                        if (containerElement != null)
-                        {
-                            return containerElement;
-                        }
-
-                        IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[1], container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
-                        if (operationImport != null)
-                        {
-                            return operationImport;
-                        }
-
-                        return new UnresolvedEntitySet(targetSegments[1], container, this.Location);
-                    }
-
-                    IEdmSchemaType type = this.model.FindType(targetSegments[0]);
-                    if (type != null)
-                    {
-                        IEdmStructuredType structuredType;
-                        IEdmEnumType enumType;
-                        if ((structuredType = type as IEdmStructuredType) != null)
-                        {
-                            IEdmProperty property = structuredType.FindProperty(targetSegments[1]);
-                            if (property != null)
-                            {
-                                return property;
-                            }
-
-                            return new UnresolvedProperty(structuredType, targetSegments[1], this.Location);
-                        }
-                        else if ((enumType = type as IEdmEnumType) != null)
-                        {
-                            foreach (IEdmEnumMember member in enumType.Members)
-                            {
-                                if (String.Equals(member.Name, targetSegments[1], StringComparison.OrdinalIgnoreCase))
-                                {
-                                    return member;
-                                }
-                            }
-
-                            return new UnresolvedEnumMember(targetSegments[1], enumType, this.Location);
-                        }
-                    }
-
-                    IEdmOperation operation = this.FindParameterizedOperation(targetSegments[0], this.model.FindOperations, this.CreateAmbiguousOperation);
-                    if (operation != null)
-                    {
-                        // $ReturnType
-                        if (targetSegments[1] == CsdlConstants.OperationReturnExternalTarget)
-                        {
-                            if (operation.ReturnType != null)
-                            {
-                                return operation.GetReturn();
-                            }
-
-                            return new UnresolvedReturn(operation, this.Location);
-                        }
-
-                        IEdmOperationParameter parameter = operation.FindParameter(targetSegments[1]);
-                        if (parameter != null)
-                        {
-                            return parameter;
-                        }
-
-                        return new UnresolvedParameter(operation, targetSegments[1], this.Location);
-                    }
-
-                    return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[0]), this.Location), targetSegments[1], this.Location);
-                }
-
-                if (targetSegmentsCount == 3)
-                {
-                    // The only valid target with three segments is a function parameter, or an operation return.
-                    string containerName = targetSegments[0];
-                    string operationName = targetSegments[1];
-                    string parameterName = targetSegments[2];
-
-                    container = this.Model.FindEntityContainer(containerName);
-                    if (container != null)
-                    {
-                        IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, container.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
-                        if (operationImport != null)
-                        {
-                            // $ReturnType
-                            if (parameterName == CsdlConstants.OperationReturnExternalTarget)
-                            {
-                                if (operationImport.Operation.ReturnType != null)
-                                {
-                                    return operationImport.Operation.GetReturn();
-                                }
-
-                                return new UnresolvedReturn(operationImport.Operation, this.Location);
-                            }
-
-                            IEdmOperationParameter parameter = operationImport.Operation.FindParameter(parameterName);
-                            if (parameter != null)
-                            {
-                                return parameter;
-                            }
-
-                            return new UnresolvedParameter(operationImport.Operation, parameterName, this.Location);
-                        }
-                    }
-
-                    string qualifiedOperationName = containerName + "/" + operationName;
-                    UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
-                    if (parameterName == CsdlConstants.OperationReturnExternalTarget)
-                    {
-                        return new UnresolvedReturn(unresolvedOperation, this.Location);
-                    }
-                    else
-                    {
-                        return new UnresolvedParameter(unresolvedOperation, parameterName, this.Location);
-                    }
-                }
-
-                return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });*/
             }
         }
-
-        /*
-                 * IEdmEntityContainer
-                 * IEdmSchemaType
-                 * IEdmTerm
-                 * IEdmOperation
-                 * IEdmEntityContainerElement
-                 * IEdmOperationImport
-                 */
 
         private IEdmVocabularyAnnotatable HandleTargetSegments(string[] targetSegments, int targetSegmentsCount, int level)
         {
@@ -535,11 +370,31 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmVocabularyAnnotatable HandleIEdmEntityContainer(IEdmEntityContainer edmEntityContainer, string[] targetSegments, int targetSegmentsCount, int level)
         {
-            IEdmEntityContainerElement containerElement = edmEntityContainer.FindEntitySetExtended(targetSegments[level])
-                                                                      ?? edmEntityContainer.FindSingletonExtended(targetSegments[level]) as IEdmEntityContainerElement;
-            if (containerElement != null)
+            IEdmEntitySet entitySet = edmEntityContainer.FindEntitySetExtended(targetSegments[level]);
+            IEdmSingleton singleton = edmEntityContainer.FindSingletonExtended(targetSegments[level]); // as IEdmEntityContainerElement;
+
+            if (entitySet != null)
             {
-                return containerElement;
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmEntitySet(entitySet, targetSegments, targetSegmentsCount, level + 1);
+                }
+                else
+                {
+                    return entitySet;
+                }
+            }
+
+            if (singleton != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmSingleton(singleton, targetSegments, targetSegmentsCount, level + 1);
+                }
+                else
+                {
+                    return singleton;
+                }
             }
 
             IEdmOperationImport operationImport = FindParameterizedOperationImport(targetSegments[level], edmEntityContainer.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
@@ -588,10 +443,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[level-1]), this.Location), targetSegments[level], this.Location);
         }
 
-        //private IEdmVocabularyAnnotatable HandleIEdmTerm(IEdmTerm edmTerm, string[] targetSegments, int targetSegmentsCount, int level)
-        //{
-        //}
-
         private IEdmVocabularyAnnotatable HandleIEdmOperation(IEdmOperation edmOperation, string[] targetSegments, int targetSegmentsCount, int level)
         {
             // $ReturnType
@@ -614,9 +465,60 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return new UnresolvedParameter(edmOperation, targetSegments[level], this.Location);
         }
 
-        //private IEdmVocabularyAnnotatable HandleIEdmEntityContainerElement(IEdmEntityContainerElement edmEntityContainerElement, string[] targetSegments, int targetSegmentsCount, int level)
-        //{
-        //}
+        private IEdmVocabularyAnnotatable HandleIEdmEntitySet(IEdmEntitySet edmEntitySet, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            // .../MyEntitySet/MySchema.MyEntityType/...
+            // .../MyEntitySet/MyComplexProperty/...
+            IEdmSchemaType type = this.model.FindType(targetSegments[level]);
+            if (type != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmSchemaType(type, targetSegments, targetSegmentsCount, level + 1);
+                }
+                else
+                {
+                    return type;
+                }
+            }
+
+            IEdmType edmType = edmEntitySet.Type;
+            IEdmStructuredType structuredType;
+
+            if ((structuredType = edmType as IEdmStructuredType) != null)
+            {
+                // .../MyEntitySet/MyProperty
+                // .../MyEntitySet/MyNavigationProperty
+                IEdmProperty property = structuredType.FindProperty(targetSegments[level]);
+                if (property != null)
+                {
+                    return property;
+                }
+
+                return new UnresolvedProperty(structuredType, targetSegments[level], this.Location);
+            }
+
+            return new UnresolvedType(this.model.ReplaceAlias(targetSegments[level]), this.Location);
+        }
+
+        private IEdmVocabularyAnnotatable HandleIEdmSingleton(IEdmSingleton edmSingleton, string[] targetSegments, int targetSegmentsCount, int level)
+        {
+            IEdmSchemaType schemaType = this.model.FindType(targetSegments[level]);
+            IEdmComplexType complexType = schemaType as IEdmComplexType;
+            if (complexType != null)
+            {
+                if (targetSegmentsCount - 1 > level)
+                {
+                    return HandleIEdmSchemaType(schemaType, targetSegments, targetSegmentsCount, level + 1);
+                }
+                else
+                {
+                    return complexType;
+                }
+            }
+
+            return new UnresolvedType(this.model.ReplaceAlias(targetSegments[level]), this.Location);
+        }
 
         private IEdmVocabularyAnnotatable HandleIEdmOperationImport(IEdmOperationImport edmOperationImport, string[] targetSegments, int targetSegmentsCount, int level)
         {
