@@ -371,7 +371,6 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private IEdmVocabularyAnnotatable HandleIEdmEntityContainer(IEdmEntityContainer edmEntityContainer, string[] targetSegments, int targetSegmentsCount, int level)
         {
             IEdmEntitySet entitySet = edmEntityContainer.FindEntitySetExtended(targetSegments[level]);
-            IEdmSingleton singleton = edmEntityContainer.FindSingletonExtended(targetSegments[level]); // as IEdmEntityContainerElement;
 
             if (entitySet != null)
             {
@@ -384,6 +383,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     return entitySet;
                 }
             }
+
+            IEdmSingleton singleton = edmEntityContainer.FindSingletonExtended(targetSegments[level]);
 
             if (singleton != null)
             {
