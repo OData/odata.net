@@ -2830,6 +2830,48 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("('examplepainting')",
                 Assert.IsType<CollectionConstantNode>(inNode.Right).LiteralText);
         }
+
+        [Theory]
+        [InlineData("example in ('')", "\"\"")] // No space
+        [InlineData("example in (' ')", " ")] // 1 space
+        [InlineData("example in ( '   ' )", "   ")] // 3 spaces
+        [InlineData("example in ( \"  \" )", "  ")] // 2 spaces
+        [InlineData("example in ( \"    \" )", "    ")] // 4 spaces
+        public void FilterWithInOperationWithOpenTypesInEmptyString(string filterQueryString, string expectedLiteral)
+        {
+            FilterClause filter = ParseFilter(filterQueryString,
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            ConstantNode constantNode = collectionNode.Collection.First();
+            Assert.Equal(expectedLiteral, constantNode.LiteralText);
+        }
+
+        [Theory]
+        [InlineData("example in ('', \"  \")", "\"\"", "  ")]
+        [InlineData("example in (' ', \"\")", " ", "\"\"")]
+        [InlineData("example in ( '   ', '' )", "   ", "\"\"")]
+        [InlineData("example in ( \"  \", \" \" )", "  ", " ")]
+        [InlineData("example in ( \"    \", ' ' )", "    ", " ")]
+        public void FilterWithInOperationWithOpenTypesInMultipleEmptyStrings(string filterQueryString, string expectedFirstLiteral, string expectedSecondLiteral)
+        {
+            FilterClause filter = ParseFilter(filterQueryString,
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(2, collectionNode.Collection.Count);
+
+            ConstantNode constantNode1 = collectionNode.Collection.First();
+            Assert.Equal(expectedFirstLiteral, constantNode1.LiteralText);
+
+            ConstantNode constantNode2 = collectionNode.Collection.Last();
+            Assert.Equal(expectedSecondLiteral, constantNode2.LiteralText);
+        }
+
         #endregion
 
         private static FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmType edmType, IEdmNavigationSource edmEntitySet = null)

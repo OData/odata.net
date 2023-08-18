@@ -8237,7 +8237,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
-    internal virtual void DeepInsert (T resource)
+    public virtual Microsoft.OData.Client.DataServiceResponse DeepInsert (T resource)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)

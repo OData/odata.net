@@ -42,8 +42,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The current entry.</summary>
         private ODataResource currentEntry;
 
-        /// <summary>The stack of read <see cref="IMaterializerState"/> items.</summary>
-        private readonly Stack<IMaterializerState> materializerStateItems;
+        /// <summary>The stack of read <see cref="IMaterializerState"/> items for ODataDeltaResourceSet.</summary>
+        private readonly Stack<IMaterializerState> deltaMaterializerStateItems;
+
+        /// <summary>The stack of read <see cref="IMaterializerState"/> items for ODataResource.</summary>
+        private readonly Stack<IMaterializerState> entryMaterializerStateItems;
 
         /// <summary>
         /// The materializer context.
@@ -86,8 +89,12 @@ namespace Microsoft.OData.Client.Materialization
             if (isDeltaPayload)
             {
                 // If we have a delta payload, we need the stack data structure to keep track of the read items.
-                this.materializerStateItems = new Stack<IMaterializerState>();
-            }    
+                this.deltaMaterializerStateItems = new Stack<IMaterializerState>();
+            }
+            else
+            {
+                this.entryMaterializerStateItems = new Stack<IMaterializerState>();
+            }
         }
 
         /// <summary>
@@ -334,14 +341,14 @@ namespace Microsoft.OData.Client.Materialization
             ODataDeltaResourceSet result = (ODataDeltaResourceSet)this.reader.Item;
             MaterializerDeltaFeed feed = null;
 
-            Debug.Assert(this.materializerStateItems != null, "this.materializerStateItems should not be null");
+            Debug.Assert(this.deltaMaterializerStateItems != null, "this.deltaMaterializerStateItems should not be null");
 
             feed = MaterializerDeltaFeed.CreateDeltaFeed(
                     result,
                     new List<IMaterializerState>(),
                     this.materializerContext);
 
-            this.materializerStateItems.Push(feed);
+            this.deltaMaterializerStateItems.Push(feed);
 
             do
             {
@@ -360,7 +367,7 @@ namespace Microsoft.OData.Client.Materialization
                     case ODataReaderState.DeletedResourceEnd:
                     case ODataReaderState.ResourceEnd:
                     case ODataReaderState.DeltaResourceSetEnd:
-                        this.materializerStateItems?.Pop();
+                        this.deltaMaterializerStateItems?.Pop();
                         break;
                     default:
                         throw DSClient.Error.InternalError(InternalError.UnexpectedReadState);
@@ -375,15 +382,29 @@ namespace Microsoft.OData.Client.Materialization
         /// Adds an <see cref="IMaterializerState"/> entry to a parent entry.
         /// </summary>
         /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
-        private void AddResourceToParent(IMaterializerState materializerState)
+        private void AddDeltaResourceToParent(IMaterializerState materializerState)
         {
-            IMaterializerState topItem = this.materializerStateItems.Peek();
+            IMaterializerState topItem = this.deltaMaterializerStateItems.Peek();
 
             if (topItem is MaterializerDeltaFeed delta)
             {
                 delta.AddEntry(materializerState);
             }
             else if (topItem is MaterializerEntry entry)
+            {
+                entry.AddNestedItem(materializerState);
+            }
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IMaterializerState"/> entry to a parent entry.
+        /// </summary>
+        /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
+        private void AddResourceToParent(IMaterializerState materializerState)
+        {
+            IMaterializerState topItem = this.entryMaterializerStateItems.Peek();
+
+            if (topItem is MaterializerEntry entry)
             {
                 entry.AddNestedItem(materializerState);
             }
@@ -446,9 +467,14 @@ namespace Microsoft.OData.Client.Materialization
 
                 // A resource cannot be a top-level item in a bulk-update. 
                 // The resource has to be contained in a delta resource set. 
-                if (this.materializerStateItems?.Count > 0)
+                if (this.deltaMaterializerStateItems?.Count > 0)
                 {
-                    this.materializerStateItems.Push(entry);
+                    this.deltaMaterializerStateItems.Push(entry);
+                }
+
+                if (this.entryMaterializerStateItems != null)
+                {
+                    this.entryMaterializerStateItems.Push(entry);
                 }
 
                 do
@@ -463,10 +489,16 @@ namespace Microsoft.OData.Client.Materialization
                             
                             break;
                         case ODataReaderState.ResourceEnd:
-                            if (this.materializerStateItems?.Count > 0)
+                            if (this.deltaMaterializerStateItems?.Count > 0)
                             {
-                                this.materializerStateItems.Pop();
-                            }    
+                                this.deltaMaterializerStateItems.Pop();
+                            }
+
+                            if (this.entryMaterializerStateItems?.Count > 0)
+                            {
+                                this.entryMaterializerStateItems.Pop();
+                            }
+
                             break;
                         default:
                             throw DSClient.Error.InternalError(InternalError.UnexpectedReadState);
@@ -510,28 +542,54 @@ namespace Microsoft.OData.Client.Materialization
             {
                 if (feed != null)
                 {
-                    MaterializerNavigationLink.CreateLink(link, feed, this.materializerContext);
+                    nestedEntry = MaterializerNestedEntry.CreateNestedEntry(
+                        link,
+                        new List<IMaterializerState>(),
+                        this.materializerContext);
+
+                    nestedEntry.Feed = feed;
+
+                    MaterializerFeed materializerFeed = MaterializerFeed.GetFeed(feed, this.materializerContext);
+
+                    foreach (ODataResource resource in materializerFeed.Entries)
+                    {
+                        MaterializerEntry materializerEntry = MaterializerEntry.GetEntry(resource, this.materializerContext);
+
+                        materializerFeed.AddItem(materializerEntry);
+                    }
+
+                    nestedEntry.AddNestedItem(materializerFeed);
+                    AddResourceToParent(nestedEntry);
                 }
                 else if (deltaFeed != null)
                 {
-                    nestedEntry = MaterializerNestedEntry.CreateNestedResourceInfo(
+                    nestedEntry = MaterializerNestedEntry.CreateNestedEntry(
                         link, 
                         new List<IMaterializerState>(), 
                         this.materializerContext);
 
                     nestedEntry.AddNestedItem(deltaFeed);
 
-                    Debug.Assert(this.materializerStateItems != null, "this.materializerStateItems should not be null");
+                    Debug.Assert(this.deltaMaterializerStateItems != null, "this.deltaMaterializerStateItems should not be null");
 
-                    if (this.materializerStateItems.Count > 0)
+                    if (this.deltaMaterializerStateItems.Count > 0)
                     {
-                        AddResourceToParent(nestedEntry);    
+                        AddDeltaResourceToParent(nestedEntry);
                     }                     
                 }
                 else
                 {
                     Debug.Assert(entry != null, "entry != null");
-                    MaterializerNavigationLink.CreateLink(link, entry, this.materializerContext);
+
+                    nestedEntry = MaterializerNestedEntry.CreateNestedEntry(
+                        link,
+                        new List<IMaterializerState>(),
+                        this.materializerContext);
+
+                    nestedEntry.Entry = entry;
+
+                    nestedEntry.AddNestedItem(entry);
+                    AddResourceToParent(nestedEntry);
                 }
 
                 this.ReadAndExpectState(ODataReaderState.NestedResourceInfoEnd);
@@ -553,13 +611,13 @@ namespace Microsoft.OData.Client.Materialization
             ODataDeletedResource result = (ODataDeletedResource)this.reader.Item;
             MaterializerDeletedEntry entry;
 
-            Debug.Assert(this.materializerStateItems != null, "this.materializerStateItems should not be null");
+            Debug.Assert(this.deltaMaterializerStateItems != null, "this.deltaMaterializerStateItems should not be null");
 
             entry = MaterializerDeletedEntry.CreateDeletedEntry(
                     result,
                     this.materializerContext);
 
-            this.materializerStateItems.Push(entry);
+            this.deltaMaterializerStateItems.Push(entry);
 
             do
             {
@@ -568,9 +626,9 @@ namespace Microsoft.OData.Client.Materialization
                 switch (this.reader.State)
                 {
                     case ODataReaderState.DeletedResourceEnd:
-                        if (this.materializerStateItems.Count > 0)
+                        if (this.deltaMaterializerStateItems.Count > 0)
                         {
-                            this.materializerStateItems.Pop();
+                            this.deltaMaterializerStateItems.Pop();
                         }
                         break;
                     default:
