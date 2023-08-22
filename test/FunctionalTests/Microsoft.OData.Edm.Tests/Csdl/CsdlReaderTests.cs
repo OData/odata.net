@@ -133,8 +133,9 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                         "</edmx:DataServices>" +
                     "</edmx:Edmx>";
 
-            //// TODO fix failing tests
             //// TODO create test for each failure case
+            //// TODO does everything still work ifthe referenced models aren't validated?
+            //// TODO fix failing tests
             //// TODO test referenced models
             //// TODO add feature flag
             var errors = Enumerable.Empty<EdmError>();

@@ -2235,10 +2235,30 @@ namespace Microsoft.OData.Edm.Validation
                        }
                        else
                        {
+                           model.ItemExistsInReferencedModel(fullName, true);
                            elements[fullName] = item.SchemaElementKind;
                        }
                    }
                });
+
+
+        private sealed class Builder
+        {
+            private readonly IEdmModel model;
+
+            public Builder(IEdmModel model)
+            {
+                this.model = model;
+            }
+
+            public bool TryGetValue(string name, out EdmSchemaElementKind elementKind)
+            {
+            }
+
+            public void Add(string name, EdmSchemaElementKind elementKind)
+            {
+            }
+        }
 
         /// <summary>
         /// Validates that there are not duplicate properties in an entity key.

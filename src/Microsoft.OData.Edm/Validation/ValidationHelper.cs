@@ -140,14 +140,15 @@ namespace Microsoft.OData.Edm.Validation
             return error.ErrorCode >= EdmErrorCode.InterfaceCriticalPropertyValueMustNotBeNull && error.ErrorCode <= EdmErrorCode.InterfaceCriticalCycleInTypeHierarchy;
         }
 
-        internal static bool ItemExistsInReferencedModel(this IEdmModel model, string fullName, bool checkEntityContainer)
+        internal static bool ItemExistsInReferencedModel(this IEdmModel model, string fullName, bool checkEntityContainer, out IEdmSchemaElement edmSchemaElement)
         {
+            edmSchemaElement = null;
             foreach (IEdmModel referenced in model.ReferencedModels)
             {
-                if (referenced.FindDeclaredType(fullName) != null ||
-                    referenced.FindDeclaredTerm(fullName) != null ||
+                if ((edmSchemaElement = referenced.FindDeclaredType(fullName)) != null ||
+                    (edmSchemaElement = referenced.FindDeclaredTerm(fullName)) != null ||
                     (checkEntityContainer && referenced.ExistsContainer(fullName)) ||
-                    (referenced.FindDeclaredOperations(fullName) ?? Enumerable.Empty<IEdmOperation>()).FirstOrDefault() != null)
+                    (edmSchemaElement = (referenced.FindDeclaredOperations(fullName) ?? Enumerable.Empty<IEdmOperation>()).FirstOrDefault()) != null)
                 {
                     return true;
                 }
@@ -157,8 +158,9 @@ namespace Microsoft.OData.Edm.Validation
         }
 
         // Take operation name to avoid recomputing it
-        internal static bool OperationOrNameExistsInReferencedModel(this IEdmModel model, IEdmOperation operation, string operationFullName)
+        internal static bool OperationOrNameExistsInReferencedModel(this IEdmModel model, IEdmOperation operation, string operationFullName, out IEdmSchemaElement edmSchemaElement)
         {
+            edmSchemaElement = null;
             foreach (IEdmModel referenced in model.ReferencedModels)
             {
                 if (referenced.FindDeclaredType(operationFullName) != null ||
