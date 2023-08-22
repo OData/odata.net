@@ -28,6 +28,8 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
+  <Import Project="..\Build.props"/>
+
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>

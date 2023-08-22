@@ -16,4 +16,11 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
+  <ItemGroup>
+    <!--don't compile this since it's shared to other projects through a link-->
+    <None Include="Fake.cs" />
+    <!--don't compile this since it's shared to other projects through a link-->
+    <None Include="Fake.vb" />
+  </ItemGroup>
+
 </Project>
