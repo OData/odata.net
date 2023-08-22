@@ -958,7 +958,7 @@ namespace Microsoft.OData.Edm.Validation
                     {
                         if (baseType.DeclaredKey != null)
                         {
-                            if(foundKey)
+                            if (foundKey)
                             {
                                 context.AddError(
                                 entityType.Location(),
@@ -2217,60 +2217,24 @@ namespace Microsoft.OData.Edm.Validation
            new ValidationRule<IEdmModel>(
                (context, model) =>
                {
-                   HashSetInternal<string> nonFunctionNameList = new HashSetInternal<string>();
                    DuplicateOperationValidator duplicateOperationValidator = new DuplicateOperationValidator(context);
-                   HashSetInternal<string> operationList = new HashSetInternal<string>();
-
-                   foreach (var item in model.SchemaElements)
+                   var elements = new Dictionary<string, EdmSchemaElementKind>();
+                   foreach (var item in model.SchemaElements.Concat(model.ReferencedModels.SelectMany(referencedModel => referencedModel.SchemaElements)))
                    {
-                       bool duplicate = false;
-                       string fullName = item.FullName();
-                       IEdmOperation operation = item as IEdmOperation;
-                       if (operation != null)
+                       var fullName = item.FullName();
+                       if (elements.TryGetValue(fullName, out var elementKind))
                        {
-                           if (!operationList.Contains(operation.FullName()))
+                           if (item.SchemaElementKind != elementKind || !(item is IEdmOperation operation) || duplicateOperationValidator.ValidateNotDuplicate(operation, false))
                            {
-                               operationList.Add(operation.FullName());
-                           }
-
-                           // If a non-function already exists with the same name, stop processing as a function, as it is irrelevant it will always be an error.
-                           if (nonFunctionNameList.Contains(fullName))
-                           {
-                               duplicate = true;
-                           }
-
-                           duplicateOperationValidator.ValidateNotDuplicate(operation, false /*skipError*/);
-
-                           if (!duplicate)
-                           {
-                               duplicate = model.OperationOrNameExistsInReferencedModel(operation, fullName);
+                               context.AddError(
+                                   item.Location(),
+                                   EdmErrorCode.AlreadyDefined,
+                                   Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined(fullName));
                            }
                        }
                        else
                        {
-                           if (!nonFunctionNameList.Add(fullName))
-                           {
-                               duplicate = true;
-                           }
-                           else
-                           {
-                               if (operationList.Contains(fullName))
-                               {
-                                   duplicate = true;
-                               }
-                               else
-                               {
-                                   duplicate = model.ItemExistsInReferencedModel(fullName, true);
-                               }
-                           }
-                       }
-
-                       if (duplicate)
-                       {
-                           context.AddError(
-                                       item.Location(),
-                                       EdmErrorCode.AlreadyDefined,
-                                       Strings.EdmModel_Validator_Semantic_SchemaElementNameAlreadyDefined(fullName));
+                           elements[fullName] = item.SchemaElementKind;
                        }
                    }
                });

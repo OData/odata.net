@@ -99,6 +99,51 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ReadActionFunctionDuplicateName()
+        {
+            var csdl =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                        "<edmx:DataServices>" +
+                            "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"EntityType1\">" +
+                                    "<Key>" + 
+                                        "<PropertyRef Name=\"ID\" />" + 
+                                    "</Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" Nullable=\"false\"/>" +
+                                "</EntityType>" +
+                                "<ComplexType Name=\"ComplexType1\">" +
+                                "</ComplexType>" +
+                                /*"<ComplexType Name=\"foo\">" +
+                                "</ComplexType>" +*/
+                                /*"<Action Name=\"foo\" IsBound=\"true\">" + 
+                                  "<Parameter Name=\"bindingParameter\" Type=\"NS.EntityType1\" />" +
+                                  "<ReturnType Type=\"NS.ComplexType1\" />" +
+                                "</Action>" +*/
+                                "<Function Name=\"foo\" IsBound=\"true\">" +
+                                  "<Parameter Name=\"bindingParameter\" Type=\"NS.EntityType1\" />" +
+                                  "<ReturnType Type=\"NS.ComplexType1\" />" +
+                                "</Function>" +
+                                "<Function Name=\"foo\" IsBound=\"true\">" +
+                                  "<Parameter Name=\"bindingParameter\" Type=\"NS.EntityType1\" />" +
+                                  "<Parameter Name=\"asdf\" Type=\"Edm.String\" />" +
+                                  "<ReturnType Type=\"NS.ComplexType1\" />" +
+                                "</Function>" +
+                            "</Schema>" +
+                        "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+
+            //// TODO fix failing tests
+            //// TODO create test for each failure case
+            //// TODO test referenced models
+            //// TODO add feature flag
+            var errors = Enumerable.Empty<EdmError>();
+            var parsed = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out var model, out errors);
+            Assert.True(parsed, string.Join(Environment.NewLine, errors));
+            Assert.True(model.Validate(out errors), string.Join(Environment.NewLine, errors));
+        }
+
+        [Fact]
         public void ReadNavigationPropertyPartnerTest()
         {
             var csdl =
