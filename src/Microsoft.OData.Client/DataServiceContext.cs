@@ -2385,7 +2385,7 @@ namespace Microsoft.OData.Client
         /// <param name="callback">The delegate that is called when a response to the deep insert request is received.</param>
         /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
         /// <returns>An<see cref="IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
-        internal virtual IAsyncResult BeginDeepInsert<T>(AsyncCallback callback, object state, T resource)
+        public virtual IAsyncResult BeginDeepInsert<T>(AsyncCallback callback, object state, T resource)
         {
             if (resource == null)
             {
@@ -2401,7 +2401,7 @@ namespace Microsoft.OData.Client
         /// <summary>Called to complete the <see cref="BeginDeepInsert{T}(AsyncCallback, object, T)"/>.</summary>
         /// <param name="asyncResult">An <see cref="IAsyncResult" /> that represents the status of the asynchronous operation.</param>
         /// <returns>The DataServiceResponse object that holds the result of the bulk update operation.</returns>
-        internal virtual DataServiceResponse EndDeepInsert(IAsyncResult asyncResult)
+        public virtual DataServiceResponse EndDeepInsert(IAsyncResult asyncResult)
         {
             DeepInsertSaveResult result = BaseAsyncResult.EndExecute<DeepInsertSaveResult>(this, Util.DeepInsertMethodName, asyncResult);
             return result.EndRequest();
