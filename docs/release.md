@@ -12,7 +12,7 @@
 ## Directions
 
 ### Initiate the Release
-1. Increment the version number and update the Public API files; both of these steps can be accomplished by running the `tools\IncrementVersion.cmd` script. Then create a pull request with these changes using the `tools\Release\CreatePullRequest.cmd` script and merge the pull request.
+1. Increment the version number and update the Public API files; both of these steps can be accomplished by running the `tools\IncrementVersion.cmd` script. Then create a pull request with these changes using the `tools\Release\CreateAndPushBranch.cmd` script and merge the pull request.
     * Increment the version number referenced during build in [`Versioning.props`](tools/CustomMSBuild/Versioning.props) by using [semantic versioning](https://semver.org/).
     * Update the Public API files by copying the contents of any `PublicAPI.Unshipped.txt` file that has changed since the last release into its corresponding `PublicAPI.Shipped.txt` file.
 2. Kick off a new [nightly build](https://identitydivision.visualstudio.com/OData/_build?definitionId=1104) by running the pipeline to generate the NuGet packages that will be published for this release.
