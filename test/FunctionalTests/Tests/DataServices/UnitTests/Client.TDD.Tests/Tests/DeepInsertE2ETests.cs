@@ -112,6 +112,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private readonly RequestInfo requestInfo;
         private readonly Serializer serializer;
         private readonly HeaderCollection headers;
+        private readonly Person person;
+        private readonly Person personNoId;
+        private readonly VipPerson vipPerson;
+        private readonly Car car;
+        private readonly Car carNoId;
 
         public DeepInsertE2ETests()
         {
@@ -119,6 +124,44 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             this.requestInfo = new RequestInfo(context);
             this.serializer = new Serializer(this.requestInfo);
             this.headers = new HeaderCollection();
+            this.person = new Person
+            {
+                ID = 100,
+                Name = "Person 100",
+            };
+            this.personNoId = new Person
+            {
+                Name = "Person 100",
+            };
+            this.car = new Car
+            {
+                ID = 1001,
+                Name = "Car 1001"
+            };
+            this.carNoId = new Car
+            {
+                ID = 1001,
+                Name = "Car 1001"
+            };
+            this.vipPerson = new VipPerson
+            {
+                ID = 100,
+                Name = "VipPerson 100",
+            };
+        }
+
+        private void SetupDataServiceContext(string expectedResponse)
+        {
+            var headers = new Dictionary<string, string>()
+                        {
+                            {"Content-Type", "application/json;charset=utf-8"},
+                            {"Location", "http://localhost:5000/Persons(100)"},
+                        };
+
+            SetupContextWithRequestPipelineForSaving(
+                this.context,
+                expectedResponse,
+                headers);
         }
 
         [Fact]
@@ -138,34 +181,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithOneLevelOfNesting()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                ID = 1001,
-                Name = "Car 1001"
-            };
-
-            this.context.AddObject("Persons", person);
-
-            this.context.AddRelatedObject(person, "Cars", car);
-
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -185,34 +205,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithOneLevelOfNesting()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                ID = 1001,
-                Name = "Car 1001"
-            };
-
-            this.context.AddObject("Persons", person);
-
-            this.context.AddRelatedObject(person, "Cars", car);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -232,32 +229,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithOneLevelOfNestingAndServerGeneratedId()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                Name = "Car 1001"
-            };
-
-            this.context.AddObject("Persons", person);
-
-            this.context.AddRelatedObject(person, "Cars", car);
-
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddObject("Persons", this.personNoId);
+            this.context.AddRelatedObject(this.personNoId, "Cars", this.carNoId);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.personNoId);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -278,32 +254,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithOneLevelOfNestingAndServerGeneratedId()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                Name = "Car 1001"
-            };
-
-            this.context.AddObject("Persons", person);
-
-            this.context.AddRelatedObject(person, "Cars", car);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            this.context.AddObject("Persons", this.personNoId);
+            this.context.AddRelatedObject(this.personNoId, "Cars", this.carNoId);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.personNoId);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -324,26 +279,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithNestedResponseWithNoRelatedDescriptors()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(Countries())))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            this.context.AddObject("Persons", person);
-
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
 
             Assert.Single(response);
             Assert.Empty(response.Single().NestedResponses);
@@ -353,26 +292,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithNestedResponseWithNoRelatedDescriptors()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(Countries())))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            this.context.AddObject("Persons", person);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
 
             Assert.Single(response);
             Assert.Empty(response.Single().NestedResponses);
@@ -382,32 +305,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithThreeLevelsOfNesting()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(Countries())))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
             var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
             var country = new Country { ID = 101, Name = "CountryA" };
-            this.context.AddObject("Persons", person);
-            this.context.AddRelatedObject(person, "Cars", car1);
-            this.context.AddRelatedObject(car1, "Manufacturers", manufacturer);
-            this.context.AddRelatedObject(manufacturer, "Countries", country);
 
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            this.context.AddRelatedObject(this.car, "Manufacturers", manufacturer);
+            this.context.AddRelatedObject(manufacturer, "Countries", country);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -441,32 +348,15 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithThreeLevelsOfNesting()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(Countries())))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
             var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
             var country = new Country { ID = 101, Name = "CountryA" };
-            this.context.AddObject("Persons", person);
-            this.context.AddRelatedObject(person, "Cars", car1);
-            this.context.AddRelatedObject(car1, "Manufacturers", manufacturer);
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            this.context.AddRelatedObject(this.car, "Manufacturers", manufacturer);
             this.context.AddRelatedObject(manufacturer, "Countries", country);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -500,33 +390,17 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithMultipleLinks()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"},{\"ID\":\"1002\",\"Name\":\"Car 1002\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
-
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
+            SetupDataServiceContext(expectedResponse);
 
             var car1 = new Car { ID = 1001, Name = "Car 1001" };
             var car2 = new Car { ID = 1002, Name = "Car 1002" };
 
-            this.context.AddObject("Persons", person);
+            this.context.AddObject("Persons", this.person);
             this.context.AttachTo("Cars", car1);
             this.context.AttachTo("Cars", car2);
-            this.context.AddLink(person, "Cars", car1);
-            this.context.AddLink(person, "Cars", car2);
-
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddLink(this.person, "Cars", car1);
+            this.context.AddLink(this.person, "Cars", car2);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
 
             Assert.Single(response);
             Assert.Equal(2, response.Single().NestedResponses.Count);
@@ -552,33 +426,17 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithMultipleLinks()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"},{\"ID\":\"1002\",\"Name\":\"Car 1002\"}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
-
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
+            SetupDataServiceContext(expectedResponse);
 
             var car1 = new Car { ID = 1001, Name = "Car 1001" };
             var car2 = new Car { ID = 1002, Name = "Car 1002" };
 
-            this.context.AddObject("Persons", person);
+            this.context.AddObject("Persons", this.person);
             this.context.AttachTo("Cars", car1);
             this.context.AttachTo("Cars", car2);
-            this.context.AddLink(person, "Cars", car1);
-            this.context.AddLink(person, "Cars", car2);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            this.context.AddLink(this.person, "Cars", car1);
+            this.context.AddLink(this.person, "Cars", car2);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
 
             Assert.Single(response);
             Assert.Equal(2, response.Single().NestedResponses.Count);
@@ -604,26 +462,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithNoRelatedObjects()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons/$entity\",\"ID\":100,\"Name\":\"Person 100\"}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Bing",
-            };
-
-            this.context.AddObject("Persons", person);
-
-            DataServiceResponse response = this.context.DeepInsert<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
 
             Assert.Single(response);
             Assert.Empty(response.Single().NestedResponses);
@@ -633,26 +475,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithNoRelatedObjects()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons/$entity\",\"ID\":100,\"Name\":\"Person 100\"}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Bing",
-            };
-
-            this.context.AddObject("Persons", person);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(person);
+            this.context.AddObject("Persons", this.person);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
 
             Assert.Single(response);
             Assert.Empty(response.Single().NestedResponses);
@@ -662,29 +488,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithSingleValueNavigation()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#VipPersons(VipCar())/$entity\",\"ID\":100,\"Name\":\"VipPerson 100\",\"VipCar\":{\"ID\":1001,\"Name\":null}}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var vipPerson = new VipPerson
-            {
-                ID = 100,
-                Name = "VipPerson 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
-
-            this.context.AddObject("VipPersons", vipPerson);
-            this.context.SetRelatedObject(vipPerson, "VipCar", car1);
-
-            DataServiceResponse response = this.context.DeepInsert<VipPerson>(vipPerson);
+            this.context.AddObject("VipPersons", this.vipPerson);
+            this.context.SetRelatedObject(this.vipPerson, "VipCar", this.car);
+            DataServiceResponse response = this.context.DeepInsert<VipPerson>(this.vipPerson);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -705,29 +513,11 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithSingleValueNavigation()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#VipPersons(VipCar())/$entity\",\"ID\":100,\"Name\":\"VipPerson 100\",\"VipCar\":{\"ID\":1001,\"Name\":null}}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var vipPerson = new VipPerson
-            {
-                ID = 100,
-                Name = "VipPerson 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
-
-            this.context.AddObject("VipPersons", vipPerson);
-            this.context.SetRelatedObject(vipPerson, "VipCar", car1);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<VipPerson>(vipPerson);
+            this.context.AddObject("VipPersons", this.vipPerson);
+            this.context.SetRelatedObject(this.vipPerson, "VipCar", this.car);
+            DataServiceResponse response = await this.context.DeepInsertAsync<VipPerson>(this.vipPerson);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -748,30 +538,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void DeepInsertAnEntry_WithSingleValueNavigationLink()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#VipPersons(VipCar())/$entity\",\"ID\":100,\"Name\":\"VipPerson 100\",\"VipCar\":{\"ID\":1001,\"Name\":null}}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var vipPerson = new VipPerson
-            {
-                ID = 100,
-                Name = "VipPerson 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
-
-            this.context.AddObject("VipPersons", vipPerson);
-            this.context.AttachTo("Cars", car1);
-            this.context.SetRelatedObjectLink(vipPerson, "VipCar", car1);
-
-            DataServiceResponse response = this.context.DeepInsert<VipPerson>(vipPerson);
+            this.context.AddObject("VipPersons", this.vipPerson);
+            this.context.AttachTo("Cars", this.car);
+            this.context.SetRelatedObjectLink(this.vipPerson, "VipCar", this.car);
+            DataServiceResponse response = this.context.DeepInsert<VipPerson>(this.vipPerson);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -792,30 +564,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public async Task DeepInsertAsyncAnEntry_WithSingleValueNavigationLink()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#VipPersons(VipCar())/$entity\",\"ID\":100,\"Name\":\"VipPerson 100\",\"VipCar\":{\"ID\":1001,\"Name\":null}}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
+            this.context.AddObject("VipPersons", this.vipPerson);
+            this.context.AttachTo("Cars", this.car);
+            this.context.SetRelatedObjectLink(this.vipPerson, "VipCar", this.car);
 
-            var vipPerson = new VipPerson
-            {
-                ID = 100,
-                Name = "VipPerson 100",
-            };
-
-            var car1 = new Car { ID = 1001 };
-
-            this.context.AddObject("VipPersons", vipPerson);
-            this.context.AttachTo("Cars", car1);
-            this.context.SetRelatedObjectLink(vipPerson, "VipCar", car1);
-
-            DataServiceResponse response = await this.context.DeepInsertAsync<VipPerson>(vipPerson);
+            DataServiceResponse response = await this.context.DeepInsertAsync<VipPerson>(this.vipPerson);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -836,32 +591,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         public void HandleResponse_Of_AnInvalidResponse_ThrowsException()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":null,\"Name\":null}]}";
-            var headers = new Dictionary<string, string>()
-                        {
-                            {"Content-Type", "application/json;charset=utf-8"},
-                            {"Location", "http://localhost:5000/Persons(100)"},
-                        };
+            SetupDataServiceContext(expectedResponse);
 
-            SetupContextWithRequestPipelineForSaving(
-                this.context,
-                expectedResponse,
-                headers);
-
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                ID = 1001,
-                Name = "Car 1001"
-            };
-
-            this.context.AddObject("Persons", person);
-
-            this.context.AddRelatedObject(person, "Cars", car);
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
 
             Assert.Throws<DataServiceRequestException>(() => this.context.DeepInsert<Person>(person));
         }
@@ -869,24 +602,13 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         [Fact]
         public void DeepInsertAnEntry_WithANestedDelete_Fails()
         {
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Person 100",
-            };
-
-            var car = new Car
-            {
-                ID = 1002,
-            };
-
-            this.context.AttachTo("Persons", person);
-            this.context.AttachTo("Cars", car);
-            this.context.DeleteLink(person, "Cars", car);
+            this.context.AttachTo("Persons", this.person);
+            this.context.AttachTo("Cars", this.car);
+            this.context.DeleteLink(this.person, "Cars", this.car);
 
             Action action = () =>
             {
-                this.context.DeepInsert<Person>(person);
+                this.context.DeepInsert<Person>(this.person);
             };
 
             action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified("Cars(1002)"));
@@ -895,12 +617,6 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         [Fact]
         public void DeepInsertAnEntry_WithANestedUpdate_Fails()
         {
-            var person = new Person
-            {
-                ID = 100,
-                Name = "Bing",
-            };
-
             var cars = new List<Car>
             {
                 new Car
@@ -910,7 +626,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 }
             };
 
-            this.context.AddObject("Persons", person);
+            this.context.AddObject("Persons", this.person);
             this.context.AttachTo("Cars", cars[0]);
 
             DataServiceCollection<Car> carsCollection = new DataServiceCollection<Car>(this.context);
@@ -921,7 +637,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             Action action = () =>
             {
-                this.context.DeepInsert<Person>(person);
+                this.context.DeepInsert<Person>(this.person);
             };
 
             action.ShouldThrow<InvalidOperationException>(Strings.Context_DeepInsertDeletedOrModified("Cars(200)"));
