@@ -2222,9 +2222,10 @@ namespace Microsoft.OData.Edm.Validation
                    foreach (var item in model.SchemaElements.Concat(model.ReferencedModels.SelectMany(referencedModel => referencedModel.SchemaElements)))
                    {
                        var fullName = item.FullName();
+                       var duplicateOverload = item is IEdmOperation operation && duplicateOperationValidator.ValidateNotDuplicate(operation, false);
                        if (elements.TryGetValue(fullName, out var elementKind))
                        {
-                           if (item.SchemaElementKind != elementKind || !(item is IEdmOperation operation) || duplicateOperationValidator.ValidateNotDuplicate(operation, false))
+                           if (item.SchemaElementKind != elementKind)
                            {
                                context.AddError(
                                    item.Location(),
