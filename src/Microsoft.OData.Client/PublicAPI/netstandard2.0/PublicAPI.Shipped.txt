@@ -1,3 +1,4 @@
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedEnded(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedStarted(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.ReadingDeltaFeedArgs
