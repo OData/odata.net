@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests;
@@ -101,6 +102,34 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private async Task ReadEntryPayloadAsync(string payload,
+            EdmEntitySet entitySet,
+            EdmEntityType entityType,
+            Action<ODataReader> action,
+            bool readUntypedAsValue = false,
+            bool readRequest = false,
+            ODataMessageReaderSettings settings = null)
+        {
+            var message = new InMemoryMessage()
+            {
+                Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload))
+            };
+            message.SetHeader("Content-Type", "application/json");
+
+            ODataMessageReaderSettings readerSettings = readUntypedAsValue ? UntypedAsValueReaderSettings : UntypedAsStringReaderSettings;
+
+            using (var msgReader = readRequest ?
+                new ODataMessageReader((IODataRequestMessage)message, settings ?? readerSettings, this.serverModel) :
+                new ODataMessageReader((IODataResponseMessage)message, settings ?? readerSettings, this.serverModel))
+            {
+                var reader = await msgReader.CreateODataResourceReaderAsync(entitySet, entityType);
+                while (await reader.ReadAsync())
                 {
                     action(reader);
                 }
@@ -1782,6 +1811,45 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, false, true /*reading request*/);
 
+            VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
+        }
+
+        [Fact]
+        public async Task ReadSingleValueEdmUntypedPropertyWithODataTypeResourceTestAsync()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1"":{
+    ""@odata.type"": ""#Server.NS.Address"",
+    ""Street"":""Mars Rd""
+  }
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
+        }
+
+        private void VerifyResourceAndWrite(ODataResource topLevelResource, ODataResource nestedResource, ODataNestedResourceInfo nestedInfo)
+        {
             Assert.Empty(topLevelResource.Properties);
             ODataProperty property = Assert.Single(nestedResource.Properties);
             Assert.Equal("Street", property.Name);
@@ -1822,6 +1890,30 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, false, true /*reading request*/);
 
+            VerifyEnum(topLevelResource);
+        }
+
+        [Fact]
+        public async Task ReadSingleValueEdmUntypedPropertyWithODataTypeEnumTestAsync()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1@odata.type"": ""#Server.NS.EnumType"",
+  ""MyEdmUntypedProp1"": ""Member""
+}";
+            ODataResource topLevelResource = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    topLevelResource = (reader.Item as ODataResource);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyEnum(topLevelResource);
+        }
+
+        private static void VerifyEnum(ODataResource topLevelResource)
+        {
             ODataProperty property = Assert.Single(topLevelResource.Properties);
             Assert.Equal("MyEdmUntypedProp1", property.Name);
             ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(property.Value);
@@ -1951,6 +2043,59 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
                 }
             }, false, true /*reading request*/);
 
+            VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
+        }
+
+        [Fact]
+        public async Task ReadCollectionEdmUntypedPropertyWithODataTypeMixCollectionTestAsync()
+        {
+            const string payload = @"{
+  ""Infos"":[
+    {
+      ""@odata.type"": ""#Server.NS.Address"",
+      ""Street"":""Mars Rd""
+    },
+    42
+  ]
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataResourceSet resourceSet = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataPrimitiveValue primitiveValue = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    resourceSet = (reader.Item as ODataResourceSet);
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    primitiveValue = (reader.Item as ODataPrimitiveValue);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
+        }
+
+        private void VerifyCollectionAndWrite(ODataResource topLevelResource, ODataResource nestedResource,
+            ODataResourceSet resourceSet, ODataNestedResourceInfo nestedInfo, ODataPrimitiveValue primitiveValue)
+        {
             Assert.Empty(topLevelResource.Properties);
             ODataProperty property = Assert.Single(nestedResource.Properties);
             Assert.Equal("Street", property.Name);
