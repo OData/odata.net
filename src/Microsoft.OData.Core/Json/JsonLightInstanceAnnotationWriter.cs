@@ -505,14 +505,12 @@ namespace Microsoft.OData
             bool ignoreFilter = false,
             string propertyName = null)
         {
-
             if (!instanceAnnotationNames.Add(annotation.Name))
             {
                 throw new ODataException(ODataErrorStrings.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(annotation.Name));
             }
 
-            if (!tracker.IsAnnotationWritten(annotation.Name)
-                        && (!ODataAnnotationNames.IsODataAnnotationName(annotation.Name) || ODataAnnotationNames.IsUnknownODataAnnotationName(annotation.Name)))
+            if (!tracker.IsAnnotationWritten(annotation.Name))
             {
                 this.WriteInstanceAnnotation(annotation, ignoreFilter, propertyName);
                 tracker.MarkAnnotationWritten(annotation.Name);
