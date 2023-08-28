@@ -5,13 +5,14 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
 {
     /// <summary>
     /// Represents an EDM path expression.
     /// </summary>
-    public interface IEdmPathExpression : IEdmExpression
+    public interface IEdmPathExpression : IEdmExpression, IEdmVocabularyAnnotatable
     {
         /// <summary>
         /// Gets the path segments as a decomposed qualified name. "A.B/C/D.E" is { "A.B", "C", "D.E" }.

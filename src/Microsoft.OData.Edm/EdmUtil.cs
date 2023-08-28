@@ -421,6 +421,11 @@ namespace Microsoft.OData.Edm
 
         internal static string FullyQualifiedName(IEdmVocabularyAnnotatable element)
         {
+            if (element is IEdmPathExpression pathExpr)
+            {
+                return pathExpr.Path;
+            }
+
             IEdmSchemaElement schemaElement = element as IEdmSchemaElement;
             if (schemaElement != null)
             {

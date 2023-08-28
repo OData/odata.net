@@ -13,6 +13,7 @@ using Microsoft.OData.Edm.Csdl.Parsing.Ast;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Tests.Validation;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.ExtensionMethods
@@ -749,6 +750,21 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         #endregion
+
+        [Fact]
+        public void SetInlineSerializationLocationForPathExpression_Throws()
+        {
+            IEdmPathExpression pathExp = new EdmPropertyPathExpression("any");
+
+            EdmVocabularyAnnotation annotation
+                = new EdmVocabularyAnnotation(pathExp, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("any"));
+
+            Action test = () => annotation.SetSerializationLocation(EdmCoreModel.Instance, EdmVocabularyAnnotationSerializationLocation.Inline);
+
+            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(test);
+
+            Assert.Equal("Invalid to set inline location for a path target 'any'.", exception.Message);
+        }
 
         [Fact]
         public void CheckExistingContainer()

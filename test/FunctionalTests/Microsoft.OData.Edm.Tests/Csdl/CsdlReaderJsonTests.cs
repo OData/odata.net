@@ -1239,6 +1239,52 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingPathWithAnnotationsJsonCsdlWorks()
+        {
+            string csdl =
+@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""User"": {
+      ""$Kind"": ""EntityType"",
+      ""mail"": {
+        ""$Nullable"": true
+      },
+      ""manager"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.User""
+      }
+    },
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""me"": {
+        ""$Type"": ""NS.User""
+      }
+    },
+    ""$Annotations"": {
+      ""me/manager/mail"": {
+        ""@Org.OData.Core.V1.LongDescription"": ""Expected JSON LongDescription""
+      }
+    }
+  }
+}";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            Utf8JsonReader jsonReader = GetJsonReader(csdl);
+            bool result = CsdlReader.TryParse(ref jsonReader, out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            EdmNavigationPropertyPathExpression propertyPath = new EdmNavigationPropertyPathExpression("me/manager/mail");
+
+            string longDescription = GetStringAnnotation(model, propertyPath, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("Expected JSON LongDescription", longDescription);
+        }
+
+
+        [Fact]
         public void ParsingInLineOptionalParameterInJsonWorks()
         {
             string expected = @"{

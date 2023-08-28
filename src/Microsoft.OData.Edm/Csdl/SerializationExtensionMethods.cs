@@ -98,6 +98,13 @@ namespace Microsoft.OData.Edm.Csdl
             EdmUtil.CheckArgumentNull(annotation, "annotation");
             EdmUtil.CheckArgumentNull(model, "model");
 
+            if (annotation.Target is IEdmPathExpression pathExpress &&
+                location != null &&
+                location.Value == EdmVocabularyAnnotationSerializationLocation.Inline)
+            {
+                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_InvalidLocationForPathAnnotation(pathExpress.Path));
+            }
+
             model.SetAnnotationValue(annotation, EdmConstants.InternalUri, CsdlConstants.AnnotationSerializationLocationAnnotation, (object)location);
         }
 
@@ -304,7 +311,8 @@ namespace Microsoft.OData.Edm.Csdl
 
         internal static bool IsInline(this IEdmVocabularyAnnotation annotation, IEdmModel model)
         {
-            return annotation.GetSerializationLocation(model) == EdmVocabularyAnnotationSerializationLocation.Inline || annotation.TargetString() == null;
+            return !(annotation.Target is IEdmPathExpression) && // path target is always out of line
+                (annotation.GetSerializationLocation(model) == EdmVocabularyAnnotationSerializationLocation.Inline || annotation.TargetString() == null);
         }
 
         internal static string TargetString(this IEdmVocabularyAnnotation annotation)

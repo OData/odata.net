@@ -1295,6 +1295,40 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingPathWithAnnotationsWorks()
+        {
+            string csdl =
+"<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+"<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+  "<edmx:DataServices>" +
+    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+      "<EntityType Name=\"User\">" +
+        "<Property Name=\"mail\" Type=\"Edm.String\" />" +
+        "<NavigationProperty Name=\"manager\" Type=\"NS.User\" />" +
+      "</EntityType>" +
+      "<EntityContainer Name=\"Default\">" +
+        "<Singleton Name=\"me\" Type=\"NS.User\" />" +
+      "</EntityContainer>" +
+      "<Annotations Target=\"me/manager/mail\">" +
+        "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Expected LongDescription\" />" +
+      "</Annotations>" +
+    "</Schema>" +
+  "</edmx:DataServices>" +
+"</edmx:Edmx>";
+
+            IEdmModel model;
+            IEnumerable<EdmError> errors;
+            bool result = CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out model, out errors);
+            Assert.True(result);
+            Assert.NotNull(model);
+
+            EdmNavigationPropertyPathExpression propertyPath = new EdmNavigationPropertyPathExpression("me/manager/mail");
+
+            string longDescription = GetStringAnnotation(model, propertyPath, CoreVocabularyModel.LongDescriptionTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("Expected LongDescription", longDescription);
+        }
+
+        [Fact]
         public void ParsingEnumMemberWithAnnotationsWorks()
         {
             string types =

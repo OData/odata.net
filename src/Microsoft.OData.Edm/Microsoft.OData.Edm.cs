@@ -328,6 +328,7 @@ namespace Microsoft.OData.Edm
         internal const string TimeOfDay_InvalidCompareToTarget = "TimeOfDay_InvalidCompareToTarget";
         internal const string EdmVocabularyAnnotations_DidNotFindDefaultValue = "EdmVocabularyAnnotations_DidNotFindDefaultValue";
         internal const string EdmVocabularyAnnotations_TermTypeNotSupported = "EdmVocabularyAnnotations_TermTypeNotSupported";
+        internal const string EdmVocabularyAnnotations_InvalidLocationForPathAnnotation = "EdmVocabularyAnnotations_InvalidLocationForPathAnnotation";
 
         static EdmRes loader = null;
         ResourceManager resources;

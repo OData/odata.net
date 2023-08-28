@@ -1784,6 +1784,79 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ShouldWriteAnnotationForPath()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType user = new EdmEntityType("NS", "User");
+            user.AddStructuralProperty("mail", EdmPrimitiveTypeKind.String);
+
+            user.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo
+            {
+                Name = "manager",
+                TargetMultiplicity = EdmMultiplicity.ZeroOrOne,
+                Target = user
+            });
+            model.AddElement(user);
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+            EdmSingleton me = new EdmSingleton(container, "me", user);
+            container.AddElement(me);
+            model.AddElement(container);
+
+            EdmPropertyPathExpression pathExpression = new EdmPropertyPathExpression("me/manager/mail");
+            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(pathExpression, CoreVocabularyModel.LongDescriptionTerm, new EdmStringConstant("Stove Inline LongDescription"));
+            model.SetVocabularyAnnotation(annotation);
+
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                    "<EntityType Name=\"User\">" +
+                      "<Property Name=\"mail\" Type=\"Edm.String\" />" +
+                      "<NavigationProperty Name=\"manager\" Type=\"NS.User\" />" +
+                    "</EntityType>" +
+                    "<EntityContainer Name=\"Default\">" +
+                      "<Singleton Name=\"me\" Type=\"NS.User\" />" +
+                    "</EntityContainer>" +
+                    "<Annotations Target=\"me/manager/mail\">" +
+                      "<Annotation Term=\"Org.OData.Core.V1.LongDescription\" String=\"Stove Inline LongDescription\" />" +
+                    "</Annotations>" +
+                  "</Schema>" +
+                "</edmx:DataServices>" +
+              "</edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Default"",
+  ""NS"": {
+    ""User"": {
+      ""$Kind"": ""EntityType"",
+      ""mail"": {
+        ""$Nullable"": true
+      },
+      ""manager"": {
+        ""$Kind"": ""NavigationProperty"",
+        ""$Type"": ""NS.User""
+      }
+    },
+    ""Default"": {
+      ""$Kind"": ""EntityContainer"",
+      ""me"": {
+        ""$Type"": ""NS.User""
+      }
+    },
+    ""$Annotations"": {
+      ""me/manager/mail"": {
+        ""@Org.OData.Core.V1.LongDescription"": ""Stove Inline LongDescription""
+      }
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void ShouldWriteAnnotationForEnumMember()
         {
             // Arrange

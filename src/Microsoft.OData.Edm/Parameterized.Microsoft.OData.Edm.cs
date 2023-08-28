@@ -2637,6 +2637,14 @@ namespace Microsoft.OData.Edm {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_TermTypeNotSupported, p0);
         }
 
+        /// <summary>
+        /// A string like "Invalid to set inline location for a path target '{0}'."
+        /// </summary>
+        internal static string EdmVocabularyAnnotations_InvalidLocationForPathAnnotation(object p0)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_InvalidLocationForPathAnnotation, p0);
+        }
+
     }
 
     /// <summary>

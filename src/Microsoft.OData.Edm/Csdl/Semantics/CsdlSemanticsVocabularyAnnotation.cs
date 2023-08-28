@@ -308,6 +308,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 string[] targetSegments = target.Split('/');
                 int targetSegmentsCount = targetSegments.Length;
                 IEdmEntityContainer container;
+                IEdmVocabularyAnnotatable annotatable = null;
 
                 if (targetSegmentsCount == 1)
                 {
@@ -413,6 +414,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new UnresolvedParameter(operation, targetSegments[1], this.Location);
                     }
 
+                    if (TryResolveAsPathTarget(target, targetSegments, out annotatable))
+                    {
+                        return annotatable;
+                    }
+
                     return new UnresolvedProperty(new UnresolvedEntityType(this.model.ReplaceAlias(targetSegments[0]), this.Location), targetSegments[1], this.Location);
                 }
 
@@ -450,6 +456,11 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         }
                     }
 
+                    if (TryResolveAsPathTarget(target, targetSegments, out annotatable))
+                    {
+                        return annotatable;
+                    }
+
                     string qualifiedOperationName = containerName + "/" + operationName;
                     UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
                     if (parameterName == CsdlConstants.OperationReturnExternalTarget)
@@ -462,8 +473,117 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     }
                 }
 
+                if (TryResolveAsPathTarget(target, targetSegments, out annotatable))
+                {
+                    return annotatable;
+                }
+
                 return new BadElement(new EdmError[] { new EdmError(this.Location, EdmErrorCode.ImpossibleAnnotationsTarget, Edm.Strings.CsdlSemantics_ImpossibleAnnotationsTarget(target)) });
             }
+        }
+
+        private bool TryResolveAsPathTarget(string target, string[] targetSegments, out IEdmVocabularyAnnotatable annotatableTarget)
+        {
+            // So far, ODL only supports property and navigation property path
+            annotatableTarget = null;
+            if (targetSegments.Length <= 1)
+            {
+                // a target path for an annotation at least has two segments. Right?
+                return false;
+            }
+
+            IEdmEntityContainer container = this.Model.EntityContainer;
+            // the path could be:
+            // "NS.Default.Customers/ContainedOrders"(It's old pattern, Let's not support this)
+            // "NS.Default/Customers/ContainedOrders" (for top-level entity set in the Default entity container) or
+            // "Customers/ContainedOrders" (unqualified)
+            string firstElementName = targetSegments[0];
+            int nextIndex = 1;
+            if (firstElementName.Contains("."))
+            {
+                container = this.Model.FindEntityContainer(firstElementName);
+                nextIndex = 2;
+                firstElementName = targetSegments[1];
+            }
+
+            if (container == null)
+            {
+                return false;
+            }
+
+            // Starting segment must be a singleton or entity set
+            IEdmNavigationSource navigationSource = container.FindEntitySet(firstElementName);
+            if (navigationSource == null)
+            {
+                navigationSource = container.FindSingleton(firstElementName);
+            }
+
+            if (navigationSource == null)
+            {
+                return false;
+            }
+
+            IEdmStructuredType currStructuredType = navigationSource.EntityType();
+            IEdmProperty lastProperty = null;
+            int lastIndex = targetSegments.Length - 1;
+            for (int i = nextIndex; i < targetSegments.Length; ++i)
+            {
+                string elementName = targetSegments[i];
+
+                if (elementName.Contains("."))
+                {
+                    // It should be a type cast
+                    IEdmStructuredType nextCastType = this.Model.FindType(elementName) as IEdmStructuredType;
+                    if (nextCastType == null || !nextCastType.IsOrInheritsFrom(currStructuredType))
+                    {
+                        return false;
+                    }
+
+                    currStructuredType = nextCastType;
+                }
+                else
+                {
+                    // It should be a property
+                    IEdmProperty property = currStructuredType.FindProperty(elementName);
+                    if (property == null)
+                    {
+                        return false;
+                    }
+
+                    IEdmTypeReference propertyType = property.Type;
+                    if (propertyType.IsCollection())
+                    {
+                        propertyType = propertyType.AsCollection().ElementType();
+                    }
+
+                    currStructuredType = propertyType as IEdmStructuredType;
+                    if (currStructuredType == null)
+                    {
+                        return false;
+                    }
+
+                    if (i == lastIndex)
+                    {
+                        lastProperty = property;
+                    }
+                }
+            }
+
+            if (lastProperty == null)
+            {
+                return false;
+            }
+
+            if (lastProperty.PropertyKind == EdmPropertyKind.Structural)
+            {
+                annotatableTarget = new EdmPropertyPathExpression(target);
+            }
+            else
+            {
+                annotatableTarget = new EdmNavigationPropertyPathExpression(target);
+            }
+
+            return true;
         }
 
         private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
