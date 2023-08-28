@@ -404,8 +404,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                 }
             }
 
-            Regex regex = new Regex("\\(.*?\\)");
-            string operationName = regex.Replace(targetSegments[level], string.Empty);
+            string operationName = targetSegments[level];
 
             IEdmOperationImport operationImport = FindParameterizedOperationImport(operationName, edmEntityContainer.FindOperationImportsExtended, this.CreateAmbiguousOperationImport);
             if (operationImport != null)
@@ -422,19 +421,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
             // Funky implementation below with the assumption that 3 parts and functions
 
-            //if (targetSegmentsCount - 1 > level)
-            //{
-            //    string qualifiedOperationName = edmEntityContainer.Name + "/" + targetSegments[level];
-            //    UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
-            //    if (targetSegments[level + 1] == CsdlConstants.OperationReturnExternalTarget)
-            //    {
-            //        return new UnresolvedReturn(unresolvedOperation, this.Location);
-            //    }
-            //    else
-            //    {
-            //        return new UnresolvedParameter(unresolvedOperation, targetSegments[level + 1], this.Location);
-            //    }
-            //}
+            if (targetSegmentsCount - 1 > level)
+            {
+                string qualifiedOperationName = edmEntityContainer.FullName() + "/" + targetSegments[level];
+                UnresolvedOperation unresolvedOperation = new UnresolvedOperation(qualifiedOperationName, Edm.Strings.Bad_UnresolvedOperation(qualifiedOperationName), this.Location);
+                if (targetSegments[level + 1] == CsdlConstants.OperationReturnExternalTarget)
+                {
+                    return new UnresolvedReturn(unresolvedOperation, this.Location);
+                }
+                else
+                {
+                    return new UnresolvedParameter(unresolvedOperation, targetSegments[level + 1], this.Location);
+                }
+            }
 
             return new UnresolvedEntitySet(targetSegments[level], edmEntityContainer, this.Location);
         }
