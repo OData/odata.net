@@ -378,8 +378,7 @@ namespace Microsoft.OData.Client.Tests
 
             public bool InstanceFunction(string parameter) { return true; }
 
-            [OriginalName("sale")]
-            [UriFunction]
+            [UriFunction, OriginalName("sale")]
             public int YearSale(int year) => throw new NotSupportedException();
 
             [UriFunction(true)]
@@ -391,12 +390,10 @@ namespace Microsoft.OData.Client.Tests
 
         private static class UriFunctions
         {
-            [OriginalName("now")]
-            [UriFunction]
+            [UriFunction, OriginalName("now")]
             public static DateTimeOffset ServerNow() => throw new NotSupportedException();
 
-            [OriginalName("date")]
-            [UriFunction]
+            [UriFunction, OriginalName("date")]
             public static Edm.Date ServerDate(DateTimeOffset value) => throw new NotSupportedException();
 
             [UriFunction(true)]
