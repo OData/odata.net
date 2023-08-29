@@ -251,6 +251,9 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             }
         }
 
+        /// <summary>
+        /// Test trimming the end of a path of it's key and type segments
+        /// </summary>
         [Fact]
         public void TrimEndingTypeAndKeySegments()
         {
