@@ -252,6 +252,50 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void TrimEndingTypeAndKeySegments()
+        {
+            var testCases = new[]
+            {
+                new {
+                    Url = "People",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People(1)",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People/Fully.Qualified.Namespace.Employee",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People(1)/Fully.Qualified.Namespace.Employee",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People/Fully.Qualified.Namespace.Employee/1",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People/Fully.Qualified.Namespace.Employee/1/MyAddress",
+                    Trimmed = "People/Fully.Qualified.Namespace.Employee/1/MyAddress"
+                },
+                new {
+                    Url = "People(1)/Fully.Qualified.Namespace.Employee/MyAddress",
+                    Trimmed = "People/1/Fully.Qualified.Namespace.Employee/MyAddress"
+                },
+            };
+
+            foreach (var testCase in testCases)
+            {
+                ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, testCase.Url));
+                ODataPath path = parser.ParsePath();
+                var result = path.TrimEndingTypeAndKeySegments();
+                Assert.Equal(testCase.Trimmed, result.ToResourcePathString(ODataUrlKeyDelimiter.Slash));
+            }
+        }
+
+        [Fact]
         public void TestIsIndividualProperty()
         {
             string[] trueCases = new string[]
