@@ -121,18 +121,18 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Asynchronous deep insert request.
+        /// Begins an asynchronous deep insert request.
         /// </summary>
         /// <typeparam name="T">The type of the top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
         internal void BeginDeepInsertRequest<T>(T resource)
         {
-            PerRequest pereq = null;
-
             if (resource == null)
             {
                 throw Error.ArgumentNull(nameof(resource));
             }
+
+            PerRequest peReq = null;
 
             BuildDescriptorGraph(this.ChangedEntries, true, resource);
 
@@ -144,17 +144,17 @@ namespace Microsoft.OData.Client
                 if (deepInsertRequestMessage != null)
                 {
                     deepInsertRequestMessage.SetContentLengthHeader();
-                    this.perRequest = pereq = new PerRequest();
-                    pereq.Request = deepInsertRequestMessage;
-                    pereq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
+                    this.perRequest = peReq = new PerRequest();
+                    peReq.Request = deepInsertRequestMessage;
+                    peReq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
 
-                    AsyncStateBag asyncStateBag = new AsyncStateBag(pereq);
+                    AsyncStateBag asyncStateBag = new AsyncStateBag(peReq);
 
                     this.responseStream = new MemoryStream();
 
                     IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
 
-                    pereq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
+                    peReq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
                 }
                 else
                 {
@@ -162,18 +162,18 @@ namespace Microsoft.OData.Client
 
                     if (this.CompletedSynchronously)
                     {
-                        this.HandleCompleted(pereq);
+                        this.HandleCompleted(peReq);
                     }
                 }
             }
             catch (Exception e)
             {
-                this.HandleFailure(pereq, e);
+                this.HandleFailure(peReq, e);
                 throw;
             }
             finally
             {
-                this.HandleCompleted(pereq);
+                this.HandleCompleted(peReq);
             }
 
             Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
@@ -330,16 +330,16 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Read and store response data for the current change</summary>
-        /// <param name="pereq">The completed per request object</param>
-        /// <remarks>This is called only from the async code paths, when the response to the batch has been read fully.</remarks>
-        protected override void FinishCurrentChange(PerRequest pereq)
+        /// <param name="pereq">The completed <see cref="BaseAsyncResult.PerRequest"/> object</param>
+        /// <remarks>This is called only from the async code paths, when the response to the deep insert request has been read fully.</remarks>
+        protected override void FinishCurrentChange(PerRequest peReq)
         {
-            base.FinishCurrentChange(pereq);
+            base.FinishCurrentChange(peReq);
 
             // This resets the position in the buffered response stream to the beginning
             // so that we can start reading the response.
             // In this case the ResponseStream is always a MemoryStream since we cache the async response.
-            this.ResponseStream.Position = 0;
+            this.responseStream.Position = 0;
             this.perRequest = null;
             this.SetCompleted();
         }

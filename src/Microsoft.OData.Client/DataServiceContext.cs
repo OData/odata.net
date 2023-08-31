@@ -2364,7 +2364,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
-        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation.</returns>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
         public virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource)
         {
             return this.DeepInsertAsync(resource, CancellationToken.None);
@@ -2375,7 +2375,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
         /// <param name="resource">The top-level object of the type to be deep inserted.</param>
-        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of a bulk operation.</returns>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
         public virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
         {
             return FromAsync((objectsArg, callback, state) => BeginDeepInsert(callback, state, objectsArg), EndDeepInsert, resource, cancellationToken);
@@ -2400,7 +2400,7 @@ namespace Microsoft.OData.Client
 
         /// <summary>Called to complete the <see cref="BeginDeepInsert{T}(AsyncCallback, object, T)"/>.</summary>
         /// <param name="asyncResult">An <see cref="IAsyncResult" /> that represents the status of the asynchronous operation.</param>
-        /// <returns>The DataServiceResponse object that holds the result of the bulk update operation.</returns>
+        /// <returns>The DataServiceResponse object that holds the result of the deep insert operation.</returns>
         public virtual DataServiceResponse EndDeepInsert(IAsyncResult asyncResult)
         {
             DeepInsertSaveResult result = BaseAsyncResult.EndExecute<DeepInsertSaveResult>(this, Util.DeepInsertMethodName, asyncResult);
