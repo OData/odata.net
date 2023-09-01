@@ -113,10 +113,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private readonly Serializer serializer;
         private readonly HeaderCollection headers;
         private readonly Person person;
-        private readonly Person personNoId;
+        private readonly Person personWithoutId;
         private readonly VipPerson vipPerson;
         private readonly Car car;
-        private readonly Car carNoId;
+        private readonly Car carWithoutId;
 
         public DeepInsertE2ETests()
         {
@@ -129,7 +129,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 ID = 100,
                 Name = "Person 100",
             };
-            this.personNoId = new Person
+            this.personWithoutId = new Person
             {
                 Name = "Person 100",
             };
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 ID = 1001,
                 Name = "Car 1001"
             };
-            this.carNoId = new Car
+            this.carWithoutId = new Car
             {
                 ID = 1001,
                 Name = "Car 1001"
@@ -231,9 +231,9 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
             SetupDataServiceContext(expectedResponse);
 
-            this.context.AddObject("Persons", this.personNoId);
-            this.context.AddRelatedObject(this.personNoId, "Cars", this.carNoId);
-            DataServiceResponse response = this.context.DeepInsert<Person>(this.personNoId);
+            this.context.AddObject("Persons", this.personWithoutId);
+            this.context.AddRelatedObject(this.personWithoutId, "Cars", this.carWithoutId);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.personWithoutId);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
@@ -256,9 +256,9 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
             SetupDataServiceContext(expectedResponse);
 
-            this.context.AddObject("Persons", this.personNoId);
-            this.context.AddRelatedObject(this.personNoId, "Cars", this.carNoId);
-            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.personNoId);
+            this.context.AddObject("Persons", this.personWithoutId);
+            this.context.AddRelatedObject(this.personWithoutId, "Cars", this.carWithoutId);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.personWithoutId);
 
             Assert.Single(response);
             Assert.Single(response.Single().NestedResponses);
