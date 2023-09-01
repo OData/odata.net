@@ -141,30 +141,18 @@ namespace Microsoft.OData.Client
                 ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
                 this.Abortable = deepInsertRequestMessage;
 
-                if (deepInsertRequestMessage != null)
-                {
-                    deepInsertRequestMessage.SetContentLengthHeader();
-                    this.perRequest = peReq = new PerRequest();
-                    peReq.Request = deepInsertRequestMessage;
-                    peReq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
+                deepInsertRequestMessage.SetContentLengthHeader();
+                this.perRequest = peReq = new PerRequest();
+                peReq.Request = deepInsertRequestMessage;
+                peReq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
 
-                    AsyncStateBag asyncStateBag = new AsyncStateBag(peReq);
+                AsyncStateBag asyncStateBag = new AsyncStateBag(peReq);
 
-                    this.responseStream = new MemoryStream();
+                this.responseStream = new MemoryStream();
 
-                    IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+                IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
 
-                    peReq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
-                }
-                else
-                {
-                    this.SetCompleted();
-
-                    if (this.CompletedSynchronously)
-                    {
-                        this.HandleCompleted(peReq);
-                    }
-                }
+                peReq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
             }
             catch (Exception e)
             {
@@ -330,7 +318,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>Read and store response data for the current change</summary>
-        /// <param name="pereq">The completed <see cref="BaseAsyncResult.PerRequest"/> object</param>
+        /// <param name="peReq">The completed <see cref="BaseAsyncResult.PerRequest"/> object</param>
         /// <remarks>This is called only from the async code paths, when the response to the deep insert request has been read fully.</remarks>
         protected override void FinishCurrentChange(PerRequest peReq)
         {
@@ -339,7 +327,10 @@ namespace Microsoft.OData.Client
             // This resets the position in the buffered response stream to the beginning
             // so that we can start reading the response.
             // In this case the ResponseStream is always a MemoryStream since we cache the async response.
-            this.responseStream.Position = 0;
+            if (this.responseStream.Position != 0)
+            {
+                this.responseStream.Position = 0;
+            }
             this.perRequest = null;
             this.SetCompleted();
         }
