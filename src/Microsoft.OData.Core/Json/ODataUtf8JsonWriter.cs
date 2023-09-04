@@ -260,7 +260,23 @@ namespace Microsoft.OData.Json
         public void WriteValue(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("NaN");
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("INF");
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("-INF");
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+            
             this.FlushIfBufferThresholdReached();
         }
 
@@ -661,7 +677,23 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("NaN");
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("INF");
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue("-INF");
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
