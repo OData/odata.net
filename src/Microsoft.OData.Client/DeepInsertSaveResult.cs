@@ -134,10 +134,9 @@ namespace Microsoft.OData.Client
 
             PerRequest peReq = null;
 
-            BuildDescriptorGraph(this.ChangedEntries, true, resource);
-
             try
             {
+                BuildDescriptorGraph(this.ChangedEntries, true, resource);
                 ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
                 this.Abortable = deepInsertRequestMessage;
 
@@ -331,6 +330,7 @@ namespace Microsoft.OData.Client
             {
                 this.responseStream.Position = 0;
             }
+
             this.perRequest = null;
             this.SetCompleted();
         }

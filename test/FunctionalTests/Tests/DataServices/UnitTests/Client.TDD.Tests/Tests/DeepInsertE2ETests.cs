@@ -178,6 +178,12 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public async Task CallingDeepInsertAsyncRequest_WithUntrackedEntity_ShouldThrowAnInvalidException()
+        {
+            Assert.Throws<InvalidOperationException>(delegate { this.context.DeepInsertAsync<Person>(this.person); });
+        }
+
+        [Fact]
         public void DeepInsertAnEntry_WithOneLevelOfNesting()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"}]}";
