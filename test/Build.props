@@ -30,6 +30,7 @@
     <ShouldGenerateVersionConstantsFile Condition="'$(ShouldGenerateVersionConstantsFile)' == ''">true</ShouldGenerateVersionConstantsFile>
   </PropertyGroup>
 
+  <Import Project="Build.Debug.props" Condition="'$(Configuration)' == 'Debug'"/>
   <Import Project="..\Build.props" />
   <Import Project="$(CustomBuildExtensionsPath)\Versioning.props" />
 
