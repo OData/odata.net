@@ -29,6 +29,9 @@ namespace Microsoft.OData.Json
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
         private readonly static ReadOnlyMemory<byte> itemSeparator = new byte[] { (byte)',' };
+        private readonly static ReadOnlyMemory<byte> nanValue = new byte[] { (byte)'N', (byte)'a', (byte)'N' };
+        private readonly static ReadOnlyMemory<byte> positiveInfinityValue = new byte[] { (byte)'I', (byte)'N', (byte)'F' };
+        private readonly static ReadOnlyMemory<byte> negativeInfinityValue = new byte[] { (byte)'-', (byte)'I', (byte)'N', (byte)'F' };
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
@@ -260,7 +263,23 @@ namespace Microsoft.OData.Json
         public void WriteValue(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+            
             this.FlushIfBufferThresholdReached();
         }
 
@@ -661,7 +680,23 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
