@@ -1,8 +1,0 @@
-$select = Microsoft.Test.Taupo.OData.WCFService.GetChild
-$expand = 
-
-
-SelectExpandQueryOption
-	AllSelected = False
-	SelectedItems
-		Path[(OpenProperty: Microsoft.Test.Taupo.OData.WCFService.GetChild)]

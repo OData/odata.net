@@ -1,1 +1,0 @@
-Path[(Singleton: SpecialOrder)/(Property: OrderDate)/($value)]
