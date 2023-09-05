@@ -2339,7 +2339,7 @@ namespace Microsoft.OData.Client
 
         #endregion
 
-        #region DeepInsert
+        #region DeepInsert, DeepInsertAsync, BeginDeepInsert, EndDeepInsert
 
         /// <summary>
         /// Processes deep insert requests. Creates a resource and its related resources or creates a resource and links it to its related existing resources in a single request.
@@ -2353,9 +2353,57 @@ namespace Microsoft.OData.Client
                 throw Error.ArgumentNull(nameof(resource));
             }
 
-            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.SaveChangesMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.DeepInsertMethodName, SaveChangesOptions.DeepInsert, callback: null, state: null);
             result.DeepInsertRequest(resource);
 
+            return result.EndRequest();
+        }
+
+        /// <summary>
+        /// Asynchronously processes a deep insert request.
+        /// </summary>
+        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
+        public virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource)
+        {
+            return this.DeepInsertAsync(resource, CancellationToken.None);
+        }
+
+        /// <summary>
+        /// Asynchronously processes a deep insert request.
+        /// </summary>
+        /// <typeparam name="T">The type of top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        /// <returns>A task representing the <see cref="DataServiceResponse"/> that holds the result of the deep insert operation.</returns>
+        public virtual Task<DataServiceResponse> DeepInsertAsync<T>(T resource, CancellationToken cancellationToken)
+        {
+            return FromAsync((objectsArg, callback, state) => BeginDeepInsert(callback, state, objectsArg), EndDeepInsert, resource, cancellationToken);
+        }
+
+        /// <summary>Asynchronously submits top-level objects to be deep inserted to the data service.</summary>
+        /// <param name="callback">The delegate that is called when a response to the deep insert request is received.</param>
+        /// <param name="state">User-defined state object that is used to pass context data to the callback method.</param>
+        /// <returns>An<see cref="IAsyncResult" /> object that is used to track the status of the asynchronous operation.</returns>
+        public virtual IAsyncResult BeginDeepInsert<T>(AsyncCallback callback, object state, T resource)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            DeepInsertSaveResult result = new DeepInsertSaveResult(this, Util.DeepInsertMethodName, SaveChangesOptions.DeepInsert, callback, state);
+            result.BeginDeepInsertRequest(resource);
+
+            return result;
+        }
+
+        /// <summary>Called to complete the <see cref="BeginDeepInsert{T}(AsyncCallback, object, T)"/>.</summary>
+        /// <param name="asyncResult">An <see cref="IAsyncResult" /> that represents the status of the asynchronous operation.</param>
+        /// <returns>The DataServiceResponse object that holds the result of the deep insert operation.</returns>
+        public virtual DataServiceResponse EndDeepInsert(IAsyncResult asyncResult)
+        {
+            DeepInsertSaveResult result = BaseAsyncResult.EndExecute<DeepInsertSaveResult>(this, Util.DeepInsertMethodName, asyncResult);
             return result.EndRequest();
         }
 

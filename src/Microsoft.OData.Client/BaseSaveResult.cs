@@ -495,7 +495,7 @@ namespace Microsoft.OData.Client
                 {
                     this.HandleOperationResponse(responseMessage);
 
-                    if (!Util.IsBulkUpdate(this.Options))
+                    if (!Util.IsBulkUpdate(this.Options) && !Util.IsDeepInsert(this.Options))
                     {
                         this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
                     }  

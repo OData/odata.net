@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -20,6 +21,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Handles the deep insert requests and responses (both sync and async).
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "The response stream is disposed by the message reader we create over it which we dispose inside the enumerator.")]
     internal class DeepInsertSaveResult : BaseSaveResult
     {
         #region Private Fields
@@ -116,6 +118,52 @@ namespace Microsoft.OData.Client
 
                 throw exception;
             }
+        }
+
+        /// <summary>
+        /// Begins an asynchronous deep insert request.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        internal void BeginDeepInsertRequest<T>(T resource)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            PerRequest peReq = null;
+
+            try
+            {
+                BuildDescriptorGraph(this.ChangedEntries, true, resource);
+                ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
+                this.Abortable = deepInsertRequestMessage;
+
+                deepInsertRequestMessage.SetContentLengthHeader();
+                this.perRequest = peReq = new PerRequest();
+                peReq.Request = deepInsertRequestMessage;
+                peReq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
+
+                AsyncStateBag asyncStateBag = new AsyncStateBag(peReq);
+
+                this.responseStream = new MemoryStream();
+
+                IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+
+                peReq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(peReq, e);
+                throw;
+            }
+            finally
+            {
+                this.HandleCompleted(peReq);
+            }
+
+            Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
         /// <summary>
@@ -266,6 +314,25 @@ namespace Microsoft.OData.Client
         protected override ODataRequestMessageWrapper CreateRequestMessage(string method, Uri requestUri, HeaderCollection headers, HttpStack httpStack, Descriptor descriptor, string contentId)
         {
             return this.CreateTopLevelRequest(method, requestUri, headers, httpStack, descriptor);
+        }
+
+        /// <summary>Read and store response data for the current change</summary>
+        /// <param name="peReq">The completed <see cref="BaseAsyncResult.PerRequest"/> object</param>
+        /// <remarks>This is called only from the async code paths, when the response to the deep insert request has been read fully.</remarks>
+        protected override void FinishCurrentChange(PerRequest peReq)
+        {
+            base.FinishCurrentChange(peReq);
+
+            // This resets the position in the buffered response stream to the beginning
+            // so that we can start reading the response.
+            // In this case the ResponseStream is always a MemoryStream since we cache the async response.
+            if (this.responseStream.Position != 0)
+            {
+                this.responseStream.Position = 0;
+            }
+
+            this.perRequest = null;
+            this.SetCompleted();
         }
 
         /// <summary>
