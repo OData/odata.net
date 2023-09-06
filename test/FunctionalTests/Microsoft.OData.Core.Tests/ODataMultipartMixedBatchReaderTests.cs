@@ -210,9 +210,34 @@ OData-Version: 4.0
         public void ReadMultipartMixedBatchRequestWthoutContentId()
         {
             var payload = Regex.Replace(batchRequestPayload, "Content-ID: .", "");
-            Assert.NotEqual(payload, batchRequestPayload);
+            Assert.DoesNotContain("Content-ID", payload);
+
+            var verifyResourceStack = new Stack<Action<ODataResource>>();
+            verifyResourceStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Order", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Amount", properties[1].Name);
+                Assert.Equal(13M, properties[1].Value);
+            });
+            verifyResourceStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Sue", properties[1].Value);
+            });
+
             SetupMultipartMixedBatchReaderAndRunTest(
-                batchRequestPayload,
+                payload,
                 (multipartMixedBatchReader) =>
                 {
                     var operationCount = 0;
@@ -223,6 +248,7 @@ OData-Version: 4.0
                         {
                             case ODataBatchReaderState.Operation:
                                 var operationRequestMessage = multipartMixedBatchReader.CreateOperationRequestMessage();
+                                operationCount++;
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
                                     if (operationCount == 3)
@@ -232,7 +258,17 @@ OData-Version: 4.0
                                     else
                                     {
                                         var jsonLightResourceReader = messageReader.CreateODataResourceReader();
-                                        while (jsonLightResourceReader.Read()) {}
+                                        while (jsonLightResourceReader.Read())
+                                        {
+                                            switch (jsonLightResourceReader.State)
+                                            {
+                                                case ODataReaderState.ResourceEnd:
+                                                    Assert.NotEmpty(verifyResourceStack);
+                                                    var innerVerifyResourceStack = verifyResourceStack.Pop();
+                                                    innerVerifyResourceStack(jsonLightResourceReader.Item as ODataResource);
+                                                    break;
+                                            }
+                                        }
                                     }
                                 }
                                 break;

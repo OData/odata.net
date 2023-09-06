@@ -35,7 +35,7 @@ namespace Microsoft.OData.MultipartMixed
 
         /// <summary>
         /// Require Content-Id header in changesets
-        /// If turned off allows to read OData 2.0 requests without Content-Id header present.
+        /// If turned off, it allows to reading OData 2.0 requests without Content-Id header present.
         /// </summary>
         private bool requireContentId = true;
 
@@ -46,6 +46,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
+        /// <param name="requireContentId">If turned off, it allows to reading OData 2.0 requests without Content-Id header present.</param>
         internal ODataMultipartMixedBatchReader(ODataMultipartMixedBatchInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous, bool requireContentId)
             : base(inputContext, synchronous)
         {
