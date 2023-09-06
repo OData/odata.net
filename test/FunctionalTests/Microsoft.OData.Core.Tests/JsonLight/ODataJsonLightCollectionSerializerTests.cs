@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.JsonLight
     public class ODataJsonLightCollectionSerializerTests
     {
         private EdmModel model;
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
         private EdmEntityType entityType;
 
@@ -230,6 +230,7 @@ namespace Microsoft.OData.Tests.JsonLight
         /// </summary>
         private async Task<string> SetupODataJsonLightCollectionSerializerAndRunTestAsync(Func<ODataJsonLightCollectionSerializer, Task> func, IServiceProvider container = null, bool writingTopLevelCollection = false)
         {
+            this.stream = new AsyncStream(this.stream);
             var jsonLightCollectionSerializer = CreateODataJsonLightCollectionSerializer(true, container, true, writingTopLevelCollection);
             await func(jsonLightCollectionSerializer);
             await jsonLightCollectionSerializer.JsonLightOutputContext.FlushAsync();

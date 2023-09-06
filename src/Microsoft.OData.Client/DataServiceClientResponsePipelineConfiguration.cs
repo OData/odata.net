@@ -41,6 +41,12 @@ namespace Microsoft.OData.Client
         /// <summary> The message reader setting configurations. </summary>
         private readonly List<Action<MessageReaderSettingsArgs>> messageReaderSettingsConfigurationActions;
 
+        /// <summary> Actions to be run when reading start delta feed called </summary>
+        private readonly List<Action<ReadingDeltaFeedArgs>> readingStartDeltaFeedActions;
+
+        /// <summary> Actions to be run when reading end delta feed called </summary>
+        private readonly List<Action<ReadingDeltaFeedArgs>> readingEndDeltaFeedActions;
+
         /// <summary> The sender. </summary>
         private readonly object sender;
 
@@ -64,6 +70,8 @@ namespace Microsoft.OData.Client
             this.materializedEntityActions = new List<Action<MaterializedEntityArgs>>();
 
             this.messageReaderSettingsConfigurationActions = new List<Action<MessageReaderSettingsArgs>>();
+            this.readingStartDeltaFeedActions = new List<Action<ReadingDeltaFeedArgs>>();
+            this.readingEndDeltaFeedActions = new List<Action<ReadingDeltaFeedArgs>>();
         }
 
         /// <summary>
@@ -81,7 +89,9 @@ namespace Microsoft.OData.Client
                     this.readingStartFeedActions.Count > 0 ||
                     this.readingEndFeedActions.Count > 0 ||
                     this.readingStartNestedResourceInfoActions.Count > 0 ||
-                    this.readingEndNestedResourceInfoActions.Count > 0;
+                    this.readingEndNestedResourceInfoActions.Count > 0 ||
+                    this.readingStartDeltaFeedActions.Count > 0 ||
+                    this.readingEndDeltaFeedActions.Count > 0 ;
             }
         }
 
@@ -163,6 +173,32 @@ namespace Microsoft.OData.Client
             WebUtil.CheckArgumentNull(action, "action");
 
             this.readingEndFeedActions.Add(action);
+            return this;
+        }
+
+        /// <summary>
+        /// Called when [read start delta feed].
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The response pipeline configuration.</returns>
+        public DataServiceClientResponsePipelineConfiguration OnDeltaFeedStarted(Action<ReadingDeltaFeedArgs> action)
+        {
+            WebUtil.CheckArgumentNull(action, "action");
+
+            this.readingStartDeltaFeedActions.Add(action);
+            return this;
+        }
+
+        /// <summary>
+        /// Called when [read end delta feed].
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <returns>The response pipeline configuration.</returns>
+        public DataServiceClientResponsePipelineConfiguration OnDeltaFeedEnded(Action<ReadingDeltaFeedArgs> action)
+        {
+            WebUtil.CheckArgumentNull(action, "action");
+
+            this.readingEndDeltaFeedActions.Add(action);
             return this;
         }
 
@@ -305,6 +341,42 @@ namespace Microsoft.OData.Client
                 foreach (Action<ReadingNestedResourceInfoArgs> navAction in this.readingEndNestedResourceInfoActions)
                 {
                     navAction(args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes the delta feed start actions.
+        /// </summary>
+        /// <param name="deltaFeed">The delta feed.</param>
+        internal void ExecuteOnDeltaFeedStartActions(ODataDeltaResourceSet deltaFeed)
+        {
+            Debug.Assert(deltaFeed != null, "deltaFeed != null");
+            if (this.readingStartDeltaFeedActions.Count > 0)
+            {
+                ReadingDeltaFeedArgs args = new ReadingDeltaFeedArgs(deltaFeed);
+                foreach (Action<ReadingDeltaFeedArgs> feedAction in this.readingStartDeltaFeedActions)
+                {
+                    feedAction(args);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Executes the delta feed end actions.
+        /// </summary>
+        /// <param name="deltaFeed">The delta feed.</param>
+        internal void ExecuteOnDeltaFeedEndActions(ODataDeltaResourceSet deltaFeed)
+        {
+            Debug.Assert(deltaFeed != null, "deltaFeed != null");
+
+            if (this.readingEndDeltaFeedActions.Count > 0)
+            {
+                ReadingDeltaFeedArgs args = new ReadingDeltaFeedArgs(deltaFeed);
+                
+                foreach (Action<ReadingDeltaFeedArgs> feedAction in this.readingEndDeltaFeedActions)
+                {
+                    feedAction(args);
                 }
             }
         }

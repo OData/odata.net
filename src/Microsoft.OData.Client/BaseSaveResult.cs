@@ -494,7 +494,11 @@ namespace Microsoft.OData.Client
                 if (!this.IsBatchRequest)
                 {
                     this.HandleOperationResponse(responseMessage);
-                    this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
+
+                    if (!Util.IsBulkUpdate(this.Options) && !Util.IsDeepInsert(this.Options))
+                    {
+                        this.HandleOperationResponseHeaders((HttpStatusCode)responseMessage.StatusCode, new HeaderCollection(responseMessage));
+                    }  
                 }
 
                 Util.DebugInjectFault("SaveAsyncResult::AsyncEndGetResponse_BeforeGetStream");
@@ -811,12 +815,19 @@ namespace Microsoft.OData.Client
 
         /// <summary>flag results as being processed</summary>
         /// <param name="descriptor">result descriptor being processed</param>
+        /// <param name="failedOperationInBulkOps">true if processing a failed operation in a bulk operation, otherwise false.</param>
         /// <returns>count of related links that were also processed</returns>
-        protected int SaveResultProcessed(Descriptor descriptor)
+        protected int SaveResultProcessed(Descriptor descriptor, bool failedOperationInBulkOps = false)
         {
             // media links will be processed twice
+            // If we get a failed operation in a bulk operation then we don't make updates to the descriptor.
             descriptor.SaveResultWasProcessed = descriptor.State;
 
+            if (failedOperationInBulkOps)
+            {
+                descriptor.SaveResultWasProcessed = EntityStates.Unchanged;
+            }
+            
             int count = 0;
             if (descriptor.DescriptorKind == DescriptorKind.Entity && (EntityStates.Added == descriptor.State))
             {

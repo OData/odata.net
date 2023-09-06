@@ -401,6 +401,50 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "SetRelatedObject method only works when the sourceProperty is not a collection."
+        /// </summary>
+        internal static string Context_SetRelatedObjectNonCollectionOnly
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectNonCollectionOnly);
+            }
+        }
+
+        /// <summary>
+        /// A string like "SetRelatedObject method only works if the source entity is in a non-deleted state."
+        /// </summary>
+        internal static string Context_SetRelatedObjectSourceDeleted
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectSourceDeleted);
+            }
+        }
+
+        /// <summary>
+        /// A string like "SetRelatedObjectLink method only works when the sourceProperty is not a collection."
+        /// </summary>
+        internal static string Context_SetRelatedObjectLinkNonCollectionOnly
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectLinkNonCollectionOnly);
+            }
+        }
+
+        /// <summary>
+        /// A string like "SetRelatedObjectLink method only works if the source entity is in a non-deleted state."
+        /// </summary>
+        internal static string Context_SetRelatedObjectLinkSourceDeleted
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_SetRelatedObjectLinkSourceDeleted);
+            }
+        }
+
+        /// <summary>
         /// A string like "Media link object of type '{0}' is configured to use the MIME type specified in the property '{1}'. However, that property's value is null or empty."
         /// </summary>
         internal static string Context_NoContentTypeForMediaLink(object p0, object p1)
@@ -728,6 +772,25 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
+        /// A string like "Deep insert can only have one top level entity."
+        /// </summary>
+        internal static string Context_DeepInsertOneTopLevelEntity
+        {
+            get
+            {
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertOneTopLevelEntity);
+            }
+        }
+
+        /// <summary>
+        /// A string like "For deep insert, ChangeState for '{0}' cannot be Deleted or Modified."
+        /// </summary>
+        internal static string Context_DeepInsertDeletedOrModified(object p0)
+        {
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Context_DeepInsertDeletedOrModified, p0);
+        }
+
+        /// <summary>
         /// A string like "When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance."
         /// </summary>
         internal static string DataServiceClientFormat_LoadServiceModelRequired
@@ -902,9 +965,9 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "The property '{0}' is of entity type and it cannot be a property of the type '{1}', which is not of entity type.  Only entity types can contain navigation properties."
         /// </summary>
-        internal static string ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties(object p0, object p1)
+        internal static string ClientTypeCache_NonEntityTypeCannotContainEntityProperties(object p0, object p1)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeOrNonComplexTypeCannotContainEntityProperties, p0, p1);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ClientTypeCache_NonEntityTypeCannotContainEntityProperties, p0, p1);
         }
 
         /// <summary>

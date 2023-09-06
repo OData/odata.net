@@ -2,7 +2,7 @@
 
 ## Prerequisites
 * Administrator account on NuGet
-    1. Log into your nuget.org account and link it to your AAD account by signing in with your Microsoft work account.
+    1. Log into your nuget.org account and link it to your Entra ID account by signing in with your Microsoft work account.
     2. Ask someone from the team to add you as an administrator on NuGet. You will need to accept this request once it is sent to you via email.
 * NuGet Package Explorer
     1. Download [NuGet Package Explorer](https://apps.microsoft.com/store/detail/nuget-package-explorer/9WZDNCRDMDM3) from the Windows store.

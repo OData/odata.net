@@ -10,12 +10,11 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
+    using DSClient = Microsoft.OData.Client;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Edm;
-    using DSClient = Microsoft.OData.Client;
 
     /// <summary>
     /// Use this class to materialize objects provided from an <see cref="ODataMessageReader"/>.
@@ -46,6 +45,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>The converter to use when assigning values of primitive properties. </summary>
         private DSClient.SimpleLazy<PrimitivePropertyConverter> lazyPrimitivePropertyConverter;
 
+        /// <summary>Whether to include navigation properties when materializing an entry.</summary>
+        private bool includeLinks;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="ODataMaterializer" /> class.
         /// </summary>
@@ -65,6 +67,7 @@ namespace Microsoft.OData.Client.Materialization
             this.collectionValueMaterializationPolicy.InstanceAnnotationMaterializationPolicy = this.instanceAnnotationMaterializationPolicy;
             this.instanceAnnotationMaterializationPolicy.CollectionValueMaterializationPolicy = this.collectionValueMaterializationPolicy;
             this.instanceAnnotationMaterializationPolicy.EnumValueMaterializationPolicy = this.enumValueMaterializationPolicy;
+            this.includeLinks = this.MaterializerContext.IncludeLinks;
         }
 
         /// <summary>Current value being materialized; possibly null.</summary>
@@ -77,6 +80,9 @@ namespace Microsoft.OData.Client.Materialization
 
         /// <summary>Feed being materialized; possibly null.</summary>
         internal abstract ODataResourceSet CurrentFeed { get; }
+
+        /// <summary>OData delta resource set being materialized; possibly null.</summary>
+        internal abstract ODataDeltaResourceSet CurrentDeltaFeed { get; }
 
         /// <summary>Entry being materialized; possibly null.</summary>
         internal abstract ODataResource CurrentEntry { get; }
@@ -96,6 +102,14 @@ namespace Microsoft.OData.Client.Materialization
         internal virtual bool IsCountable
         {
             get { return false; }
+        }
+
+        /// <summary>
+        /// Returns true if we should include navigation properties when materializing an entry.
+        /// </summary>
+        internal bool IncludeLinks
+        {
+            get { return includeLinks; }
         }
 
         /// <summary>
@@ -349,6 +363,13 @@ namespace Microsoft.OData.Client.Materialization
         protected static ODataMessageReader CreateODataMessageReader(IODataResponseMessage responseMessage, ResponseInfo responseInfo, ref ODataPayloadKind payloadKind)
         {
             ODataMessageReaderSettings settings = responseInfo.ReadHelper.CreateSettings();
+
+            // We use v4.01 to read all payloads. This is backwards compatible with v4.0
+            settings.Version = ODataVersion.V401;
+            settings.ShouldIncludeAnnotation = (annotation) =>
+            {
+                return true;
+            };
 
             ODataMessageReader odataMessageReader = responseInfo.ReadHelper.CreateReader(responseMessage, settings);
 

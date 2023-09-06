@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private ODataJsonLightOutputContext V4RequestOutputContext;
         private ODataJsonLightOutputContext V401ResponseOutputContext;
         private ODataJsonLightOutputContext V401RequestOutputContext;
-        private MemoryStream stream;
+        private Stream stream;
         private EdmModel myModel;
 
         #region Entities
@@ -3061,7 +3061,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return (new StreamReader(stream)).ReadToEnd();
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4, bool isResponse = true, bool isAsync = false)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4, bool isResponse = true, bool isAsync = false)
         {
             var settings = new ODataMessageWriterSettings { Version = version, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
@@ -3117,7 +3117,7 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataVersion odataVersion = ODataVersion.V4,
             bool writingRequest = false)
         {
-            this.stream = new MemoryStream();
+            this.stream = new AsyncStream(new MemoryStream());
             var jsonLightOutputContext = CreateJsonLightOutputContext(
                     this.stream,
                     this.GetModel(),

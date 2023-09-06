@@ -39,6 +39,9 @@ namespace Microsoft.OData.Service
         /// <summary>'OData-Version' - HTTP header name for OData version.</summary>
         internal const string HttpODataVersion = "OData-Version";
 
+        /// <summary>'4.0' - the version 4.0 text for a data service.'</summary>
+        internal const string ODataVersion401 = "4.01";
+
         /// <summary>'OData-MaxVersion' - HTTP header name for maximum understood OData version.</summary>
         internal const string HttpODataMaxVersion = "OData-MaxVersion";
 
@@ -333,6 +336,9 @@ namespace Microsoft.OData.Service
 
         /// <summary>the type of the containing object or targeted property if the type of the object or targeted property cannot be heuristically determined.</summary>
         internal const string ODataType = "@odata.type";
+
+        /// <summary>Instance annotation used to mark a failed modification operation within a bulk payload.</summary>
+        internal const string DataModificationException = "Core.DataModificationException";
 
         #endregion OData constants
 

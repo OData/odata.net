@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -173,6 +174,10 @@ namespace ExperimentsLib
         {
         }
 
+        public void WriteValue(JsonElement value)
+        {
+        }
+
         public Task WriteValueAsync(bool value)
         {
             return Task.CompletedTask;
@@ -249,6 +254,11 @@ namespace ExperimentsLib
         }
 
         public Task WriteValueAsync(TimeOfDay value)
+        {
+            return Task.CompletedTask;
+        }
+
+        public Task WriteValueAsync(JsonElement value)
         {
             return Task.CompletedTask;
         }

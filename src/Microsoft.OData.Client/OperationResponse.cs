@@ -24,6 +24,9 @@ namespace Microsoft.OData.Client
         /// <summary>exception to throw during get results</summary>
         private Exception innerException;
 
+        /// <summary>The nested operation response for nested operations in a bulk update.</summary>
+        private List<OperationResponse> nestedResponses;
+
         /// <summary>
         /// constructor
         /// </summary>
@@ -68,6 +71,24 @@ namespace Microsoft.OData.Client
         internal HeaderCollection HeaderCollection
         {
             get { return this.headers; }
+        }
+
+        /// <summary>Nested operation responses for nested operations in bulk update.</summary>
+        internal List<OperationResponse> NestedResponses 
+        { 
+            get 
+            {
+                if (this.nestedResponses == null)
+                {
+                    this.nestedResponses = new List<OperationResponse>();
+                }
+
+                return this.nestedResponses; 
+            }
+            set 
+            { 
+                this.nestedResponses = value; 
+            }
         }
     }
 }

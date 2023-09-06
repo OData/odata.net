@@ -788,6 +788,25 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
+        /// Writes a substring starting at a specified position on the string to the buffer.
+        /// This method is intended for use in async methods, where you cannot pass ref parameters.
+        /// </summary>
+        /// <param name="inputString">Input string value.</param>
+        /// <param name="currentIndex">The index in the string at which the substring begins.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferIndex">Current position in the buffer after the substring has been written.</param>
+        /// <param name="substrLength">The length of the substring to be copied.</param>
+        private static void WriteSubstringToBuffer(string inputString, Ref<int> currentIndex, char[] buffer, Ref<int> bufferIndex, int substrLength)
+        {
+            Debug.Assert(inputString != null, "inputString != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            inputString.CopyTo(currentIndex.Value, buffer, 0, substrLength);
+            bufferIndex.Value = substrLength;
+            currentIndex.Value += substrLength;
+        }
+
+        /// <summary>
         /// Writes an escaped string to the buffer.
         /// </summary>
         /// <param name="writer">The text writer to write the output to.</param>

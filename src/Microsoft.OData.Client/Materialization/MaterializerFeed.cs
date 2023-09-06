@@ -16,13 +16,16 @@ namespace Microsoft.OData.Client.Materialization
     /// <summary>
     /// Materializer state for a given ODataResourceSet
     /// </summary>
-    internal struct MaterializerFeed
+    internal struct MaterializerFeed : IMaterializerState
     {
         /// <summary>The feed.</summary>
         private readonly ODataResourceSet feed;
 
         /// <summary>The entries.</summary>
         private readonly IEnumerable<ODataResource> entries;
+
+        /// <summary>The items.</summary>
+        private readonly List<IMaterializerState> items;
 
         /// <summary>
         /// Prevents a default instance of the <see cref="MaterializerFeed"/> struct from being created.
@@ -36,6 +39,7 @@ namespace Microsoft.OData.Client.Materialization
 
             this.feed = feed;
             this.entries = entries;
+            this.items = new List<IMaterializerState>();
         }
 
         /// <summary>
@@ -60,6 +64,23 @@ namespace Microsoft.OData.Client.Materialization
         public Uri NextPageLink
         {
             get { return this.feed.NextPageLink; }
+        }
+
+        /// <summary>
+        /// Gets the items.
+        /// </summary>
+        public List<IMaterializerState> Items
+        {
+            get { return this.items; }
+        }
+
+        /// <summary>
+        /// Adds an <see cref="IMaterializerState"/> item to the items collection.
+        /// </summary>
+        /// <param name="item">The <see cref="IMaterializerState"/> item to be added.</param>
+        public void AddItem(IMaterializerState item)
+        {
+            this.items.Add(item);
         }
 
         /// <summary>

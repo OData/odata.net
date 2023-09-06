@@ -379,6 +379,30 @@ namespace Microsoft.OData.Json
             return this.writer.FlushAsync();
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        public async ValueTask DisposeAsync()
+        {
+            if (this.ArrayPool != null && this.wrappedBuffer.Value != null)
+            {
+                BufferUtils.ReturnToBuffer(this.ArrayPool, this.wrappedBuffer.Value);
+                this.ArrayPool = null;
+                this.wrappedBuffer.Value = null;
+            }
+
+            if (this.binaryValueStream != null)
+            {
+                try
+                {
+                    await this.binaryValueStream.DisposeAsync().ConfigureAwait(false);
+                }
+                finally
+                {
+                    this.binaryValueStream = null;
+                }
+            }
+        }
+#endif
+
         /// <inheritdoc/>
         public async Task<Stream> StartStreamValueScopeAsync()
         {
@@ -399,7 +423,11 @@ namespace Microsoft.OData.Json
         public async Task EndStreamValueScopeAsync()
         {
             await this.binaryValueStream.FlushAsync().ConfigureAwait(false);
+#if NETCOREAPP3_1_OR_GREATER
+            await this.binaryValueStream.DisposeAsync().ConfigureAwait(false);
+#else
             this.binaryValueStream.Dispose();
+#endif
             this.binaryValueStream = null;
             await this.writer.FlushAsync().ConfigureAwait(false);
             await this.writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);

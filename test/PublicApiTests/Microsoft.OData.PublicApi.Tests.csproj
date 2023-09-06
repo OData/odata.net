@@ -8,6 +8,8 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
+  <Import Project="..\Build.props"/>
+  
   <ItemGroup>
     <None Remove="BaseLine\Microsoft.OData.PublicApi.net45.bsl" />
     <None Remove="BaseLine\Microsoft.OData.PublicApi.netstandard1.1.bsl" />

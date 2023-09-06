@@ -7925,6 +7925,7 @@ public enum Microsoft.OData.Client.SaveChangesOptions : int {
     BatchWithSingleChangeset = 1
     BulkUpdate = 128
     ContinueOnError = 2
+    DeepInsert = 256
     None = 0
     PostOnlySetProperties = 8
     ReplaceOnUpdate = 4
@@ -8127,6 +8128,8 @@ public class Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguratio
 }
 
 public class Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration {
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnDeltaFeedEnded (System.Action`1[[Microsoft.OData.Client.ReadingDeltaFeedArgs]] action)
+    public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnDeltaFeedStarted (System.Action`1[[Microsoft.OData.Client.ReadingDeltaFeedArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntityMaterialized (System.Action`1[[Microsoft.OData.Client.MaterializedEntityArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryEnded (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
     public Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration OnEntryStarted (System.Action`1[[Microsoft.OData.Client.ReadingEntryArgs]] action)
@@ -8208,6 +8211,8 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual void AttachLink (object source, string sourceProperty, object target)
     public virtual void AttachTo (string entitySetName, object entity)
     public virtual void AttachTo (string entitySetName, object entity, string etag)
+    internal virtual System.IAsyncResult BeginBulkUpdate (System.AsyncCallback callback, object state, T[] objects)
+    public virtual System.IAsyncResult BeginDeepInsert (System.AsyncCallback callback, object state, T resource)
     public virtual System.IAsyncResult BeginExecute (DataServiceQueryContinuation`1 continuation, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
@@ -8222,7 +8227,9 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.IAsyncResult BeginLoadProperty (object entity, string propertyName, System.Uri nextLinkUri, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginSaveChanges (Microsoft.OData.Client.SaveChangesOptions options, System.AsyncCallback callback, object state)
-    internal virtual void BulkUpdate (T[] objects)
+    public virtual Microsoft.OData.Client.DataServiceResponse BulkUpdate (T[] objects)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] BulkUpdateAsync (T[] objects)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] BulkUpdateAsync (System.Threading.CancellationToken cancellationToken, T[] objects)
     public virtual void CancelRequest (System.IAsyncResult asyncResult)
     public virtual void ChangeState (object entity, Microsoft.OData.Client.EntityStates state)
     public virtual DataServiceQuery`1 CreateFunctionQuery ()
@@ -8231,12 +8238,17 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
+    public virtual Microsoft.OData.Client.DataServiceResponse DeepInsert (T resource)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource, System.Threading.CancellationToken cancellationToken)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
     public virtual void DeleteObject (object entity, object[] dependsOnObjects)
     public virtual bool Detach (object entity)
     public virtual bool DetachLink (object source, string sourceProperty, object target)
+    internal virtual Microsoft.OData.Client.DataServiceResponse EndBulkUpdate (System.IAsyncResult asyncResult)
+    public virtual Microsoft.OData.Client.DataServiceResponse EndDeepInsert (System.IAsyncResult asyncResult)
     public virtual Microsoft.OData.Client.OperationResponse EndExecute (System.IAsyncResult asyncResult)
     public virtual IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
     public virtual Microsoft.OData.Client.DataServiceResponse EndExecuteBatch (System.IAsyncResult asyncResult)
@@ -8296,6 +8308,8 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (System.Threading.CancellationToken cancellationToken)
     public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] SaveChangesAsync (Microsoft.OData.Client.SaveChangesOptions options, System.Threading.CancellationToken cancellationToken)
     public virtual void SetLink (object source, string sourceProperty, object target)
+    public virtual void SetRelatedObject (object source, string sourceProperty, object target)
+    public virtual void SetRelatedObjectLink (object source, string sourceProperty, object target)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
     public virtual void SetSaveStream (object entity, System.IO.Stream stream, bool closeStream, string contentType, string slug)
     public virtual void SetSaveStream (object entity, string name, System.IO.Stream stream, bool closeStream, Microsoft.OData.Client.DataServiceRequestArgs args)
@@ -8862,6 +8876,12 @@ public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.
 
     public DataServiceQueryContinuation`1 GetContinuation ()
     public virtual IEnumerator`1 GetEnumerator ()
+}
+
+public sealed class Microsoft.OData.Client.ReadingDeltaFeedArgs {
+    public ReadingDeltaFeedArgs (Microsoft.OData.ODataDeltaResourceSet deltaFeed)
+
+    Microsoft.OData.ODataDeltaResourceSet DeltaFeed  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.ReadingEntryArgs {

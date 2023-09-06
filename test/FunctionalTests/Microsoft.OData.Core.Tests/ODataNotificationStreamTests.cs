@@ -13,7 +13,7 @@ namespace Microsoft.OData.Tests
 {
     public class ODataNotificationStreamTests
     {
-        private MemoryStream stream;
+        private Stream stream;
         private TextWriter writer;
         private IODataStreamListener streamListener;
 
@@ -68,6 +68,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
+            this.stream = new AsyncStream(this.stream);
             await using (Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener)) // `synchronous` argument becomes irrelevant
@@ -82,6 +83,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public async Task NotificationStreamDisposeAsyncShouldBeIdempotentAsync()
         {
+            this.stream = new AsyncStream(this.stream);
             Stream notificationStream = new ODataNotificationStream(
                 this.stream,
                 this.streamListener);

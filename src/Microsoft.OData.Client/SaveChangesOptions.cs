@@ -50,6 +50,11 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// A bulk update operation.
         /// </summary>
-        BulkUpdate = 128
+        BulkUpdate = 128,
+
+        /// <summary>
+        /// A deep insert operation.
+        /// </summary>
+        DeepInsert = 256
     }
 }

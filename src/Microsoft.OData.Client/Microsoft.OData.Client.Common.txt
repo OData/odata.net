@@ -47,6 +47,10 @@ Context_AddRelatedObjectCollectionOnly=AddRelatedObject method only works when t
 Context_AddRelatedObjectSourceDeleted=AddRelatedObject method only works if the source entity is in a non-deleted state.
 Context_UpdateRelatedObjectNonCollectionOnly=UpdateRelatedObject method only works when the sourceProperty is not collection.
 Context_SetLinkReferenceOnly=SetLink method only works when the sourceProperty is not a collection.
+Context_SetRelatedObjectNonCollectionOnly=SetRelatedObject method only works when the sourceProperty is not a collection.
+Context_SetRelatedObjectSourceDeleted=SetRelatedObject method only works if the source entity is in a non-deleted state.
+Context_SetRelatedObjectLinkNonCollectionOnly=SetRelatedObjectLink method only works when the sourceProperty is not a collection.
+Context_SetRelatedObjectLinkSourceDeleted=SetRelatedObjectLink method only works if the source entity is in a non-deleted state.
 
 Context_NoContentTypeForMediaLink=Media link object of type '{0}' is configured to use the MIME type specified in the property '{1}'. However, that property's value is null or empty.
 Context_BatchNotSupportedForMediaLink=Saving entities with the [MediaEntry] attribute is not currently supported in batch mode. Use non-batched mode instead.
@@ -82,7 +86,9 @@ Context_OnMessageCreatingReturningNull=DataServiceContext.Configurations.Request
 Context_SendingRequest_InvalidWhenUsingOnMessageCreating=SendingRequest cannot be used in combination with the DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property. Please use SendingRequest2 with DataServiceContext.Configurations.RequestPipeline.OnMessageCreating property instead.
 Context_MustBeUsedWith='{0}' must be used with '{1}'.
 Context_EntityMediaLinksNotTrackedInEntity=The context is currently in no tracking mode, in order to use streams make sure your entities extend BaseEntityType and query the Item again from the server to populate the read link or enable tracking.
-Context_EntityInNonTrackedContextLacksMediaLinks=The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType. 
+Context_EntityInNonTrackedContextLacksMediaLinks=The context is in non tracking mode, The entity does not seem to have the media links populated properly. Please verify server response is correct and that the entity extends BaseEntityType.
+Context_DeepInsertOneTopLevelEntity=Deep insert can only have one top level entity.
+Context_DeepInsertDeletedOrModified=For deep insert, ChangeState for '{0}' cannot be Deleted or Modified.
 
 DataServiceClientFormat_LoadServiceModelRequired=When you call the UseJson method without a parameter, you must use the LoadServiceModel property to provide a valid IEdmModel instance.
 DataServiceClientFormat_ValidServiceModelRequiredForJson=To use the JSON format, you must first call DataServiceContext.Format.UseJson() and supply a valid service model.

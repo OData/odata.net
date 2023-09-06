@@ -104,7 +104,8 @@ namespace Microsoft.OData.Client
         /// <param name="elementType">result type.</param>
         /// <param name="format">The format of the response being materialized from.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache)
+        /// <param name="includeLinks">Whether to include navigation properties when materializing an entry.</param>
+        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache, bool includeLinks = true)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -113,7 +114,7 @@ namespace Microsoft.OData.Client
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
             QueryComponents qc = new QueryComponents(null, Util.ODataVersionEmpty, elementType, null, null);
-            ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, materializerCache);
+            ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, materializerCache, includeLinks);
             EntityTrackingAdapter entityTrackingAdapter = new EntityTrackingAdapter(responseInfo.EntityTracker, responseInfo.MergeOption, responseInfo.Model, responseInfo.Context, materializerContext);
             this.materializer = new ODataEntriesEntityMaterializer(entries, materializerContext, entityTrackingAdapter, qc, materializerType, null, format);
         }

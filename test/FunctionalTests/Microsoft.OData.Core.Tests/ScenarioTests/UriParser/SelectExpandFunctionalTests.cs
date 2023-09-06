@@ -794,6 +794,59 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(ODataErrorStrings.UriParser_ExpandCountExceeded(2, 1));
         }
 
+        [Theory]
+        [InlineData("NS.Models.Menu", "NS.Models.ExtendedMenu/Panels")]
+        [InlineData("NS.Models.ExtendedMenu", "Panels")]
+        public void ExpectedNavigationSourceIsResolvedForExpandedNonContainedNavigationPropertyDeclaredOnDerivedType(string targetEdmType, string expand)
+        {
+            // Arrange
+            var model = new EdmModel();
+
+            var menuType = new EdmEntityType("NS.Models", "Menu");
+            menuType.AddKeys(menuType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            var panelType = new EdmEntityType("NS.Models", "Panel");
+            panelType.AddKeys(panelType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+
+            var extendedMenuType = new EdmEntityType("NS.Models", "ExtendedMenu", menuType);
+            var extendedPanelType = new EdmEntityType("NS.Models", "ExtendedPanel", panelType);
+
+            model.AddElement(menuType);
+            model.AddElement(panelType);
+            model.AddElement(extendedMenuType);
+            model.AddElement(extendedPanelType);
+
+            var panelsNavigationProperty = extendedMenuType.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo
+                {
+                    Name = "Panels",
+                    Target = panelType,
+                    TargetMultiplicity = EdmMultiplicity.Many
+                });
+
+            var entityContainer = model.AddEntityContainer("Default", "Container");
+
+            var menusEntitySet = entityContainer.AddEntitySet("Menus", menuType);
+            var panelsEntitySet = entityContainer.AddEntitySet("Panels", panelType);
+
+            menusEntitySet.AddNavigationTarget(panelsNavigationProperty, panelsEntitySet);
+
+            var queryOptionsParser = new ODataQueryOptionParser(
+                model: model,
+                targetEdmType: model.FindDeclaredType(targetEdmType),
+                targetNavigationSource: menusEntitySet,
+                queryOptions: new Dictionary<string, string> { { "$expand", expand } },
+                null);
+
+            // Act
+            var selectAndExpand = queryOptionsParser.ParseSelectAndExpand();
+
+            // Assert
+            Assert.NotNull(selectAndExpand);
+            var selectedItem = Assert.Single(selectAndExpand.SelectedItems);
+            var expandedNavigationSelectItem = Assert.IsType<ExpandedNavigationSelectItem>(selectedItem);
+            Assert.Equal(expandedNavigationSelectItem.NavigationSource, panelsEntitySet);
+        }
+
         #endregion
 
         #region Interesting $expand with other options scenarios

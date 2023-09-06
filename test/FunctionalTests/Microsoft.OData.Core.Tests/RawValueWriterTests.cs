@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests
     ///</summary>
     public class RawValueWriterTests
     {
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
 
         public RawValueWriterTests()
@@ -224,6 +224,7 @@ namespace Microsoft.OData.Tests
 
         private async Task<string> SetupRawValueWriterAndRunTestAsync(Func<RawValueWriter, Task> func)
         {
+            this.stream = new AsyncStream(this.stream);
             var rawValueWriter = new RawValueWriter(this.settings, this.stream, new UTF32Encoding());
 
             await func(rawValueWriter);

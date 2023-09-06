@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             bool result = false;
-            MaterializerNavigationLink atomProperty = default(MaterializerNavigationLink);
+            MaterializerNestedEntry atomProperty = default(MaterializerNestedEntry);
             IEnumerable<ODataNestedResourceInfo> properties = entry.NestedResourceInfos;
             ClientEdmModel model = entry.EntityDescriptor.Model;
             for (int i = 0; i < path.Count; i++)
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Client.Materialization
                 IEdmType expectedEdmType = model.GetOrCreateEdmType(expectedType);
                 ClientPropertyAnnotation property = model.GetClientTypeAnnotation(expectedEdmType).GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
                 atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(properties, propertyName, materializerContext);
-                EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.Link);
+                EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.NestedResourceInfo);
                 if (atomProperty.Feed != null)
                 {
                     Debug.Assert(segmentIsLeaf, "segmentIsLeaf -- otherwise the path generated traverses a feed, which should be disallowed");
@@ -330,7 +330,7 @@ namespace Microsoft.OData.Client.Materialization
             ClientEdmModel edmModel = materializer.MaterializerContext.Model;
             ClientTypeAnnotation entryType = entry.ActualType ?? edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(expectedType));
             IEnumerable list = (IEnumerable)Util.ActivatorCreateInstance(typeof(List<>).MakeGenericType(resultType));
-            MaterializerNavigationLink atomProperty = default(MaterializerNavigationLink);
+            MaterializerNestedEntry atomProperty = default(MaterializerNestedEntry);
             ClientPropertyAnnotation property = null;
             for (int i = 0; i < path.Count; i++)
             {
@@ -359,7 +359,7 @@ namespace Microsoft.OData.Client.Materialization
                 }
             }
 
-            EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.Link);
+            EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.NestedResourceInfo);
             MaterializerFeed sourceFeed = MaterializerFeed.GetFeed(atomProperty.Feed, materializer.MaterializerContext);
             Debug.Assert(
                 sourceFeed.Feed != null,
@@ -397,8 +397,9 @@ namespace Microsoft.OData.Client.Materialization
 
             // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
             // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-            MaterializerNavigationLink property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, name, materializerContext);
+            MaterializerNestedEntry property = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, name, materializerContext);
             MaterializerEntry result = property.Entry;
+
             if (result == null)
             {
                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
@@ -569,7 +570,8 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The materialized instance.</returns>
         internal static object DirectMaterializePlan(ODataEntityMaterializer materializer, MaterializerEntry entry, Type expectedEntryType)
         {
-            materializer.entryValueMaterializationPolicy.Materialize(entry, expectedEntryType, true);
+            materializer.entryValueMaterializationPolicy.Materialize(entry, expectedEntryType, materializer.IncludeLinks);
+
             return entry.ResolvedObject;
         }
 
@@ -679,7 +681,7 @@ namespace Microsoft.OData.Client.Materialization
                     {
                         EntryValueMaterializationPolicy.ValidatePropertyMatch(property, link);
 
-                        MaterializerNavigationLink linkState = MaterializerNavigationLink.GetLink(link, this.MaterializerContext);
+                        MaterializerNestedEntry linkState = MaterializerNestedEntry.GetNestedEntry(link, this.MaterializerContext);
 
                         if (linkState.Feed != null)
                         {
@@ -1038,7 +1040,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="links">List to get value from.</param>
         /// <param name="propertyName">Property name to look up.</param>
         /// <returns>The specified property (never null).</returns>
-        private static MaterializerNavigationLink GetPropertyOrThrow(IEnumerable<ODataNestedResourceInfo> links, string propertyName, IODataMaterializerContext materializerContext)
+        private static MaterializerNestedEntry GetPropertyOrThrow(IEnumerable<ODataNestedResourceInfo> links, string propertyName, IODataMaterializerContext materializerContext)
         {
             ODataNestedResourceInfo link = null;
             if (links != null)
@@ -1051,7 +1053,7 @@ namespace Microsoft.OData.Client.Materialization
                 throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
             }
 
-            return MaterializerNavigationLink.GetLink(link, materializerContext);
+            return MaterializerNestedEntry.GetNestedEntry(link, materializerContext);
         }
 
         /// <summary>Merges a list into the property of a given <paramref name="entry"/>.</summary>

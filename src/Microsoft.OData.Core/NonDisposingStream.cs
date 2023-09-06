@@ -81,6 +81,11 @@ namespace Microsoft.OData
             this.innerStream.Flush();
         }
 
+        public override Task FlushAsync(CancellationToken cancellationToken)
+        {
+            return this.innerStream.FlushAsync(cancellationToken);
+        }
+
         /// <summary>
         /// Reads data from the stream.
         /// </summary>
