@@ -72,6 +72,37 @@ Accept-Charset: UTF-8
 --batch_aed653ab--
 ";
 
+        private const string batchRequestPayloadWithoutContentId = @"--batch_aed653ab
+Content-Type: multipart/mixed; boundary=changeset_5e368128
+
+--changeset_5e368128
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://tempuri.org/Customers HTTP/1.1
+OData-Version: 4.0
+OData-MaxVersion: 4.0
+Content-Type: application/json;odata.metadata=minimal
+Accept: application/json;odata.metadata=minimal
+Accept-Charset: UTF-8
+
+{""@odata.type"":""NS.Customer"",""Id"":1,""Name"":""Sue""}
+--changeset_5e368128
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://tempuri.org/Orders HTTP/1.1
+OData-Version: 4.0
+OData-MaxVersion: 4.0
+Content-Type: application/json;odata.metadata=minimal
+Accept: application/json;odata.metadata=minimal
+Accept-Charset: UTF-8
+
+{""@odata.type"":""NS.Order"",""Id"":1,""Amount"":13}
+--changeset_5e368128--
+--batch_aed653ab--
+";
+
         private const string batchResponsePayload = @"--batchresponse_aed653ab
 Content-Type: application/http
 Content-Transfer-Encoding: binary
@@ -209,8 +240,7 @@ OData-Version: 4.0
         [Fact]
         public void ReadMultipartMixedBatchRequestWthoutContentId()
         {
-            var payload = Regex.Replace(batchRequestPayload, "Content-ID: .", "");
-            Assert.DoesNotContain("Content-ID", payload);
+            Assert.DoesNotContain("Content-ID", batchRequestPayloadWithoutContentId);
 
             var verifyResourceStack = new Stack<Action<ODataResource>>();
             verifyResourceStack.Push((resource) =>
@@ -237,7 +267,7 @@ OData-Version: 4.0
             });
 
             SetupMultipartMixedBatchReaderAndRunTest(
-                payload,
+                batchRequestPayloadWithoutContentId,
                 (multipartMixedBatchReader) =>
                 {
                     var operationCount = 0;
