@@ -49,16 +49,19 @@ async function loadSampleFile(filePath: string, editorView: EditorView): Promise
 
 // Call the function to initially populate the editors with file contents
 loadSampleFile('../samples/sample_1.csdl', csdlInputEditor);
+loadSampleFile('../samples/sample_1.csdl', routesOutputEditor);
 
 function updateSecondEditorContent() {
   const content = csdlInputEditor.state.doc.toString().toUpperCase();
   routesOutputEditor.dispatch({
     changes: { from: 0, to: routesOutputEditor.state.doc.length, insert: content },
   });
-  
 }
 
 // Call the function to initially populate the second editor
 updateSecondEditorContent();
+
+// call updateSecondEditorContent every 3 seconds
+setInterval(updateSecondEditorContent, 3000);
 
 csdlInputEditor.dom.addEventListener('input', updateSecondEditorContent);

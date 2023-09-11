@@ -1,0 +1,47 @@
+
+Rapid Explorer
+Service Base Url
+Generate a request
+1
+users
+Results
+
+Error 404 Not Found
+
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+  <edmx:DataService>
+    <Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Jetsons">
+      <EntityType Name="Company">
+        <Key>
+          <PropertyRef Name="stockSymbol"/>
+        </Key>
+        <Property Name="stockSymbol" Type="Edm.String" Nullable="false"/>
+        <Property Name="name" Type="Edm.String"/>
+        <Property Name="incorporated" Type="Edm.DateTimeOffset" Nullable="false" Precision="0"/>
+        <NavigationProperty Name="employees" Type="Collection(Jetsons.Employee)" Nullable="false" ContainsTarget="true"/>
+      </EntityType>
+      <EntityType Name="Employee">
+        <Key>
+          <PropertyRef Name="id"/>
+        </Key>
+        <Property Name="id" Type="Edm.Int32" Nullable="false"/>
+        <Property Name="firstName" Type="Edm.String"/>
+        <Property Name="lastName" Type="Edm.String"/>
+        <Property Name="title" Type="Edm.String"/>
+      </EntityType>
+      <Function Name="topEmployees" IsBound="true" EntitySetPath="company/employees">
+        <Parameter Name="company" Type="Jetsons.Company"/>
+        <Parameter Name="num" Type="Edm.Int32" Nullable="false"/>
+        <ReturnType Type="Collection(Jetsons.Employee)"/>
+      </Function>
+      <Action Name="youreFired" IsBound="true">
+        <Parameter Name="employee" Type="Jetsons.Employee"/>
+        <Parameter Name="reason" Type="Edm.String" Nullable="false"/>
+      </Action>
+      <EntityContainer Name="Container">
+        <EntitySet Name="competitors" EntityType="Jetsons.Company"/>
+        <Singleton Name="company" Type="Jetsons.Company"/>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataService>
+</edmx:Edmx>
