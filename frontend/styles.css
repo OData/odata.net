@@ -1,0 +1,17 @@
+/* CSS Styles */
+.editor-container {
+    display: flex;
+    width: 100%; /* Make the container occupy the full width of the screen */
+}
+
+.editor {
+    flex: 1;
+    border: 1px solid #ccc;
+    margin-right: 10px;
+    /* Adjust as needed to create space between editors */
+    width: 50%; /* Each editor occupies half of the container's width */
+}
+
+.editor-tab.active {
+    background-color: #555;
+  }

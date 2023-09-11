@@ -1,0 +1,28 @@
+{
+  "name": "code-editor",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host --port 8000",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "typescript": "^4.9.3",
+    "vite": "^4.0.0"
+  },
+  "dependencies": {
+    "@codemirror/autocomplete": "^6.9.0",
+    "@codemirror/commands": "^6.2.5",
+    "@codemirror/fold": "^0.19.4",
+    "@codemirror/lang-javascript": "^6.2.1",
+    "@codemirror/lang-json": "^6.0.1",
+    "@codemirror/lang-xml": "^6.0.2",
+    "@codemirror/language": "^6.9.0",
+    "@codemirror/lint": "^6.4.1",
+    "@codemirror/search": "^6.5.2",
+    "@codemirror/state": "^6.2.1",
+    "@codemirror/view": "^6.18.0",
+    "codemirror": "^6.0.1"
+  }
+}
