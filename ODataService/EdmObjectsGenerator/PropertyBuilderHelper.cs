@@ -1,4 +1,4 @@
-﻿namespace EdmObjectsGenerator
+﻿namespace DataSourceGenerator
 {
     using System;
     using System.Linq;

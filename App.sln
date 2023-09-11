@@ -7,7 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Portal", "Portal\Portal.csp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ODataService", "ODataService", "{621819DE-DDB7-41FC-A874-757464A90050}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EdmObjectsGenerator", "ODataService\EdmObjectsGenerator\EdmObjectsGenerator.csproj", "{3678C588-F1DD-4EF6-879A-3D1D8114A880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DataSourceGenerator", "ODataService\EdmObjectsGenerator\DataSourceGenerator.csproj", "{3678C588-F1DD-4EF6-879A-3D1D8114A880}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{22530016-09F5-4136-829B-765ADEF3310F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "ODataService", "ODataService", "{957D9415-CE59-47B5-ABB8-A5EA12863F4E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ODataServiceTests", "ODataServiceTests\ODataServiceTests.csproj", "{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,11 +29,20 @@ Global
 		{3678C588-F1DD-4EF6-879A-3D1D8114A880}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3678C588-F1DD-4EF6-879A-3D1D8114A880}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3678C588-F1DD-4EF6-879A-3D1D8114A880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{3678C588-F1DD-4EF6-879A-3D1D8114A880} = {621819DE-DDB7-41FC-A874-757464A90050}
+		{957D9415-CE59-47B5-ABB8-A5EA12863F4E} = {22530016-09F5-4136-829B-765ADEF3310F}
+		{1978960D-EFF1-4AB1-902B-0DE7BEADA5A1} = {957D9415-CE59-47B5-ABB8-A5EA12863F4E}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {736D9CFE-B80E-445C-8328-D46C08F1FC8D}
 	EndGlobalSection
 EndGlobal

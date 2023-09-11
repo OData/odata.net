@@ -1,8 +1,7 @@
-﻿namespace EdmObjectsGenerator
+﻿namespace DataSourceGenerator
 {
     using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -14,7 +13,7 @@
     using Microsoft.OData.Edm.Validation;
 
     [Serializable]
-    public class EdmClassGenerator
+    public class DataSourceGenerator
     {
         Dictionary<string, TypeBuilderInfo> _typeBuildersDict = new Dictionary<string, TypeBuilderInfo>();
         static Regex collectionRegex = new Regex(@"Collection\((.+)\)", RegexOptions.Compiled);
@@ -46,7 +45,7 @@
             }
         }
 
-        public void BuildModules(IEdmModel model, ModuleBuilder moduleBuilder, string dbContextName)
+        public void BuildModules(IEdmModel model, ModuleBuilder moduleBuilder, string dataSourceName)
         {
             //first create the basic types for the enums
             foreach (var modelSchemaElement in model.SchemaElements)
@@ -118,36 +117,31 @@
 
                 }
             }
-            
 
-            //generate the DbContext type
-            var entitiesBuilder = moduleBuilder.DefineType(dbContextName + "Context", TypeAttributes.Class | TypeAttributes.Public, typeof(DbContext));
-            var dbContextType = typeof(DbContext);
-            entitiesBuilder.CreateDefaultConstructor(dbContextType, "name=" + dbContextName);
-
+            // generate the in-memory dataSource
+            var dataSource = moduleBuilder.DefineType(dataSourceName, TypeAttributes.Class | TypeAttributes.Public);
             foreach (var entitySet in model.EntityContainer.EntitySets())
             {
                 TypeBuilderInfo entityType = _typeBuildersDict.FirstOrDefault(t => t.Key == entitySet.EntityType().FullName()).Value;
                 if (entityType != null)
                 {
-                    Type listOf = typeof(DbSet<>);
+                    Type listOf = typeof(List<>);
                     Type selfContained = listOf.MakeGenericType(entityType.Builder);
-                    PropertyBuilderHelper.BuildProperty(entitiesBuilder, entitySet.Name, selfContained);
+                    PropertyBuilderHelper.BuildProperty(dataSource, entitySet.Name, selfContained);
                 }
             }
 
-            // create the OnModelCreating method
-            MethodBuilder methodbuilder = entitiesBuilder.DefineMethod("OnModelCreating", MethodAttributes.Public
-                                                                                          | MethodAttributes.HideBySig
-                                                                                          | MethodAttributes.CheckAccessOnOverride
-                                                                                          | MethodAttributes.Virtual,
-                                                                                          typeof(void), new Type[] { typeof(DbModelBuilder) });
+            foreach (var singleton in model.EntityContainer.Singletons())
+            {
+                TypeBuilderInfo entityType = _typeBuildersDict.FirstOrDefault(t => t.Key == singleton.EntityType().FullName()).Value;
+                if (entityType != null)
+                {
+                    PropertyBuilderHelper.BuildProperty(dataSource, singleton.Name, entityType.Builder);
+                }
+            }
 
-            // generate the IL for the OnModelCreating method
-            ILGenerator ilGenerator = methodbuilder.GetILGenerator();
-//todo: insert code
-            ilGenerator.Emit(OpCodes.Ret);
-            entitiesBuilder.CreateType();
+            dataSource.CreateType();
+
         }
 
         internal TypeBuilder CreateType(IEdmStructuredType targetType, ModuleBuilder moduleBuilder, string moduleName)
@@ -165,7 +159,7 @@
                 }
 
                 var typeBuilder = moduleBuilder.DefineType(moduleName, TypeAttributes.Class | TypeAttributes.Public, previouslyBuiltType);
-                var typeBuilderInfo = new TypeBuilderInfo() {Builder = typeBuilder, IsDerived = true};
+                var typeBuilderInfo = new TypeBuilderInfo() { Builder = typeBuilder, IsDerived = true };
                 _typeBuildersDict.Add(moduleName, typeBuilderInfo);
                 _builderQueue.Enqueue(typeBuilderInfo);
                 return typeBuilder;
@@ -174,7 +168,7 @@
             else
             {
                 var typeBuilder = moduleBuilder.DefineType(moduleName, TypeAttributes.Class | TypeAttributes.Public);
-                var builderInfo = new TypeBuilderInfo() {Builder = typeBuilder, IsDerived = false};
+                var builderInfo = new TypeBuilderInfo() { Builder = typeBuilder, IsDerived = false };
                 _typeBuildersDict.Add(moduleName, builderInfo);
                 _builderQueue.Enqueue(builderInfo);
 
@@ -237,7 +231,7 @@
             }
 
             EnumBuilder typeBuilder = moduleBuilder.DefineEnum(moduleName, TypeAttributes.Public, typeof(int));
-            var builderInfo = new TypeBuilderInfo() {Builder = typeBuilder, IsDerived = false};
+            var builderInfo = new TypeBuilderInfo() { Builder = typeBuilder, IsDerived = false };
             _typeBuildersDict.Add(moduleName, builderInfo);
             _builderQueue.Enqueue(builderInfo);
             return typeBuilder;
@@ -371,11 +365,10 @@
         // could also use Domain.SetData()/Domain.GetData() on the new domain
         public string csdlFileName { get; set; }
 
-        public Type GenerateDbContext(string csdlFileName, bool save=false)
+        public static Type GenerateDataSource(IEdmModel model, string dataSourceName, bool save=false)
         {
             // Get name for assembly
-            string dbContextName = csdlFileName.Split('\\').Last().Replace(".xml", "");
-            string assemblyName = dbContextName + "_Assembly";
+            string assemblyName = dataSourceName + "_Assembly";
 
             // See if assembly already exists
             AppDomain appDomain = AppDomain.CurrentDomain;
@@ -383,15 +376,12 @@
 
             if (assembly == null)
             {
-                // Load model
-                IEdmModel model = ReadModel(csdlFileName);
-
                 // Build Assembly
                 AssemblyName assembly_Name = new AssemblyName(assemblyName);
                 AssemblyBuilder assemblyBuilder = appDomain.DefineDynamicAssembly(assembly_Name, AssemblyBuilderAccess.RunAndCollect);
                 ModuleBuilder module = assemblyBuilder.DefineDynamicModule($"{assembly_Name.Name}");
-                EdmClassGenerator generator = new EdmClassGenerator();
-                generator.BuildModules(model, module, dbContextName);
+                DataSourceGenerator generator = new DataSourceGenerator();
+                generator.BuildModules(model, module, dataSourceName);
 
                 // save for debugging purposes
                 if (save)
@@ -402,23 +392,24 @@
                 assembly = appDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName);
             }
 
-            
-            // Return generated DbContext
-            Type dbContext =  assembly.GetTypes().FirstOrDefault(t => t.Name == dbContextName + "Context");
-            return dbContext;
+
+            //// Return generated DataSource
+            //Type dataSource =  assembly.GetTypes().FirstOrDefault(t => t.Name == dataSourceName + "Context");
+            //return dataSource;
+            return null;
         }
 
-        public void GenerateDbContextInANewAppDomain()
+        public void GenerateDataSourceInANewAppDomain(IEdmModel model, string dataSourceName)
         {
             // Get filename from static object; could also pass in Domain.SetData()
             string fileName = this.csdlFileName;
 
             // Call generator
-            Type dbContextType = GenerateDbContext(fileName);
+            Type dataSourceType = GenerateDataSource(model, dataSourceName);
 
             // try to pass back to calling assembly. This does not work.
             AppDomain domain = AppDomain.CurrentDomain.GetData("domain") as AppDomain;
-            domain.SetData("contextType", dbContextType);
+            domain.SetData("dataSourceType", dataSourceType);
         }
     }
 }
