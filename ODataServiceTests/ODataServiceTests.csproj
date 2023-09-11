@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\ODataService\EdmObjectsGenerator\DataSourceGenerator.csproj" />
+    <ProjectReference Include="..\ODataService\DataSourceGenerator\DataSourceGenerator.csproj" />
   </ItemGroup>
 
   <ItemGroup>

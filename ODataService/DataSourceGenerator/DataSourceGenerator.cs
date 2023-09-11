@@ -378,7 +378,7 @@
             {
                 // Build Assembly
                 AssemblyName assembly_Name = new AssemblyName(assemblyName);
-                AssemblyBuilder assemblyBuilder = appDomain.DefineDynamicAssembly(assembly_Name, AssemblyBuilderAccess.RunAndCollect);
+                AssemblyBuilder assemblyBuilder = AssemblyBuilder.DefineDynamicAssembly(assembly_Name, AssemblyBuilderAccess.RunAndCollect);
                 ModuleBuilder module = assemblyBuilder.DefineDynamicModule($"{assembly_Name.Name}");
                 DataSourceGenerator generator = new DataSourceGenerator();
                 generator.BuildModules(model, module, dataSourceName);
@@ -386,7 +386,7 @@
                 // save for debugging purposes
                 if (save)
                 {
-                    assemblyBuilder.Save($"{assembly_Name.Name}.dll");
+               //     assemblyBuilder.Save($"{assembly_Name.Name}.dll");
                 }
 
                 assembly = appDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName);
@@ -394,9 +394,8 @@
 
 
             //// Return generated DataSource
-            //Type dataSource =  assembly.GetTypes().FirstOrDefault(t => t.Name == dataSourceName + "Context");
-            //return dataSource;
-            return null;
+            Type dataSource = assembly.GetTypes().FirstOrDefault(t => t.Name == dataSourceName + "Context");
+            return dataSource;
         }
 
         public void GenerateDataSourceInANewAppDomain(IEdmModel model, string dataSourceName)
