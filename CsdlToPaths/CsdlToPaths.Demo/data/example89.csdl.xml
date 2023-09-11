@@ -1,0 +1,152 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
+  <edmx:Reference
+    Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+
+      <Annotation Term="Core.DefaultNamespace" />
+
+    </edmx:Include>
+
+  </edmx:Reference>
+
+  <edmx:Reference
+    Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml">
+
+    <edmx:Include Alias="Measures" Namespace="Org.OData.Measures.V1" />
+
+  </edmx:Reference>
+
+  <edmx:DataServices>
+    <Schema Namespace="ODataDemo">
+      <EntityType Name="Product" HasStream="true">
+        <Key>
+          <PropertyRef Name="productId" />
+        </Key>
+        <Property Name="productId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="description" Type="Edm.String">
+          <Annotation Term="Core.IsLanguageDependent" />
+
+        </Property>
+
+        <Property Name="releaseDate" Type="Edm.Date" />
+        <Property Name="discontinuedDate" Type="Edm.Date" />
+        <Property Name="rating" Type="Edm.Int32" />
+        <Property Name="price" Type="Edm.Decimal" Scale="variable">
+          <Annotation Term="Measures.ISOCurrency" Path="Currency" />
+
+        </Property>
+
+        <Property Name="currency" Type="Edm.String" MaxLength="3" />
+
+        <NavigationProperty Name="category" Type="ODataDemo.Category"
+          Nullable="false" Partner="products" />
+
+        <NavigationProperty Name="supplier" Type="ODataDemo.Supplier"
+          Partner="products" />
+      </EntityType>
+      <EntityType Name="Category">
+        <Key>
+          <PropertyRef Name="categoryId" />
+        </Key>
+        <Property Name="categoryId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="name" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.IsLanguageDependent" />
+
+        </Property>
+
+        <NavigationProperty Name="products" Partner="Category"
+          Type="Collection(ODataDemo.Product)">
+          <OnDelete Action="Cascade" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Supplier">
+        <Key>
+          <PropertyRef Name="supplierId" />
+        </Key>
+        <Property Name="supplierId" Type="Edm.String" Nullable="false" />
+        <Property Name="name" Type="Edm.String" />
+        <Property Name="address" Type="ODataDemo.Address" Nullable="false" />
+        <Property Name="concurrency" Type="Edm.Int32" Nullable="false" />
+        <NavigationProperty Name="products" Partner="Supplier"
+          Type="Collection(ODataDemo.Product)" />
+
+      </EntityType>
+      <EntityType Name="Country">
+
+        <Key>
+
+          <PropertyRef Name="code" />
+
+        </Key>
+
+        <Property Name="code" Type="Edm.String" MaxLength="2"
+          Nullable="false" />
+
+        <Property Name="name" Type="Edm.String" />
+
+      </EntityType>
+
+      <ComplexType Name="Address">
+        <Property Name="street" Type="Edm.String" />
+        <Property Name="city" Type="Edm.String" />
+        <Property Name="state" Type="Edm.String" />
+        <Property Name="zipCode" Type="Edm.String" />
+        <Property Name="countryName" Type="Edm.String" />
+        <NavigationProperty Name="country" Type="ODataDemo.Country">
+
+          <ReferentialConstraint Property="countryName"
+            ReferencedProperty="name" />
+
+        </NavigationProperty>
+
+      </ComplexType>
+      <Function Name="ProductsByRating">
+        <Parameter Name="rating" Type="Edm.Int32" />
+
+        <ReturnType Type="Collection(ODataDemo.Product)" />
+      </Function>
+      <EntityContainer Name="DemoService">
+        <EntitySet Name="products" EntityType="ODataDemo.Product">
+          <NavigationPropertyBinding Path="Category" Target="Categories" />
+
+        </EntitySet>
+        <EntitySet Name="categories" EntityType="ODataDemo.Category">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+
+          <Annotation Term="Core.Description" String="Product Categories" />
+
+        </EntitySet>
+        <EntitySet Name="suppliers" EntityType="ODataDemo.Supplier">
+          <NavigationPropertyBinding Path="products" Target="Products" />
+
+          <NavigationPropertyBinding Path="address/country"
+            Target="countries" />
+
+          <Annotation Term="Core.OptimisticConcurrency">
+
+            <Collection>
+
+              <PropertyPath>Concurrency</PropertyPath>
+
+            </Collection>
+
+          </Annotation>
+
+        </EntitySet>
+        <Singleton Name="mainSupplier" Type="ODataDemo.Supplier">
+          <NavigationPropertyBinding Path="Products" Target="Products" />
+
+          <Annotation Term="Core.Description" String="Primary Supplier" />
+
+        </Singleton>
+
+        <EntitySet Name="countries" EntityType="ODataDemo.Country" />
+
+        <FunctionImport Name="ProductsByRating" EntitySet="Products"
+          Function="ODataDemo.ProductsByRating" />
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

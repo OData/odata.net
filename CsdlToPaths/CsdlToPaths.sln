@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsdlToPaths", "CsdlToPaths\CsdlToPaths.csproj", "{234DF902-1948-44C0-B435-BA6EC36F69D5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsdlToPaths.Tests", "CsdlToPaths.Tests\CsdlToPaths.Tests.csproj", "{195D745C-0447-4196-9D8E-68AD96169E2D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CsdlToPathsDemo", "CsdlToPaths.Demo\CsdlToPathsDemo.csproj", "{F7F19C88-F9BA-4E91-AF0C-44D802219AF7}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{234DF902-1948-44C0-B435-BA6EC36F69D5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{234DF902-1948-44C0-B435-BA6EC36F69D5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{234DF902-1948-44C0-B435-BA6EC36F69D5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{234DF902-1948-44C0-B435-BA6EC36F69D5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{195D745C-0447-4196-9D8E-68AD96169E2D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{195D745C-0447-4196-9D8E-68AD96169E2D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{195D745C-0447-4196-9D8E-68AD96169E2D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{195D745C-0447-4196-9D8E-68AD96169E2D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F7F19C88-F9BA-4E91-AF0C-44D802219AF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7F19C88-F9BA-4E91-AF0C-44D802219AF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7F19C88-F9BA-4E91-AF0C-44D802219AF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7F19C88-F9BA-4E91-AF0C-44D802219AF7}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
