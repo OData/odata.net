@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.AspNetCore.Mvc.Formatters;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,8 @@ builder.Services.AddAuthorization(options =>
     // By default, all incoming requests will be authorized according to the default policy
     options.FallbackPolicy = options.DefaultPolicy;
 });
+
+builder.Services.AddControllers(options => options.InputFormatters.Add(new TextPlainFormatter()));
 
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor()
@@ -56,7 +59,6 @@ if (!app.Environment.IsDevelopment())
 
 // System.Console.WriteLine((app.Configuration as IConfigurationRoot).GetDebugView());
 
-
 app.UseHttpsRedirection();
 
 app.UseStaticFiles();
@@ -71,3 +73,19 @@ app.MapBlazorHub();
 app.MapFallbackToPage("/_Host");
 
 app.Run();
+
+public class TextPlainFormatter : InputFormatter
+{
+    public override async Task<InputFormatterResult> ReadRequestBodyAsync(InputFormatterContext context)
+    {
+        using (var reader = new System.IO.StreamReader(context.HttpContext.Request.Body))
+        {
+            return await InputFormatterResult.SuccessAsync(await reader.ReadToEndAsync());
+        }
+    }
+
+    public override bool CanRead(InputFormatterContext context)
+    {
+        return true;
+    }
+}
