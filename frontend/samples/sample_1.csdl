@@ -1,0 +1,9 @@
+<EntityType Name="Employee">
+  <Key>
+    <PropertyRef Name="ID" />
+  </Key>
+  <Property Name="ID" Type="Edm.String" Nullable="false" />
+  <Property Name="FirstName" Type="Edm.String" Nullable="false" />
+  <Property Name="LastName" Type="Edm.String" Nullable="false" />
+  <NavigationProperty Name="Manager" Type="self.Manager" />
+</EntityType>
