@@ -135,7 +135,7 @@ export default function Home() {
   }
 
   function sendDataToBackend() {
-    alert("TODO IMPLEMENT");
+    fetch("https://localhost:5001/csdls/for_saketh")
   }
 
   useEffect(() => {
