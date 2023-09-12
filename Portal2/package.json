@@ -1,9 +1,0 @@
-{
-  "dependencies": {
-    "@monaco-editor/react": "^4.5.2",
-    "@types/react-router-dom": "^5.3.3",
-    "buffer": "^6.0.3",
-    "sax": "^1.2.4",
-    "stream": "^0.0.2"
-  }
-}

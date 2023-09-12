@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace Portal2.Controllers
+namespace Project2.Controllers
 {
     [ApiController]
     [Route("[controller]")]

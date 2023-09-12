@@ -6,6 +6,7 @@ import React, { useState, useEffect } from "react";
 import SwaggerUI from "./SwaggerUI";
 import { csdl2openapi } from "../utils/csdl2openapi";
 import { xml2json } from "../utils/xml2json";
+import { set } from "zod";
 
 export default function Home() {
   const defaultValue = `<?xml version="1.0" encoding="utf-8"?>
