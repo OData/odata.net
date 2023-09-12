@@ -1,5 +1,5 @@
 {
-  "name": "project2",
+  "name": "portal2",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
@@ -7,6 +7,7 @@
     "http-proxy-middleware": "^2.0.6",
     "jquery": "^3.6.4",
     "merge": "^2.1.1",
+    "monaco-editor": "^0.43.0",
     "oidc-client": "^1.11.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",

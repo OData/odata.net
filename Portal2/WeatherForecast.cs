@@ -1,4 +1,4 @@
-namespace Project2
+namespace Portal2
 {
     public class WeatherForecast
     {

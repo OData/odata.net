@@ -1,14 +1,12 @@
-import Head from "next/head";
-import Link from "next/link";
+import React, { Component } from 'react';
 import Editor from "@monaco-editor/react";
-import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import React, { useState, useEffect } from "react";
-import SwaggerUI from "./SwaggerUI";
 import { csdl2openapi } from "../utils/csdl2openapi";
 import { xml2json } from "../utils/xml2json";
 
-export default function Home() {
-  const defaultValue = `<?xml version="1.0" encoding="utf-8"?>
+export class Home extends Component {
+  static displayName = Home.name;
+
+  static defaultValue = `<?xml version="1.0" encoding="utf-8"?>
   <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Reference Uri="./Products.xml">
       <edmx:Include Namespace="ProductService" />
@@ -104,95 +102,16 @@ export default function Home() {
     </edmx:DataServices>
   </edmx:Edmx>
 `;
-  function parseXMLtoOpenAPIAsString(xml: string): string {
-    console.log("Parsing XML to Open API as String");
-    try {
-      const parsed = xml2json(xml.replace("\ufeff", "") ?? "");
-      const actual = csdl2openapi(parsed, {});
-      const actualString = JSON.stringify(actual, null, 2);
-      return actualString;
-    } catch (e) {
-      const errorMessage = (e as Error).message;
-      console.log(errorMessage);
-      return errorMessage ?? "Failed to Parse CSDL";
-    }
-  }
 
-  const [parsedOutput, setParsedOutput] = useState(
-    parseXMLtoOpenAPIAsString(defaultValue),
-  );
-  const [swaggerJson, setSwaggerJson] = useState<Record<string, any> | null>(
-    null,
-  );
-
-  function handleEditorChange(
-    value: string | undefined,
-    event: monaco.editor.IModelContentChangedEvent,
-  ): void {
-    console.log("Handling Editor Change");
-    setParsedOutput(parseXMLtoOpenAPIAsString(value ?? "") ?? "");
-  }
-
-  function sendDataToBackend() {
-    alert("TODO IMPLEMENT");
-  }
-
-  useEffect(() => {
-    // Initial parsing of XML content when the component mounts
-    const initialParsedOutput = parseXMLtoOpenAPIAsString(defaultValue);
-    setParsedOutput(initialParsedOutput);
-  }, []); // Empty dependency array to run this effect only once when the component mounts
-
-  useEffect(() => {
-    // Update Swagger JSON whenever parsedOutput changes
-    if (parsedOutput) {
-      try {
-        const json = JSON.parse(parsedOutput);
-        setSwaggerJson(json);
-      } catch (error) {
-        console.error("Error parsing JSON:", error);
-        setSwaggerJson(null); // Handle parsing errors
-      }
-    } else {
-      setSwaggerJson(null); // Handle the case where parsedOutput is empty
-    }
-  }, [parsedOutput]); // Include parsedOutput as a dependency
-
-  return (
-    <>
-      <Head>
-        <title>OData Playground</title>
-        <meta
-          name="description"
-          content="OData Playground Created for Microsoft 2023 Hackathon"
-        />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
-      <main className="flex h-screen flex-col">
-        <div className="flex items-center justify-between bg-[#0F6EBF] p-2 text-2xl font-bold text-white">
-          <div>OData Playground</div>
-          <button className="p-2 hover:bg-[#364853] rounded" onClick={sendDataToBackend}>Go</button>
-        </div>
-
-        <div className="grid h-full grid-cols-2 gap-4 bg-white">
-          <div className="border border-red-500">
-            <div className="h-full">
-              <Editor
+  render() {
+    return (
+      <div>
+         <Editor
                 defaultLanguage="xml"
-                defaultValue={defaultValue}
-                onChange={handleEditorChange}
+                defaultValue={this.defaultValue}
+                onChange={() => console.alert("changed")}
               />
-            </div>
-          </div>
-          <div className="border border-black bg-stone-100 p-4">
-            {swaggerJson ? (
-              <SwaggerUI swaggerJson={swaggerJson} />
-            ) : (
-              <p>Loading Swagger UI...</p>
-            )}
-          </div>
-        </div>
-      </main>
-    </>
-  );
+      </div>
+    );
+  }
 }

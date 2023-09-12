@@ -8,7 +8,7 @@
     }
   },
   "profiles": {
-    "Project2": {
+    "Portal2": {
       "commandName": "Project",
       "launchBrowser": true,
       "applicationUrl": "https://localhost:7180;http://localhost:5274",

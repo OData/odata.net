@@ -17,7 +17,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSourceGenerator", "ODat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratedDataSourceTests", "GeneratedDataSourceTests\GeneratedDataSourceTests.csproj", "{7DECA341-442D-41D5-89B4-B3BCD3676758}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project2", "Project2\Project2.csproj", "{7D4313F7-300D-405A-A92B-285EE1045FAC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Portal2", "Portal2\Portal2.csproj", "{7D4313F7-300D-405A-A92B-285EE1045FAC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
