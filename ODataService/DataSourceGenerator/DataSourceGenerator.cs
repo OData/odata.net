@@ -2,15 +2,21 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Common;
     using System.IO;
     using System.Linq;
     using System.Reflection;
     using System.Reflection.Emit;
+    using System.Reflection.Metadata;
+    using System.Security.AccessControl;
     using System.Text.RegularExpressions;
     using System.Xml;
+    using Microsoft.AspNetCore.Mvc.ModelBinding;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
     using Microsoft.OData.Edm.Validation;
+    using Microsoft.Restier.Core;
+    using Microsoft.Restier.Core.Model;
 
     [Serializable]
     public class DataSourceGenerator
@@ -118,8 +124,41 @@
                 }
             }
 
+            // Finally, create the data source object
+            CreateDataSource(moduleBuilder, model, dataSourceName);
+
+        }
+
+        internal void CreateDataSource(ModuleBuilder moduleBuilder, IEdmModel model, string dataSourceName)
+        {
             // generate the in-memory dataSource
-            var dataSource = moduleBuilder.DefineType(dataSourceName, TypeAttributes.Class | TypeAttributes.Public);
+            var apiBaseType = typeof(ApiBase);
+            var dataSource = moduleBuilder.DefineType(dataSourceName + "." + dataSourceName + "DataSource", TypeAttributes.Class | TypeAttributes.Public, apiBaseType);
+
+            // create constructor
+            var serviceProviderType = typeof(IServiceProvider);
+            var baseConstructor = apiBaseType.GetConstructor(BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance, new Type[] { serviceProviderType });
+            var baseParameter = baseConstructor.GetParameters()[0];
+            var ctor = dataSource.DefineConstructor(MethodAttributes.Public, baseConstructor.CallingConvention, new Type[] { serviceProviderType });
+            var parameterBuilder = ctor.DefineParameter(0, baseParameter.Attributes, baseParameter.Name);
+            foreach (var attribute in TypeBuilderHelper.BuildCustomAttributes(baseParameter.GetCustomAttributesData()))
+            {
+                parameterBuilder.SetCustomAttribute(attribute);
+            }
+
+            var emitter = ctor.GetILGenerator();
+            emitter.Emit(OpCodes.Nop);
+
+            // Load `this` and call base constructor with arguments
+            emitter.Emit(OpCodes.Ldarg_0);
+            emitter.Emit(OpCodes.Ldarg_1);
+            emitter.Emit(OpCodes.Call, baseConstructor);
+
+            emitter.Emit(OpCodes.Ret);
+
+            // Create DataSource Properties
+
+            //**todo** initialize lists
             foreach (var entitySet in model.EntityContainer.EntitySets())
             {
                 TypeBuilderInfo entityType = _typeBuildersDict.FirstOrDefault(t => t.Key == entitySet.EntityType().FullName()).Value;
@@ -127,7 +166,7 @@
                 {
                     Type listOf = typeof(List<>);
                     Type selfContained = listOf.MakeGenericType(entityType.Builder);
-                    PropertyBuilderHelper.BuildProperty(dataSource, entitySet.Name, selfContained);
+                    PropertyBuilderHelper.BuildDataSourceProperty(dataSource, entitySet.Name, selfContained);
                 }
             }
 
@@ -136,12 +175,11 @@
                 TypeBuilderInfo entityType = _typeBuildersDict.FirstOrDefault(t => t.Key == singleton.EntityType().FullName()).Value;
                 if (entityType != null)
                 {
-                    PropertyBuilderHelper.BuildProperty(dataSource, singleton.Name, entityType.Builder);
+                    PropertyBuilderHelper.BuildDataSourceProperty(dataSource, singleton.Name, entityType.Builder);
                 }
             }
 
             dataSource.CreateType();
-
         }
 
         internal TypeBuilder CreateType(IEdmStructuredType targetType, ModuleBuilder moduleBuilder, string moduleName)
@@ -382,19 +420,24 @@
                 ModuleBuilder module = assemblyBuilder.DefineDynamicModule($"{assembly_Name.Name}");
                 DataSourceGenerator generator = new DataSourceGenerator();
                 generator.BuildModules(model, module, dataSourceName);
+                assembly = appDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName);
 
                 // save for debugging purposes
                 if (save)
                 {
-               //     assemblyBuilder.Save($"{assembly_Name.Name}.dll");
+                    var gen = new Lokad.ILPack.AssemblyGenerator();
+
+                    // for ad-hoc serialization
+                    var bytes = gen.GenerateAssemblyBytes(assembly);
+
+                    // direct serialization to disk
+                    gen.GenerateAssembly(assembly, $"{assembly_Name.Name}.dll");
                 }
 
-                assembly = appDomain.GetAssemblies().FirstOrDefault(a => a.GetName().Name == assemblyName);
             }
 
-
             //// Return generated DataSource
-            Type dataSource = assembly.GetTypes().FirstOrDefault(t => t.Name == dataSourceName + "Context");
+            Type dataSource = assembly.GetTypes().FirstOrDefault(t => t.Name == dataSourceName + "DataSource");
             return dataSource;
         }
 
