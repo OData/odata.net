@@ -1,5 +1,6 @@
 ﻿namespace DataSourceGenerator
 {
+    using Microsoft.Restier.Core;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -65,23 +66,7 @@
         }
         */
 
-        public static void CreateDefaultConstructor(this TypeBuilder builder, Type baseType, string paramValue)
-        {
-            var constructor = baseType.GetConstructor(new Type[] { typeof(string) });
-            var ctor = builder.DefineConstructor(MethodAttributes.Public, constructor.CallingConvention, new Type[] { });
-
-            var emitter = ctor.GetILGenerator();
-            emitter.Emit(OpCodes.Nop);
-
-            // Load `this` and call base constructor with arguments
-            emitter.Emit(OpCodes.Ldarg_0);
-            emitter.Emit(OpCodes.Ldstr, paramValue);
-            emitter.Emit(OpCodes.Call, constructor);
-
-            emitter.Emit(OpCodes.Ret);
-        }
-
-        private static CustomAttributeBuilder[] BuildCustomAttributes(IEnumerable<CustomAttributeData> customAttributes)
+        internal static CustomAttributeBuilder[] BuildCustomAttributes(IEnumerable<CustomAttributeData> customAttributes)
         {
             return customAttributes.Select(attribute => {
                 var attributeArgs = attribute.ConstructorArguments.Select(a => a.Value).ToArray();
