@@ -8,6 +8,10 @@
 dotnet dev-certs https
 dotnet dev-certs https --trust
 ```
+3. Add a personal access token secret for the backing CSDL storage:
+```sh
+dotnet user-secrets set "CsdlStorage:GithubPersonalAccessToken" "{your_token_here}"
+```
 
 ## Running Locally
 
