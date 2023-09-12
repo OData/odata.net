@@ -1,5 +1,6 @@
 ﻿namespace DataSourceGenerator
 {
+    using Microsoft.Restier.AspNetCore.Model;
     using System;
     using System.Linq;
     using System.Reflection;
@@ -40,9 +41,9 @@
 
             MethodAttributes getSetAttr =
                 MethodAttributes.Public | MethodAttributes.SpecialName |
-                    MethodAttributes.HideBySig;
+                  MethodAttributes.HideBySig;
 
-            // Define the "get" accessor method for CustomerName.
+            // Define the "get" accessor method for Property.
             MethodBuilder propMethodBldr =
                 typeBuilder.DefineMethod($"get_{fieldName}",
                                            getSetAttr,
@@ -55,7 +56,7 @@
             custNameGetIL.Emit(OpCodes.Ldfld, fieldBldr);
             custNameGetIL.Emit(OpCodes.Ret);
 
-            // Define the "set" accessor method for CustomerName.
+            // Define the "set" accessor method for Property.
             MethodBuilder propSetMethodBldr =
                 typeBuilder.DefineMethod($"set_{fieldName}",
                                            getSetAttr,
@@ -72,5 +73,41 @@
             propBuilder.SetGetMethod(propMethodBldr);
             propBuilder.SetSetMethod(propSetMethodBldr);
         }
+
+        public static void BuildDataSourceProperty(TypeBuilder typeBuilder, string fieldName, Type fieldType)
+        {
+            FieldBuilder fieldBldr = typeBuilder.DefineField(fieldName,
+                                                            fieldType,
+                                                            FieldAttributes.Private);
+
+            PropertyBuilder propBuilder = typeBuilder.DefineProperty(fieldName,
+                                                             PropertyAttributes.HasDefault,
+                                                             fieldType,
+                                                             null);
+
+            // Set the [Resource] attribute
+            ConstructorInfo constructor = typeof(ResourceAttribute).GetConstructor(Type.EmptyTypes);
+            CustomAttributeBuilder attributeBuilder = new CustomAttributeBuilder(constructor, new object[] { });
+            propBuilder.SetCustomAttribute(attributeBuilder);
+ 
+            MethodAttributes getAttr =
+                MethodAttributes.Public | MethodAttributes.SpecialName |
+                  MethodAttributes.HideBySig;
+
+            // Define the "get" accessor method for Property.
+            MethodBuilder propMethodBldr =
+                typeBuilder.DefineMethod($"get_{fieldName}",
+                                           getAttr,
+                                           fieldType,
+                                           Type.EmptyTypes);
+
+            ILGenerator custNameGetIL = propMethodBldr.GetILGenerator();
+
+            custNameGetIL.Emit(OpCodes.Ldarg_0);
+            custNameGetIL.Emit(OpCodes.Ldfld, fieldBldr);
+            custNameGetIL.Emit(OpCodes.Ret);
+            propBuilder.SetGetMethod(propMethodBldr);
+        }
+
     }
 }
