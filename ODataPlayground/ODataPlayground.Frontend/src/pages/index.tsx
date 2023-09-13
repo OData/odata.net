@@ -11,7 +11,7 @@ import { useRouter } from 'next/router';
 
 export default function Home() {
   const router = useRouter();
-  const defaultValue = `<?xml version="1.0" encoding="utf-8"?>
+  const sampleCsdl = `<?xml version="1.0" encoding="utf-8"?>
   <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Reference Uri="./Products.xml">
       <edmx:Include Namespace="ProductService" />
@@ -109,8 +109,57 @@ export default function Home() {
 `;
   const csdlParam = router.query.csdl as string | undefined;
 
+  const defaultValue = (() => {
+    if (typeof window !== 'undefined') {
+      if (csdlParam) {
+        // Decode the 'csdlParam' if needed
+        const csdlId = decodeURIComponent(csdlParam);
+      
+        // Clear the query parameter from the URL
+        window.history.replaceState({}, document.title, "/");
+        console.log("Param Found, Saving to Local Storage and Redirecting")
+        localStorage.setItem('csdlId', csdlId);
+        window.location.href = '/';
+      } else if (localStorage.getItem('csdlId')) {
+        console.log("Local Storage Found, Fetching CSDL")
+        const csdlId = localStorage.getItem('csdlId') ?? "";
+        // Fetch the CSDL data from the backend
+        fetch(`https://localhost:5001/csdls/${csdlId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((csdlEncoded) => {
+            // Decode the base64-encoded CSDL data
+            const csdlIdBytes = atob(csdlEncoded);
+      
+            // Call updateEditorValue with the decoded CSDL
+            console.log("Updating Editor Value");
+            console.log(csdlIdBytes);
+            setEditorContent(csdlIdBytes);
+            // clear local storage
+            localStorage.removeItem('csdlId');
+            return csdlIdBytes
+          })
+          .catch((error) => {
+            console.log('error', error);
+            return 
+          });
+      } else {
+        return sampleCsdl;
+      }
+    } else {
+      return sampleCsdl;
+    }
+  })();
+
+  var userInput = defaultValue;
+
+
   function parseXMLtoOpenAPIAsString(xml: string): string {
-    console.log("Parsing XML to Open API as String");
+    console.log("[parseXMLtoOpenAPIAsString]Parsing XML to Open API as String");
     try {
       const parsed = xml2json(xml.replace("\ufeff", "") ?? "");
       const actual = csdl2openapi(parsed, {});
@@ -118,22 +167,21 @@ export default function Home() {
       return actualString;
     } catch (e) {
       const errorMessage = (e as Error).message;
-      console.log(errorMessage);
+      console.log("[parseXMLtoOpenAPIAsString]Error: " + errorMessage);
       return errorMessage ?? "Failed to Parse CSDL";
     }
   }
 
-  var userInput = defaultValue;
-
   const [parsedOutput, setParsedOutput] = useState(
-    parseXMLtoOpenAPIAsString(defaultValue),
+    () => {
+      console.log("Setting Initial Value of parsedOutput");
+      return parseXMLtoOpenAPIAsString(defaultValue ?? "") ;
+    }, // Sets initial value of parsedOutput
   );
 
   const [swaggerJson, setSwaggerJson] = useState<Record<string, any> | null>(
     null,
   );
-
-  const [editorValue, setEditorValue] = useState(defaultValue);
 
   // Reference to the Monaco Editor instance
   const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
@@ -149,14 +197,16 @@ export default function Home() {
     value: string | undefined,
     event: monaco.editor.IModelContentChangedEvent,
   ): void {
-    console.log("Handling Editor Change");
+    console.log("[handleEditorChange]Begin Editor Change");
     userInput = value ?? "";
+    console.log("[handleEditorChange]UserInput: " + userInput);
     setParsedOutput(parseXMLtoOpenAPIAsString(value ?? "") ?? "");
+    console.log("[handleEditorChange]End Editor Change");
   }
 
   function sendDataToBackend() {
-    var encodedUserInput = btoa(userInput)
-    console.log("Sending Data to Backend");
+    var encodedUserInput = btoa(userInput ?? "")
+    console.log("[sendDataToBackend]Sending Data to Backend");
     var requestOptions: RequestInit = {
       method: 'PUT',
       headers: { 'Content-Type': 'text/plain' },
@@ -182,55 +232,24 @@ export default function Home() {
     .then(result => console.log(result))
     .catch(error => console.log('error', error));
   }
-  
-
-  useEffect(() => {
-    // Initial parsing of XML content when the component mounts
-    const initialParsedOutput = parseXMLtoOpenAPIAsString(defaultValue);
-    setParsedOutput(initialParsedOutput);
-  }, []); // Empty dependency array to run this effect only once when the component mounts
 
   useEffect(() => {
     // Update Swagger JSON whenever parsedOutput changes
+    console.log("[parsedOutputUpdate]Updating Swagger JSON");
+    console.log("[parsedOutputUpdate]UserInput: " + userInput)
+    console.log("[parsedOutputUpdate]ParsedOutput: "+ parsedOutput)
     if (parsedOutput) {
       try {
         const json = JSON.parse(parsedOutput);
         setSwaggerJson(json);
       } catch (error) {
-        console.error("Error parsing JSON:", error);
-        setSwaggerJson(null); // Handle parsing errors
+        console.log("Error parsing JSON:", error);
+        setSwaggerJson({}); // Handle parsing errors
       }
     } else {
-      setSwaggerJson(null); // Handle the case where parsedOutput is empty
+      setSwaggerJson({}); // Handle the case where parsedOutput is empty
     }
   }, [parsedOutput]); // Include parsedOutput as a dependency
-
-  if (csdlParam) {
-    // Decode the 'csdlParam' if needed
-    const decodedCSDL = decodeURIComponent(csdlParam);
-  
-    // Clear the query parameter from the URL
-    window.history.replaceState({}, document.title, "/");
-  
-    // Fetch the CSDL data from the backend
-    fetch(`https://localhost:5001/csdls/${decodedCSDL}`)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Network response was not ok");
-        }
-        return response.text();
-      })
-      .then((csdlEncoded) => {
-        // Decode the base64-encoded CSDL data
-        const decodedCSDLBytes = atob(csdlEncoded);
-  
-        // Call updateEditorValue with the decoded CSDL
-        console.log("Updating Editor Value");
-        console.log(decodedCSDLBytes);
-        setEditorContent(decodedCSDLBytes);
-      })
-      .catch((error) => console.log('error', error));
-  }
   
 
   return (
