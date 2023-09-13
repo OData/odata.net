@@ -6,7 +6,7 @@ using System;
 namespace ODataServiceTests
 {
     [TestClass]
-    public class DataSourceGeneratorTests
+    public class DatSourceGeneratorTests
     {
         [TestMethod]
         public void GenerateNwind()
@@ -18,15 +18,8 @@ namespace ODataServiceTests
 
             Assert.IsNotNull(t);
             var properties = t.GetProperties();
-            //Assert.AreEqual(6, properties.Length);
+            Assert.AreEqual(7, properties.Length);
             // todo: add additional tests for generated types
-        }
-
-        [TestMethod]
-        public void GenerateNwind2()
-        {
-            IServiceProvider sp = null;
-            //var nwind = new NWind.NWindDataSource(sp);
         }
     }
 }
