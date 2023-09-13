@@ -63,10 +63,13 @@
 
         private readonly string adoPersonalAccessToken;
 
+        private readonly bool downloadWorkloads;
+
         public CsdlController(ICsdlStorage csdlStorage, IConfiguration configuration)
         {
             this.csdlStorage = csdlStorage;
             this.adoPersonalAccessToken = configuration["WorkloadsStorage:PersonalAccessToken"] ?? throw new InvalidOperationException("No ADO personal access token was specified in the configuration");
+            this.downloadWorkloads = bool.Parse(configuration["WorkloadsStorage:DownloadWorkloads"] ?? throw new InvalidOperationException("No ADO personal access token was specified in the configuration"));
         }
 
         [HttpPut]
@@ -78,65 +81,72 @@
             //// TODO error handling this is pretty important
 
             string finalCsdl;
-            using (var connection = new Microsoft.VisualStudio.Services.WebApi.VssConnection(new Uri("https://msazure.visualstudio.com"), new VssBasicCredential(string.Empty, personalAccessToken))) //// TODO parameterize
+            if (!this.downloadWorkloads)
             {
-                using (var client = connection.GetClient<GitHttpClient>())
+                finalCsdl = Encoding.UTF8.GetString(Convert.FromBase64String(data));
+            }
+            else
+            {
+                using (var connection = new Microsoft.VisualStudio.Services.WebApi.VssConnection(new Uri("https://msazure.visualstudio.com"), new VssBasicCredential(string.Empty, personalAccessToken))) //// TODO parameterize
                 {
-                    using (var workloadsStream = await client.GetItemZipAsync( //// TODO parameterize
-                        project: "One",
-                        repositoryId: "AD-AggregatorService-Workloads",
-                        path: "/Workloads",
-                        includeContent: true,
-                        versionDescriptor: new GitVersionDescriptor
-                        {
-                            VersionType = GitVersionType.Branch,
-                            Version = "master",
-                        }))
+                    using (var client = connection.GetClient<GitHttpClient>())
                     {
-                        using (var zipArchive = new ZipArchive(workloadsStream))
+                        using (var workloadsStream = await client.GetItemZipAsync( //// TODO parameterize
+                            project: "One",
+                            repositoryId: "AD-AggregatorService-Workloads",
+                            path: "/Workloads",
+                            includeContent: true,
+                            versionDescriptor: new GitVersionDescriptor
+                            {
+                                VersionType = GitVersionType.Branch,
+                                Version = "master",
+                            }))
                         {
-                            var schemaEntries = zipArchive
-                                .Entries
-                                .Select(entry => (entry, match: workloadRegex.Match(entry.FullName)))
-                                .Where(e => e.match.Success)
-                                .Select(e =>
-                                {
-                                    var workloadName = e.match.Groups[1].Value;
-                                    var stream = new MemoryStream();
-                                    e.entry.Open().CopyTo(stream);
-
-                                    return (workloadName, stream);
-                                });
-                            ////.Append((workloadName: "Microsoft.Playground", stream: new MemoryStream(Encoding.UTF8.GetBytes(data)))); TODO
-                            var schemaLoader = new Microsoft.Graph.AGS.Schema.InternalSchemaLoader(new SchemaServiceConfigurations(), new GlobalFeatureProvider());
-                            InternalSchema internalSchema;
-                            int thing = 1;
-                            foreach (var entry in schemaEntries
-                                .EnumerateFirst()
-                                .Apply(
-                                    first =>
+                            using (var zipArchive = new ZipArchive(workloadsStream))
+                            {
+                                var schemaEntries = zipArchive
+                                    .Entries
+                                    .Select(entry => (entry, match: workloadRegex.Match(entry.FullName)))
+                                    .Where(e => e.match.Success)
+                                    .Select(e =>
                                     {
-                                        var model = GetEdmModel(first.stream);
-                                        return schemaLoader.LoadSchema(model, first.workloadName, (GraphVersionFlags)int.MaxValue);//// Tags.Parse("asdf")); //// TODO nul shuold be graph flags
-                                    },
-                                    out internalSchema))
-                            {
-                                var model = GetEdmModel(entry.stream);
-                                schemaLoader.LoadSchema(model, internalSchema, entry.workloadName, (GraphVersionFlags)int.MaxValue);//// Tags.Parse("asdf")); //// TODO tags
-                                ++thing;
-                            }
+                                        var workloadName = e.match.Groups[1].Value;
+                                        var stream = new MemoryStream();
+                                        e.entry.Open().CopyTo(stream);
 
-                            internalSchema.GenerateModel(null); //// TODO tags set
-                            using (var stream = new MemoryStream())
-                            {
-                                using (var xmlWriter = XmlWriter.Create(stream))
+                                        return (workloadName, stream);
+                                    });
+                                ////.Append((workloadName: "Microsoft.Playground", stream: new MemoryStream(Encoding.UTF8.GetBytes(data)))); TODO
+                                var schemaLoader = new Microsoft.Graph.AGS.Schema.InternalSchemaLoader(new SchemaServiceConfigurations(), new GlobalFeatureProvider());
+                                InternalSchema internalSchema;
+                                int thing = 1;
+                                foreach (var entry in schemaEntries
+                                    .EnumerateFirst()
+                                    .Apply(
+                                        first =>
+                                        {
+                                            var model = GetEdmModel(first.stream);
+                                            return schemaLoader.LoadSchema(model, first.workloadName, (GraphVersionFlags)int.MaxValue);//// Tags.Parse("asdf")); //// TODO nul shuold be graph flags
+                                        },
+                                        out internalSchema))
                                 {
-                                    CsdlWriter.TryWriteCsdl(internalSchema.Model, xmlWriter, CsdlTarget.OData, out var errors);
-
+                                    var model = GetEdmModel(entry.stream);
+                                    schemaLoader.LoadSchema(model, internalSchema, entry.workloadName, (GraphVersionFlags)int.MaxValue);//// Tags.Parse("asdf")); //// TODO tags
+                                    ++thing;
                                 }
 
-                                stream.Position = 0;
-                                finalCsdl = Encoding.UTF8.GetString(stream.ToArray());
+                                internalSchema.GenerateModel(null); //// TODO tags set
+                                using (var stream = new MemoryStream())
+                                {
+                                    using (var xmlWriter = XmlWriter.Create(stream))
+                                    {
+                                        CsdlWriter.TryWriteCsdl(internalSchema.Model, xmlWriter, CsdlTarget.OData, out var errors);
+
+                                    }
+
+                                    stream.Position = 0;
+                                    finalCsdl = Encoding.UTF8.GetString(stream.ToArray());
+                                }
                             }
                         }
                     }
@@ -170,6 +180,11 @@
         public async Task<IActionResult> Get([FromRoute] string csdlIdentifier)
         {
             var csdl = await this.csdlStorage.GetAsync(csdlIdentifier);
+            if (!this.downloadWorkloads)
+            {
+                csdl = Encoding.UTF8.GetBytes(Convert.ToBase64String(csdl));
+            }
+
             return Ok(Encoding.UTF8.GetString(csdl));
         }
     }
