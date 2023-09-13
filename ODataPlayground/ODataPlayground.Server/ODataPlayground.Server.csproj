@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <UserSecretsId>aspnet-Portal-dcf2e09c-7ad4-4e61-8e82-6128e02a9292</UserSecretsId>
   </PropertyGroup>
 
   <ItemGroup>

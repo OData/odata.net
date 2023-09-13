@@ -9,7 +9,7 @@ export:
 	cd ODataPlayground.Frontend && npx next export
 
 copy:
-	cd ODataPlayground.Server && cp -r ../ODataPlayground.Frontend/out/. ./ClientApp
+	cd ODataPlayground.Server && rm -r ClientApp/* && cp -r ../ODataPlayground.Frontend/out/. ./ClientApp
 
 run:
 	cd ODataPlayground.Server && dotnet run

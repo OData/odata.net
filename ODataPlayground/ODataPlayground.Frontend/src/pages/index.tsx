@@ -2,14 +2,16 @@ import Head from "next/head";
 import Link from "next/link";
 import Editor from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SwaggerUI from "./SwaggerUI";
 import { csdl2openapi } from "../utils/csdl2openapi";
 import { xml2json } from "../utils/xml2json";
 import { set } from "zod";
+import { useRouter } from 'next/router';
 
 export default function Home() {
-  const defaultValue = `<?xml version="1.0" encoding="utf-8"?>
+  const router = useRouter();
+  const sampleCsdl = `<?xml version="1.0" encoding="utf-8"?>
   <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Reference Uri="./Products.xml">
       <edmx:Include Namespace="ProductService" />
@@ -105,8 +107,59 @@ export default function Home() {
     </edmx:DataServices>
   </edmx:Edmx>
 `;
+  const csdlParam = router.query.csdl as string | undefined;
+
+  const defaultValue = (() => {
+    if (typeof window !== 'undefined') {
+      if (csdlParam) {
+        // Decode the 'csdlParam' if needed
+        const csdlId = decodeURIComponent(csdlParam);
+      
+        // Clear the query parameter from the URL
+        window.history.replaceState({}, document.title, "/");
+        console.log("Param Found, Saving to Local Storage and Redirecting")
+        localStorage.setItem('csdlId', csdlId);
+        window.location.href = '/';
+      } else if (localStorage.getItem('csdlId')) {
+        console.log("Local Storage Found, Fetching CSDL")
+        const csdlId = localStorage.getItem('csdlId') ?? "";
+        // Fetch the CSDL data from the backend
+        fetch(`/csdls/${csdlId}`)
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error("Network response was not ok");
+            }
+            return response.text();
+          })
+          .then((csdlEncoded) => {
+            // Decode the base64-encoded CSDL data
+            const csdlIdBytes = atob(csdlEncoded);
+      
+            // Call updateEditorValue with the decoded CSDL
+            console.log("Updating Editor Value");
+            console.log(csdlIdBytes);
+            setEditorContent(csdlIdBytes);
+            // clear local storage
+            localStorage.removeItem('csdlId');
+            return csdlIdBytes
+          })
+          .catch((error) => {
+            console.log('error', error);
+            return 
+          });
+      } else {
+        return sampleCsdl;
+      }
+    } else {
+      return sampleCsdl;
+    }
+  })();
+
+  var userInput = defaultValue;
+
+
   function parseXMLtoOpenAPIAsString(xml: string): string {
-    console.log("Parsing XML to Open API as String");
+    console.log("[parseXMLtoOpenAPIAsString]Parsing XML to Open API as String");
     try {
       const parsed = xml2json(xml.replace("\ufeff", "") ?? "");
       const actual = csdl2openapi(parsed, {});
@@ -114,50 +167,90 @@ export default function Home() {
       return actualString;
     } catch (e) {
       const errorMessage = (e as Error).message;
-      console.log(errorMessage);
+      console.log("[parseXMLtoOpenAPIAsString]Error: " + errorMessage);
       return errorMessage ?? "Failed to Parse CSDL";
     }
   }
 
   const [parsedOutput, setParsedOutput] = useState(
-    parseXMLtoOpenAPIAsString(defaultValue),
+    () => {
+      console.log("Setting Initial Value of parsedOutput");
+      return parseXMLtoOpenAPIAsString(defaultValue ?? "") ;
+    }, // Sets initial value of parsedOutput
   );
+
   const [swaggerJson, setSwaggerJson] = useState<Record<string, any> | null>(
     null,
   );
+
+  // Reference to the Monaco Editor instance
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+
+  // Function to set the editor value
+  const setEditorContent = (content: string) => {
+    if (editorRef.current) {
+      editorRef.current.setValue(content);
+    }
+  };
 
   function handleEditorChange(
     value: string | undefined,
     event: monaco.editor.IModelContentChangedEvent,
   ): void {
-    console.log("Handling Editor Change");
+    console.log("[handleEditorChange]Begin Editor Change");
+    userInput = value ?? "";
+    console.log("[handleEditorChange]UserInput: " + userInput);
     setParsedOutput(parseXMLtoOpenAPIAsString(value ?? "") ?? "");
+    console.log("[handleEditorChange]End Editor Change");
   }
 
   function sendDataToBackend() {
-    fetch("https://localhost:5001/csdls/for_saketh")
+    var encodedUserInput = btoa(userInput ?? "")
+    console.log("[sendDataToBackend]Sending Data to Backend");
+    var requestOptions: RequestInit = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'text/plain' },
+      body: encodedUserInput,
+      redirect: 'follow' as RequestRedirect // Specify the type explicitly
+    };
+  
+    fetch("/csdls", requestOptions)
+    .then(response => {
+      // Check if the response has a 'Location' header
+      if (response.headers.has('Location')) {
+        // Get the value of the 'Location' header
+        const locationHeader = response.headers.get('Location');
+        
+        // Present the 'Location' header value in an alert
+        alert(`Shareable URL: ${locationHeader}`);
+      } else {
+        // If 'Location' header is not present, show a message
+        alert('Unable to Generate Shareable URL');
+      }
+      return response.text();
+    })
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
   }
 
   useEffect(() => {
-    // Initial parsing of XML content when the component mounts
-    const initialParsedOutput = parseXMLtoOpenAPIAsString(defaultValue);
-    setParsedOutput(initialParsedOutput);
-  }, []); // Empty dependency array to run this effect only once when the component mounts
-
-  useEffect(() => {
     // Update Swagger JSON whenever parsedOutput changes
+    console.log("[parsedOutputUpdate]Updating Swagger JSON");
+    console.log("[parsedOutputUpdate]UserInput: " + userInput)
+    console.log("[parsedOutputUpdate]ParsedOutput: "+ parsedOutput)
     if (parsedOutput) {
       try {
         const json = JSON.parse(parsedOutput);
         setSwaggerJson(json);
       } catch (error) {
-        console.error("Error parsing JSON:", error);
-        setSwaggerJson(null); // Handle parsing errors
+        console.log("Error parsing JSON:", error);
+        setSwaggerJson({}); // Handle parsing errors
       }
     } else {
-      setSwaggerJson(null); // Handle the case where parsedOutput is empty
+      setSwaggerJson({}); // Handle the case where parsedOutput is empty
     }
   }, [parsedOutput]); // Include parsedOutput as a dependency
+  
 
   return (
     <>
@@ -182,6 +275,9 @@ export default function Home() {
                 defaultLanguage="xml"
                 defaultValue={defaultValue}
                 onChange={handleEditorChange}
+                onMount={(editor) => {
+                  editorRef.current = editor;
+                }}
               />
             </div>
           </div>
