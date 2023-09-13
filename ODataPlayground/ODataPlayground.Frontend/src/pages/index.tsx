@@ -219,13 +219,10 @@ export default function Home() {
       // Check if the response has a 'Location' header
       if (response.headers.has('Location')) {
         // Get the value of the 'Location' header
-        const locationHeader = response.headers.get('Location') ?? "";
-        const csdlId = locationHeader.substring(locationHeader.indexOf('/csdls/') + 7);
-        console.log("CSDL ID: " + csdlId);
-        const newURL = `${location.origin}?csdl=${csdlId}`;
+        const locationHeader = response.headers.get('Location');
         
         // Present the 'Location' header value in an alert
-        alert(`Shareable URL: ${newURL}`);
+        alert(`Shareable URL: ${locationHeader}`);
       } else {
         // If 'Location' header is not present, show a message
         alert('Unable to Generate Shareable URL');
