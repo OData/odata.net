@@ -484,4 +484,4 @@ user-secrets.md
 out/
 Portal/secrets.json
 
-ODataPlayground/ODataPlayground.Server/ClientApp/
+# ODataPlayground/ODataPlayground.Server/ClientApp/
