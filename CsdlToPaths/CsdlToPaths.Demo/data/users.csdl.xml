@@ -1,0 +1,27 @@
+<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx"
+  xmlns="http://docs.oasis-open.org/odata/ns/edm" Version="4.0">
+
+
+  <edmx:DataServices>
+    <Schema Namespace="Directory">
+
+      <EntityType Name="User">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="name" Type="Edm.Int32" Nullable="false" />
+        <Property Name="createdDate" Type="Edm.Date" />
+        <NavigationProperty Name="manager" Type="Directory.User"
+          Nullable="false" Partner="reports" />
+        <NavigationProperty Name="reports" Type="Collection(Directory.User)"
+          Nullable="false" Partner="manager" />
+      </EntityType>
+
+      <EntityContainer Name="DemoService">
+        <EntitySet Name="users" EntityType="Directory.User">
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
