@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="Trippin" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <EntityType Name="Airline">
+        <Key>
+          <PropertyRef Name="AirlineCode" />
+        </Key>
+        <Property Name="AirlineCode" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="TimeStampValue" Type="Edm.Binary" />
+      </EntityType>
+      <EntityType Name="Airport">
+        <Key>
+          <PropertyRef Name="IcaoCode" />
+        </Key>
+        <Property Name="IcaoCode" Type="Edm.String" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="IataCode" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Event">
+        <Key>
+          <PropertyRef Name="Id" />
+        </Key>
+        <Property Name="Id" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OccursAt" Type="Trippin.Location" />
+        <Property Name="Description" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Flight">
+        <Key>
+          <PropertyRef Name="FlightId" />
+        </Key>
+        <Property Name="FlightId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="ConfirmationCode" Type="Edm.String" />
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="Duration" Type="Edm.Duration" Nullable="false" />
+        <Property Name="SeatNumber" Type="Edm.String" />
+        <Property Name="FlightNumber" Type="Edm.String" />
+        <Property Name="FromId" Type="Edm.String" />
+        <Property Name="ToId" Type="Edm.String" />
+        <Property Name="AirlineId" Type="Edm.String" />
+        <NavigationProperty Name="From" Type="Trippin.Airport">
+          <ReferentialConstraint Property="FromId" ReferencedProperty="IcaoCode" />
+        </NavigationProperty>
+        <NavigationProperty Name="To" Type="Trippin.Airport">
+          <ReferentialConstraint Property="ToId" ReferencedProperty="IcaoCode" />
+        </NavigationProperty>
+        <NavigationProperty Name="Airline" Type="Trippin.Airline">
+          <ReferentialConstraint Property="AirlineId" ReferencedProperty="AirlineCode" />
+        </NavigationProperty>
+      </EntityType>
+      <EntityType Name="Order">
+        <Key>
+          <PropertyRef Name="PersonId" />
+          <PropertyRef Name="OrderId" />
+        </Key>
+        <Property Name="PersonId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="OrderId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="Price" Type="Edm.Double" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Person">
+        <Key>
+          <PropertyRef Name="PersonId" />
+        </Key>
+        <Property Name="PersonId" Type="Edm.Int64" />
+        <Property Name="UserName" Type="Edm.String" />
+        <Property Name="FirstName" Type="Edm.String" Nullable="false" />
+        <Property Name="LastName" Type="Edm.String" MaxLength="26" />
+        <Property Name="Age" Type="Edm.Int64" />
+        <Property Name="Concurrency" Type="Edm.Int64" Nullable="false" />
+        <Property Name="BirthDate" Type="Edm.Date" Nullable="false" />
+        <Property Name="BirthDate2" Type="Edm.Date" />
+        <Property Name="BirthTime" Type="Edm.TimeOfDay" Nullable="false" />
+        <Property Name="BirthTime2" Type="Edm.TimeOfDay" />
+        <Property Name="BirthDateTime" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="BirthDateTime2" Type="Edm.DateTimeOffset" />
+        <Property Name="FavoriteFeature" Type="Trippin.Feature" Nullable="false" />
+        <Property Name="FavoriteFeature2" Type="Trippin.Feature" />
+        <NavigationProperty Name="BestFriend" Type="Trippin.Person">
+          <ReferentialConstraint Property="PersonId" ReferencedProperty="PersonId" />
+        </NavigationProperty>
+        <NavigationProperty Name="Friends" Type="Collection(Trippin.Person)" />
+        <NavigationProperty Name="Trips" Type="Collection(Trippin.Trip)" />
+      </EntityType>
+      <EntityType Name="Trip">
+        <Key>
+          <PropertyRef Name="TripId" />
+        </Key>
+        <Property Name="TripId" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TrackGuid" Type="Edm.Guid" />
+        <Property Name="PersonId" Type="Edm.Int64" />
+        <Property Name="ShareId" Type="Edm.Guid" Nullable="false" />
+        <Property Name="Name" Type="Edm.String" />
+        <Property Name="Budget" Type="Edm.Single" Nullable="false" />
+        <Property Name="Description" Type="Edm.String" />
+        <Property Name="StartsAt" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="EndsAt" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="LastUpdated" Type="Edm.DateTimeOffset" Nullable="false" />
+        <NavigationProperty Name="Flights" Type="Collection(Trippin.Flight)" />
+        <NavigationProperty Name="Events" Type="Collection(Trippin.Event)" />
+      </EntityType>
+      <ComplexType Name="Location">
+        <Property Name="Address" Type="Edm.String" />
+      </ComplexType>
+      <EntityType Name="SpecialOrder" BaseType="Trippin.Order">
+        <Property Name="Tag" Type="Edm.String" />
+      </EntityType>
+      <EntityType Name="Employee" BaseType="Trippin.Person">
+        <Property Name="Cost" Type="Edm.Int64" Nullable="false" />
+        <NavigationProperty Name="Peers" Type="Collection(Trippin.Person)" />
+      </EntityType>
+      <EntityType Name="Manager" BaseType="Trippin.Person">
+        <Property Name="Budget" Type="Edm.Int64" Nullable="false" />
+        <NavigationProperty Name="DirectReports" Type="Collection(Trippin.Person)" />
+      </EntityType>
+      <EnumType Name="Feature">
+        <Member Name="Feature1" Value="0" />
+        <Member Name="Feature2" Value="1" />
+        <Member Name="Feature3" Value="2" />
+        <Member Name="Feature4" Value="3" />
+      </EnumType>
+      <EntityContainer Name="Container">
+        <EntitySet Name="Airlines" EntityType="Trippin.Airline">
+          <Annotation Term="Org.OData.Core.V1.OptimisticConcurrency">
+            <Collection>
+              <PropertyPath>TimeStampValue</PropertyPath>
+            </Collection>
+          </Annotation>
+        </EntitySet>
+        <EntitySet Name="Airports" EntityType="Trippin.Airport" />
+        <EntitySet Name="Events" EntityType="Trippin.Event" />
+        <EntitySet Name="Flights" EntityType="Trippin.Flight">
+          <NavigationPropertyBinding Path="Airline" Target="Airlines" />
+          <NavigationPropertyBinding Path="From" Target="Airports" />
+          <NavigationPropertyBinding Path="To" Target="Airports" />
+        </EntitySet>
+        <EntitySet Name="Orders" EntityType="Trippin.Order" />
+        <EntitySet Name="People" EntityType="Trippin.Person">
+          <NavigationPropertyBinding Path="BestFriend" Target="People" />
+          <NavigationPropertyBinding Path="Friends" Target="People" />
+          <NavigationPropertyBinding Path="Trippin.Employee/Peers" Target="People" />
+          <NavigationPropertyBinding Path="Trippin.Manager/DirectReports" Target="People" />
+          <NavigationPropertyBinding Path="Trips" Target="Trips" />
+        </EntitySet>
+        <EntitySet Name="Trips" EntityType="Trippin.Trip">
+          <NavigationPropertyBinding Path="Events" Target="Events" />
+          <NavigationPropertyBinding Path="Flights" Target="Flights" />
+          <Annotation Term="Org.OData.Core.V1.OptimisticConcurrency">
+            <Collection>
+              <PropertyPath>LastUpdated</PropertyPath>
+            </Collection>
+          </Annotation>
+        </EntitySet>
+      </EntityContainer>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
