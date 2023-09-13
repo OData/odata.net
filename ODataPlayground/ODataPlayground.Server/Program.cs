@@ -3,11 +3,14 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Identity.Web;
 using Microsoft.Identity.Web.UI;
 using NextjsStaticHosting.AspNetCore;
+using Portal.Core.CsdlStorage;
+using System;
 using System.Threading.Tasks;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -30,6 +33,22 @@ builder.Services.AddControllers(options => options.InputFormatters.Add(new TextP
 
 
 builder.Services.AddSingleton<IMemoryCache, MemoryCache>();
+builder.Services.AddSingleton<ICsdlStorage>(serviceProvider =>
+{
+    var configuration = serviceProvider.GetService<IConfiguration>();
+    if (configuration == null)
+    {
+        throw new InvalidOperationException("TODO");
+    }
+
+    var repositoryOwner = configuration["CsdlStorage:RepositoryOwner"] ?? throw new InvalidOperationException("No github repository owner was specified in the configuration");
+    var repositoryName = configuration["CsdlStorage:RepositoryName"] ?? throw new InvalidOperationException("No github repository name was specified in the configuration");
+    var branchName = configuration["CsdlStorage:BranchName"] ?? throw new InvalidOperationException("No github branch name was specified in the configuration");
+    var personalAccessToken = configuration["CsdlStorage:GithubPersonalAccessToken"] ?? throw new InvalidOperationException("No github personal access key was specified in the configuration");
+    var userAgentHeader = configuration["CsdlStorage:UserAgentHeader"] ?? throw new InvalidOperationException("No github personal access key was specified in the configuration");
+
+    return new GithubCsdlStorage(repositoryOwner, repositoryName, branchName, personalAccessToken, userAgentHeader);
+});
 
 builder.Services.AddScoped<UserService>();
 

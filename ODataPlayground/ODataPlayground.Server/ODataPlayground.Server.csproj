@@ -2,6 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>net7.0</TargetFramework>
+    <Nullable>enable</Nullable>
     <UserSecretsId>aspnet-Portal-dcf2e09c-7ad4-4e61-8e82-6128e02a9292</UserSecretsId>
   </PropertyGroup>
 
@@ -12,6 +13,8 @@
     <PackageReference Include="Microsoft.Identity.Web" Version="1.16.0" />
     <PackageReference Include="Microsoft.Identity.Web.UI" Version="1.16.0" />
     <PackageReference Include="Microsoft.AspNetCore.Components.QuickGrid" Version="8.0.0-preview.2.23153.2" />
+    <PackageReference Include="Microsoft.Graph.Studio.Core" Version="1.0.902" />
+    <PackageReference Include="Microsoft.TeamFoundationServer.Client" Version="16.206.0-preview" />
   </ItemGroup>
 
 </Project>
