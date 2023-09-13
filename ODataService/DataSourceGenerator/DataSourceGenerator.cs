@@ -132,12 +132,12 @@
         internal void CreateDataSource(ModuleBuilder moduleBuilder, IEdmModel model, string dataSourceName)
         {
             // generate the in-memory dataSource
-            var apiBaseType = typeof(ApiBase);
+            var apiBaseType = typeof(DynamicDataSource);
             var dataSource = moduleBuilder.DefineType(dataSourceName + "." + dataSourceName + "DataSource", TypeAttributes.Class | TypeAttributes.Public, apiBaseType);
 
             // create constructor
             var serviceProviderType = typeof(IServiceProvider);
-            var baseConstructor = apiBaseType.GetConstructor(BindingFlags.NonPublic | BindingFlags.CreateInstance | BindingFlags.Instance, new Type[] { serviceProviderType });
+            var baseConstructor = apiBaseType.GetConstructor(BindingFlags.Public | BindingFlags.CreateInstance | BindingFlags.Instance, new Type[] { serviceProviderType });
             var baseParameter = baseConstructor.GetParameters()[0];
             var ctor = dataSource.DefineConstructor(MethodAttributes.Public, baseConstructor.CallingConvention, new Type[] { serviceProviderType });
             var parameterBuilder = ctor.DefineParameter(0, baseParameter.Attributes, baseParameter.Name);

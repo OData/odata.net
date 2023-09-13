@@ -90,14 +90,14 @@
             CustomAttributeBuilder attributeBuilder = new CustomAttributeBuilder(constructor, new object[] { });
             propBuilder.SetCustomAttribute(attributeBuilder);
  
-            MethodAttributes getAttr =
+            MethodAttributes getSetAttr =
                 MethodAttributes.Public | MethodAttributes.SpecialName |
                   MethodAttributes.HideBySig;
 
             // Define the "get" accessor method for Property.
             MethodBuilder propMethodBldr =
                 typeBuilder.DefineMethod($"get_{fieldName}",
-                                           getAttr,
+                                           getSetAttr,
                                            fieldType,
                                            Type.EmptyTypes);
 
@@ -106,7 +106,24 @@
             custNameGetIL.Emit(OpCodes.Ldarg_0);
             custNameGetIL.Emit(OpCodes.Ldfld, fieldBldr);
             custNameGetIL.Emit(OpCodes.Ret);
+
             propBuilder.SetGetMethod(propMethodBldr);
+
+            // Define the "set" accessor method for Property.
+            MethodBuilder propSetMethodBldr =
+                typeBuilder.DefineMethod($"set_{fieldName}",
+                                           getSetAttr,
+                                           null,
+                                           new Type[] { fieldType });
+
+            ILGenerator custNameSetIL = propSetMethodBldr.GetILGenerator();
+
+            custNameSetIL.Emit(OpCodes.Ldarg_0);
+            custNameSetIL.Emit(OpCodes.Ldarg_1);
+            custNameSetIL.Emit(OpCodes.Stfld, fieldBldr);
+            custNameSetIL.Emit(OpCodes.Ret);
+
+            propBuilder.SetSetMethod(propSetMethodBldr);
         }
 
     }
