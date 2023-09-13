@@ -124,7 +124,7 @@ export default function Home() {
         console.log("Local Storage Found, Fetching CSDL")
         const csdlId = localStorage.getItem('csdlId') ?? "";
         // Fetch the CSDL data from the backend
-        fetch(`https://localhost:5001/csdls/${csdlId}`)
+        fetch(`/csdls/${csdlId}`)
           .then((response) => {
             if (!response.ok) {
               throw new Error("Network response was not ok");
@@ -214,7 +214,7 @@ export default function Home() {
       redirect: 'follow' as RequestRedirect // Specify the type explicitly
     };
   
-    fetch("https://localhost:5001/csdls", requestOptions)
+    fetch("/csdls", requestOptions)
     .then(response => {
       // Check if the response has a 'Location' header
       if (response.headers.has('Location')) {
