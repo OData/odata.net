@@ -155,9 +155,6 @@ export default function Home() {
     }
   })();
 
-  var userInput = defaultValue;
-
-
   function parseXMLtoOpenAPIAsString(xml: string): string {
     console.log("[parseXMLtoOpenAPIAsString]Parsing XML to Open API as String");
     try {
@@ -198,48 +195,56 @@ export default function Home() {
     event: monaco.editor.IModelContentChangedEvent,
   ): void {
     console.log("[handleEditorChange]Begin Editor Change");
-    userInput = value ?? "";
-    console.log("[handleEditorChange]UserInput: " + userInput);
     setParsedOutput(parseXMLtoOpenAPIAsString(value ?? "") ?? "");
     console.log("[handleEditorChange]End Editor Change");
   }
 
   function sendDataToBackend() {
-    var encodedUserInput = btoa(userInput ?? "")
-    console.log("[sendDataToBackend]Sending Data to Backend");
-    var requestOptions: RequestInit = {
-      method: 'PUT',
-      headers: { 'Content-Type': 'text/plain' },
-      body: encodedUserInput,
-      redirect: 'follow' as RequestRedirect // Specify the type explicitly
-    };
+    // Get the Monaco editor instance
+    const editorInstance = editorRef.current;
   
-    fetch("/csdls", requestOptions)
-    .then(response => {
-      // Check if the response has a 'Location' header
-      if (response.headers.has('Location')) {
-        // Get the value of the 'Location' header
-        const locationHeader = response.headers.get('Location') ?? "";
-        const csdlId = locationHeader.substring(locationHeader.indexOf('/csdls/') + 7);
-        console.log("CSDL ID: " + csdlId);
-        const newURL = `${location.origin}?csdl=${csdlId}`;
-        
-        // Present the 'Location' header value in an alert
-        alert(`Shareable URL: ${newURL}`);
-      } else {
-        // If 'Location' header is not present, show a message
-        alert('Unable to Generate Shareable URL');
-      }
-      return response.text();
-    })
-    .then(result => console.log(result))
-    .catch(error => console.log('error', error));
+    if (editorInstance) {
+      // Get the content of the editor
+      const editorContent = editorInstance.getValue();
+      const encodedUserInput = btoa(editorContent);
+  
+      console.log("[sendDataToBackend]Sending Data to Backend");
+      // console.log("[sendDataToBackend]UserInput: " + editorContent);
+  
+      var requestOptions: RequestInit = {
+        method: 'PUT',
+        headers: { 'Content-Type': 'text/plain' },
+        body: encodedUserInput,
+        redirect: 'follow' as RequestRedirect // Specify the type explicitly
+      };
+  
+      fetch("/csdls", requestOptions)
+        .then(response => {
+          // Check if the response has a 'Location' header
+          if (response.headers.has('Location')) {
+            // Get the value of the 'Location' header
+            const locationHeader = response.headers.get('Location') ?? "";
+            const csdlId = locationHeader.substring(locationHeader.indexOf('/csdls/') + 7);
+            console.log("CSDL ID: " + csdlId);
+            const newURL = `${location.origin}?csdl=${csdlId}`;
+  
+            // Present the 'Location' header value in an alert
+            alert(`Shareable URL: ${newURL}`);
+          } else {
+            // If 'Location' header is not present, show a message
+            alert('Unable to Generate Shareable URL');
+          }
+          return response.text();
+        })
+        .then(result => console.log(result))
+        .catch(error => console.log('error', error));
+    }
   }
+  
 
   useEffect(() => {
     // Update Swagger JSON whenever parsedOutput changes
     console.log("[parsedOutputUpdate]Updating Swagger JSON");
-    console.log("[parsedOutputUpdate]UserInput: " + userInput)
     console.log("[parsedOutputUpdate]ParsedOutput: "+ parsedOutput)
     if (parsedOutput) {
       try {
