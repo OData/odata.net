@@ -268,7 +268,7 @@ export default function Home() {
       <main className="flex h-screen flex-col">
         <div className="flex items-center justify-between bg-[#0F6EBF] p-2 text-2xl font-bold text-white">
           <div>OData Playground</div>
-          <button className="p-2 hover:bg-[#364853] rounded" onClick={sendDataToBackend}>Go</button>
+          <button className="p-2 hover:bg-[#364853] rounded" onClick={sendDataToBackend}>Share</button>
         </div>
 
         <div className="grid h-full grid-cols-2 gap-4 bg-white">
