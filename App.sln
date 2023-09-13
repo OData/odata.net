@@ -17,6 +17,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DataSourceGenerator", "ODat
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GeneratedDataSourceTests", "GeneratedDataSourceTests\GeneratedDataSourceTests.csproj", "{7DECA341-442D-41D5-89B4-B3BCD3676758}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project2", "Project2\Project2.csproj", "{7D4313F7-300D-405A-A92B-285EE1045FAC}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{7DECA341-442D-41D5-89B4-B3BCD3676758}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DECA341-442D-41D5-89B4-B3BCD3676758}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DECA341-442D-41D5-89B4-B3BCD3676758}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D4313F7-300D-405A-A92B-285EE1045FAC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D4313F7-300D-405A-A92B-285EE1045FAC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D4313F7-300D-405A-A92B-285EE1045FAC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D4313F7-300D-405A-A92B-285EE1045FAC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
