@@ -67,7 +67,7 @@
                         var serializedCsdlId = JsonSerializer.Serialize(csdlId);
                         var encodedCsdlId = Convert.ToBase64String(Encoding.UTF8.GetBytes(serializedCsdlId));
 
-                        var location = $"https://{HttpContext.Request.Host}?csdl={encodedCsdlId}";
+                        var location = $"https://{HttpContext.Request.Host}/csdls/{encodedCsdlId}";
                         Response.Headers.Add("Location", location);
                     }
                 }
