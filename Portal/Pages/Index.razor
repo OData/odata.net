@@ -1,0 +1,81 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.WebUtilities
+@using GraphApiReview.Model
+@inject GraphApiReview.ApiReviewService Service
+@inject NavigationManager NavigationManager
+@inject UserService UserService
+
+<PageTitle>Graph API Reviews</PageTitle>
+@* 
+<a href="/?">all</a>
+<a href="/?filter=@(UserService.GetUserFirstName())">filter by "@UserService.GetUserFirstName()"</a> *@
+
+@if (rotateToken)
+{
+<div>
+    The ADO personal access token has expired. Please rotate it.
+</div>
+}
+else if (relatedToMe == null || actionRequired == null)
+{
+    <p><em>Loading Reviews from ADO...</em></p>
+}
+else
+{
+    <input id="reportButton" type="button" value="Show Report" style="float: right" onclick="generateReport('@pageLoadTime.ToString()', '@currentUserUpn')" />
+    <div id="reportDiv" hidden="true">
+        <textarea id="report" style="width: 100%; margin-top: 10px" rows=20/>
+    </div>
+    <div>
+        <h5 id="actionRequiredHeader" class="expandableHeader expandedHeader" onclick="expand('actionRequired')">Action Required (@actionRequired.Count())</h5>
+        <div id="actionRequiredDiv">
+            <table>
+                <tr>
+                    <td>Pull Request</td>
+                </tr>
+                @foreach (var row in @actionRequired)
+                {
+                    <tr>
+                        <a href="@row.PullRequest.Url" target="_blank" rel="noopener noreferrer">@row.PullRequest.Title</a>
+                        <input type="button" value="Add To Report" style="float: right" onclick="addToReport(true, '@row.PullRequest.Url', '@row.Url'); this.disabled = true" />
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+}
+
+@code {
+    private IQueryable<ApiReviewRequest>? relatedToMe;
+    private IQueryable<ApiReviewRequest>? actionRequired;
+    private IQueryable<ApiReviewRequestError>? errors;
+
+    private DateTime? pageLoadTime;
+    private string? currentUserUpn;
+
+    private bool rotateToken;
+
+    protected override async Task OnInitializedAsync()
+    {
+        this.pageLoadTime = DateTime.UtcNow;
+        this.currentUserUpn = UserService.GetUser().Identity?.Name ?? "<unknown>";
+
+        (IEnumerable<ApiReviewRequest> relatedToMe, IEnumerable<ApiReviewRequest> actionRequired, IEnumerable<ApiReviewRequestError> errors) myWork = 
+            (Enumerable.Empty<ApiReviewRequest>(), Enumerable.Empty<ApiReviewRequest>(), Enumerable.Empty<ApiReviewRequestError>());
+        try
+        {
+            myWork = await Service.GetMyWork(this.currentUserUpn);
+        }
+        catch (HttpRequestException e) when (e.StatusCode == System.Net.HttpStatusCode.Unauthorized)
+        {
+            this.rotateToken = true;
+        }
+    
+        if (!this.rotateToken)
+        {
+            this.relatedToMe = myWork.relatedToMe.AsQueryable();
+            this.actionRequired = myWork.actionRequired.AsQueryable();
+            this.errors = myWork.errors.AsQueryable();
+        }
+    }
+}
