@@ -2,13 +2,15 @@ import Head from "next/head";
 import Link from "next/link";
 import Editor from "@monaco-editor/react";
 import * as monaco from "monaco-editor/esm/vs/editor/editor.api";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import SwaggerUI from "./SwaggerUI";
 import { csdl2openapi } from "../utils/csdl2openapi";
 import { xml2json } from "../utils/xml2json";
 import { set } from "zod";
+import { useRouter } from 'next/router';
 
 export default function Home() {
+  const router = useRouter();
   const defaultValue = `<?xml version="1.0" encoding="utf-8"?>
   <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
     <edmx:Reference Uri="./Products.xml">
@@ -105,6 +107,8 @@ export default function Home() {
     </edmx:DataServices>
   </edmx:Edmx>
 `;
+  const csdlParam = router.query.csdl as string | undefined;
+
   function parseXMLtoOpenAPIAsString(xml: string): string {
     console.log("Parsing XML to Open API as String");
     try {
@@ -119,24 +123,66 @@ export default function Home() {
     }
   }
 
+  var userInput = defaultValue;
+
   const [parsedOutput, setParsedOutput] = useState(
     parseXMLtoOpenAPIAsString(defaultValue),
   );
+
   const [swaggerJson, setSwaggerJson] = useState<Record<string, any> | null>(
     null,
   );
+
+  const [editorValue, setEditorValue] = useState(defaultValue);
+
+  // Reference to the Monaco Editor instance
+  const editorRef = useRef<monaco.editor.IStandaloneCodeEditor | null>(null);
+
+  // Function to set the editor value
+  const setEditorContent = (content: string) => {
+    if (editorRef.current) {
+      editorRef.current.setValue(content);
+    }
+  };
 
   function handleEditorChange(
     value: string | undefined,
     event: monaco.editor.IModelContentChangedEvent,
   ): void {
     console.log("Handling Editor Change");
+    userInput = value ?? "";
     setParsedOutput(parseXMLtoOpenAPIAsString(value ?? "") ?? "");
   }
 
   function sendDataToBackend() {
-    fetch("https://localhost:5001/csdls/for_saketh")
+    var encodedUserInput = btoa(userInput)
+    console.log("Sending Data to Backend");
+    var requestOptions: RequestInit = {
+      method: 'PUT',
+      headers: { 'Content-Type': 'text/plain' },
+      body: encodedUserInput,
+      redirect: 'follow' as RequestRedirect // Specify the type explicitly
+    };
+  
+    fetch("https://localhost:5001/csdls", requestOptions)
+    .then(response => {
+      // Check if the response has a 'Location' header
+      if (response.headers.has('Location')) {
+        // Get the value of the 'Location' header
+        const locationHeader = response.headers.get('Location');
+        
+        // Present the 'Location' header value in an alert
+        alert(`Shareable URL: ${locationHeader}`);
+      } else {
+        // If 'Location' header is not present, show a message
+        alert('Unable to Generate Shareable URL');
+      }
+      return response.text();
+    })
+    .then(result => console.log(result))
+    .catch(error => console.log('error', error));
   }
+  
 
   useEffect(() => {
     // Initial parsing of XML content when the component mounts
@@ -158,6 +204,34 @@ export default function Home() {
       setSwaggerJson(null); // Handle the case where parsedOutput is empty
     }
   }, [parsedOutput]); // Include parsedOutput as a dependency
+
+  if (csdlParam) {
+    // Decode the 'csdlParam' if needed
+    const decodedCSDL = decodeURIComponent(csdlParam);
+  
+    // Clear the query parameter from the URL
+    window.history.replaceState({}, document.title, "/");
+  
+    // Fetch the CSDL data from the backend
+    fetch(`https://localhost:5001/csdls/${decodedCSDL}`)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("Network response was not ok");
+        }
+        return response.text();
+      })
+      .then((csdlEncoded) => {
+        // Decode the base64-encoded CSDL data
+        const decodedCSDLBytes = atob(csdlEncoded);
+  
+        // Call updateEditorValue with the decoded CSDL
+        console.log("Updating Editor Value");
+        console.log(decodedCSDLBytes);
+        setEditorContent(decodedCSDLBytes);
+      })
+      .catch((error) => console.log('error', error));
+  }
+  
 
   return (
     <>
@@ -182,6 +256,9 @@ export default function Home() {
                 defaultLanguage="xml"
                 defaultValue={defaultValue}
                 onChange={handleEditorChange}
+                onMount={(editor) => {
+                  editorRef.current = editor;
+                }}
               />
             </div>
           </div>
