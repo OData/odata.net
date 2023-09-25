@@ -120,6 +120,29 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseFilterWithSurrogatePairsShouldThrowsWithoutEnabledSurrogatePairs()
+        {
+            Action parse = () => this.testSubject.ParseFilter("𬉼 eq 'abc'");
+            var exception = Assert.Throws<ODataException>(parse);
+            Assert.Contains("character '\ud870' is not valid at position 0 in '𬉼 eq 'abc'", exception.Message);
+        }
+
+        [Fact]
+        public void ParseFilterWithSurrogatePairsShouldReturnValidToken()
+        {
+            UriQueryExpressionParser parser = new UriQueryExpressionParser(50, false, false, true);
+            QueryToken token = parser.ParseFilter("𬉼 eq 'abc'");
+
+            BinaryOperatorToken binaryToken = Assert.IsType<BinaryOperatorToken>(token);
+
+            Assert.Equal(BinaryOperatorKind.Equal, binaryToken.OperatorKind);
+
+            EndPathToken endToken = Assert.IsType<EndPathToken>(binaryToken.Left);
+            Assert.Equal("𬉼", endToken.Identifier);
+            Assert.IsType<LiteralToken>(binaryToken.Right);
+        }
+
+        [Fact]
         public void ParseApplyWithEmptyStringShouldReturnEmptyCollection()
         {
             IEnumerable<QueryToken> actual = this.testSubject.ParseApply(string.Empty);

@@ -140,6 +140,7 @@ namespace Microsoft.OData.UriParser
         /// <param name='text'>Text to parse (not null).</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
         /// <returns>
         /// true if the key instance was parsed; false if there was a
         /// syntactic error.
@@ -148,9 +149,9 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        public static bool TryParseKeysFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing, bool useSurrogatePairs = false)
         {
-            return TryParseFromUri(text, out instance, enableUriTemplateParsing);
+            return TryParseFromUri(text, out instance, enableUriTemplateParsing, useSurrogatePairs);
         }
 
         /// <summary>
@@ -177,7 +178,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         public static bool TryParseNullableTokens(string text, out SegmentArgumentParser instance)
         {
-            return TryParseFromUri(text, out instance, false);
+            return TryParseFromUri(text, out instance, false, false);
         }
 
         /// <summary>Tries to convert values to the keys of the specified type.</summary>
@@ -259,6 +260,7 @@ namespace Microsoft.OData.UriParser
         /// <param name='text'>Text to parse (not null).</param>
         /// <param name='instance'>After invocation, the parsed key instance.</param>
         /// <param name="enableUriTemplateParsing">Whether Uri template parsing is enabled.</param>
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
         /// <returns>
         /// true if the key instance was parsed; false if there was a
         /// syntactic error.
@@ -267,7 +269,7 @@ namespace Microsoft.OData.UriParser
         /// The returned instance contains only string values. To get typed values, a call to
         /// TryConvertValues is necessary.
         /// </remarks>
-        private static bool TryParseFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing)
+        private static bool TryParseFromUri(string text, out SegmentArgumentParser instance, bool enableUriTemplateParsing, bool useSurrogatePairs)
         {
             Debug.Assert(text != null, "text != null");
 
@@ -275,7 +277,7 @@ namespace Microsoft.OData.UriParser
             List<string> positionalValues = null;
 
             // parse keys just like function parameters
-            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), true, false);
+            ExpressionLexer lexer = new ExpressionLexer(string.Concat("(", text, ")"), true, false, useSurrogatePairs);
             UriQueryExpressionParser exprParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit /* default limit for parsing key value */, lexer);
             var tmp = (new FunctionCallParser(lexer, exprParser)).ParseArgumentListOrEntityKeyList();
             if (lexer.CurrentToken.Kind != ExpressionTokenKind.End)

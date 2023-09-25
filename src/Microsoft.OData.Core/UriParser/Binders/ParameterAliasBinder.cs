@@ -80,7 +80,7 @@ namespace Microsoft.OData.UriParser
         {
             // Get the syntactic representation of the filter expression
             // TODO: change Settings.FilterLimit to ParameterAliasValueLimit
-            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit);
+            UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(bindingState.Configuration.Settings.FilterLimit, useSurrogatePairs: bindingState.Configuration.IsSurrogatePairsEnabled);
             QueryToken aliasValueToken = expressionParser.ParseExpressionText(aliasValueExpression);
 
             // Special logic to handle parameter alias token.
@@ -111,7 +111,7 @@ namespace Microsoft.OData.UriParser
             string valueStr;
             if (valueToken != null && (valueStr = valueToken.Value as string) != null && !string.IsNullOrEmpty(valueToken.OriginalText))
             {
-                var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+                var lexer = new ExpressionLexer(valueToken.OriginalText, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/, model.IsSurrogatePairsEnabled());
                 if (lexer.CurrentToken.Kind == ExpressionTokenKind.BracketedExpression || lexer.CurrentToken.Kind == ExpressionTokenKind.BracedExpression)
                 {
                     object result = valueStr;

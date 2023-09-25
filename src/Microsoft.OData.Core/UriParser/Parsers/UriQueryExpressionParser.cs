@@ -51,6 +51,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private ExpressionLexer lexer;
 
+        /// <summary>Whether the lexer is being used to parse surrogate pairs.
+        private bool useSurrogatePairs;
+
         /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
@@ -75,34 +78,19 @@ namespace Microsoft.OData.UriParser
         /// Creates a UriQueryExpressionParser.
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
-        public UriQueryExpressionParser(int maxDepth)
-            : this(maxDepth, false)
-        {
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false)
-            : this(maxDepth, enableCaseInsensitiveBuiltinIdentifier, false)
-        {
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
-        /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
-        /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
-        /// <param name="enableNoDollarQueryOptions">Whether to allow no-dollar query options.</param>
-        internal UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false)
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
+        public UriQueryExpressionParser(int maxDepth,
+            bool enableCaseInsensitiveBuiltinIdentifier = false,
+            bool enableNoDollarQueryOptions = false,
+            bool useSurrogatePairs = false)
         {
             Debug.Assert(maxDepth >= 0, "maxDepth >= 0");
 
             this.maxDepth = maxDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.useSurrogatePairs = useSurrogatePairs;
         }
 
         /// <summary>
@@ -110,7 +98,8 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="maxDepth">The maximum depth of each part of the query - a recursion limit.</param>
         /// <param name="lexer">The ExpressionLexer containing text to be parsed.</param>
-        internal UriQueryExpressionParser(int maxDepth, ExpressionLexer lexer) : this(maxDepth)
+        internal UriQueryExpressionParser(int maxDepth, ExpressionLexer lexer)
+            : this(maxDepth)
         {
             Debug.Assert(lexer != null, "lexer != null");
             this.lexer = lexer;
@@ -144,6 +133,11 @@ namespace Microsoft.OData.UriParser
         internal bool EnableNoDollarQueryOptions
         {
             get { return this.enableNoDollarQueryOptions; }
+        }
+
+        internal bool UseSurrogatePairs
+        {
+            get { return this.useSurrogatePairs; }
         }
 
         /// <summary>
@@ -312,7 +306,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(compute);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(compute, this.useSurrogatePairs);
 
             while (true)
             {
@@ -410,7 +404,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(apply, this.useSurrogatePairs);
 
             while (true)
             {
@@ -654,7 +648,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(expressionText != null, "expressionText != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(expressionText);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(expressionText, this.useSurrogatePairs);
             QueryToken result = this.ParseExpression();
             this.lexer.ValidateToken(ExpressionTokenKind.End);
 
@@ -671,7 +665,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(orderBy != null, "orderBy != null");
 
             this.recursionDepth = 0;
-            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(orderBy);
+            this.lexer = CreateLexerForFilterOrOrderByOrApplyExpression(orderBy, this.useSurrogatePairs);
 
             List<OrderByToken> orderByTokens = new List<OrderByToken>();
             while (true)
@@ -719,10 +713,11 @@ namespace Microsoft.OData.UriParser
         /// Creates a new <see cref="ExpressionLexer"/> for the given filter, orderby or apply expression.
         /// </summary>
         /// <param name="expression">The expression.</param>
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
         /// <returns>The lexer for the expression, which will have already moved to the first token.</returns>
-        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression)
+        private static ExpressionLexer CreateLexerForFilterOrOrderByOrApplyExpression(string expression, bool useSurrogatePairs)
         {
-            return new ExpressionLexer(expression, true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            return new ExpressionLexer(expression, true /*moveToFirstToken*/, true /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/, useSurrogatePairs);
         }
 
         /// <summary>Creates an exception for a parse error.</summary>

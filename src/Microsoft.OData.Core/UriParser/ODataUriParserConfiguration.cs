@@ -21,6 +21,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>The resolver to use when parsing URLs.</summary>
         private ODataUriResolver uriResolver;
 
+        private bool isSurrogatePairsEnabled;
+
         /// <summary>
         /// Initializes a new instance of <see cref="ODataUriParserConfiguration"/>.
         /// </summary>
@@ -36,6 +38,7 @@ namespace Microsoft.OData.UriParser
             this.Container = container;
             this.Resolver = ODataUriResolver.GetUriResolver(container);
             this.urlKeyDelimiter = ODataUrlKeyDelimiter.GetODataUrlKeyDelimiter(container);
+            this.isSurrogatePairsEnabled = model.IsSurrogatePairsEnabled();
 
             if (this.Container == null)
             {
@@ -129,6 +132,11 @@ namespace Microsoft.OData.UriParser
         {
             get { return this.Resolver.EnableNoDollarQueryOptions; }
             set { this.Resolver.EnableNoDollarQueryOptions = value; }
+        }
+
+        internal bool IsSurrogatePairsEnabled
+        {
+            get { return this.isSurrogatePairsEnabled; }
         }
 
         /// <summary>

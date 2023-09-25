@@ -38,6 +38,11 @@ namespace Microsoft.OData.UriParser
         private readonly bool enableNoDollarQueryOptions;
 
         /// <summary>
+        /// Whether to allow surrogate pairs.
+        /// </summary>
+        private readonly bool useSurrogatePairs;
+
+        /// <summary>
         /// Whether to allow case insensitive for builtin identifier.
         /// </summary>
         private readonly bool enableCaseInsensitiveBuiltinIdentifier;
@@ -69,7 +74,8 @@ namespace Microsoft.OData.UriParser
             string clauseToParse,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
-            bool enableNoDollarQueryOptions = false)
+            bool enableNoDollarQueryOptions = false,
+            bool useSurrogatePairs = false)
         {
             this.maxRecursiveDepth = maxRecursiveDepth;
 
@@ -81,11 +87,12 @@ namespace Microsoft.OData.UriParser
 
             // Sets up our lexer. We don't turn useSemicolonDelimiter on since the parsing code for expand options,
             // which is the only thing that needs it, is in a different class that uses it's own lexer.
-            this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/) : null;
+            this.lexer = clauseToParse != null ? new ExpressionLexer(clauseToParse, false /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, useSurrogatePairs) : null;
 
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
 
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.useSurrogatePairs = useSurrogatePairs;
         }
 
         /// <summary>
@@ -103,8 +110,9 @@ namespace Microsoft.OData.UriParser
             IEdmStructuredType parentStructuredType,
             int maxRecursiveDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
-            bool enableNoDollarQueryOptions = false)
-            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+            bool enableNoDollarQueryOptions = false,
+            bool useSurrogatePairs = false)
+            : this(clauseToParse, maxRecursiveDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions, useSurrogatePairs)
         {
             this.resolver = resolver;
             this.parentStructuredType = parentStructuredType;
@@ -124,7 +132,8 @@ namespace Microsoft.OData.UriParser
                         this.parentStructuredType,
                         this.maxRecursiveDepth,
                         this.enableCaseInsensitiveBuiltinIdentifier,
-                        this.enableNoDollarQueryOptions)
+                        this.enableNoDollarQueryOptions,
+                        this.useSurrogatePairs)
                     {
                         MaxFilterDepth = MaxFilterDepth,
                         MaxOrderByDepth = MaxOrderByDepth,

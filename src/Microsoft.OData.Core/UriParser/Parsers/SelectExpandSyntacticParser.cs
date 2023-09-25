@@ -34,7 +34,8 @@ namespace Microsoft.OData.UriParser
                 selectClause,
                 configuration.Settings.SelectExpandLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
-                configuration.EnableNoDollarQueryOptions)
+                configuration.EnableNoDollarQueryOptions,
+                configuration.IsSurrogatePairsEnabled)
             {
                 MaxPathDepth = configuration.Settings.PathLimit
             };
@@ -46,7 +47,8 @@ namespace Microsoft.OData.UriParser
                 parentStructuredType,
                 configuration.Settings.SelectExpandLimit,
                 configuration.EnableCaseInsensitiveUriFunctionIdentifier,
-                configuration.EnableNoDollarQueryOptions)
+                configuration.EnableNoDollarQueryOptions,
+                configuration.IsSurrogatePairsEnabled)
             {
                 MaxPathDepth = configuration.Settings.PathLimit,
                 MaxFilterDepth = configuration.Settings.FilterLimit,

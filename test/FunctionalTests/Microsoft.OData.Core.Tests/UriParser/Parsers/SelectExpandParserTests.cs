@@ -24,6 +24,34 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
     {
         #region ParseSelect
         [Fact]
+        public void SelectParsesSurrogatePairsThrowsWithoutEnabled()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser("𬉼,bar,𢒹", ODataUriParserSettings.DefaultSelectExpandLimit);
+
+            // Act
+            Action test = () => parser.ParseSelect();
+
+            // Assert
+            var exception = Assert.Throws<ODataException>(test);
+            Assert.Contains("character '\ud870' is not valid at position 0 in '𬉼,bar,𢒹", exception.Message);
+        }
+
+        [Fact]
+        public void SelectParsesSurrogatePairsShouldWork()
+        {
+            // Arrange
+            SelectExpandParser parser = new SelectExpandParser("𬉼,bar,𢒹", ODataUriParserSettings.DefaultSelectExpandLimit, false, false, true);
+
+            // Act
+            SelectToken selectToken = parser.ParseSelect();
+
+            // Assert
+            Assert.Equal(3, selectToken.Properties.Count());
+            Assert.Equal(3, selectToken.SelectTerms.Count());
+        }
+
+        [Fact]
         public void SelectParsesEachTermOnce()
         {
             // Arrange

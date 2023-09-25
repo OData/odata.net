@@ -472,7 +472,7 @@ namespace Microsoft.OData.UriParser
 
             // Get the syntactic representation of the filter expression.
             UriQueryExpressionParser expressionParser = new UriQueryExpressionParser(
-                configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier);
+                configuration.Settings.FilterLimit, configuration.EnableCaseInsensitiveUriFunctionIdentifier, useSurrogatePairs: configuration.IsSurrogatePairsEnabled);
             QueryToken filterToken = expressionParser.ParseFilter(filter);
 
             // Bind it to metadata.
@@ -698,7 +698,8 @@ namespace Microsoft.OData.UriParser
             ODataPathSegment keySegment;
             ODataPathSegment previous = this.parsedSegments[this.parsedSegments.Count - 1];
             KeySegment previousKeySegment = this.FindPreviousKeySegment();
-            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment, parenthesesSection, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing))
+            if (!SegmentKeyHandler.TryCreateKeySegmentFromParentheses(previous, previousKeySegment,
+                parenthesesSection, this.configuration.Resolver, out keySegment, this.configuration.EnableUriTemplateParsing, this.configuration.IsSurrogatePairsEnabled))
             {
                 return false;
             }

@@ -1578,6 +1578,7 @@ static Microsoft.OData.Edm.ExtensionMethods.DeclaringEntityType(this Microsoft.O
 static Microsoft.OData.Edm.ExtensionMethods.DependentProperties(this Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
 static Microsoft.OData.Edm.ExtensionMethods.DirectValueAnnotations(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmElement element) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>
 static Microsoft.OData.Edm.ExtensionMethods.ElementType(this Microsoft.OData.Edm.IEdmCollectionTypeReference type) -> Microsoft.OData.Edm.IEdmTypeReference
+static Microsoft.OData.Edm.ExtensionMethods.EnableSurrogatePairs(this Microsoft.OData.Edm.IEdmModel model) -> void
 static Microsoft.OData.Edm.ExtensionMethods.EntityDefinition(this Microsoft.OData.Edm.IEdmEntityTypeReference type) -> Microsoft.OData.Edm.IEdmEntityType
 static Microsoft.OData.Edm.ExtensionMethods.EntityReferenceDefinition(this Microsoft.OData.Edm.IEdmEntityReferenceTypeReference type) -> Microsoft.OData.Edm.IEdmEntityReferenceType
 static Microsoft.OData.Edm.ExtensionMethods.EntitySets(this Microsoft.OData.Edm.IEdmEntityContainer container) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmEntitySet>
@@ -1657,6 +1658,7 @@ static Microsoft.OData.Edm.ExtensionMethods.IsKey(this Microsoft.OData.Edm.IEdmP
 static Microsoft.OData.Edm.ExtensionMethods.IsOpen(this Microsoft.OData.Edm.IEdmStructuredTypeReference type) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.IsOpen(this Microsoft.OData.Edm.IEdmType type) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.IsPrincipal(this Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.IsSurrogatePairsEnabled(this Microsoft.OData.Edm.IEdmModel model) -> bool
 static Microsoft.OData.Edm.ExtensionMethods.Key(this Microsoft.OData.Edm.IEdmEntityType type) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
 static Microsoft.OData.Edm.ExtensionMethods.Key(this Microsoft.OData.Edm.IEdmEntityTypeReference type) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuralProperty>
 static Microsoft.OData.Edm.ExtensionMethods.Location(this Microsoft.OData.Edm.IEdmElement item) -> Microsoft.OData.Edm.EdmLocation

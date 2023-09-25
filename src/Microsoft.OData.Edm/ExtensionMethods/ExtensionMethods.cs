@@ -62,6 +62,31 @@ namespace Microsoft.OData.Edm
             model.SetAnnotationValue(model, EdmConstants.InternalUri, EdmConstants.EdmVersionAnnotation, version);
         }
 
+        /// <summary>
+        /// Enable Surrogate Pairs identifier.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        public static void EnableSurrogatePairs(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            // it doesn't matter what value we store, so long as it's not null
+            model.SetAnnotationValue(model, EdmConstants.InternalUri, "SurrogatePairsIdentifier", new object());
+        }
+
+        /// <summary>
+        /// Checks whether or not the model enables surrogate pairs identifier.
+        /// </summary>
+        /// <param name="model">The model involved</param>
+        /// <returns>Whether or not the model has been marked as immutable</returns>
+        public static bool IsSurrogatePairsEnabled(this IEdmModel model)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+
+            object value = model.GetAnnotationValue(model, EdmConstants.InternalUri, "SurrogatePairsIdentifier");
+            return value != null;
+        }
+
         #region IEdmModel interface's FindDeclaredXxx() methods, here their counterpart methods become FindXxx().
         /// <summary>
         /// Searches for a type with the given name in this model and all referenced models and returns null if no such type exists.

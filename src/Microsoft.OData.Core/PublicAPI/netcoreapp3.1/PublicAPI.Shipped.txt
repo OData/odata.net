@@ -1920,7 +1920,7 @@ Microsoft.OData.UriParser.UriPathParser
 Microsoft.OData.UriParser.UriPathParser.UriPathParser(Microsoft.OData.UriParser.ODataUriParserSettings settings) -> void
 Microsoft.OData.UriParser.UriQueryExpressionParser
 Microsoft.OData.UriParser.UriQueryExpressionParser.ParseFilter(string filter) -> Microsoft.OData.UriParser.QueryToken
-Microsoft.OData.UriParser.UriQueryExpressionParser.UriQueryExpressionParser(int maxDepth) -> void
+Microsoft.OData.UriParser.UriQueryExpressionParser.UriQueryExpressionParser(int maxDepth, bool enableCaseInsensitiveBuiltinIdentifier = false, bool enableNoDollarQueryOptions = false, bool useSurrogatePairs = false) -> void
 Microsoft.OData.UriParser.UriTemplateExpression
 Microsoft.OData.UriParser.UriTemplateExpression.ExpectedType.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.UriParser.UriTemplateExpression.LiteralText.get -> string

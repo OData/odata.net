@@ -44,6 +44,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly bool enableCaseInsensitiveBuiltinIdentifier;
 
+        /// <summary>Whether to allow surrogate pairs.</summary>
+        private bool useSurrogatePairs;
+
         /// <summary>
         /// Lexer to parse over the optionsText for a single $expand term. This is NOT the same lexer used by <see cref="SelectExpandParser"/>
         /// to parse over the entirety of $select or $expand.
@@ -56,14 +59,17 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
         internal SelectExpandOptionParser(
             int maxRecursionDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
-            bool enableNoDollarQueryOptions = false)
+            bool enableNoDollarQueryOptions = false,
+            bool useSurrogatePairs = false)
         {
             this.maxRecursionDepth = maxRecursionDepth;
             this.enableCaseInsensitiveBuiltinIdentifier = enableCaseInsensitiveBuiltinIdentifier;
             this.enableNoDollarQueryOptions = enableNoDollarQueryOptions;
+            this.useSurrogatePairs = useSurrogatePairs;
         }
 
         /// <summary>
@@ -74,13 +80,15 @@ namespace Microsoft.OData.UriParser
         /// <param name="maxRecursionDepth">Max recursion depth left.</param>
         /// <param name="enableCaseInsensitiveBuiltinIdentifier">Whether to allow case insensitive for builtin identifier.</param>
         /// <param name="enableNoDollarQueryOptions">Whether to enable no dollar query options.</param>
+        /// <param name="useSurrogatePairs">Whether surrogate pairs is enabled.</param>
         internal SelectExpandOptionParser(
             ODataUriResolver resolver,
             IEdmStructuredType parentStructuredType,
             int maxRecursionDepth,
             bool enableCaseInsensitiveBuiltinIdentifier = false,
-            bool enableNoDollarQueryOptions = false)
-            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions)
+            bool enableNoDollarQueryOptions = false,
+            bool useSurrogatePairs = false)
+            : this(maxRecursionDepth, enableCaseInsensitiveBuiltinIdentifier, enableNoDollarQueryOptions, useSurrogatePairs)
         {
             this.resolver = resolver;
             this.parentStructuredType = parentStructuredType;
@@ -440,7 +448,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(this.MaxFilterDepth, enableCaseInsensitiveBuiltinIdentifier, useSurrogatePairs: this.useSurrogatePairs);
             return filterParser.ParseFilter(filterText);
         }
 
@@ -454,7 +462,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string orderByText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser orderbyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier, useSurrogatePairs: this.useSurrogatePairs);
             return orderbyParser.ParseOrderBy(orderByText);
         }
 
@@ -564,7 +572,8 @@ namespace Microsoft.OData.UriParser
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions);
+                this.enableNoDollarQueryOptions,
+                this.useSurrogatePairs);
 
             return innerSelectParser.ParseSelect();
         }
@@ -602,7 +611,8 @@ namespace Microsoft.OData.UriParser
                 targetStructuredType,
                 this.maxRecursionDepth - 1,
                 this.enableCaseInsensitiveBuiltinIdentifier,
-                this.enableNoDollarQueryOptions);
+                this.enableNoDollarQueryOptions,
+                this.useSurrogatePairs);
 
             return innerExpandParser.ParseExpand();
         }
@@ -648,7 +658,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string computeText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser computeParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser computeParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier, useSurrogatePairs: this.useSurrogatePairs);
             return computeParser.ParseCompute(computeText);
         }
 
@@ -661,7 +671,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string applyText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser applyParser = new UriQueryExpressionParser(this.MaxOrderByDepth, enableCaseInsensitiveBuiltinIdentifier, useSurrogatePairs: this.useSurrogatePairs);
             return applyParser.ParseApply(applyText);
         }
     }

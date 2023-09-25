@@ -25,6 +25,51 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public class CsdlWriterTests
     {
+        [Fact]
+        public void ShouldWriteSurrogatePairsAsIdentifier()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmEntityType customer = new EdmEntityType("NS", "𬉼"); // U+2C27C
+            customer.AddKeys(customer.AddStructuralProperty("𬉽", EdmCoreModel.Instance.GetInt32(false))); // U+2C27D
+            customer.AddStructuralProperty("𢒹", EdmCoreModel.Instance.GetComplexType(true)); // U+224B9
+            model.AddElement(customer);
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                  "<EntityType Name=\"𬉼\">" +
+                    "<Key>" +
+                      "<PropertyRef Name=\"𬉽\" />" +
+                    "</Key>" +
+                    "<Property Name=\"𬉽\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                    "<Property Name=\"𢒹\" Type=\"Edm.ComplexType\" />" +
+                  "</EntityType>" +
+                "</Schema></edmx:DataServices></edmx:Edmx>");
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""\uD870\uDE7C"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""\uD870\uDE7D""
+      ],
+      ""\uD870\uDE7D"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""\uD849\uDCB9"": {
+        ""$Type"": ""Edm.ComplexType"",
+        ""$Nullable"": true
+      }
+    }
+  }
+}");
+        }
+
         #region Reference
         [Fact]
         public void ShouldWriteEdmReference()

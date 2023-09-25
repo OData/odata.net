@@ -83,6 +83,8 @@ namespace Microsoft.OData.UriParser
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
 
+        private readonly bool useSurrogatePairs;
+
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
 
@@ -97,8 +99,9 @@ namespace Microsoft.OData.UriParser
         /// <param name="expression">Expression to parse.</param>
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter)
-            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/)
+        /// <param name="useSurrogatePairs">If ture, the lexer supports surrogate pairs for identifier.</param>
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool useSurrogatePairs = false)
+            : this(expression, moveToFirstToken, useSemicolonDelimiter, false /*parsingFunctionParameters*/, useSurrogatePairs)
         {
         }
 
@@ -107,7 +110,8 @@ namespace Microsoft.OData.UriParser
         /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
-        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
+        /// <param name="useSurrogatePairs">If ture, the lexer supports surrogate pairs for identifier.</param>
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters, bool useSurrogatePairs = false)
         {
             Debug.Assert(expression != null, "expression != null");
 
@@ -117,6 +121,7 @@ namespace Microsoft.OData.UriParser
             this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
             this.parsingDoubleQuotedString = false;
+            this.useSurrogatePairs = useSurrogatePairs;
 
             this.SetTextPos(0);
 
@@ -199,7 +204,8 @@ namespace Microsoft.OData.UriParser
                     Char.IsLetter(this.ch.Value) ||       // IsLetter covers: Ll, Lu, Lt, Lo, Lm
                     this.ch == '_' ||
                     this.ch == '$' ||
-                    PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.LetterNumber);
+                    PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.LetterNumber ||
+                    (this.useSurrogatePairs && PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.Surrogate));
             }
         }
 
@@ -215,7 +221,8 @@ namespace Microsoft.OData.UriParser
             {
                 return this.ch != null && (
                     Char.IsLetterOrDigit(this.ch.Value) ||    // covers: Ll, Lu, Lt, Lo, Lm, Nd
-                    AdditionalUnicodeCategoriesForIdentifier.Contains(PlatformHelper.GetUnicodeCategory(this.ch.Value)));  // covers the rest
+                    AdditionalUnicodeCategoriesForIdentifier.Contains(PlatformHelper.GetUnicodeCategory(this.ch.Value)) ||  // covers the rest
+                    (this.useSurrogatePairs && PlatformHelper.GetUnicodeCategory(this.ch.Value) == UnicodeCategory.Surrogate));
             }
         }
         #endregion

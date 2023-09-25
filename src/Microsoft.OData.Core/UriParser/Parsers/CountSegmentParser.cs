@@ -124,7 +124,7 @@ namespace Microsoft.OData.UriParser
             this.lexer.NextToken();
             string filterText = UriParserHelper.ReadQueryOption(this.lexer);
 
-            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier);
+            UriQueryExpressionParser filterParser = new UriQueryExpressionParser(ODataUriParserSettings.DefaultFilterLimit, this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier, useSurrogatePairs: this.UriQueryExpressionParser.UseSurrogatePairs);
             return filterParser.ParseFilter(filterText);
         }
 
