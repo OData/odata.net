@@ -42,6 +42,32 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ArgumentNull()
+        {
+            var csdl =
+                @"<?xml version=""1.0"" encoding=""utf-8""?>" +
+                @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx "">" +
+                ////@"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">" + // TODO replacing the above line with this one causes the test to pass
+                @"<edmx:DataServices>" +
+                @"<Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""Microsoft.DirectoryServices"" xmlns:ags=""http://aggregator.microsoft.com/internal"">" +
+                @"</Schema>" +
+                @"</edmx:DataServices>" +
+                @"</edmx:Edmx>";
+            using (var stream = new MemoryStream(System.Text.Encoding.UTF8.GetBytes(csdl)))
+            {
+                stream.Position = 0;
+                using (var reader = XmlReader.Create(stream))
+                {
+                    var readerSettings = new CsdlReaderSettings()
+                    {
+                        IgnoreUnexpectedAttributesAndElements = true,
+                    };
+                    Assert.True(CsdlReader.TryParse(reader, true, out var model, out var errors));
+                }
+            }
+        }
+
+        [Fact]
         public void ShouldReadEdmReference()
         {
             // Act & Assert for XML
