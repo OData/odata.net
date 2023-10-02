@@ -220,39 +220,31 @@ namespace Microsoft.OData.Json
         /// <returns>The string representation of the DateTimeOffset based on the given format.</returns>
         internal static string FormatDateTimeOffset(DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
-            switch (dateTimeFormat)
+            if (dateTimeFormat == ODataJsonDateTimeFormat.ISO8601DateTime)
             {
-                case ODataJsonDateTimeFormat.ISO8601DateTime:
-                    {
-                        // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark
-                        //  YYYY-MM-DDThh:mm:ss.sTZD
-                        //  [("+" / "-") offset]
-                        //  quotation-mark
-                        //
-                        // offset = 4DIGIT
-                        return XmlConvert.ToString(value);
-                    }
-
-                case ODataJsonDateTimeFormat.ODataDateTime:
-                    {
-                        // Uses the same format as DateTime but with offset:
-                        // jsonDateTime= quotation-mark
-                        //  "\/Date("
-                        //  ticks
-                        //  [("+" / "-") offset]
-                        //  ")\/"
-                        //  quotation-mark
-                        //
-                        // ticks = *DIGIT
-                        // offset = 4DIGIT
-                        return FormatDateTimeAsJsonTicksString(value);
-                    }
+                // Uses the same format as DateTime but with offset:
+                // jsonDateTime= quotation-mark
+                //  YYYY-MM-DDThh:mm:ss.sTZD
+                //  [("+" / "-") offset]
+                //  quotation-mark
+                //
+                // offset = 4DIGIT
+                return XmlConvert.ToString(value);
             }
-
-            // NOTE: This statement will not be reached because
-            // we exhausted all the options in the enum
-            return dateTimeFormat.ToString();
+            else
+            {
+                // Uses the same format as DateTime but with offset:
+                // jsonDateTime= quotation-mark
+                //  "\/Date("
+                //  ticks
+                //  [("+" / "-") offset]
+                //  ")\/"
+                //  quotation-mark
+                //
+                // ticks = *DIGIT
+                // offset = 4DIGIT
+                return FormatDateTimeAsJsonTicksString(value);
+            }
         }
 
         /// <summary>
