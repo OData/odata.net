@@ -308,7 +308,21 @@ namespace Microsoft.OData.Json
         public void WriteValue(DateTimeOffset value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value);
+            if (value.Offset == TimeSpan.Zero)
+            {
+                // The default JsonWriter uses the format 2022-11-09T09:42:30Z when the offset is 0
+                // Utf8JsonWriter uses the format 2022-11-09T09:42:30+00:00
+                // While both formats are valid IS0 8601, we decided to keep the output
+                // consistent between the two writers to avoid breaking any client that may
+                // have dependency on the original format.
+                string formattedValue = JsonValueUtils.FormatDateTimeOffset(value, ODataJsonDateTimeFormat.ISO8601DateTime);
+                this.utf8JsonWriter.WriteStringValue(formattedValue);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteStringValue(value);
+            }
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -725,7 +739,21 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(DateTimeOffset value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value);
+            if (value.Offset == TimeSpan.Zero)
+            {
+                // The default JsonWriter uses the format 2022-11-09T09:42:30Z when the offset is 0
+                // Utf8JsonWriter uses the format 2022-11-09T09:42:30+00:00
+                // While both formats are valid IS0 8601, we decided to keep the output
+                // consistent between the two writers to avoid breaking any client that may
+                // have dependency on the original format.
+                string formattedValue = JsonValueUtils.FormatDateTimeOffset(value, ODataJsonDateTimeFormat.ISO8601DateTime);
+                this.utf8JsonWriter.WriteStringValue(formattedValue);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteStringValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
