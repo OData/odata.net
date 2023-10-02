@@ -70,6 +70,7 @@ AtomValueUtils_CannotConvertValueToAtomPrimitive=Cannot convert a value of type 
 
 ODataJsonWriter_UnsupportedValueType=The value of type '{0}' is not supported and cannot be converted to a JSON representation.
 ODataJsonWriter_UnsupportedValueInCollection=Unable to serialize an object in a collection as it is not a supported ODataValue.
+ODataJsonWriter_UnsupportedDateTimeFormat=The specified ODataJsonDateTimeFormat is not supported.
 
 ODataException_GeneralError=An error occurred while processing the OData message.
 ODataErrorException_GeneralError=An error was read from the payload. See the 'Error' property for more details.
