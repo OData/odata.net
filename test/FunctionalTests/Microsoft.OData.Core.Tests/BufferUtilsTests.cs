@@ -15,6 +15,8 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BufferUtilsShouldCreateANewBufferIfPassedInBufferIsNull()
         {
+            Assert.True(false, "gdebruin");
+            
             char[] buffer = null;
             Assert.NotNull(BufferUtils.InitializeBufferIfRequired(buffer));
         }
@@ -22,9 +24,16 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void BufferUtilsShouldCreateNonZeroLengthBuffer()
         {
+            InternalMethod();
+            
             char[] buffer = null;
             buffer = BufferUtils.InitializeBufferIfRequired(buffer);
             Assert.True(buffer.Length > 0);
+        }
+
+        private void InternalMethod()
+        {
+            throw new InvalidOperationException("also gdebruin");
         }
 
         [Fact]
