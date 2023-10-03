@@ -1047,9 +1047,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
-        public void KeyLookupCannotAppearAfterFunctionWithParameters()
+        public void KeyLookupCanAppearAfterFunctionWithParameters()
         {
-            PathFunctionalTestsUtil.RunParseErrorPath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)(1)", ODataErrorStrings.ExpressionLexer_SyntaxError(14, "inOffice=true)(1"));
+            var path = PathFunctionalTestsUtil.RunParsePath("People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)(42)");
+            Assert.Equal(4, path.Count);
+            path.Segments[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            path.Segments[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
+            path.Segments[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForAllMyFriendsDogs(2));
+            path.Segments[3].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 42));
         }
 
         [Fact]

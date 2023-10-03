@@ -801,6 +801,30 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         }
 
         [Fact]
+        public void ParseKeyInParenthesisAfterBoundFunctionReturnsCollectionOfEntitiesShouldWork()
+        {
+            // People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice = true)(42)
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)(42)" });
+            Assert.Equal(4, path.Count);
+            path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForAllMyFriendsDogs(2));
+            path[3].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 42));
+        }
+
+        [Fact]
+        public void ParseKeyAsSegmentAfterBoundFunctionReturnsCollectionOfEntitiesShouldWork()
+        {
+            // People(1)/Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice = true)/42
+            IList<ODataPathSegment> path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.AllMyFriendsDogs(inOffice=true)", "42" });
+            Assert.Equal(4, path.Count);
+            path[0].ShouldBeEntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            path[1].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 1));
+            path[2].ShouldBeOperationSegment(HardCodedTestModel.GetFunctionForAllMyFriendsDogs(2));
+            path[3].ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 42));
+        }
+
+        [Fact]
         public void ParseBoundFunctionWithTypeDefinitionAsParameterAndReturnTypeShouldWork()
         {
             var path = this.testSubject.ParsePath(new[] { "People(1)", "Fully.Qualified.Namespace.GetFullName(nickname='abc')" });
