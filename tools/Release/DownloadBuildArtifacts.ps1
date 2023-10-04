@@ -7,3 +7,20 @@ automation that is still missing:
 2. release note generation is not fully automated; categories could be discovered by looking at work items linked to the PR
 3. anything after release note generation hasn't been automated yet
 #>
+
+
+
+### create PAT here: https://github.com/settings/tokens/new
+### it should have `repo` checked and nothing else
+
+$headers = @{
+	'Accept' = 'application/vnd.github+json'
+	'Authorization' = 'Bearer TODO'
+	'X-GitHub-Api-Version' = '2022-11-28'
+}
+
+$body = "{""title"":""Amazing new feature"",""body"":""Please pull these awesome changes in!"",""head"":""corranrogue9/modelnullref"",""base"":""master""}"
+
+Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
+
+
