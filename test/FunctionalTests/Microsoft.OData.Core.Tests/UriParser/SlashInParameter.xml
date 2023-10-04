@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+  <edmx:DataServices>
+    <Schema Namespace="ns" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+      <EntityContainer Name="Container">
+        <Singleton Name="drive" Type="self.drive" />
+      </EntityContainer>
+      <EntityType Name="drive">
+        <NavigationProperty Name="root" Type="self.root" ContainsTarget="true" Nullable="false" />
+      </EntityType>
+      <EntityType Name="root">
+      </EntityType>
+      <EntityType Name="driveItem">
+        <Property Name="foo" Type="Edm.String" />
+      </EntityType>
+      <Function Name="getByPath" IsBound="true">
+        <Parameter Name="bindingParameter" Type="self.root" />
+        <Parameter Name="path" Type="Edm.String" Nullable="false" />
+        <ReturnType Type="self.driveItem" />
+      </Function>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

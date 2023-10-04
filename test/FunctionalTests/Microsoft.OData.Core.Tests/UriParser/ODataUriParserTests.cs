@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -26,6 +28,62 @@ namespace Microsoft.OData.Tests.UriParser
     {
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+
+        /// <summary>
+        /// Gets the name of the caller method of this method
+        /// </summary>
+        /// <param name="caller">The string that the method name of the caller will be written into</param>
+        /// <returns>The name of the caller method of this method</returns>
+        public static string GetCurrentMethodName([System.Runtime.CompilerServices.CallerMemberName] string caller = null)
+        {
+            return caller;
+        }
+
+#if !NETCOREAPP1_1
+        [Fact]
+        public void SlashInParameter()
+        {
+            // load the CSDL from the embedded resources
+            var assembly = Assembly.GetExecutingAssembly();
+            var currentMethod = GetCurrentMethodName();
+            var csdlResourceName = assembly.GetManifestResourceNames().Where(name => name.EndsWith($"{currentMethod}.xml")).Single();
+
+            // parse the CSDL
+            IEdmModel model;
+            using (var csdlResourceStream = assembly.GetManifestResourceStream(csdlResourceName))
+            {
+                using (var xmlReader = XmlReader.Create(csdlResourceStream))
+                {
+                    if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
+                    {
+                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                    }
+                }
+            }
+
+            var domain = new Uri("http://tempuri.org");
+            var requestUrl = new Uri(domain, "/drive/root/ns.getByPath(path='Foo%252fbar')");
+            var uriParser = new ODataUriParser(model, domain, requestUrl);
+            var odataUri = uriParser.ParseUri();
+
+            Assert.Equal(3, odataUri.Path.Segments.Count);
+            var operationSegment = odataUri.Path.Segments[2] as OperationSegment;
+            Assert.NotNull(operationSegment);
+            Assert.Equal(1, operationSegment.Parameters.Count());
+            var convertNode = operationSegment.Parameters.First().Value as ConvertNode;
+            Assert.NotNull(convertNode);
+            var constantNode = convertNode.Source as ConstantNode;
+            Assert.NotNull(constantNode);
+
+            //// TODO the below assert succeeds; this is because the %25 from the original URL has been decoded. However, there is no way to determine that the original URL had to be decoded.
+            //// constantNode.Value *also* contains the decoded version. constantNode.LiteralText might have been intended to contain the text from the original URL? Anyway, even if that is
+            //// the case, it's now too late to address without a breaking change probably. So, we should add another property to ConstantNode that contains the original URL value for the
+            //// node.
+            //// Assert.Equal("'Foo%2fbar'", constantNode.LiteralText);
+            
+            Assert.Equal("'Foo%252fbar'", constantNode.LiteralText);
+        }
+#endif
 
         [Theory]
         [InlineData(true)]
