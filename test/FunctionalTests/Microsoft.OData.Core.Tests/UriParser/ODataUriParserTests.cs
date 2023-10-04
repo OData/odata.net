@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Reflection;
+using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
@@ -26,6 +28,41 @@ namespace Microsoft.OData.Tests.UriParser
     {
         private readonly Uri ServiceRoot = new Uri("http://host");
         private readonly Uri FullUri = new Uri("http://host/People");
+
+        /// <summary>
+        /// Gets the name of the caller method of this method
+        /// </summary>
+        /// <param name="caller">The string that the method name of the caller will be written into</param>
+        /// <returns>The name of the caller method of this method</returns>
+        public static string GetCurrentMethodName([System.Runtime.CompilerServices.CallerMemberName] string caller = null)
+        {
+            return caller;
+        }
+
+#if !NETCOREAPP1_1
+        [Fact]
+        public void EscapeFunctionQuote()
+        {
+
+            // load the CSDL from the embedded resources
+            var assembly = Assembly.GetExecutingAssembly();
+            var currentMethod = GetCurrentMethodName();
+            var csdlResourceName = assembly.GetManifestResourceNames().Where(name => name.EndsWith($"{currentMethod}.xml")).Single();
+
+            // parse the CSDL
+            IEdmModel model;
+            using (var csdlResourceStream = assembly.GetManifestResourceStream(csdlResourceName))
+            {
+                using (var xmlReader = XmlReader.Create(csdlResourceStream))
+                {
+                    if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
+                    {
+                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                    }
+                }
+            }
+        }
+#endif
 
         [Theory]
         [InlineData(true)]
