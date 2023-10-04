@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+  <edmx:DataServices>
+    <Schema Namespace="ns" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+      <EntityContainer Name="Container">
+        <EntitySet Name="users" EntityType="self.user" />
+      </EntityContainer>
+      <EntityType Name="user">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false"/>
+        <Property Name="foo-bar" Type="Edm.String" />
+      </EntityType>
+      <Action Name="testAction" IsBound="true">
+        <Parameter Name="bindingParameter" Type="self.user" Nullable="false" />
+        <Parameter Name="param" Type="Edm.String" Nullable="false" />
+      </Action>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
