@@ -98,6 +98,13 @@ namespace Microsoft.OData.Edm.Csdl
             EdmUtil.CheckArgumentNull(annotation, "annotation");
             EdmUtil.CheckArgumentNull(model, "model");
 
+            if (annotation.Target is IEdmTargetPath targetPath &&
+                location != null &&
+                location.Value == EdmVocabularyAnnotationSerializationLocation.Inline)
+            {
+                throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation(targetPath.Path));
+            }
+
             model.SetAnnotationValue(annotation, EdmConstants.InternalUri, CsdlConstants.AnnotationSerializationLocationAnnotation, (object)location);
         }
 

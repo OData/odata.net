@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Linq;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests
@@ -13,6 +14,51 @@ namespace Microsoft.OData.Edm.Tests
     ///</summary>
     public class EdmUtilTests
     {
+        private static EdmEntityType customer = new EdmEntityType("NS", "Customer");
+        private static EdmEntityType vipCustomer = new EdmEntityType("NS", "VipCustomer", customer);
+        private static EdmEntityType city = new EdmEntityType("NS", "City");
+        private static EdmComplexType complex = new EdmComplexType("NS", "Address");
+        private static EdmComplexType derivedcomplex = new EdmComplexType("NS", "DerivedAddress", complex);
+        private static EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
+        private static EdmEntitySet entitySet = new EdmEntitySet(container, "Customers", customer);
+        private static EdmSingleton singleton = new EdmSingleton(container, "Me", customer);
+
+        private static IEdmProperty nameProperty;
+        private static IEdmProperty addressProperty;
+        private static IEdmProperty myRoadProperty;
+        private static EdmNavigationProperty navUnderComplex;
+        private static EdmNavigationProperty navUnderCustomer;
+
+        public EdmUtilTests()
+        {
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
+
+            complex.AddStructuralProperty("Road", EdmCoreModel.Instance.GetString(false));
+            derivedcomplex.AddStructuralProperty("MyRoad", EdmCoreModel.Instance.GetString(false));
+            navUnderComplex = complex.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "City",
+                    Target = city,
+                    TargetMultiplicity = EdmMultiplicity.One,
+                });
+
+            customer.AddStructuralProperty("Address", new EdmComplexTypeReference(complex, false));
+
+            navUnderCustomer = customer.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "Cities",
+                    Target = city,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            nameProperty = customer.DeclaredProperties.Where(x => x.Name == "Name").FirstOrDefault();
+            addressProperty = customer.DeclaredProperties.Where(x => x.Name == "Address").FirstOrDefault();
+            myRoadProperty = derivedcomplex.DeclaredProperties.Where(x => x.Name == "MyRoad").FirstOrDefault();
+        }
+
         [Fact]
         public void FunctionImportShouldProduceCorrectFullyQualifiedNameAndNotHaveParameters()
         {
@@ -27,6 +73,60 @@ namespace Microsoft.OData.Edm.Tests
         {
             var entitySet = new EdmEntitySet(new EdmEntityContainer("d.s", "container"), "entitySet", new EdmEntityType("foo", "type"));
             Assert.Equal("d.s.container/entitySet", EdmUtil.FullyQualifiedName(entitySet));
+        }
+
+        [Fact]
+        public void EdmTargetPathEntitySetAndPropertyShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, entitySet, nameProperty);
+
+            Assert.Equal("NS.Default/Customers/Name", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Customers/Name", target.Path);
+        }
+
+        [Fact]
+        public void EdmTargetPathEntitySetAndPropertyOnDerivedTypeShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, entitySet, vipCustomer, nameProperty);
+
+            Assert.Equal("NS.Default/Customers/NS.VipCustomer/Name", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Customers/NS.VipCustomer/Name", target.Path);
+        }
+
+        [Fact]
+        public void EdmTargetPathEntitySetAndNavigationPropertyShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, entitySet, navUnderCustomer);
+
+            Assert.Equal("NS.Default/Customers/Cities", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Customers/Cities", target.Path);
+        }
+
+        [Fact]
+        public void EdmTargetPathEntitySetAndNavigationPropertyInComplexTypeShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, entitySet, addressProperty, navUnderComplex);
+
+            Assert.Equal("NS.Default/Customers/Address/City", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Customers/Address/City", target.Path);
+        }
+
+        [Fact]
+        public void EdmTargetPathEntitySetAndNavigationPropertyInDerivedComplexTypeShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, entitySet, addressProperty, derivedcomplex, myRoadProperty);
+
+            Assert.Equal("NS.Default/Customers/Address/NS.DerivedAddress/MyRoad", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Customers/Address/NS.DerivedAddress/MyRoad", target.Path);
+        }
+
+        [Fact]
+        public void EdmTargetPathSingletonAndNavigationPropertyInComplexTypeShouldProduceCorrectFullyQualifiedName()
+        {
+            EdmTargetPath target = new EdmTargetPath(container, singleton, addressProperty, navUnderComplex);
+
+            Assert.Equal("NS.Default/Me/Address/City", EdmUtil.FullyQualifiedName(target));
+            Assert.Equal("NS.Default/Me/Address/City", target.Path);
         }
 
         [Theory]

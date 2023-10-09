@@ -23,7 +23,7 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
-    public class CsdlWriterTests
+    public partial class CsdlWriterTests
     {
         #region Reference
         [Fact]

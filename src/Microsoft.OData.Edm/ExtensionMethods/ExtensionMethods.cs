@@ -10,6 +10,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -250,6 +251,41 @@ namespace Microsoft.OData.Edm
             }
 
             return result;
+        }
+
+        /// <summary>
+        /// Gets a target path's vocabulary annotations defined in a specific model and models referenced by that model.
+        /// </summary>
+        /// <param name="model">The model to search.</param>
+        /// <param name="targetPath">The target path to check for annotations.</param>
+        /// <returns>Annotations attached to the target path by this model or by models referenced by this model.</returns>
+        public static IEnumerable<IEdmVocabularyAnnotation> GetTargetPathAnnotations(this IEdmModel model, string targetPath)
+        {
+            EdmUtil.CheckArgumentNull(model, nameof(model));
+            EdmUtil.CheckArgumentNull(targetPath, nameof(targetPath));
+
+            IEdmTargetPath edmTargetPath = model.GetTargetPath(targetPath);
+
+            return model.FindVocabularyAnnotations(edmTargetPath);
+        }
+
+        /// <summary>
+        /// Gets a target path's vocabulary annotations defined in a specific model and models referenced by that model.
+        /// </summary>
+        /// <typeparam name="T">Type of the annotation being returned.</typeparam>
+        /// <param name="model">The model to search.</param>
+        /// <param name="targetPath">The target path to check for annotations.</param>
+        /// <param name="term">Term to search for.</param>
+        /// <returns>Annotations attached to the target path by this model or by models referenced by this model that bind the term.</returns>
+        public static IEnumerable<T> FindVocabularyAnnotations<T>(this IEdmModel model, string targetPath, IEdmTerm term) where T : IEdmVocabularyAnnotation
+        {
+            EdmUtil.CheckArgumentNull(model, nameof(model));
+            EdmUtil.CheckArgumentNull(targetPath, nameof(targetPath));
+            EdmUtil.CheckArgumentNull(term, nameof(term));
+
+            IEdmTargetPath edmTargetPath = model.GetTargetPath(targetPath);
+
+            return model.FindVocabularyAnnotations<T>(edmTargetPath, term);
         }
 
         /// <summary>
@@ -1527,6 +1563,30 @@ namespace Microsoft.OData.Edm
                 PrimitiveValueConverterConstants.UInt64TypeName,
                 PrimitiveValueConverterConstants.DefaultUInt64UnderlyingType,
                 isNullable);
+        }
+
+        /// <summary>
+        /// Get the <see cref="IEdmTargetPath"/> from a target path string.
+        /// </summary>
+        /// <param name="model">The EdmModel.</param>
+        /// <param name="targetPath">Target path containing segments separated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
+        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <returns>The created <see cref="IEdmTargetPath"/>.</returns>
+        public static IEdmTargetPath GetTargetPath(this IEdmModel model, string targetPath, bool caseInsensitive = true)
+        {
+            EdmUtil.CheckArgumentNull(model, nameof(model));
+            EdmUtil.CheckArgumentNull(targetPath, nameof(targetPath));
+
+            string[] targetPathSegments = targetPath.Split('/');
+
+            IEnumerable<IEdmElement> pathSegments = model.GetTargetSegments(targetPathSegments, caseInsensitive);
+
+            if (pathSegments.Any())
+            {
+                return new EdmTargetPath(pathSegments, targetPath);
+            }
+
+            return null;
         }
 
         #endregion
@@ -2936,6 +2996,60 @@ namespace Microsoft.OData.Edm
 
             return name;
         }
+
+        #region IEdmTargetPath extensions
+
+        /// <summary>
+        /// Get the path string from the <see cref="IEdmTargetPath"/>.
+        /// </summary>
+        /// <param name="targetPath">The target path.</param>
+        /// <returns>The target path string.</returns>
+        internal static string GetPathString(this IEdmTargetPath targetPath)
+        {
+            EdmUtil.CheckArgumentNull(targetPath, nameof(targetPath));
+
+            IEdmEntityContainer container = targetPath.Segments[0] as IEdmEntityContainer;
+
+            if (container == null)
+            {
+                throw new InvalidOperationException(Strings.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
+            }
+
+            IEdmEntityContainerElement containerElement = targetPath.Segments[1] as IEdmEntityContainerElement;
+
+            if (containerElement == null)
+            {
+                throw new InvalidOperationException(Strings.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
+            }
+
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.Append(container.FullName());
+            stringBuilder.Append("/");
+            stringBuilder.Append(containerElement.Name);
+
+            int index = 2;
+
+            while (index < targetPath.Segments.Count)
+            {
+                if (targetPath.Segments[index] is IEdmSchemaType schemaType)
+                {
+                    stringBuilder.Append("/");
+                    stringBuilder.Append(EdmUtil.FullyQualifiedName(schemaType));
+                }
+
+                else if (targetPath.Segments[index] is IEdmProperty edmProperty)
+                {
+                    stringBuilder.Append("/");
+                    stringBuilder.Append(edmProperty.Name);
+                }
+
+                index++;
+            }
+
+            return stringBuilder.ToString();
+        }
+
+        #endregion
 
         #region methods for finding elements in CsdlSemanticsModel
 
