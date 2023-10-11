@@ -416,7 +416,7 @@ namespace Microsoft.OData.Client
 
                     if (m.Method.Name != "GetValue" && m.Method.Name != "GetValueAsync")
                     {
-                        if (m.Object != null && (this.InSubScope || this.parent?.NodeType == ExpressionType.Call))
+                        if (m.Object != null && (this.InSubScope || this.parent?.NodeType == ExpressionType.Call || this.parent?.NodeType == ExpressionType.MemberAccess))
                         {
                             this.builder.Append(UriHelper.FORWARDSLASH);
                         }
