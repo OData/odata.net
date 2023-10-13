@@ -8867,15 +8867,6 @@ public sealed class Microsoft.OData.Client.OriginalNameAttribute : System.Attrib
     string OriginalName  { public get; }
 }
 
-[
-AttributeUsageAttribute(),
-]
-public sealed class Microsoft.OData.Client.UriFunctionAttribute : System.Attribute {
-    public UriFunctionAttribute (bool allowClientSideEvaluation = false)
-
-    bool AllowClientSideEvaluation  { public get; }
-}
-
 public sealed class Microsoft.OData.Client.QueryOperationResponse`1 : Microsoft.OData.Client.QueryOperationResponse, IEnumerable`1, IEnumerable {
     long Count  { public virtual get; }
     [
@@ -8925,6 +8916,15 @@ public sealed class Microsoft.OData.Client.StreamDescriptor : Microsoft.OData.Cl
 public sealed class Microsoft.OData.Client.UriEntityOperationParameter : Microsoft.OData.Client.UriOperationParameter {
     public UriEntityOperationParameter (string name, object value)
     public UriEntityOperationParameter (string name, object value, bool useEntityReference)
+}
+
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.UriFunctionAttribute : System.Attribute {
+    public UriFunctionAttribute (params bool allowClientSideEvaluation)
+
+    bool AllowClientSideEvaluation  { public get; }
 }
 
 public sealed class Microsoft.OData.Client.WritingEntityReferenceLinkArgs {
