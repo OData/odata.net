@@ -20,6 +20,7 @@ Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType=T
 EdmType_UnexpectedEdmType=Unexpected Edm type.
 NavigationPropertyBinding_PathIsNotValid=The navigation property binding path is not valid.
 MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
+NullTermForAlternateKey=A null term was provided in the '{0}' parameter when enumerating alternate keys on a type
 
 ; Evaluation messages
 Edm_Evaluator_NoTermTypeAnnotationOnType=Type '{0}' must have a single type annotation with term type '{1}'.

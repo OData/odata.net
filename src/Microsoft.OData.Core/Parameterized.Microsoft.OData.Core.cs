@@ -6389,6 +6389,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "A null term was provided in the '{0}' parameter"
+        /// </summary>
+        internal static string UriParser_NullAlternateKeyTerm(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.UriParser_NullAlternateKeyTerm, p0);
+        }
+
+        /// <summary>
         /// A string like "More than one properties match the name '{0}' were found in type '{1}'."
         /// </summary>
         internal static string UriParserMetadata_MultipleMatchingPropertiesFound(object p0, object p1)

@@ -2156,13 +2156,36 @@ namespace Microsoft.OData.Edm
         /// <returns>Alternate Keys of this type.</returns>
         public static IEnumerable<IDictionary<string, IEdmProperty>> GetAlternateKeysAnnotation(this IEdmModel model, IEdmEntityType type)
         {
+            return GetAlternateKeysAnnotation(model, type, new[] { AlternateKeysVocabularyModel.AlternateKeysTerm, CoreVocabularyModel.AlternateKeysTerm });
+        }
+
+        /// <summary>
+        /// Gets the declared alternate keys of the most defined entity with a declared key present.
+        /// </summary>
+        /// <param name="model">The model to be used.</param>
+        /// <param name="type">Reference to the calling object.</param>
+        /// <param name="alternateKeyTerms">The <see cref="IEdmTerm"/>s that are used within <paramref name="model"/> to represent alternate key annotations</param>
+        /// <returns>Alternate Keys of this type.</returns>
+        /// <exception cref="ArgumentNullException">
+        /// Thrown if <paramref name="model"/> or <paramref name="type"/> or <paramref name="alternateKeyTerms"/> is <see langword="null"/>
+        /// </exception>
+        /// <exception cref="ArgumentException">Thrown if <paramref name="alternateKeyTerms"/> contains any <see langword="null"/> values</exception>
+        public static IEnumerable<IDictionary<string, IEdmProperty>> GetAlternateKeysAnnotation(
+            this IEdmModel model, 
+            IEdmEntityType type, 
+            IEnumerable<IEdmTerm> alternateKeyTerms)
+        {
             EdmUtil.CheckArgumentNull(model, "model");
             EdmUtil.CheckArgumentNull(type, "type");
+            EdmUtil.CheckArgumentNull(alternateKeyTerms, nameof(alternateKeyTerms));
 
             IEdmEntityType checkingType = type;
             while (checkingType != null)
             {
-                IEnumerable<IDictionary<string, IEdmProperty>> declaredAlternateKeys = GetDeclaredAlternateKeysForType(checkingType, model);
+                IEnumerable<IDictionary<string, IEdmProperty>> declaredAlternateKeys = GetDeclaredAlternateKeysForType(
+                    checkingType, 
+                    model, 
+                    alternateKeyTerms);
                 if (declaredAlternateKeys != null)
                 {
                     return declaredAlternateKeys;
@@ -3462,24 +3485,31 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="type">Reference to the calling object.</param>
         /// <param name="model">The model to be used.</param>
+        /// <param name="alternateKeyTerms">
+        /// The <see cref="IEdmTerm"/>s that are used within <paramref name="model"/> to represent alternate key annotations; assumed to not be <see langword="null"/>
+        /// </param>
         /// <returns>Alternate Keys of this type.</returns>
-        private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(IEdmEntityType type, IEdmModel model)
+        /// <exception cref="ArgumentException">Thrown if <paramref name="alternateKeyTerms"/> contains any <see langword="null"/> values</exception>
+        private static IEnumerable<IDictionary<string, IEdmProperty>> GetDeclaredAlternateKeysForType(
+            IEdmEntityType type,
+            IEdmModel model, 
+            IEnumerable<IEdmTerm> alternateKeyTerms)
         {
-            IEdmVocabularyAnnotation annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, AlternateKeysVocabularyModel.AlternateKeysTerm).FirstOrDefault();
-            IEdmVocabularyAnnotation coreAnnotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, CoreVocabularyModel.AlternateKeysTerm).FirstOrDefault();
-
-            if (annotationValue != null || coreAnnotationValue != null)
+            var any = false;
+            var declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
+            foreach (var alternateKeyTerm in alternateKeyTerms)
             {
-                List<IDictionary<string, IEdmProperty>> declaredAlternateKeys = new List<IDictionary<string, IEdmProperty>>();
-
-                Action<IEdmVocabularyAnnotation> retrieveAnnotationAction = ann =>
+                if (alternateKeyTerm == null)
                 {
-                    if (ann == null)
-                    {
-                        return;
-                    }
+                    throw new ArgumentException(Strings.NullTermForAlternateKey(nameof(alternateKeyTerms)));
+                }
 
-                    IEdmCollectionExpression keys = ann.Value as IEdmCollectionExpression;
+                var annotationValue = model.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(type, alternateKeyTerm).FirstOrDefault();
+                if (annotationValue != null)
+                {
+                    any = true;
+
+                    IEdmCollectionExpression keys = annotationValue.Value as IEdmCollectionExpression;
                     Debug.Assert(keys != null, "expected IEdmCollectionExpression for alternate key annotation value");
 
                     foreach (IEdmRecordExpression key in keys.Elements.OfType<IEdmRecordExpression>())
@@ -3510,13 +3540,11 @@ namespace Microsoft.OData.Edm
                             }
                         }
                     }
-                };
+                }
+            }
 
-                // For backwards-compability, we merge the alternate keys from community and core vocabulary annotations.
-
-                retrieveAnnotationAction(annotationValue);
-                retrieveAnnotationAction(coreAnnotationValue);
-
+            if (any)
+            {
                 return declaredAlternateKeys;
             }
 
