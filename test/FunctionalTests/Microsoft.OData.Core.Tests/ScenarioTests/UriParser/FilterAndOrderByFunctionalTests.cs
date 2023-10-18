@@ -2138,17 +2138,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Fact]
         public void FilterWithInOperationWithParensStringCollection_EscapedSingleQuote()
         {
-            FilterClause filter = ParseFilter("SSN in ('a''bc','''def','xyz''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+            FilterClause filter = ParseFilter("SSN in ('a''bc','''def','ghi''','xyz''')", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
             var inNode = Assert.IsType<InNode>(filter.Expression);
             Assert.Equal("SSN", Assert.IsType<SingleValuePropertyAccessNode>(inNode.Left).Property.Name);
 
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
-            Assert.Equal("('a''bc','''def','xyz''')", collectionNode.LiteralText);
-            Assert.Equal(3, collectionNode.Collection.Count);
+            Assert.Equal("('a''bc','''def','ghi''','xyz''')", collectionNode.LiteralText);
+            Assert.Equal(4, collectionNode.Collection.Count);
             collectionNode.Collection.ElementAt(0).ShouldBeConstantQueryNode("a'bc");
             collectionNode.Collection.ElementAt(1).ShouldBeConstantQueryNode("'def");
-            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("xyz'");
+            collectionNode.Collection.ElementAt(2).ShouldBeConstantQueryNode("ghi'");
+            collectionNode.Collection.ElementAt(3).ShouldBeConstantQueryNode("xyz'");
         }
 
         [Fact]
