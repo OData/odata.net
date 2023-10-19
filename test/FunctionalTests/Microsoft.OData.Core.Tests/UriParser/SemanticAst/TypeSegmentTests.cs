@@ -28,6 +28,18 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void IdentifierByDefaultSetsActualFullTypeName()
+        {
+            // Single
+            TypeSegment typeSegment = new TypeSegment(HardCodedTestModel.GetPersonType(), null);
+            Assert.Equal("Fully.Qualified.Namespace.Person", typeSegment.Identifier);
+
+            // Collection
+            typeSegment = new TypeSegment(new EdmCollectionType(new EdmEntityTypeReference(HardCodedTestModel.GetPersonType(), false)), null);
+            Assert.Equal("Fully.Qualified.Namespace.Person", typeSegment.Identifier);
+        }
+
+        [Fact]
         public void TypeSetCorrectly()
         {
             IEdmType type = ModelBuildingHelpers.BuildValidEntityType();

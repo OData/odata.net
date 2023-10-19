@@ -56,6 +56,10 @@ namespace Microsoft.OData.UriParser
             {
                 ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "KeySegments");
             }
+
+            // We don't need to re-generate the indeitifer.
+            // Here, just put a place holder, the caller can override this if need more detail identifier.
+            this.Identifier = "{key}";
         }
 
         /// <summary>

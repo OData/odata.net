@@ -27,6 +27,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Fact]
+        public void IdentifierByDefaultIsKeyDefaultName()
+        {
+            var set = ModelBuildingHelpers.BuildValidEntitySet();
+            KeySegment segment = new KeySegment(Key, set.EntityType(), set);
+            Assert.Equal("{key}", segment.Identifier);
+        }
+
+        [Fact]
         public void TypeIsSetCorrectly()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
