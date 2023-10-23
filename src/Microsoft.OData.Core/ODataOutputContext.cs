@@ -19,7 +19,11 @@ namespace Microsoft.OData
     /// Base class for all output contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
+#if NETCOREAPP3_1_OR_GREATER
+    public abstract class ODataOutputContext : IDisposable, IAsyncDisposable
+#else
     public abstract class ODataOutputContext : IDisposable
+#endif
     {
         /// <summary>The format for this output context.</summary>
         private readonly ODataFormat format;
@@ -685,6 +689,33 @@ namespace Microsoft.OData
         protected virtual void Dispose(bool disposing)
         {
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// IAsyncDisposable.DisposeAsync() implementation to asynchronously cleanup unmanaged resources of the context.
+        /// </summary>
+        /// <returns>A task representing the asynchronous disposal of the context.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            await this.DisposeAsyncCore().ConfigureAwait(false);
+
+            // Calling Dispose(disposing: false) releases unmanaged resources if any
+            // but does not perform synchronous I/O (e.g. does not call Flush())
+            // See: https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#the-disposeasync-method
+            this.Dispose(false);
+
+            GC.SuppressFinalize(this);
+        }
+
+        /// <summary>
+        /// Perform the actual cleanup work asynchronously.
+        /// </summary>
+        /// <returns>A task representing the asynchronous disposal of the context.</returns>
+        protected virtual ValueTask DisposeAsyncCore()
+        {
+            return default;
+        }
+#endif
 
         /// <summary>
         /// Creates an exception which reports that the specified payload kind if not support by this format.

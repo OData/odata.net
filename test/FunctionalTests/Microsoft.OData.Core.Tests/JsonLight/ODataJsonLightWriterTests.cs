@@ -20,6 +20,7 @@ using Microsoft.OData.Json;
 #endif
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.UriParser;
+using Microsoft.OData.Tests;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
@@ -1229,7 +1230,11 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteStartAsync(addressResource);
                     await jsonLightWriter.WriteStartAsync(streamProperty);
 
+#if NETCOREAPP3_1_OR_GREATER
+                    await using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
+#else
                     using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
+#endif
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
@@ -2213,9 +2218,15 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 container = containerBuilder.BuildContainer();
             }
 
+            Stream messageStream = this.stream;
+            if (isAsync)
+            {
+                messageStream = new AsyncStream(messageStream);
+            }
+
             var messageInfo = new ODataMessageInfo
             {
-                MessageStream = this.stream,
+                MessageStream = messageStream,
                 MediaType = new ODataMediaType("application", "json"),
 #if NETCOREAPP1_1
                 Encoding = Encoding.GetEncoding(0),

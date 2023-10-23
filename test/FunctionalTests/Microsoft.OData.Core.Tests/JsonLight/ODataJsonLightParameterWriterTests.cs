@@ -939,7 +939,7 @@ namespace Microsoft.OData.Tests.JsonLight
             IEdmOperation edmOperation = null,
             bool writingResponse = true)
         {
-            var stream = new MemoryStream();
+            var stream = new AsyncStream(new MemoryStream());
 
             var jsonLightOutputContext = CreateJsonLightOutputContext(
                 stream,
@@ -973,7 +973,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(expectedPayload, payload);
         }
 
-        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, bool writingResponse = true, bool synchronous = true)
+        private static ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, bool writingResponse = true, bool synchronous = true)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test/"));

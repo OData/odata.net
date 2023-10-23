@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.Json
     public class JsonLightInstanceAnnotationWriterAsyncTests
     {
         private EdmModel model;
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
         private ODataJsonLightValueSerializer jsonLightValueSerializer;
         private EdmEnumType dayEnumType;
@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.Json
             mealComplexType.AddStructuralProperty("Dessert", EdmPrimitiveTypeKind.String);
             this.model.AddElement(this.mealComplexType);
 
-            this.stream = new MemoryStream();
+            this.stream = new AsyncStream(new MemoryStream());
             this.settings = new ODataMessageWriterSettings
             {
                 EnableMessageStreamDisposal = false,

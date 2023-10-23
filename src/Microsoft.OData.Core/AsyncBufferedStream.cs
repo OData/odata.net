@@ -106,9 +106,9 @@ namespace Microsoft.OData
         /// </summary>
         public override void Flush()
         {
-            // no-op
             // This can be called from writers that are put on top of this stream when
             // they are closed/disposed
+            this.FlushSync();
         }
 
         /// <summary>

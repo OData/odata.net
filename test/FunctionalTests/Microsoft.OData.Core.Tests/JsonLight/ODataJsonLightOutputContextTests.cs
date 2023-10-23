@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.JsonLight
     {
         private const string ServiceUri = "http://tempuri.org";
         private EdmModel model;
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings messageWriterSettings;
 
         private EdmEntityType orderEntityType;
@@ -438,7 +438,11 @@ namespace Microsoft.OData.Tests.JsonLight
                     var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
+#if NETCOREAPP3_1_OR_GREATER
+                    await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+#else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
+#endif
                     {
                         var resourceWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                         var orderResource = CreateOrderResource();
@@ -749,7 +753,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
         }
 
-        #endregion Async Tests
+#endregion Async Tests
 
         private static void WriteAndValidate(
             Action<ODataJsonLightOutputContext> test,
@@ -804,7 +808,8 @@ namespace Microsoft.OData.Tests.JsonLight
             Func<ODataJsonLightOutputContext, Task> func,
             bool writingResponse = true)
         {
-            var messageInfo = CreateMessageInfo(this.model, /*synchronous*/ true, writingResponse);
+            this.stream = new AsyncStream(this.stream);
+            var messageInfo = CreateMessageInfo(this.model, asynchronous: true, writingResponse: writingResponse);
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);
 
             await func(jsonLightOutputContext);

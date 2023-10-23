@@ -17,6 +17,7 @@ namespace Microsoft.OData.Json
     using Microsoft.OData.Edm;
 #if NETCOREAPP3_1_OR_GREATER
     using System.Text.Json;
+    using System.Threading.Tasks;
 #endif
     #endregion Namespaces
 
@@ -24,7 +25,11 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
+#if NETCOREAPP3_1_OR_GREATER
+    internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable, IAsyncDisposable
+#else
     internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable
+#endif
     {
         /// <summary>
         /// Writer to write text into.

@@ -885,7 +885,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             MaterializerEntry materializerEntry = MaterializerEntry.CreateEntry(entry, ODataFormat.Json, true, clientEdmModel, materializerContext);
             entries.Add(materializerEntry);
 
-            MaterializerNestedEntry nestedEntry = MaterializerNestedEntry.CreateNestedResourceInfo(nestedResourceInfo, entries, materializerContext);
+            MaterializerNestedEntry nestedEntry = MaterializerNestedEntry.CreateNestedEntry(nestedResourceInfo, entries, materializerContext);
             Assert.IsType<ODataNestedResourceInfo>(nestedEntry.NestedResourceInfo);
             Assert.Single(nestedEntry.NestedItems);
         }
@@ -903,7 +903,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             var clientEdmModel = new ClientEdmModel(ODataProtocolVersion.V4);
             var materializerContext = new TestMaterializerContext() { Model = clientEdmModel, Context = this.context };
             
-            MaterializerNestedEntry nestedEntry = MaterializerNestedEntry.CreateNestedResourceInfo(nestedResourceInfo, null, materializerContext);
+            MaterializerNestedEntry nestedEntry = MaterializerNestedEntry.CreateNestedEntry(nestedResourceInfo, null, materializerContext);
 
             Assert.IsType<ODataNestedResourceInfo>(nestedEntry.NestedResourceInfo);
             Assert.Empty(nestedEntry.NestedItems);

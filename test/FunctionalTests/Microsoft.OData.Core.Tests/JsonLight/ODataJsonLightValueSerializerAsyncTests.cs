@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private EdmEnumType colorEnumType;
         private EdmComplexType attributesComplexType;
         private EdmEntityType entityType;
-        private MemoryStream stream;
+        private Stream stream;
         private ODataMessageWriterSettings settings;
 
         public ODataJsonLightValueSerializerAsyncTests()
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.JsonLight
             entityType.AddStructuralProperty("Attributes", new EdmCollectionTypeReference(new EdmCollectionType(attributesComplexTypeRef)));
             this.model.AddElement(this.entityType);
 
-            this.stream = new MemoryStream();
+            this.stream = new AsyncStream(new MemoryStream());
             this.settings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false, Version = ODataVersion.V4 };
             this.settings.SetServiceDocumentUri(new Uri("http://tempuri.org"));
         }

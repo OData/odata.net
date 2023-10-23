@@ -429,7 +429,7 @@ namespace Microsoft.OData.Tests.JsonLight
         /// </summary>
         private static async Task<string> SetupSerializerAndRunTestAsync(string jsonpFunctionName, Func<ODataJsonLightSerializer, Task> func)
         {
-            var stream = new MemoryStream();
+            var stream = new AsyncStream(new MemoryStream());
             var jsonLightSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
             await func(jsonLightSerializer);
             await jsonLightSerializer.JsonLightOutputContext.FlushAsync();

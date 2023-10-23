@@ -744,6 +744,8 @@ Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceSetWriterAsync
 Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceWriter(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter
 Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceWriterAsync(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 Microsoft.OData.ODataMessageWriter.Dispose() -> void
+Microsoft.OData.ODataMessageWriter.DisposeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.OData.ODataOutputContext.DisposeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage) -> void
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage, Microsoft.OData.ODataMessageWriterSettings settings) -> void
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage, Microsoft.OData.ODataMessageWriterSettings settings, Microsoft.OData.Edm.IEdmModel model) -> void
@@ -2355,6 +2357,7 @@ virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceSetWri
 virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceWriter(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter
 virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceWriterAsync(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 virtual Microsoft.OData.ODataOutputContext.Dispose(bool disposing) -> void
+virtual Microsoft.OData.ODataOutputContext.DisposeAsyncCore() -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.ODataOutputContext.WriteError(Microsoft.OData.ODataError odataError, bool includeDebugInformation) -> void
 virtual Microsoft.OData.ODataOutputContext.WriteErrorAsync(Microsoft.OData.ODataError odataError, bool includeDebugInformation) -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataOutputContext.WriteProperty(Microsoft.OData.ODataProperty odataProperty) -> void

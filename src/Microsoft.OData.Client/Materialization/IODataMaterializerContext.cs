@@ -64,5 +64,10 @@ namespace Microsoft.OData.Client.Materialization
         /// Specifies whether query projection will handle null propagation automatically.
         /// </summary>
         bool AutoNullPropagation { get; }
+
+        /// <summary>
+        /// Specifies whether to include navigation properties when materializing an entry.
+        /// </summary>
+        bool IncludeLinks { get; }
     }
 }

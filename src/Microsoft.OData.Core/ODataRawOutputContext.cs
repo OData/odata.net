@@ -339,27 +339,63 @@ namespace Microsoft.OData
         [SuppressMessage("Microsoft.Usage", "CA2213:DisposableFieldsShouldBeDisposed", MessageId = "rawValueWriter", Justification = "We intentionally don't dispose rawValueWriter, we instead dispose the underlying stream manually.")]
         protected override void Dispose(bool disposing)
         {
+            if (disposing)
+            {
+                try
+                {
+                    if (this.messageOutputStream != null)
+                    {
+                        if (this.rawValueWriter != null)
+                        {
+                            this.rawValueWriter.Flush();
+                        }
+
+                        // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
+                        if (this.asynchronousOutputStream != null)
+                        {
+#if NETSTANDARD1_1
+                            this.asynchronousOutputStream.FlushSync();
+#else
+                            this.asynchronousOutputStream.Flush();
+#endif
+                        }
+
+                        // Dispose the message stream (note that we OWN this stream, so we always dispose it).
+                        this.messageOutputStream.Dispose();
+                    }
+                }
+                finally
+                {
+                    this.messageOutputStream = null;
+                    this.asynchronousOutputStream = null;
+                    this.outputStream = null;
+                    this.rawValueWriter = null;
+                }
+            }
+
+            base.Dispose(disposing);
+        }
+
+#if NETCOREAPP3_1_OR_GREATER
+        protected override async ValueTask DisposeAsyncCore()
+        {
             try
             {
                 if (this.messageOutputStream != null)
                 {
                     if (this.rawValueWriter != null)
                     {
-                        this.rawValueWriter.Flush();
+                        await this.rawValueWriter.FlushAsync().ConfigureAwait(false);
                     }
 
                     // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                     if (this.asynchronousOutputStream != null)
                     {
-#if NETSTANDARD1_1
-                        this.asynchronousOutputStream.FlushSync();
-#else
-                        this.asynchronousOutputStream.Flush();
-#endif
+                        await this.asynchronousOutputStream.FlushAsync().ConfigureAwait(false);
                     }
 
                     // Dispose the message stream (note that we OWN this stream, so we always dispose it).
-                    this.messageOutputStream.Dispose();
+                    await this.messageOutputStream.DisposeAsync().ConfigureAwait(false);
                 }
             }
             finally
@@ -370,8 +406,9 @@ namespace Microsoft.OData
                 this.rawValueWriter = null;
             }
 
-            base.Dispose(disposing);
+            await base.DisposeAsyncCore().ConfigureAwait(false);
         }
+#endif
 
         /// <summary>
         /// Writes a single value as the message body.

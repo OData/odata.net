@@ -7,10 +7,13 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Text;
+using Microsoft.OData.Client.Materialization;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.Client
@@ -18,6 +21,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Handles the deep insert requests and responses (both sync and async).
     /// </summary>
+    [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "The response stream is disposed by the message reader we create over it which we dispose inside the enumerator.")]
     internal class DeepInsertSaveResult : BaseSaveResult
     {
         #region Private Fields
@@ -30,6 +34,23 @@ namespace Microsoft.OData.Client
         /// related descriptors to be used in writing deep insert requests.
         /// </summary>
         private readonly BulkUpdateGraph bulkUpdateGraph;
+
+        /// <summary>A list of all the operation responses for a deep insert response.</summary>
+        private readonly List<OperationResponse> operationResponses;
+
+        /// <summary>The descriptor associated with a materializer state.</summary>
+        private readonly Dictionary<Descriptor, IMaterializerState> materializerStateForDescriptor;
+
+        /// <summary>
+        /// We cache the current response and then parse it. We need to do this for the async case only.
+        /// </summary>
+        private Stream responseStream;
+
+        /// <summary>The response headers</summary>
+        private HeaderCollection headers;
+
+        /// <summary>Top level entry.</summary>
+        private MaterializerEntry topLevelEntry;
 
         #endregion
 
@@ -46,6 +67,8 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(Util.IsDeepInsert(options), "the options must have deep insert flag set");
             this.bulkUpdateGraph = new BulkUpdateGraph(this.RequestInfo);
+            this.operationResponses = new List<OperationResponse>();
+            this.materializerStateForDescriptor = new Dictionary<Descriptor, IMaterializerState>();
         }
 
         /// <summary>
@@ -56,7 +79,10 @@ namespace Microsoft.OData.Client
             get { return this.bulkUpdateGraph; }
         }
 
-        protected override Stream ResponseStream => throw new NotImplementedException();
+        protected override Stream ResponseStream
+        {
+            get { return this.responseStream; }
+        }
 
         /// <summary>
         /// Synchronous deep insert request.
@@ -65,6 +91,11 @@ namespace Microsoft.OData.Client
         /// <param name="resource"> The top-level object to be deep inserted.</param>
         internal void DeepInsertRequest<T>(T resource)
         {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
             BuildDescriptorGraph(this.ChangedEntries, true, resource);
 
             ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
@@ -79,6 +110,7 @@ namespace Microsoft.OData.Client
             try
             {
                 this.batchResponseMessage = this.RequestInfo.GetSynchronousResponse(deepInsertRequestMessage, false);
+                this.responseStream = this.batchResponseMessage.GetStream();
             }
             catch (DataServiceTransportException ex)
             {
@@ -86,6 +118,52 @@ namespace Microsoft.OData.Client
 
                 throw exception;
             }
+        }
+
+        /// <summary>
+        /// Begins an asynchronous deep insert request.
+        /// </summary>
+        /// <typeparam name="T">The type of the top-level object to be deep inserted.</typeparam>
+        /// <param name="resource">The top-level object of the type to be deep inserted.</param>
+        internal void BeginDeepInsertRequest<T>(T resource)
+        {
+            if (resource == null)
+            {
+                throw Error.ArgumentNull(nameof(resource));
+            }
+
+            PerRequest peReq = null;
+
+            try
+            {
+                BuildDescriptorGraph(this.ChangedEntries, true, resource);
+                ODataRequestMessageWrapper deepInsertRequestMessage = this.GenerateDeepInsertRequest();
+                this.Abortable = deepInsertRequestMessage;
+
+                deepInsertRequestMessage.SetContentLengthHeader();
+                this.perRequest = peReq = new PerRequest();
+                peReq.Request = deepInsertRequestMessage;
+                peReq.RequestContentStream = deepInsertRequestMessage.CachedRequestStream;
+
+                AsyncStateBag asyncStateBag = new AsyncStateBag(peReq);
+
+                this.responseStream = new MemoryStream();
+
+                IAsyncResult asyncResult = BaseAsyncResult.InvokeAsync(deepInsertRequestMessage.BeginGetRequestStream, this.AsyncEndGetRequestStream, asyncStateBag);
+
+                peReq.SetRequestCompletedSynchronously(asyncResult.CompletedSynchronously);
+            }
+            catch (Exception e)
+            {
+                this.HandleFailure(peReq, e);
+                throw;
+            }
+            finally
+            {
+                this.HandleCompleted(peReq);
+            }
+
+            Debug.Assert((this.CompletedSynchronously && this.IsCompleted) || !this.CompletedSynchronously, "sync without complete");
         }
 
         /// <summary>
@@ -112,6 +190,7 @@ namespace Microsoft.OData.Client
                         throw Error.InvalidOperation(Strings.Context_DeepInsertOneTopLevelEntity);
                     }
 
+                    topLevelDescriptor.ContentGeneratedForSave = true;
                     bulkUpdateGraph.AddTopLevelDescriptor(topLevelDescriptor);
                 }
 
@@ -130,6 +209,7 @@ namespace Microsoft.OData.Client
                                 throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
                             }
 
+                            entityDescriptor.ContentGeneratedForSave = true;
                             bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, entityDescriptor);
                             this.BuildDescriptorGraph(descriptors, false, entityDescriptor.Entity);
                         }
@@ -153,6 +233,7 @@ namespace Microsoft.OData.Client
                                 throw Error.InvalidOperation(Strings.Context_DeepInsertDeletedOrModified(entitySetAndKey));
                             }
 
+                            linkDescriptor.ContentGeneratedForSave = true;
                             bulkUpdateGraph.AddRelatedDescriptor(topLevelDescriptor, linkDescriptor);
                             this.BuildDescriptorGraph(descriptors, false, linkDescriptor.Target);
                         }
@@ -213,7 +294,17 @@ namespace Microsoft.OData.Client
             return deepInsertRequestMessage;
         }
 
-        protected override bool ProcessResponsePayload => throw new NotImplementedException();
+        /// <summary>
+        /// returns true if the response payload needs to be processed.
+        /// </summary>
+        protected override bool ProcessResponsePayload
+        {
+            get
+            {
+                Debug.Assert(this.topLevelEntry != null, "There must be a top level entry.");
+                return this.topLevelEntry != null;
+            }
+        }
 
         internal override bool IsBatchRequest
         {
@@ -225,19 +316,274 @@ namespace Microsoft.OData.Client
             return this.CreateTopLevelRequest(method, requestUri, headers, httpStack, descriptor);
         }
 
+        /// <summary>Read and store response data for the current change</summary>
+        /// <param name="peReq">The completed <see cref="BaseAsyncResult.PerRequest"/> object</param>
+        /// <remarks>This is called only from the async code paths, when the response to the deep insert request has been read fully.</remarks>
+        protected override void FinishCurrentChange(PerRequest peReq)
+        {
+            base.FinishCurrentChange(peReq);
+
+            // This resets the position in the buffered response stream to the beginning
+            // so that we can start reading the response.
+            // In this case the ResponseStream is always a MemoryStream since we cache the async response.
+            if (this.responseStream.Position != 0)
+            {
+                this.responseStream.Position = 0;
+            }
+
+            this.perRequest = null;
+            this.SetCompleted();
+        }
+
+        /// <summary>
+        /// Gets the materializer state to process the response.
+        /// </summary>
+        /// <param name="entityDescriptor">The entity descriptor whose response is getting materialized.</param>
+        /// <param name="responseInfo">Information about the response to be materialized.</param>
+        /// <returns>An instance of <see cref="MaterializeAtom"/> that can be used to materialize the response.</returns>
         protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
-            throw new NotImplementedException();
+            Debug.Assert(this.materializerStateForDescriptor != null, "this.materializerStateForDescriptor != null");
+
+            if (this.materializerStateForDescriptor.TryGetValue(entityDescriptor, out IMaterializerState materializerState) && materializerState is MaterializerEntry materializerEntry)
+            {
+                return new MaterializeAtom(responseInfo, new[] { materializerEntry.Entry }, entityDescriptor.Entity.GetType(), materializerEntry.Format, base.MaterializerCache, false);
+            }
+
+            return null;
         }
 
         protected override void HandleOperationResponse(IODataResponseMessage responseMessage)
         {
-            throw new NotImplementedException();
+            this.batchResponseMessage = responseMessage;
         }
 
         protected override DataServiceResponse HandleResponse()
         {
-            throw new NotImplementedException();
+            // This will process the responses and throw if failure was detected
+            if (this.ResponseStream != null)
+            {
+                return this.HandleDeepInsertResponse();
+            }
+
+            return new DataServiceResponse(null, (int)WebExceptionStatus.Success, new List<OperationResponse>(0), batchResponse: this.IsBatchRequest);
+        }
+
+        private DataServiceResponse HandleDeepInsertResponse()
+        {
+            EntityDescriptor entityDescriptor = this.bulkUpdateGraph.TopLevelDescriptors[0];
+            MaterializerEntry entry = default;
+            DataServiceResponse response = new DataServiceResponse(headers, (int)this.batchResponseMessage.StatusCode, operationResponses, this.IsBatchRequest);
+
+            try
+            {
+                // We are setting the MaxProtocolVersion to v4.01 when reading deep insert responses.
+                this.RequestInfo.Context.MaxProtocolVersion = ODataProtocolVersion.V401;
+                Version responseVersion;
+                HandleResponse(
+                    this.RequestInfo,
+                    (HttpStatusCode)this.batchResponseMessage.StatusCode,
+                    this.batchResponseMessage.GetHeader(XmlConstants.HttpODataVersion),
+                    () => this.ResponseStream,
+                    throwOnFailure: true,
+                    out responseVersion);
+
+                HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
+
+                ResponseInfo responseInfo = this.CreateResponseInfo(entityDescriptor);
+                HttpWebResponseMessage responseMessageWrapper = new HttpWebResponseMessage(
+                    headers,
+                    this.batchResponseMessage.StatusCode,
+                    () => this.ResponseStream);
+
+                ODataMaterializerContext materializerContext = new ODataMaterializerContext(responseInfo, base.MaterializerCache);
+                entry = ODataReaderEntityMaterializer.ParseSingleEntityPayload(responseMessageWrapper, responseInfo, entityDescriptor.Entity.GetType(), materializerContext);
+
+                this.headers = headers;
+                this.topLevelEntry = entry;
+            }
+            catch (InvalidOperationException ex)
+            {
+                HeaderCollection headers = new HeaderCollection(this.batchResponseMessage);
+                int statusCode = this.batchResponseMessage == null ? (int)HttpStatusCode.InternalServerError : (int)this.batchResponseMessage.StatusCode;
+                DataServiceResponse dataServiceResponse = new DataServiceResponse(headers, statusCode, Enumerable.Empty<OperationResponse>(), this.IsBatchRequest);
+                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
+            }
+
+            HandleDeepInsertResponseInternal(entry : entry, isTopLevelDescriptor : true, descriptor : entityDescriptor, parentOperationResponse : null);
+
+            return response;
+        }
+
+        private void HandleDeepInsertResponseInternal(MaterializerEntry entry, bool isTopLevelDescriptor, Descriptor descriptor, OperationResponse parentOperationResponse)
+        {
+            OperationResponse response = this.CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
+
+            List<Descriptor> relatedDescriptors = this.BulkUpdateGraph.GetRelatedDescriptors(descriptor);
+
+            foreach (IMaterializerState nestedItem in entry?.NestedItems)
+            {
+                if (nestedItem is MaterializerNestedEntry materializerNestedEntry)
+                {
+                    foreach (IMaterializerState nestedEntries in materializerNestedEntry.NestedItems)
+                    {
+                        if (nestedEntries is MaterializerFeed feed)
+                        {
+                            for (int i = 0; i < feed.Items.Count; i++)
+                            {
+                                // Ensures the count of the descriptors matches the feed.Items count.
+                                if (relatedDescriptors.Count < i + 1)
+                                {
+                                    break;
+                                }
+
+                                HandleDeepInsertResponseInternal(feed.Items[i] as MaterializerEntry, false, relatedDescriptors[i], response);
+                            }
+                        }
+                        else if (nestedEntries is MaterializerEntry nestedEntry)
+                        {
+                            // In single value navigation property, the related descriptors count must be 1.
+                            if (relatedDescriptors.Count == 0)
+                            {
+                                break;
+                            }
+
+                            HandleDeepInsertResponseInternal(nestedEntry, false, relatedDescriptors[0], response);
+                        }
+                    }
+                }
+            }
+        }
+
+        private OperationResponse CreateOperationResponse(
+            MaterializerEntry materializerState,
+            bool isTopLevelResponse,
+            Descriptor descriptor,
+            OperationResponse parentOperationResponse)
+        {
+            Exception ex = null;
+            OperationResponse operationResponse = null;
+            DataServiceResponse dataServiceResponse = new DataServiceResponse(
+                headers: null,
+                statusCode: -1,
+                this.operationResponses,
+                batchResponse: false);
+
+            try
+            {
+                if (descriptor == null)
+                {
+                    return null;
+                }
+
+                this.SaveResultProcessed(descriptor, HasFailedOperation(materializerState));
+
+                operationResponse = new ChangeOperationResponse(this.headers, descriptor)
+                {
+                    StatusCode = this.batchResponseMessage.StatusCode
+                };
+
+                this.materializerStateForDescriptor.Add(descriptor, materializerState);
+
+                if (isTopLevelResponse)
+                {
+                    this.operationResponses.Add(operationResponse);
+                    this.HandleLocationHeaders(descriptor, (HttpStatusCode)this.batchResponseMessage.StatusCode, this.headers);
+                }
+                else
+                {
+                    // In POST request, we have a location header from the response.
+                    // We should not use the location header for nested descriptors since the location header only applies for the top level resource/descriptor.
+                    string location;
+                    this.headers.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
+
+                    if (location != null)
+                    {
+                        this.headers.UnderlyingDictionary.Remove(XmlConstants.HttpResponseLocation);
+                    }
+
+                    parentOperationResponse.NestedResponses.Add(operationResponse);
+                }
+#if DEBUG
+                this.HandleOperationResponse(descriptor, this.headers, (HttpStatusCode)this.batchResponseMessage.StatusCode);
+#else
+                this.HandleOperationResponse(descriptor, this.headers);
+#endif
+                return operationResponse;
+            }
+            catch (InvalidOperationException e)
+            {
+                ex = e;
+            }
+
+            if (ex != null)
+            {
+                throw new DataServiceRequestException(Strings.DataServiceException_GeneralError, ex, dataServiceResponse);
+            }
+
+            return null;
+        }
+
+        /// <summary>
+        /// Checks whether an entry has a data modification exception instance annotation.
+        /// </summary>
+        /// <param name="entry">The materializer entry to check for the data modification exception instance annotation.</param>
+        /// <returns>true if the entry has the data modification exception, otherwise false.</returns>
+        private static bool HasFailedOperation(MaterializerEntry entry)
+        {
+            return entry.Entry.InstanceAnnotations.Any(a => a.Name == XmlConstants.DataModificationException);
+        }
+
+        private void HandleLocationHeaders(Descriptor descriptor, HttpStatusCode statusCode, HeaderCollection headers)
+        {
+            if (descriptor.DescriptorKind == DescriptorKind.Entity)
+            {
+                EntityDescriptor entityDescriptor = (EntityDescriptor)descriptor;
+
+                if (descriptor.State == EntityStates.Added && WebUtil.SuccessStatusCode(statusCode))
+                {
+                    string location;
+                    string odataEntityId;
+                    Uri editLink = null;
+                    headers.TryGetHeader(XmlConstants.HttpResponseLocation, out location);
+                    headers.TryGetHeader(XmlConstants.HttpODataEntityId, out odataEntityId);
+
+                    if (location != null)
+                    {
+                        // Verify the location header is an absolute uri
+                        editLink = WebUtil.ValidateLocationHeader(location);
+                    }
+                    else if (descriptor.State == EntityStates.Added)
+                    {
+                        // For POST scenarios, location header must be specified.
+                        // Except for preflight requests
+                        if (headers.HasHeader("Content-Type") && statusCode != HttpStatusCode.Created)
+                        {
+                            throw Error.NotSupported(Strings.Deserialize_NoLocationHeader);
+                        }
+                    }
+
+                    Uri odataId = null;
+                    if (odataEntityId != null)
+                    {
+                        odataId = WebUtil.ValidateIdentityValue(odataEntityId);
+                        if (location == null)
+                        {
+                            throw Error.NotSupported(Strings.Context_BothLocationAndIdMustBeSpecified);
+                        }
+                    }
+                    else
+                    {
+                        // we already verified that the location must be an absolute uri
+                        odataId = UriUtil.CreateUri(location, UriKind.Absolute);
+                    }
+
+                    if (editLink != null)
+                    {
+                        this.RequestInfo.EntityTracker.AttachLocation(entityDescriptor.Entity, odataId, editLink);
+                    }
+                }
+            }
         }
     }
 }

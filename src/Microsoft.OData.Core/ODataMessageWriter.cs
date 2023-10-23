@@ -18,10 +18,14 @@ namespace Microsoft.OData
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 
-    /// <summary>
-    /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
-    /// </summary>
+/// <summary>
+/// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
+/// </summary>
+#if NETCOREAPP3_1_OR_GREATER
+    public sealed class ODataMessageWriter : IDisposable, IAsyncDisposable
+#else
     public sealed class ODataMessageWriter : IDisposable
+#endif
     {
         /// <summary>The message for which the message writer was created.</summary>
         private readonly ODataMessage message;
@@ -730,6 +734,23 @@ namespace Microsoft.OData
             GC.SuppressFinalize(this);
         }
 
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// <see cref="System.IAsyncDisposable.DisposeAsync"/> implementation to asynchronously
+        /// clean up unmanaged resources of the writer.
+        /// </summary>
+        /// <returns>A task representing the asynchronous operation of disposing the writer.</returns>
+        public async ValueTask DisposeAsync()
+        {
+            await this.DisposeAsyncCore().ConfigureAwait(false);
+            // Calling Dispose(disposing: false) releases unmanaged resources if any
+            // but does not perform synchronous I/O (e.g. does not call Flush())
+            // See: https://learn.microsoft.com/en-us/dotnet/standard/garbage-collection/implementing-disposeasync#the-disposeasync-method
+            this.Dispose(false);
+            GC.SuppressFinalize(this);
+        }
+#endif
+
         /// <summary>
         /// Sets the content-type and OData-Version headers on the message used by the message writer.
         /// This method can be called if it is important to set all the message headers before calling any of the
@@ -1192,6 +1213,28 @@ namespace Microsoft.OData
                 }
             }
         }
+
+#if NETCOREAPP3_1_OR_GREATER
+        /// <summary>
+        /// Asynchronously performs the actual cleanup work.
+        /// </summary>
+        /// <returns>A task representing the asynchronous disposal of the writer.</returns>
+        private async ValueTask DisposeAsyncCore()
+        {
+            this.isDisposed = true;
+            try
+            {
+                if (this.outputContext != null)
+                {
+                    await this.outputContext.DisposeAsync().ConfigureAwait(false);
+                }
+            }
+            finally
+            {
+                this.outputContext = null;
+            }
+        }
+#endif
 
         /// <summary>
         /// Verifies that, if a payload kind has been set via SetHeaders, the payload kind that
