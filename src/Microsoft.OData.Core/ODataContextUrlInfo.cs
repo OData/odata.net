@@ -294,14 +294,19 @@ namespace Microsoft.OData
                 return null;
             }
 
-            if (odataUri == null)
+            string navigationPath = null;
+            if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri != null && odataUri.Path != null)
             {
-                return navigationSource;
+                ODataPath odataPath = odataUri.Path.TrimEndingTypeAndKeySegments();
+                if (!(odataPath.LastSegment is NavigationPropertySegment) && !(odataPath.LastSegment is OperationSegment))
+                {
+                    throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
+                }
+
+                navigationPath = odataPath.ToContextUrlPathString();
             }
-            else
-            {
-                return ComputeNavigationPathImpl(kind, new ODataUriSlim(odataUri), navigationSource);
-            }
+
+            return navigationPath ?? navigationSource;
         }
 
         private static string ComputeNavigationPath(EdmNavigationSourceKind kind, in ODataUriSlim odataUri, string navigationSource)
@@ -314,11 +319,6 @@ namespace Microsoft.OData
                 return null;
             }
 
-            return ComputeNavigationPathImpl(kind, odataUri, navigationSource);
-        }
-
-        private static string ComputeNavigationPathImpl(EdmNavigationSourceKind kind, in ODataUriSlim odataUri, string navigationSource)
-        {
             string navigationPath = null;
             if (kind == EdmNavigationSourceKind.ContainedEntitySet && odataUri.Path != null)
             {
@@ -327,10 +327,8 @@ namespace Microsoft.OData
                 {
                     throw new ODataException(Strings.ODataContextUriBuilder_ODataPathInvalidForContainedElement(odataPath.ToContextUrlPathString()));
                 }
-
                 navigationPath = odataPath.ToContextUrlPathString();
             }
-
             return navigationPath ?? navigationSource;
         }
 
