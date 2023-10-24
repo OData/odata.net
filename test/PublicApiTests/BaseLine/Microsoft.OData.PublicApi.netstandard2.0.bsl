@@ -2914,16 +2914,6 @@ public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.ODa
     Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
 }
 
-[
-ExtensionAttribute(),
-]
-public sealed class System.Collections.Generic.ReadOnlyListExtensions {
-    [
-    ExtensionAttribute(),
-    ]
-    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
-}
-
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
     EntityFramework = 0
     OData = 1
@@ -6421,11 +6411,6 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     [
     ExtensionAttribute(),
     ]
-    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeAndKeySegments (Microsoft.OData.UriParser.ODataPath path)
-
-    [
-    ExtensionAttribute(),
-    ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeSegment (Microsoft.OData.UriParser.ODataPath path)
 }
 
@@ -8227,6 +8212,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual void AttachTo (string entitySetName, object entity)
     public virtual void AttachTo (string entitySetName, object entity, string etag)
     internal virtual System.IAsyncResult BeginBulkUpdate (System.AsyncCallback callback, object state, T[] objects)
+    public virtual System.IAsyncResult BeginDeepInsert (System.AsyncCallback callback, object state, T resource)
     public virtual System.IAsyncResult BeginExecute (DataServiceQueryContinuation`1 continuation, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state)
     public virtual System.IAsyncResult BeginExecute (System.Uri requestUri, System.AsyncCallback callback, object state, string httpMethod, Microsoft.OData.Client.OperationParameter[] operationParameters)
@@ -8252,7 +8238,9 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual DataServiceQuery`1 CreateQuery (string entitySetName)
     public virtual DataServiceQuery`1 CreateQuery (string resourcePath, bool isComposable)
     public virtual DataServiceQuery`1 CreateSingletonQuery (string singletonName)
-    internal virtual void DeepInsert (T resource)
+    public virtual Microsoft.OData.Client.DataServiceResponse DeepInsert (T resource)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource)
+    public virtual System.Threading.Tasks.Task`1[[Microsoft.OData.Client.DataServiceResponse]] DeepInsertAsync (T resource, System.Threading.CancellationToken cancellationToken)
     protected System.Type DefaultResolveType (string typeName, string fullNamespace, string languageDependentNamespace)
     public virtual void DeleteLink (object source, string sourceProperty, object target)
     public virtual void DeleteObject (object entity)
@@ -8260,6 +8248,7 @@ public class Microsoft.OData.Client.DataServiceContext {
     public virtual bool Detach (object entity)
     public virtual bool DetachLink (object source, string sourceProperty, object target)
     internal virtual Microsoft.OData.Client.DataServiceResponse EndBulkUpdate (System.IAsyncResult asyncResult)
+    public virtual Microsoft.OData.Client.DataServiceResponse EndDeepInsert (System.IAsyncResult asyncResult)
     public virtual Microsoft.OData.Client.OperationResponse EndExecute (System.IAsyncResult asyncResult)
     public virtual IEnumerable`1 EndExecute (System.IAsyncResult asyncResult)
     public virtual Microsoft.OData.Client.DataServiceResponse EndExecuteBatch (System.IAsyncResult asyncResult)

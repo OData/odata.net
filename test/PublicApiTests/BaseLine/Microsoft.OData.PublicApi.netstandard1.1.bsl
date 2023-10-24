@@ -2914,16 +2914,6 @@ public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.ODa
     Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
 }
 
-[
-ExtensionAttribute(),
-]
-public sealed class System.Collections.Generic.ReadOnlyListExtensions {
-    [
-    ExtensionAttribute(),
-    ]
-    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
-}
-
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
     EntityFramework = 0
     OData = 1
@@ -6417,11 +6407,6 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     ExtensionAttribute(),
     ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingKeySegment (Microsoft.OData.UriParser.ODataPath path)
-
-    [
-    ExtensionAttribute(),
-    ]
-    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeAndKeySegments (Microsoft.OData.UriParser.ODataPath path)
 
     [
     ExtensionAttribute(),
