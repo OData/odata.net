@@ -588,16 +588,6 @@ public class Microsoft.Spatial.SpatialPipeline {
     public virtual Microsoft.Spatial.SpatialPipeline ChainTo (Microsoft.Spatial.SpatialPipeline destination)
 }
 
-[
-ExtensionAttribute(),
-]
-public sealed class System.Collections.Generic.ReadOnlyCollectionExtensions {
-    [
-    ExtensionAttribute(),
-    ]
-    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
-}
-
 >>>Microsoft.OData.Edm
 public enum Microsoft.OData.Edm.EdmContainerElementKind : int {
     ActionImport = 2
@@ -2922,6 +2912,16 @@ public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.ODa
     string Namespace  { public virtual get; }
     Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
     Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class System.Collections.Generic.ReadOnlyListExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
 }
 
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
