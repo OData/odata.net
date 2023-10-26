@@ -77,6 +77,8 @@ namespace Microsoft.OData.UriParser
                 this.TargetEdmType = null;
                 this.TargetKind = RequestTargetKind.VoidOperation;
             }
+
+            this.Identifier = operation.FullName();
         }
 
         /// <summary>
@@ -128,6 +130,7 @@ namespace Microsoft.OData.UriParser
             this.computedReturnEdmType = typeSoFar;
             this.entitySet = entitySet;
             this.EnsureTypeAndSetAreCompatable();
+            this.Identifier = this.operations.First().FullName();
         }
 
         /// <summary>

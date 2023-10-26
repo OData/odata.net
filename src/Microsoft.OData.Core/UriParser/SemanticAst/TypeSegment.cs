@@ -63,6 +63,7 @@ namespace Microsoft.OData.UriParser
 
             this.expectedType = expectedType;
 
+            this.Identifier = actualType.AsElementType().FullTypeName();
             this.TargetEdmType = expectedType;
             this.TargetEdmNavigationSource = navigationSource;
 
