@@ -8918,6 +8918,15 @@ public sealed class Microsoft.OData.Client.UriEntityOperationParameter : Microso
     public UriEntityOperationParameter (string name, object value, bool useEntityReference)
 }
 
+[
+AttributeUsageAttribute(),
+]
+public sealed class Microsoft.OData.Client.UriFunctionAttribute : System.Attribute {
+    public UriFunctionAttribute (params bool allowClientSideEvaluation)
+
+    bool AllowClientSideEvaluation  { public get; }
+}
+
 public sealed class Microsoft.OData.Client.WritingEntityReferenceLinkArgs {
     public WritingEntityReferenceLinkArgs (Microsoft.OData.ODataEntityReferenceLink entityReferenceLink, object source, object target)
 
