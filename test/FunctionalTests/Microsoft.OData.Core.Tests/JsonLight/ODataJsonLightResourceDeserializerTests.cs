@@ -100,7 +100,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
         [Theory]
         [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}", DeltaDeletedEntryReason.Deleted)]
+        [InlineData("{\"reason\":\"deleted\",\"id\":\"http://tempuri.org/Customers(1)\"}", DeltaDeletedEntryReason.Deleted)]
         [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"changed\"}", DeltaDeletedEntryReason.Changed)]
+        [InlineData("{\"reason\":\"changed\",\"id\":\"http://tempuri.org/Customers(1)\"}", DeltaDeletedEntryReason.Changed)]
         public async Task ReadDeletedEntryAsync(string payload, DeltaDeletedEntryReason deletedEntryReason)
         {
             using (var jsonInputContext = CreateJsonLightInputContext(payload, model))
@@ -116,11 +118,12 @@ namespace Microsoft.OData.Tests.JsonLight
             }
         }
 
-        [Fact]
-        public async Task ReadDeletedEntryAsync_IgnoresUnexpectedPrimitiveProperties()
+        [Theory]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"unexpected\":true}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"unexpected\":true,\"reason\":\"deleted\"}")]
+        [InlineData("{\"unexpected\":true,\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
+        public async Task ReadDeletedEntryAsync_IgnoresUnexpectedPrimitiveProperties(string payload)
         {
-            var payload = "{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"unexpected\":true}";
-
             using (var jsonInputContext = CreateJsonLightInputContext(payload, model))
             {
                 var jsonLightResourceDeserializer = new ODataJsonLightResourceDeserializer(jsonInputContext);
@@ -128,6 +131,45 @@ namespace Microsoft.OData.Tests.JsonLight
                 await AdvanceReaderToFirstPropertyAsync(jsonLightResourceDeserializer.JsonReader);
 
                 var deletedResource = await jsonLightResourceDeserializer.ReadDeletedEntryAsync();
+
+                Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
+                Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
+            }
+        }
+
+        [Theory]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}", DeltaDeletedEntryReason.Deleted)]
+        [InlineData("{\"reason\":\"deleted\",\"id\":\"http://tempuri.org/Customers(1)\"}", DeltaDeletedEntryReason.Deleted)]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"changed\"}", DeltaDeletedEntryReason.Changed)]
+        [InlineData("{\"reason\":\"changed\",\"id\":\"http://tempuri.org/Customers(1)\"}", DeltaDeletedEntryReason.Changed)]
+        public void ReadDeletedEntry(string payload, DeltaDeletedEntryReason deletedEntryReason)
+        {
+            using (var jsonInputContext = CreateJsonLightInputContext(payload: payload, model: model, isAsync: false))
+            {
+                var jsonLightResourceDeserializer = new ODataJsonLightResourceDeserializer(jsonInputContext);
+
+                AdvanceReaderToFirstProperty(jsonLightResourceDeserializer.JsonReader);
+
+                var deletedResource = jsonLightResourceDeserializer.ReadDeletedEntry();
+
+                Assert.Equal(deletedEntryReason, deletedResource.Reason);
+                Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
+            }
+        }
+
+        [Theory]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"unexpected\":true}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"unexpected\":true,\"reason\":\"deleted\"}")]
+        [InlineData("{\"unexpected\":true,\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
+        public void ReadDeletedEntry_IgnoresUnexpectedPrimitiveProperties(string payload)
+        {
+            using (var jsonInputContext = CreateJsonLightInputContext(payload: payload, model: model, isAsync: false))
+            {
+                var jsonLightResourceDeserializer = new ODataJsonLightResourceDeserializer(jsonInputContext);
+
+                AdvanceReaderToFirstProperty(jsonLightResourceDeserializer.JsonReader);
+
+                var deletedResource = jsonLightResourceDeserializer.ReadDeletedEntry();
 
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -1732,7 +1774,11 @@ namespace Microsoft.OData.Tests.JsonLight
 
         [Theory]
         [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"nested\":{\"foo\":\"bar\"}}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"nested\":{\"foo\":\"bar\"},\"reason\":\"deleted\"}")]
+        [InlineData("{\"nested\":{\"foo\":\"bar\"},\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
         [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"nested\":[{\"foo\":\"bar\"}]}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"nested\":[{\"foo\":\"bar\"}],\"reason\":\"deleted\"}")]
+        [InlineData("{\"nested\":[{\"foo\":\"bar\"}],\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
         public async Task ReadDeletedEntryAsync_ThrowsExceptionForNestedContent(string payload)
         {
             using (var jsonInputContext = CreateJsonLightInputContext(payload, model))
@@ -1743,6 +1789,30 @@ namespace Microsoft.OData.Tests.JsonLight
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
                     () => jsonLightResourceDeserializer.ReadDeletedEntryAsync());
+
+                Assert.Equal(
+                    ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
+                    exception.Message);
+            }
+        }
+
+        [Theory]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"nested\":{\"foo\":\"bar\"}}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"nested\":{\"foo\":\"bar\"},\"reason\":\"deleted\"}")]
+        [InlineData("{\"nested\":{\"foo\":\"bar\"},\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\",\"nested\":[{\"foo\":\"bar\"}]}")]
+        [InlineData("{\"id\":\"http://tempuri.org/Customers(1)\",\"nested\":[{\"foo\":\"bar\"}],\"reason\":\"deleted\"}")]
+        [InlineData("{\"nested\":[{\"foo\":\"bar\"}],\"id\":\"http://tempuri.org/Customers(1)\",\"reason\":\"deleted\"}")]
+        public void ReadDeletedEntry_ThrowsExceptionForNestedContent(string payload)
+        {
+            using (var jsonInputContext = CreateJsonLightInputContext(payload: payload, model: model, isAsync: false))
+            {
+                var jsonLightResourceDeserializer = new ODataJsonLightResourceDeserializer(jsonInputContext);
+
+                AdvanceReaderToFirstProperty(jsonLightResourceDeserializer.JsonReader);
+
+                var exception = Assert.Throws<ODataException>(
+                    () => jsonLightResourceDeserializer.ReadDeletedEntry());
 
                 Assert.Equal(
                     ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
@@ -1944,6 +2014,13 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             await bufferingJsonReader.ReadAsync(); // Position the reader on the first node
             await bufferingJsonReader.ReadAsync(); // Read StartObject
+            Assert.Equal(JsonNodeType.Property, bufferingJsonReader.NodeType);
+        }
+
+        private static void AdvanceReaderToFirstProperty(BufferingJsonReader bufferingJsonReader)
+        {
+            bufferingJsonReader.Read(); // Position the reader on the first node
+            bufferingJsonReader.Read(); // Read StartObject
             Assert.Equal(JsonNodeType.Property, bufferingJsonReader.NodeType);
         }
 
