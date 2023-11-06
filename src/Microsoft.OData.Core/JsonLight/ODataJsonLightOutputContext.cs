@@ -98,14 +98,14 @@ namespace Microsoft.OData.JsonLight
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
 #else 
-                    // TODO: testing whether removing the BufferedStream will improve perf
+                    // TODO: testing whether removing the BufferedStream will improve perf for ODataUtf8JsonWriter
                     //this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
                     this.asynchronousOutputStream = this.messageOutputStream;
 #endif
                     outputStream = this.asynchronousOutputStream;
                 }
 
-                this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
+                //this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
 
                 bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
 
@@ -127,6 +127,15 @@ namespace Microsoft.OData.JsonLight
                 // Then fallback to the TextWriter-based approach
                 if (this.asynchronousJsonWriter == null && this.jsonWriter == null)
                 {
+                    // TODO: we want to retain the existing behaviour of using BufferedStream  
+#if !NETSTANDARD1_1
+                    if (!this.Synchronous)
+                    {
+                        this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
+                        outputStream = this.asynchronousOutputStream;
+                    }
+#endif
+                    this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
                     this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
 
                     if (!(this.jsonWriter is IJsonWriterAsync))

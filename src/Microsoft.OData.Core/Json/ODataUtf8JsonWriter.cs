@@ -841,6 +841,8 @@ namespace Microsoft.OData.Json
                 await this.outputStream.DisposeAsync().ConfigureAwait(false);
             }
 
+            this.bufferWriter.Dispose();
+
             this.Dispose(false);
         }
 
