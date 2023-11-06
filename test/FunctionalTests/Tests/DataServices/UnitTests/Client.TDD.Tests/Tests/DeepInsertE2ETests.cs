@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using System.Xml.Linq;
 using AstoriaUnitTests.Tests;
 using FluentAssertions;
 using Microsoft.OData.Client.Materialization;
@@ -52,6 +53,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 </Key>
                 <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false""/>
                 <Property Name=""Name"" Type=""Edm.String"" Nullable=""false""/>
+                <Property Name=""Registration"" Type=""Microsoft.OData.Client.TDDUnitTests.Tests.DeepInsertE2ETests.Registration"" Nullable=""true""/>
                 <NavigationProperty Name=""Owner"" Type=""Microsoft.OData.Client.TDDUnitTests.Tests.DeepInsertE2ETests.Person""/>
                 <NavigationProperty Name=""Owners"" Type=""Collection(Microsoft.OData.Client.TDDUnitTests.Tests.DeepInsertE2ETests.Person)""/>
                 <NavigationProperty Name=""Manufacturers"" Type=""Collection(Microsoft.OData.Client.TDDUnitTests.Tests.DeepInsertE2ETests.Manufacturer)""/>
@@ -71,6 +73,10 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 <Property Name=""ID"" Type=""Edm.Int32"" Nullable=""false""/>
                 <Property Name=""Name"" Type=""Edm.String""/>
             </EntityType>
+            <ComplexType Name=""Registration"">
+                <Property Name=""Date"" Type=""Edm.DateTimeOffset"" Nullable=""false""/>
+                <Property Name=""LicensePlate"" Type=""Edm.String""/>
+            </ComplexType>
         </Schema>
         <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
             <EntityContainer Name=""Container"">
@@ -117,6 +123,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         private readonly VipPerson vipPerson;
         private readonly Car car;
         private readonly Car carWithoutId;
+        private readonly Car carWithRegistration;
 
         public DeepInsertE2ETests()
         {
@@ -142,6 +149,16 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             {
                 ID = 1001,
                 Name = "Car 1001"
+            };
+            this.carWithRegistration = new Car
+            {
+                ID = 1001,
+                Name = "Car 1001",
+                Registration = new Registration
+                {
+                    Date = new DateTimeOffset(2023, 11, 6, 0, 0, 0, TimeSpan.Zero),
+                    LicensePlate = "DL-172238"
+                }
             };
             this.vipPerson = new VipPerson
             {
@@ -229,6 +246,72 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
 
             Assert.Equal("Person 100", returnedPerson.Name);
             Assert.Equal(1001, returnedCar.ID);
+        }
+
+        [Fact]
+        public void DeepInsertAnEntry_WithComplexProperty()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\",\"Registration\":{\"Date\":\"2023-11-06T00:00:00+00:00\",\"LicensePlate\":\"DL-172238\"},\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
+            SetupDataServiceContext(expectedResponse);
+
+            var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.carWithRegistration);
+            this.context.AddRelatedObject(this.carWithRegistration, "Manufacturers", manufacturer);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
+
+            Assert.Single(response);
+            Assert.Single(response.Single().NestedResponses);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+
+            var nestedResponseCars = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor carDescriptor = nestedResponseCars.Descriptor as EntityDescriptor;
+            var returnedCar = carDescriptor.Entity as Car;
+
+            var nestedResponseManufacturers = nestedResponseCars.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor manuDescriptor = nestedResponseManufacturers.Descriptor as EntityDescriptor;
+            var returnedManufacturer = manuDescriptor.Entity as Manufacturer;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(1001, returnedCar.ID);
+            Assert.Equal(11, returnedManufacturer.ID);
+            Assert.Equal("DL-172238", returnedCar.Registration.LicensePlate);
+        }
+
+        [Fact]
+        public async Task DeepInsertAsyncAnEntry_WithComplexProperty()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\",\"Registration\":{\"Date\":\"2023-11-06T00:00:00+00:00\",\"LicensePlate\":\"DL-172238\"},\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\",\"Countries\":[{\"ID\":101,\"Name\":\"CountryA\"}]}]}]}";
+            SetupDataServiceContext(expectedResponse);
+
+            var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.carWithRegistration);
+            this.context.AddRelatedObject(this.carWithRegistration, "Manufacturers", manufacturer);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
+
+            Assert.Single(response);
+            Assert.Single(response.Single().NestedResponses);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+
+            var nestedResponseCars = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor carDescriptor = nestedResponseCars.Descriptor as EntityDescriptor;
+            var returnedCar = carDescriptor.Entity as Car;
+
+            var nestedResponseManufacturers = nestedResponseCars.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor manuDescriptor = nestedResponseManufacturers.Descriptor as EntityDescriptor;
+            var returnedManufacturer = manuDescriptor.Entity as Manufacturer;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(1001, returnedCar.ID);
+            Assert.Equal(11, returnedManufacturer.ID);
+            Assert.Equal("DL-172238", returnedCar.Registration.LicensePlate);
         }
 
         [Fact]
@@ -742,6 +825,53 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             public DataServiceQuery<Country> Countries { get; private set; }
         }
 
+        public class Registration : INotifyPropertyChanged
+        {
+            private DateTimeOffset _date;
+            public DateTimeOffset Date
+            {
+                get
+                {
+                    return _date;
+                }
+                set
+                {
+                    if (value != _date)
+                    {
+                        _date = value;
+                        OnPropertyChanged("Date");
+                    }
+                }
+            }
+
+            private string _licensePlate;
+            public string LicensePlate 
+            {
+                get
+                {
+                    return _licensePlate;
+                }
+                set
+                {
+                    if (value != _licensePlate)
+                    {
+                        _licensePlate = value;
+                        OnPropertyChanged("LicensePlate");
+                    }
+                }
+            }
+            public event PropertyChangedEventHandler PropertyChanged;
+
+            protected virtual void OnPropertyChanged(string property)
+            {
+                if ((this.PropertyChanged != null))
+                {
+                    this.PropertyChanged(this, new PropertyChangedEventArgs(property));
+                }
+            }
+
+        }
+
         public class Car : INotifyPropertyChanged
         {
             private string _name;
@@ -765,6 +895,23 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
             public Person Owner { get; set; }
             public List<Person> Owners { get; set; }
             public List<Manufacturer> Manufacturers { get; set; }
+            
+            private Registration _registration;
+            public Registration Registration
+            {
+                get
+                {
+                    return _registration;
+                }
+                set
+                {
+                    if (_registration != value)
+                    {
+                        _registration = value;
+                        OnPropertyChanged("Registration");
+                    }
+                }
+            }
 
             public event PropertyChangedEventHandler PropertyChanged;
 
