@@ -36,7 +36,8 @@ namespace Microsoft.OData.Json
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter utf8JsonWriter;
-        private readonly ArrayBufferWriter<byte> bufferWriter;
+        //private readonly ArrayBufferWriter<byte> bufferWriter;
+        private readonly PooledByteBufferWriter bufferWriter;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -102,7 +103,8 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
+            //this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
+            this.bufferWriter = new PooledByteBufferWriter(bufferSize);
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -553,6 +555,7 @@ namespace Microsoft.OData.Json
             {
                 this.writeStream.Flush();
                 this.utf8JsonWriter.Dispose();
+                this.bufferWriter.Dispose();
 
                 if (this.outputStream != this.writeStream)
                 {
