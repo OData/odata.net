@@ -1574,6 +1574,11 @@ namespace Microsoft.OData.JsonLight
         /// </remarks>
         private bool ReadAtNestedPropertyInfoSynchronously()
         {
+            Debug.Assert(this.CurrentScope.State == ODataReaderState.NestedProperty, "Must be on 'NestedProperty' scope.");
+            JsonLightNestedPropertyInfoScope nestedPropertyInfoScope = (JsonLightNestedPropertyInfoScope)this.CurrentScope;
+            ODataJsonLightReaderNestedPropertyInfo nestedPropertyInfo = nestedPropertyInfoScope.ReaderNestedPropertyInfo;
+            Debug.Assert(nestedPropertyInfo != null);
+
             ODataPropertyInfo propertyInfo = this.CurrentScope.Item as ODataPropertyInfo;
             Debug.Assert(propertyInfo != null, "Reading Nested Property Without an ODataPropertyInfo");
 
@@ -1582,10 +1587,18 @@ namespace Microsoft.OData.JsonLight
             {
                 this.StartNestedStreamInfo(new ODataJsonLightReaderStreamInfo(streamPropertyInfo.PrimitiveTypeKind, streamPropertyInfo.ContentType));
             }
+            else if (!nestedPropertyInfo.WithValue)
+            {
+                // It's a nested non-stream property
+                this.PopScope(ODataReaderState.NestedProperty);
+
+                // We are reading a next nested info.
+                return this.ReadNextNestedInfo();
+            }
             else
             {
                 this.StartNestedStreamInfo(
-                    new ODataJsonLightReaderStreamInfo(propertyInfo.PrimitiveTypeKind));
+                   new ODataJsonLightReaderStreamInfo(propertyInfo.PrimitiveTypeKind));
             }
 
             return true;
@@ -4096,7 +4109,13 @@ namespace Microsoft.OData.JsonLight
                       navigationSource, EdmCoreModel.Instance.GetPrimitive(EdmPrimitiveTypeKind.Stream, true), odataUri)
             {
                 Debug.Assert(nestedPropertyInfo != null, "JsonLightNestedInfoScope created with a null nestedPropertyInfo");
+                ReaderNestedPropertyInfo = nestedPropertyInfo;
             }
+
+            /// <summary>
+            /// The nested property info for the nested property info to report.
+            /// </summary>
+            public ODataJsonLightReaderNestedPropertyInfo ReaderNestedPropertyInfo { get; }
         }
 
         /// <summary>
