@@ -393,6 +393,92 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         }
 
         [Fact]
+        public void DeepInsertAnEntry_WithMultipleRelatedObjects()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(),Owners()))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\"}],\"Owners\":[{\"ID\":101,\"Name\":\"Car owner\"}]}]}";
+            SetupDataServiceContext(expectedResponse);
+
+            var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
+            var owner = new Person { ID = 101, Name = "Car owner" };
+
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            this.context.AddRelatedObject(this.car, "Manufacturers", manufacturer);
+            this.context.AddRelatedObject(this.car, "Owners", owner);
+            DataServiceResponse response = this.context.DeepInsert<Person>(this.person);
+
+            Assert.Single(response);
+            Assert.Single(response.Single().NestedResponses);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+
+            var nestedResponseCars = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor carDescriptor = nestedResponseCars.Descriptor as EntityDescriptor;
+            var returnedCar = carDescriptor.Entity as Car;
+
+            var nestedResponseManufacturers = nestedResponseCars.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor manuDescriptor = nestedResponseManufacturers.Descriptor as EntityDescriptor;
+            var returnedManufacturer = manuDescriptor.Entity as Manufacturer;
+
+            var nestedResponseOwners = nestedResponseCars.NestedResponses[1] as ChangeOperationResponse;
+            EntityDescriptor ownerDescriptor = nestedResponseOwners.Descriptor as EntityDescriptor;
+            var returnedOwner = ownerDescriptor.Entity as Person;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(1001, returnedCar.ID);
+            Assert.Equal(11, returnedManufacturer.ID);
+            Assert.Equal(101, returnedOwner.ID);
+            Assert.Equal(2, nestedResponseCars.NestedResponses.Count);
+            Assert.Empty(nestedResponseManufacturers.NestedResponses);
+            Assert.Empty(nestedResponseOwners.NestedResponses);
+        }
+
+        [Fact]
+        public async Task DeepInsertAsyncAnEntry_WithMultipleRelatedObjects()
+        {
+            var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars(Manufacturers(),Owners()))/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":1001,\"Name\":null,\"Manufacturers\":[{\"ID\":11,\"Name\":\"Manu-A\"}],\"Owners\":[{\"ID\":101,\"Name\":\"Car owner\"}]}]}";
+            SetupDataServiceContext(expectedResponse);
+
+            var manufacturer = new Manufacturer { ID = 11, Name = "Manu-A" };
+            var owner = new Person { ID = 101, Name = "Car owner" };
+
+            this.context.AddObject("Persons", this.person);
+            this.context.AddRelatedObject(this.person, "Cars", this.car);
+            this.context.AddRelatedObject(this.car, "Manufacturers", manufacturer);
+            this.context.AddRelatedObject(this.car, "Owners", owner);
+            DataServiceResponse response = await this.context.DeepInsertAsync<Person>(this.person);
+
+            Assert.Single(response);
+            Assert.Single(response.Single().NestedResponses);
+
+            var changeOperationResponse = response.First() as ChangeOperationResponse;
+            EntityDescriptor entityDescriptor = changeOperationResponse.Descriptor as EntityDescriptor;
+            var returnedPerson = entityDescriptor.Entity as Person;
+
+            var nestedResponseCars = changeOperationResponse.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor carDescriptor = nestedResponseCars.Descriptor as EntityDescriptor;
+            var returnedCar = carDescriptor.Entity as Car;
+
+            var nestedResponseManufacturers = nestedResponseCars.NestedResponses[0] as ChangeOperationResponse;
+            EntityDescriptor manuDescriptor = nestedResponseManufacturers.Descriptor as EntityDescriptor;
+            var returnedManufacturer = manuDescriptor.Entity as Manufacturer;
+
+            var nestedResponseOwners = nestedResponseCars.NestedResponses[1] as ChangeOperationResponse;
+            EntityDescriptor ownerDescriptor = nestedResponseOwners.Descriptor as EntityDescriptor;
+            var returnedOwner = ownerDescriptor.Entity as Person;
+
+            Assert.Equal("Person 100", returnedPerson.Name);
+            Assert.Equal(1001, returnedCar.ID);
+            Assert.Equal(11, returnedManufacturer.ID);
+            Assert.Equal(101, returnedOwner.ID);
+            Assert.Equal(2, nestedResponseCars.NestedResponses.Count);
+            Assert.Empty(nestedResponseManufacturers.NestedResponses);
+            Assert.Empty(nestedResponseOwners.NestedResponses);
+        }
+
+        [Fact]
         public void DeepInsertAnEntry_WithMultipleLinks()
         {
             var expectedResponse = "{\"@context\":\"http://localhost:5000/$metadata#Persons(Cars())/$entity\",\"ID\":100,\"Name\":\"Person 100\",\"Cars\":[{\"ID\":\"1001\",\"Name\":\"Car 1001\"},{\"ID\":\"1002\",\"Name\":\"Car 1002\"}]}";

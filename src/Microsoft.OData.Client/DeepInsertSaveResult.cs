@@ -420,6 +420,7 @@ namespace Microsoft.OData.Client
             OperationResponse response = this.CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
 
             List<Descriptor> relatedDescriptors = this.BulkUpdateGraph.GetRelatedDescriptors(descriptor);
+            int currentRelatedIndex = 0;
 
             foreach (IMaterializerState nestedItem in entry?.NestedItems)
             {
@@ -431,24 +432,24 @@ namespace Microsoft.OData.Client
                         {
                             for (int i = 0; i < feed.Items.Count; i++)
                             {
-                                // Ensures the count of the descriptors matches the feed.Items count.
-                                if (relatedDescriptors.Count < i + 1)
+                                if (currentRelatedIndex >= relatedDescriptors.Count)
                                 {
+                                    // No more descriptors
                                     break;
                                 }
 
-                                HandleDeepInsertResponseInternal(feed.Items[i] as MaterializerEntry, false, relatedDescriptors[i], response);
+                                HandleDeepInsertResponseInternal(feed.Items[i] as MaterializerEntry, false, relatedDescriptors[currentRelatedIndex++], response);
                             }
                         }
                         else if (nestedEntries is MaterializerEntry nestedEntry)
                         {
-                            // In single value navigation property, the related descriptors count must be 1.
-                            if (relatedDescriptors.Count == 0)
+                            if (currentRelatedIndex >= relatedDescriptors.Count)
                             {
+                                // No more descriptors
                                 break;
                             }
 
-                            HandleDeepInsertResponseInternal(nestedEntry, false, relatedDescriptors[0], response);
+                            HandleDeepInsertResponseInternal(nestedEntry, false, relatedDescriptors[currentRelatedIndex++], response);
                         }
                     }
                 }
