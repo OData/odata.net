@@ -23,9 +23,7 @@ namespace JsonWriterBenchmarks
         private readonly IEnumerable<Customer> data;
         private readonly IEdmModel model;
 
-        private Stream memoryStream;
-        private Stream fileStream;
-        private IPayloadWriter<IEnumerable<Customer>> writer;
+        private string filePath;
 
         [ParamsSource(nameof(WriterNames))]
         public string WriterName;
@@ -40,26 +38,24 @@ namespace JsonWriterBenchmarks
             model = DataModel.GetEdmModel();
         }
 
-        [IterationSetup]
+        [GlobalSetup]
         public void SetupStreams()
         {
-            memoryStream = new MemoryStream();
-            string path = Path.GetTempFileName();
-            fileStream = new FileStream(path, FileMode.Create, FileAccess.Write);
-            writer = writerCollection.GetWriter(WriterName);
+            filePath = Path.GetTempFileName();
         }
 
-        [IterationCleanup]
+        [GlobalCleanup]
         public void CleanUp()
         {
-            fileStream.Close();
-            fileStream = null;
+            File.Delete(filePath);
         }
 
         [Benchmark]
         [BenchmarkCategory("InMemory")]
         public async Task WriteToMemoryAsync()
         {
+            var writer = writerCollection.GetWriter(WriterName);
+            var memoryStream = new MemoryStream();
             await writer.WritePayloadAsync(data, memoryStream);
         }
 
@@ -68,11 +64,11 @@ namespace JsonWriterBenchmarks
         public async Task WriteToFileAsync()
         {
             // multiple writes to increase benchmark duration
-            await writer.WritePayloadAsync(data, fileStream);
-            await writer.WritePayloadAsync(data, fileStream);
-            await writer.WritePayloadAsync(data, fileStream);
-            await writer.WritePayloadAsync(data, fileStream);
-            await writer.WritePayloadAsync(data, fileStream);
+            await WritePayloadAsync();
+            await WritePayloadAsync();
+            await WritePayloadAsync();
+            await WritePayloadAsync();
+            await WritePayloadAsync();
         }
 
         [Benchmark]
@@ -80,11 +76,18 @@ namespace JsonWriterBenchmarks
         public async Task WriteWithRawValues()
         {
             // multiple writes to increase benchmark duration
-            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
-            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
-            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
-            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
-            await writer.WritePayloadAsync(data, fileStream, includeRawValues: true);
+            await WritePayloadAsync(includeRawValues: true);
+            await WritePayloadAsync(includeRawValues: true);
+            await WritePayloadAsync(includeRawValues: true);
+            await WritePayloadAsync(includeRawValues: true);
+            await WritePayloadAsync(includeRawValues: true);
+        }
+
+        private async Task WritePayloadAsync(bool includeRawValues = false)
+        {
+            var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, FileShare.ReadWrite);
+            var writer = writerCollection.GetWriter(WriterName);
+            await writer.WritePayloadAsync(data, outputStream, includeRawValues);
         }
     }
 }
