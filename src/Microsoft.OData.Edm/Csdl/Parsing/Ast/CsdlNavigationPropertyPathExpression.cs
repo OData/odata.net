@@ -4,12 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.Edm.Vocabularies;
+using System.Collections.Generic;
+
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
+
     /// <summary>
     /// Represents a CSDL navigation property Path expression.
     /// </summary>
-    internal class CsdlNavigationPropertyPathExpression : CsdlPathExpression
+    internal class CsdlNavigationPropertyPathExpression : CsdlPathExpression, IEdmNavigationPropertyPath
     {
         public CsdlNavigationPropertyPathExpression(string path, CsdlLocation location)
             : base(path, location)
@@ -20,5 +24,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
         {
             get { return EdmExpressionKind.NavigationPropertyPath; }
         }
+
+        IEnumerable<string> IEdmPathExpression.PathSegments => throw new System.NotImplementedException();
     }
 }

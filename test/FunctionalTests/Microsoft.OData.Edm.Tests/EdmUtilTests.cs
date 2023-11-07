@@ -29,6 +29,17 @@ namespace Microsoft.OData.Edm.Tests
             Assert.Equal("d.s.container/entitySet", EdmUtil.FullyQualifiedName(entitySet));
         }
 
+        [Fact]
+        public void EdmNavigationPropertyHasAnnotationTargetName()
+        {
+            // arrange
+            var path = new Edm.Vocabularies.EdmNavigationPropertyPathExpression("foo/bar/baz");
+            // act
+            var actual = EdmUtil.FullyQualifiedName(path);
+            // assert
+            Assert.Equal("foo/bar/baz", actual);
+        }
+
         [Theory]
         [InlineData("", false)]
         [InlineData(" ", false)]
