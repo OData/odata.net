@@ -3,6 +3,7 @@
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
+#define POOLED_ARRAY_BUFFER // when define, PooledByteBufferWriter is used, otherwise ArrayBufferWriter is used
 
 #if NETCOREAPP3_1_OR_GREATER
 using System;
@@ -16,6 +17,8 @@ using System.Threading.Tasks;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
+
+
 
 namespace Microsoft.OData.Json
 {
@@ -36,8 +39,11 @@ namespace Microsoft.OData.Json
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter utf8JsonWriter;
-        //private readonly ArrayBufferWriter<byte> bufferWriter;
+#if !POOLED_ARRAY_BUFFER
+        private readonly ArrayBufferWriter<byte> bufferWriter;
+#else
         private readonly PooledByteBufferWriter bufferWriter;
+#endif
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -103,8 +109,11 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-            //this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
+#if !POOLED_ARRAY_BUFFER
+            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
+#else
             this.bufferWriter = new PooledByteBufferWriter(bufferSize);
+#endif
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -555,7 +564,9 @@ namespace Microsoft.OData.Json
             {
                 this.writeStream.Flush();
                 this.utf8JsonWriter.Dispose();
+#if POOLED_ARRAY_BUFFER
                 this.bufferWriter.Dispose();
+#endif
 
                 if (this.outputStream != this.writeStream)
                 {
@@ -841,7 +852,9 @@ namespace Microsoft.OData.Json
                 await this.outputStream.DisposeAsync().ConfigureAwait(false);
             }
 
+#if POOLED_ARRAY_BUFFER
             this.bufferWriter.Dispose();
+#endif
 
             this.Dispose(false);
         }
