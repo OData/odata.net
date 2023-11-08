@@ -65,7 +65,7 @@
           </Record>
           <Record>
             <PropertyValue Property="rel" String="describedby" />
-            <PropertyValue Property="href" String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Capabilities.V1.md" />
+            <PropertyValue Property="href" String="https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Capabilities.V1.md" />
           </Record>
         </Collection>
       </Annotation>
@@ -131,12 +131,12 @@ supported:
 
       <Term Name="SupportedFormats" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Media types of supported formats, including format parameters" />
-        <Annotation Term="Core.IsMediaType" Bool="true" />
+        <Annotation Term="Core.IsMediaType" />
       </Term>
 
       <Term Name="SupportedMetadataFormats" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Media types of supported formats for $metadata, including format parameters" />
-        <Annotation Term="Core.IsMediaType" Bool="true" />
+        <Annotation Term="Core.IsMediaType" />
       </Term>
 
       <Term Name="AcceptableEncodings" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer">
@@ -184,7 +184,7 @@ supported:
         </Property>
         <Property Name="DocumentationUrl" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="Human readable description of the meaning of the URL Template parameters" />
-          <Annotation Term="Core.IsURL" Bool="true" />
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
@@ -207,7 +207,8 @@ supported:
 
       <!--Query Capabilities -->
 
-      <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton">
+      <Term Name="CountRestrictions" Type="Capabilities.CountRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on /$count path suffix and $count=true system query option" />
       </Term>
       <ComplexType Name="CountRestrictionsType">
@@ -222,7 +223,8 @@ supported:
         </Property>
       </ComplexType>
 
-      <Term Name="NavigationRestrictions" Type="Capabilities.NavigationRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton">
+      <Term Name="NavigationRestrictions" Type="Capabilities.NavigationRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on navigating properties according to OData URL conventions" />
         <Annotation Term="Core.LongDescription" String="Restrictions specified on an entity set are valid whether the request is directly to the entity set or through a navigation property bound to that entity set. Services can specify a different set of restrictions specific to a path, in which case the more specific restrictions take precedence." />
       </Term>
@@ -235,8 +237,20 @@ supported:
         </Property>
       </ComplexType>
       <ComplexType Name="NavigationPropertyRestriction">
-        <Property Name="NavigationProperty" Type="Edm.NavigationPropertyPath">
+        <Annotation Term="Core.LongDescription">
+          <String>Using a property of `NavigationPropertyRestriction` in a [`NavigationRestrictions`](#NavigationRestrictions) annotation
+          is discouraged in favor of using an annotation with the corresponding term from this vocabulary and a target path starting with a container and ending in the `NavigationProperty`,
+          unless the favored alternative is impossible because a dynamic expression requires an instance path whose evaluation
+          starts at the target of the `NavigationRestrictions` annotation. See [this example](../examples/Org.OData.Capabilities.V1.capabilities.md).</String>
+        </Annotation>
+        <Property Name="NavigationProperty" Type="Edm.NavigationPropertyPath" Nullable="false">
           <Annotation Term="Core.Description" String="Navigation properties can be navigated" />
+          <Annotation Term="Core.LongDescription">
+            <String>The target path of a [`NavigationRestrictions`](#NavigationRestrictions) annotation followed by this
+            navigation property path addresses the resource to which the other properties of `NavigationPropertyRestriction` apply.
+            Instance paths that occur in dynamic expressions are evaluated starting at the boundary between both paths,
+            which must therefore be chosen accordingly.</String>
+          </Annotation>
         </Property>
         <Property Name="Navigability" Type="Capabilities.NavigationType">
           <Annotation Term="Core.Description" String="Supported navigability of this navigation property" />
@@ -300,23 +314,28 @@ supported:
         </Member>
       </EnumType>
 
-      <Term Name="IndexableByKey" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="IndexableByKey" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Supports key values according to OData URL conventions" />
       </Term>
 
-      <Term Name="TopSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="TopSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Supports $top" />
       </Term>
 
-      <Term Name="SkipSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="SkipSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Supports $skip" />
       </Term>
 
-      <Term Name="ComputeSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet">
+      <Term Name="ComputeSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Supports $compute" />
       </Term>
 
-      <Term Name="SelectSupport" Type="Capabilities.SelectSupportType" Nullable="false" AppliesTo="EntityContainer EntitySet Singleton">
+      <Term Name="SelectSupport" Type="Capabilities.SelectSupportType" Nullable="false" AppliesTo="EntityContainer EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Support for $select and nested query options within $select" />
       </Term>
       <ComplexType Name="SelectSupportType">
@@ -360,6 +379,12 @@ supported:
         <Annotation Term="Core.Description" String="Batch Support for the service" />
       </Term>
       <ComplexType Name="BatchSupportType">
+        <Annotation Term="Validation.ApplicableTerms">
+          <Collection>
+            <String>Core.Description</String>
+            <String>Core.LongDescription</String>
+          </Collection>
+        </Annotation>
         <Property Name="Supported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="Service supports requests to $batch" />
         </Property>
@@ -380,7 +405,7 @@ supported:
         </Property>
         <Property Name="SupportedFormats" Type="Collection(Edm.String)" Nullable="false">
           <Annotation Term="Core.Description" String="Media types of supported formats for $batch" />
-          <Annotation Term="Core.IsMediaType" Bool="true" />
+          <Annotation Term="Core.IsMediaType" />
           <Annotation Term="Validation.AllowedValues">
             <Collection>
               <Record>
@@ -396,15 +421,22 @@ supported:
         </Property>
       </ComplexType>
 
-      <Term Name="FilterFunctions" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer EntitySet">
+      <Term Name="FilterFunctions" Type="Collection(Edm.String)" Nullable="false" AppliesTo="EntityContainer EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="List of functions and operators supported in filter expressions" />
         <Annotation Term="Core.LongDescription" String="If not specified, null, or empty, all functions and operators may be attempted." />
       </Term>
 
-      <Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" Nullable="false" AppliesTo="EntitySet">
+      <Term Name="FilterRestrictions" Type="Capabilities.FilterRestrictionsType" Nullable="false" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on filter expressions" />
       </Term>
       <ComplexType Name="FilterRestrictionsType">
+        <Annotation Term="Validation.ApplicableTerms">
+          <Collection>
+            <String>Core.Description</String>
+          </Collection>
+        </Annotation>
         <Property Name="Filterable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="$filter is supported" />
         </Property>
@@ -465,10 +497,16 @@ supported:
         </Annotation>
       </TypeDefinition>
 
-      <Term Name="SortRestrictions" Type="Capabilities.SortRestrictionsType" Nullable="false" AppliesTo="EntitySet">
+      <Term Name="SortRestrictions" Type="Capabilities.SortRestrictionsType" Nullable="false" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on orderby expressions" />
       </Term>
       <ComplexType Name="SortRestrictionsType">
+        <Annotation Term="Validation.ApplicableTerms">
+          <Collection>
+            <String>Core.Description</String>
+          </Collection>
+        </Annotation>
         <Property Name="Sortable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="$orderby is supported" />
         </Property>
@@ -483,15 +521,21 @@ supported:
         </Property>
       </ComplexType>
 
-      <Term Name="ExpandRestrictions" Type="Capabilities.ExpandRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton">
+      <Term Name="ExpandRestrictions" Type="Capabilities.ExpandRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on expand expressions" />
       </Term>
       <ComplexType Name="ExpandRestrictionsType">
+        <Annotation Term="Validation.ApplicableTerms">
+          <Collection>
+            <String>Core.Description</String>
+          </Collection>
+        </Annotation>
         <Property Name="Expandable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="$expand is supported" />
         </Property>
         <Property Name="StreamsExpandable" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
-          <Annotation Term="Core.Description" String="$expand is supported for stream properties and media resources" />
+          <Annotation Term="Core.Description" String="$expand is supported for stream properties and media streams" />
         </Property>
         <Property Name="NonExpandableProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These properties cannot be used in expand expressions" />
@@ -505,10 +549,16 @@ supported:
         </Property>
       </ComplexType>
 
-      <Term Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType" Nullable="false" AppliesTo="EntitySet">
+      <Term Name="SearchRestrictions" Type="Capabilities.SearchRestrictionsType" Nullable="false" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on search expressions" />
       </Term>
       <ComplexType Name="SearchRestrictionsType">
+        <Annotation Term="Validation.ApplicableTerms">
+          <Collection>
+            <String>Core.Description</String>
+          </Collection>
+        </Annotation>
         <Property Name="Searchable" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
           <Annotation Term="Core.Description" String="$search is supported" />
         </Property>
@@ -547,7 +597,8 @@ supported:
 
       <!-- Data Modification Capabilities -->
 
-      <Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" Nullable="false" AppliesTo="EntitySet EntityType">
+      <Term Name="InsertRestrictions" Type="Capabilities.InsertRestrictionsType" Nullable="false" AppliesTo="EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on insert operations" />
       </Term>
       <ComplexType Name="InsertRestrictionsType">
@@ -583,11 +634,14 @@ supported:
         </Property>
         <Property Name="Description" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="A brief description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.IsLanguageDependent" />
         </Property>
         <Property Name="LongDescription" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="A lengthy description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.Description" String="A long description of the request" />
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+        <Property Name="ErrorResponses" Type="Collection(Capabilities.HttpResponse)" Nullable="false">
+          <Annotation Term="Core.Description" String="Possible error responses returned by the request." />
         </Property>
       </ComplexType>
 
@@ -620,7 +674,8 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
       </ComplexType>
 
-      <Term Name="DeepInsertSupport" Type="Capabilities.DeepInsertSupportType" AppliesTo="EntityContainer EntitySet">
+      <Term Name="DeepInsertSupport" Type="Capabilities.DeepInsertSupportType" AppliesTo="EntityContainer EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Deep Insert Support of the annotated resource (the whole service, an entity set, or a collection-valued resource)" />
       </Term>
       <ComplexType Name="DeepInsertSupportType">
@@ -632,7 +687,8 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
       </ComplexType>
 
-      <Term Name="UpdateRestrictions" Type="Capabilities.UpdateRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton EntityType">
+      <Term Name="UpdateRestrictions" Type="Capabilities.UpdateRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on update operations" />
       </Term>
       <ComplexType Name="UpdateRestrictionsType">
@@ -655,7 +711,7 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
           <Annotation Term="Core.Description" String="Members of collections can be updated via a PATCH request with a type-cast segment and a `/$each` segment" />
         </Property>
         <Property Name="NonUpdatableProperties" Type="Collection(Edm.PropertyPath)" Nullable="false">
-          <Annotation Term="Core.Description" String="These structural properties cannot be specified on update" />
+          <Annotation Term="Core.Description" String="These structural properties cannot be updated" />
         </Property>
         <Property Name="NonUpdatableNavigationProperties" Type="Collection(Edm.NavigationPropertyPath)" Nullable="false">
           <Annotation Term="Core.Description" String="These navigation properties do not allow rebinding" />
@@ -680,11 +736,14 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
         <Property Name="Description" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="A brief description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.IsLanguageDependent" />
         </Property>
         <Property Name="LongDescription" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="A lengthy description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.Description" String="A long description of the request" />
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+        <Property Name="ErrorResponses" Type="Collection(Capabilities.HttpResponse)" Nullable="false">
+          <Annotation Term="Core.Description" String="Possible error responses returned by the request." />
         </Property>
       </ComplexType>
 
@@ -712,7 +771,8 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Member>
       </EnumType>
 
-      <Term Name="DeepUpdateSupport" Type="Capabilities.DeepUpdateSupportType" Nullable="false" AppliesTo="EntityContainer EntitySet">
+      <Term Name="DeepUpdateSupport" Type="Capabilities.DeepUpdateSupportType" Nullable="false" AppliesTo="EntityContainer EntitySet Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Deep Update Support of the annotated resource (the whole service, an entity set, or a collection-valued resource)" />
       </Term>
       <ComplexType Name="DeepUpdateSupportType">
@@ -724,7 +784,8 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
       </ComplexType>
 
-      <Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton EntityType">
+      <Term Name="DeleteRestrictions" Type="Capabilities.DeleteRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions on delete operations" />
       </Term>
       <ComplexType Name="DeleteRestrictionsType">
@@ -738,10 +799,10 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
           <Annotation Term="Core.Description" String="The maximum number of navigation properties that can be traversed when addressing the collection to delete from or the entity to delete. A value of -1 indicates there is no restriction." />
         </Property>
         <Property Name="FilterSegmentSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
-          <Annotation Term="Core.Description" String="Members of collections can be updated via a PATCH request with a `/$filter(...)/$each` segment" />
+          <Annotation Term="Core.Description" String="Members of collections can be deleted via a DELETE request with a `/$filter(...)/$each` segment" />
         </Property>
         <Property Name="TypecastSegmentSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
-          <Annotation Term="Core.Description" String="Members of collections can be updated via a PATCH request with a type-cast segment and a `/$each` segment" />
+          <Annotation Term="Core.Description" String="Members of collections can be deleted via a DELETE request with a type-cast segment and a `/$each` segment" />
         </Property>
         <Property Name="Permissions" Type="Collection(Capabilities.PermissionType)" Nullable="true">
           <Annotation Term="Core.Description" String="Required permissions. One of the specified sets of scopes is required to perform the delete." />
@@ -754,11 +815,14 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
         <Property Name="Description" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="A brief description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.IsLanguageDependent" />
         </Property>
         <Property Name="LongDescription" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="A lengthy description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.Description" String="A long description of the request" />
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+        <Property Name="ErrorResponses" Type="Collection(Capabilities.HttpResponse)" Nullable="false">
+          <Annotation Term="Core.Description" String="Possible error responses returned by the request." />
         </Property>
       </ComplexType>
 
@@ -819,6 +883,9 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         <Property Name="CustomQueryOptions" Type="Collection(Capabilities.CustomParameter)" Nullable="false">
           <Annotation Term="Core.Description" String="Supported or required custom query options" />
         </Property>
+        <Property Name="ErrorResponses" Type="Collection(Capabilities.HttpResponse)" Nullable="false">
+          <Annotation Term="Core.Description" String="Possible error responses returned by the request." />
+        </Property>
       </ComplexType>
       <Term Name="AnnotationValuesInQuerySupported" Type="Core.Tag" DefaultValue="true" Nullable="false" AppliesTo="EntityContainer">
         <Annotation Term="Core.Description" String="Supports annotation values within system query options" />
@@ -848,7 +915,8 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
       </ComplexType>
 
-      <Term Name="ReadRestrictions" Type="Capabilities.ReadRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton">
+      <Term Name="ReadRestrictions" Type="Capabilities.ReadRestrictionsType" Nullable="false" AppliesTo="EntitySet Singleton Collection">
+        <Annotation Term="Core.AppliesViaContainer" />
         <Annotation Term="Core.Description" String="Restrictions for retrieving a collection of entities, retrieving a singleton instance." />
       </Term>
       <ComplexType Name="ReadRestrictionsBase" Abstract="true">
@@ -866,17 +934,23 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
         <Property Name="Description" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="A brief description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.IsLanguageDependent" />
         </Property>
         <Property Name="LongDescription" Type="Edm.String" Nullable="true">
-          <Annotation Term="Core.Description" String="A lengthy description of the request" />
-          <Annotation Term="Core.IsLanguageDependent" Bool="true" />
+          <Annotation Term="Core.Description" String="A long description of the request" />
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+        <Property Name="ErrorResponses" Type="Collection(Capabilities.HttpResponse)" Nullable="false">
+          <Annotation Term="Core.Description" String="Possible error responses returned by the request." />
         </Property>
       </ComplexType>
       <ComplexType Name="ReadByKeyRestrictionsType" BaseType="Capabilities.ReadRestrictionsBase">
         <Annotation Term="Core.Description" String="Restrictions for retrieving an entity by key" />
       </ComplexType>
       <ComplexType Name="ReadRestrictionsType" BaseType="Capabilities.ReadRestrictionsBase">
+        <Property Name="TypecastSegmentSupported" Type="Edm.Boolean" Nullable="false" DefaultValue="true">
+          <Annotation Term="Core.Description" String="Entities of a specific derived type can be read by specifying a type-cast segment" />
+        </Property>
         <Property Name="ReadByKeyRestrictions" Type="Capabilities.ReadByKeyRestrictionsType">
           <Annotation Term="Core.Description" String="Restrictions for retrieving an entity by key" />
           <Annotation Term="Core.LongDescription" String="Only valid when applied to a collection. If a property of `ReadByKeyRestrictions` is not specified, the corresponding property value of `ReadRestrictions` applies." />
@@ -950,7 +1024,7 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
           <Annotation Term="Core.Description" String="Description of the custom parameter" />
         </Property>
         <Property Name="DocumentationURL" Type="Edm.String">
-          <Annotation Term="Core.IsURL" Bool="true" />
+          <Annotation Term="Core.IsURL" />
           <Annotation Term="Core.Description" String="URL of related documentation" />
         </Property>
         <Property Name="Required" Type="Edm.Boolean" Nullable="false" DefaultValue="false">
@@ -961,10 +1035,20 @@ The absence of `RestrictedProperties` denotes all properties are accessible usin
         </Property>
       </ComplexType>
 
-      <Term Name="MediaLocationUpdateSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="Property">
+      <Term Name="MediaLocationUpdateSupported" Type="Core.Tag" Nullable="false" DefaultValue="true" AppliesTo="EntityType Property">
         <Annotation Term="Core.RequiresType" String="Edm.Stream" />
-        <Annotation Term="Core.Description" String="Stream property supports update of its media edit URL and/or media read URL" />
+        <Annotation Term="Core.Description" String="Stream property or media stream supports update of its media edit URL and/or media read URL" />
       </Term>
+
+      <ComplexType Name="HttpResponse">
+        <Property Name="StatusCode" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="HTTP response status code, for example 400, 403, 501" />
+        </Property>
+        <Property Name="Description" Type="Edm.String" Nullable="false">
+          <Annotation Term="Core.Description" String="Human-readable description of the response" />
+          <Annotation Term="Core.IsLanguageDependent" />
+        </Property>
+      </ComplexType>
 
     </Schema>
   </edmx:DataServices>

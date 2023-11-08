@@ -36,6 +36,11 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Value"" Type=""Edm.PrimitiveType"">
       <Annotation Term=""Core.Description"" String=""An allowed value for the property, parameter, or type definition"" />
     </Property>
+    <Annotation Term=""Validation.ApplicableTerms"">
+      <Collection>
+        <String>Core.SymbolicName</String>
+      </Collection>
+    </Annotation>
   </ComplexType>
   <ComplexType Name=""ConstraintType"">
     <Property Name=""FailureMessage"" Type=""Edm.String"">

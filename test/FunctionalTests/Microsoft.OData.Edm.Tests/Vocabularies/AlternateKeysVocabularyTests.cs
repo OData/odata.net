@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
       <Annotation Term=""Core.Description"" String=""A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"" />
     </Property>
   </ComplexType>
-  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType"">
+  <Term Name=""AlternateKeys"" Type=""Collection(Keys.AlternateKey)"" AppliesTo=""EntityType EntitySet NavigationProperty"">
     <Annotation Term=""Core.Description"" String=""Communicates available alternate keys"" />
   </Term>
 </Schema>";
@@ -60,7 +60,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             string output = sw.ToString();
 
             Assert.False(errors.Any(), "No Errors");
-            Assert.True(expectedText == output, "expectedText = output");
+            Assert.Equal(expectedText, output);
         }
     }
 }
