@@ -4,7 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+//#define USE_CONCURRENT_DICT
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,15 +25,21 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// </remarks>
     public class EdmDirectValueAnnotationsManager : IEdmDirectValueAnnotationsManager
     {
+#if USE_CONCURRENT_DICT_ALT
+        private ConcurrentDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary;
+#else
         /// <summary>
         /// Keeps track of transient annotations on elements.
         /// </summary>
         private VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary;
+#endif
 
+#if !USE_CONCURRENT_DICT
         /// <summary>
         /// Used for locking during updates to the annotations dictionary;
         /// </summary>
         private object annotationsDictionaryLock = new object();
+#endif
 
         /// <summary>
         /// Elements for which normal comparison failed to produce a valid result, arbitrarily ordered to enable stable comparisons.
@@ -48,7 +56,11 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         public EdmDirectValueAnnotationsManager()
         {
+#if USE_CONCURRENT_DICT_ALT
+            this.annotationsDictionary = new ConcurrentDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>>();
+#else
             this.annotationsDictionary = VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>>.Create(this.CompareElements);
+#endif
         }
 
         /// <summary>
@@ -59,10 +71,17 @@ namespace Microsoft.OData.Edm.Vocabularies
         public IEnumerable<IEdmDirectValueAnnotation> GetDirectValueAnnotations(IEdmElement element)
         {
             // Fetch the annotations dictionary once and only once, because this.annotationsDictionary might get updated by another thread.
+#if USE_CONCURRENT_DICT_ALT
+            IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations = this.GetAttachedAnnotations(element);
+            this.annotationsDictionary.TryGetValue(element, out VersioningList<IEdmDirectValueAnnotation> transientAnnotations);
+#else
             VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
 
+
             IEnumerable<IEdmDirectValueAnnotation> immutableAnnotations = this.GetAttachedAnnotations(element);
+
             VersioningList<IEdmDirectValueAnnotation> transientAnnotations = GetTransientAnnotations(element, annotationsDictionary);
+#endif
 
             if (immutableAnnotations != null)
             {
@@ -90,15 +109,19 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="value">New annotation to set.</param>
         public void SetAnnotationValue(IEdmElement element, string namespaceName, string localName, object value)
         {
+#if !USE_CONCURRENT_DICT
             lock (this.annotationsDictionaryLock)
             {
+#endif
                 // Use a local variable to store any interim changes to the annotations dictionary, and perform one atomic update
                 // to the field. Otherwise, other threads could see a dictionary in an interim state.
                 VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
                 this.SetAnnotationValue(element, namespaceName, localName, value, ref annotationsDictionary);
 
                 this.annotationsDictionary = annotationsDictionary;
-            }
+#if !USE_CONCURRENT_DICT
+        }
+#endif
         }
 
         /// <summary>
@@ -107,8 +130,10 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// <param name="annotations">The annotations to set</param>
         public void SetAnnotationValues(IEnumerable<IEdmDirectValueAnnotationBinding> annotations)
         {
+#if !USE_CONCURRENT_DICT
             lock (this.annotationsDictionaryLock)
             {
+#endif
                 // Use a local variable to store any interim changes to the annotations dictionary, and perform one atomic update
                 // to the field. Otherwise, other threads could see a dictionary in an interim state.
                 VersioningDictionary<IEdmElement, VersioningList<IEdmDirectValueAnnotation>> annotationsDictionary = this.annotationsDictionary;
@@ -119,7 +144,9 @@ namespace Microsoft.OData.Edm.Vocabularies
                 }
 
                 this.annotationsDictionary = annotationsDictionary;
-            }
+#if !USE_CONCURRENT_DICT
+        }
+#endif
         }
 
         /// <summary>

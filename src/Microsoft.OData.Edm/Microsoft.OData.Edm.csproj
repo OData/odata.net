@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net45;netstandard2.0;netstandard1.1;netcoreapp3.1</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Edm</AssemblyName>
     <RootNamespace>Microsoft.OData.Edm</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
@@ -87,6 +87,14 @@
 
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AdditionalFiles Remove="C:\odata.net\src\Microsoft.OData.Edm\.editorconfig" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="C:\odata.net\src\Microsoft.OData.Edm\.editorconfig" />
   </ItemGroup>
     
   <ItemGroup>

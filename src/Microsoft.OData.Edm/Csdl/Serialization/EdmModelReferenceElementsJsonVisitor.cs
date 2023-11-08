@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
 using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;

@@ -8,7 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
 #endif
 using System.Xml;
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Csdl
             this.edmxVersion = edmxVersion;
         }
 
-#if NETSTANDARD2_0
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         /// <summary>
         /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
         /// </summary>

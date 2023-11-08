@@ -4,8 +4,16 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+//#define USE_CONCURRENT_DICT
+#if NETCOREAPP3_1_OR_GREATER
+//#define USE_IMMUTABLE_DICT
+#endif
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
+#if USE_IMMUTABLE_DICT
+using System.Collections.Immutable;
+#endif
 
 namespace Microsoft.OData.Edm
 {
@@ -26,7 +34,13 @@ namespace Microsoft.OData.Edm
 
         public static VersioningDictionary<TKey, TValue> Create(Func<TKey, TKey, int> compareFunction)
         {
+#if USE_CONCURRENT_DICT
+            return new ConcurrentDictVersioningDictionary(compareFunction);
+#elif USE_IMMUTABLE_DICT
+            return new ImmutableDictVersioningDictionary(compareFunction, ImmutableDictionary<TKey, TValue>.Empty);
+#else
             return new EmptyVersioningDictionary(compareFunction);
+#endif
         }
 
         public abstract VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue);
@@ -329,5 +343,61 @@ namespace Microsoft.OData.Edm
                 return hash % HashSize;
             }
         }
+
+        internal class ConcurrentDictVersioningDictionary : VersioningDictionary<TKey, TValue>
+        {
+            private ConcurrentDictionary<TKey, TValue> _dict;
+
+            public ConcurrentDictVersioningDictionary(Func<TKey, TKey, int> compareFunction) : base(compareFunction)
+            {
+                _dict = new ConcurrentDictionary<TKey, TValue>();
+            }
+
+            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove)
+            {
+                _dict.TryRemove(keyToRemove, out _);
+                return this;
+            }
+
+            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue)
+            {
+                _dict[keyToSet] = newValue;
+                return this;
+            }
+
+            public override bool TryGetValue(TKey key, out TValue value)
+            {
+                return _dict.TryGetValue(key, out value);
+            }
+        }
+
+#if USE_IMMUTABLE_DICT
+        internal class ImmutableDictVersioningDictionary : VersioningDictionary<TKey, TValue>
+        {
+            private ImmutableDictionary<TKey, TValue> _dict;
+            private Func<TKey, TKey, int> _compareFunction;
+
+            public ImmutableDictVersioningDictionary(Func<TKey, TKey, int> compareFunction, ImmutableDictionary<TKey, TValue> dict) : base(compareFunction)
+            {
+                _dict = dict;
+                _compareFunction = compareFunction;
+            }
+
+            public override VersioningDictionary<TKey, TValue> Remove(TKey keyToRemove)
+            {
+                return new ImmutableDictVersioningDictionary(_compareFunction, _dict.Remove(keyToRemove));
+            }
+
+            public override VersioningDictionary<TKey, TValue> Set(TKey keyToSet, TValue newValue)
+            {
+                return new ImmutableDictVersioningDictionary(_compareFunction, _dict.SetItem(keyToSet, newValue));
+            }
+
+            public override bool TryGetValue(TKey key, out TValue value)
+            {
+                return _dict.TryGetValue(key, out value);
+            }
+        }
+#endif
     }
 }
