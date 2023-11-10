@@ -796,6 +796,14 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The requested buffer capacity {0} exceeds the max buffer size."
+        /// </summary>
+        internal static string ODataMessageWriter_Buffer_Maximum_Size_Exceeded(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, p0);
+        }
+
+        /// <summary>
         /// A string like "Both startResourceXmlCustomizationCallback and endResourceXmlCustomizationCallback must be either null or non-null."
         /// </summary>
         internal static string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth

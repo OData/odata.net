@@ -103,6 +103,7 @@ namespace Microsoft.OData
         internal const string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull = "ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull";
         internal const string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter = "ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter";
         internal const string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances = "ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances";
+        internal const string ODataMessageWriter_Buffer_Maximum_Size_Exceeded = "ODataMessageWriter_Buffer_Maximum_Size_Exceeded";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromCollection = "ODataCollectionWriterCore_InvalidTransitionFromCollection";
