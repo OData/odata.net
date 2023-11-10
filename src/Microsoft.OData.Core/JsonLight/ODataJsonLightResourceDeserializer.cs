@@ -1017,7 +1017,7 @@ namespace Microsoft.OData.JsonLight
                     }
                     else
                     {
-                        readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty);
+                        readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
                     }
                 }
             }
@@ -1422,23 +1422,37 @@ namespace Microsoft.OData.JsonLight
             }
         }
 
-        private static ODataJsonLightReaderNestedPropertyInfo ReadNestedPropertyInfoWithoutValue(IODataJsonLightReaderResourceState resourceState, IEdmProperty property)
+        /// <summary>
+        /// Read a resource-level data property without value.
+        /// </summary>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="propertyName">The property name, it must not be null.</param>
+        /// <param name="property">The property itself, it could be null if it's dynamic property.</param>
+        /// <returns>The NestedResourceInfo or null.</returns>
+        private static ODataJsonLightReaderNestedPropertyInfo ReadNestedPropertyInfoWithoutValue(IODataJsonLightReaderResourceState resourceState,
+            string propertyName, IEdmProperty property)
         {
             Debug.Assert(resourceState != null, "resourceState must not be null");
-            Debug.Assert(property != null, "Property must not be null");
+            Debug.Assert(propertyName != null, "Property name must not be null");
 
-            string propertyName = property.Name;
-            IEdmTypeReference propertyType = property.Type;
-
+            IEdmTypeReference propertyType = property?.Type;
             IDictionary<string, object> odataAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
             IList<KeyValuePair<string, object>> propertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName).ToList();
             if ((odataAnnotations.Count + propertyAnnotations.Count) == 0)
             {
                 // If we don't have any annotations for the property, it could contain errors.
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyType.FullName()));
+                if (property != null)
+                {
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyType.FullName()));
+                }
+                else
+                {
+                    // it's a dynamic property
+                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                }
             }
 
-            IEdmPrimitiveType primitiveType = propertyType.Definition.AsElementType() as IEdmPrimitiveType;
+            IEdmPrimitiveType primitiveType = propertyType == null ? null : propertyType.Definition.AsElementType() as IEdmPrimitiveType;
             ODataPropertyInfo propertyInfo = new ODataPropertyInfo
             {
                 PrimitiveTypeKind = primitiveType == null ? EdmPrimitiveTypeKind.None : primitiveType.PrimitiveKind,
@@ -1449,11 +1463,8 @@ namespace Microsoft.OData.JsonLight
 
             foreach (KeyValuePair<string, object> annotation in propertyAnnotations)
             {
-                if (annotation.Value != null)
-                {
-                    // annotation.Value == null indicates that this annotation should be skipped.
-                    propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                }
+                 // annotation.Value == null indicates that this annotation should be skipped?
+                 propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
             }
 
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(propertyInfo);
@@ -1537,7 +1548,7 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                return ReadNestedPropertyInfoWithoutValue(resourceState, propertyName, null);
             }
 
             object propertyValue = null;
@@ -3304,7 +3315,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty);
+                    readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
                 }
             }
 

@@ -48,7 +48,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReadNonStreamPrimitivePropertyWithoutValueButWithInstanceAnnotations()
+        public void ReadStreamPrimitivePropertyWithoutValueButWithInstanceAnnotations()
         {
             // Intentionally add 'name' property at the end of the payload.
             string payload = String.Format(resourcePayload,
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public void ReadStreamPrimitivePropertyWithoutValueButWithInstanceAnnotation()
+        public void ReadNonStreamPrimitivePropertyWithoutValueButWithInstanceAnnotation()
         {
             // Intentionally add 'name' property at the end of the payload.
             string payload = String.Format(resourcePayload,
@@ -129,6 +129,61 @@ namespace Microsoft.OData.Tests.JsonLight
                 Assert.NotNull(nestedPropertyInfo);
                 Assert.Equal("age", nestedPropertyInfo.Name);
                 Assert.Equal(2, nestedPropertyInfo.InstanceAnnotations.Count);
+            }
+        }
+
+        [Fact]
+        public void ReadDynamicPrimitivePropertyWithoutValueButWithInstanceAnnotation()
+        {
+            // Intentionally add 'name' property at the end of the payload.
+            string payload = String.Format(resourcePayload,
+                ",\"aDynamic1@Custom.StartAnnotation\":123,\"aDynamic2@Custom.StartAnnotation2\":false,\"name\":\"sam\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                ODataPropertyInfo nested1PropertyInfo = null;
+                ODataPropertyInfo nested2PropertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            if (nested1PropertyInfo != null)
+                            {
+                                nested2PropertyInfo = reader.Item as ODataPropertyInfo;
+                            }
+                            else
+                            {
+                                nested1PropertyInfo = reader.Item as ODataPropertyInfo;
+                            }
+                            break;
+                    }
+                }
+
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                Assert.NotNull(nested1PropertyInfo);
+                Assert.Equal("aDynamic1", nested1PropertyInfo.Name);
+                ODataInstanceAnnotation annotation1 = Assert.Single(nested1PropertyInfo.InstanceAnnotations);
+                Assert.Equal("Custom.StartAnnotation", annotation1.Name);
+                Assert.Equal(123, annotation1.Value.FromODataValue());
+
+                Assert.NotNull(nested2PropertyInfo);
+                Assert.Equal("aDynamic2", nested2PropertyInfo.Name);
+                ODataInstanceAnnotation annotation2 = Assert.Single(nested2PropertyInfo.InstanceAnnotations);
+                Assert.Equal("Custom.StartAnnotation2", annotation2.Name);
+                Assert.Equal(false, annotation2.Value.FromODataValue());
             }
         }
 
