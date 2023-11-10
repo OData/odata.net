@@ -1,14 +1,15 @@
-﻿#if NETCOREAPP3_1_OR_GREATER
-using Microsoft.OData;
+﻿//---------------------------------------------------------------------
+// <copyright file="PooledByteBufferWriter.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+#if NETCOREAPP3_1_OR_GREATER
+using System;
 using System.Buffers;
 using System.Diagnostics;
-using System.Diagnostics.CodeAnalysis;
-using System.IO;
-using System.Runtime.CompilerServices;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace System.Text.Json
+namespace Microsoft.OData.Json
 {
     /// <summary>
     /// An implementation of <see cref="IBufferWriter{byte}"/> that rents
@@ -152,16 +153,6 @@ namespace System.Text.Json
 
             CheckAndResizeBuffer(sizeHint);
             return _rentedBuffer.AsSpan(_index);
-        }
-
-        internal ValueTask WriteToStreamAsync(Stream destination, CancellationToken cancellationToken)
-        {
-            return destination.WriteAsync(WrittenMemory, cancellationToken);
-        }
-
-        internal void WriteToStream(Stream destination)
-        {
-            destination.Write(WrittenMemory.Span);
         }
 
         private void CheckAndResizeBuffer(int sizeHint)
