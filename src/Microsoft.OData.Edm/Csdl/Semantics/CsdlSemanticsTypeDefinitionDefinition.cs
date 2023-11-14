@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
     /// <summary>
     /// Provides semantics for CsdlTypeDefinition.
     /// </summary>
-    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition, IEdmFullNamedElement
+    internal class CsdlSemanticsTypeDefinitionDefinition : CsdlSemanticsTypeDefinition, IEdmTypeDefinition, IEdmFullNamedElement, IEdmFacetedTypeDefinition
     {
         private readonly CsdlSemanticsSchema context;
         private readonly CsdlTypeDefinition typeDefinition;
@@ -73,6 +73,16 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
             get { return this.typeDefinition; }
         }
+
+        public int? MaxLength => this.typeDefinition.MaxLength;
+
+        public bool? IsUnicode => this.typeDefinition.IsUnicode;
+
+        public int? Precision => this.typeDefinition.Precision;
+
+        public int? Scale => this.typeDefinition.Scale;
+
+        public int? Srid => this.typeDefinition.Srid;
 
         protected override IEnumerable<IEdmVocabularyAnnotation> ComputeInlineVocabularyAnnotations()
         {
