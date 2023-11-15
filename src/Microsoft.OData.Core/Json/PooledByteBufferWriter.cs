@@ -11,6 +11,7 @@ using System.Diagnostics;
 
 namespace Microsoft.OData.Json
 {
+    // This class has been adapated from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
     /// <summary>
     /// An implementation of <see cref="IBufferWriter{byte}"/> that rents
     /// buffers from an array pool instead of allocating a new array every time.
@@ -21,12 +22,12 @@ namespace Microsoft.OData.Json
         // it can be used as an IBufferWriter and holds a buffer that should eventually be
         // returned to the shared pool. If rentedBuffer is null, then the instance is in a
         // cleared/disposed state and it must re-rent a buffer before it can be used again.
-        private byte[]? _rentedBuffer;
-        private int _index;
+        private byte[] rentedBuffer;
+        private int index;
 
         private const int MinimumBufferSize = 256;
 
-        // Value copied from Array.MaxLength in System.Private.CoreLib/src/libraries/System.Private.CoreLib/src/System/Array.cs.
+        // Value copied from Array.MaxLength in https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Array.cs
         public const int MaximumBufferSize = 0X7FFFFFC7;
 
         private PooledByteBufferWriter()
@@ -42,8 +43,8 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(initialCapacity > 0);
 
-            _rentedBuffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
-            _index = 0;
+            this.rentedBuffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
+            this.index = 0;
         }
 
         /// <summary>
@@ -54,9 +55,9 @@ namespace Microsoft.OData.Json
         {
             get
             {
-                Debug.Assert(_rentedBuffer != null);
-                Debug.Assert(_index <= _rentedBuffer.Length);
-                return _rentedBuffer.AsMemory(0, _index);
+                Debug.Assert(this.rentedBuffer != null);
+                Debug.Assert(this.index <= this.rentedBuffer.Length);
+                return this.rentedBuffer.AsMemory(0, this.index);
             }
         }
 
@@ -67,8 +68,8 @@ namespace Microsoft.OData.Json
         {
             get
             {
-                Debug.Assert(_rentedBuffer != null);
-                return _index;
+                Debug.Assert(rentedBuffer != null);
+                return this.index;
             }
         }
 
@@ -79,8 +80,8 @@ namespace Microsoft.OData.Json
         {
             get
             {
-                Debug.Assert(_rentedBuffer != null);
-                return _rentedBuffer.Length;
+                Debug.Assert(this.rentedBuffer != null);
+                return this.rentedBuffer.Length;
             }
         }
 
@@ -92,8 +93,8 @@ namespace Microsoft.OData.Json
         {
             get
             {
-                Debug.Assert(_rentedBuffer != null);
-                return _rentedBuffer.Length - _index;
+                Debug.Assert(this.rentedBuffer != null);
+                return this.rentedBuffer.Length - this.index;
             }
         }
 
@@ -103,10 +104,10 @@ namespace Microsoft.OData.Json
         /// <param name="count"></param>
         public void Advance(int count)
         {
-            Debug.Assert(_rentedBuffer != null);
+            Debug.Assert(this.rentedBuffer != null);
             Debug.Assert(count >= 0);
-            Debug.Assert(_index <= _rentedBuffer.Length - count);
-            _index += count;
+            Debug.Assert(this.index <= this.rentedBuffer.Length - count);
+            this.index += count;
         }
 
         /// <summary>
@@ -117,7 +118,7 @@ namespace Microsoft.OData.Json
         public Memory<byte> GetMemory(int sizeHint = MinimumBufferSize)
         {
             CheckAndResizeBuffer(sizeHint);
-            return _rentedBuffer.AsMemory(_index);
+            return this.rentedBuffer.AsMemory(index);
         }
 
         /// <summary>
@@ -133,7 +134,7 @@ namespace Microsoft.OData.Json
             }
 
             CheckAndResizeBuffer(sizeHint);
-            return _rentedBuffer.AsSpan(_index);
+            return this.rentedBuffer.AsSpan(index);
         }
 
         /// <summary>
@@ -149,37 +150,37 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Dispose()
         {
-            if (_rentedBuffer == null)
+            if (this.rentedBuffer == null)
             {
                 return;
             }
 
             ClearHelper();
-            byte[] toReturn = _rentedBuffer;
-            _rentedBuffer = null;
+            byte[] toReturn = this.rentedBuffer;
+            this.rentedBuffer = null;
             ArrayPool<byte>.Shared.Return(toReturn);
         }
 
         private void ClearHelper()
         {
-            Debug.Assert(_rentedBuffer != null);
-            Debug.Assert(_index <= _rentedBuffer.Length);
+            Debug.Assert(this.rentedBuffer != null);
+            Debug.Assert(this.index <= this.rentedBuffer.Length);
 
-            _rentedBuffer.AsSpan(0, _index).Clear();
-            _index = 0;
+            this.rentedBuffer.AsSpan(0, index).Clear();
+            this.index = 0;
         }
 
         private void CheckAndResizeBuffer(int sizeHint)
         {
-            Debug.Assert(_rentedBuffer != null);
+            Debug.Assert(rentedBuffer != null);
             Debug.Assert(sizeHint > 0);
 
-            int currentLength = _rentedBuffer.Length;
-            int availableSpace = currentLength - _index;
+            int currentLength = this.rentedBuffer.Length;
+            int availableSpace = currentLength - this.index;
 
             // If we've reached ~1GB written, grow to the maximum buffer
             // length to avoid incessant minimal growths causing perf issues.
-            if (_index >= MaximumBufferSize / 2)
+            if (this.index >= MaximumBufferSize / 2)
             {
                 sizeHint = Math.Max(sizeHint, MaximumBufferSize - currentLength);
             }
@@ -199,21 +200,21 @@ namespace Microsoft.OData.Json
                     }
                 }
 
-                byte[] oldBuffer = _rentedBuffer;
+                byte[] oldBuffer = this.rentedBuffer;
 
-                _rentedBuffer = ArrayPool<byte>.Shared.Rent(newSize);
+                this.rentedBuffer = ArrayPool<byte>.Shared.Rent(newSize);
 
-                Debug.Assert(oldBuffer.Length >= _index);
-                Debug.Assert(_rentedBuffer.Length >= _index);
+                Debug.Assert(oldBuffer.Length >= this.index);
+                Debug.Assert(this.rentedBuffer.Length >= this.index);
 
-                Span<byte> oldBufferAsSpan = oldBuffer.AsSpan(0, _index);
-                oldBufferAsSpan.CopyTo(_rentedBuffer);
+                Span<byte> oldBufferAsSpan = oldBuffer.AsSpan(0, this.index);
+                oldBufferAsSpan.CopyTo(this.rentedBuffer);
                 oldBufferAsSpan.Clear();
                 ArrayPool<byte>.Shared.Return(oldBuffer);
             }
 
-            Debug.Assert(_rentedBuffer.Length - _index > 0);
-            Debug.Assert(_rentedBuffer.Length - _index >= sizeHint);
+            Debug.Assert(this.rentedBuffer.Length - this.index > 0);
+            Debug.Assert(this.rentedBuffer.Length - this.index >= sizeHint);
         }
     }
 }
