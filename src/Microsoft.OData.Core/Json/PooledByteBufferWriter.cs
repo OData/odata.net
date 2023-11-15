@@ -143,9 +143,6 @@ namespace Microsoft.OData.Json
 
         public Span<byte> GetSpan(int sizeHint = MinimumBufferSize)
         {
-            // TODO: this condition is here cause without it the sizeHint is getting set to 0
-            // instead of the MinimumBufferSize when the method is called without params.
-            // I don't understand why this is happening, will investigate later
             if (sizeHint == 0)
             {
                 sizeHint = MinimumBufferSize;

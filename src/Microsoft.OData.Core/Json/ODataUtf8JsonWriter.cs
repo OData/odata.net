@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 #if NETCOREAPP3_1_OR_GREATER
-#define POOLED_BUFFER
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -37,11 +36,7 @@ namespace Microsoft.OData.Json
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter utf8JsonWriter;
-#if POOLED_BUFFER
         private readonly PooledByteBufferWriter bufferWriter;
-#else
-        private readonly ArrayBufferWriter<byte> bufferWriter;
-#endif
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -107,11 +102,7 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-#if POOLED_BUFFER
             this.bufferWriter = new PooledByteBufferWriter(bufferSize);
-#else
-            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
-#endif
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -577,9 +568,7 @@ namespace Microsoft.OData.Json
             {
                 this.writeStream.Flush();
                 this.utf8JsonWriter.Dispose();
-#if POOLED_BUFFER
                 this.bufferWriter.Dispose();
-#endif
 
                 if (this.outputStream != this.writeStream)
                 {
@@ -880,12 +869,10 @@ namespace Microsoft.OData.Json
                 await this.outputStream.DisposeAsync().ConfigureAwait(false);
             }
 
-#if POOLED_BUFFER
             if (this.bufferWriter != null)
             {
                 this.bufferWriter.Dispose();
             }
-#endif
 
             this.Dispose(false);
         }
