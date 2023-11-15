@@ -433,8 +433,7 @@ namespace Microsoft.OData.Json
                 this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
             }
 
-            var rawBytes = Encoding.UTF8.GetBytes(rawValue);
-            this.bufferWriter.Write(rawBytes);
+            this.bufferWriter.Write(Encoding.UTF8.GetBytes(rawValue));
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
