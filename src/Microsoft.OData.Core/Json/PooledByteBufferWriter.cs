@@ -33,6 +33,11 @@ namespace Microsoft.OData.Json
         {
         }
 
+        /// <summary>
+        /// Creates an instance of <see cref="PooledByteBufferWriter"/> to which data can be written,
+        /// with a specified initial capacity.
+        /// </summary>
+        /// <param name="initialCapacity"></param>
         public PooledByteBufferWriter(int initialCapacity) : this()
         {
             Debug.Assert(initialCapacity > 0);
@@ -41,6 +46,10 @@ namespace Microsoft.OData.Json
             _index = 0;
         }
 
+        /// <summary>
+        /// Gets a <see cref="ReadOnlyMemory{byte}"/> that contains the data
+        /// written to the underlying buffer so far.
+        /// </summary>
         public ReadOnlyMemory<byte> WrittenMemory
         {
             get
@@ -51,6 +60,9 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Gets the amount of data written to the underlying buffer.
+        /// </summary>
         public int WrittenCount
         {
             get
@@ -60,6 +72,9 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Gets the total amount of space within the underlying buffer.
+        /// </summary>
         public int Capacity
         {
             get
@@ -69,6 +84,10 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// Gets the amount of available space that can be written to
+        /// without forcing the underlying buffer to grow.
+        /// </summary>
         public int FreeCapacity
         {
             get
@@ -78,14 +97,62 @@ namespace Microsoft.OData.Json
             }
         }
 
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="count"></param>
+        public void Advance(int count)
+        {
+            Debug.Assert(_rentedBuffer != null);
+            Debug.Assert(count >= 0);
+            Debug.Assert(_index <= _rentedBuffer.Length - count);
+            _index += count;
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="sizeHint"></param>
+        /// <returns></returns>
+        public Memory<byte> GetMemory(int sizeHint = MinimumBufferSize)
+        {
+            CheckAndResizeBuffer(sizeHint);
+            return _rentedBuffer.AsMemory(_index);
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        /// <param name="sizeHint"></param>
+        /// <returns></returns>
+        public Span<byte> GetSpan(int sizeHint = MinimumBufferSize)
+        {
+            if (sizeHint == 0)
+            {
+                sizeHint = MinimumBufferSize;
+            }
+
+            CheckAndResizeBuffer(sizeHint);
+            return _rentedBuffer.AsSpan(_index);
+        }
+
+        /// <summary>
+        /// Clears the data written to the underlying buffer.
+        /// </summary>
         public void Clear()
         {
             ClearHelper();
         }
 
-        public void ClearAndReturnBuffers()
+        /// <summary>
+        /// Returns the rented memory back to the pool.
+        /// </summary>
+        public void Dispose()
         {
-            Debug.Assert(_rentedBuffer != null);
+            if (_rentedBuffer == null)
+            {
+                return;
+            }
 
             ClearHelper();
             byte[] toReturn = _rentedBuffer;
@@ -100,56 +167,6 @@ namespace Microsoft.OData.Json
 
             _rentedBuffer.AsSpan(0, _index).Clear();
             _index = 0;
-        }
-
-        // Returns the rented buffer back to the pool
-        public void Dispose()
-        {
-            if (_rentedBuffer == null)
-            {
-                return;
-            }
-
-            ClearHelper();
-            byte[] toReturn = _rentedBuffer;
-            _rentedBuffer = null;
-            ArrayPool<byte>.Shared.Return(toReturn);
-        }
-
-        public void InitializeEmptyInstance(int initialCapacity)
-        {
-            Debug.Assert(initialCapacity > 0);
-            Debug.Assert(_rentedBuffer is null);
-
-            _rentedBuffer = ArrayPool<byte>.Shared.Rent(initialCapacity);
-            _index = 0;
-        }
-
-        public static PooledByteBufferWriter CreateEmptyInstanceForCaching() => new PooledByteBufferWriter();
-
-        public void Advance(int count)
-        {
-            Debug.Assert(_rentedBuffer != null);
-            Debug.Assert(count >= 0);
-            Debug.Assert(_index <= _rentedBuffer.Length - count);
-            _index += count;
-        }
-
-        public Memory<byte> GetMemory(int sizeHint = MinimumBufferSize)
-        {
-            CheckAndResizeBuffer(sizeHint);
-            return _rentedBuffer.AsMemory(_index);
-        }
-
-        public Span<byte> GetSpan(int sizeHint = MinimumBufferSize)
-        {
-            if (sizeHint == 0)
-            {
-                sizeHint = MinimumBufferSize;
-            }
-
-            CheckAndResizeBuffer(sizeHint);
-            return _rentedBuffer.AsSpan(_index);
         }
 
         private void CheckAndResizeBuffer(int sizeHint)
