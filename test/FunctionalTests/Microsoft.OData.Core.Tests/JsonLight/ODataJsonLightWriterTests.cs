@@ -8,11 +8,18 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 using Microsoft.OData.Edm;
+using Microsoft.OData.Edm.Csdl;
+#if NETCOREAPP3_1_OR_GREATER
 using Microsoft.OData.Json;
+#endif
 using Microsoft.OData.JsonLight;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Tests;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
@@ -738,6 +745,181 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 "\"@Is.EntityReferenceLink\":true}}",
                 result);
         }
+
+        /// <summary>
+        /// Gets the name of the caller method of this method
+        /// </summary>
+        /// <param name="caller">The string that the method name of the caller will be written into</param>
+        /// <returns>The name of the caller method of this method</returns>
+        public static string GetCurrentMethodName([System.Runtime.CompilerServices.CallerMemberName] string caller = null)
+        {
+            return caller;
+        }
+
+        /// <summary>
+        /// A <see cref="IEdmNavigationSource"/> that pretends to be the "products" contained navigation collection for the purposes of computing a context URL
+        /// </summary>
+        private sealed class MockNavigationSource : IEdmNavigationSource, IEdmContainedEntitySet, IEdmUnknownEntitySet
+        {
+            public IEnumerable<IEdmNavigationPropertyBinding> NavigationPropertyBindings => throw new NotImplementedException();
+
+            public IEdmPathExpression Path => throw new NotImplementedException();
+
+            public IEdmType Type => new EdmEntityType("ns", "products");
+
+            public string Name => "products";
+
+            public IEdmNavigationSource ParentNavigationSource => throw new NotImplementedException();
+
+            public IEdmNavigationProperty NavigationProperty => throw new NotImplementedException();
+
+            public IEnumerable<IEdmNavigationPropertyBinding> FindNavigationPropertyBindings(IEdmNavigationProperty navigationProperty)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty)
+            {
+                throw new NotImplementedException();
+            }
+
+            public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty navigationProperty, IEdmPathExpression bindingPath)
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+#if !NETCOREAPP1_1
+        /// <summary>
+        /// Generates a context URL from a <see cref="ODataUriSlim"/> that ends with cast and key segments
+        /// </summary>
+        /// <returns><see cref="void"/></returns>
+        [Fact]
+        public static void GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment()
+        {
+            var domain = new Uri("http://tempuri.org");
+            var requestUrl = new Uri(domain, "/orders('1')/products/ns.derivedProduct('2')");
+
+            // load the CSDL from the embedded resources
+            var assembly = Assembly.GetExecutingAssembly();
+            var currentMethod = GetCurrentMethodName();
+            var csdlResourceName = assembly.GetManifestResourceNames().Where(name => name.EndsWith($"{currentMethod}.xml")).Single();
+
+            // parse the CSDL
+            IEdmModel model;
+            using (var csdlResourceStream = assembly.GetManifestResourceStream(csdlResourceName))
+            {
+                using (var xmlReader = XmlReader.Create(csdlResourceStream))
+                {
+                    if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
+                    {
+                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                    }
+                }
+            }
+
+            var uriParser = new ODataUriParser(model, domain, requestUrl);
+            var slimUri = new ODataUriSlim(uriParser.ParseUri());
+            var contextUrlInfo = ODataContextUrlInfo.Create(new MockNavigationSource(), "ns.product", true, slimUri, ODataVersion.V4);
+            Assert.Equal(@"orders('1')/products", contextUrlInfo.NavigationPath);
+        }
+
+        /// <summary>
+        /// Writes a resource as the response to a request where the URL ends with a combined cast and key segment
+        /// </summary>
+        /// <returns><see cref="void"/></returns>
+        [Fact]
+        public static async Task WriteContextWithDerivedTypeCastAndKeySegmentAsync()
+        {
+            var domain = new Uri("http://tempuri.org");
+            var requestUrl = new Uri(domain, "/orders('1')/products/ns.derivedProduct('2')");
+            var serviceSideResponseResource = new ODataResource
+            {
+                TypeName = "ns.product",
+                Properties = new List<ODataProperty>
+                {
+                    new ODataProperty
+                    {
+                        Name = "id",
+                        Value = "1",
+                        SerializationInfo = new ODataPropertySerializationInfo
+                        {
+                            PropertyKind = ODataPropertyKind.Key
+                        },
+                    },
+                    new ODataProperty
+                    {
+                        Name = "name",
+                        Value = "somename",
+                    },
+                },
+            };
+            var expectedResponsePayload = 
+                "{" +
+                    "\"@odata.context\":\"http://tempuri.org/$metadata#orders('1')/products/$entity\"," +
+                    "\"id\":\"1\"," +
+                    "\"name\":\"somename\"" + 
+                "}";
+
+            // load the CSDL from the embedded resources
+            var assembly = Assembly.GetExecutingAssembly();
+            var currentMethod = GetCurrentMethodName();
+            var csdlResourceName = assembly.GetManifestResourceNames().Where(name => name.EndsWith($"{currentMethod}.xml")).Single();
+
+            // parse the CSDL
+            IEdmModel model;
+            using (var csdlResourceStream = assembly.GetManifestResourceStream(csdlResourceName))
+            {
+                using (var xmlReader = XmlReader.Create(csdlResourceStream))
+                {
+                    if (!CsdlReader.TryParse(xmlReader, out model, out var errors))
+                    {
+                        Assert.True(false, string.Join(Environment.NewLine, errors));
+                    }
+                }
+            }
+
+            using (var memoryStream = new MemoryStream())
+            {
+                // initialize the json response writer
+                var uriParser = new ODataUriParser(model, domain, requestUrl);
+                var odataMessageWriterSettings = new ODataMessageWriterSettings
+                {
+                    EnableMessageStreamDisposal = false,
+                    Version = ODataVersion.V4,
+                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*"),
+                    ODataUri = uriParser.ParseUri(),
+                };
+                var messageInfo = new ODataMessageInfo
+                {
+                    MessageStream = memoryStream,
+                    MediaType = new ODataMediaType("application", "json"),
+                    Encoding = Encoding.Default,
+                    IsResponse = true,
+                    IsAsync = true,
+                    Model = model,
+                };
+                var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, odataMessageWriterSettings);
+                var jsonLightWriter = new ODataJsonLightWriter(
+                    jsonLightOutputContext,
+                    null,
+                    null,
+                    false);
+
+                // write the response
+                await jsonLightWriter.WriteStartAsync(serviceSideResponseResource);
+                await jsonLightWriter.WriteEndAsync();
+
+                // confirm that the written response was the expected response
+                memoryStream.Position = 0;
+                using (var streamReader = new StreamReader(memoryStream))
+                {
+                    var actualResponsePayload = await streamReader.ReadToEndAsync();
+                    Assert.Equal(expectedResponsePayload, actualResponsePayload);
+                }
+            }
+        }
+#endif
 
         [Fact]
         public async Task WriteEntityReferenceLinkForCollectionNavigationPropertyAsync()

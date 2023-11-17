@@ -1,1 +1,2 @@
-﻿
+﻿static System.Collections.Generic.ReadOnlyListExtensions.FindLastIndex<T>(this System.Collections.Generic.IReadOnlyList<T> list, System.Func<T, bool> predicate) -> int
+System.Collections.Generic.ReadOnlyListExtensions

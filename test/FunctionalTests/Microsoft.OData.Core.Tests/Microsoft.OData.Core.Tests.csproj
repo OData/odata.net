@@ -52,6 +52,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Remove="JsonLight\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
+    <None Remove="JsonLight\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Common\ExceptionUtilities.cs" Link="ExceptionUtilities.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmConstants.cs" Link="EdmConstants.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\EdmToStockModelConverter.cs" Link="EdmToStockModelConverter.cs" />
@@ -59,6 +64,11 @@
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\MetadataUtils.cs" Link="MetadataUtils.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\Metadata\TestModels.cs" Link="TestModels.cs" />
     <Compile Include="..\Tests\TestUtils\Common\Microsoft.Test.OData.Utils\ODataLibTest\ModelBuilder.cs" Link="ModelBuilder.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="JsonLight\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
+    <EmbeddedResource Include="JsonLight\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
   </ItemGroup>
 
   <ItemGroup>
