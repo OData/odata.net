@@ -515,6 +515,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The specified ODataJsonDateTimeFormat is not supported."
+        /// </summary>
+        internal static string ODataJsonWriter_UnsupportedDateTimeFormat
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_UnsupportedDateTimeFormat);
+            }
+        }
+
+        /// <summary>
         /// A string like "An error occurred while processing the OData message."
         /// </summary>
         internal static string ODataException_GeneralError
