@@ -310,8 +310,8 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             if (value.Offset == TimeSpan.Zero)
             {
-                // The default JsonWriter uses the format 2022-11-09T09:42:30Z when the offset is 0
-                // Utf8JsonWriter uses the format 2022-11-09T09:42:30+00:00
+                // The default JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffffZ when the offset is 0
+                // Utf8JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffff+00:00
                 // While both formats are valid IS0 8601, we decided to keep the output
                 // consistent between the two writers to avoid breaking any client that may
                 // have dependency on the original format.
@@ -741,8 +741,9 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             if (value.Offset == TimeSpan.Zero)
             {
-                // The default JsonWriter uses the format 2022-11-09T09:42:30Z when the offset is 0
-                // Utf8JsonWriter uses the format 2022-11-09T09:42:30+00:00
+
+                // The default JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffffZ when the offset is 0
+                // Utf8JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffff+00:00
                 // While both formats are valid IS0 8601, we decided to keep the output
                 // consistent between the two writers to avoid breaking any client that may
                 // have dependency on the original format.
