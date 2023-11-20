@@ -28,18 +28,14 @@ namespace Microsoft.OData.Json
         private const int MinimumBufferSize = 256;
 
         // Value copied from Array.MaxLength in https://github.com/dotnet/runtime/blob/main/src/libraries/System.Private.CoreLib/src/System/Array.cs
-        public const int MaximumBufferSize = 0X7FFFFFC7;
-
-        private PooledByteBufferWriter()
-        {
-        }
+        public const int MaximumBufferSize = 0X7FFFFFC7; // 2147483591 (approx 2GB)
 
         /// <summary>
         /// Creates an instance of <see cref="PooledByteBufferWriter"/> to which data can be written,
         /// with a specified initial capacity.
         /// </summary>
         /// <param name="initialCapacity"></param>
-        public PooledByteBufferWriter(int initialCapacity) : this()
+        public PooledByteBufferWriter(int initialCapacity)
         {
             Debug.Assert(initialCapacity > 0);
 
@@ -98,10 +94,7 @@ namespace Microsoft.OData.Json
             }
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="count"></param>
         public void Advance(int count)
         {
             Debug.Assert(this.rentedBuffer != null);
@@ -110,22 +103,14 @@ namespace Microsoft.OData.Json
             this.index += count;
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="sizeHint"></param>
-        /// <returns></returns>
         public Memory<byte> GetMemory(int sizeHint = MinimumBufferSize)
         {
             CheckAndResizeBuffer(sizeHint);
             return this.rentedBuffer.AsMemory(index);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
-        /// <param name="sizeHint"></param>
-        /// <returns></returns>
         public Span<byte> GetSpan(int sizeHint = MinimumBufferSize)
         {
             if (sizeHint == 0)
@@ -142,7 +127,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         public void Clear()
         {
-            ClearHelper();
+            ClearInternal();
         }
 
         /// <summary>
@@ -155,13 +140,13 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            ClearHelper();
+            ClearInternal();
             byte[] toReturn = this.rentedBuffer;
             this.rentedBuffer = null;
             ArrayPool<byte>.Shared.Return(toReturn);
         }
 
-        private void ClearHelper()
+        private void ClearInternal()
         {
             Debug.Assert(this.rentedBuffer != null);
             Debug.Assert(this.index <= this.rentedBuffer.Length);
@@ -187,13 +172,23 @@ namespace Microsoft.OData.Json
 
             if (sizeHint > availableSpace)
             {
+                // If the current size buffer of buffer is relatively small,
+                // we'll grow it by the size hint requested by the caller
+                // otherwise we'll attempt to double the buffer size.
+                // This avoids repeatedly growing the buffer by small
+                // chunks.
                 int growBy = Math.Max(sizeHint, currentLength);
 
                 int newSize = currentLength + growBy;
 
                 if ((uint)newSize > MaximumBufferSize)
                 {
+                    // If the new size exceeds by the maximum buffer size,
+                    // then we fall back and attempt to grow it only by
+                    // the size requested by the caller.
                     newSize = currentLength + sizeHint;
+
+                    // If the size still exceeds the max size, then give up and throw an OOM.
                     if ((uint)newSize > MaximumBufferSize)
                     {
                         throw new OutOfMemoryException(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
