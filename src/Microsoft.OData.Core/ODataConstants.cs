@@ -218,7 +218,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The default size used for buffering output data.
         /// </summary>
-        internal const int DefaultOutputBufferSize = 16 * 1024;
+        internal const int DefaultOutputBufferSize = 84000;
 
         #endregion Context URL
     }
