@@ -106,6 +106,15 @@ namespace Microsoft.OData.Json
         /// <inheritdoc/>
         public Memory<byte> GetMemory(int sizeHint = MinimumBufferSize)
         {
+            // When called through an IBufferWriter interface,
+            // the sizeHint will be initialized to 0.
+            // IBufferWriter expects a non-empty buffer to be returned
+            // when a 0 sizeHint is provided.
+            if (sizeHint == 0)
+            {
+                sizeHint = MinimumBufferSize;
+            }
+
             CheckAndResizeBuffer(sizeHint);
             return this.rentedBuffer.AsMemory(index);
         }
@@ -113,6 +122,10 @@ namespace Microsoft.OData.Json
         /// <inheritdoc/>
         public Span<byte> GetSpan(int sizeHint = MinimumBufferSize)
         {
+            // When called through an IBufferWriter interface,
+            // the sizeHint will be initialized to 0.
+            // IBufferWriter expects a non-empty buffer to be returned
+            // when a 0 sizeHint is provided.
             if (sizeHint == 0)
             {
                 sizeHint = MinimumBufferSize;

@@ -7,8 +7,11 @@
 #if NETCOREAPP3_1_OR_GREATER
 
 using System;
+using System.Buffers;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Json;
@@ -43,6 +46,22 @@ namespace Microsoft.OData.Tests.Json
             using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(512);
             Memory<byte> memory = bufferWriter.GetMemory();
             Assert.Equal(512, memory.Length);
+        }
+
+        [Fact]
+        public void GetSpan_WhenSizeHintIsZero_ReturnsNonEmptyBuffer()
+        {
+            using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(512);
+            Span<byte> buffer = bufferWriter.GetSpan(0);
+            Assert.Equal(512, buffer.Length);
+        }
+
+        [Fact]
+        public void GetMemory_WhenSizeHintIsZero_ReturnsNonEmptyBuffer()
+        {
+            using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(512);
+            Memory<byte> buffer = bufferWriter.GetMemory(0);
+            Assert.Equal(512, buffer.Length);
         }
 
         [Fact]
@@ -107,6 +126,28 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(112, bufferWriter.FreeCapacity);
             Assert.Equal(400, bufferWriter.WrittenCount);
             Assert.Equal(512, bufferWriter.Capacity);
+        }
+
+        [Fact]
+        public void GetSpan_ThrowsExceptionIfExceedsMaxBufferSize()
+        {
+            int initialBufferSize = 256;
+            using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(initialBufferSize);
+
+            Action action = () => bufferWriter.GetSpan(PooledByteBufferWriter.MaximumBufferSize);
+            int newSize = initialBufferSize + PooledByteBufferWriter.MaximumBufferSize;
+            action.Throws<OutOfMemoryException>(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
+        }
+
+        [Fact]
+        public void GetMemory_ThrowsExceptionIfExceedsMaxBufferSize()
+        {
+            int initialBufferSize = 256;
+            using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(initialBufferSize);
+
+            Action action = () => bufferWriter.GetMemory(PooledByteBufferWriter.MaximumBufferSize);
+            int newSize = initialBufferSize + PooledByteBufferWriter.MaximumBufferSize;
+            action.Throws<OutOfMemoryException>(Strings.ODataMessageWriter_Buffer_Maximum_Size_Exceeded(newSize));
         }
 
         [Fact]
