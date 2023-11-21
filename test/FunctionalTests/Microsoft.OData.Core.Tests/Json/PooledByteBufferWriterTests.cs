@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.Json
     public class PooledByteBufferWriterTests
     {
         [Fact]
-        public void ContstructorInitializesBufferToInititalCapacity()
+        public void Constructor_InitializesBufferToInititalCapacity()
         {
             using PooledByteBufferWriter bufferWriter = new PooledByteBufferWriter(512);
             Assert.Equal(0, bufferWriter.WrittenMemory.Span.Length);
