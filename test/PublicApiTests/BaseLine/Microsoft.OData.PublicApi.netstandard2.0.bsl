@@ -5622,6 +5622,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
     bool AlwaysAddTypeAnnotationsForDerivedTypes  { public get; public set; }
     Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
     System.Uri BaseUri  { public get; public set; }
+    int BufferSize  { public get; public set; }
     bool EnableCharactersCheck  { public get; public set; }
     bool EnableMessageStreamDisposal  { public get; public set; }
     string JsonPCallback  { public get; public set; }
