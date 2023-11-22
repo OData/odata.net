@@ -26,7 +26,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Fact]
         public void SchemaElementsShouldReturnCorrectSchemaElementCount()
         {
-            Assert.Equal(40, EdmCoreModel.Instance.SchemaElements.Count());
+            Assert.Equal(42, EdmCoreModel.Instance.SchemaElements.Count());
         }
 
         [Theory]

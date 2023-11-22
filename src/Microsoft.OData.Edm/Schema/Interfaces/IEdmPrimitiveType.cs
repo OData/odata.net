@@ -177,6 +177,16 @@ namespace Microsoft.OData.Edm
         Date,
 
         /// <summary>
+        /// Represents a Dictionary of String, Object type.
+        /// </summary>
+        DictionaryOfStringObject,
+
+        /// <summary>
+        /// Represents a Dictionary of String, String type.
+        /// </summary>
+        DictionaryOfStringString,
+
+        /// <summary>
         /// Represents a TimeOfDay type
         /// </summary>
         TimeOfDay,

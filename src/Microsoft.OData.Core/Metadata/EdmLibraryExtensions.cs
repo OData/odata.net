@@ -54,6 +54,12 @@ namespace Microsoft.OData.Metadata
         /// <summary>Type reference for Edm.Decimal.</summary>
         private static readonly EdmPrimitiveTypeReference DecimalTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Decimal), false);
 
+        /// <summary>Type reference for Edm.DictionaryOfStringObject.</summary>
+        private static readonly EdmPrimitiveTypeReference DictionaryOfStringObjectTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringObject), true);
+
+        /// <summary>Type reference for Edm.DictionaryOfStringString.</summary>
+        private static readonly EdmPrimitiveTypeReference DictionaryOfStringStringTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringString), true);
+
         /// <summary>Type reference for Edm.Double.</summary>
         private static readonly EdmPrimitiveTypeReference DoubleTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Double), false);
 
@@ -94,6 +100,8 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(Boolean), BooleanTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Byte), ByteTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Decimal), DecimalTypeReference);
+            PrimitiveTypeReferenceMap.Add(typeof(Dictionary<string, object>), DictionaryOfStringObjectTypeReference);
+            PrimitiveTypeReferenceMap.Add(typeof(Dictionary<string, string>), DictionaryOfStringStringTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Double), DoubleTypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Int16), Int16TypeReference);
             PrimitiveTypeReferenceMap.Add(typeof(Int32), Int32TypeReference);
@@ -601,7 +609,7 @@ namespace Microsoft.OData.Metadata
                 return true;
             }
 
-            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType) || typeof(IDictionary).IsAssignableFrom(clrType);
         }
 
         /// <summary>
@@ -1474,7 +1482,15 @@ namespace Microsoft.OData.Metadata
 
             // If it didn't work, try spatial types which need assignability.
             IEdmPrimitiveType primitiveType = null;
-            if (typeof(GeographyPoint).IsAssignableFrom(clrType))
+            if (typeof(IDictionary<string, object>).IsAssignableFrom(clrType))
+            {
+                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringObject);
+            }
+            else if (typeof(IDictionary<string, string>).IsAssignableFrom(clrType))
+            {
+                primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringString);
+            }
+            else if (typeof(GeographyPoint).IsAssignableFrom(clrType))
             {
                 primitiveType = EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.GeographyPoint);
             }
@@ -2001,6 +2017,9 @@ namespace Microsoft.OData.Metadata
             {
                 case EdmPrimitiveTypeKind.Boolean:
                 case EdmPrimitiveTypeKind.Byte:
+                case EdmPrimitiveTypeKind.Date:
+                case EdmPrimitiveTypeKind.DictionaryOfStringObject:
+                case EdmPrimitiveTypeKind.DictionaryOfStringString:
                 case EdmPrimitiveTypeKind.Double:
                 case EdmPrimitiveTypeKind.Guid:
                 case EdmPrimitiveTypeKind.Int16:
@@ -2009,7 +2028,6 @@ namespace Microsoft.OData.Metadata
                 case EdmPrimitiveTypeKind.SByte:
                 case EdmPrimitiveTypeKind.Single:
                 case EdmPrimitiveTypeKind.Stream:
-                case EdmPrimitiveTypeKind.Date:
                 case EdmPrimitiveTypeKind.PrimitiveType:
                     return new EdmPrimitiveTypeReference(primitiveType, nullable);
                 case EdmPrimitiveTypeKind.Binary:

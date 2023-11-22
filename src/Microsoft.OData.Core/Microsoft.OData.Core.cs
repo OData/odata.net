@@ -483,6 +483,7 @@ namespace Microsoft.OData
         internal const string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected = "ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected";
         internal const string ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty = "ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty";
         internal const string ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue = "ODataJsonReaderCoreUtils_CannotReadSpatialPropertyValue";
+        internal const string ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue = "ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue";
         internal const string ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource = "ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource";
         internal const string ODataJsonLightReaderUtils_AnnotationWithNullValue = "ODataJsonLightReaderUtils_AnnotationWithNullValue";
         internal const string ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation = "ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation";

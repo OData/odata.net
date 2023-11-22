@@ -56,6 +56,8 @@ namespace Microsoft.OData.Edm
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DateTimeOffset),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Date),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Decimal),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringObject),
+                new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.DictionaryOfStringString),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Binary),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.String),
                 new EdmCoreModelPrimitiveType(EdmPrimitiveTypeKind.Stream),

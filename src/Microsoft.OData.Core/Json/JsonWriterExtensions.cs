@@ -153,6 +153,12 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            if (value is Dictionary<string, object>)
+            {
+                jsonWriter.WriteJsonObjectValue((Dictionary<string, object>)value, null);
+                return;
+            }
+
             throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName));
         }
 

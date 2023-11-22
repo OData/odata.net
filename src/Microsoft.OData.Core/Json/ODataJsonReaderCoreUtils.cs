@@ -81,6 +81,84 @@ namespace Microsoft.OData.Json
             return spatialValue;
         }
 
+        internal static IDictionary<string, object> ReadDictionaryOfStringObjectValue(
+            IJsonReader jsonReader,
+            bool insideJsonObjectValue,
+            ODataInputContext inputContext,
+            IEdmPrimitiveTypeReference expectedValueTypeReference,
+            bool validateNullValue,
+            int recursionDepth,
+            string propertyName)
+        {
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+            Debug.Assert(inputContext != null, "inputContext != null");
+            Debug.Assert(expectedValueTypeReference != null, "expectedValueTypeReference != null");
+            Debug.Assert(expectedValueTypeReference.IsDictionaryOfStringObject(), "ReadDictionaryOfStringObjectValue must be called only with dictionary types");
+
+            // Dictionary of String, Object value can be either null constant or a JSON object
+            // If it's a null primitive value, report a null value.
+            if (!insideJsonObjectValue && TryReadNullValue(jsonReader, inputContext, expectedValueTypeReference, validateNullValue, propertyName))
+            {
+                return null;
+            }
+
+            IDictionary<string, object> dictionaryOfStringObjectValue = new Dictionary<string, object>();
+            if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                IDictionary<string, object> jsonObject = ReadObjectValue(jsonReader, insideJsonObjectValue, inputContext, recursionDepth);
+                foreach (var item in jsonObject)
+                {
+                    dictionaryOfStringObjectValue[item.Key] = item.Value;
+                }
+            }
+
+            if (dictionaryOfStringObjectValue == null)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue);
+            }
+
+            return dictionaryOfStringObjectValue;
+        }
+
+        internal static IDictionary<string, string> ReadDictionaryOfStringStringValue(
+            IJsonReader jsonReader,
+            bool insideJsonObjectValue,
+            ODataInputContext inputContext,
+            IEdmPrimitiveTypeReference expectedValueTypeReference,
+            bool validateNullValue,
+            int recursionDepth,
+            string propertyName)
+        {
+            Debug.Assert(jsonReader != null, "jsonReader != null");
+            Debug.Assert(inputContext != null, "inputContext != null");
+            Debug.Assert(expectedValueTypeReference != null, "expectedValueTypeReference != null");
+            Debug.Assert(expectedValueTypeReference.IsDictionaryOfStringString(), "ReadDictionaryOfStringStringValue must be called only with dictionary types");
+
+            // Dictionary of String, String value can be either null constant or a JSON object
+            // If it's a null primitive value, report a null value.
+            if (!insideJsonObjectValue && TryReadNullValue(jsonReader, inputContext, expectedValueTypeReference, validateNullValue, propertyName))
+            {
+                return null;
+            }
+
+            IDictionary<string, string> dictionaryOfStringStringValue = new Dictionary<string, string>();
+            if (insideJsonObjectValue || jsonReader.NodeType == JsonNodeType.StartObject)
+            {
+                IDictionary<string, object> jsonObject = ReadObjectValue(jsonReader, insideJsonObjectValue, inputContext, recursionDepth);
+                foreach (var item in jsonObject)
+                {
+                    dictionaryOfStringStringValue[item.Key] = (string)item.Value;
+                }
+            }
+
+            if (dictionaryOfStringStringValue == null)
+            {
+                throw new ODataException(ODataErrorStrings.ODataJsonReaderCoreUtils_CannotReadDictionaryPropertyValue);
+            }
+
+            return dictionaryOfStringStringValue;
+        }
+
         /// <summary>
         /// Tries to read a null value from the JSON reader.
         /// </summary>
