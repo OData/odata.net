@@ -145,8 +145,8 @@ namespace Microsoft.OData
         public ICharArrayPool ArrayPool { get; set; }
 
         /// <summary>
-        /// Gets/sets the size of the buffer used to buffer writes to the output
-        /// stream. Note that this is a hint and may override it when deemed fit.
+        /// Gets or sets the size of the buffer used to buffer writes to the output
+        /// stream. Note that this is a hint and may be disregarded where deemed fit.
         /// </summary>
         public int BufferSize { get; set; }
 
