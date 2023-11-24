@@ -417,6 +417,11 @@ namespace Microsoft.OData.Client
 
         private void HandleDeepInsertResponseInternal(MaterializerEntry entry, bool isTopLevelDescriptor, Descriptor descriptor, OperationResponse parentOperationResponse)
         {
+            if (entry.EntityHasBeenResolved)
+            {
+                return;
+            }
+
             OperationResponse response = this.CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
 
             List<Descriptor> relatedDescriptors = this.BulkUpdateGraph.GetRelatedDescriptors(descriptor);

@@ -384,19 +384,15 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
         private void AddDeltaResourceToParent(IMaterializerState materializerState)
         {
-            // Only add entries that are entities (having an Url).
-            if (materializerState is MaterializerNestedEntry nestedEntry && nestedEntry.NestedResourceInfo.Url != null)
-            {
-                IMaterializerState topItem = this.deltaMaterializerStateItems.Peek();
+            IMaterializerState topItem = this.deltaMaterializerStateItems.Peek();
 
-                if (topItem is MaterializerDeltaFeed delta)
-                {
-                    delta.AddEntry(materializerState);
-                }
-                else if (topItem is MaterializerEntry entry)
-                {
-                    entry.AddNestedItem(materializerState);
-                }
+            if (topItem is MaterializerDeltaFeed delta)
+            {
+                delta.AddEntry(materializerState);
+            }
+            else if (topItem is MaterializerEntry entry)
+            {
+                entry.AddNestedItem(materializerState);
             }
         }
 
@@ -406,15 +402,11 @@ namespace Microsoft.OData.Client.Materialization
         /// <param name="materializerState">The <see cref="IMaterializerState"/> entry being added to the parent item.</param>
         private void AddResourceToParent(IMaterializerState materializerState)
         {
-            // Only add entries that are entities (having an Url).
-            if (materializerState is MaterializerNestedEntry nestedEntry && nestedEntry.NestedResourceInfo.Url != null)
-            {
-                IMaterializerState topItem = this.entryMaterializerStateItems.Peek();
+            IMaterializerState topItem = this.entryMaterializerStateItems.Peek();
 
-                if (topItem is MaterializerEntry entry)
-                {
-                    entry.AddNestedItem(materializerState);
-                }
+            if (topItem is MaterializerEntry entry)
+            {
+                entry.AddNestedItem(materializerState);
             }
         }
 
