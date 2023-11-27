@@ -116,9 +116,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                             {
-                                //ExpectedException = tc.Format == ODataFormat.Json
-                                //        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "NonStreamProperty", "Edm.Boolean")
-                                //        : ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
                                 ExpectedException = null
                             },
                     },

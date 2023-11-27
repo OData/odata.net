@@ -237,7 +237,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     ExpectedEntity = PayloadBuilder.Entity(),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
-                   // ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String"),
                     OnlyResponse = true
                 },
                 new StreamPropertyTestCase

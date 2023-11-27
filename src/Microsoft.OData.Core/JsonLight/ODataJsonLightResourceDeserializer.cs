@@ -1437,8 +1437,8 @@ namespace Microsoft.OData.JsonLight
 
             IEdmTypeReference propertyType = property?.Type;
             IDictionary<string, object> odataAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
-            IList<KeyValuePair<string, object>> propertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName).ToList();
-            if ((odataAnnotations.Count + propertyAnnotations.Count) == 0)
+            IList<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName).ToList();
+            if (odataAnnotations.Count == 0 && customAnnotations.Count == 0)
             {
                 // If we don't have any annotations for the property, it could contain errors.
                 if (property != null)
@@ -1461,7 +1461,7 @@ namespace Microsoft.OData.JsonLight
 
             AttachODataAnnotations(resourceState, propertyName, propertyInfo);
 
-            foreach (KeyValuePair<string, object> annotation in propertyAnnotations)
+            foreach (KeyValuePair<string, object> annotation in customAnnotations)
             {
                  // annotation.Value == null indicates that this annotation should be skipped?
                  propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
@@ -1756,7 +1756,6 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                // TODO: Shall we return ODataJsonLightReaderNestedPropertyInfo for a dynamic property without value?
                 throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType(propertyName));
             }
 
