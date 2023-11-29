@@ -1,3 +1,0 @@
-Microsoft.OData.Client.UriFunctionAttribute
-Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
-Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
