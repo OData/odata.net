@@ -93,6 +93,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Get the segment at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the segment to retrieve</param>
+        public ODataPathSegment this[int index] => this.segments[index];
+
+        /// <summary>
         /// Get the number of segments in this path.
         /// </summary>
         public int Count
