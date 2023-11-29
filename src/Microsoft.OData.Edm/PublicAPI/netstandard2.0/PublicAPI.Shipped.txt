@@ -1,4 +1,6 @@
-﻿abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
+static System.Collections.Generic.ReadOnlyListExtensions.FindLastIndex<T>(this System.Collections.Generic.IReadOnlyList<T> list, System.Func<T, bool> predicate) -> int
+System.Collections.Generic.ReadOnlyListExtensions
+abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
 abstract Microsoft.OData.Edm.EdmModelBase.FindDirectlyDerivedTypes(Microsoft.OData.Edm.IEdmStructuredType baseType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuredType>
 abstract Microsoft.OData.Edm.EdmModelBase.SchemaElements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmSchemaElement>
 abstract Microsoft.OData.Edm.EdmNavigationSource.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
