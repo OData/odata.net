@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.FirstOrDefault();
+                return this.segments.Count > 0 ? this.segments[0] : default;
             }
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.LastOrDefault();
+                return this.segments.Count > 0 ? this.segments[this.segments.Count - 1] : default;
             }
         }
 
