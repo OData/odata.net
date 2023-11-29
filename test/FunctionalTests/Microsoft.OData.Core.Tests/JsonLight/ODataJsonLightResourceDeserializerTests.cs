@@ -306,6 +306,32 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public async Task ReadResourceContentWithPropertyWithoutValueButWithCustomAnnotationsAsync()
+        {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("custom.instance");
+
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
+                "\"Id\":41," +
+                "\"Name@custom.instance\":\"Food\"}";
+
+            await SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
+                payload,
+                this.categoriesEntitySet,
+                this.categoryEntityType,
+                (resourceState) =>
+                {
+                    var resource = resourceState.Resource;
+                    Assert.NotNull(resource);
+                    var idProperty = Assert.Single(resource.Properties);
+                    Assert.Equal("Id", idProperty.Name);
+                    Assert.Equal(41, idProperty.Value);
+
+                    var customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations("Name");
+                    Assert.Contains(new KeyValuePair<string, object>("custom.instance", "Food"), customAnnotations);
+                });
+        }
+
+        [Fact]
         public async Task ReadResourceContentWithExpandedSingletonNavigationPropertyInResponsePayloadAsync()
         {
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
