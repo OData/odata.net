@@ -595,13 +595,26 @@ namespace Microsoft.OData.Metadata
         {
             Debug.Assert(clrType != null, "clrType != null");
 
-            if (clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64))
-            {
+            // Directly check the most common types for first
+            // for better performance.
+            return clrType == typeof(string)
+                || clrType == typeof(int)
+                || clrType == typeof(bool)
+                || clrType == typeof(double)
+                || clrType == typeof(DateTimeOffset)
+                || clrType == typeof(Guid)
+                || clrType == typeof(Date)
+                || clrType == typeof(Decimal)
+                || clrType == typeof(Int64)
                 // Since UInt types are not in the core model, they cannot be found in the map below.
-                return true;
-            }
-
-            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+                || clrType == typeof(UInt16)
+                || clrType == typeof(UInt32)
+                || clrType == typeof(UInt64)
+                // Lookup the primitive type map for remaining types. If we add more predicates to this conditions
+                // then it could take longer to reach the types in the last predicates than to look them up in the
+                // dictionary. So for a good balance handle common types directly and the rest in the dictionary.
+                || PrimitiveTypeReferenceMap.ContainsKey(clrType)
+                || typeof(ISpatial).IsAssignableFrom(clrType);
         }
 
         /// <summary>
