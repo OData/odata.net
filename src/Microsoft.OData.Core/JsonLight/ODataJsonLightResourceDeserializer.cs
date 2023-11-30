@@ -1436,22 +1436,6 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(propertyName != null, "Property name must not be null");
 
             IEdmTypeReference propertyType = property?.Type;
-            IDictionary<string, object> odataAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName);
-            IList<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName).ToList();
-            if (odataAnnotations.Count == 0 && customAnnotations.Count == 0)
-            {
-                // If we don't have any annotations for the property, it could contain errors.
-                if (property != null)
-                {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyType.FullName()));
-                }
-                else
-                {
-                    // it's a dynamic property
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
-                }
-            }
-
             IEdmPrimitiveType primitiveType = propertyType == null ? null : propertyType.Definition.AsElementType() as IEdmPrimitiveType;
             ODataPropertyInfo propertyInfo = new ODataPropertyInfo
             {
@@ -1461,6 +1445,7 @@ namespace Microsoft.OData.JsonLight
 
             AttachODataAnnotations(resourceState, propertyName, propertyInfo);
 
+            IEnumerable<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
             foreach (KeyValuePair<string, object> annotation in customAnnotations)
             {
                  // annotation.Value == null indicates that this annotation should be skipped?
