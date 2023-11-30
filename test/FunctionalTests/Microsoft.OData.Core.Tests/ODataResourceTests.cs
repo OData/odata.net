@@ -316,5 +316,42 @@ namespace Microsoft.OData.Tests
             var exception = Assert.Throws<ODataException>(test);
             Assert.Equal(Strings.ODataResource_PropertyValueCannotBeODataResourceValue("CollectionProperty"), exception.Message);
         }
+
+        [Fact]
+        public void WhenSkipPropertyVerificatonIsTrue_ODataResourcePropertyWithODataResourceValue_DoesNotThrow()
+        {
+            ODataResource resource = new ODataResource
+            {
+                TypeName = "NS.Resource",
+                SkipPropertyVerification = true
+            };
+
+            resource.Properties = new[]
+            {
+                new ODataProperty { Name = "ResourceProperty", Value = new ODataResourceValue() }
+            };
+        }
+
+        [Fact]
+        public void WhenSkipPropertyVerificatonIsTrue_ODataResourcePropertyWithCollectionODataResourceValue_DoesNotThrow()
+        {
+            ODataResource resource = new ODataResource
+            {
+                TypeName = "NS.Resource",
+                SkipPropertyVerification = true
+            };
+
+            resource.Properties = new[]
+            {
+                new ODataProperty
+                {
+                    Name = "CollectionProperty",
+                    Value = new ODataCollectionValue
+                    {
+                        Items = new [] { new ODataResourceValue() }
+                    }
+                }
+            };
+        }
     }
 }
