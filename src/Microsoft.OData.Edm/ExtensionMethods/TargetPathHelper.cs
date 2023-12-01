@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm
                 return Enumerable.Empty<IEdmElement>();
             }
 
-            List<IEdmElement> pathSegments = new List<IEdmElement>();
+            List<IEdmElement> pathSegments = new List<IEdmElement>(targetSegments.Length);
             pathSegments.Add(container);
             int index = 1; // index of the targetSegments.
 
