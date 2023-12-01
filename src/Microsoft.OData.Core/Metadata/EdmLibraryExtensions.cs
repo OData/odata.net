@@ -629,6 +629,10 @@ namespace Microsoft.OData.Metadata
 #if !NETSTANDARD1_1
                 (PrimitiveTypeCodeBitMap & typeCode) == typeCode
                 ||
+#else
+                // .netstandard1.1 does not support TypeCode
+                clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64)
+                ||
 #endif
                 // DateTimeOffset and Guid don't have dedicated type codes, but they are
                 // common types, so we check them first to optimize their lookup before falling back to the dictionary.
