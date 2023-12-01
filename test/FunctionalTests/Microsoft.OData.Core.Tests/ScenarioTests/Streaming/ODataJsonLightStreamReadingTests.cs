@@ -15,12 +15,177 @@ namespace Microsoft.OData.Tests.JsonLight
 {
     public class ODataJsonLightStreamReadingTests
     {
-        private EdmModel model;
-        private IEdmEntitySet customersEntitySet;
         private string binaryString = "binaryString";
         private string stringValue = "My String Value";
         private string binaryValue = "DGJpbmFyeVN0cmluZw==";
         private string resourcePayload = "{{\"@context\":\"http://testservice/$metadata#customers/$entity\",\"id\":\"1\"{0}}}";
+
+        // Since the model doesn't change for all test cases, let's create once for all test cases.
+        private static IEdmModel Model;
+        private static IEdmEntitySet CustomersEntitySet;
+        static ODataJsonLightStreamReadingTests()
+        {
+            var model = new EdmModel();
+            var enumType = new EdmEnumType("test", "gender");
+            enumType.AddMember(new EdmEnumMember(enumType, "male", new EdmEnumMemberValue(0)));
+            enumType.AddMember(new EdmEnumMember(enumType, "female", new EdmEnumMemberValue(1)));
+
+            var customerType = new EdmEntityType("test", "customer", null, false, true);
+            customerType.AddKeys(customerType.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false));
+            customerType.AddStructuralProperty("name", EdmPrimitiveTypeKind.String);
+            customerType.AddStructuralProperty("nickName", EdmPrimitiveTypeKind.String);
+            customerType.AddStructuralProperty("age", EdmPrimitiveTypeKind.Int32, false);
+            customerType.AddStructuralProperty("isMarvel", EdmPrimitiveTypeKind.Boolean, false);
+            customerType.AddStructuralProperty("gender", new EdmEnumTypeReference(enumType, true));
+            customerType.AddStructuralProperty("stream", EdmPrimitiveTypeKind.Stream);
+            customerType.AddStructuralProperty("binaryAsStream", EdmPrimitiveTypeKind.Binary);
+            customerType.AddStructuralProperty("comments", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
+            model.AddElement(customerType);
+
+            var container = model.AddEntityContainer("test", "container");
+            CustomersEntitySet = container.AddEntitySet("customers", customerType);
+            Model = model;
+        }
+
+        [Fact]
+        public void ReadStreamPrimitivePropertyWithoutValueButWithInstanceAnnotations()
+        {
+            // Intentionally add 'name' property at the end of the payload.
+            string payload = String.Format(resourcePayload,
+                ",\"stream@Custom.ComplexAnnotation\": {\"description\":\"abc\"},\"name\":\"sam\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 3 : 3;
+                ODataResource resource = null;
+                ODataPropertyInfo nestedPropertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            nestedPropertyInfo = reader.Item as ODataPropertyInfo;
+                            break;
+                    }
+                }
+
+                Assert.Null(nestedPropertyInfo); // Make sure there's no extra nested property info created for stream property?
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+
+                ODataProperty streamProperty = resource.Properties.FirstOrDefault(p => p.Name == "stream");
+                Assert.NotNull(streamProperty);
+                ODataInstanceAnnotation annotation = Assert.Single(streamProperty.InstanceAnnotations);
+                Assert.Equal("Custom.ComplexAnnotation", annotation.Name);
+                ODataResourceValue resourceValue = Assert.IsType<ODataResourceValue>(annotation.Value);
+                ODataProperty descProperty = Assert.Single(resourceValue.Properties);
+                Assert.Equal("description", descProperty.Name);
+                Assert.Equal("abc", descProperty.Value);
+            }
+        }
+
+        [Fact]
+        public void ReadNonStreamPrimitivePropertyWithoutValueButWithInstanceAnnotation()
+        {
+            // Intentionally add 'name' property at the end of the payload.
+            string payload = String.Format(resourcePayload,
+                ",\"age@Custom.StartAnnotation\":123,\"age@Custom.StartAnnotation2\":true,\"name\":\"sam\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                ODataPropertyInfo nestedPropertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            nestedPropertyInfo = reader.Item as ODataPropertyInfo;
+                            break;
+                    }
+                }
+
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                Assert.NotNull(nestedPropertyInfo);
+                Assert.Equal("age", nestedPropertyInfo.Name);
+                Assert.Equal(2, nestedPropertyInfo.InstanceAnnotations.Count);
+            }
+        }
+
+        [Fact]
+        public void ReadDynamicPrimitivePropertyWithoutValueButWithInstanceAnnotation()
+        {
+            // Intentionally add 'name' property at the end of the payload.
+            string payload = String.Format(resourcePayload,
+                ",\"aDynamic1@Custom.StartAnnotation\":123,\"aDynamic2@Custom.StartAnnotation2\":false,\"name\":\"sam\""
+                );
+
+            foreach (Variant variant in GetVariants(null))
+            {
+                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                ODataResource resource = null;
+                ODataPropertyInfo nested1PropertyInfo = null;
+                ODataPropertyInfo nested2PropertyInfo = null;
+
+                ODataReader reader = CreateODataReader(payload, variant);
+                while (reader.Read())
+                {
+                    switch (reader.State)
+                    {
+                        case ODataReaderState.ResourceStart:
+                            resource = reader.Item as ODataResource;
+                            break;
+
+                        case ODataReaderState.NestedProperty:
+                            if (nested1PropertyInfo != null)
+                            {
+                                nested2PropertyInfo = reader.Item as ODataPropertyInfo;
+                            }
+                            else
+                            {
+                                nested1PropertyInfo = reader.Item as ODataPropertyInfo;
+                            }
+                            break;
+                    }
+                }
+
+                Assert.NotNull(resource);
+                Assert.Equal(expectedPropertyCount, resource.Properties.Count());
+                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                Assert.NotNull(nested1PropertyInfo);
+                Assert.Equal("aDynamic1", nested1PropertyInfo.Name);
+                ODataInstanceAnnotation annotation1 = Assert.Single(nested1PropertyInfo.InstanceAnnotations);
+                Assert.Equal("Custom.StartAnnotation", annotation1.Name);
+                Assert.Equal(123, annotation1.Value.FromODataValue());
+
+                Assert.NotNull(nested2PropertyInfo);
+                Assert.Equal("aDynamic2", nested2PropertyInfo.Name);
+                ODataInstanceAnnotation annotation2 = Assert.Single(nested2PropertyInfo.InstanceAnnotations);
+                Assert.Equal("Custom.StartAnnotation2", annotation2.Name);
+                Assert.Equal(false, annotation2.Value.FromODataValue());
+            }
+        }
 
         [Fact]
         public void ReadPrimitiveCollectionProperty()
@@ -1167,37 +1332,6 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         #region Helpers
-        private IEdmModel GetModel()
-        {
-            if (this.model == null)
-            {
-                var model = new EdmModel();
-
-                var enumType = new EdmEnumType("test", "gender");
-                enumType.AddMember(new EdmEnumMember(enumType, "male", new EdmEnumMemberValue(0)));
-                enumType.AddMember(new EdmEnumMember(enumType, "female", new EdmEnumMemberValue(1)));
-
-                var customerType = new EdmEntityType("test", "customer", null, false, true);
-                customerType.AddKeys(customerType.AddStructuralProperty("id", EdmPrimitiveTypeKind.String, false));
-                customerType.AddStructuralProperty("name", EdmPrimitiveTypeKind.String);
-                customerType.AddStructuralProperty("nickName", EdmPrimitiveTypeKind.String);
-                customerType.AddStructuralProperty("age", EdmPrimitiveTypeKind.Int32, false);
-                customerType.AddStructuralProperty("isMarvel", EdmPrimitiveTypeKind.Boolean, false);
-                customerType.AddStructuralProperty("gender", new EdmEnumTypeReference(enumType, true));
-                customerType.AddStructuralProperty("stream", EdmPrimitiveTypeKind.Stream);
-                customerType.AddStructuralProperty("binaryAsStream", EdmPrimitiveTypeKind.Binary);
-                customerType.AddStructuralProperty("comments", new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(true))));
-                model.AddElement(customerType);
-
-                var container = model.AddEntityContainer("test", "container");
-                this.customersEntitySet = container.AddEntitySet("customers", customerType);
-
-                this.model = model;
-            }
-
-            return this.model;
-        }
-
         private class Variant
         {
             public string Description;
@@ -1215,7 +1349,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Full
         }
 
-        private IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream, bool includeUnordered = true)
+        private static IEnumerable<Variant> GetVariants(Func<IEdmPrimitiveType, bool, string, IEdmProperty, bool> readAsStream, bool includeUnordered = true)
         {
             List<Variant> variants = new List<Variant>();
             foreach (ODataVersion version in new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 })
@@ -1244,6 +1378,7 @@ namespace Microsoft.OData.Tests.JsonLight
                                     Version = version,
                                     ReadUntypedAsString = false,
                                     ReadAsStreamFunc = readAsStream,
+                                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
                                 },
                                 IsRequest = isRequest,
                                 IsStreaming = isStreaming,
@@ -1257,11 +1392,21 @@ namespace Microsoft.OData.Tests.JsonLight
             return variants;
         }
 
-        private ODataReader CreateODataReader(string payload, Variant variant)
+        private static IDictionary<string, string> AnnotationPrefixes = new Dictionary<string, string>
+        {
+            { "@context", "@odata.context" },
+            { "@type", "@odata.type" },
+            { "@mediaContentType", "@odata.mediaContentType" }
+        };
+
+        private static ODataReader CreateODataReader(string payload, Variant variant)
         {
             if (variant.Version < ODataVersion.V401)
             {
-                payload = payload.Replace("@", "@odata.");
+                foreach (var item in AnnotationPrefixes)
+                {
+                    payload = payload.Replace(item.Key, item.Value);
+                }
             }
 
             var stream = new MemoryStream();
@@ -1279,7 +1424,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 {
                     requestMessage.SetHeader("Content-Type", "application/json;odata.streaming=true");
                 }
-                messageReader = new ODataMessageReader(requestMessage, variant.Settings, this.GetModel());
+                messageReader = new ODataMessageReader(requestMessage, variant.Settings, Model);
             }
             else
             {
@@ -1288,14 +1433,14 @@ namespace Microsoft.OData.Tests.JsonLight
                 {
                     responseMessage.SetHeader("Content-Type", "application/json;odata.streaming=true");
                 }
-                    messageReader = new ODataMessageReader(responseMessage, variant.Settings, this.GetModel());
+                    messageReader = new ODataMessageReader(responseMessage, variant.Settings, Model);
             }
 
-            ODataReader reader = messageReader.CreateODataResourceReader(this.customersEntitySet, this.customersEntitySet.EntityType());
+            ODataReader reader = messageReader.CreateODataResourceReader(CustomersEntitySet, CustomersEntitySet.EntityType());
             return reader;
         }
 
-        private string ReadStream(ODataReader reader)
+        private static string ReadStream(ODataReader reader)
         {
             ODataStreamItem streamValue = reader.Item as ODataStreamItem;
             Assert.NotNull(streamValue);
@@ -1319,7 +1464,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return result;
         }
 
-        private string ReadPartialStream(ODataReader reader)
+        private static string ReadPartialStream(ODataReader reader)
         {
             ODataStreamItem streamValue = reader.Item as ODataStreamItem;
             Assert.NotNull(streamValue);

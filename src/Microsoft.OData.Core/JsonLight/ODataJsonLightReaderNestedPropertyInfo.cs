@@ -12,11 +12,14 @@ namespace Microsoft.OData.JsonLight
 
     internal class ODataJsonLightReaderNestedPropertyInfo : ODataJsonLightReaderNestedInfo
     {
-        internal ODataJsonLightReaderNestedPropertyInfo(ODataPropertyInfo nestedPropertyInfo, IEdmProperty nestedProperty) : base(nestedProperty)
+        internal ODataJsonLightReaderNestedPropertyInfo(ODataPropertyInfo nestedPropertyInfo, IEdmProperty nestedProperty, bool withValue = true) : base(nestedProperty)
         {
-            this.NestedPropertyInfo = nestedPropertyInfo;
+            NestedPropertyInfo = nestedPropertyInfo;
+            WithValue = withValue;
         }
 
-        internal ODataPropertyInfo NestedPropertyInfo { get; set; }
+        internal ODataPropertyInfo NestedPropertyInfo { get; }
+
+        public bool WithValue { get; }
     }
 }

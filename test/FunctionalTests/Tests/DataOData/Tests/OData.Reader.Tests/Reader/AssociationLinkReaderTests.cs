@@ -102,10 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedResultCallback = 
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = 
-                                        (tc.Format == ODataFormat.Json)
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String")
-                                        : ODataExpectedExceptions.ODataException("ValidationUtils_NavigationPropertyExpected", "Name", "TestModel.CityType", "Structural"),
+                                    ExpectedException = null
                                 },
                 },
             };

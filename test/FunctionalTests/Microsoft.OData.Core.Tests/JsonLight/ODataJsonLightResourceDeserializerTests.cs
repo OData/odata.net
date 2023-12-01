@@ -348,6 +348,32 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public async Task ReadResourceContentWithPropertyWithoutValueButWithCustomAnnotationsAsync()
+        {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("custom.instance");
+
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
+                "\"Id\":41," +
+                "\"Name@custom.instance\":\"Food\"}";
+
+            await SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
+                payload,
+                this.categoriesEntitySet,
+                this.categoryEntityType,
+                (resourceState) =>
+                {
+                    var resource = resourceState.Resource;
+                    Assert.NotNull(resource);
+                    var idProperty = Assert.Single(resource.Properties);
+                    Assert.Equal("Id", idProperty.Name);
+                    Assert.Equal(41, idProperty.Value);
+
+                    var customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations("Name");
+                    Assert.Contains(new KeyValuePair<string, object>("custom.instance", "Food"), customAnnotations);
+                });
+        }
+
+        [Fact]
         public async Task ReadResourceContentWithExpandedSingletonNavigationPropertyInResponsePayloadAsync()
         {
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
@@ -1303,22 +1329,31 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
-        public async Task ReadResourceContentAsync_ThrowsExceptionForDeferredPrimitiveProperty()
+        public async Task ReadResourceContentAsync_CanReadDeferredPrimitiveProperty()
         {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Products/$entity\"," +
                 "\"Id\":1," +
-                "\"Name@odata.type\":\"#Edm.String\"}";
+                "\"Name@odata.type\":\"#Edm.String\"," +
+                "\"Name@custom.annotation\":\"abc\"}";
 
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
+               await SetupJsonLightResourceSerializerAndRunReadResourceContextTestAsync(
                     payload,
                     this.productsEntitySet,
                     this.productEntityType,
-                    (resourceState) => { }));
+                    (resourceState) =>
+                    {
+                        var odataPropertyAnnotations = resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations("Name");
+                        KeyValuePair<string, object> odataAnnotation = Assert.Single(odataPropertyAnnotations);
+                        Assert.Equal("odata.type", odataAnnotation.Key);
+                        Assert.Equal("Edm.String", odataAnnotation.Value);
 
-            Assert.Equal(
-                ErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType("Name", "Edm.String"),
-                exception.Message);
+                        var customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations("Name");
+                        KeyValuePair<string, object> customAnnotation = Assert.Single(customAnnotations);
+                        Assert.Equal("custom.annotation", customAnnotation.Key);
+                        Assert.Equal("abc", customAnnotation.Value);
+                    });
         }
 
         [Theory]
@@ -1565,8 +1600,6 @@ namespace Microsoft.OData.Tests.JsonLight
                 ErrorStrings.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"),
                 exception.Message);
         }
-
-
 
         [Fact]
         public async Task ReadTopLevelResourceSetAnnotationsAsync_ThrowsExceptionForMissingValueProperty()

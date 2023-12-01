@@ -68,6 +68,79 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public void CanWritePrimitivePropertyInstanceAnnotationWithoutPropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"age@Custom.StartAnnotation\":123"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(123);
+                ODataPropertyInfo propertyInfo = new ODataPropertyInfo { Name = "age" };
+                propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", primitiveValue));
+
+                // write some properties within the resource and others separately
+                writer.WriteStart(resource);
+
+                writer.WriteStart(propertyInfo);
+                writer.WriteEnd(); // property
+
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWritePrimitivePropertyInstanceAnnotationWithPropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                ",\"age@Custom.StartAnnotation\":123,\"age\":37"
+                );
+
+            RunTest((ODataWriter writer) =>
+            {
+                ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(123);
+                ODataPropertyInfo propertyInfo = new ODataPropertyInfo { Name = "age" };
+                propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", primitiveValue));
+
+                // write some properties within the resource and others separately
+                writer.WriteStart(resource);
+
+                writer.WriteStart(propertyInfo);
+                    writer.WritePrimitive(new ODataPrimitiveValue(37));
+                writer.WriteEnd(); // property
+
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
+        public void CanWriteDynamicPropertyWithInstanceAnnotationsButWithoutPropertyValue()
+        {
+            string expectedPayload = String.Format(resourcePayload,
+                 ",\"aDynamicProperty@Custom.StartAnnotation\":123"
+                 );
+
+            RunTest((ODataWriter writer) =>
+            {
+                ODataPrimitiveValue primitiveValue = new ODataPrimitiveValue(123);
+                ODataPropertyInfo propertyInfo = new ODataPropertyInfo { Name = "aDynamicProperty" };
+                propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation("Custom.StartAnnotation", primitiveValue));
+
+                // write some properties within the resource and others separately
+                writer.WriteStart(resource);
+
+                writer.WriteStart(propertyInfo);
+                writer.WriteEnd(); // property
+
+                writer.WriteEnd(); // resource
+            },
+            expectedPayload);
+        }
+
+        [Fact]
         public void CanWriteBinaryPropertyAsStream()
         {
             string expectedPayload = String.Format(resourcePayload,
@@ -724,6 +797,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     RequestUri = new Uri("http://testService/customers")
                 },
             };
+            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
 
             ODataMessageWriter messageWriter;
 

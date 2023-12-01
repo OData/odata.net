@@ -1022,7 +1022,7 @@ namespace Microsoft.OData.JsonLight
                     }
                     else
                     {
-                        throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
+                        readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
                     }
                 }
             }
@@ -1428,6 +1428,41 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
+        /// Read a resource-level data property without value.
+        /// </summary>
+        /// <param name="resourceState">The state of the reader for resource to read.</param>
+        /// <param name="propertyName">The property name, it must not be null.</param>
+        /// <param name="property">The property itself, it could be null if it's dynamic property.</param>
+        /// <returns>The NestedResourceInfo or null.</returns>
+        private static ODataJsonLightReaderNestedPropertyInfo ReadNestedPropertyInfoWithoutValue(IODataJsonLightReaderResourceState resourceState,
+            string propertyName, IEdmProperty property)
+        {
+            Debug.Assert(resourceState != null, "resourceState must not be null");
+            Debug.Assert(propertyName != null, "Property name must not be null");
+
+            IEdmTypeReference propertyType = property?.Type;
+            IEdmPrimitiveType primitiveType = propertyType == null ? null : propertyType.Definition.AsElementType() as IEdmPrimitiveType;
+            ODataPropertyInfo propertyInfo = new ODataPropertyInfo
+            {
+                PrimitiveTypeKind = primitiveType == null ? EdmPrimitiveTypeKind.None : primitiveType.PrimitiveKind,
+                Name = propertyName,
+            };
+
+            AttachODataAnnotations(resourceState, propertyName, propertyInfo);
+
+            IEnumerable<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
+            foreach (KeyValuePair<string, object> annotation in customAnnotations)
+            {
+                 // annotation.Value == null indicates that this annotation should be skipped?
+                 propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+            }
+
+            resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(propertyInfo);
+
+            return new ODataJsonLightReaderNestedPropertyInfo(propertyInfo, property, false);
+        }
+
+        /// <summary>
         /// Returns whether or not a StreamPropertyInfo value specifies a content-type of application/json.
         /// </summary>
         /// <param name="streamPropertyInfo">The StreamPropertyInfo that may specify application/json.</param>
@@ -1503,7 +1538,7 @@ namespace Microsoft.OData.JsonLight
             // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                return ReadNestedPropertyInfoWithoutValue(resourceState, propertyName, null);
             }
 
             object propertyValue = null;
@@ -3277,7 +3312,7 @@ namespace Microsoft.OData.JsonLight
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(propertyName, propertyTypeReference.FullName()));
+                    readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
                 }
             }
 
