@@ -79,6 +79,7 @@ namespace Microsoft.OData
             this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
             this.MultipartNewLine = "\r\n";
             this.AlwaysAddTypeAnnotationsForDerivedTypes = false;
+            this.BufferSize = ODataConstants.DefaultOutputBufferSize;
         }
 
         /// <summary>
@@ -142,6 +143,12 @@ namespace Microsoft.OData
         /// Get/sets the character buffer pool.
         /// </summary>
         public ICharArrayPool ArrayPool { get; set; }
+
+        /// <summary>
+        /// Gets or sets the size of the buffer used to buffer writes to the output
+        /// stream. Note that this is a hint and may be disregarded where deemed fit.
+        /// </summary>
+        public int BufferSize { get; set; }
 
         /// <summary>
         /// Quotas to use for limiting resource consumption when writing an OData message.
@@ -447,6 +454,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
             this.ArrayPool = other.ArrayPool;
+            this.BufferSize = other.BufferSize;
         }
     }
 }

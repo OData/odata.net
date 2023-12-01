@@ -88,22 +88,7 @@ namespace Microsoft.OData.JsonLight
             {
                 this.messageOutputStream = messageInfo.MessageStream;
 
-                Stream outputStream;
-                if (this.Synchronous)
-                {
-                    outputStream = this.messageOutputStream;
-                }
-                else
-                {
-#if NETSTANDARD1_1
-                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-#else 
-                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
-#endif
-                    outputStream = this.asynchronousOutputStream;
-                }
-
-                this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
+                
 
                 bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
 
@@ -112,9 +97,17 @@ namespace Microsoft.OData.JsonLight
 
                 if (streamBasedJsonWriterFactory != null)
                 {
+#if !NETSTANDARD1_1
+                    // When using IStreamBasedJsonWriterFactory, we do not wrap the ouput stream in a buffered stream.
+                    // The assumption is that the default ODataUtf8JsonWriter will be used, and that writer handles
+                    // its own buffering (more efficiently). It leads to too many byte[] array allocations if we have
+                    // both the BufferedStream and ODataUtf8JsonWriter allocating buffers unnecessarily.
+                    this.asynchronousOutputStream = this.messageOutputStream;
+#endif
+
                     this.asynchronousJsonWriter = CreateAsynchronousJsonWriter(
                         streamBasedJsonWriterFactory,
-                        outputStream,
+                        this.messageOutputStream,
                         isIeee754Compatible,
                         messageInfo.Encoding);
 
@@ -125,6 +118,22 @@ namespace Microsoft.OData.JsonLight
                 // Then fallback to the TextWriter-based approach
                 if (this.asynchronousJsonWriter == null && this.jsonWriter == null)
                 {
+                    Stream outputStream;
+                    if (this.Synchronous)
+                    {
+                        outputStream = this.messageOutputStream;
+                    }
+                    else
+                    {
+#if NETSTANDARD1_1
+                        this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
+#else
+                        this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, this.MessageWriterSettings.BufferSize);
+#endif
+                        outputStream = this.asynchronousOutputStream;
+                    }
+
+                    this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
                     this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
 
                     if (!(this.jsonWriter is IJsonWriterAsync))

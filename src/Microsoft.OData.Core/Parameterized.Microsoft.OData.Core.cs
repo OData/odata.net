@@ -515,6 +515,17 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
+        /// A string like "The specified ODataJsonDateTimeFormat is not supported."
+        /// </summary>
+        internal static string ODataJsonWriter_UnsupportedDateTimeFormat
+        {
+            get
+            {
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_UnsupportedDateTimeFormat);
+            }
+        }
+
+        /// <summary>
         /// A string like "An error occurred while processing the OData message."
         /// </summary>
         internal static string ODataException_GeneralError
@@ -782,6 +793,14 @@ namespace Microsoft.OData {
             {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
             }
+        }
+
+        /// <summary>
+        /// A string like "The requested buffer capacity {0} exceeds the max buffer size."
+        /// </summary>
+        internal static string ODataMessageWriter_Buffer_Maximum_Size_Exceeded(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_Buffer_Maximum_Size_Exceeded, p0);
         }
 
         /// <summary>

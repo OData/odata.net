@@ -181,6 +181,12 @@ namespace Microsoft.OData.Tests
             Assert.True(this.settings.ThrowOnDuplicatePropertyNames);
         }
 
+        [Fact]
+        public void BufferSizeShouldDefaultToDefaultOutputBufferSize()
+        {
+            Assert.Equal(ODataConstants.DefaultOutputBufferSize, this.settings.BufferSize);
+        }
+
         #endregion Default settings tests
 
         #region Copy constructor tests
@@ -341,6 +347,7 @@ namespace Microsoft.OData.Tests
             this.settings.ArrayPool = new TestCharArrayPool(5);
             this.settings.EnableMessageStreamDisposal = false;
             this.settings.EnableCharactersCheck = true;
+            this.settings.BufferSize = 4096;
 
             var edmModel = new EdmModel();
             var defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");

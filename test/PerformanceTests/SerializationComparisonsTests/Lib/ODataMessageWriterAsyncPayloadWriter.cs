@@ -49,7 +49,7 @@ namespace ExperimentsLib
             
             IODataResponseMessage message = this.messageFactory(stream);
 
-            var messageWriter = new ODataMessageWriter(message, settings, this.model);
+            await using var messageWriter = new ODataMessageWriter(message, settings, this.model);
             var entitySet = this.model.EntityContainer.FindEntitySet("Customers");
             ODataWriter writer = await messageWriter.CreateODataResourceSetWriterAsync(entitySet);
 

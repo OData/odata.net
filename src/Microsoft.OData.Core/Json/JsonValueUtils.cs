@@ -208,7 +208,18 @@ namespace Microsoft.OData.Json
         internal static void WriteValue(TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
             Debug.Assert(writer != null, "writer != null");
+            string textValue = JsonValueUtils.FormatDateTimeOffset(value, dateTimeFormat);
+            JsonValueUtils.WriteQuoted(writer, textValue);
+        }
 
+        /// <summary>
+        /// Formats the DateTimeOffset value as a string based on the specified format.
+        /// </summary>
+        /// <param name="value">DateTimeOffset value to be formatted.</param>
+        /// <param name="dateTimeFormat">The format to use for conversion.</param>
+        /// <returns>The string representation of the DateTimeOffset based on the given format.</returns>
+        internal static string FormatDateTimeOffset(DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
+        {
             switch (dateTimeFormat)
             {
                 case ODataJsonDateTimeFormat.ISO8601DateTime:
@@ -220,11 +231,8 @@ namespace Microsoft.OData.Json
                         //  quotation-mark
                         //
                         // offset = 4DIGIT
-                        string textValue = XmlConvert.ToString(value);
-                        JsonValueUtils.WriteQuoted(writer, textValue);
+                        return XmlConvert.ToString(value);
                     }
-
-                    break;
 
                 case ODataJsonDateTimeFormat.ODataDateTime:
                     {
@@ -238,11 +246,10 @@ namespace Microsoft.OData.Json
                         //
                         // ticks = *DIGIT
                         // offset = 4DIGIT
-                        string textValue = FormatDateTimeAsJsonTicksString(value);
-                        JsonValueUtils.WriteQuoted(writer, textValue);
+                        return FormatDateTimeAsJsonTicksString(value);
                     }
-
-                    break;
+                default:
+                    throw new ODataException(Strings.ODataJsonWriter_UnsupportedDateTimeFormat);
             }
         }
 

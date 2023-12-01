@@ -1,4 +1,4 @@
-﻿Microsoft.OData.Edm.EdmTargetPath
+Microsoft.OData.Edm.EdmTargetPath
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
 Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void
 Microsoft.OData.Edm.EdmTargetPath.Path.get -> string
