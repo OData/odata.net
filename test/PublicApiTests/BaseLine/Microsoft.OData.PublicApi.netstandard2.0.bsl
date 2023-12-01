@@ -6484,12 +6484,16 @@ public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriPars
     public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
+[
+DefaultMemberAttribute(),
+]
 public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
     public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 
     int Count  { public get; }
     Microsoft.OData.UriParser.ODataPathSegment FirstSegment  { public get; }
+    Microsoft.OData.UriParser.ODataPathSegment Item [int index] { public get; }
     Microsoft.OData.UriParser.ODataPathSegment LastSegment  { public get; }
 
     public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] GetEnumerator ()

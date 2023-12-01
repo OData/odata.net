@@ -77,7 +77,7 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.FirstOrDefault();
+                return this.segments.Count > 0 ? this.segments[0] : null;
             }
         }
 
@@ -88,9 +88,15 @@ namespace Microsoft.OData.UriParser
         {
             get
             {
-                return this.segments.LastOrDefault();
+                return this.segments.Count > 0 ? this.segments[this.segments.Count - 1] : null;
             }
         }
+
+        /// <summary>
+        /// Get the segment at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the segment to retrieve</param>
+        public ODataPathSegment this[int index] => this.segments[index];
 
         /// <summary>
         /// Get the number of segments in this path.
