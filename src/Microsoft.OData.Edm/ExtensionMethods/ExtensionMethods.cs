@@ -2995,10 +2995,9 @@ namespace Microsoft.OData.Edm
                 throw new InvalidOperationException(Strings.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
             }
 
-            StringBuilder stringBuilder = new StringBuilder();
-            stringBuilder.Append(container.FullName());
-            stringBuilder.Append("/");
-            stringBuilder.Append(containerElement.Name);
+            string[] segments = new string[targetPath.Segments.Count];
+            segments[0] = container.FullName();
+            segments[1] = containerElement.Name;
 
             int index = 2;
 
@@ -3006,20 +3005,18 @@ namespace Microsoft.OData.Edm
             {
                 if (targetPath.Segments[index] is IEdmSchemaType schemaType)
                 {
-                    stringBuilder.Append("/");
-                    stringBuilder.Append(EdmUtil.FullyQualifiedName(schemaType));
+                    segments[index] = EdmUtil.FullyQualifiedName(schemaType);
                 }
 
                 else if (targetPath.Segments[index] is IEdmProperty edmProperty)
                 {
-                    stringBuilder.Append("/");
-                    stringBuilder.Append(edmProperty.Name);
+                    segments[index] = edmProperty.Name;
                 }
 
                 index++;
             }
 
-            return stringBuilder.ToString();
+            return string.Join("/", segments);
         }
 
         #endregion
