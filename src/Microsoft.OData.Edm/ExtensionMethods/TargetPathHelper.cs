@@ -188,7 +188,7 @@ namespace Microsoft.OData.Edm
         {
             IEdmElement previousElement = pathSegments[index - 1];
 
-            bool isValid = IsDerivedTypeValid(previousElement, schemaType);
+            bool isValid = IsTypeCastValid(previousElement, schemaType);
 
             if (!isValid)
             {
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        private static bool IsDerivedTypeValid(IEdmElement element, IEdmSchemaType schemaType)
+        private static bool IsTypeCastValid(IEdmElement element, IEdmSchemaType schemaType)
         {
             IEdmType elementEdmType = null;
             if (element is IEdmProperty property)

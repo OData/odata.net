@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingEntitySetNavigationPropertyOnComplexTypeOutOfLineAnnotationsWorks()
         {
-            // Test for MySchema.MyEntityContainer/MyComplexProperty/MyNavigationProperty
+            // Test for MySchema.MyEntityContainer/MyEntitySet/MyComplexProperty/MyNavigationProperty
 
             string types =
 @"<EntityType Name=""City"">
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingEntitySetNavigationPropertySubPropertyOnComplexTypeOutOfLineAnnotationsWorks()
         {
-            // Test for MySchema.MyEntityContainer/MyComplexProperty/MyNavigationProperty/MyProperty
+            // Test for MySchema.MyEntityContainer/MyEntitySet/MyComplexProperty/MyNavigationProperty/MyProperty
 
             string types =
 @"<EntityType Name=""City"">
@@ -193,7 +193,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingEntitySetPropertyOnComplexTypeOutOfLineAnnotationsWorks()
         {
-            // Test for MySchema.MyEntityContainer/MyComplexProperty/MyProperty
+            // Test for MySchema.MyEntityContainer/MyEntitySet/MyComplexProperty/MyProperty
 
             string types =
 @"<EntityType Name=""City"">
@@ -319,8 +319,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ParsingInvalidAnnotationTargetValidationFails()
         {
-            // Test for MySchema.MyEntityContainer/MySingleton/MyNavigationProperty
-
             string types =
 @"
 <Annotations Target=""NS.Default/Me/Orders/NS.VipOrder/OrderId"" >
