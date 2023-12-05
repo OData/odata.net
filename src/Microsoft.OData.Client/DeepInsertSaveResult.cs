@@ -432,20 +432,19 @@ namespace Microsoft.OData.Client
                         {
                             for (int i = 0; i < feed.Items.Count; i++)
                             {
-                                if (currentRelatedIndex >= relatedDescriptors.Count)
+                                MaterializerEntry nestedEntry = feed.Items[i] as MaterializerEntry;
+                                if (nestedEntry == null || !nestedEntry.IsTracking || nestedEntry.EntityHasBeenResolved || currentRelatedIndex >= relatedDescriptors.Count)
                                 {
-                                    // No more descriptors
                                     break;
                                 }
 
-                                HandleDeepInsertResponseInternal(feed.Items[i] as MaterializerEntry, false, relatedDescriptors[currentRelatedIndex++], response);
+                                HandleDeepInsertResponseInternal(nestedEntry, false, relatedDescriptors[currentRelatedIndex++], response);
                             }
                         }
                         else if (nestedEntries is MaterializerEntry nestedEntry)
                         {
-                            if (currentRelatedIndex >= relatedDescriptors.Count)
+                            if (nestedEntry.EntityHasBeenResolved || !nestedEntry.IsTracking || currentRelatedIndex >= relatedDescriptors.Count)
                             {
-                                // No more descriptors
                                 break;
                             }
 
