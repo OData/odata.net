@@ -1570,16 +1570,16 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="targetPath">Target path containing segments separated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>The created <see cref="IEdmTargetPath"/>.</returns>
-        public static IEdmTargetPath GetTargetPath(this IEdmModel model, string targetPath, bool caseInsensitive = true)
+        public static IEdmTargetPath GetTargetPath(this IEdmModel model, string targetPath, bool ignoreCase = true)
         {
             EdmUtil.CheckArgumentNull(model, nameof(model));
             EdmUtil.CheckArgumentNull(targetPath, nameof(targetPath));
 
             string[] targetPathSegments = targetPath.Split('/');
 
-            IEnumerable<IEdmElement> pathSegments = model.GetTargetSegments(targetPathSegments, caseInsensitive);
+            IEnumerable<IEdmElement> pathSegments = model.GetTargetSegments(targetPathSegments, ignoreCase);
 
             if (pathSegments.Any())
             {

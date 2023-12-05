@@ -2058,7 +2058,7 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
-    public static Microsoft.OData.Edm.IEdmTargetPath GetTargetPath (Microsoft.OData.Edm.IEdmModel model, string targetPath, params bool caseInsensitive)
+    public static Microsoft.OData.Edm.IEdmTargetPath GetTargetPath (Microsoft.OData.Edm.IEdmModel model, string targetPath, params bool ignoreCase)
 
     [
     ExtensionAttribute(),

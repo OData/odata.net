@@ -21,9 +21,9 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="model">The EdmModel.</param>
         /// <param name="targetSegments">Segments for the target path..</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>The created enumeration of <see cref="IEdmElement"/>.</returns>
-        public static IEnumerable<IEdmElement> GetTargetSegments(this IEdmModel model, string[] targetSegments, bool caseInsensitive)
+        public static IEnumerable<IEdmElement> GetTargetSegments(this IEdmModel model, string[] targetSegments, bool ignoreCase)
         {
             EdmUtil.CheckArgumentNull(model, nameof(model));
             EdmUtil.CheckArgumentNull(targetSegments, nameof(targetSegments));
@@ -39,22 +39,22 @@ namespace Microsoft.OData.Edm
             pathSegments.Add(container);
             int index = 1; // index of the targetSegments.
 
-            IEdmVocabularyAnnotatable vocabularyAnnotatable =  HandleEntityContainer(model, pathSegments, container, targetSegments, index, caseInsensitive);
+            IEdmVocabularyAnnotatable vocabularyAnnotatable =  HandleEntityContainer(model, pathSegments, container, targetSegments, index, ignoreCase);
             index++;
 
             while (index < targetSegments.Length)
             {
                 if (vocabularyAnnotatable is IEdmEntityContainerElement containerElement)
                 {
-                    vocabularyAnnotatable = HandleContainerElement(model, pathSegments, containerElement, targetSegments, index, caseInsensitive);
+                    vocabularyAnnotatable = HandleContainerElement(model, pathSegments, containerElement, targetSegments, index, ignoreCase);
                 }
                 else if (vocabularyAnnotatable is IEdmSchemaType schemaType)
                 {
-                    vocabularyAnnotatable = HandleSchemaType(model, pathSegments, schemaType, targetSegments, index, caseInsensitive);
+                    vocabularyAnnotatable = HandleSchemaType(model, pathSegments, schemaType, targetSegments, index, ignoreCase);
                 }
                 else if (vocabularyAnnotatable is IEdmProperty property)
                 {
-                    vocabularyAnnotatable = HandleProperty(model, pathSegments, property, targetSegments, index, caseInsensitive);
+                    vocabularyAnnotatable = HandleProperty(model, pathSegments, property, targetSegments, index, ignoreCase);
                 }
                 else
                 {
@@ -75,9 +75,9 @@ namespace Microsoft.OData.Edm
         /// <param name="entityContainer">The entity container.</param>
         /// <param name="targetSegments">The target segments to resolve.</param>
         /// <param name="index">The index of the target segments.</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
-        private static IEdmVocabularyAnnotatable HandleEntityContainer(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainer entityContainer, string[] targetSegments, int index, bool caseInsensitive)
+        private static IEdmVocabularyAnnotatable HandleEntityContainer(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainer entityContainer, string[] targetSegments, int index, bool ignoreCase)
         {
             IEdmEntitySet entitySet = entityContainer.FindEntitySetExtended(targetSegments[index]);
 
@@ -108,9 +108,9 @@ namespace Microsoft.OData.Edm
         /// <param name="entityContainerElement">The entity container element.</param>
         /// <param name="targetSegments">The target segments to resolve.</param>
         /// <param name="index">The index of the target segments.</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
-        private static IEdmVocabularyAnnotatable HandleContainerElement(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainerElement entityContainerElement, string[] targetSegments, int index, bool caseInsensitive)
+        private static IEdmVocabularyAnnotatable HandleContainerElement(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainerElement entityContainerElement, string[] targetSegments, int index, bool ignoreCase)
         {
             // .../MyEntitySet/MySchema.MyEntityType/...
             // .../MyEntitySet/MyComplexProperty/...
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Edm
                 // .../MySingleton/MyProperty/...
                 // .../MySingleton/MyNavigationProperty/...
 
-                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, caseInsensitive);
+                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, ignoreCase);
             }
 
             return null;
@@ -158,9 +158,9 @@ namespace Microsoft.OData.Edm
         /// <param name="schemaType">The schema type.</param>
         /// <param name="targetSegments">The target segments to resolve.</param>
         /// <param name="index">The index of the target segments.</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
-        private static IEdmVocabularyAnnotatable HandleSchemaType(IEdmModel model, List<IEdmElement> pathSegments, IEdmSchemaType schemaType, string[] targetSegments, int index, bool caseInsensitive)
+        private static IEdmVocabularyAnnotatable HandleSchemaType(IEdmModel model, List<IEdmElement> pathSegments, IEdmSchemaType schemaType, string[] targetSegments, int index, bool ignoreCase)
         {
             // Validate schema type is not followed by schema type e.g entitycontainer/entityset/NS.TypeCase1/NS.TypeCase2/...
             IEdmSchemaType nextSchemaType = model.FindType(targetSegments[index]);
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Edm
 
             if (schemaType is IEdmStructuredType structuredType)
             {
-                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, caseInsensitive);
+                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, ignoreCase);
             }
 
             return null;
@@ -232,9 +232,9 @@ namespace Microsoft.OData.Edm
         /// <param name="edmProperty">The edm property.</param>
         /// <param name="targetSegments">The target segments to resolve.</param>
         /// <param name="index">The index of the target segments.</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
-        private static IEdmVocabularyAnnotatable HandleProperty(IEdmModel model, List<IEdmElement> pathSegments, IEdmProperty edmProperty, string[] targetSegments, int index, bool caseInsensitive)
+        private static IEdmVocabularyAnnotatable HandleProperty(IEdmModel model, List<IEdmElement> pathSegments, IEdmProperty edmProperty, string[] targetSegments, int index, bool ignoreCase)
         {
             IEdmSchemaType schemaType = model.FindType(targetSegments[index]);
 
@@ -254,7 +254,7 @@ namespace Microsoft.OData.Edm
             {
                 // .../MyProperty1/MyProperty2/...
 
-                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, caseInsensitive);
+                return HandleStructuredType(model, pathSegments, structuredType, targetSegments, index, ignoreCase);
             }
 
             return null;
@@ -268,11 +268,11 @@ namespace Microsoft.OData.Edm
         /// <param name="structuredType">The structured type.</param>
         /// <param name="targetSegments">The target segments to resolve.</param>
         /// <param name="index">The index of the target segments.</param>
-        /// <param name="caseInsensitive">Property name case-insensitive or not.</param>
+        /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
-        private static IEdmVocabularyAnnotatable HandleStructuredType(IEdmModel model, List<IEdmElement> pathSegments, IEdmStructuredType structuredType, string[] targetSegments, int index, bool caseInsensitive)
+        private static IEdmVocabularyAnnotatable HandleStructuredType(IEdmModel model, List<IEdmElement> pathSegments, IEdmStructuredType structuredType, string[] targetSegments, int index, bool ignoreCase)
         {
-            IEdmProperty property = structuredType.FindProperty(targetSegments[index], caseInsensitive);
+            IEdmProperty property = structuredType.FindProperty(targetSegments[index], ignoreCase);
 
             if (property != null)
             {
