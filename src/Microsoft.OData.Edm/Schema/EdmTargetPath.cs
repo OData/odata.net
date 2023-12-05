@@ -99,7 +99,7 @@ namespace Microsoft.OData.Edm
             // Validate no segment is null
             if (this.segments.Contains(null))
             {
-                throw Error.ArgumentNull(nameof(segments));
+                throw new ArgumentException(Strings.TargetPath_SegmentsMustNotContainNullSegment);
             }
 
             // Validate that the first element is Container.

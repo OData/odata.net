@@ -42,6 +42,7 @@ namespace Microsoft.OData.Edm
         internal const string MultipleMatchingPropertiesFound = "MultipleMatchingPropertiesFound";
         internal const string TargetPath_FirstSegmentMustBeIEdmEntityContainer = "TargetPath_FirstSegmentMustBeIEdmEntityContainer";
         internal const string TargetPath_SecondSegmentMustBeIEdmEntityContainerElement = "TargetPath_SecondSegmentMustBeIEdmEntityContainerElement";
+        internal const string TargetPath_SegmentsMustNotContainNullSegment = "TargetPath_SegmentsMustNotContainNullSegment";
         internal const string TypeCast_HierarchyNotFollowed = "TypeCast_HierarchyNotFollowed";
         internal const string Edm_Evaluator_NoTermTypeAnnotationOnType = "Edm_Evaluator_NoTermTypeAnnotationOnType";
         internal const string Edm_Evaluator_NoValueAnnotationOnType = "Edm_Evaluator_NoValueAnnotationOnType";

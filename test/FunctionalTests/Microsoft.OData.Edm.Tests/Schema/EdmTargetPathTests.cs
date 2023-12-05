@@ -70,7 +70,8 @@ namespace Microsoft.OData.Edm.Tests.Library
             // Act & Assert
             Action action = () => new EdmTargetPath(container, null, customer);
 
-            ArgumentNullException exception = Assert.Throws<ArgumentNullException>(action);
+            ArgumentException exception = Assert.Throws<ArgumentException>(action);
+            Assert.Equal(Strings.TargetPath_SegmentsMustNotContainNullSegment, exception.Message);
         }
 
         [Fact]

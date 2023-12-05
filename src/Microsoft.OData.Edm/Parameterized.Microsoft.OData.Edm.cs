@@ -209,6 +209,17 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "Target path segments must not contain a null segment."
+        /// </summary>
+        internal static string TargetPath_SegmentsMustNotContainNullSegment
+        {
+            get
+            {
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TargetPath_SegmentsMustNotContainNullSegment);
+            }
+        }
+
+        /// <summary>
         /// A string like "Encountered invalid type cast. '{0}' is not assignable from '{1}'."
         /// </summary>
         internal static string TypeCast_HierarchyNotFollowed(object p0, object p1)

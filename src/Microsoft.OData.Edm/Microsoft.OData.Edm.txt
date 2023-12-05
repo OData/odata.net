@@ -22,6 +22,7 @@ NavigationPropertyBinding_PathIsNotValid=The navigation property binding path is
 MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
 TargetPath_FirstSegmentMustBeIEdmEntityContainer=First segment must be IEdmEntityContainer.
 TargetPath_SecondSegmentMustBeIEdmEntityContainerElement=Second segment must be IEdmEntityContainerElement.
+TargetPath_SegmentsMustNotContainNullSegment=Target path segments must not contain a null segment.
 TypeCast_HierarchyNotFollowed=Encountered invalid type cast. '{0}' is not assignable from '{1}'.
 
 ; Evaluation messages

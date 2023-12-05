@@ -14,14 +14,14 @@ namespace Microsoft.OData.Edm.Tests
     ///</summary>
     public class EdmUtilTests
     {
-        private static EdmEntityType customer = new EdmEntityType("NS", "Customer");
-        private static EdmEntityType vipCustomer = new EdmEntityType("NS", "VipCustomer", customer);
-        private static EdmEntityType city = new EdmEntityType("NS", "City");
-        private static EdmComplexType complex = new EdmComplexType("NS", "Address");
-        private static EdmComplexType derivedcomplex = new EdmComplexType("NS", "DerivedAddress", complex);
-        private static EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
-        private static EdmEntitySet entitySet = new EdmEntitySet(container, "Customers", customer);
-        private static EdmSingleton singleton = new EdmSingleton(container, "Me", customer);
+        private static EdmEntityType customer;
+        private static EdmEntityType vipCustomer;
+        private static EdmEntityType city;
+        private static EdmComplexType complex;
+        private static EdmComplexType derivedcomplex;
+        private static EdmEntityContainer container;
+        private static EdmEntitySet entitySet;
+        private static EdmSingleton singleton;
 
         private static IEdmProperty nameProperty;
         private static IEdmProperty addressProperty;
@@ -29,13 +29,13 @@ namespace Microsoft.OData.Edm.Tests
         private static EdmNavigationProperty navUnderComplex;
         private static EdmNavigationProperty navUnderCustomer;
 
-        public EdmUtilTests()
+        static EdmUtilTests()
         {
-            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
-            customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
+            city = new EdmEntityType("NS", "City");
 
+            complex = new EdmComplexType("NS", "Address");
             complex.AddStructuralProperty("Road", EdmCoreModel.Instance.GetString(false));
-            derivedcomplex.AddStructuralProperty("MyRoad", EdmCoreModel.Instance.GetString(false));
+
             navUnderComplex = complex.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
                 {
@@ -44,6 +44,12 @@ namespace Microsoft.OData.Edm.Tests
                     TargetMultiplicity = EdmMultiplicity.One,
                 });
 
+            derivedcomplex = new EdmComplexType("NS", "DerivedAddress", complex);
+            derivedcomplex.AddStructuralProperty("MyRoad", EdmCoreModel.Instance.GetString(false));
+
+            customer = new EdmEntityType("NS", "Customer");
+            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
+            customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
             customer.AddStructuralProperty("Address", new EdmComplexTypeReference(complex, false));
 
             navUnderCustomer = customer.AddUnidirectionalNavigation(
@@ -53,6 +59,12 @@ namespace Microsoft.OData.Edm.Tests
                     Target = city,
                     TargetMultiplicity = EdmMultiplicity.Many,
                 });
+
+            vipCustomer = new EdmEntityType("NS", "VipCustomer", customer);
+
+            container = new EdmEntityContainer("NS", "Default");
+            entitySet = new EdmEntitySet(container, "Customers", customer);
+            singleton = new EdmSingleton(container, "Me", customer);
 
             nameProperty = customer.DeclaredProperties.Where(x => x.Name == "Name").FirstOrDefault();
             addressProperty = customer.DeclaredProperties.Where(x => x.Name == "Address").FirstOrDefault();
