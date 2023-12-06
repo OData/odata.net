@@ -86,7 +86,7 @@ namespace Microsoft.OData.Edm
 
             EdmTargetPath other = obj as EdmTargetPath;
 
-            return string.Equals(this.Path, other.Path, StringComparison.OrdinalIgnoreCase);
+            return string.Equals(this.Path, other.Path, StringComparison.Ordinal);
         }
 
         public override int GetHashCode()
