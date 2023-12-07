@@ -12,17 +12,17 @@ namespace Microsoft.OData.Edm
     using Microsoft.OData.Edm.Vocabularies;
 
     /// <summary>
-    /// Target path helper.
+    /// Helper for <see cref="EdmTargetPath"/> class.
     /// </summary>
     internal static class TargetPathHelper
     {
         /// <summary>
-        /// Get the Segments from a target path string as enumeration of Edm elements.
+        /// Returns the segments of a target path string as a collection of Edm elements.
         /// </summary>
-        /// <param name="model">The EdmModel.</param>
-        /// <param name="targetSegments">Segments for the target path..</param>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="targetSegments">Segments for the target path string.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>The created enumeration of <see cref="IEdmElement"/>.</returns>
+        /// <returns>The collection of <see cref="IEdmElement"/>.</returns>
         public static IEnumerable<IEdmElement> GetTargetSegments(this IEdmModel model, string[] targetSegments, bool ignoreCase)
         {
             EdmUtil.CheckArgumentNull(model, nameof(model));
@@ -68,15 +68,15 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Returns an Entity container element from the entity container.
+        /// Returns an entity container element from the specified entity container.
         /// </summary>
-        /// <param name="model">The edm model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
         /// <param name="entityContainer">The entity container.</param>
-        /// <param name="targetSegments">The target segments to resolve.</param>
-        /// <param name="index">The index of the target segments.</param>
+        /// <param name="targetSegments">The array of segments in the target path string.</param>
+        /// <param name="index">The index of the target segment.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
+        /// <returns>An Edm entity container element as an <see cref="IEdmVocabularyAnnotatable"/>.</returns>
         private static IEdmVocabularyAnnotatable HandleEntityContainer(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainer entityContainer, string[] targetSegments, int index, bool ignoreCase)
         {
             IEdmEntitySet entitySet = entityContainer.FindEntitySetExtended(targetSegments[index]);
@@ -103,13 +103,13 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Returns a schema type or property from an entity container element.
         /// </summary>
-        /// <param name="model">The edm model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
         /// <param name="entityContainerElement">The entity container element.</param>
-        /// <param name="targetSegments">The target segments to resolve.</param>
-        /// <param name="index">The index of the target segments.</param>
+        /// <param name="targetSegments">The array of segments in the target path string.</param>
+        /// <param name="index">The index of the target segment.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
+        /// <returns>An Edm schema type or property element as an <see cref="IEdmVocabularyAnnotatable"/>.</returns>
         private static IEdmVocabularyAnnotatable HandleContainerElement(IEdmModel model, List<IEdmElement> pathSegments, IEdmEntityContainerElement entityContainerElement, string[] targetSegments, int index, bool ignoreCase)
         {
             // .../MyEntitySet/MySchema.MyEntityType/...
@@ -153,13 +153,13 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Returns a property from a schema type.
         /// </summary>
-        /// <param name="model">The edm model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
         /// <param name="schemaType">The schema type.</param>
-        /// <param name="targetSegments">The target segments to resolve.</param>
-        /// <param name="index">The index of the target segments.</param>
+        /// <param name="targetSegments">The array of segments in the target path string.</param>
+        /// <param name="index">The index of the target segment.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
+        /// <returns>An Edm schema type or property element as an <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
         private static IEdmVocabularyAnnotatable HandleSchemaType(IEdmModel model, List<IEdmElement> pathSegments, IEdmSchemaType schemaType, string[] targetSegments, int index, bool ignoreCase)
         {
             // Validate schema type is not followed by schema type e.g entitycontainer/entityset/NS.TypeCase1/NS.TypeCase2/...
@@ -179,11 +179,11 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Validate a schema type.
+        /// Validates a schema type.
         /// </summary>
         /// <param name="schemaType">The schema type.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
-        /// <param name="index">The index of the path segments.</param>
+        /// <param name="index">The index of the target segment.</param>
         private static void ValidateSchemaType(IEdmSchemaType schemaType, List<IEdmElement> pathSegments, int index)
         {
             IEdmElement previousElement = pathSegments[index - 1];
@@ -227,13 +227,13 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Returns a schema type or property from a property.
         /// </summary>
-        /// <param name="model">The edm model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
         /// <param name="edmProperty">The edm property.</param>
-        /// <param name="targetSegments">The target segments to resolve.</param>
-        /// <param name="index">The index of the target segments.</param>
+        /// <param name="targetSegments">The array of segments in the target path string.</param>
+        /// <param name="index">The index of the target segment.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
+        /// <returns>An Edm schema type or property element as an <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
         private static IEdmVocabularyAnnotatable HandleProperty(IEdmModel model, List<IEdmElement> pathSegments, IEdmProperty edmProperty, string[] targetSegments, int index, bool ignoreCase)
         {
             IEdmSchemaType schemaType = model.FindType(targetSegments[index]);
@@ -263,13 +263,13 @@ namespace Microsoft.OData.Edm
         /// <summary>
         /// Returns a property from a structured type.
         /// </summary>
-        /// <param name="model">The edm model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <param name="pathSegments">The path segments of already resolved target segments.</param>
         /// <param name="structuredType">The structured type.</param>
-        /// <param name="targetSegments">The target segments to resolve.</param>
-        /// <param name="index">The index of the target segments.</param>
+        /// <param name="targetSegments">The array of segments in the target path string.</param>
+        /// <param name="index">The index of the target segment.</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
-        /// <returns>An <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
+        /// <returns>An Edm property element as an <see cref="IEdmVocabularyAnnotatable"/> object.</returns>
         private static IEdmVocabularyAnnotatable HandleStructuredType(IEdmModel model, List<IEdmElement> pathSegments, IEdmStructuredType structuredType, string[] targetSegments, int index, bool ignoreCase)
         {
             IEdmProperty property = structuredType.FindProperty(targetSegments[index], ignoreCase);

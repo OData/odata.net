@@ -77,6 +77,7 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        /// <inheritdoc/>
         public override bool Equals(object obj)
         {
             if (obj == null)
@@ -89,6 +90,7 @@ namespace Microsoft.OData.Edm
             return string.Equals(this.Path, other.Path, StringComparison.Ordinal);
         }
 
+        /// <inheritdoc/>
         public override int GetHashCode()
         {
             return this.path.GetHashCode();

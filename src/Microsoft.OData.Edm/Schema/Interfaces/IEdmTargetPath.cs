@@ -15,7 +15,7 @@ namespace Microsoft.OData.Edm
     public interface IEdmTargetPath : IEdmVocabularyAnnotatable
     {
         /// <summary>
-        /// The target path.
+        /// Gets the target path.
         /// </summary>
         string Path { get; }
 

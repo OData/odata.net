@@ -1566,10 +1566,10 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Get the <see cref="IEdmTargetPath"/> from a target path string.
+        /// Returns an <see cref="IEdmTargetPath"/> given a target path string.
         /// </summary>
-        /// <param name="model">The EdmModel.</param>
-        /// <param name="targetPath">Target path containing segments separated by '/'. For example: "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="targetPath">The target path string comprising of segments separated by '/', e.g., "A.B/C/D.E/Func1(NS.T,NS.T2)/P1".</param>
         /// <param name="ignoreCase">Property name case-insensitive or not.</param>
         /// <returns>The created <see cref="IEdmTargetPath"/>.</returns>
         public static IEdmTargetPath GetTargetPath(this IEdmModel model, string targetPath, bool ignoreCase = true)
@@ -2973,9 +2973,9 @@ namespace Microsoft.OData.Edm
         #region IEdmTargetPath extensions
 
         /// <summary>
-        /// Get the path string from the <see cref="IEdmTargetPath"/>.
+        /// Returns the target path string given an <see cref="IEdmTargetPath"/>.
         /// </summary>
-        /// <param name="targetPath">The target path.</param>
+        /// <param name="targetPath">The <see cref="IEdmTargetPath"/>.</param>
         /// <returns>The target path string.</returns>
         internal static string GetPathString(this IEdmTargetPath targetPath)
         {
@@ -3007,7 +3007,6 @@ namespace Microsoft.OData.Edm
                 {
                     segments[index] = EdmUtil.FullyQualifiedName(schemaType);
                 }
-
                 else if (targetPath.Segments[index] is IEdmProperty edmProperty)
                 {
                     segments[index] = edmProperty.Name;
