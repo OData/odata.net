@@ -1055,6 +1055,11 @@ public interface Microsoft.OData.Edm.IEdmStructuredType : IEdmElement, IEdmType 
 public interface Microsoft.OData.Edm.IEdmStructuredTypeReference : IEdmElement, IEdmTypeReference {
 }
 
+public interface Microsoft.OData.Edm.IEdmTargetPath : IEdmElement, IEdmVocabularyAnnotatable {
+    string Path  { public abstract get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.Edm.IEdmElement]] Segments  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmTemporalTypeReference : IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
     System.Nullable`1[[System.Int32]] Precision  { public abstract get; }
 }
@@ -1938,6 +1943,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, string targetPath, Microsoft.OData.Edm.Vocabularies.IEdmTerm term)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, string qualifier)
 
     [
@@ -2044,6 +2054,16 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     ExtensionAttribute(),
     ]
     public static Microsoft.OData.Edm.IEdmOperationReturn GetReturn (Microsoft.OData.Edm.IEdmOperation operation)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmTargetPath GetTargetPath (Microsoft.OData.Edm.IEdmModel model, string targetPath, params bool ignoreCase)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] GetTargetPathAnnotations (Microsoft.OData.Edm.IEdmModel model, string targetPath)
 
     [
     ExtensionAttribute(),
@@ -2829,6 +2849,17 @@ public class Microsoft.OData.Edm.EdmStructuralProperty : Microsoft.OData.Edm.Edm
 
     string DefaultValueString  { public virtual get; }
     Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
+}
+
+public class Microsoft.OData.Edm.EdmTargetPath : IEdmElement, IEdmTargetPath, IEdmVocabularyAnnotatable {
+    public EdmTargetPath (Microsoft.OData.Edm.IEdmElement[] segments)
+    public EdmTargetPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmElement]] segments)
+
+    string Path  { public virtual get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.Edm.IEdmElement]] Segments  { public virtual get; }
+
+    public virtual bool Equals (object obj)
+    public virtual int GetHashCode ()
 }
 
 public class Microsoft.OData.Edm.EdmTemporalTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTemporalTypeReference, IEdmTypeReference {
