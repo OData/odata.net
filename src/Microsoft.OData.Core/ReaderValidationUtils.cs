@@ -812,8 +812,11 @@ namespace Microsoft.OData
                 case EdmTypeKind.Complex:
                     if (payloadType != null)
                     {
-                        // The payload type must be compatible to the expected type.
-                        VerifyComplexType(expectedTypeReference, payloadType, /* failIfNotRelated */ true);
+                        if (!expectedTypeReference.IsUntyped())
+                        {
+                            // The payload type must be compatible to the expected type.
+                            VerifyComplexType(expectedTypeReference, payloadType, failIfNotRelated: true);
+                        }
 
                         // Use the payload type
                         return payloadType.ToTypeReference(/*nullable*/ true);
@@ -836,7 +839,7 @@ namespace Microsoft.OData
 
                     break;
                 case EdmTypeKind.Enum:
-                    if (payloadType != null && string.CompareOrdinal(payloadType.FullTypeName(), expectedTypeReference.FullName()) != 0)
+                    if (!expectedTypeReference.IsUntyped() && payloadType != null && string.CompareOrdinal(payloadType.FullTypeName(), expectedTypeReference.FullName()) != 0)
                     {
                         throw new ODataException(Strings.ValidationUtils_IncompatibleType(payloadType.FullTypeName(), expectedTypeReference.FullName()));
                     }
@@ -845,7 +848,7 @@ namespace Microsoft.OData
                 case EdmTypeKind.Collection:
                     // The type must be exactly equal - note that we intentionally ignore nullability of the items here, since the payload type
                     // can't specify that.
-                    if (payloadType != null && !payloadType.IsElementTypeEquivalentTo(expectedTypeReference.Definition))
+                    if (!expectedTypeReference.IsUntyped() && payloadType != null && !payloadType.IsElementTypeEquivalentTo(expectedTypeReference.Definition))
                     {
                         VerifyCollectionComplexItemType(expectedTypeReference, payloadType);
 

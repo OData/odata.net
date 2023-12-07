@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 using Microsoft.OData;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Tests;
@@ -56,6 +57,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             this.serverEntityType.AddKeys(this.serverEntityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             this.serverEntityType.AddStructuralProperty("Address", new EdmComplexTypeReference(addressType, true));
             this.serverEntityType.AddStructuralProperty("MyEdmUntypedProp1", EdmCoreModel.Instance.GetUntyped());
+            this.serverEntityType.AddStructuralProperty("Infos",
+                new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())));
 
             // open entity type
             this.serverOpenEntityType = new EdmEntityType("Server.NS", "ServerOpenEntityType",
@@ -99,6 +102,34 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             {
                 var reader = msgReader.CreateODataResourceReader(entitySet, entityType);
                 while (reader.Read())
+                {
+                    action(reader);
+                }
+            }
+        }
+
+        private async Task ReadEntryPayloadAsync(string payload,
+            EdmEntitySet entitySet,
+            EdmEntityType entityType,
+            Action<ODataReader> action,
+            bool readUntypedAsValue = false,
+            bool readRequest = false,
+            ODataMessageReaderSettings settings = null)
+        {
+            var message = new InMemoryMessage()
+            {
+                Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload))
+            };
+            message.SetHeader("Content-Type", "application/json");
+
+            ODataMessageReaderSettings readerSettings = readUntypedAsValue ? UntypedAsValueReaderSettings : UntypedAsStringReaderSettings;
+
+            using (var msgReader = readRequest ?
+                new ODataMessageReader((IODataRequestMessage)message, settings ?? readerSettings, this.serverModel) :
+                new ODataMessageReader((IODataResponseMessage)message, settings ?? readerSettings, this.serverModel))
+            {
+                var reader = await msgReader.CreateODataResourceReaderAsync(entitySet, entityType);
+                while (await reader.ReadAsync())
                 {
                     action(reader);
                 }
@@ -1745,6 +1776,353 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
             });
 
             Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Id\":61880128,\"UndeclaredFloatId\":12.3,\"undeclaredComplex1\":{\"MyProp1\":\"aaaaaaaaa\",\"UndeclaredProp1\":\"bbbbbbb\"},\"Address\":{\"Street\":\"No.999,Zixing Rd Minhang\",\"UndeclaredStreet\":\"No.10000000999,Zixing Rd Minhang\",\"MyEdmUntypedProp3\":{\"MyProp12\":\"bbb222\",\"abc\":null}}}", result);
+        }
+        #endregion
+
+        #region declared Edm.Untyped property with odata.type
+        [Fact]
+        public void ReadSingleValueEdmUntypedPropertyWithODataTypeResourceTest()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1"":{
+    ""@odata.type"": ""#Server.NS.Address"",
+    ""Street"":""Mars Rd""
+  }
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
+        }
+
+        [Fact]
+        public async Task ReadSingleValueEdmUntypedPropertyWithODataTypeResourceTestAsync()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1"":{
+    ""@odata.type"": ""#Server.NS.Address"",
+    ""Street"":""Mars Rd""
+  }
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyResourceAndWrite(topLevelResource, nestedResource, nestedInfo);
+        }
+
+        private void VerifyResourceAndWrite(ODataResource topLevelResource, ODataResource nestedResource, ODataNestedResourceInfo nestedInfo)
+        {
+            Assert.Empty(topLevelResource.Properties);
+            ODataProperty property = Assert.Single(nestedResource.Properties);
+            Assert.Equal("Street", property.Name);
+            Assert.Equal("Mars Rd", property.Value);
+            Assert.Equal("MyEdmUntypedProp1", nestedInfo.Name);
+
+            topLevelResource.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(topLevelResource);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(topLevelResource);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(nestedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\"," +
+                "\"MyEdmUntypedProp1\":{" +
+                  "\"Street\":\"Mars Rd\"" +
+                "}" +
+              "}", result);
+        }
+
+        [Fact]
+        public void ReadSingleValueEdmUntypedPropertyWithODataTypeEnumTest()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1@odata.type"": ""#Server.NS.EnumType"",
+  ""MyEdmUntypedProp1"": ""Member""
+}";
+            ODataResource topLevelResource = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    topLevelResource = (reader.Item as ODataResource);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyEnum(topLevelResource);
+        }
+
+        [Fact]
+        public async Task ReadSingleValueEdmUntypedPropertyWithODataTypeEnumTestAsync()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1@odata.type"": ""#Server.NS.EnumType"",
+  ""MyEdmUntypedProp1"": ""Member""
+}";
+            ODataResource topLevelResource = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    topLevelResource = (reader.Item as ODataResource);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyEnum(topLevelResource);
+        }
+
+        private static void VerifyEnum(ODataResource topLevelResource)
+        {
+            ODataProperty property = Assert.Single(topLevelResource.Properties);
+            Assert.Equal("MyEdmUntypedProp1", property.Name);
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(property.Value);
+            Assert.Equal("Server.NS.EnumType", enumValue.TypeName);
+            Assert.Equal("Member", enumValue.Value);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void ReadSingleValueEdmUntypedPropertyWithODataTypePrimitiveCollectionTest(bool readUntypedAsValue)
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1@odata.type"": ""#Collection(Edm.Int32)"",
+  ""MyEdmUntypedProp1"": [5, 3]
+}";
+            ODataResource topLevelResource = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    topLevelResource = (reader.Item as ODataResource);
+                }
+            },
+            readUntypedAsValue, // it doesn't matter since the value is typed.
+            true /*reading request*/);
+
+            ODataProperty property = Assert.Single(topLevelResource.Properties);
+            Assert.Equal("MyEdmUntypedProp1", property.Name);
+            ODataCollectionValue collectionValue = Assert.IsType<ODataCollectionValue>(property.Value);
+
+            Assert.Equal("Collection(Edm.Int32)", collectionValue.TypeName);
+            Assert.Equal(2, collectionValue.Items.Count());
+            Assert.Equal(5, collectionValue.Items.First());
+            Assert.Equal(3, collectionValue.Items.Last());
+        }
+
+        [Fact]
+        public void ReadSingleValueEdmUntypedPropertyWithODataTypeMixCollectionTest()
+        {
+            const string payload = @"{
+  ""MyEdmUntypedProp1"": [
+      5,
+      {
+        ""@odata.type"": ""#Server.NS.Address"",
+        ""Street"":""Mars Rd""
+      }
+  ]
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataPrimitiveValue primitiveValue = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    primitiveValue = (reader.Item as ODataPrimitiveValue);
+                }
+            }, true, true /*reading request*/);
+
+            Assert.Empty(topLevelResource.Properties);
+            Assert.Equal("MyEdmUntypedProp1", nestedInfo.Name);
+            Assert.Equal(5, primitiveValue.Value);
+
+            ODataProperty property = Assert.Single(nestedResource.Properties);
+            Assert.Equal("Street", property.Name);
+            Assert.Equal("Mars Rd", property.Value);
+        }
+
+        [Fact]
+        public void ReadCollectionEdmUntypedPropertyWithODataTypeMixCollectionTest()
+        {
+            const string payload = @"{
+  ""Infos"":[
+    {
+      ""@odata.type"": ""#Server.NS.Address"",
+      ""Street"":""Mars Rd""
+    },
+    42
+  ]
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataResourceSet resourceSet = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataPrimitiveValue primitiveValue = null;
+            this.ReadEntryPayload(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    resourceSet = (reader.Item as ODataResourceSet);
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    primitiveValue = (reader.Item as ODataPrimitiveValue);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
+        }
+
+        [Fact]
+        public async Task ReadCollectionEdmUntypedPropertyWithODataTypeMixCollectionTestAsync()
+        {
+            const string payload = @"{
+  ""Infos"":[
+    {
+      ""@odata.type"": ""#Server.NS.Address"",
+      ""Street"":""Mars Rd""
+    },
+    42
+  ]
+}";
+            ODataResource topLevelResource = null;
+            ODataResource nestedResource = null;
+            ODataResourceSet resourceSet = null;
+            ODataNestedResourceInfo nestedInfo = null;
+            ODataPrimitiveValue primitiveValue = null;
+            await this.ReadEntryPayloadAsync(payload, this.serverEntitySet, this.serverEntityType, reader =>
+            {
+                if (reader.State == ODataReaderState.ResourceStart)
+                {
+                    if (topLevelResource == null)
+                    {
+                        topLevelResource = (reader.Item as ODataResource);
+                    }
+                    else
+                    {
+                        nestedResource = (reader.Item as ODataResource);
+                    }
+                }
+                else if (reader.State == ODataReaderState.ResourceSetStart)
+                {
+                    resourceSet = (reader.Item as ODataResourceSet);
+                }
+                else if (reader.State == ODataReaderState.NestedResourceInfoStart)
+                {
+                    nestedInfo = (reader.Item as ODataNestedResourceInfo);
+                }
+                else if (reader.State == ODataReaderState.Primitive)
+                {
+                    primitiveValue = (reader.Item as ODataPrimitiveValue);
+                }
+            }, false, true /*reading request*/);
+
+            VerifyCollectionAndWrite(topLevelResource, nestedResource, resourceSet, nestedInfo, primitiveValue);
+        }
+
+        private void VerifyCollectionAndWrite(ODataResource topLevelResource, ODataResource nestedResource,
+            ODataResourceSet resourceSet, ODataNestedResourceInfo nestedInfo, ODataPrimitiveValue primitiveValue)
+        {
+            Assert.Empty(topLevelResource.Properties);
+            ODataProperty property = Assert.Single(nestedResource.Properties);
+            Assert.Equal("Street", property.Name);
+            Assert.Equal("Mars Rd", property.Value);
+            Assert.Equal(42, primitiveValue.Value);
+            Assert.Equal("Infos", nestedInfo.Name);
+
+            topLevelResource.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(topLevelResource);
+            string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
+            {
+                writer.WriteStart(topLevelResource);
+                writer.WriteStart(nestedInfo);
+                writer.WriteStart(resourceSet);
+                writer.WritePrimitive(primitiveValue); // switch the order intentionally
+                writer.WriteStart(nestedResource);
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+                writer.WriteEnd();
+            });
+
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\"," +
+                "\"Infos\":[" +
+                  "42," +
+                  "{\"@odata.type\":\"#Server.NS.Address\",\"Street\":\"Mars Rd\"}" +
+                "]" +
+              "}", result);
         }
         #endregion
 
