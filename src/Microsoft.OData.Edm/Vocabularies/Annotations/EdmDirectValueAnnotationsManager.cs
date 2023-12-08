@@ -336,6 +336,11 @@ namespace Microsoft.OData.Edm.Vocabularies
                 return 0;
             }
 
+            if (left is null || right is null)
+            {
+                return 0;
+            }
+
             /* Left and right are distinct. */
 
             int leftHash = left.GetHashCode();
