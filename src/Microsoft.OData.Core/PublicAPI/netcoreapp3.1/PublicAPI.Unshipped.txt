@@ -1,1 +1,0 @@
-Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
