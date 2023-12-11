@@ -59,3 +59,4 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.CountSegmentParser.#CreateCountSegmentToken(Microsoft.OData.UriParser.QueryToken)")]
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.SelectExpandOptionParser.#BuildSelectTermToken(Microsoft.OData.UriParser.PathSegmentToken,System.String)")]
 
+[assembly: SuppressMessage("Design", "CA1002:Do not expose generic lists", Justification = "Fix in next major release", Scope = "member", Target = "~P:Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Messages")]

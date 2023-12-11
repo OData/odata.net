@@ -207,6 +207,12 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WritePrimitiveValueAsync_DateTimeOffset_WithZeroOffsetWithZeroOffset()
+        {
+            await this.VerifyWritePrimitiveValueAsync(new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, TimeSpan.Zero), "\"0001-02-03T04:05:06.007Z\"");
+        }
+
+        [Fact]
         public async Task WritePrimitiveValueAsync_Guid()
         {
             await this.VerifyWritePrimitiveValueAsync(new Guid("00000012-0000-0000-0000-012345678900"), "\"00000012-0000-0000-0000-012345678900\"");

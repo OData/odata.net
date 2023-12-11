@@ -20,7 +20,7 @@
   - OData Measures Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Measures.V1.xml.
   - OData Capabilities Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Capabilities.V1.xml.
   - OData Validation Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Validation.V1.xml.
-  - OData Aggregation Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggretation.V1.xml.
+  - OData Aggregation Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Aggregation.V1.xml.
   - OData Authorization Vocabulary. Latest version: https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml.
 
   Related work:
@@ -49,24 +49,21 @@
         <Collection>
           <Record>
             <PropertyValue Property="rel" String="latest-version" />
-            <PropertyValue Property="href"
-              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml" />
+            <PropertyValue Property="href" String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.xml" />
           </Record>
           <Record>
             <PropertyValue Property="rel" String="alternate" />
-            <PropertyValue Property="href"
-              String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.json" />
+            <PropertyValue Property="href" String="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Authorization.V1.json" />
           </Record>
           <Record>
             <PropertyValue Property="rel" String="describedby" />
-            <PropertyValue Property="href"
-              String="https://github.com/oasis-tcs/odata-vocabularies/blob/master/vocabularies/Org.OData.Authorization.V1.md" />
+            <PropertyValue Property="href" String="https://github.com/oasis-tcs/odata-vocabularies/blob/main/vocabularies/Org.OData.Authorization.V1.md" />
           </Record>
         </Collection>
       </Annotation>
 
       <Term Name="SecuritySchemes" Type="Collection(Auth.SecurityScheme)" Nullable="false" AppliesTo="EntityContainer">
-        <Annotation Term="Core.Description" String="At least one of the specified security schemes are required to make a request against the service."/> 
+        <Annotation Term="Core.Description" String="At least one of the specified security schemes are required to make a request against the service" />
       </Term>
 
       <ComplexType Name="SecurityScheme">
@@ -94,9 +91,8 @@
 
       <ComplexType Name="OpenIDConnect" BaseType="Auth.Authorization">
         <Property Name="IssuerUrl" Type="Edm.String" Nullable="false">
-          <Annotation Term="Core.Description"
-            String="Issuer location for the OpenID Provider. Configuration information can be obtained by appending `/.well-known/openid-configuration` to this Url." />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.Description" String="Issuer location for the OpenID Provider. Configuration information can be obtained by appending `/.well-known/openid-configuration` to this Url." />
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
@@ -115,39 +111,39 @@
         </Property>
         <Property Name="RefreshUrl" Type="Edm.String" Nullable="true">
           <Annotation Term="Core.Description" String="Refresh Url" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
       <ComplexType Name="OAuth2ClientCredentials" BaseType="Auth.OAuthAuthorization">
         <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
           <Annotation Term="Core.Description" String="Token Url" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
       <ComplexType Name="OAuth2Implicit" BaseType="Auth.OAuthAuthorization">
         <Property Name="AuthorizationUrl" Type="Edm.String" Nullable="false">
           <Annotation Term="Core.Description" String="Authorization URL" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
       <ComplexType Name="OAuth2Password" BaseType="Auth.OAuthAuthorization">
         <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
-         <Annotation Term="Core.Description" String="Token Url" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.Description" String="Token Url" />
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
       <ComplexType Name="OAuth2AuthCode" BaseType="Auth.OAuthAuthorization">
         <Property Name="AuthorizationUrl" Type="Edm.String" Nullable="false">
           <Annotation Term="Core.Description" String="Authorization URL" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.IsURL" />
         </Property>
         <Property Name="TokenUrl" Type="Edm.String" Nullable="false">
           <Annotation Term="Core.Description" String="Token Url" />
-          <Annotation Term="Core.IsURL" Bool="true"/>
+          <Annotation Term="Core.IsURL" />
         </Property>
       </ComplexType>
 
@@ -185,7 +181,7 @@
       </EnumType>
 
       <TypeDefinition Name="SchemeName" UnderlyingType="Edm.String">
-          <Annotation Term="Core.Description" String="The name of the authorization scheme." />
+        <Annotation Term="Core.Description" String="The name of the authorization scheme." />
       </TypeDefinition>
 
     </Schema>

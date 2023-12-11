@@ -1034,14 +1034,19 @@ namespace Microsoft.OData.Json
             ReadInternal();
 
             details = new List<ODataErrorDetail>();
-            ODataErrorDetail detail;
-            if (TryReadErrorDetail(out detail))
-            {
-                details.Add(detail);
-            }
 
-            // ]
-            ReadInternal();
+            while (this.currentBufferedNode.NodeType != JsonNodeType.EndArray)
+            {
+                ODataErrorDetail detail;
+                if (!TryReadErrorDetail(out detail))
+                {
+                    return false;
+                }
+
+                details.Add(detail);
+                // ] or { (next error detail object)
+                ReadInternal();
+            }
 
             return true;
         }
@@ -1586,18 +1591,22 @@ namespace Microsoft.OData.Json
 
             List<ODataErrorDetail> details = new List<ODataErrorDetail>();
 
-            Tuple<bool, ODataErrorDetail> readErrorDetailResult = await TryReadErrorDetailAsync()
-                .ConfigureAwait(false);
-            if (!readErrorDetailResult.Item1)
+            while (this.currentBufferedNode.NodeType != JsonNodeType.EndArray)
             {
-                return Tuple.Create(false, details);
+                Tuple<bool, ODataErrorDetail> readErrorDetailResult = await TryReadErrorDetailAsync()
+                    .ConfigureAwait(false);
+
+                if (!readErrorDetailResult.Item1)
+                {
+                    return Tuple.Create(false, details);
+                }
+
+                details.Add(readErrorDetailResult.Item2);
+
+                // ] or { (next error detail object)
+                await ReadInternalAsync()
+                    .ConfigureAwait(false);
             }
-
-            details.Add(readErrorDetailResult.Item2);
-
-            // ]
-            await ReadInternalAsync()
-                .ConfigureAwait(false);
 
             return Tuple.Create(true, details);
         }

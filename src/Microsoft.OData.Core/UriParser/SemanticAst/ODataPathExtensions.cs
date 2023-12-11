@@ -138,6 +138,22 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Creates a <see cref="ODataPath"/> that is <paramref name="path"/> with the type segments and key segments removed from the end
+        /// </summary>
+        /// <param name="path">The <see cref="ODataPath"/> to trim the ending of</param>
+        /// <returns>A <see cref="ODataPath"/> without type-cast and key segments at the end</returns>
+        /// <exception cref="System.ArgumentNullException">Thrown if <paramref name="path"/> is <see langword="null"/></exception>
+        public static ODataPath TrimEndingTypeAndKeySegments(this ODataPath path)
+        {
+            if (path == null)
+            {
+                throw Error.ArgumentNull(nameof(path));
+            }
+
+            return new ODataPath(path.Segments.Take(path.Segments.FindLastIndex(segment => !(segment is KeySegment || segment is TypeSegment)) + 1));
+        }
+
+        /// <summary>
         /// Creates a new ODataPath with the specified segment added.
         /// </summary>
         /// <param name="path">The path against which the segment should be applied.</param>
