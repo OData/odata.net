@@ -1359,7 +1359,7 @@ namespace Microsoft.OData.Tests.UriParser
         [InlineData("/entitySetEscaped::/32:/NonComposableParameter", typeof(ODataUnrecognizedPathException))]
         [InlineData("/entitySetEscaped('32')/NS.SpecialDrive::/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataUnrecognizedPathException))]
         [InlineData("/entitySetEscaped(32)/:NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataException))]
-        [InlineData("/entitySetEscaped('32')::/NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataException))]
+        [InlineData("/entitySetEscaped('32')::/NS.SpecialDrive:/ComposableParameter::/nestedNonComposableParameter:", typeof(ODataUnrecognizedPathException))]
         public void ParseInvalidEscapeURIShouldThrow(string escapeFunctionUri, Type exceptionType)
         {
             // Arrange

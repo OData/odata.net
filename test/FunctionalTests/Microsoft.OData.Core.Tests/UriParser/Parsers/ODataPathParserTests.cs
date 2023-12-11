@@ -42,6 +42,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExtractSegmentIdentifierAndParenthesisExpression("multiple(123)", "multiple", "123");
             ExtractSegmentIdentifierAndParenthesisExpression("multiple(123;321)", "multiple", "123;321");
             ExtractSegmentIdentifierAndParenthesisExpression("set()", "set", string.Empty);
+            ExtractSegmentIdentifierAndParenthesisExpression("()", "()", null);
+            ExtractSegmentIdentifierAndParenthesisExpression("file(1).txt", "file(1).txt", null);
         }
 
         [Fact]
@@ -50,14 +52,8 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             string actualIdentifier;
             string queryPortion;
 
-            Action emptyString = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(string.Empty, out actualIdentifier, out queryPortion);
+            Action emptyString = () => ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(string.Empty, out actualIdentifier, out queryPortion);
             emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
-
-            Action noIdentifier = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("()", out actualIdentifier, out queryPortion);
-            noIdentifier.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
-
-            Action noEndParen = () => ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression("foo(", out actualIdentifier, out queryPortion);
-            noEndParen.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         #region $ref cases
@@ -815,7 +811,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         {
             string actualIdentifier;
             string queryPortion;
-            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(segment, out actualIdentifier, out queryPortion);
+            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(segment, out actualIdentifier, out queryPortion);
             Assert.Equal(expectedIdentifier, actualIdentifier);
             Assert.Equal(expectedQueryPortion, queryPortion);
         }

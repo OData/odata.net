@@ -69,41 +69,38 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Extracts the segment identifier and, if there are parenthesis in the segment, the expression in the parenthesis.
-        /// Will throw if identifier is not found or if the parenthesis expression is malformed. This function does not validate
-        /// anything and simply provides the raw text of both the identifier and parenthetical expression.
+        /// Extracts the segment identifier and, if there is a valid parenthesis pair in the segment, the expression in the parenthesis.
+        /// This function does not validate anything and simply provides the raw text of both the identifier and parenthetical expression.
         /// </summary>
         /// <remarks>Internal only so it can be called from tests. Should not be used outside <see cref="ODataPathParser"/>.</remarks>
         /// <param name="segmentText">The segment text.</param>
         /// <param name="identifier">The identifier that was found.</param>
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
-        internal static void ExtractSegmentIdentifierAndParenthesisExpression(string segmentText, out string identifier, out string parenthesisExpression)
+        internal static void TryExtractSegmentIdentifierAndParenthesisExpression(
+            string segmentText,
+            out string identifier,
+            out string parenthesisExpression)
         {
             Debug.Assert(segmentText != null, "segment != null");
 
+            // We allow a single trailing '/', which results in an empty segment.
+            // However System.Uri removes it, so any empty segment we see is a 404 error.
+            if (segmentText.Length == 0)
+            {
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            }
+
             int parenthesisStart = segmentText.IndexOf('(');
-            if (parenthesisStart < 0)
+            if (parenthesisStart <= 0 || segmentText[segmentText.Length - 1] != ')')
             {
                 identifier = segmentText;
                 parenthesisExpression = null;
             }
             else
             {
-                if (segmentText[segmentText.Length - 1] != ')')
-                {
-                    throw ExceptionUtil.CreateSyntaxError();
-                }
-
                 // split the string to grab the identifier and remove the parentheses
                 identifier = segmentText.Substring(0, parenthesisStart);
                 parenthesisExpression = segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
-            }
-
-            // We allow a single trailing '/', which results in an empty segment.
-            // However System.Uri removes it, so any empty segment we see is a 404 error.
-            if (identifier.Length == 0)
-            {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
             }
         }
 
@@ -835,9 +832,10 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+                segmentText,
+                out string identifier,
+                out string parenthesisExpression);
             Debug.Assert(identifier != null, "identifier != null");
 
             // Look for well-known system resource points.
@@ -923,9 +921,10 @@ namespace Microsoft.OData.UriParser
         /// <returns>boolean value.</returns>
         private bool BindSegmentBeforeEscapeFunction(string segmentText)
         {
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+                segmentText,
+                out string identifier,
+                out string parenthesisExpression);
 
             if (this.parsedSegments.Count == 0)
             {
@@ -1178,9 +1177,10 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
+            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+                text,
+                out string identifier,
+                out string parenthesisExpression);
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:

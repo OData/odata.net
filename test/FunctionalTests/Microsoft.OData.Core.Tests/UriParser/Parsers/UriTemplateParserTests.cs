@@ -377,7 +377,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 new {Input = "}{"   , Error = Strings.ExpressionLexer_InvalidCharacter("}", 6, "onCat=}{")},
                 new {Input = "{{}"  , Error = Strings.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindingParametersAndMatchingOperation
                 new {Input = "{}}"  , Error = Strings.ExpressionLexer_InvalidCharacter("}", 8, "onCat={}}")},
-                new {Input = "{#}"  , Error = Strings.RequestUriProcessor_SyntaxError},
             };
 
             foreach (var errorCase in errorCases)
@@ -403,7 +402,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                 new {Input = "}{"   , Error = Strings.ExpressionLexer_InvalidCharacter("}", 1, "(}{)")},
                 new {Input = "{{}"  , Error = Strings.ExpressionLexer_UnbalancedBracketExpression}, // Thrown by ODataPathParser::TryBindKeyFromParentheses
                 new {Input = "{}}"  , Error = Strings.ExpressionLexer_InvalidCharacter("}", 3, "({}})")},
-                new {Input = "{#}"  , Error = Strings.RequestUriProcessor_SyntaxError},
             };
 
             foreach (var errorCase in errorCases)
