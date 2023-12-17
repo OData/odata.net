@@ -37,22 +37,60 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
         [Fact]
         public void RequestUriProcessorExtractSegmentIdentifierTest()
         {
-            ExtractSegmentIdentifierAndParenthesisExpression("blah", "blah", null);
-            ExtractSegmentIdentifierAndParenthesisExpression("multiple words", "multiple words", null);
-            ExtractSegmentIdentifierAndParenthesisExpression("multiple(123)", "multiple", "123");
-            ExtractSegmentIdentifierAndParenthesisExpression("multiple(123;321)", "multiple", "123;321");
-            ExtractSegmentIdentifierAndParenthesisExpression("set()", "set", string.Empty);
-            ExtractSegmentIdentifierAndParenthesisExpression("()", "()", null);
-            ExtractSegmentIdentifierAndParenthesisExpression("file(1).txt", "file(1).txt", null);
+            string actualIdentifier;
+            string queryPortion;
+
+            // Success cases
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "blah", "blah", null);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "multiple words", "multiple words", null);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "multiple(123)", "multiple", "123");
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "multiple(123;321)", "multiple", "123;321");
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "set()", "set", string.Empty);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "()", string.Empty, string.Empty);
+
+            // Failure cases
+            Action emptyString =
+                () =>
+                    ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                        enableKeyAsSegment: false,
+                        string.Empty,
+                        out actualIdentifier,
+                        out queryPortion);
+            emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+
+            Action noEndParen =
+                () =>
+                    ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                        enableKeyAsSegment: false,
+                        "foo(",
+                        out actualIdentifier,
+                        out queryPortion);
+            noEndParen.Throws<ODataException>(ErrorStrings.RequestUriProcessor_SyntaxError);
         }
 
         [Fact]
-        public void RequestUriProcessorExtractSegmentIdentifierErrorTest()
+        public void RequestUriProcessorExtractSegmentIdentifierTest_KeyAsSegment()
         {
             string actualIdentifier;
             string queryPortion;
 
-            Action emptyString = () => ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(string.Empty, out actualIdentifier, out queryPortion);
+            // Success cases
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "blah", "blah", null);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "multiple words", "multiple words", null);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "multiple(123)", "multiple", "123");
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "multiple(123;321)", "multiple", "123;321");
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "set()", "set", string.Empty);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "()", string.Empty, string.Empty);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "foo(", "foo(", null);
+
+            // Failure cases
+            Action emptyString =
+                () =>
+                    ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                        enableKeyAsSegment: false,
+                        string.Empty,
+                        out actualIdentifier,
+                        out queryPortion);
             emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
         }
 
@@ -807,11 +845,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             Assert.Equal("abc", node.Value);
         }
 
-        private static void ExtractSegmentIdentifierAndParenthesisExpression(string segment, string expectedIdentifier, string expectedQueryPortion)
+        private static void ExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment,
+            string segment,
+            string expectedIdentifier,
+            string expectedQueryPortion)
         {
             string actualIdentifier;
             string queryPortion;
-            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(segment, out actualIdentifier, out queryPortion);
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment, segment, out actualIdentifier, out queryPortion);
             Assert.Equal(expectedIdentifier, actualIdentifier);
             Assert.Equal(expectedQueryPortion, queryPortion);
         }

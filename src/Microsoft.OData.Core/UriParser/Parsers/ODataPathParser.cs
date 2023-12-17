@@ -76,7 +76,8 @@ namespace Microsoft.OData.UriParser
         /// <param name="segmentText">The segment text.</param>
         /// <param name="identifier">The identifier that was found.</param>
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
-        internal static void TryExtractSegmentIdentifierAndParenthesisExpression(
+        internal static void ExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment,
             string segmentText,
             out string identifier,
             out string parenthesisExpression)
@@ -91,16 +92,26 @@ namespace Microsoft.OData.UriParser
             }
 
             int parenthesisStart = segmentText.IndexOf('(');
-            if (parenthesisStart <= 0 || segmentText[segmentText.Length - 1] != ')')
+
+            bool containsOpenParenthesis = parenthesisStart >= 0;
+            bool endsWithCloseParenthesis = segmentText[segmentText.Length - 1] == ')';
+
+            if (containsOpenParenthesis != endsWithCloseParenthesis && !enableKeyAsSegment)
             {
-                identifier = segmentText;
-                parenthesisExpression = null;
+                // If the parenthesis are not in the expected state fail with a syntax error. We do not do this for key-as-segment
+                // because in that case the segment text is potentially still a valid key value.
+                throw ExceptionUtil.CreateSyntaxError();
+            }
+            else if (containsOpenParenthesis && endsWithCloseParenthesis)
+            {
+                // Split the string to grab the identifier and remove the parentheses.
+                identifier = segmentText.Substring(0, parenthesisStart);
+                parenthesisExpression = segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
             }
             else
             {
-                // split the string to grab the identifier and remove the parentheses
-                identifier = segmentText.Substring(0, parenthesisStart);
-                parenthesisExpression = segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
+                identifier = segmentText;
+                parenthesisExpression = null;
             }
         }
 
@@ -832,7 +843,9 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
                 segmentText,
                 out string identifier,
                 out string parenthesisExpression);
@@ -921,7 +934,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>boolean value.</returns>
         private bool BindSegmentBeforeEscapeFunction(string segmentText)
         {
-            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
                 segmentText,
                 out string identifier,
                 out string parenthesisExpression);
@@ -965,7 +980,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // For KeyAsSegment, try to handle as key segment
-                if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
+                if (enableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
                 {
                     return true;
                 }
@@ -1177,7 +1192,9 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            ODataPathParser.TryExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
                 text,
                 out string identifier,
                 out string parenthesisExpression);
@@ -1247,7 +1264,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // For KeyAsSegment, try to handle as key segment
-            if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
+            if (enableKeyAsSegment && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
