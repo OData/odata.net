@@ -46,7 +46,6 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "multiple(123)", "multiple", "123");
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "multiple(123;321)", "multiple", "123;321");
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "set()", "set", string.Empty);
-            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: false, "()", string.Empty, string.Empty);
 
             // Failure cases
             Action emptyString =
@@ -57,6 +56,15 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
                         out actualIdentifier,
                         out queryPortion);
             emptyString.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+
+            Action noIdentifier =
+                () =>
+                    ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                        enableKeyAsSegment: false,
+                        "()",
+                        out actualIdentifier,
+                        out queryPortion);
+            noIdentifier.Throws<ODataUnrecognizedPathException>(ErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
 
             Action noEndParen =
                 () =>
@@ -80,7 +88,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "multiple(123)", "multiple", "123");
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "multiple(123;321)", "multiple", "123;321");
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "set()", "set", string.Empty);
-            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "()", string.Empty, string.Empty);
+            ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "()", "()", null);
             ExtractSegmentIdentifierAndParenthesisExpression(enableKeyAsSegment: true, "foo(", "foo(", null);
 
             // Failure cases

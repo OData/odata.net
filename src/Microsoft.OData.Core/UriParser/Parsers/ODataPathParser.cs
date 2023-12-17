@@ -69,10 +69,12 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Extracts the segment identifier and, if there is a valid parenthesis pair in the segment, the expression in the parenthesis.
-        /// This function does not validate anything and simply provides the raw text of both the identifier and parenthetical expression.
+        /// Extracts the segment identifier and, if there are parenthesis in the segment, the expression in the parenthesis.
+        /// Will throw if identifier is not found or if the parenthesis expression is malformed. This function does not validate
+        /// anything and simply provides the raw text of both the identifier and parenthetical expression.
         /// </summary>
         /// <remarks>Internal only so it can be called from tests. Should not be used outside <see cref="ODataPathParser"/>.</remarks>
+        /// <param name="enableKeyAsSegment">Whether key-as-segment is enabled.</param>
         /// <param name="segmentText">The segment text.</param>
         /// <param name="identifier">The identifier that was found.</param>
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
@@ -112,6 +114,21 @@ namespace Microsoft.OData.UriParser
             {
                 identifier = segmentText;
                 parenthesisExpression = null;
+            }
+
+            if (identifier.Length == 0)
+            {
+                if (enableKeyAsSegment)
+                {
+                    // We already know that the segment itself is non-zero and so if the identifier is empty and we've enabled
+                    // key-as-segment we'll treat the entire segment as the identifier.
+                    identifier = segmentText;
+                    parenthesisExpression = null;
+                }
+                else
+                {
+                    throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+                }
             }
         }
 
