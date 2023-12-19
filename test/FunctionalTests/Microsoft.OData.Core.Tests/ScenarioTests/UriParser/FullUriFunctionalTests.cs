@@ -71,6 +71,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseOrderbyWithBuiltInFunction()
+        {
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People?$orderby=tolower(Name)"));
+            ODataUri parsedUri = parser.ParseUri();
+            SingleValueFunctionCallNode funcCall = parsedUri.OrderBy.Expression.ShouldBeSingleValueFunctionCallQueryNode("tolower", EdmCoreModel.Instance.GetString(true));
+            QueryNode parameter = Assert.Single(funcCall.Parameters);
+            parameter.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPersonNameProp());
+            Assert.Equal(OrderByDirection.Ascending, parsedUri.OrderBy.Direction);
+        }
+
+        [Fact]
         public void SelectOrExpandCanOnlyBeCalledOnEntity()
         {
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://www.odata.com/OData"), new Uri("http://www.odata.com/OData/People(1)/Name?$select=Name"));
