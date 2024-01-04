@@ -95,6 +95,12 @@
     </PackageReference>
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
+	<PackageReference Include="Microsoft.Extensions.ObjectPool">
+	  <Version>6.0.3</Version>
+	</PackageReference>
+  </ItemGroup>
+
   <ItemGroup>
     <AdditionalFiles Include="PublicAPI\$(TargetFramework)\**" />
   </ItemGroup>
