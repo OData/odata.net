@@ -31,11 +31,6 @@ namespace Microsoft.OData
 #endif
 
         /// <summary>
-        /// Instances of the NullDuplicatePropertyNameChecker.
-        /// </summary>
-        private IDuplicatePropertyNameChecker nullDuplicatePropertyNameChecker;
-
-        /// <summary>
         /// Creates a WriterValidator instance and binds it to settings.
         /// </summary>
         /// <param name="settings">The ODataMessageWriterSettings instance to bind to.</param>
@@ -66,13 +61,7 @@ namespace Microsoft.OData
             }
             else
             {
-                if (this.nullDuplicatePropertyNameChecker == null)
-                {
-                    // NullDuplicatePropertyNameChecker does nothing, so we can use a single instance during the writing process.
-                    this.nullDuplicatePropertyNameChecker = new NullDuplicatePropertyNameChecker();
-                }
-
-                duplicatePropertyNameChecker = this.nullDuplicatePropertyNameChecker;
+                duplicatePropertyNameChecker = NullDuplicatePropertyNameChecker.Instance;
             }
 
             return duplicatePropertyNameChecker;
