@@ -257,6 +257,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     Query = "People(1)/MyAddress/Fully.Qualified.Namespace.Address/NextHome",
                     TypeCast = "Fully.Qualified.Namespace.Address"
                 },
+                new
+                {
+                    Query = "",
+                    TypeCast = ""
+                }
             };
 
             foreach (var testCase in testCases)
