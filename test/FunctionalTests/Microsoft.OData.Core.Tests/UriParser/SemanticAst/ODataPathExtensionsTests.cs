@@ -160,12 +160,30 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var testCases = new[]
             {
                 new {
+                    Query = "",
+                    Result = ""
+                },
+                new {
                     Query = "People(1)",
+                    Result = "People"
+                },
+                 new {
+                    Query = "People",
                     Result = "People"
                 },
                 new {
                     Query = "People(1)/Fully.Qualified.Namespace.Person",
                     Result = "People/Fully.Qualified.Namespace.Person"
+                },
+                new {
+                    Query = "People/Fully.Qualified.Namespace.Person",
+                    Result = "People/Fully.Qualified.Namespace.Person"
+                },
+                // Having consecutive type segments is not useful, but ODataPath currently supports it.
+                // The test case helps avoid accidental regressions.
+                new {
+                    Query = "People(1)/Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Person",
+                    Result = "People/Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Person"
                 },
                 new
                 {
@@ -373,8 +391,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         }
 
         [Theory]
+        [InlineData("", 1, "(1)")]
         [InlineData("People", 1, "People(1)")]
         [InlineData("People/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Manager")]
+        // Having consecutive type segments is not useful, but ODataPath currently supports it.
+        // The test case helps avoid accidental regressions.
         [InlineData("People/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager")]
         [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)")]
         [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports/Fully.Qualified.Namespace.Manager", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)/Fully.Qualified.Namespace.Manager")]

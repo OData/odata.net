@@ -108,14 +108,42 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            var typeHandler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            var keyHandler = new SplitEndingSegmentOfTypeHandler<KeySegment>();
-            path.WalkWith(typeHandler);
-            typeHandler.FirstPart.WalkWith(keyHandler);
-            ODataPath newPath = keyHandler.FirstPart;
-            AppendLastSegment(typeHandler, newPath);
+            // if the path ends in type segments
+            // we should remove the key segment before the type segments
 
-            return newPath;
+            if (path.Count == 0)
+            {
+                return path;
+            }
+
+            int typeSplitIndex = path.Count - 1;
+            while (path[typeSplitIndex] is TypeSegment)
+            {
+                typeSplitIndex--;
+            }
+
+            if (!(path[typeSplitIndex] is KeySegment))
+            {
+                // path does not end with a key segment
+                return path;
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count - 1);
+
+            for (int i = 0; i < typeSplitIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            for (int i = typeSplitIndex + 1; i < path.Count; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            // Since we created the segments list here and we're sure it's not going to be
+            // used anywhere else, it's safe and much more efficient to tell ODataPath
+            // to take it as is without making an internal copy.
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>
@@ -230,6 +258,9 @@ namespace Microsoft.OData.UriParser
                 newSegments.Add(path[i]);
             }
 
+            // Since we created the segments list here and we're sure it's not going to be
+            // used anywhere else, it's safe and much more efficient to tell ODataPath
+            // to take it as is without making an internal copy.
             return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
