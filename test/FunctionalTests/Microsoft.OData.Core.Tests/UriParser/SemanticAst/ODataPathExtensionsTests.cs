@@ -284,6 +284,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var testCases = new[]
             {
                 new {
+                    Url = "",
+                    Trimmed = ""
+                },
+                new {
                     Url = "People",
                     Trimmed = "People"
                 },
@@ -300,7 +304,15 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     Trimmed = "People"
                 },
                 new {
+                    Url = "People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Employee",
+                    Trimmed = "People"
+                },
+                new {
                     Url = "People/Fully.Qualified.Namespace.Employee/1",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People/Fully.Qualified.Namespace.Employee/1/Fully.Qualified.Namespace.Employee",
                     Trimmed = "People"
                 },
                 new {
