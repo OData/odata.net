@@ -191,25 +191,5 @@ namespace Microsoft.OData.UriParser
 
             return !this.segments.Where((t, i) => !t.Equals(other.segments[i])).Any();
         }
-
-        /// <summary>
-        /// Add a segment to this path.
-        /// </summary>
-        /// <param name="newSegment">the segment to add</param>
-        /// <exception cref="System.ArgumentNullException">Throws if the input newSegment is null.</exception>
-        internal void Add(ODataPathSegment newSegment)
-        {
-            ExceptionUtils.CheckArgumentNotNull(newSegment, "newSegment");
-            this.segments.Add(newSegment);
-        }
-
-        /// <summary>
-        /// Adds a range of segments to the current path
-        /// </summary>
-        /// <param name="oDataPath"></param>
-        internal void AddRange(ODataPath oDataPath)
-        {
-            this.segments.AddRange(oDataPath.segments);
-        }
     }
 }

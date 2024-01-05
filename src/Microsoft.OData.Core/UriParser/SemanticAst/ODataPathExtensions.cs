@@ -226,9 +226,15 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new ODataPath with the segment appended.</returns>
         internal static ODataPath AddSegment(this ODataPath path, ODataPathSegment segment)
         {
-            var newPath = new ODataPath(path);
-            newPath.Add(segment);
-            return newPath;
+            if (segment == null)
+            {
+                throw new ArgumentNullException(nameof(segment));
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count + 1);
+            newSegments.AddRange(path.Segments);
+            newSegments.Add(segment);
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>

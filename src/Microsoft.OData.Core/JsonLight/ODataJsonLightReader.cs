@@ -2430,7 +2430,7 @@ namespace Microsoft.OData.JsonLight
 
             if (currentScope != null && currentScope.ResourceTypeFromMetadata != currentScope.ResourceType)
             {
-                odataPath.Add(new TypeSegment(currentScope.ResourceType, null));
+                odataPath = odataPath.AddSegment(new TypeSegment(currentScope.ResourceType, null));
             }
 
             if (navigationProperty == null)
