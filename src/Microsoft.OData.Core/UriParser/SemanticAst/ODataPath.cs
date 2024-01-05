@@ -70,6 +70,19 @@ namespace Microsoft.OData.UriParser
             // the input ODataPath must have already validated the segments
         }
 
+        /// <summary>
+        /// Creates a new instance of <see cref="ODataPath"/> from the
+        /// specified <paramref name="segments"/>. This does not
+        /// copy the segments list.
+        /// </summary>
+        /// <remarks>
+        /// This should be used in internal scenarios where we're sure
+        /// the input list will not be used by the caller after the ODataPath
+        /// is instantiated.
+        /// </remarks>
+        /// <param name="segments">The segments that make up the path.</param>
+        /// <param name="checkNullSegments">Whether to perform validation for null segments. To improve performance, set to false when you're sure
+        /// the input does not contain null segments.</param>
         private ODataPath(List<ODataPathSegment> segments, bool checkNullSegments = true)
         {
             ExceptionUtils.CheckArgumentNotNull(segments, "segments");
@@ -80,6 +93,19 @@ namespace Microsoft.OData.UriParser
             }
         }
 
+        /// <summary>
+        /// Efficiently creates a new instance of <see cref="ODataPath"/> from the
+        /// specified <paramref name="segments"/> list without creating an internal copy.
+        /// </summary>
+        /// <remarks>
+        /// This should be used in internal scenarios where we're sure
+        /// the input list will not be used by the caller after the ODataPath
+        /// is instantiated.
+        /// </remarks>
+        /// <param name="segments">The segments that make up the path.</param>
+        /// <param name="verifySegmentsNotNull">Whether to perform validation for null segments. To improve performance, set to false when you're sure
+        /// the input does not contain null segments.</param>
+        /// <returns>A new instance of <see cref="ODataPath"/></returns>
         internal static ODataPath CreateFromListWithoutCopying(List<ODataPathSegment> segments, bool verifySegmentsNotNull = true)
         {
             var path = new ODataPath(segments, verifySegmentsNotNull);
