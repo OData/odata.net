@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
@@ -369,6 +370,23 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 bool result = path.IsIndividualProperty();
                 Assert.False(result, string.Format("Resource path \"{0}\" should not target at individual property", testCase));
             }
+        }
+
+        [Theory]
+        [InlineData("People", 1, "People(1)")]
+        [InlineData("People/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Manager")]
+        [InlineData("People/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports/Fully.Qualified.Namespace.Manager", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)/Fully.Qualified.Namespace.Manager")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager")]
+        public void TestAddKeySegment(string initialPath, int id,  string expectedPath)
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, initialPath)).ParsePath();
+            var keySegment = new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var newODataPath = odataPath.AddKeySegment(keySegment);
+
+            Assert.Equal(odataPath.Count + 1, newODataPath.Count);
+            Assert.Equal(expectedPath, newODataPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
         }
     }
 }

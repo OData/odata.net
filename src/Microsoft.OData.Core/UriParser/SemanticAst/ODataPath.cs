@@ -70,6 +70,22 @@ namespace Microsoft.OData.UriParser
             // the input ODataPath must have already validated the segments
         }
 
+        private ODataPath(List<ODataPathSegment> segments, bool checkNullSegments = true)
+        {
+            ExceptionUtils.CheckArgumentNotNull(segments, "segments");
+            this.segments = segments;
+            if (checkNullSegments && this.segments.Contains(null))
+            {
+                throw Error.ArgumentNull(nameof(segments));
+            }
+        }
+
+        internal static ODataPath CreateFromListWithoutCopying(List<ODataPathSegment> segments, bool verifySegmentsNotNull = true)
+        {
+            var path = new ODataPath(segments, verifySegmentsNotNull);
+            return path;
+        }
+
         /// <summary>
         /// Gets the first segment in the path. Returns null if the path is empty.
         /// </summary>

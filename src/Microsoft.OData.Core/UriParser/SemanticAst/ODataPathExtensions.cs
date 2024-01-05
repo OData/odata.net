@@ -209,13 +209,28 @@ namespace Microsoft.OData.UriParser
 
         internal static ODataPath AddKeySegment(this ODataPath path, KeySegment keySegment)
         {
-            var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            path.WalkWith(handler);
-            ODataPath newPath = handler.FirstPart;
-            newPath.Add(keySegment);
-            AppendLastSegment(handler, newPath);
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count + 1);
+            // if the path ends with one or more consecutive TypeSegments we'll
+            // insert the key segment before that sequence of ending type segments.
+            int splitIndex = path.Count - 1;
+            while (splitIndex >= 0 && path[splitIndex] is TypeSegment)
+            {
+                splitIndex--;
+            }
+            
+            for (int i = 0; i <= splitIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
 
-            return newPath;
+            newSegments.Add(keySegment);
+
+            for (int i = splitIndex + 1; i < path.Count; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         private static void AppendLastSegment(SplitEndingSegmentOfTypeHandler<TypeSegment> handler, ODataPath newPath)
