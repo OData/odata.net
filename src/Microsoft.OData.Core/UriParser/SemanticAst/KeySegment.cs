@@ -62,6 +62,24 @@ namespace Microsoft.OData.UriParser
             this.Identifier = "{key}";
         }
 
+        internal KeySegment(IList<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource, bool verifyNavigationSourceType = true)
+        {
+            this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys);
+            this.edmType = edmType;
+            this.navigationSource = navigationSource;
+            this.SingleResult = true;
+
+            // Check that the type they gave us is related to the type of the set
+            if (verifyNavigationSourceType && navigationSource != null)
+            {
+                ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "KeySegments");
+            }
+
+            // We don't need to regenerate the identifier.
+            // Here, just put a place holder, the caller can override this if need more detail identifier.
+            this.Identifier = "{key}";
+        }
+
         /// <summary>
         /// Construct a Segment that represents a key lookup.
         /// </summary>

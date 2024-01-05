@@ -2519,8 +2519,8 @@ namespace Microsoft.OData.JsonLight
             {
                 IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
                 ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
-                KeyValuePair<string, object>[] keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType, false);
-                if (keys.Length == 0)
+                IList<KeyValuePair<string, object>> keys = ODataResourceMetadataContext.GetKeyProperties(resource, null, currentEntityType, false);
+                if (keys.Count == 0)
                 {
                     odataPath = null;
                     return false;
