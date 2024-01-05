@@ -229,30 +229,14 @@ namespace Microsoft.OData.Evaluation
             ODataProperty property = null;
             if (resource.NonComputedProperties != null)
             {
-                // since this method is called frequently, we implement SingleOrDefault manually
-                // to avoid allocating predicate closures.
-                using (IEnumerator<ODataProperty> e = resource.NonComputedProperties.GetEnumerator())
+                // We use a manual loop instead of a for-loop to avoid
+                // closure allocations given how frequently this method is called.
+                foreach (ODataProperty item in resource.NonComputedProperties)
                 {
-                    while (e.MoveNext())
+                    if (item.Name == propertyName)
                     {
-                        ODataProperty temp = e.Current;
-                        if (temp.Name == propertyName)
-                        {
-                            // We should re-evaluate whether it's necessary to check for duplicates
-                            // at this point. Doing this duplicate-check here is inefficient given
-                            // that this method maybe called multiple times for the same resource.
-                            // It's implemented as-is for now to retain the behaviour of the previous
-                            // implementation that made use of SingleOrDefault().
-                            while (e.MoveNext())
-                            {
-                                if (e.Current.Name == propertyName)
-                                {
-                                    throw new InvalidOperationException(Strings.DuplicatePropertyNamesNotAllowed(propertyName));
-                                }
-                            }
-
-                            property = temp;
-                        }
+                        property = item;
+                        break;
                     }
                 }
             }
