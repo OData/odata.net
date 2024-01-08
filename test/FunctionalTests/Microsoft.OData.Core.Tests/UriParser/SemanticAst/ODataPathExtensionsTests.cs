@@ -426,5 +426,30 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Assert.Equal(odataPath.Count + 1, newODataPath.Count);
             Assert.Equal(expectedPath, newODataPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
         }
+
+        [Fact]
+        public void TestAddKeySegmentThrowsIfSegmentNull()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People")).ParsePath();
+            Assert.Throws<ArgumentNullException>(() => odataPath.AddKeySegment(null));
+        }
+
+        [Fact]
+        public void TestAddSegment()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People(1)")).ParsePath();
+            var newSegment = new PropertySegment(HardCodedTestModel.GetPersonAddressProp());
+            var newPath = odataPath.AddSegment(newSegment);
+
+            Assert.Equal(odataPath.Count + 1, newPath.Count);
+            Assert.Equal("People(1)/MyAddress", newPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
+        }
+
+        [Fact]
+        public void TestAddSegmentThrowsIfSegmentNull()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People")).ParsePath();
+            Assert.Throws<ArgumentNullException>(() => odataPath.AddSegment(null));
+        }
     }
 }
