@@ -168,7 +168,7 @@ namespace Microsoft.OData.Evaluation
         /// <param name="serializationInfo">The serialization info of the resource for writing without model.</param>
         /// <param name="actualEntityType">The edm entity type of the resource</param>
         /// <param name="requiresId">Whether key properties are required to be returned</param>
-        /// <returns>Key value pair array</returns>
+        /// <returns>Key value pair list.</returns>
         internal static IList<KeyValuePair<string, object>> GetKeyProperties(
             ODataResourceBase resource,
             ODataResourceSerializationInfo serializationInfo,
@@ -362,11 +362,11 @@ namespace Microsoft.OData.Evaluation
 
 
         /// <summary>
-        /// Gets the entity type name of the specified resource.
+        /// Gets the resource type name of the specified resource.
         /// </summary>
         /// <param name="resource"></param>
         /// <param name="resourceType"></param>
-        /// <returns></returns>
+        /// <returns>The name of the resource's type.</returns>
         private static string GetResourceTypeName(ODataResourceBase resource, IEdmStructuredType resourceType)
         {
             return string.IsNullOrEmpty(resource.TypeName) ? resourceType?.FullTypeName() : resource.TypeName;
