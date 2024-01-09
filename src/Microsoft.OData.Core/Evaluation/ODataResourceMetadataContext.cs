@@ -192,7 +192,7 @@ namespace Microsoft.OData.Evaluation
             }
 
             if (!ValidateEntityTypeHasKeyProperties(keyProperties, resource, actualEntityType, requiresId))
-            { 
+            {
                 return Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
             }
 
@@ -295,11 +295,11 @@ namespace Microsoft.OData.Evaluation
         /// Validates that the resource has key properties.
         /// </summary>
         /// <param name="keyProperties">Key properties of the resource.</param>
-        /// <param name="resource">The entity type name of the resource.</param>
-        /// <param name="actualEntityType">The entity type of the resource.</param>
+        /// <param name="resource">The resource that contains the properties.</param>
+        /// <param name="actualEntityType">The type of the resource.</param>
         /// <param name="throwOnError">Whether to throw if validation fails.</param>
         /// <returns>True, if validation succeeds, or false if validation fails.</returns>
-        private static bool ValidateEntityTypeHasKeyProperties(IList<KeyValuePair<string, object>> keyProperties, ODataResourceBase resource, IEdmEntityType actualEntityType, bool throwOnError)
+        private static bool ValidateEntityTypeHasKeyProperties(IList<KeyValuePair<string, object>> keyProperties, ODataResourceBase resource, IEdmStructuredType actualEntityType, bool throwOnError)
         {
             if (keyProperties == null || keyProperties.Count == 0)
             {
@@ -549,10 +549,10 @@ namespace Microsoft.OData.Evaluation
                         IEdmEntityType entityType = this.actualResourceType as IEdmEntityType;
                         if (entityType != null)
                         {
-                            this.keyProperties = GetPropertyValues(entityType.Key(), resource, this.actualResourceType, this.requiresId).ToArray();
+                            this.keyProperties = GetPropertyValues(entityType.Key(), resource, entityType, this.requiresId);
                         }
 
-                        if (!ValidateEntityTypeHasKeyProperties(this.keyProperties, resource, entityType, this.requiresId))
+                        if (!ValidateEntityTypeHasKeyProperties(this.keyProperties, resource, this.actualResourceType, this.requiresId))
                         {
                             return Enumerable.Empty<KeyValuePair<string, object>>().ToArray();
                         }
