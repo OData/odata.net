@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// Construct a Segment that represents a key lookup.
+        /// Constructs a Segment that represents a key lookup.
         /// </summary>
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
         /// <param name="edmType">The type of the item this key returns.</param>
@@ -50,7 +50,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Construct a segment that represents a key lookup.
+        /// Constructs a segment that represents a key lookup.
         /// </summary>
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
         /// <param name="edmType">The type of the item this key returns.</param>
@@ -79,7 +79,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Construct a Segment that represents a key lookup.
+        /// Constructs a Segment that represents a key lookup.
         /// </summary>
         /// <param name="previous">The segment to apply the key to.</param>
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
