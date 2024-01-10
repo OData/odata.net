@@ -573,7 +573,7 @@ namespace Microsoft.OData.Evaluation
                     {
                         IEnumerable<IEdmStructuralProperty> properties = this.ComputeETagPropertiesFromAnnotation();
                         this.etagProperties = properties.Any()
-                            ? GetPropertyValues(properties, resource, this.actualResourceType, /*isRequired*/ false)
+                            ? GetPropertyValues(properties, resource, this.actualResourceType, isRequired: false)
                             : EmptyProperties;
                     }
 

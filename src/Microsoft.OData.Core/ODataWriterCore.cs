@@ -2861,7 +2861,7 @@ namespace Microsoft.OData
         private bool TryBuildKeySegment(out KeySegment keySegment)
         {
             IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-            IList<KeyValuePair<string, object>> keys = GetKeyProperties(currentEntityType, false /*throwIfFail*/);
+            IList<KeyValuePair<string, object>> keys = GetKeyProperties(currentEntityType, throwIfFail: false);
             if (keys == null || keys.Count == 0)
             {
                 keySegment = null;
