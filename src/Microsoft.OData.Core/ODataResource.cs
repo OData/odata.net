@@ -176,6 +176,15 @@ namespace Microsoft.OData
             get { return this.MetadataBuilder.GetFunctions(); }
         }
 
+        /// <summary>
+        /// Gets or sets whether to skip property verification. When set to false (default behaviour),
+        /// the properties collection will be verified to ensure it doesn't contain invalid values.
+        /// When set to true, it's the caller's responsibility to ensure the property values are valid
+        /// before setting the <see cref="Properties"/> property. This can be a useful optimization
+        /// in hot paths when you're sure property values are valid.
+        /// </summary>
+        public bool SkipPropertyVerification { get; set; }
+
         /// <summary>Gets or sets the resource properties.</summary>
         /// <returns>The resource properties.</returns>
         /// <remarks>
@@ -190,7 +199,11 @@ namespace Microsoft.OData
 
             set
             {
-                VerifyProperties(value);
+                if (!this.SkipPropertyVerification)
+                {
+                    VerifyProperties(value);
+                }
+
                 this.properties = value;
             }
         }
