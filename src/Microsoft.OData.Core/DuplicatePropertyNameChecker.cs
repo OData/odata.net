@@ -129,6 +129,12 @@ namespace Microsoft.OData
     /// </summary>
     internal class NullDuplicatePropertyNameChecker : IDuplicatePropertyNameChecker
     {
+        /// <summary>
+        /// Singleton instance of the <see cref="NullDuplicatePropertyNameChecker"/>. Since
+        /// it does nothing, we can safely re-use the same instance throughout the process.
+        /// </summary>
+        public static NullDuplicatePropertyNameChecker Instance = new NullDuplicatePropertyNameChecker();
+
         public void ValidatePropertyUniqueness(ODataPropertyInfo property)
         {
             // nop

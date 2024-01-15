@@ -4857,6 +4857,7 @@ public abstract class Microsoft.OData.ODataResourceBase : Microsoft.OData.ODataI
     Microsoft.OData.ODataStreamReferenceValue MediaResource  { public get; public set; }
     System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
     System.Uri ReadLink  { public get; public set; }
+    bool SkipPropertyVerification  { public get; public set; }
     string TypeName  { public get; public set; }
 
     public void AddAction (Microsoft.OData.ODataAction action)
