@@ -364,8 +364,8 @@ namespace Microsoft.OData.Evaluation
         /// <summary>
         /// Gets the resource type name of the specified resource.
         /// </summary>
-        /// <param name="resource"></param>
-        /// <param name="resourceType"></param>
+        /// <param name="resource">The resource instance.</param>
+        /// <param name="resourceType">The resource's type.</param>
         /// <returns>The name of the resource's type.</returns>
         private static string GetResourceTypeName(ODataResourceBase resource, IEdmStructuredType resourceType)
         {
