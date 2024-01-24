@@ -20,12 +20,12 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Context associated with this query.
         /// </summary>
-        private readonly DataServiceContext Context;
+        private readonly DataServiceContext context;
 
         /// <summary>
         /// Parameters of this action.
         /// </summary>
-        private readonly BodyOperationParameter[] Parameters;
+        private readonly BodyOperationParameter[] parameters;
 
         /// <summary>
         /// Object of an action which returns a collection.
@@ -35,9 +35,34 @@ namespace Microsoft.OData.Client
         /// <param name="parameters">Parameters of this action.</param>
         public DataServiceActionQuery(DataServiceContext context, string requestUriString, params BodyOperationParameter[] parameters)
         {
-            this.Context = context;
+            this.context = context;
             this.RequestUri = new Uri(requestUriString);
-            this.Parameters = parameters;
+            this.parameters = parameters;
+        }
+
+        /// <summary>
+        /// Gets the <see cref="DataServiceContext"/> that will be used to execute the action query
+        /// </summary>
+        public DataServiceContext Context
+        {
+            get
+            {
+                return this.context;
+            }
+        }
+
+        /// <summary>
+        /// Gets the <see cref="BodyOperationParameter"/>s that will be provided to the action when the query is executed
+        /// </summary>
+        public IEnumerable<BodyOperationParameter> Parameters
+        {
+            get
+            {
+                foreach (var element in this.parameters)
+                {
+                    yield return element;
+                }
+            }
         }
 
         /// <summary>
@@ -52,7 +77,7 @@ namespace Microsoft.OData.Client
         /// <exception cref="InvalidOperationException">Problem materializing result of query into object.</exception>
         public IEnumerable<T> Execute()
         {
-            return Context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, Parameters);
+            return context.Execute<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, parameters);
         }
 
         /// <summary>Asynchronously sends a request to the data service to execute a specific URI.</summary>
@@ -62,7 +87,7 @@ namespace Microsoft.OData.Client
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Justification = "Type is used to infer result")]
         public IAsyncResult BeginExecute(AsyncCallback callback, object state)
         {
-            return Context.BeginExecute<T>(this.RequestUri, callback, state, XmlConstants.HttpMethodPost, false, Parameters);
+            return context.BeginExecute<T>(this.RequestUri, callback, state, XmlConstants.HttpMethodPost, false, parameters);
         }
 
         /// <summary>Asynchronously sends the request so that this call does not block processing while waiting for the results from the service.</summary>
@@ -77,7 +102,7 @@ namespace Microsoft.OData.Client
         /// <param name="cancellationToken">The token to monitor for cancellation requests.</param>
         public Task<IEnumerable<T>> ExecuteAsync(CancellationToken cancellationToken)
         {
-            return Context.ExecuteAsync<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, cancellationToken, Parameters);
+            return context.ExecuteAsync<T>(this.RequestUri, XmlConstants.HttpMethodPost, false, cancellationToken, parameters);
         }
 
         /// <summary>Called to complete the <see cref="Microsoft.OData.Client.DataServiceActionQuery.BeginExecute(System.AsyncCallback,System.Object)" />.</summary>
@@ -92,7 +117,7 @@ namespace Microsoft.OData.Client
         public IEnumerable<T> EndExecute(IAsyncResult asyncResult)
         {
             Util.CheckArgumentNull(asyncResult, "asyncResult");
-            return Context.EndExecute<T>(asyncResult);
+            return context.EndExecute<T>(asyncResult);
         }
 
         /// <summary>
