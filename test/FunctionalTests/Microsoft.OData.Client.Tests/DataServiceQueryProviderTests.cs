@@ -170,7 +170,7 @@ namespace Microsoft.OData.Client.Tests
 
         #endregion
 
-        #region CustomUriFunction tests
+        #region CustomFunction tests
 
         [Fact]
         public void TranslatesStaticFunction()
@@ -206,6 +206,157 @@ namespace Microsoft.OData.Client.Tests
             Assert.Equal(@"http://root/Products?$filter=$it/ServiceNamespace.InstanceFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
         }
 
+        [Fact]
+        public void TranslatesStaticFunctionWhenLast()
+        {
+            // Arrange
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            localDsc.ResolveName = (t) => "ServiceNamespace.Product";
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => true && Product.StaticFunction(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=true and ServiceNamespace.StaticFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceFunctionWhenLast()
+        {
+            // Arrange
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            localDsc.ResolveName = (t) => "ServiceNamespace.Product";
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => true && product.InstanceFunction(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=true and $it/ServiceNamespace.InstanceFunction(parameter=$it/Name)", queryComponents.Uri.ToString());
+        }
+
+        #endregion
+
+        #region CustomUriFunction tests
+
+        [Fact]
+        public void TranslatesInstanceUriFunction()
+        {
+            // Arrange - products selling more than 1000 in year 2022
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.YearSale(2022) > 1000);
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=sale($it,2022) gt 1000", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceUriFunctionOfProperty()
+        {
+            // Arrange - products selling more than 1000 the year it was launched
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.YearSale(product.LaunchDate.Year) > 1000);
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=sale($it,year(LaunchDate)) gt 1000", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunction()
+        {
+            // Arrange - products launched 7 days ago, evaluated on server
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.LaunchDate == UriFunctions.ServerDate(UriFunctions.ServerNow() - TimeSpan.FromDays(7)));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=LaunchDate eq date(now() sub duration'P7D')", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunctionCanResolve()
+        {
+            // Arrange - client evaluated Even()
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => UriFunctions.Even(2));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=true", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesStaticUriFunctionOfProperty()
+        {
+            // Arrange - products with Even Id
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => UriFunctions.Even(product.Id));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Even(Id)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceUriFunctionOfProperty2()
+        {
+            // Arrange - products with Even Id
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => product.Test(product.Name));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=Test($it,Name)", queryComponents.Uri.ToString());
+        }
+
+        [Fact]
+        public void TranslatesInstanceUriFunctionOfProperty3()
+        {
+            Product clientProduct = new Product();
+            // Arrange - products with Even Id
+            var localDsc = new DataServiceContext(new Uri("http://root"), ODataProtocolVersion.V4);
+            var sut = new DataServiceQueryProvider(localDsc);
+            var products = localDsc.CreateQuery<Product>("Products")
+                .Where(product => clientProduct.Test(""));
+
+            // Act
+            var queryComponents = sut.Translate(products.Expression);
+
+            // Assert
+            Assert.Equal(@"http://root/Products?$filter=true", queryComponents.Uri.ToString());
+        }
+
         #endregion
 
         [EntityType]
@@ -218,11 +369,37 @@ namespace Microsoft.OData.Client.Tests
 
             public decimal Price { get; set; }
 
+            public Edm.Date LaunchDate { get; set; }
+
             public IEnumerable<string> Comments { get; set; }
 
             public static bool StaticFunction(string parameter) { return true; }
 
             public bool InstanceFunction(string parameter) { return true; }
+
+            [UriFunction, OriginalName("sale")]
+            public int YearSale(int year) => throw new NotSupportedException();
+
+            [UriFunction(true)]
+            public bool Test(string data)
+            {
+                return string.IsNullOrEmpty(data);
+            }
+        }
+
+        private static class UriFunctions
+        {
+            [UriFunction, OriginalName("now")]
+            public static DateTimeOffset ServerNow() => throw new NotSupportedException();
+
+            [UriFunction, OriginalName("date")]
+            public static Edm.Date ServerDate(DateTimeOffset value) => throw new NotSupportedException();
+
+            [UriFunction(true)]
+            public static bool Even(int value)
+            {
+                return value % 2 == 0;
+            }
         }
     }
 }

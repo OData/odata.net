@@ -110,14 +110,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // A stream is not allowed in a property with a non-stream property kind.
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
-                        PayloadElement = PayloadBuilder.Entity("TestModel.EntityTypeWithStreamProperty").StreamProperty("NonStreamProperty", "http://readlink", "http://editlink"),
+                        PayloadElement = PayloadBuilder.Entity("TestModel.EntityTypeWithStreamProperty").Property("Id", PayloadBuilder.PrimitiveValue(1))
+                            .StreamProperty("NonStreamProperty", "http://readlink", "http://editlink"),
                         PayloadEdmModel = model,
                         ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                             {
-                                ExpectedException = tc.Format == ODataFormat.Json
-                                        ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "NonStreamProperty", "Edm.Boolean")
-                                        : ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject")
+                                ExpectedException = null
                             },
                     },
                     // Top-level property of stream type is not allowed

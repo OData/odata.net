@@ -9,8 +9,10 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Reflection;
     using System.Text.RegularExpressions;
+    using Microsoft.OData.Client.Metadata;
     using Microsoft.OData.Edm;
     using Microsoft.OData.UriParser.Aggregation;
     using Microsoft.Spatial;
@@ -242,8 +244,27 @@ namespace Microsoft.OData.Client
         internal static bool TryGetQueryOptionMethod(MethodInfo mi, out string methodName)
         {
             return (expressionMethodMap.TryGetValue(mi, out methodName) ||
+                TryResolveUriFunction(mi, out methodName) ||
                 (IsVisualBasicAssembly(mi.DeclaringType.GetAssembly()) &&
                  expressionVBMethodMap.TryGetValue(mi.DeclaringType.FullName + "." + mi.Name, out methodName)));
+        }
+
+        /// <summary>
+        /// Sees if method is declared as a UriFunction and resolves the uri method name
+        /// </summary>
+        /// <param name="mi">The method info</param>
+        /// <param name="methodName">uri method name</param>
+        /// <returns>true/ false</returns>
+        private static bool TryResolveUriFunction(MethodInfo mi, out string methodName)
+        {
+            UriFunctionAttribute uriFunctionAttribute = (UriFunctionAttribute)mi.GetCustomAttributes(typeof(UriFunctionAttribute), false).FirstOrDefault();
+            if (uriFunctionAttribute != null)
+            {
+                methodName = ClientTypeUtil.GetServerDefinedName(mi);
+                return true;
+            }
+            methodName = null;
+            return false;
         }
 
         /// <summary>

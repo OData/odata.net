@@ -1055,6 +1055,11 @@ public interface Microsoft.OData.Edm.IEdmStructuredType : IEdmElement, IEdmType 
 public interface Microsoft.OData.Edm.IEdmStructuredTypeReference : IEdmElement, IEdmTypeReference {
 }
 
+public interface Microsoft.OData.Edm.IEdmTargetPath : IEdmElement, IEdmVocabularyAnnotatable {
+    string Path  { public abstract get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.Edm.IEdmElement]] Segments  { public abstract get; }
+}
+
 public interface Microsoft.OData.Edm.IEdmTemporalTypeReference : IEdmElement, IEdmPrimitiveTypeReference, IEdmTypeReference {
     System.Nullable`1[[System.Int32]] Precision  { public abstract get; }
 }
@@ -1938,6 +1943,11 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     [
     ExtensionAttribute(),
     ]
+    public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, string targetPath, Microsoft.OData.Edm.Vocabularies.IEdmTerm term)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static IEnumerable`1 FindVocabularyAnnotations (Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, string qualifier)
 
     [
@@ -2044,6 +2054,16 @@ public sealed class Microsoft.OData.Edm.ExtensionMethods {
     ExtensionAttribute(),
     ]
     public static Microsoft.OData.Edm.IEdmOperationReturn GetReturn (Microsoft.OData.Edm.IEdmOperation operation)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static Microsoft.OData.Edm.IEdmTargetPath GetTargetPath (Microsoft.OData.Edm.IEdmModel model, string targetPath, params bool ignoreCase)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation]] GetTargetPathAnnotations (Microsoft.OData.Edm.IEdmModel model, string targetPath)
 
     [
     ExtensionAttribute(),
@@ -2831,6 +2851,17 @@ public class Microsoft.OData.Edm.EdmStructuralProperty : Microsoft.OData.Edm.Edm
     Microsoft.OData.Edm.EdmPropertyKind PropertyKind  { public virtual get; }
 }
 
+public class Microsoft.OData.Edm.EdmTargetPath : IEdmElement, IEdmTargetPath, IEdmVocabularyAnnotatable {
+    public EdmTargetPath (Microsoft.OData.Edm.IEdmElement[] segments)
+    public EdmTargetPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.IEdmElement]] segments)
+
+    string Path  { public virtual get; }
+    System.Collections.Generic.IReadOnlyList`1[[Microsoft.OData.Edm.IEdmElement]] Segments  { public virtual get; }
+
+    public virtual bool Equals (object obj)
+    public virtual int GetHashCode ()
+}
+
 public class Microsoft.OData.Edm.EdmTemporalTypeReference : Microsoft.OData.Edm.EdmPrimitiveTypeReference, IEdmElement, IEdmPrimitiveTypeReference, IEdmTemporalTypeReference, IEdmTypeReference {
     public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable)
     public EdmTemporalTypeReference (Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, System.Nullable`1[[System.Int32]] precision)
@@ -2912,6 +2943,16 @@ public sealed class Microsoft.OData.Edm.EdmUntypedStructuredType : Microsoft.ODa
     string Namespace  { public virtual get; }
     Microsoft.OData.Edm.EdmSchemaElementKind SchemaElementKind  { public virtual get; }
     Microsoft.OData.Edm.EdmTypeKind TypeKind  { public virtual get; }
+}
+
+[
+ExtensionAttribute(),
+]
+public sealed class System.Collections.Generic.ReadOnlyListExtensions {
+    [
+    ExtensionAttribute(),
+    ]
+    public static int FindLastIndex (IReadOnlyList`1 list, Func`2 predicate)
 }
 
 public enum Microsoft.OData.Edm.Csdl.CsdlTarget : int {
@@ -4816,6 +4857,7 @@ public abstract class Microsoft.OData.ODataResourceBase : Microsoft.OData.ODataI
     Microsoft.OData.ODataStreamReferenceValue MediaResource  { public get; public set; }
     System.Collections.Generic.IEnumerable`1[[Microsoft.OData.ODataProperty]] Properties  { public get; public set; }
     System.Uri ReadLink  { public get; public set; }
+    bool SkipPropertyVerification  { public get; public set; }
     string TypeName  { public get; public set; }
 
     public void AddAction (Microsoft.OData.ODataAction action)
@@ -5612,6 +5654,7 @@ public sealed class Microsoft.OData.ODataMessageWriterSettings {
     bool AlwaysAddTypeAnnotationsForDerivedTypes  { public get; public set; }
     Microsoft.OData.Buffers.ICharArrayPool ArrayPool  { public get; public set; }
     System.Uri BaseUri  { public get; public set; }
+    int BufferSize  { public get; public set; }
     bool EnableCharactersCheck  { public get; public set; }
     bool EnableMessageStreamDisposal  { public get; public set; }
     string JsonPCallback  { public get; public set; }
@@ -6411,6 +6454,11 @@ public sealed class Microsoft.OData.UriParser.ODataPathExtensions {
     [
     ExtensionAttribute(),
     ]
+    public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeAndKeySegments (Microsoft.OData.UriParser.ODataPath path)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static Microsoft.OData.UriParser.ODataPath TrimEndingTypeSegment (Microsoft.OData.UriParser.ODataPath path)
 }
 
@@ -6468,12 +6516,16 @@ public class Microsoft.OData.UriParser.ODataExpandPath : Microsoft.OData.UriPars
     public ODataExpandPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 }
 
+[
+DefaultMemberAttribute(),
+]
 public class Microsoft.OData.UriParser.ODataPath : IEnumerable, IEnumerable`1 {
     public ODataPath (Microsoft.OData.UriParser.ODataPathSegment[] segments)
     public ODataPath (System.Collections.Generic.IEnumerable`1[[Microsoft.OData.UriParser.ODataPathSegment]] segments)
 
     int Count  { public get; }
     Microsoft.OData.UriParser.ODataPathSegment FirstSegment  { public get; }
+    Microsoft.OData.UriParser.ODataPathSegment Item [int index] { public get; }
     Microsoft.OData.UriParser.ODataPathSegment LastSegment  { public get; }
 
     public virtual System.Collections.Generic.IEnumerator`1[[Microsoft.OData.UriParser.ODataPathSegment]] GetEnumerator ()

@@ -126,14 +126,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "With odata.type annotation - should fail",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataTypeAnnotationName) + "\":\"Edm.Stream\"",
                 },
                 new StreamPropertyTestCase
                 {
                     DebugDescription = "Everything with navigation link URL annotation - should fail",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", "http://odata.org/streamproperty/readlink", "http://odata.org/streamproperty/editlink", "streamproperty:contenttype", "streamproperty:etag"),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":\"http://odata.org/streamproperty/readlink\"," +
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/streamproperty/navlink\"," +
@@ -145,7 +145,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid edit link - wrong primitive",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":42",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataMediaEditLinkAnnotationName),
                     OnlyResponse = true,
@@ -154,7 +154,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid edit link - null",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataMediaEditLinkAnnotationName),
                     OnlyResponse = true,
@@ -163,7 +163,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid read link - wrong primitive",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":true",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "True", JsonLightConstants.ODataMediaReadLinkAnnotationName),
                     OnlyResponse = true,
@@ -172,7 +172,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid read link - null",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaReadLinkAnnotationName) + "\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataMediaReadLinkAnnotationName),
                     OnlyResponse = true,
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid ETag - non primitive",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaETagAnnotationName) + "\":[]",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                     OnlyResponse = true,
@@ -190,7 +190,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid ETag - null",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaETagAnnotationName) + "\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataMediaETagAnnotationName),
                     OnlyResponse = true,
@@ -199,7 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid content type - non primitive",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaContentTypeAnnotationName) + "\":{}",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                     OnlyResponse = true,
@@ -208,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Invalid content type - null",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, null, null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaContentTypeAnnotationName) + "\":null",
                     ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataMediaContentTypeAnnotationName),
                     OnlyResponse = true,
@@ -218,7 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Open stream property",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("OpenSkyline", null, "http://odata.org/streamproperty/editlink", null, null),
                     OwningEntityType = model.FindDeclaredType("TestModel.CityOpenType").ToTypeReference(),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("OpenSkyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
                     OnlyResponse = true
                 },
@@ -226,7 +226,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Undeclared stream property (disallowed by default)",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("NewSkyline", null, "http://odata.org/streamproperty/editlink", null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("NewSkyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_PropertyDoesNotExistOnType", "NewSkyline", "TestModel.CityType"),
                     OnlyResponse = true
@@ -234,17 +234,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new StreamPropertyTestCase
                 {
                     DebugDescription = "Stream property declared with non-stream type",
-                    ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Name", null, "http://odata.org/streamproperty/editlink", null, null),
+                    ExpectedEntity = PayloadBuilder.Entity(),
                     Json = 
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Name", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType", "Name", "Edm.String"),
                     OnlyResponse = true
                 },
                 new StreamPropertyTestCase
                 {
                     DebugDescription = "Stream property with value",
                     ExpectedEntity = PayloadBuilder.Entity().StreamProperty("Skyline", null, "http://odata.org/streamproperty/editlink", null, null),
-                    Json = 
+                    Json =
                         "\"" + JsonLightUtils.GetPropertyAnnotationName("Skyline", JsonLightConstants.ODataMediaEditLinkAnnotationName) + "\":\"http://odata.org/streamproperty/editlink\"," +
                         "\"Skyline\":\"value\"",
                     OnlyResponse = true

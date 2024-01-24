@@ -20,6 +20,10 @@ Constructable_DependentPropertyCountMustMatchNumberOfPropertiesOnPrincipalType=T
 EdmType_UnexpectedEdmType=Unexpected Edm type.
 NavigationPropertyBinding_PathIsNotValid=The navigation property binding path is not valid.
 MultipleMatchingPropertiesFound=More than one properties match the name '{0}' were found in type '{1}'.
+TargetPath_FirstSegmentMustBeIEdmEntityContainer=First segment must be IEdmEntityContainer.
+TargetPath_SecondSegmentMustBeIEdmEntityContainerElement=Second segment must be IEdmEntityContainerElement.
+TargetPath_SegmentsMustNotContainNullSegment=Target path segments must not contain a null segment.
+TypeCast_HierarchyNotFollowed=Encountered invalid type cast. '{0}' is not assignable from '{1}'.
 
 ; Evaluation messages
 Edm_Evaluator_NoTermTypeAnnotationOnType=Type '{0}' must have a single type annotation with term type '{1}'.
@@ -341,3 +345,4 @@ TimeOfDay_InvalidParsingString=String '{0}' was not recognized as a valid TimeOf
 TimeOfDay_InvalidCompareToTarget=Target object '{0}' is not an instance with type of TimeOfDay.
 EdmVocabularyAnnotations_DidNotFindDefaultValue=Annotation expressions must specify a value or use a term with a specified default value. Cannot find a default value for the given annotation term, '{0}'.
 EdmVocabularyAnnotations_TermTypeNotSupported=Term type '{0}' is not supported for value retrieval.
+EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation=Invalid to set inline location for a path target '{0}'.

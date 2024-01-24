@@ -1026,7 +1026,7 @@ namespace Microsoft.OData.JsonLight
             return property;
         }
 
-        protected static void AttachODataAnnotations(IODataJsonLightReaderResourceState resourceState, string propertyName, ODataProperty property)
+        protected static void AttachODataAnnotations(IODataJsonLightReaderResourceState resourceState, string propertyName, ODataPropertyInfo property)
         {
             foreach (KeyValuePair<string, object> annotation
                      in propertyName.Length == 0

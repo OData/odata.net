@@ -20,7 +20,7 @@ using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
-    public class CsdlReaderTests
+    public partial class CsdlReaderTests
     {
         private const string ValidEdmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>

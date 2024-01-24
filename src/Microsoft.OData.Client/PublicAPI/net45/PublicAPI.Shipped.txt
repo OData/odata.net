@@ -1,3 +1,11 @@
+Microsoft.OData.Client.UriFunctionAttribute
+Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
+Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
+virtual Microsoft.OData.Client.DataServiceContext.BeginDeepInsert<T>(System.AsyncCallback callback, object state, T resource) -> System.IAsyncResult
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
+virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
+virtual Microsoft.OData.Client.DataServiceContext.EndDeepInsert(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedEnded(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedStarted(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.ReadingDeltaFeedArgs

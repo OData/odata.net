@@ -95,7 +95,7 @@ namespace Microsoft.OData
         /// Validates that no duplicate property exists.
         /// </summary>
         /// <param name="property">The property to be validated.</param>
-        internal void CheckForDuplicatePropertyNames(ODataProperty property)
+        internal void CheckForDuplicatePropertyNames(ODataPropertyInfo property)
         {
             Debug.Assert(property != null);
 

@@ -45,6 +45,14 @@ namespace Microsoft.OData.Metadata
         /// </summary>
         private static readonly Dictionary<Type, IEdmPrimitiveTypeReference> PrimitiveTypeReferenceMap = new Dictionary<Type, IEdmPrimitiveTypeReference>(EqualityComparer<Type>.Default);
 
+#if !NETSTANDARD1_1
+        /// <summary>
+        /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <see cref="IsPrimitiveType(Type)"/> method.
+        /// If the bit at a given type code position is set, it means that's a support primitive type.
+        /// </summary>
+        private static readonly int PrimitiveTypeCodeBitMap = 0;
+#endif
+
         /// <summary>Type reference for Edm.Boolean.</summary>
         private static readonly EdmPrimitiveTypeReference BooleanTypeReference = ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Boolean), false);
 
@@ -131,6 +139,25 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(Date?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
+
+#if !NETSTANDARD1_1
+            // Pack type codes of supported primitive types in the bitmap
+            // See the type codes here: https://learn.microsoft.com/en-us/dotnet/api/system.typecode
+            PrimitiveTypeCodeBitMap = 0;
+
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Byte;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Decimal;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Double;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Int16;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Int32;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Int64;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.SByte;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.Single;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.String;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt16;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt32;
+            PrimitiveTypeCodeBitMap |= 1 << (int)TypeCode.UInt64;
+#endif
         }
 
         #region Internal methods
@@ -594,14 +621,28 @@ namespace Microsoft.OData.Metadata
         internal static bool IsPrimitiveType(Type clrType)
         {
             Debug.Assert(clrType != null, "clrType != null");
+#if !NETSTANDARD1_1
+            int typeCode = 1 << (int)Type.GetTypeCode(clrType);
+#endif
 
-            if (clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64))
-            {
-                // Since UInt types are not in the core model, they cannot be found in the map below.
-                return true;
-            }
-
-            return PrimitiveTypeReferenceMap.ContainsKey(clrType) || typeof(ISpatial).IsAssignableFrom(clrType);
+            return
+#if !NETSTANDARD1_1
+                (PrimitiveTypeCodeBitMap & typeCode) == typeCode
+                ||
+#else
+                // .netstandard1.1 does not support TypeCode
+                clrType == typeof(UInt16) || clrType == typeof(UInt32) || clrType == typeof(UInt64)
+                ||
+#endif
+                // DateTimeOffset and Guid don't have dedicated type codes, but they are
+                // common types, so we check them first to optimize their lookup before falling back to the dictionary.
+                clrType == typeof(DateTimeOffset)
+                || clrType == typeof(Guid)
+                // Lookup the primitive type map for remaining types. If we add more predicates to this conditions
+                // then it could take longer to reach the types in the last predicates than to look them up in the
+                // dictionary. So for a good balance handle common types directly and the rest in the dictionary.
+                || PrimitiveTypeReferenceMap.ContainsKey(clrType)
+                || typeof(ISpatial).IsAssignableFrom(clrType);
         }
 
         /// <summary>

@@ -29,11 +29,14 @@ namespace Microsoft.OData.Json
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
         private readonly static ReadOnlyMemory<byte> itemSeparator = new byte[] { (byte)',' };
+        private readonly static ReadOnlyMemory<byte> nanValue = new byte[] { (byte)'N', (byte)'a', (byte)'N' };
+        private readonly static ReadOnlyMemory<byte> positiveInfinityValue = new byte[] { (byte)'I', (byte)'N', (byte)'F' };
+        private readonly static ReadOnlyMemory<byte> negativeInfinityValue = new byte[] { (byte)'-', (byte)'I', (byte)'N', (byte)'F' };
 
         private readonly Stream outputStream;
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter utf8JsonWriter;
-        private readonly ArrayBufferWriter<byte> bufferWriter;
+        private readonly PooledByteBufferWriter bufferWriter;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
@@ -99,7 +102,7 @@ namespace Microsoft.OData.Json
             this.outputStream = outputStream;
             this.isIeee754Compatible = isIeee754Compatible;
             this.bufferSize = bufferSize;
-            this.bufferWriter = new ArrayBufferWriter<byte>(bufferSize);
+            this.bufferWriter = new PooledByteBufferWriter(bufferSize);
             // flush when we're close to the buffer capacity to avoid allocating bigger buffers
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
@@ -260,7 +263,23 @@ namespace Microsoft.OData.Json
         public void WriteValue(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+            
             this.FlushIfBufferThresholdReached();
         }
 
@@ -289,7 +308,21 @@ namespace Microsoft.OData.Json
         public void WriteValue(DateTimeOffset value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value);
+            if (value.Offset == TimeSpan.Zero)
+            {
+                // The default JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffffZ when the offset is 0
+                // Utf8JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffff+00:00
+                // While both formats are valid IS0 8601, we decided to keep the output
+                // consistent between the two writers to avoid breaking any client that may
+                // have dependency on the original format.
+                string formattedValue = JsonValueUtils.FormatDateTimeOffset(value, ODataJsonDateTimeFormat.ISO8601DateTime);
+                this.utf8JsonWriter.WriteStringValue(formattedValue);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteStringValue(value);
+            }
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -534,6 +567,7 @@ namespace Microsoft.OData.Json
             {
                 this.writeStream.Flush();
                 this.utf8JsonWriter.Dispose();
+                this.bufferWriter.Dispose();
 
                 if (this.outputStream != this.writeStream)
                 {
@@ -661,7 +695,23 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(double value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (double.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (double.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (double.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
@@ -690,7 +740,22 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(DateTimeOffset value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteStringValue(value);
+            if (value.Offset == TimeSpan.Zero)
+            {
+
+                // The default JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffffZ when the offset is 0
+                // Utf8JsonWriter uses the format yyyy-MM-ddThh:mm:ss.fffffff+00:00
+                // While both formats are valid IS0 8601, we decided to keep the output
+                // consistent between the two writers to avoid breaking any client that may
+                // have dependency on the original format.
+                string formattedValue = JsonValueUtils.FormatDateTimeOffset(value, ODataJsonDateTimeFormat.ISO8601DateTime);
+                this.utf8JsonWriter.WriteStringValue(formattedValue);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteStringValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
@@ -803,6 +868,11 @@ namespace Microsoft.OData.Json
                 await this.outputStream.DisposeAsync().ConfigureAwait(false);
             }
 
+            if (this.bufferWriter != null)
+            {
+                this.bufferWriter.Dispose();
+            }
+
             this.Dispose(false);
         }
 
@@ -814,7 +884,7 @@ namespace Microsoft.OData.Json
             }
         }
 
-        #endregion
+#endregion
 
     }
 }

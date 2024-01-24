@@ -12,30 +12,55 @@ trigger:
 pr:
 - master
 
-pool:
-  vmImage: 'windows-2019'
-  
+jobs:
 
-variables:
-  buildPlatform: 'Any CPU'
-  buildConfiguration: 'Release'
-  skipComponentGovernanceDetection: true
-  snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-  snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-  gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-  ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
-  mainDll1: 'Microsoft.OData.Edm.dll'
-  ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
-  mainDll2: 'Microsoft.OData.Core.dll'
-  ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
-  mainDll3: 'Microsoft.Spatial.dll'
-  ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
-  mainDll4: 'Microsoft.OData.Client.dll'
-  ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
-  mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
-  ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+- job:  Debug
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+    skipComponentGovernanceDetection: true
+    snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+    snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+    gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+    ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+    mainDll1: 'Microsoft.OData.Edm.dll'
+    ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+    mainDll2: 'Microsoft.OData.Core.dll'
+    ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+    mainDll3: 'Microsoft.Spatial.dll'
+    ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+    mainDll4: 'Microsoft.OData.Client.dll'
+    ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+    mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
+    ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+  steps:
+    - template: buildandtest.yml
+    - template: credscan.yml
 
-steps:
-- template: buildandtest.yml
+- job:  Release
+  pool:
+    vmImage: 'windows-2019'
+  variables:
+    buildPlatform: 'Any CPU'
+    buildConfiguration: 'Release'
+    skipComponentGovernanceDetection: true
+    snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+    snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+    gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+    ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+    mainDll1: 'Microsoft.OData.Edm.dll'
+    ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+    mainDll2: 'Microsoft.OData.Core.dll'
+    ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+    mainDll3: 'Microsoft.Spatial.dll'
+    ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+    mainDll4: 'Microsoft.OData.Client.dll'
+    ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+    mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
+    ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+  steps:
+    - template: buildandtest.yml
+    - template: credscan.yml
 
-- template: credscan.yml

@@ -19,9 +19,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         {
         }
 
+        private IEdmType type;
+
         public override IEdmType Type
         {
-            get { return this.typeCache.GetValue(this, ComputeElementTypeFunc, null); }
+            get
+            { 
+                if (type == null)
+                {
+                    type = this.typeCache.GetValue(this, ComputeElementTypeFunc, null);
+                }
+
+                return type;
+            }
         }
 
         public override EdmContainerElementKind ContainerElementKind

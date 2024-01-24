@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+  <edmx:DataServices>
+    <Schema Namespace="ns" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal" xmlns:odata="http://schemas.microsoft.com/oDataCapabilities">
+      <EntityContainer Name="Container">
+        <EntitySet Name="orders" EntityType="self.order" />
+        <EntitySet Name="categories" EntityType="self.category" />
+      </EntityContainer>
+      <EntityType Name="order">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <NavigationProperty Name="products" Type="Collection(self.product)" ContainsTarget="true" Nullable="false" />
+      </EntityType>
+      <EntityType Name="product">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="name" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="category">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="foo" Type="Edm.String" Nullable="false" />
+      </EntityType>
+      <EntityType Name="derivedProduct" BaseType="self.product">
+        <NavigationProperty Name="category" Type="self.category" ContainsTarget="true" />
+      </EntityType>
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>

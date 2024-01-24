@@ -226,7 +226,21 @@ namespace Microsoft.OData.Evaluation
         {
             Debug.Assert(resource != null, "resource != null");
 
-            ODataProperty property = resource.NonComputedProperties == null ? null : resource.NonComputedProperties.SingleOrDefault(p => p.Name == propertyName);
+            ODataProperty property = null;
+            if (resource.NonComputedProperties != null)
+            {
+                // We use a manual loop instead of a for-loop to avoid
+                // closure allocations given how frequently this method is called.
+                foreach (ODataProperty item in resource.NonComputedProperties)
+                {
+                    if (item.Name == propertyName)
+                    {
+                        property = item;
+                        break;
+                    }
+                }
+            }
+
             if (property == null)
             {
                 if (isRequired)

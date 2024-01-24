@@ -108,7 +108,8 @@ namespace Microsoft.OData.UriParser
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
-                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal))
+
+                    if (expectedTypeFullName.Equals("Edm.String", StringComparison.Ordinal) || expectedTypeFullName.Equals("Edm.Untyped", StringComparison.Ordinal))
                     {
                         // For collection of strings, need to convert single-quoted string to double-quoted string,
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
@@ -298,9 +299,11 @@ namespace Microsoft.OData.UriParser
                         {
                             if(k > 2 && input[k - 2] == '\'')
                             {
-                                // Ignore we have 3 single quotes e.g 'xyz'''
-                                // It means we need to escape the double quotes to return the result "xyz'"
-                                continue;
+                                // We have 3 single quotes e.g 'ghi'''
+                                // It means we need to unescape the double single quotes
+                                // and escape double quote to return the result "ghi'" and process next items
+                                sb.Append('"');
+                                return k;
                             }
                             // We append \"\" so as to return "\"\"" instead of "".
                             // This is to avoid passing an empty string to the ConstantNode.

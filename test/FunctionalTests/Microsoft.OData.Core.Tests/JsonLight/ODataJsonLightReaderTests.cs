@@ -204,6 +204,43 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
         [Fact]
+        public async Task ReadTopLevelResource_WithPropertyWithoutValueAsync()
+        {
+            this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"Sue\"," +
+                "\"Type@custom.instance\":\"Retail\"" +
+              "}";
+
+            await SetupJsonLightReaderAndRunTestAsync(
+                payload,
+                this.customerEntitySet,
+                this.customerEntityType,
+                (jsonLightReader) => DoReadAsync(
+                    jsonLightReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        Assert.NotNull(resource);
+                        var properties = resource.Properties.ToArray();
+                        Assert.Equal(2, properties.Length);
+                        Assert.Equal("Id", properties[0].Name);
+                        Assert.Equal(1, properties[0].Value);
+                        Assert.Equal("Name", properties[1].Name);
+                    },
+                    verifyNestedPropertyInfoAction: (item) =>
+                    {
+                        ODataPropertyInfo propertyInfo = Assert.IsType<ODataPropertyInfo>(item);
+
+                        Assert.Equal("Type", propertyInfo.Name);
+                        ODataInstanceAnnotation annotation = Assert.Single(propertyInfo.InstanceAnnotations);
+                        Assert.Equal("custom.instance", annotation.Name);
+                        Assert.Equal("Retail", annotation.Value.FromODataValue());
+                    }));
+        }
+
+        [Fact]
         public async Task ReadTopLevelDeltaResourceSetAsync()
         {
             this.messageReaderSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -783,8 +820,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 this.customerEntityType,
                 (jsonLightReader) => DoReadAsync(
                     jsonLightReader,
-                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    verifyNestedPropertyInfoAction: (item) =>
                     {
+                        ODataStreamPropertyInfo streamPropertyInfo = Assert.IsType<ODataStreamPropertyInfo>(item);
                         Assert.NotNull(streamPropertyInfo);
                         Assert.NotNull(streamPropertyInfo.EditLink);
                         Assert.Equal("http://tempuri.org/Customers(1)/Photo", streamPropertyInfo.EditLink.AbsoluteUri);
@@ -820,8 +858,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 this.customerEntityType,
                 (jsonLightReader) => DoReadAsync(
                     jsonLightReader,
-                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    verifyNestedPropertyInfoAction: (item) =>
                     {
+                        ODataStreamPropertyInfo streamPropertyInfo = item as ODataStreamPropertyInfo;
                         Assert.Null(streamPropertyInfo);
                     },
                     verifyTextStreamAction: async (textReader) =>
@@ -847,8 +886,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 this.customerEntityType,
                 (jsonLightReader) => DoReadAsync(
                     jsonLightReader,
-                    verifyStreamPropertyInfoAction: (streamPropertyInfo) =>
+                    verifyNestedPropertyInfoAction: (item) =>
                     {
+                        ODataStreamPropertyInfo streamPropertyInfo = item as ODataStreamPropertyInfo;
                         Assert.Null(streamPropertyInfo);
                     },
                     verifyTextStreamAction: async (textReader) =>
@@ -1643,8 +1683,6 @@ namespace Microsoft.OData.Tests.JsonLight
                 exception.Message);
         }
 
-
-
         [Fact]
         public async Task ReadNestedResourceAsync_ThrowsExceptionForNonNullableStructuralPropertyAsNull()
         {
@@ -1676,7 +1714,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Action<ODataDeletedResource> verifyDeletedResourceAction = null,
             Action<ODataDeltaLinkBase> verifyDeltaLinkAction = null,
             Action<ODataEntityReferenceLink> verifyEntityReferenceLinkAction = null,
-            Action<ODataStreamPropertyInfo> verifyStreamPropertyInfoAction = null,
+            Action<ODataItem> verifyNestedPropertyInfoAction = null,
             Action<Stream> verifyBinaryStreamAction = null,
             Action<TextReader> verifyTextStreamAction = null,
             Action<ODataPrimitiveValue> verifyPrimitiveAction = null)
@@ -1785,9 +1823,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
                         break;
                     case ODataReaderState.NestedProperty:
-                        if (verifyStreamPropertyInfoAction != null)
+                        if (verifyNestedPropertyInfoAction != null)
                         {
-                            verifyStreamPropertyInfoAction(jsonLightReader.Item as ODataStreamPropertyInfo);
+                            verifyNestedPropertyInfoAction(jsonLightReader.Item);
                         }
 
                         break;

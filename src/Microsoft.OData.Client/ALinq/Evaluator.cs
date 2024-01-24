@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
+    using System.Linq;
     using System.Linq.Expressions;
 
     /// <summary>
@@ -168,6 +169,16 @@ namespace Microsoft.OData.Client
                 this.candidates = new HashSet<Expression>(EqualityComparer<Expression>.Default);
                 this.Visit(expression);
                 return this.candidates;
+            }
+
+            internal override Expression VisitMethodCall(MethodCallExpression m)
+            {
+                UriFunctionAttribute uriFunctionAttribute = (UriFunctionAttribute)m.Method.GetCustomAttributes(typeof(UriFunctionAttribute), false).SingleOrDefault();
+                if (uriFunctionAttribute != null && !uriFunctionAttribute.AllowClientSideEvaluation)
+                {
+                    this.cannotBeEvaluated = true;
+                }
+                return base.VisitMethodCall(m);
             }
 
             /// <summary>

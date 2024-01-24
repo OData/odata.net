@@ -6,9 +6,8 @@
 
 namespace Microsoft.OData
 {
-    using System;
     using System.Collections.Generic;
-#if NETSTANDARD2_0_OR_GREATER
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER
     using Microsoft.Extensions.ObjectPool;
 #endif
     using Microsoft.OData.Edm;
@@ -24,17 +23,12 @@ namespace Microsoft.OData
         /// </summary>
         private readonly ODataMessageWriterSettings settings;
 
-#if NETSTANDARD2_0_OR_GREATER
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER
         /// <summary>
         /// Object pool that stores instances of the DuplicatePropertyNameChecker.
         /// </summary>
         private ObjectPool<DuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
 #endif
-
-        /// <summary>
-        /// Instances of the NullDuplicatePropertyNameChecker.
-        /// </summary>
-        private IDuplicatePropertyNameChecker nullDuplicatePropertyNameChecker;
 
         /// <summary>
         /// Creates a WriterValidator instance and binds it to settings.
@@ -52,7 +46,7 @@ namespace Microsoft.OData
 
             if (settings.ThrowOnDuplicatePropertyNames)
             {
-#if NETSTANDARD2_0_OR_GREATER
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER
                 if (this.duplicatePropertyNameCheckerObjectPool == null)
                 {
                     DefaultObjectPoolProvider poolProvider = new DefaultObjectPoolProvider { MaximumRetained = 8 };
@@ -67,13 +61,7 @@ namespace Microsoft.OData
             }
             else
             {
-                if (this.nullDuplicatePropertyNameChecker == null)
-                {
-                    // NullDuplicatePropertyNameChecker does nothing, so we can use a single instance during the writing process.
-                    this.nullDuplicatePropertyNameChecker = new NullDuplicatePropertyNameChecker();
-                }
-
-                duplicatePropertyNameChecker = this.nullDuplicatePropertyNameChecker;
+                duplicatePropertyNameChecker = NullDuplicatePropertyNameChecker.Instance;
             }
 
             return duplicatePropertyNameChecker;
@@ -82,7 +70,7 @@ namespace Microsoft.OData
         /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
-#if NETSTANDARD2_0_OR_GREATER
+#if NETSTANDARD2_0_OR_GREATER || NETCOREAPP3_1_OR_GREATER
             // We only return the DuplicatePropertyNameChecker to the object pool and ignore the NullDuplicatePropertyNameChecker.
             if (duplicatePropertyNameChecker is DuplicatePropertyNameChecker duplicateChecker)
             {

@@ -85,6 +85,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueDoubleNaN()
+        {
+            this.VerifyWritePrimitiveValue(double.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueDoublePositiveInfinity()
+        {
+            this.VerifyWritePrimitiveValue(double.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueDoubleNegativeInfinity()
+        {
+            this.VerifyWritePrimitiveValue(double.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public void WritePrimitiveValueInt16()
         {
             this.VerifyWritePrimitiveValue((short)876, "876");
@@ -160,6 +178,12 @@ namespace Microsoft.OData.Tests.Json
         public void WritePrimitiveValueDateTimeOffset()
         {
             this.VerifyWritePrimitiveValue(new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, new TimeSpan(1, 2, 0)), "\"0001-02-03T04:05:06.007+01:02\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueDateTimeOffsetWithZeroOffset()
+        {
+            this.VerifyWritePrimitiveValue(new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, TimeSpan.Zero), "\"0001-02-03T04:05:06.007Z\"");
         }
 
         [Fact]

@@ -62,6 +62,18 @@ namespace Microsoft.OData.Json
             return this.writer.WriteAsync(value);
         }
 
+        /// <inheritdoc/>
+        public override void Write(char[] buffer, int index, int count)
+        {
+            this.writer.Write(buffer, index, count);
+        }
+
+        /// <inheritdoc/>
+        public override Task WriteAsync(char[] buffer, int index, int count)
+        {
+            return this.writer.WriteAsync(buffer, index, count);
+        }
+
         /// <summary>
         /// Writes a new line.
         /// </summary>

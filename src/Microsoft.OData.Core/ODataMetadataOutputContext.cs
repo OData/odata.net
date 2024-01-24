@@ -61,7 +61,7 @@ namespace Microsoft.OData
 #if NETSTANDARD1_1
                     this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
 #else
-                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, ODataConstants.DefaultOutputBufferSize);
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, messageWriterSettings.BufferSize);
 #endif
                     outputStream = this.asynchronousOutputStream;
                 }

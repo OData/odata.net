@@ -208,7 +208,18 @@ namespace Microsoft.OData.Json
         internal static void WriteValue(TextWriter writer, DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
         {
             Debug.Assert(writer != null, "writer != null");
+            string textValue = JsonValueUtils.FormatDateTimeOffset(value, dateTimeFormat);
+            JsonValueUtils.WriteQuoted(writer, textValue);
+        }
 
+        /// <summary>
+        /// Formats the DateTimeOffset value as a string based on the specified format.
+        /// </summary>
+        /// <param name="value">DateTimeOffset value to be formatted.</param>
+        /// <param name="dateTimeFormat">The format to use for conversion.</param>
+        /// <returns>The string representation of the DateTimeOffset based on the given format.</returns>
+        internal static string FormatDateTimeOffset(DateTimeOffset value, ODataJsonDateTimeFormat dateTimeFormat)
+        {
             switch (dateTimeFormat)
             {
                 case ODataJsonDateTimeFormat.ISO8601DateTime:
@@ -220,11 +231,8 @@ namespace Microsoft.OData.Json
                         //  quotation-mark
                         //
                         // offset = 4DIGIT
-                        string textValue = XmlConvert.ToString(value);
-                        JsonValueUtils.WriteQuoted(writer, textValue);
+                        return XmlConvert.ToString(value);
                     }
-
-                    break;
 
                 case ODataJsonDateTimeFormat.ODataDateTime:
                     {
@@ -238,11 +246,10 @@ namespace Microsoft.OData.Json
                         //
                         // ticks = *DIGIT
                         // offset = 4DIGIT
-                        string textValue = FormatDateTimeAsJsonTicksString(value);
-                        JsonValueUtils.WriteQuoted(writer, textValue);
+                        return FormatDateTimeAsJsonTicksString(value);
                     }
-
-                    break;
+                default:
+                    throw new ODataException(Strings.ODataJsonWriter_UnsupportedDateTimeFormat);
             }
         }
 
@@ -785,6 +792,25 @@ namespace Microsoft.OData.Json
             inputString.CopyTo(currentIndex, buffer, 0, substrLength);
             bufferIndex = substrLength;
             currentIndex += substrLength;
+        }
+
+        /// <summary>
+        /// Writes a substring starting at a specified position on the string to the buffer.
+        /// This method is intended for use in async methods, where you cannot pass ref parameters.
+        /// </summary>
+        /// <param name="inputString">Input string value.</param>
+        /// <param name="currentIndex">The index in the string at which the substring begins.</param>
+        /// <param name="buffer">Char buffer to use for streaming data.</param>
+        /// <param name="bufferIndex">Current position in the buffer after the substring has been written.</param>
+        /// <param name="substrLength">The length of the substring to be copied.</param>
+        private static void WriteSubstringToBuffer(string inputString, Ref<int> currentIndex, char[] buffer, Ref<int> bufferIndex, int substrLength)
+        {
+            Debug.Assert(inputString != null, "inputString != null");
+            Debug.Assert(buffer != null, "buffer != null");
+
+            inputString.CopyTo(currentIndex.Value, buffer, 0, substrLength);
+            bufferIndex.Value = substrLength;
+            currentIndex.Value += substrLength;
         }
 
         /// <summary>

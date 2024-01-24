@@ -187,6 +187,47 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
+        /// A string like "First segment must be IEdmEntityContainer."
+        /// </summary>
+        internal static string TargetPath_FirstSegmentMustBeIEdmEntityContainer
+        {
+            get
+            {
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TargetPath_FirstSegmentMustBeIEdmEntityContainer);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Second segment must be IEdmEntityContainerElement."
+        /// </summary>
+        internal static string TargetPath_SecondSegmentMustBeIEdmEntityContainerElement
+        {
+            get
+            {
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TargetPath_SecondSegmentMustBeIEdmEntityContainerElement);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Target path segments must not contain a null segment."
+        /// </summary>
+        internal static string TargetPath_SegmentsMustNotContainNullSegment
+        {
+            get
+            {
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TargetPath_SegmentsMustNotContainNullSegment);
+            }
+        }
+
+        /// <summary>
+        /// A string like "Encountered invalid type cast. '{0}' is not assignable from '{1}'."
+        /// </summary>
+        internal static string TypeCast_HierarchyNotFollowed(object p0, object p1)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.TypeCast_HierarchyNotFollowed, p0, p1);
+        }
+
+        /// <summary>
         /// A string like "Type '{0}' must have a single type annotation with term type '{1}'."
         /// </summary>
         internal static string Edm_Evaluator_NoTermTypeAnnotationOnType(object p0, object p1)
@@ -2635,6 +2676,14 @@ namespace Microsoft.OData.Edm {
         internal static string EdmVocabularyAnnotations_TermTypeNotSupported(object p0)
         {
             return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_TermTypeNotSupported, p0);
+        }
+
+        /// <summary>
+        /// A string like "Invalid to set inline location for a path target '{0}'."
+        /// </summary>
+        internal static string EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation(object p0)
+        {
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation, p0);
         }
 
     }

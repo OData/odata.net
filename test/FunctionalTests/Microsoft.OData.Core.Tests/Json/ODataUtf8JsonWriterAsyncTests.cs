@@ -109,6 +109,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WritePrimitiveValueAsyncDoubleNaN()
+        {
+            await this.VerifyWritePrimitiveValueAsync(double.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncDoublePositiveInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(double.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncDoubleNegativeInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(double.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public async Task WritePrimitiveValueAsync_Int16()
         {
             await this.VerifyWritePrimitiveValueAsync((short)876, "876");
@@ -186,6 +204,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritePrimitiveValueAsync_DateTimeOffset()
         {
             await this.VerifyWritePrimitiveValueAsync(new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, new TimeSpan(1, 2, 0)), "\"0001-02-03T04:05:06.007+01:02\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsync_DateTimeOffset_WithZeroOffsetWithZeroOffset()
+        {
+            await this.VerifyWritePrimitiveValueAsync(new DateTimeOffset(1, 2, 3, 4, 5, 6, 7, TimeSpan.Zero), "\"0001-02-03T04:05:06.007Z\"");
         }
 
         [Fact]

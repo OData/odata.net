@@ -1,4 +1,19 @@
-﻿abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
+Microsoft.OData.Edm.EdmTargetPath
+Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
+Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void
+Microsoft.OData.Edm.EdmTargetPath.Path.get -> string
+Microsoft.OData.Edm.EdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
+Microsoft.OData.Edm.IEdmTargetPath
+Microsoft.OData.Edm.IEdmTargetPath.Path.get -> string
+Microsoft.OData.Edm.IEdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
+override Microsoft.OData.Edm.EdmTargetPath.Equals(object obj) -> bool
+override Microsoft.OData.Edm.EdmTargetPath.GetHashCode() -> int
+static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, string targetPath, Microsoft.OData.Edm.Vocabularies.IEdmTerm term) -> System.Collections.Generic.IEnumerable<T>
+static Microsoft.OData.Edm.ExtensionMethods.GetTargetPath(this Microsoft.OData.Edm.IEdmModel model, string targetPath, bool ignoreCase = true) -> Microsoft.OData.Edm.IEdmTargetPath
+static Microsoft.OData.Edm.ExtensionMethods.GetTargetPathAnnotations(this Microsoft.OData.Edm.IEdmModel model, string targetPath) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
+static System.Collections.Generic.ReadOnlyListExtensions.FindLastIndex<T>(this System.Collections.Generic.IReadOnlyList<T> list, System.Func<T, bool> predicate) -> int
+System.Collections.Generic.ReadOnlyListExtensions
+abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
 abstract Microsoft.OData.Edm.EdmModelBase.FindDirectlyDerivedTypes(Microsoft.OData.Edm.IEdmStructuredType baseType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuredType>
 abstract Microsoft.OData.Edm.EdmModelBase.SchemaElements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmSchemaElement>
 abstract Microsoft.OData.Edm.EdmNavigationSource.Path.get -> Microsoft.OData.Edm.IEdmPathExpression

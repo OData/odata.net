@@ -33,6 +33,7 @@ namespace Microsoft.OData.UriParser
 
             this.singleton = singleton;
 
+            this.Identifier = singleton.Name;
             this.TargetEdmNavigationSource = singleton;
             this.TargetEdmType = singleton.EntityType();
             this.TargetKind = RequestTargetKind.Resource;

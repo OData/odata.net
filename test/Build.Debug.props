@@ -1,0 +1,78 @@
+<Project>
+  <PropertyGroup>
+    <!--the name of the App.config file that the build automatically picks up-->
+    <BaseAppConfigFileName>App.config</BaseAppConfigFileName>
+    <!--the path to the App.config file for the project that is currently building-->
+    <NativeBaseAppConfigPath>$(MSBuildProjectDirectory)\$(BaseAppConfigFileName)</NativeBaseAppConfigPath>
+    <!--the path to the fallback App.config file that we will use if the project that is currently building does not have its own App.config file-->
+    <SharedBaseAppConfigPath>$(MSBuildThisFileDirectory)\$(BaseAppConfigFileName)</SharedBaseAppConfigPath>
+    <!--the name of the App.config transform file that handles Debug.Assert failures-->
+    <DebugAppConfigFileName>App.Debug.config</DebugAppConfigFileName>
+    <!--the path to the App.config transform file that handles Debug.Assert failures-->
+    <DebugAppConfigPath>$(MSBuildThisFileDirectory)\$(DebugAppConfigFileName)</DebugAppConfigPath>
+  </PropertyGroup>
+
+  <Choose>
+    <When Condition="Exists($(NativeBaseAppConfigPath))">
+      <!--if the building project has its own App.config file, use that-->
+      <PropertyGroup>
+        <BaseAppConfigPath>$(NativeBaseAppConfigPath)</BaseAppConfigPath>
+      </PropertyGroup>
+    </When>
+    <Otherwise>
+      <!--otherwise, use the fallback App.config file-->
+      <PropertyGroup>
+        <BaseAppConfigPath>$(SharedBaseAppConfigPath)</BaseAppConfigPath>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <ItemGroup>
+    <!--import the base App.config file if there isn't already one-->
+    <None Include="$(BaseAppConfigPath)" Link="$(BaseAppConfigFileName)" Condition="!Exists($(BaseAppConfigFileName))" />
+    <!--import the transform App.config file-->
+    <None Include="$(DebugAppConfigPath)" Link="App_Config\$(DebugAppConfigFileName)">
+      <DependentUpon>$(BaseAppConfigPath)</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <!--import Microsoft.OData.TestCommon because it contains the definition of the DebugAssertTraceListener that is referenced in the App.config transforms-->
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
+  </ItemGroup>
+
+  <!--we need to import a "fake" usage of the Microsoft.OData.TestCommon project so that the test frameworks will automatically copy the binary to the test run folder-->
+  <Choose>
+    <When Condition="'$(MSBuildProjectExtension)' == '.csproj'">
+      <ItemGroup>
+        <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\Fake.cs" Link="App_Config\Fake.cs" />
+      </ItemGroup>
+    </When>
+    <When Condition="'$(MSBuildProjectExtension)' == '.vbproj'">
+      <ItemGroup>
+        <Compile Include="$(EnlistmentRoot)\test\FunctionalTests\Microsoft.OData.TestCommon\Fake.vb" Link="App_Config\Fake.vb" />
+      </ItemGroup>
+    </When>
+    <Otherwise>
+      <!--currently, there are only c# and vb fake files; other files could be added to support other project types, for example f#; modern project files are able to compile any .NET language, so added support for other project types would only be for legacy support-->
+      <PropertyGroup>
+        <UnknownProjectExtension>true</UnknownProjectExtension>
+      </PropertyGroup>
+    </Otherwise>
+  </Choose>
+
+  <PropertyGroup>
+    <TransformTaskPath>$(MSBuildThisFileDirectory)\CommonAssemblies\Transform\Microsoft.Web.Publishing.Tasks.dll</TransformTaskPath>
+  </PropertyGroup>
+  <UsingTask TaskName="TransformXml" AssemblyFile="$(TransformTaskPath)" />
+
+  <Target Name="DebugValidation" BeforeTargets="Build">
+    <Error Condition="!Exists($(TransformTaskPath))" Text="Transform task '$(TransformTaskPath)' not found" />
+    <Error Condition="'$(UnknownProjectExtension)' == 'true'" Text="The project file extension '$(MSBuildProjectExtension)' for the project at '$(MSBuildProjectFullPath)' is not supported at this time. Support can be added in '$(MSBuildThisFileFullPath)' by adding a new variant of 'Fake.cs' that corresponds to the unsupported project type of '$(MSBuildProjectExtension)'" />
+  </Target>
+
+  <Target Name="Transform" AfterTargets="CopyFilesToOutputDirectory">
+    <!--apply the Debug.Assert transforms to the base App.config file-->
+    <TransformXml Source="$(OutputPath)\$(TargetFileName).config" Transform="$(DebugAppConfigPath)" Destination="$(OutputPath)\$(TargetFileName).config" />
+  </Target>
+</Project>

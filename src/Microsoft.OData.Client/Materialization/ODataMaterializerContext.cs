@@ -15,15 +15,27 @@ namespace Microsoft.OData.Client.Materialization
     /// </summary>
     internal class ODataMaterializerContext : IODataMaterializerContext
     {
+        private bool includeLinks;
+
         /// <summary>
         /// Initializes a materializer context
         /// </summary>
         /// <param name="responseInfo">Response information used to initialize with the materializer</param>
         /// <param name="materializerCache">The materializer cache.</param>
-        internal ODataMaterializerContext(ResponseInfo responseInfo, MaterializerCache materializerCache)
+        /// <param name="includeLinks">Whether to include navigation properties when materializing an entry.</param>
+        internal ODataMaterializerContext(ResponseInfo responseInfo, MaterializerCache materializerCache, bool includeLinks = true)
         {
             this.ResponseInfo = responseInfo;
             this.MaterializerCache = materializerCache;
+            this.includeLinks = includeLinks;
+        }
+
+        /// <summary>
+        /// Whether to include navigation properties when materializing an entry.
+        /// </summary>
+        public bool IncludeLinks
+        {
+            get { return this.includeLinks; }
         }
 
         /// <summary>

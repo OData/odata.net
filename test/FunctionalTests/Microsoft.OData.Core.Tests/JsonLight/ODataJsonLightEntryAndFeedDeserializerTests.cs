@@ -495,13 +495,19 @@ namespace Microsoft.OData.Tests.JsonLight
         #region Entity properties instance annotation
 
         [Fact]
-        public void ParsingInstanceAnnotationInNonExistingEntityPropertyShouldThrow()
+        public void ParsingInstanceAnnotationInNonExistingEntityPropertyShouldReadAsNestedPropertyInfo()
         {
             var deserializer = this.CreateJsonLightEntryAndFeedDeserializer("{\"ID@custom.annotation\":123}");
             AdvanceReaderToFirstProperty(deserializer.JsonReader);
             var entryState = new TestJsonLightReaderEntryState();
-            Action action = () => deserializer.ReadResourceContent(entryState);
-            action.Throws<ODataException>(ErrorStrings.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType("ID", "Edm.Int32"));
+            var nestedInfo = deserializer.ReadResourceContent(entryState);
+            ODataJsonLightReaderNestedPropertyInfo nestedPropertyInfo = Assert.IsType<ODataJsonLightReaderNestedPropertyInfo>(nestedInfo);
+            Assert.False(nestedPropertyInfo.WithValue);
+            Assert.NotNull(nestedPropertyInfo.NestedProperty);
+            Assert.Equal("ID", nestedPropertyInfo.NestedProperty.Name);
+            ODataInstanceAnnotation annotation = Assert.Single(nestedPropertyInfo.NestedPropertyInfo.InstanceAnnotations);
+            Assert.Equal("custom.annotation", annotation.Name);
+            TestUtils.AssertODataValueAreEqual(new ODataPrimitiveValue(123), annotation.Value);
         }
 
         [Fact]

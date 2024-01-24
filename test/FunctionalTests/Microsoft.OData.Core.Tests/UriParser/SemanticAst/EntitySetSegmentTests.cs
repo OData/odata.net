@@ -14,6 +14,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
     public class EntitySetSegmentTests
     {
         [Fact]
+        public void IdentifierByDefaultIsEntitySetName()
+        {
+            EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
+            Assert.Equal("People", segment.Identifier);
+        }
+
+        [Fact]
         public void TargetEdmEntitySetIsEntitySet()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());

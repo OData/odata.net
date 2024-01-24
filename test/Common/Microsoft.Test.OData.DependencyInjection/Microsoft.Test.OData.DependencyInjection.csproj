@@ -13,7 +13,7 @@
   <Import Project="..\Build.props" />
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' or '$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1' ">
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.2.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.32" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net45'">
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="1.1.0" />
