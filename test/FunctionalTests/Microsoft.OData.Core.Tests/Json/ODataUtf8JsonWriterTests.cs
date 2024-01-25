@@ -170,6 +170,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueLargeString()
+        {
+            this.VerifyWritePrimitiveValue(
+                new string('x', 30000),
+                "\"" + new string('x', 30000) + "\""
+                );
+        }
+
+        [Fact]
+        public void WritePrimitiveValueLargeStringWithSpecialChars()
+        {
+            this.VerifyWritePrimitiveValue(
+                new string('x', 20000) + "Foo ия" + new string('x', 10000),
+                "\"" + new string('x', 20000) + "Foo \\u0438\\u044F" + new string('x', 10000) + "\""
+                );
+        }
+
+        [Fact]
         public void WritePrimitiveValueStringWritesNullIfArgumentIsNull()
         {
             this.writer.WriteValue((string)null);

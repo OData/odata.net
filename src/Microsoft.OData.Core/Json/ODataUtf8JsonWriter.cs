@@ -16,6 +16,8 @@ using System.Threading.Tasks;
 using System.Buffers;
 using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
+using System.Text.Unicode;
+using System.Buffers.Text;
 
 namespace Microsoft.OData.Json
 {
@@ -37,11 +39,13 @@ namespace Microsoft.OData.Json
         private readonly Stream writeStream;
         private readonly Utf8JsonWriter utf8JsonWriter;
         private readonly PooledByteBufferWriter bufferWriter;
+        private readonly JavaScriptEncoder encoder;
         private readonly int bufferSize;
         private readonly bool isIeee754Compatible;
         private readonly bool leaveStreamOpen;
         private readonly Encoding outputEncoding;
         private bool disposed;
+        private const int chunkSize = 2048;
         /// The Utf8JsonWriter internally keeps track of when to write the item separtor ','
         /// between key-value pairs in an object and between items in an array
         /// However, we bypass the Utf8JsonWriter in our implementation of WriteRawValue
@@ -86,7 +90,10 @@ namespace Microsoft.OData.Json
         /// an array e.g. ["rawValue1", "rawValue2", "rawValue3"
         /// </summary>
         private bool isWritingConsecutiveRawValuesAtStartOfArray = false;
-        
+        /// <summary>
+        /// Rrepresents a read-only memory block containing the byte representation of the double quote character ("). 
+        /// </summary>
+        private readonly static ReadOnlyMemory<byte> doubleQuote = new byte[] { (byte)'"' };
 
         /// <summary>
         /// Creates an instance of <see cref="ODataUtf8JsonWriter"/>.
@@ -107,6 +114,7 @@ namespace Microsoft.OData.Json
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
             this.outputEncoding = encoding;
+            this.encoder = encoder ?? JavaScriptEncoder.Default;
 
             if (this.outputEncoding.CodePage == Encoding.UTF8.CodePage)
             {
@@ -123,11 +131,12 @@ namespace Microsoft.OData.Json
 
             this.utf8JsonWriter = new Utf8JsonWriter(
                 this.bufferWriter,
-                new JsonWriterOptions {
+                new JsonWriterOptions
+                {
                     // we don't need to perform validation here since the higher-level
                     // writers already perform validation
                     SkipValidation = true,
-                    Encoder = encoder ?? JavaScriptEncoder.Default
+                    Encoder = this.encoder
                 });
         }
 
@@ -256,7 +265,7 @@ namespace Microsoft.OData.Json
             {
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
-            
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -279,7 +288,7 @@ namespace Microsoft.OData.Json
             {
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
-            
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -364,32 +373,260 @@ namespace Microsoft.OData.Json
 
         public void WriteValue(string value)
         {
-            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
+            }
+            else if (value.Length > bufferWriter.FreeCapacity)
+            {
+                WriteStringValueInChunks(value.AsSpan());
             }
             else
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteStringValue(value);
             }
 
             this.FlushIfBufferThresholdReached();
         }
 
+        /// <summary>
+        /// Writes a string value into the buffer in chunks, handling escaping if necessary.
+        /// </summary>
+        /// <param name="value">The string value to write.</param>
+        /// <remarks>
+        /// This method writes the provided string value into the buffer in manageable chunks to avoid
+        /// excessive memory allocations and buffer overflows. If the string requires escaping, it is
+        /// processed accordingly to ensure correct JSON formatting.
+        /// </remarks>
+        private void WriteStringValueInChunks(ReadOnlySpan<char> value)
+        {
+            this.CommitUtf8JsonWriterContentsToBuffer();
+
+            WriteItemWithSeparatorIfNeeded();
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            this.Flush();
+
+            int charsNotProcessedFromPreviousChunk = 0;
+
+            for (int i = 0; i < value.Length; i += chunkSize)
+            {
+                int remainingChars = Math.Min(chunkSize, value.Length - i);
+                bool isFinalBlock = (i + remainingChars) == value.Length;
+                ReadOnlySpan<char> chunk = value.Slice(i - charsNotProcessedFromPreviousChunk, charsNotProcessedFromPreviousChunk + remainingChars);
+                int firstIndexToEscape = NeedsEscaping(chunk);
+
+                Debug.Assert(firstIndexToEscape >= -1 && firstIndexToEscape < value.Length);
+
+                if (firstIndexToEscape != -1)
+                {
+                    WriteEscapedStringChunk(chunk, firstIndexToEscape, isFinalBlock, out charsNotProcessedFromPreviousChunk);
+                }
+                else
+                {
+                    WriteStringChunk(chunk, isFinalBlock);
+                }
+
+                // Flush the buffer if needed
+                this.FlushIfBufferThresholdReached();
+            }
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            CheckIfSeparatorNeeded();
+
+            CheckIfAtManualValueArrayStart();
+        }
+
+        /// <summary>
+        /// Determines if any characters in the provided string span require escaping according to the specified encoder.
+        /// </summary>
+        /// <param name="value">The string span to analyze for characters needing escaping.</param>
+        /// <returns>
+        /// The index of the first character requiring escaping, or -1 if no characters need escaping or if the string span is empty.
+        /// </returns>
+        private unsafe int NeedsEscaping(ReadOnlySpan<char> value)
+        {
+            // Some implementations of JavaScriptEncoder.FindFirstCharacterToEncode may not accept
+            // null pointers and guard against that. Hence, check up-front to return -1.
+            if (value.IsEmpty)
+            {
+                return -1;
+            }
+
+            fixed (char* ptr = value)
+            {
+                return this.encoder.FindFirstCharacterToEncode(ptr, value.Length);
+            }
+        }
+
+        /// <summary>
+        /// Writes an escaped string chunk into the buffer.
+        /// </summary>
+        /// <param name="sourceChunk">The source chunk of the string to be escaped.</param>
+        /// <param name="firstIndexToEscape">The index of the first character that requires escaping.</param>
+        /// <param name="isFinalBlock">Indicates whether the chunk is the final block of the string.</param>
+        /// <remarks>
+        /// This method escapes characters within the provided string chunk that require escaping
+        /// according to the specified encoder. It allocates memory for the escaped string and handles
+        /// buffer management using either stack allocation or array pooling. Once the string is escaped,
+        /// it is written into the buffer. If the encoding operation fails, an exception is thrown. 
+        /// </remarks>
+        private void WriteEscapedStringChunk(ReadOnlySpan<char> sourceChunk, int firstIndexToEscape, bool isFinalBlock, out int preChunkNotProcessed)
+        {
+            char[] valueArray = null;
+            const int StackallocCharThreshold = 128;
+
+            int maxSize = firstIndexToEscape + 6 * (sourceChunk.Length - firstIndexToEscape);
+
+            Span<char> destination = maxSize <= StackallocCharThreshold
+                ? stackalloc char[maxSize]
+                : valueArray = ArrayPool<char>.Shared.Rent(maxSize);
+
+            preChunkNotProcessed = 0;
+
+            OperationStatus status = this.encoder.Encode(
+                   sourceChunk,
+                   destination,
+                   out int charsConsumed,
+                   out int charsWritten,
+                   isFinalBlock
+               );
+
+            Debug.Assert(status == OperationStatus.Done || status == OperationStatus.NeedMoreData);
+
+            preChunkNotProcessed = sourceChunk.Length - charsConsumed;
+            WriteStringChunk(destination.Slice(0, charsWritten), isFinalBlock);
+
+            if (valueArray != null)
+            {
+                ArrayPool<char>.Shared.Return(valueArray);
+            }
+        }
+
+        /// <summary>
+        /// Writes a chunk of the string into the buffer, converting it to UTF-8 encoding.
+        /// </summary>
+        /// <param name="chunk">The chunk of the string to be written into the buffer.</param>
+        /// <param name="isFinalBlock">Indicates whether the chunk is the final block of the string.</param>
+        /// <remarks>
+        /// This method converts the provided chunk of the string from UTF-16 encoding to UTF-8 encoding
+        /// and writes it into the buffer. It ensures that the buffer has sufficient space for the encoded
+        /// string and notifies the buffer writer of the write operation. This method assumes that the UTF-8
+        /// encoding does not exceed the maximum byte count specified by the UTF-8 encoding for the given
+        /// chunk of the string.
+        /// </remarks>
+        private void WriteStringChunk(ReadOnlySpan<char> chunk, bool isFinalBlock)
+        {
+            int maxUtf8Length = Encoding.UTF8.GetMaxByteCount(chunk.Length);
+
+            Span<byte> output = bufferWriter.GetSpan(maxUtf8Length);
+            OperationStatus status = Utf8.FromUtf16(chunk, output, out int charsRead, out int charsWritten, isFinalBlock);
+            Debug.Assert(status == OperationStatus.Done || status == OperationStatus.NeedMoreData);
+            Debug.Assert(charsRead == chunk.Length);
+
+            // notify the bufferWriter of the write
+            bufferWriter.Advance(charsWritten);
+        }
+
+        /// <summary>
+        /// Determines whether a separator should be written before the next value.
+        /// </summary>
+        /// <remarks>
+        /// This method checks the current writing context to decide whether a separator should be written
+        /// before the next value in the JSON output. It sets the flag indicating whether a separator should
+        /// be written based on conditions such as whether the writer is at the start of an array, writing
+        /// consecutive raw values at the start of an array, or if the writer is not currently in an array.
+        /// </remarks>
+        private void CheckIfSeparatorNeeded()
+        {
+            if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray || !this.IsInArray())
+            {
+                this.shouldWriteSeparator = true;
+            }
+        }
+
         public void WriteValue(byte[] value)
         {
-            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
+            }
+            else if (value.Length > bufferWriter.Capacity)
+            {
+                WriteByteValueInChunks(value.AsSpan());
             }
             else
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
-            
+
             this.FlushIfBufferThresholdReached();
+        }
+
+        /// <summary>
+        /// Writes the byte value represented by the provided ReadOnlySpan in chunks using Base64 encoding.
+        /// </summary>
+        /// <param name="value">The ReadOnlySpan containing the byte value to be written.</param>
+        private void WriteByteValueInChunks(ReadOnlySpan<byte> value)
+        {
+            this.CommitUtf8JsonWriterContentsToBuffer();
+
+            WriteItemWithSeparatorIfNeeded();
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            this.Flush();
+
+            int bytesNotWrittenFromPreviousChunk = 0;
+
+            for (int i = 0; i < value.Length; i += chunkSize)
+            {
+                int remainingChars = Math.Min(chunkSize, value.Length - i);
+                bool isFinalBlock = (i + remainingChars) == value.Length;
+
+                ReadOnlySpan<byte> chunk = value.Slice(i - bytesNotWrittenFromPreviousChunk, remainingChars + bytesNotWrittenFromPreviousChunk);
+
+                Base64EncodeAndWriteChunk(chunk, isFinalBlock, out bytesNotWrittenFromPreviousChunk);
+
+                this.FlushIfBufferThresholdReached();
+            }
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            CheckIfSeparatorNeeded();
+
+            CheckIfAtManualValueArrayStart();
+        }
+
+        /// <summary>
+        /// Encodes the specified chunk of bytes using Base64 encoding and writes the encoded data to the buffer writer.
+        /// </summary>
+        /// <param name="chunk">The chunk of bytes to be encoded.</param>
+        /// <param name="isFinalBlock">A boolean value indicating whether the chunk is the final block of data.</param>
+        /// <param name="bytesNotConsumed">An out parameter indicating the number of bytes from the previous chunk that were not processed.</param>
+        private void Base64EncodeAndWriteChunk(ReadOnlySpan<byte> chunk, bool isFinalBlock, out int bytesNotConsumed)
+        {
+            int encodingLength = Base64.GetMaxEncodedToUtf8Length(chunk.Length);
+            var output = this.bufferWriter.GetSpan(encodingLength);
+            bytesNotConsumed = 0;
+
+            OperationStatus status = Base64.EncodeToUtf8(chunk, output, out int consumed, out int written, isFinalBlock);
+
+            Debug.Assert(status == OperationStatus.Done || status == OperationStatus.NeedMoreData);
+
+            bytesNotConsumed = chunk.Length - consumed;
+
+            this.bufferWriter.Advance(written);
         }
 
         public void WriteValue(JsonElement value)
@@ -437,12 +674,38 @@ namespace Microsoft.OData.Json
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
-            if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray || !this.IsInArray())
-            {
-                this.shouldWriteSeparator = true;
-            }
+            CheckIfSeparatorNeeded();
 
             if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
+            {
+                this.isWritingConsecutiveRawValuesAtStartOfArray = true;
+            }
+
+            this.isWritingAtStartOfArray = false;
+        }
+
+        /// <summary>
+        /// Writes an item with a separator if needed, based on the context of being within an array and not writing at the start of the array.
+        /// </summary>
+        /// <remarks>
+        /// If the method is called within an array and it's not the first item being written, it places a separator before the value being written.
+        /// </remarks>
+        private void WriteItemWithSeparatorIfNeeded()
+        {
+            if (this.IsInArray() && !isWritingAtStartOfArray)
+            {
+                // Place a separator before the raw value if
+                // this is an array, unless this is the first item in the array.
+                this.bufferWriter.Write(itemSeparator.Slice(0, 1).Span);
+            }
+        }
+
+        // <summary>
+        /// Checks if the writer is at the start of a manual value array and updates the state accordingly.
+        /// </summary>
+        private void CheckIfAtManualValueArrayStart()
+        {
+            if(this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
             {
                 this.isWritingConsecutiveRawValuesAtStartOfArray = true;
             }
@@ -797,32 +1060,132 @@ namespace Microsoft.OData.Json
 
         public async Task WriteValueAsync(string value)
         {
-            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
+            }
+            else if (value.Length > bufferWriter.FreeCapacity)
+            {
+                await WriteStringValueInChunksAsync(value.AsMemory());
             }
             else
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteStringValue(value.ToString());
             }
 
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
+        /// <summary>
+        /// Writes a string value into the buffer in chunks asynchronously, handling escaping if necessary.
+        /// </summary>
+        /// <param name="value">The string value to write.</param>
+        /// <remarks>
+        /// This method writes the provided string value into the buffer in manageable chunks to avoid
+        /// excessive memory allocations and buffer overflows. If the string requires escaping, it is
+        /// processed accordingly to ensure correct JSON formatting.
+        /// </remarks>
+        private async ValueTask WriteStringValueInChunksAsync(ReadOnlyMemory<char> value)
+        {
+            this.CommitUtf8JsonWriterContentsToBuffer();
+
+            WriteItemWithSeparatorIfNeeded();
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            await this.FlushAsync();
+
+            int charsNotProcessedFromPreviousChunk = 0;
+
+            for (int i = 0; i < value.Length; i += chunkSize)
+            {
+                int remainingChars = Math.Min(chunkSize, value.Length - i);
+                bool isFinalBlock = (i + remainingChars) == value.Length;
+                ReadOnlyMemory<char> chunk = value.Slice(i - charsNotProcessedFromPreviousChunk, charsNotProcessedFromPreviousChunk + remainingChars);
+
+                int firstIndexToEscape = NeedsEscaping(chunk.Span);
+
+                Debug.Assert(firstIndexToEscape >= -1 && firstIndexToEscape < value.Length);
+
+                if (firstIndexToEscape != -1)
+                {
+                    WriteEscapedStringChunk(chunk.Span, firstIndexToEscape, isFinalBlock, out charsNotProcessedFromPreviousChunk);
+                }
+                else
+                {
+                    WriteStringChunk(chunk.Span, isFinalBlock);
+                }
+
+                // Flush the buffer if needed
+                await this.FlushIfBufferThresholdReachedAsync();
+            }
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            CheckIfSeparatorNeeded();
+
+            CheckIfAtManualValueArrayStart();
+        }
+
         public async Task WriteValueAsync(byte[] value)
         {
-            this.WriteSeparatorIfNecessary();
             if (value == null)
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
+            }
+            else if (value.Length > bufferWriter.Capacity)
+            {
+                await WriteByteValueInChunksAsync(value);
             }
             else
             {
+                this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
 
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Writes the byte value represented by the provided ReadOnlySpan in chunks using Base64 encoding.
+        /// </summary>
+        /// <param name="value">The ReadOnlySpan containing the byte value to be written.</param>
+        private async ValueTask WriteByteValueInChunksAsync(ReadOnlyMemory<byte> value)
+        {
+            this.CommitUtf8JsonWriterContentsToBuffer();
+
+            WriteItemWithSeparatorIfNeeded();
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            await FlushAsync().ConfigureAwait(false);
+
+            int bytesNotWrittenFromPreviousChunk = 0;
+
+            for (int i = 0; i < value.Length; i += chunkSize)
+            {
+                int remainingChars = Math.Min(chunkSize, value.Length - i);
+                bool isFinalBlock = (i + remainingChars) == value.Length;
+
+                ReadOnlyMemory<byte> chunk = value.Slice(i - bytesNotWrittenFromPreviousChunk, remainingChars + bytesNotWrittenFromPreviousChunk);
+
+                Base64EncodeAndWriteChunk(chunk.Span, isFinalBlock, out bytesNotWrittenFromPreviousChunk);
+
+                await FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            }
+
+            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+
+            // since we bypass the Utf8JsonWriter, we need to signal to other
+            // Write methods that a separator should be written first
+            CheckIfSeparatorNeeded();
+
+            CheckIfAtManualValueArrayStart();
         }
 
         public async Task WriteValueAsync(JsonElement value)
@@ -884,7 +1247,7 @@ namespace Microsoft.OData.Json
             }
         }
 
-#endregion
+        #endregion
 
     }
 }
