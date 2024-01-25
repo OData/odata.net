@@ -199,7 +199,7 @@ namespace Microsoft.OData.Evaluation
             return keyProperties;
         }
 
-        private static List<KeyValuePair<string, object>> GetPropertyValues(IEnumerable<IEdmStructuralProperty> properties, ODataResourceBase resource, IEdmStructuredType actualEntityType, bool isRequired)
+        private static List<KeyValuePair<string, object>> GetPropertyValues(IEnumerable<IEdmStructuralProperty> properties, ODataResourceBase resource, IEdmStructuredType actualResourceType, bool isRequired)
         {
             object primitiveValue;
             // Initialize capacity to 1 because this method is mostly called to get values of key properties
@@ -207,7 +207,7 @@ namespace Microsoft.OData.Evaluation
             List<KeyValuePair<string, object>> keys = new List<KeyValuePair<string, object>>(1);
             foreach (IEdmStructuralProperty property in properties)
             {
-                if (TryGetPrimitiveOrEnumPropertyValue(resource, property.Name, actualEntityType, isRequired, out primitiveValue))
+                if (TryGetPrimitiveOrEnumPropertyValue(resource, property.Name, actualResourceType, isRequired, out primitiveValue))
                 {
                     keys.Add(new KeyValuePair<string, object>(property.Name, primitiveValue));
                 }
