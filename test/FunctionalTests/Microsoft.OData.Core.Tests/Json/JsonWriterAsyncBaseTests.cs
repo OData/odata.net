@@ -295,6 +295,56 @@ namespace Microsoft.OData.Tests.Json
         }
 #endif
 
+        [Fact]
+        public async Task WritesLargeByteArraysCorrectly()
+        {
+            int inputLength = 1024 * 1024; // 1MB;
+            byte[] input = new byte[inputLength];
+            for (int i = 0; i < inputLength; i++)
+            {
+                input[i] = (byte)(i % 256);
+            }
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+
+                await jsonWriter.WriteValueAsync(input);
+                await jsonWriter.FlushAsync();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                string expected = Convert.ToBase64String(input);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal($"\"{expected}\"", rawOutput);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task WritesSimpleLargeStringsCorrectly()
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength);
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+
+                await jsonWriter.WriteValueAsync(input);
+                await jsonWriter.FlushAsync();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal($"\"{input}\"", rawOutput);
+                }
+            }
+        }
+
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make
