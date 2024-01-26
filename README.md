@@ -23,11 +23,11 @@ For more information about OData, please refer to the following resources:
 
 ## 2. Project structure
 
-The project currently has a  [master](https://github.com/OData/odata.net/tree/master) branch and three archived branches: [maintenance-6.x](https://github.com/OData/odata.net/tree/maintenance-6.x), [maintenance-5.x](https://github.com/OData/odata.net/tree/maintenance-5.x), and [maintenance-wcf-dataservice-v4](https://github.com/OData/odata.net/tree/maintenance-wcf-dataservice-v4).
+The project currently has a  [main](https://github.com/OData/odata.net/tree/main) branch and three archived branches: [maintenance-6.x](https://github.com/OData/odata.net/tree/maintenance-6.x), [maintenance-5.x](https://github.com/OData/odata.net/tree/maintenance-5.x), and [maintenance-wcf-dataservice-v4](https://github.com/OData/odata.net/tree/maintenance-wcf-dataservice-v4).
 
-**master branch:**
+**main branch:**
 
-The master branch is the active development branch for ODataV4 7.x. It produces libraries targeting .NET 4.5 as well as [.NET Standard 1.1 and 2.0](https://docs.microsoft.com/en-us/dotnet/articles/standard/library). The branch builds with Visual Studio 2019.
+The **main** branch is the active development branch for ODataV4 7.x. It produces libraries targeting .NET 4.5 as well as [.NET Standard 1.1 and 2.0](https://docs.microsoft.com/en-us/dotnet/articles/standard/library). The branch builds with Visual Studio 2019.
 
 For each profile above, it has the following libraries:
 
@@ -221,7 +221,7 @@ the `base=true` variable to the command, e.g.:
 crank --config benchmarks.yml --scenario ODataWriter --profile local --variable base=true
 ```
 
-This will cause the crank agent to clone the official repo and run the tests against the `master` branch.
+This will cause the crank agent to clone the official repo and run the tests against the `main` branch.
 
 You can specify a different branch, commit or tag using the `baseBranch` variable:
 
@@ -279,7 +279,7 @@ Please visit the [ODataLib docs](https://docs.microsoft.com/en-us/odata/) on doc
 
 ### 5.1 Contribution
 
-There are many ways for you to contribute to OData .NET. The easiest way is to participate in discussion of features and issues. You can also contribute by sending pull requests of features or bug fixes to us. Contribution to the documentations is also highly welcomed. Please refer to the [CONTRIBUTING.md](https://github.com/OData/odata.net/blob/master/.github/CONTRIBUTING.md) for more details.
+There are many ways for you to contribute to OData .NET. The easiest way is to participate in discussion of features and issues. You can also contribute by sending pull requests of features or bug fixes to us. Contribution to the documentations is also highly welcomed. Please refer to the [CONTRIBUTING.md](https://github.com/OData/odata.net/blob/main/.github/CONTRIBUTING.md) for more details.
 
 ### 5.2 Reporting Security Issues
 

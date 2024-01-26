@@ -45,4 +45,4 @@ git push --set-upstream origin $branchName
 
 Write-Host
 Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; create a PR for that branch by navigating to:"
-Write-Host -ForegroundColor Green "https://github.com/OData/odata.net/compare/master...$branchName"
+Write-Host -ForegroundColor Green "https://github.com/OData/odata.net/compare/main...$branchName"

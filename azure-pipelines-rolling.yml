@@ -6,11 +6,11 @@ trigger:
   batch: true
   branches:
     include:
-    - master
+    - main
    
 # Pull request (PR) triggers
 pr:
-- master
+- main
 
 jobs:
 
