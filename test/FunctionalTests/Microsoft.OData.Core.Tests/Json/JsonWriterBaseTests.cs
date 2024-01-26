@@ -623,7 +623,7 @@ namespace Microsoft.OData.Tests.Json
                 .Replace(@"\u002b", "+");
         }
 
-        private byte[] GenerateByteArray(int length)
+        private static byte[] GenerateByteArray(int length)
         {
             byte[] byteArray = new byte[length];
             for (int i = 0; i < length; i++)
