@@ -12,7 +12,7 @@ schedules:
   displayName: midnightly build
   branches:
    include:
-    - master
+    - main
 
 jobs:
 
