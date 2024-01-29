@@ -70,9 +70,6 @@ namespace JsonWriterBenchmarks
             // multiple writes to increase benchmark duration
             await WritePayloadAsync(data);
             await WritePayloadAsync(data);
-            await WritePayloadAsync(data);
-            await WritePayloadAsync(data);
-            await WritePayloadAsync(data);
         }
 
         [Benchmark]
@@ -91,8 +88,6 @@ namespace JsonWriterBenchmarks
         [BenchmarkCategory("ToFile")]
         public async Task WriteToFileWithLargeValuesAsync()
         {
-            await WritePayloadAsync(dataWithLargeValues);
-            await WritePayloadAsync(dataWithLargeValues);
             await WritePayloadAsync(dataWithLargeValues);
         }
 
