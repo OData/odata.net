@@ -25,13 +25,15 @@ namespace ExperimentsLib
                     Id = i,
                     Name = $"Cust{i} \uD800\udc05 \u00e4",
                     Emails = new List<string> { $"emailA@mailer.com{i}", $"emailB@mailer.com{i}" },
+                    Bio = $"This is a bio {i}",
+                    Content = new byte[] { 1, 2, 3, 4, (byte)(i % 256) },
                     HomeAddress = new Address { City = $"City{i} \uD800\udc05 \u00e4", Misc = $"This is a test{i}", Street = $"Street{i}\n\"escape this\"" },
                     Addresses = new List<Address>
                     {
                         new Address { City = $"CityA{i}", Misc = $"This is a test A{i}", Street = $"StreetA{i}" },
                         new Address { City = $"CityB{i}", Misc = $"This is a test B{i}", Street = $"StreetB{i}" }
                     }
-                });
+                }); ;
             }
 
             return data;

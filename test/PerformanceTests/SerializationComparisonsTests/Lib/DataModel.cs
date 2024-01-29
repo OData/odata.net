@@ -4,7 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+using System.Buffers;
+using System.Buffers.Text;
 using System.Collections.Generic;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
@@ -14,6 +19,11 @@ namespace ExperimentsLib
         public int Id { get; set; }
         public string Name { get; set; }
         public List<string> Emails { get; set; }
+        public string Bio { get; set; }
+
+        [JsonConverter(typeof(Base64Converter))]
+        public byte[] Content { get; set; }
+
         public Address HomeAddress { get; set; }
         public List<Address> Addresses { get; set; }
     }
@@ -47,6 +57,8 @@ namespace ExperimentsLib
             customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
             customer.AddStructuralProperty("Emails",
                 new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(isNullable: true))));
+            customer.AddStructuralProperty("Bio", EdmPrimitiveTypeKind.String);
+            customer.AddStructuralProperty("Content", EdmPrimitiveTypeKind.Binary);
             customer.AddStructuralProperty("HomeAddress", new EdmComplexTypeReference(addressType, isNullable: false));
             customer.AddStructuralProperty("Addresses",
                 new EdmCollectionTypeReference(
@@ -58,6 +70,20 @@ namespace ExperimentsLib
             model.AddElement(container);
 
             return model;
+        }
+    }
+
+    class Base64Converter : JsonConverter<byte[]>
+    {
+        public override byte[] Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override void Write(Utf8JsonWriter writer, byte[] value, JsonSerializerOptions options)
+        {
+            string encoded = Convert.ToBase64String(value);
+            writer.WriteStringValue(encoded);
         }
     }
 }

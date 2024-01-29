@@ -35,6 +35,7 @@ namespace ExperimentsLib
         public Task WritePayloadAsync(IEnumerable<Customer> payload, Stream stream, bool includeRawValues)
         {
             var settings = new ODataMessageWriterSettings();
+            settings.EnableMessageStreamDisposal = false;
 
             settings.ODataUri = new ODataUri
             {
@@ -80,6 +81,16 @@ namespace ExperimentsLib
                                 Items = customer.Emails,
                                 TypeName = "Collection(Edm.String)"
                             }
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Bio",
+                            Value = customer.Bio
+                        },
+                        new ODataProperty
+                        {
+                            Name = "Content",
+                            Value = customer.Content
                         }
                     }
                 };
