@@ -38,7 +38,7 @@ namespace JsonWriterBenchmarks
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
             // contains with fields with 1MB+ values each
-            dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(100);
+            dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(10);
             model = DataModel.GetEdmModel();
         }
 
@@ -77,9 +77,6 @@ namespace JsonWriterBenchmarks
         public async Task WriteWithRawValues()
         {
             // multiple writes to increase benchmark duration
-            await WritePayloadAsync(data, includeRawValues: true);
-            await WritePayloadAsync(data, includeRawValues: true);
-            await WritePayloadAsync(data, includeRawValues: true);
             await WritePayloadAsync(data, includeRawValues: true);
             await WritePayloadAsync(data, includeRawValues: true);
         }
