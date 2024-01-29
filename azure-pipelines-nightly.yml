@@ -13,6 +13,7 @@ schedules:
   branches:
    include:
     - main
+    - dev-8.x
 
 jobs:
 
