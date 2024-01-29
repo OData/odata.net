@@ -82,8 +82,19 @@ namespace ExperimentsLib
 
         public override void Write(Utf8JsonWriter writer, byte[] value, JsonSerializerOptions options)
         {
-            string encoded = Convert.ToBase64String(value);
-            writer.WriteStringValue(encoded);
+            byte[] encodedArray = null;
+            int encodedLength = Base64.GetMaxEncodedToUtf8Length(value.Length);
+            Span<byte> encoded = encodedLength <= 256 ?
+                stackalloc byte[encodedLength] :
+                encodedArray = ArrayPool<byte>.Shared.Rent(encodedLength);
+
+            Base64.EncodeToUtf8(value, encoded, out int consumed, out int written);
+            writer.WriteStringValue(encoded.Slice(0, written));
+
+            if (encodedArray != null)
+            {
+                ArrayPool<byte>.Shared.Return(encodedArray);
+            }
         }
     }
 }
