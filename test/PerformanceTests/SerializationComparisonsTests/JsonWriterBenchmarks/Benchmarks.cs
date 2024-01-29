@@ -21,6 +21,7 @@ namespace JsonWriterBenchmarks
     {
         private readonly static WriterCollection<IEnumerable<Customer>> writerCollection = DefaultWriterCollection.Create();
         private readonly IEnumerable<Customer> data;
+        private readonly IEnumerable<Customer> dataWithLargeValues;
         private readonly IEdmModel model;
 
         private string filePath;
@@ -36,6 +37,8 @@ namespace JsonWriterBenchmarks
         {
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
+            // contains with fields with 1MB+ values each
+            dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(100);
             model = DataModel.GetEdmModel();
         }
 
@@ -65,11 +68,11 @@ namespace JsonWriterBenchmarks
         public async Task WriteToFileAsync()
         {
             // multiple writes to increase benchmark duration
-            await WritePayloadAsync();
-            await WritePayloadAsync();
-            await WritePayloadAsync();
-            await WritePayloadAsync();
-            await WritePayloadAsync();
+            await WritePayloadAsync(data);
+            await WritePayloadAsync(data);
+            await WritePayloadAsync(data);
+            await WritePayloadAsync(data);
+            await WritePayloadAsync(data);
         }
 
         [Benchmark]
@@ -77,17 +80,26 @@ namespace JsonWriterBenchmarks
         public async Task WriteWithRawValues()
         {
             // multiple writes to increase benchmark duration
-            await WritePayloadAsync(includeRawValues: true);
-            await WritePayloadAsync(includeRawValues: true);
-            await WritePayloadAsync(includeRawValues: true);
-            await WritePayloadAsync(includeRawValues: true);
-            await WritePayloadAsync(includeRawValues: true);
+            await WritePayloadAsync(data, includeRawValues: true);
+            await WritePayloadAsync(data, includeRawValues: true);
+            await WritePayloadAsync(data, includeRawValues: true);
+            await WritePayloadAsync(data, includeRawValues: true);
+            await WritePayloadAsync(data, includeRawValues: true);
         }
 
-        private async Task WritePayloadAsync(bool includeRawValues = false)
+        [Benchmark]
+        [BenchmarkCategory("ToFile")]
+        public async Task WriteToFileWithLargeValuesAsync()
+        {
+            await WritePayloadAsync(dataWithLargeValues);
+            await WritePayloadAsync(dataWithLargeValues);
+            await WritePayloadAsync(dataWithLargeValues);
+        }
+
+        private async Task WritePayloadAsync(IEnumerable<Customer> payload, bool includeRawValues = false)
         {
             using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, share: FileShare.ReadWrite);
-            await writer.WritePayloadAsync(data, outputStream, includeRawValues);
+            await writer.WritePayloadAsync(payload, outputStream, includeRawValues);
         }
     }
 }

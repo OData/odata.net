@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
-using System.Text.Json;
 using Microsoft.OData.Edm;
 
 namespace ExperimentsLib
@@ -29,14 +28,11 @@ namespace ExperimentsLib
                 ("JsonSerializer", new JsonSerializerPayloadWriter()),
 
                 ("ODataMessageWriter", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage())),
-                ("ODataMessageWriter-Utf16", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage("UTF-16"))),
                 ("ODataMessageWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
                 ("ODataMessageWriter-NoOp", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateNoopMessage())),
 
                 ("ODataMessageWriter-Utf8JsonWriter", new ODataMessageWriterPayloadWriter(model,
                     stream => stream.CreateUtf8JsonWriterMessage())),
-                ("ODataMessageWriter-Utf8JsonWriter-Utf16", new ODataMessageWriterPayloadWriter(model,
-                    stream => stream.CreateUtf8JsonWriterMessage("UTF-16"))),
                 ("ODataMessageWriter-Utf8JsonWriter-NoValidation", new ODataMessageWriterPayloadWriter(model,
                     stream => stream.CreateUtf8JsonWriterMessage(), enableValidation: false)),
 
