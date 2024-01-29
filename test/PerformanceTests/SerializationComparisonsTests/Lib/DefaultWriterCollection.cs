@@ -29,7 +29,6 @@ namespace ExperimentsLib
 
                 ("ODataMessageWriter", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage())),
                 ("ODataMessageWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
-                ("ODataMessageWriter-NoOp", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateNoopMessage())),
 
                 ("ODataMessageWriter-Utf8JsonWriter", new ODataMessageWriterPayloadWriter(model,
                     stream => stream.CreateUtf8JsonWriterMessage())),
@@ -40,8 +39,6 @@ namespace ExperimentsLib
                     stream => stream.CreateJsonWriterMessage())),
                 ("ODataMessageWriter-NoValidation-Async", new ODataMessageWriterAsyncPayloadWriter(model,
                     stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
-                ("ODataMessageWriter-NoOp-Async", new ODataMessageWriterAsyncPayloadWriter(model,
-                    stream => stream.CreateNoopMessage())),
 
                 ("ODataMessageWriter-Utf8JsonWriter-Async", new ODataMessageWriterAsyncPayloadWriter(model,
                     stream => stream.CreateUtf8JsonWriterMessage())),
