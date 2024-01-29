@@ -28,22 +28,6 @@ namespace ExperimentsLib
             writers.AddWriters(
                 ("JsonSerializer", new JsonSerializerPayloadWriter()),
 
-                ("Utf8JsonWriter-Direct-ArrayPool-NoValidation", new Utf8JsonWriterDirectPayloadWriterWithArrayPool(
-                    bufferWriter => new Utf8JsonWriter(bufferWriter, new JsonWriterOptions { SkipValidation = true }))),
-
-                ("NoOpWriter-Direct", new ODataJsonWriterDirectPayloadWriter(
-                    stream => new NoopJsonWriter())),
-
-                ("ODataUtf8JsonWriter-Direct", new ODataJsonWriterDirectPayloadWriter(
-                    stream => stream.CreateODataUtf8JsonWriter())),
-                ("ODataUtf8JsonWriter-Direct-Async", new ODataJsonWriterAsyncDirectPayloadWriter(
-                    stream => stream.CreateODataUtf8JsonWriterAsync())),
-
-                ("ODataJsonWriter-Direct", new ODataJsonWriterDirectPayloadWriter(
-                    stream => stream.CreateODataJsonWriter())),
-                ("ODataJsonWriter-Direct-Async", new ODataJsonWriterAsyncDirectPayloadWriter(
-                    stream => stream.CreateODataJsonWriterAsync())),
-
                 ("ODataMessageWriter", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage())),
                 ("ODataMessageWriter-Utf16", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage("UTF-16"))),
                 ("ODataMessageWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
