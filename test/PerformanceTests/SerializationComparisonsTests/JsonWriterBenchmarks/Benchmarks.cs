@@ -23,6 +23,7 @@ namespace JsonWriterBenchmarks
         private readonly IEnumerable<Customer> data;
         private readonly IEnumerable<Customer> dataWithLargeValues;
         private readonly IEdmModel model;
+        private Stream outputStream;
 
         private string filePath;
         private IPayloadWriter<IEnumerable<Customer>> writer;
@@ -38,7 +39,7 @@ namespace JsonWriterBenchmarks
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
             // contains with fields with 1MB+ values each
-            dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(10);
+            dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(30);
             model = DataModel.GetEdmModel();
         }
 
@@ -47,11 +48,13 @@ namespace JsonWriterBenchmarks
         {
             writer = writerCollection.GetWriter(WriterName);
             filePath = Path.GetTempFileName();
+            outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, share: FileShare.ReadWrite);
         }
 
         [GlobalCleanup]
         public void Cleanup()
         {
+            outputStream.Dispose();
             File.Delete(filePath);
         }
 
@@ -90,7 +93,7 @@ namespace JsonWriterBenchmarks
 
         private async Task WritePayloadAsync(IEnumerable<Customer> payload, bool includeRawValues = false)
         {
-            using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, share: FileShare.ReadWrite);
+            //using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, share: FileShare.ReadWrite);
             await writer.WritePayloadAsync(payload, outputStream, includeRawValues);
         }
     }
