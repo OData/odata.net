@@ -58,7 +58,7 @@ namespace ExperimentsLib
                         new Address { City = $"CityA{i}", Misc = $"This is a test A{i}", Street = $"StreetA{i}" },
                         new Address { City = $"CityB{i}", Misc = $"This is a test B{i}", Street = $"StreetB{i}" }
                     }
-                }); ;
+                });
             }
 
             return data;
