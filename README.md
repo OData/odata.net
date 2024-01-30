@@ -38,6 +38,10 @@ For each profile above, it has the following libraries:
 
 For these libraries, we accept [issue reports](https://github.com/OData/odata.net/issues) and welcome contributions through [pull requests](https://github.com/OData/odata.net/pulls).
 
+**dev-8.x branch:**
+
+The `dev-8.x` branch is the active development branch for ODataV4 8.x.
+
 **maintenance-6.x branch:** (maintenance mode)
 
 The maintenance-6.x branch includes the .NET libraries for ODataV4 6.x maintenance releases.
