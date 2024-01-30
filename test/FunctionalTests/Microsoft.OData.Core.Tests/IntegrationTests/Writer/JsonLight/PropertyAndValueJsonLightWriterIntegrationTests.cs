@@ -113,7 +113,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 "]," +
                 "\"FloatNumbers\":[" +
                 "1," +
-#if NETCOREAPP3_1
+#if NETCOREAPP
                 "-3.4028235E+38," +
                 "3.4028235E+38," +
 #else

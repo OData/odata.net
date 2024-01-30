@@ -939,7 +939,7 @@ namespace Microsoft.OData.Tests.UriParser
             Uri url = new Uri("http://host/Paintings?$compute=nonsense as");
             ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, url);
             Action action = () => parser.ParseCompute();
-#if NETCOREAPP3_1
+#if NETCOREAPP
             action.Throws<ArgumentNullException>("Value cannot be null or empty. (Parameter 'alias')");
 #else
              action.Throws<ArgumentNullException>("Value cannot be null or empty.\r\nParameter name: alias");

@@ -4,8 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0
-
+#if NETCOREAPP
 namespace Microsoft.OData.Edm.Csdl
 {
     /// <summary>

@@ -140,10 +140,17 @@ namespace Microsoft.OData.Client.Tests.Serialization
                         Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
 
                     // Assert
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#else
                     await Assert.ThrowsAsync<OperationCanceledException>(async () =>
                     {
                         await getResponseTask;
                     });
+#endif
                 }
             }
         }
@@ -174,10 +181,17 @@ namespace Microsoft.OData.Client.Tests.Serialization
                         Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
 
                     // Assert
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#else
                     await Assert.ThrowsAsync<OperationCanceledException>(async () =>
                     {
                         await getResponseTask;
                     });
+#endif
                 }
             }
         }

@@ -258,7 +258,7 @@ namespace Microsoft.OData.Tests
             responseMessage.SetHeader("Content-Type", "application/json");
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
 
-#if NETCOREAPP3_1 || NETCOREAPP2_1
+#if NETCOREAPP
             IEdmModel model = reader.ReadMetadataDocument();
 
             IEdmEntityType customerType = model.FindDeclaredType("NS.Customer") as IEdmEntityType;

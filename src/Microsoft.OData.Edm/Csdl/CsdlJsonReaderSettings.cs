@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0
+#if NETCOREAPP
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl

@@ -1666,7 +1666,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmFloatingConstant(3.14f));
 
-#if NETCOREAPP3_1
+#if NETCOREAPP
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
                 @"<Annotation Term=""UI.FloatWidth"" Float=""3.140000104904175"" />");
