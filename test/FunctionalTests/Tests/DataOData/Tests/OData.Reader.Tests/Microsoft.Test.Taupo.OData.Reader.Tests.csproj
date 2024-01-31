@@ -3,7 +3,7 @@
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>     
     <AssemblyName>Microsoft.Test.Taupo.OData.Reader.Tests</AssemblyName>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

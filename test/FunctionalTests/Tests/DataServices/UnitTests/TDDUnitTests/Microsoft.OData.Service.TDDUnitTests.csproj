@@ -5,7 +5,7 @@
     <TransparentAssembly>true</TransparentAssembly>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
      <NoWarn>3016;472</NoWarn>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

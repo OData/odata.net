@@ -6,7 +6,7 @@
     <RootNamespace>Microsoft.Test.OData.Services.CSDSCReferences</RootNamespace>
     <TargetFrameworkFolderName>Desktop</TargetFrameworkFolderName>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

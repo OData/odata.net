@@ -2,7 +2,7 @@
   <PropertyGroup> 
     <NoWarn>;1699;1570;1572;1573;1591;3005;3003;3008;3016;3001;3002;3009;0618;0168;0169;1684</NoWarn>
     <AssemblyName>Microsoft.Test.KoKoMo</AssemblyName> 
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>

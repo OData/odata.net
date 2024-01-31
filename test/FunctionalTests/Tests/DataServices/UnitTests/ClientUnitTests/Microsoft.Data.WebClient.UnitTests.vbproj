@@ -7,7 +7,7 @@
     <OptionInfer>On</OptionInfer>
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <NoWarn>40000,40008</NoWarn>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

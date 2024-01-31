@@ -12,7 +12,7 @@
     <DefineConstants>$(DefineConstants);TRACE;DEBUG;DBG;_DEBUG;CODE_ANALYSIS_BASELINE;</DefineConstants>   
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

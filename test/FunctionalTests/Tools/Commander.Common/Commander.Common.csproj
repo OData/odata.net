@@ -23,7 +23,7 @@
     <DefineConstants>$(DefineConstants);MICROSOFT_ASTORIA</DefineConstants>   
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <DocumentationFile>CsdlToWorkspaceGenerator.xml</DocumentationFile>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <StartAction>Project</StartAction>
     <IsWebBootstrapper>false</IsWebBootstrapper>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>

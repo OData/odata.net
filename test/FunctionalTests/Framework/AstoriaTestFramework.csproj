@@ -12,7 +12,7 @@
     <PublishMetaAssemblyToSDK>false</PublishMetaAssemblyToSDK> 
     <DefineConstants>$(DefineConstants);CODE_ANALYSIS_BASELINE;MICROSOFT_ASTORIA;ClientFramework</DefineConstants>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
