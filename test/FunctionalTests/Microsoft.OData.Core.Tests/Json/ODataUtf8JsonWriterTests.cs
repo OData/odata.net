@@ -455,6 +455,58 @@ namespace Microsoft.OData.Tests.Json
 
         #endregion Custom JavaScriptEncoder
 
+        #region Large strings
+        [Fact]
+        public void WritesLargeStringsWithEscapingCorrectly()
+        {
+            string baseString = "Foo 𐀅 ä Foo \nBar\t\"Baz\" Foo ия <script>";
+            string baseExpectedString = "Foo \\uD800\\uDC05 \\u00E4 Foo \\nBar\\t\\u0022Baz\\u0022 Foo \\u0438\\u044F \\u003Cscript\\u003E";
+            var inputBuilder = new StringBuilder();
+            var expectedBuilder = new StringBuilder();
+
+            expectedBuilder.Append("\"");
+            while (inputBuilder.Length < (1024 * 1024))
+            {
+                inputBuilder.Append(baseString);
+                expectedBuilder.Append(baseExpectedString);
+            }
+            expectedBuilder.Append("\"");
+
+            var input = inputBuilder.ToString();
+            var expected = expectedBuilder.ToString();
+
+            this.writer.WritePrimitiveValue(input);
+
+            Assert.Equal(expected, this.ReadStream());
+        }
+
+        [Fact]
+        public void WritesLargeStringsWithEscapingWithRelaxedEncoderCorrectly()
+        {
+            string baseString = "test<>\"ия\n\t";
+            string baseExpectedString = "test<>\\\"ия\\n\\t";
+            var inputBuilder = new StringBuilder();
+            var expectedBuilder = new StringBuilder();
+
+            expectedBuilder.Append("\"");
+            while (inputBuilder.Length < (1024 * 1024))
+            {
+                inputBuilder.Append(baseString);
+                expectedBuilder.Append(baseExpectedString);
+            }
+            expectedBuilder.Append("\"");
+
+            var input = inputBuilder.ToString();
+            var expected = expectedBuilder.ToString();
+
+            this.writer = new ODataUtf8JsonWriter(this.stream, false, Encoding.UTF8, encoder: JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            this.writer.WritePrimitiveValue(input);
+
+            Assert.Equal(expected, this.ReadStream());
+        }
+
+        #endregion
+
         [Fact]
         public void FlushesWhenBufferThresholdIsReached()
         {

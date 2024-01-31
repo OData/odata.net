@@ -10,9 +10,11 @@ namespace TestServer.Controllers
     public class CustomersController : ControllerBase
     {
         [HttpGet("customers/{writer}")]
-        public IEnumerable<Customer> Get([FromQuery] int? count)
+        public IEnumerable<Customer> Get([FromQuery] int? count, [FromQuery] bool? largeFields)
         {
-            var data = CustomerDataSet.GetCustomers(count ?? 100);
+            var data = largeFields == true ?
+                CustomerDataSet.GetDataWithLargeFields(count ?? 100)
+                : CustomerDataSet.GetCustomers(count ?? 100);
             return data;
         }
     }

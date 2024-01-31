@@ -34,7 +34,6 @@ namespace ExperimentTests
             var writer = writers.GetWriter(writerName);
 
             await writer.WritePayloadAsync(customerData, stream, includeRawValues: true);
-
             using var expectedReader = new StreamReader("ExpectedOutput.txt");
             string expectedOutput = await expectedReader.ReadToEndAsync();
             stream.Seek(0, SeekOrigin.Begin);
