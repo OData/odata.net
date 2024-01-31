@@ -37,7 +37,7 @@ namespace Microsoft.OData.UriParser
         private readonly IEdmNavigationSource navigationSource;
 
         /// <summary>
-        /// Construct a Segment that represents a key lookup.
+        /// Constructs a Segment that represents a key lookup.
         /// </summary>
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
         /// <param name="edmType">The type of the item this key returns.</param>
@@ -45,14 +45,30 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="ODataException">Throws if the input entity set is not related to the input type.</exception>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Using key value pair is exactly what we want here.")]
         public KeySegment(IEnumerable<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource)
+            : this(keys.ToList(), edmType, navigationSource, verifyNavigationSourceType: true)
         {
-            this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys.ToList());
+        }
+
+        /// <summary>
+        /// Constructs a segment that represents a key lookup.
+        /// </summary>
+        /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
+        /// <param name="edmType">The type of the item this key returns.</param>
+        /// <param name="navigationSource">The navigation source that this key is used to search.</param>
+        /// <param name="verifyNavigationSourceType">Whether to verify that the entity set is related to the input type.</param>
+        /// <remarks>
+        /// The constructor does not copy the input <paramref name="keys"/> should not use the keys collection after calling this constructor.
+        /// </remarks>
+        /// <exception cref="ODataException">When <paramref name="verifyNavigationSourceType"/> is true, throws if the input entity set is not related to the input type.</exception>
+        internal KeySegment(IList<KeyValuePair<string, object>> keys, IEdmEntityType edmType, IEdmNavigationSource navigationSource, bool verifyNavigationSourceType = true)
+        {
+            this.keys = new ReadOnlyCollection<KeyValuePair<string, object>>(keys);
             this.edmType = edmType;
             this.navigationSource = navigationSource;
             this.SingleResult = true;
 
             // Check that the type they gave us is related to the type of the set
-            if (navigationSource != null)
+            if (verifyNavigationSourceType && navigationSource != null)
             {
                 ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "KeySegments");
             }
@@ -63,7 +79,7 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Construct a Segment that represents a key lookup.
+        /// Constructs a Segment that represents a key lookup.
         /// </summary>
         /// <param name="previous">The segment to apply the key to.</param>
         /// <param name="keys">The set of key property names and the values to be used in searching for the given item.</param>
