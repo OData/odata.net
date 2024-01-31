@@ -36,24 +36,14 @@ Toolchain=InProcessEmitToolchain  InvocationCount=1  UnrollFactor=1
 |           Method |                                           WriterName |       Mean |     Error |    StdDev |     Median |      Gen 0 |     Gen 1 |  Allocated |
 ----------------- |----------------------------------------------------- |-----------:|----------:|----------:|-----------:|-----------:|----------:|-----------:|
  WriteToFileAsync |                                       JsonSerializer |  31.501 ms | 0.6233 ms | 1.0916 ms |  30.733 ms |          - |         - |      12 KB |
- WriteToFileAsync |                                    NoOpWriter-Direct |   1.248 ms | 0.0125 ms | 0.0117 ms |   1.250 ms |          - |         - |       3 KB |
- WriteToFileAsync |                               ODataJsonWriter-Direct |  34.767 ms | 0.2421 ms | 0.2146 ms |  34.753 ms |  1000.0000 |         - |   6,676 KB |
- WriteToFileAsync |                         ODataJsonWriter-Direct-Async | 185.872 ms | 0.8463 ms | 0.7502 ms | 185.852 ms |  8000.0000 |         - |  48,697 KB |
  WriteToFileAsync |                                   ODataMessageWriter | 281.088 ms | 0.5729 ms | 0.5078 ms | 280.970 ms | 41000.0000 |         - | 254,692 KB |
  WriteToFileAsync |                             ODataMessageWriter-Async | 907.453 ms | 4.1577 ms | 3.4718 ms | 906.944 ms | 66000.0000 | 1000.0000 | 406,552 KB |
- WriteToFileAsync |                              ODataMessageWriter-NoOp | 229.170 ms | 0.5146 ms | 0.4814 ms | 229.286 ms | 40000.0000 |         - | 248,033 KB |
- WriteToFileAsync |                        ODataMessageWriter-NoOp-Async | 368.397 ms | 0.7569 ms | 0.7080 ms | 368.138 ms | 44000.0000 |         - | 272,260 KB |
  WriteToFileAsync |                      ODataMessageWriter-NoValidation | 245.621 ms | 0.5507 ms | 0.4881 ms | 245.605 ms | 37000.0000 |         - | 231,252 KB |
  WriteToFileAsync |                ODataMessageWriter-NoValidation-Async | 860.340 ms | 2.2663 ms | 2.1199 ms | 860.096 ms | 62000.0000 | 1000.0000 | 382,899 KB |
- WriteToFileAsync |                             ODataMessageWriter-Utf16 | 290.900 ms | 0.3936 ms | 0.3681 ms | 290.847 ms | 41000.0000 |         - | 254,686 KB |
  WriteToFileAsync |                    ODataMessageWriter-Utf8JsonWriter | 268.592 ms | 0.5407 ms | 0.5058 ms | 268.590 ms | 40000.0000 | 1000.0000 | 248,268 KB |
  WriteToFileAsync |              ODataMessageWriter-Utf8JsonWriter-Async | 480.797 ms | 0.7170 ms | 0.6707 ms | 480.779 ms | 44000.0000 | 1000.0000 | 273,436 KB |
  WriteToFileAsync |       ODataMessageWriter-Utf8JsonWriter-NoValidation | 232.998 ms | 0.2320 ms | 0.2057 ms | 232.957 ms | 36000.0000 | 1000.0000 | 224,828 KB |
  WriteToFileAsync | ODataMessageWriter-Utf8JsonWriter-NoValidation-Async | 434.364 ms | 0.4606 ms | 0.4309 ms | 434.374 ms | 40000.0000 | 1000.0000 | 249,996 KB |
- WriteToFileAsync |              ODataMessageWriter-Utf8JsonWriter-Utf16 | 273.423 ms | 0.3096 ms | 0.2896 ms | 273.425 ms | 40000.0000 | 1000.0000 | 248,269 KB |
- WriteToFileAsync |                           ODataUtf8JsonWriter-Direct |  21.348 ms | 0.0488 ms | 0.0433 ms |  21.350 ms |          - |         - |     241 KB |
- WriteToFileAsync |                     ODataUtf8JsonWriter-Direct-Async |  44.466 ms | 0.3865 ms | 0.3426 ms |  44.554 ms |          - |         - |     520 KB |
- WriteToFileAsync |         Utf8JsonWriter-Direct-ArrayPool-NoValidation |  18.642 ms | 0.0550 ms | 0.0514 ms |  18.639 ms |          - |         - |      29 KB |
 
 By default, there's a filter applied that only runs the "ToFile" tests. If you want to run the in-memory tests, or apply a different filter, you can pass the `filter` variable manually to the `crank` command:
 
