@@ -38,7 +38,8 @@ namespace JsonWriterBenchmarks
         {
             // the written output will be about 1.45MB of JSON text
             data = CustomerDataSet.GetCustomers(5000);
-            // contains with fields with 1MB+ values each
+            // contains fields with 1MB+ values each
+
             dataWithLargeValues = CustomerDataSet.GetDataWithLargeFields(30);
             model = DataModel.GetEdmModel();
         }
