@@ -94,7 +94,6 @@ namespace JsonWriterBenchmarks
 
         private async Task WritePayloadAsync(IEnumerable<Customer> payload, bool includeRawValues = false)
         {
-            //using var outputStream = new FileStream(filePath, FileMode.Create, FileAccess.Write, share: FileShare.ReadWrite);
             await writer.WritePayloadAsync(payload, outputStream, includeRawValues);
         }
     }
