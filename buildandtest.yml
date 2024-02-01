@@ -2,14 +2,10 @@ steps:
 - task: NuGetToolInstaller@0
   inputs:
     versionSpec: '6.5.0'
-
-- task: UseDotNet@2
-  inputs:
-    version: '1.0.4'
     
 - task: UseDotNet@2
   inputs:
-    version: '2.1.3'
+    version: '8.x'
  
 - task: PowerShell@2
   inputs:
@@ -21,13 +17,10 @@ steps:
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
 
-- task: UseDotNet@2
-  inputs:
-    version: '2.1.x'
 
 - task: UseDotNet@2
   inputs:
-    version: '3.1.x'
+    version: '8.x'
 
 
 - task: DotNetCoreCLI@2
