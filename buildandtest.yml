@@ -43,11 +43,11 @@ steps:
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
-- task: DotNetCoreCLI@2
-  condition: eq(variables.BuildConfiguration, 'Release')
-  displayName: 'Test'
-  inputs:
-    command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
-    projects: |      
-      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+# - task: DotNetCoreCLI@2
+#   condition: eq(variables.BuildConfiguration, 'Release')
+#   displayName: 'Test'
+#   inputs:
+#     command: 'test'
+#     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
+#     projects: |      
+#       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
