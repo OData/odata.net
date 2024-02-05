@@ -33,7 +33,7 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+     $(Build.SourcesDirectory)\sln\OData.sln
 
 - task: DotNetCoreCLI@2
   displayName: 'Test'
