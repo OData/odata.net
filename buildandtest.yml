@@ -41,7 +41,7 @@ steps:
     command: 'test'
     arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+     $(Build.SourcesDirectory)\sln\OData.sln
 
 # - task: DotNetCoreCLI@2
 #   condition: eq(variables.BuildConfiguration, 'Release')
