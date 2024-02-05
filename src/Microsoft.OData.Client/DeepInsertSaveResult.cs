@@ -420,7 +420,8 @@ namespace Microsoft.OData.Client
             OperationResponse response = this.CreateOperationResponse(entry, isTopLevelDescriptor, descriptor, parentOperationResponse);
 
             List<Descriptor> relatedDescriptors = this.BulkUpdateGraph.GetRelatedDescriptors(descriptor);
-            int currentRelatedIndex = 0;
+
+            int currentRelatedIndex = 0; // Keep track of the index of the current related Descriptor we are trying to match with the entries in NestedItems
 
             foreach (IMaterializerState nestedItem in entry?.NestedItems)
             {
