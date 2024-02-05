@@ -28,7 +28,7 @@
     <DelaySign>false</DelaySign>
   </PropertyGroup>
 
-  <Import Project="..\Build.props"/>
+  <Import Project="..\Build.props" />
 
   <ItemGroup>
     <Compile Remove="Properties\AssemblyInfo.cs" />
@@ -39,7 +39,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
+     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
    
   <ItemGroup>
