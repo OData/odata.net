@@ -378,7 +378,7 @@ namespace Microsoft.OData.Json
                 this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
             }
-            else if (value.Length > bufferWriter.FreeCapacity)
+            else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
                 WriteStringValueInChunks(value.AsSpan());
             }
@@ -558,7 +558,7 @@ namespace Microsoft.OData.Json
                 this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
             }
-            else if (value.Length > bufferWriter.Capacity)
+            else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
                 WriteByteValueInChunks(value.AsSpan());
             }
@@ -1065,7 +1065,7 @@ namespace Microsoft.OData.Json
                 this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
             }
-            else if (value.Length > bufferWriter.FreeCapacity)
+            else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
                 await WriteStringValueInChunksAsync(value.AsMemory());
             }
@@ -1138,7 +1138,7 @@ namespace Microsoft.OData.Json
                 this.WriteSeparatorIfNecessary();
                 this.utf8JsonWriter.WriteNullValue();
             }
-            else if (value.Length > bufferWriter.Capacity)
+            else if (value.Length > bufferWriter.FreeCapacity || value.Length > chunkSize)
             {
                 await WriteByteValueInChunksAsync(value);
             }
