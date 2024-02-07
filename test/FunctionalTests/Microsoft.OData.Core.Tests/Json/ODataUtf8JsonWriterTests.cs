@@ -188,6 +188,15 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueLargeStringWithSurrogatePairs()
+        {
+            this.VerifyWritePrimitiveValue(
+                new string('x', 2010) + "Foo ия" + char.ConvertFromUtf32(0x1F60A) + new string('x', 10000) + char.ConvertFromUtf32(0x1F60A),
+                "\"" + new string('x', 2010) + "Foo \\u0438\\u044F" + "\\uD83D\\uDE0A" + new string('x', 10000) + "\\uD83D\\uDE0A" + "\""
+                );
+        }
+
+        [Fact]
         public void WritePrimitiveValueStringWritesNullIfArgumentIsNull()
         {
             this.writer.WriteValue((string)null);
