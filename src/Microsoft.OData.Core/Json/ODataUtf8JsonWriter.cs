@@ -449,7 +449,7 @@ namespace Microsoft.OData.Json
             // Write methods that a separator should be written first
             CheckIfSeparatorNeeded();
 
-            CheckIfAtManualValueArrayStart();
+            CheckIfManualValueAtArrayStart();
         }
 
         /// <summary>
@@ -613,7 +613,7 @@ namespace Microsoft.OData.Json
             // Write methods that a separator should be written first
             CheckIfSeparatorNeeded();
 
-            CheckIfAtManualValueArrayStart();
+            CheckIfManualValueAtArrayStart();
         }
 
         /// <summary>
@@ -684,12 +684,7 @@ namespace Microsoft.OData.Json
             // Write methods that a separator should be written first
             CheckIfSeparatorNeeded();
 
-            if (this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
-            {
-                this.isWritingConsecutiveRawValuesAtStartOfArray = true;
-            }
-
-            this.isWritingAtStartOfArray = false;
+            CheckIfManualValueAtArrayStart();
         }
 
         /// <summary>
@@ -711,7 +706,7 @@ namespace Microsoft.OData.Json
         // <summary>
         /// Checks if the writer is at the start of a manual value array and updates the state accordingly.
         /// </summary>
-        private void CheckIfAtManualValueArrayStart()
+        private void CheckIfManualValueAtArrayStart()
         {
             if(this.isWritingAtStartOfArray || this.isWritingConsecutiveRawValuesAtStartOfArray)
             {
@@ -1136,7 +1131,7 @@ namespace Microsoft.OData.Json
             // Write methods that a separator should be written first
             CheckIfSeparatorNeeded();
 
-            CheckIfAtManualValueArrayStart();
+            CheckIfManualValueAtArrayStart();
         }
 
         public async Task WriteValueAsync(byte[] value)
@@ -1193,7 +1188,7 @@ namespace Microsoft.OData.Json
             // Write methods that a separator should be written first
             CheckIfSeparatorNeeded();
 
-            CheckIfAtManualValueArrayStart();
+            CheckIfManualValueAtArrayStart();
         }
 
         public async Task WriteValueAsync(JsonElement value)
