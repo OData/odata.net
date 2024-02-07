@@ -536,6 +536,10 @@ namespace Microsoft.OData.Json
             Span<byte> output = bufferWriter.GetSpan(maxUtf8Length);
             OperationStatus status = Utf8.FromUtf16(chunk, output, out int charsRead, out int charsWritten, isFinalBlock);
             Debug.Assert(status == OperationStatus.Done || status == OperationStatus.NeedMoreData);
+
+            // The charsRead will always be equal to chunk.Length. This is because the characters
+            // that would cause utf-8 encoding to result in partial processing is already 
+            // taken care of by the JavascriptEncoder when escaping special characters. 
             Debug.Assert(charsRead == chunk.Length);
 
             // notify the bufferWriter of the write
