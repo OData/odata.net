@@ -46,6 +46,15 @@ namespace Microsoft.OData.Json
         private readonly Encoding outputEncoding;
         private bool disposed;
         private const int chunkSize = 2048;
+        /// <summary>
+        /// Represents the threshold value used for determining whether to use stackalloc for char arrays.
+        /// </summary>
+        private const int StackallocCharThreshold = 128;
+        // In the worst case, an ASCII character represented as a single utf-8 byte could expand 6x when escaped.
+        // For example: '+' becomes '\u0043'
+        // Escaping surrogate pairs (represented by 3 or 4 utf-8 bytes) would expand to 12 bytes (which is still <= 6x).
+        // The same factor applies to utf-16 characters.
+        private const int MaxExpansionFactorWhileEscaping = 6;
         /// The Utf8JsonWriter internally keeps track of when to write the item separtor ','
         /// between key-value pairs in an object and between items in an array
         /// However, we bypass the Utf8JsonWriter in our implementation of WriteRawValue
@@ -93,7 +102,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Rrepresents a read-only memory block containing the byte representation of the double quote character ("). 
         /// </summary>
-        private readonly static ReadOnlyMemory<byte> doubleQuote = new byte[] { (byte)'"' };
+        private readonly static ReadOnlyMemory<byte> _doubleQuote = new byte[] { (byte)'"' };
 
         /// <summary>
         /// Creates an instance of <see cref="ODataUtf8JsonWriter"/>.
@@ -406,7 +415,7 @@ namespace Microsoft.OData.Json
 
             WriteItemWithSeparatorIfNeeded();
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             this.Flush();
 
@@ -434,7 +443,7 @@ namespace Microsoft.OData.Json
                 this.FlushIfBufferThresholdReached();
             }
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -480,9 +489,8 @@ namespace Microsoft.OData.Json
         private void WriteEscapedStringChunk(ReadOnlySpan<char> sourceChunk, int firstIndexToEscape, bool isFinalBlock, out int preChunkNotProcessed)
         {
             char[] valueArray = null;
-            const int StackallocCharThreshold = 128;
 
-            int maxSize = firstIndexToEscape + 6 * (sourceChunk.Length - firstIndexToEscape);
+            int maxSize = firstIndexToEscape + MaxExpansionFactorWhileEscaping * (sourceChunk.Length - firstIndexToEscape);
 
             Span<char> destination = maxSize <= StackallocCharThreshold
                 ? stackalloc char[maxSize]
@@ -581,7 +589,7 @@ namespace Microsoft.OData.Json
 
             WriteItemWithSeparatorIfNeeded();
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             this.Flush();
 
@@ -599,7 +607,7 @@ namespace Microsoft.OData.Json
                 this.FlushIfBufferThresholdReached();
             }
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -1093,7 +1101,7 @@ namespace Microsoft.OData.Json
 
             WriteItemWithSeparatorIfNeeded();
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             await this.FlushAsync();
 
@@ -1122,7 +1130,7 @@ namespace Microsoft.OData.Json
                 await this.FlushIfBufferThresholdReachedAsync();
             }
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
@@ -1161,7 +1169,7 @@ namespace Microsoft.OData.Json
 
             WriteItemWithSeparatorIfNeeded();
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             await FlushAsync().ConfigureAwait(false);
 
@@ -1179,7 +1187,7 @@ namespace Microsoft.OData.Json
                 await FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
             }
 
-            this.bufferWriter.Write(doubleQuote.Slice(0, 1).Span);
+            this.bufferWriter.Write(_doubleQuote.Slice(0, 1).Span);
 
             // since we bypass the Utf8JsonWriter, we need to signal to other
             // Write methods that a separator should be written first
