@@ -222,10 +222,6 @@
     </None>
   </ItemGroup>
 
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
   <Target Name="AnotherCustomTarget" AfterTargets="CoreCompile">
     <CreateItem Include="..\..\..\..\..\test\EndToEndTests\Services\CSDSCReferences\Microsoft.Test.OData.Services.TestServices.ActionOverloadingServiceReference.cs">
       <Output TaskParameter="Include" ItemName="CSDSCReferences" />
