@@ -54,7 +54,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Action test = () => date.AddYears(-5000);
 
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(2013, 8, 12);
             Action test = () => date.AddYears(12000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(-5000);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddMonths(120001);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(-2);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             Date date = new Date(1, 1, 1);
             Action test = () => date.AddDays(999999999);
             var exception = Assert.Throws<ArgumentOutOfRangeException>(test);
-#if NETCOREAPP3_1
+#if NETCOREAPP
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + " (Parameter 'value')", exception.Message);
 #else
             Assert.Equal(Strings.Date_InvalidAddedOrSubtractedResults + "\r\nParameter name: value", exception.Message);

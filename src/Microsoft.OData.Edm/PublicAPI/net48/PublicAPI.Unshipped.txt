@@ -1,18 +1,3 @@
-Microsoft.OData.Edm.EdmTargetPath
-Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
-Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void
-Microsoft.OData.Edm.EdmTargetPath.Path.get -> string
-Microsoft.OData.Edm.EdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
-Microsoft.OData.Edm.IEdmTargetPath
-Microsoft.OData.Edm.IEdmTargetPath.Path.get -> string
-Microsoft.OData.Edm.IEdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
-override Microsoft.OData.Edm.EdmTargetPath.Equals(object obj) -> bool
-override Microsoft.OData.Edm.EdmTargetPath.GetHashCode() -> int
-static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, string targetPath, Microsoft.OData.Edm.Vocabularies.IEdmTerm term) -> System.Collections.Generic.IEnumerable<T>
-static Microsoft.OData.Edm.ExtensionMethods.GetTargetPath(this Microsoft.OData.Edm.IEdmModel model, string targetPath, bool ignoreCase = true) -> Microsoft.OData.Edm.IEdmTargetPath
-static Microsoft.OData.Edm.ExtensionMethods.GetTargetPathAnnotations(this Microsoft.OData.Edm.IEdmModel model, string targetPath) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
-static System.Collections.Generic.ReadOnlyListExtensions.FindLastIndex<T>(this System.Collections.Generic.IReadOnlyList<T> list, System.Func<T, bool> predicate) -> int
-System.Collections.Generic.ReadOnlyListExtensions
 abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
 abstract Microsoft.OData.Edm.EdmModelBase.FindDirectlyDerivedTypes(Microsoft.OData.Edm.IEdmStructuredType baseType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuredType>
 abstract Microsoft.OData.Edm.EdmModelBase.SchemaElements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmSchemaElement>
@@ -35,6 +20,8 @@ const Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants.Change
 const Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants.ChangeTrackingFilterableProperties = "FilterableProperties" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyConstants.ChangeTrackingSupported = "Supported" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AcceptableMediaTypes = "Org.OData.Core.V1.AcceptableMediaTypes" -> string
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKey = "Org.OData.Core.V1.AlternateKey" -> string
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKeys = "Org.OData.Core.V1.AlternateKeys" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.Computed = "Org.OData.Core.V1.Computed" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.ConventionalIDs = "Org.OData.Core.V1.ConventionalIDs" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.CoreNamespace = "Org.OData.Core.V1" -> string
@@ -49,6 +36,7 @@ const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.MediaType = "O
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.OptimisticConcurrency = "Org.OData.Core.V1.OptimisticConcurrency" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.OptionalParameter = "Org.OData.Core.V1.OptionalParameter" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.Permissions = "Org.OData.Core.V1.Permissions" -> string
+const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.PropertyRef = "Org.OData.Core.V1.PropertyRef" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.RequiresType = "Org.OData.Core.V1.RequiresType" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.ResourcePath = "Org.OData.Core.V1.ResourcePath" -> string
 const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.Revisions = "Org.OData.Core.V1.Revisions" -> string
@@ -508,6 +496,11 @@ Microsoft.OData.Edm.EdmStructuredType.FindProperty(string name) -> Microsoft.ODa
 Microsoft.OData.Edm.EdmStructuredType.IsAbstract.get -> bool
 Microsoft.OData.Edm.EdmStructuredType.IsOpen.get -> bool
 Microsoft.OData.Edm.EdmStructuredType.PropertiesDictionary.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty>
+Microsoft.OData.Edm.EdmTargetPath
+Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(params Microsoft.OData.Edm.IEdmElement[] segments) -> void
+Microsoft.OData.Edm.EdmTargetPath.EdmTargetPath(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmElement> segments) -> void
+Microsoft.OData.Edm.EdmTargetPath.Path.get -> string
+Microsoft.OData.Edm.EdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
 Microsoft.OData.Edm.EdmTemporalTypeReference
 Microsoft.OData.Edm.EdmTemporalTypeReference.EdmTemporalTypeReference(Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable) -> void
 Microsoft.OData.Edm.EdmTemporalTypeReference.EdmTemporalTypeReference(Microsoft.OData.Edm.IEdmPrimitiveType definition, bool isNullable, int? precision) -> void
@@ -721,6 +714,9 @@ Microsoft.OData.Edm.IEdmStructuredType.FindProperty(string name) -> Microsoft.OD
 Microsoft.OData.Edm.IEdmStructuredType.IsAbstract.get -> bool
 Microsoft.OData.Edm.IEdmStructuredType.IsOpen.get -> bool
 Microsoft.OData.Edm.IEdmStructuredTypeReference
+Microsoft.OData.Edm.IEdmTargetPath
+Microsoft.OData.Edm.IEdmTargetPath.Path.get -> string
+Microsoft.OData.Edm.IEdmTargetPath.Segments.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.Edm.IEdmElement>
 Microsoft.OData.Edm.IEdmTemporalTypeReference
 Microsoft.OData.Edm.IEdmTemporalTypeReference.Precision.get -> int?
 Microsoft.OData.Edm.IEdmType
@@ -962,6 +958,7 @@ Microsoft.OData.Edm.Validation.EdmErrorCode.QualifierMustBeSimpleName = 359 -> M
 Microsoft.OData.Edm.Validation.EdmErrorCode.RecordExpressionHasExtraProperties = 318 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.RecordExpressionMissingRequiredProperty = 317 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.RecordExpressionNotValidForNonStructuredType = 316 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+Microsoft.OData.Edm.Validation.EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional = 411 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.ReferencedTypeMustHaveValidName = 322 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.ReferenceElementMustContainAtLeastOneIncludeOrIncludeAnnotationsElement = 372 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.ReferentialConstraintPrincipalEndMustBelongToAssociation = 243 -> Microsoft.OData.Edm.Validation.EdmErrorCode
@@ -1406,6 +1403,8 @@ override Microsoft.OData.Edm.EdmNavigationProperty.PropertyKind.get -> Microsoft
 override Microsoft.OData.Edm.EdmSingleton.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 override Microsoft.OData.Edm.EdmSingleton.Type.get -> Microsoft.OData.Edm.IEdmType
 override Microsoft.OData.Edm.EdmStructuralProperty.PropertyKind.get -> Microsoft.OData.Edm.EdmPropertyKind
+override Microsoft.OData.Edm.EdmTargetPath.Equals(object obj) -> bool
+override Microsoft.OData.Edm.EdmTargetPath.GetHashCode() -> int
 override Microsoft.OData.Edm.EdmType.ToString() -> string
 override Microsoft.OData.Edm.EdmTypeDefinition.TypeKind.get -> Microsoft.OData.Edm.EdmTypeKind
 override Microsoft.OData.Edm.EdmTypeReference.ToString() -> string
@@ -1563,6 +1562,7 @@ static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmMode
 static Microsoft.OData.Edm.EdmUtil.SetMimeType(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmProperty annotatableProperty, string mimeType) -> void
 static Microsoft.OData.Edm.EnumHelper.ToStringLiteral(this Microsoft.OData.Edm.IEdmEnumTypeReference type, long value) -> string
 static Microsoft.OData.Edm.EnumHelper.TryParseEnum(this Microsoft.OData.Edm.IEdmEnumType enumType, string value, bool ignoreCase, out long parseResult) -> bool
+static Microsoft.OData.Edm.ExtensionMethods.AddAlternateKeyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty> alternateKey, bool useCore = false) -> void
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType) -> Microsoft.OData.Edm.EdmComplexType
 static Microsoft.OData.Edm.ExtensionMethods.AddComplexType(this Microsoft.OData.Edm.EdmModel model, string namespaceName, string name, Microsoft.OData.Edm.IEdmComplexType baseType, bool isAbstract) -> Microsoft.OData.Edm.EdmComplexType
@@ -1622,6 +1622,7 @@ static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Mi
 static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, string qualifier) -> System.Collections.Generic.IEnumerable<T>
 static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, string termName) -> System.Collections.Generic.IEnumerable<T>
 static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element, string termName, string qualifier) -> System.Collections.Generic.IEnumerable<T>
+static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotations<T>(this Microsoft.OData.Edm.IEdmModel model, string targetPath, Microsoft.OData.Edm.Vocabularies.IEdmTerm term) -> System.Collections.Generic.IEnumerable<T>
 static Microsoft.OData.Edm.ExtensionMethods.FindVocabularyAnnotationsIncludingInheritedAnnotations(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable element) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 static Microsoft.OData.Edm.ExtensionMethods.FullName(this Microsoft.OData.Edm.IEdmSchemaElement element) -> string
 static Microsoft.OData.Edm.ExtensionMethods.FullName(this Microsoft.OData.Edm.IEdmTypeReference type) -> string
@@ -1638,9 +1639,12 @@ static Microsoft.OData.Edm.ExtensionMethods.GetDescriptionAnnotation(this Micros
 static Microsoft.OData.Edm.ExtensionMethods.GetEdmReferences(this Microsoft.OData.Edm.IEdmModel model) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmReference>
 static Microsoft.OData.Edm.ExtensionMethods.GetEdmVersion(this Microsoft.OData.Edm.IEdmModel model) -> System.Version
 static Microsoft.OData.Edm.ExtensionMethods.GetLongDescriptionAnnotation(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target) -> string
+static Microsoft.OData.Edm.ExtensionMethods.GetNavigationPropertyBindings(this Microsoft.OData.Edm.IEdmEntityContainer container) -> System.Collections.Generic.IEnumerable<System.Tuple<Microsoft.OData.Edm.IEdmEntityContainerElement, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>
 static Microsoft.OData.Edm.ExtensionMethods.GetPartnerPath(this Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> Microsoft.OData.Edm.IEdmPathExpression
 static Microsoft.OData.Edm.ExtensionMethods.GetPrimitiveValueConverter(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.IEdmTypeReference type) -> Microsoft.OData.Edm.IPrimitiveValueConverter
 static Microsoft.OData.Edm.ExtensionMethods.GetReturn(this Microsoft.OData.Edm.IEdmOperation operation) -> Microsoft.OData.Edm.IEdmOperationReturn
+static Microsoft.OData.Edm.ExtensionMethods.GetTargetPath(this Microsoft.OData.Edm.IEdmModel model, string targetPath, bool ignoreCase = true) -> Microsoft.OData.Edm.IEdmTargetPath
+static Microsoft.OData.Edm.ExtensionMethods.GetTargetPathAnnotations(this Microsoft.OData.Edm.IEdmModel model, string targetPath) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation>
 static Microsoft.OData.Edm.ExtensionMethods.GetTermValue(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator) -> Microsoft.OData.Edm.Vocabularies.IEdmValue
 static Microsoft.OData.Edm.ExtensionMethods.GetTermValue(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, Microsoft.OData.Edm.Vocabularies.IEdmTerm term, string qualifier, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator) -> Microsoft.OData.Edm.Vocabularies.IEdmValue
 static Microsoft.OData.Edm.ExtensionMethods.GetTermValue(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmStructuredValue context, string termName, Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator expressionEvaluator) -> Microsoft.OData.Edm.Vocabularies.IEdmValue
@@ -1841,6 +1845,7 @@ static readonly Microsoft.OData.Edm.Validation.ValidationRules.PropertyMustNotHa
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.PropertyTypeCannotBeCollectionOfAbstractType -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmProperty>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.PropertyValueBindingValueIsCorrectType -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.Vocabularies.IEdmPropertyValueBinding>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.RecordExpressionPropertiesMatchType -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.Vocabularies.IEdmRecordExpression>
+static readonly Microsoft.OData.Edm.Validation.ValidationRules.RecursiveComplexTypedPropertyMustBeOptional -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmStructuralProperty>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.SchemaElementMustNotHaveKindOfNone -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmSchemaElement>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.SchemaElementNamespaceIsNotAllowed -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmSchemaElement>
 static readonly Microsoft.OData.Edm.Validation.ValidationRules.SchemaElementNamespaceIsTooLong -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmSchemaElement>
@@ -1874,6 +1879,7 @@ static readonly Microsoft.OData.Edm.Vocabularies.Measures.V1.MeasuresVocabularyM
 static readonly Microsoft.OData.Edm.Vocabularies.V1.AuthorizationVocabularyModel.Instance -> Microsoft.OData.Edm.IEdmModel
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CapabilitiesVocabularyModel.Instance -> Microsoft.OData.Edm.IEdmModel
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.AcceptableMediaTypesTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.AlternateKeysTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.ComputedTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.ConcurrencyTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.ConventionalIDsTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
@@ -1894,6 +1900,8 @@ static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.Revision
 static readonly Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel.DerivedTypeConstraintTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
 static readonly Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel.Instance -> Microsoft.OData.Edm.IEdmModel
 static readonly Microsoft.OData.Edm.Vocabularies.V1.ValidationVocabularyModel.Namespace -> string
+static System.Collections.Generic.ReadOnlyListExtensions.FindLastIndex<T>(this System.Collections.Generic.IReadOnlyList<T> list, System.Func<T, bool> predicate) -> int
+System.Collections.Generic.ReadOnlyListExtensions
 virtual Microsoft.OData.Edm.Csdl.CsdlWriter.WriteCsdl() -> void
 virtual Microsoft.OData.Edm.EdmEntityContainer.AddActionImport(Microsoft.OData.Edm.IEdmAction action) -> Microsoft.OData.Edm.EdmActionImport
 virtual Microsoft.OData.Edm.EdmEntityContainer.AddActionImport(string name, Microsoft.OData.Edm.IEdmAction action) -> Microsoft.OData.Edm.EdmActionImport
@@ -1919,11 +1927,3 @@ virtual Microsoft.OData.Edm.EdmNavigationSource.FindNavigationTarget(Microsoft.O
 virtual Microsoft.OData.Edm.EdmPathExpression.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
 virtual Microsoft.OData.Edm.EdmStructuredType.DeclaredProperties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmProperty>
 virtual Microsoft.OData.Edm.Vocabularies.EdmDirectValueAnnotationsManager.GetAttachedAnnotations(Microsoft.OData.Edm.IEdmElement element) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Vocabularies.IEdmDirectValueAnnotation>
-const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKey = "Org.OData.Core.V1.AlternateKey" -> string
-const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.AlternateKeys = "Org.OData.Core.V1.AlternateKeys" -> string
-const Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyConstants.PropertyRef = "Org.OData.Core.V1.PropertyRef" -> string
-Microsoft.OData.Edm.Validation.EdmErrorCode.RecursiveComplexTypedPropertyMustBeOptional = 411 -> Microsoft.OData.Edm.Validation.EdmErrorCode
-static Microsoft.OData.Edm.ExtensionMethods.AddAlternateKeyAnnotation(this Microsoft.OData.Edm.EdmModel model, Microsoft.OData.Edm.IEdmEntityType type, System.Collections.Generic.IDictionary<string, Microsoft.OData.Edm.IEdmProperty> alternateKey, bool useCore = false) -> void
-static Microsoft.OData.Edm.ExtensionMethods.GetNavigationPropertyBindings(this Microsoft.OData.Edm.IEdmEntityContainer container) -> System.Collections.Generic.IEnumerable<System.Tuple<Microsoft.OData.Edm.IEdmEntityContainerElement, Microsoft.OData.Edm.IEdmNavigationPropertyBinding>>
-static readonly Microsoft.OData.Edm.Validation.ValidationRules.RecursiveComplexTypedPropertyMustBeOptional -> Microsoft.OData.Edm.Validation.ValidationRule<Microsoft.OData.Edm.IEdmStructuralProperty>
-static readonly Microsoft.OData.Edm.Vocabularies.V1.CoreVocabularyModel.AlternateKeysTerm -> Microsoft.OData.Edm.Vocabularies.IEdmTerm

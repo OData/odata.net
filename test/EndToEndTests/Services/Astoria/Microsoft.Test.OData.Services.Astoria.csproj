@@ -9,7 +9,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -67,6 +67,11 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Compile Include="ActionOverloading\ActionOverloadingTestActionProvider.cs" />
+    <Compile Include="AstoriaDefaultServiceDBModel.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
+    </Compile>
     <Compile Include="Default\AstoriaDefaultActionProvider.cs" />
     <Compile Include="Default\DefaultContainer.cs" />
     <Compile Include="Default\Entities.cs" />
@@ -149,11 +154,6 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>
-    </Compile>
-    <Compile Include="AstoriaDefaultServiceDBModel.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>AstoriaDefaultServiceDBModel.edmx</DependentUpon>
     </Compile>
     <Compile Include="EFCar.cs">
       <DependentUpon>AstoriaDefaultServiceDBModel.tt</DependentUpon>

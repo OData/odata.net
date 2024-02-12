@@ -262,7 +262,7 @@ namespace Microsoft.OData.Tests
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         #region "ODataUtf8JsonWriter support"
         [Fact]
         public void SupportsStreamBasedJsonWriter()
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Tests
         #endregion "ODataUtf8JsonWriter support"
 #endif
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         #region "ODataJsonElementValue support"
         [Fact]
         public void WriteEntityWithJsonElementValues()
@@ -851,7 +851,7 @@ namespace Microsoft.OData.Tests
 
             string contentType = "application/json";
 
-#if NETCOREAPP3_1 || NETCOREAPP2_1
+#if NETCOREAPP
             // Act
             string payload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
             {
@@ -893,7 +893,7 @@ namespace Microsoft.OData.Tests
 #endif
         }
 
-#if NETCOREAPP3_1 || NETCOREAPP2_1
+#if NETCOREAPP
         [Fact]
         public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl()
         {
@@ -993,7 +993,7 @@ namespace Microsoft.OData.Tests
         }
 
         #region "DisposeAsync"
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 
         [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously()

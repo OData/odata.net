@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0
+#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;

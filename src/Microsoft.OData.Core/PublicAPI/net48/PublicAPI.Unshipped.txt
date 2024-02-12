@@ -2,11 +2,6 @@ Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriPa
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
-Microsoft.OData.Json.IJsonWriter.WriteValue(System.Text.Json.JsonElement value) -> void
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.Task
-Microsoft.OData.ODataJsonElementValue
-Microsoft.OData.ODataJsonElementValue.ODataJsonElementValue(System.Text.Json.JsonElement value) -> void
-Microsoft.OData.ODataJsonElementValue.Value.get -> System.Text.Json.JsonElement
 override Microsoft.OData.ODataEnumValue.ToString() -> string
 override Microsoft.OData.ODataPrimitiveValue.ToString() -> string
 abstract Microsoft.OData.ODataBatchReader.CreateOperationRequestMessageImplementation() -> Microsoft.OData.ODataBatchOperationRequestMessage
@@ -748,8 +743,6 @@ Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceSetWriterAsync
 Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceWriter(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter
 Microsoft.OData.ODataMessageWriter.CreateODataUriParameterResourceWriterAsync(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 Microsoft.OData.ODataMessageWriter.Dispose() -> void
-Microsoft.OData.ODataMessageWriter.DisposeAsync() -> System.Threading.Tasks.ValueTask
-Microsoft.OData.ODataOutputContext.DisposeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage) -> void
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage, Microsoft.OData.ODataMessageWriterSettings settings) -> void
 Microsoft.OData.ODataMessageWriter.ODataMessageWriter(Microsoft.OData.IODataRequestMessage requestMessage, Microsoft.OData.ODataMessageWriterSettings settings, Microsoft.OData.Edm.IEdmModel model) -> void
@@ -2361,7 +2354,6 @@ virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceSetWri
 virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceWriter(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter
 virtual Microsoft.OData.ODataOutputContext.CreateODataUriParameterResourceWriterAsync(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 virtual Microsoft.OData.ODataOutputContext.Dispose(bool disposing) -> void
-virtual Microsoft.OData.ODataOutputContext.DisposeAsyncCore() -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.ODataOutputContext.WriteError(Microsoft.OData.ODataError odataError, bool includeDebugInformation) -> void
 virtual Microsoft.OData.ODataOutputContext.WriteErrorAsync(Microsoft.OData.ODataError odataError, bool includeDebugInformation) -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataOutputContext.WriteProperty(Microsoft.OData.ODataProperty odataProperty) -> void
@@ -2500,19 +2492,16 @@ virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OD
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedPrecision(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedScale(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.UriPathParser.ParsePathIntoSegments(System.Uri fullUri, System.Uri serviceBaseUri) -> System.Collections.Generic.ICollection<string>
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.CreateAsynchronousJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriterAsync
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.DefaultStreamBasedJsonWriterFactory(System.Text.Encodings.Web.JavaScriptEncoder encoder = null) -> void
 Microsoft.OData.Json.IStreamBasedJsonWriterFactory
 Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateAsynchronousJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriterAsync
 Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.get -> bool
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.set -> void
-static Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.Default.get -> Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory
 static Microsoft.OData.UriParser.ODataPathExtensions.EdmType(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmTypeReference
 static Microsoft.OData.UriParser.ODataPathExtensions.IsCollection(this Microsoft.OData.UriParser.ODataPath path) -> bool
 static Microsoft.OData.UriParser.ODataPathExtensions.NavigationSource(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmNavigationSource
 static Microsoft.OData.UriParser.ODataPathExtensions.ToResourcePathString(this Microsoft.OData.UriParser.ODataPath path, Microsoft.OData.ODataUrlKeyDelimiter urlKeyDelimiter) -> string
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingKeySegment(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeSegment(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
+Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
+Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void

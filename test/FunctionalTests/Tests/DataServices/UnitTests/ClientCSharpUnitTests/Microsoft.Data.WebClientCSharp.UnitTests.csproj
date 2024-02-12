@@ -5,7 +5,7 @@
      <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

@@ -11,7 +11,7 @@
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
     <NoWarn>40000,40008</NoWarn>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

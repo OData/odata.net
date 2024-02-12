@@ -409,7 +409,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
             Assert.Equal(new Uri("http://gobbledygook/GetPet4(id=102.0)"), actualUri);
         }
-#if !NETCOREAPP3_1
+#if !NETCOREAPP
         [Fact]
         public void FunctionParameterDoublePrecision()
         {

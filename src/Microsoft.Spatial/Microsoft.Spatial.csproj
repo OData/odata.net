@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net45;netstandard2.0;netstandard1.1</TargetFrameworks>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <AssemblyName>Microsoft.Spatial</AssemblyName>
     <RootNamespace>Microsoft.Spatial</RootNamespace>
 
@@ -43,6 +43,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+	<AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Shipped.txt" />
+	<AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
   <ItemGroup>

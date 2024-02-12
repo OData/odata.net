@@ -2,7 +2,7 @@
   <PropertyGroup>
     <AssemblyName>Microsoft.Data.ServerUnitTests1.UnitTests</AssemblyName>    
     <SignAssemblyAttribute>false</SignAssemblyAttribute>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>

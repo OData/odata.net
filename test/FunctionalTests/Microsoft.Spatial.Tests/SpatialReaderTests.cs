@@ -49,7 +49,7 @@ namespace Microsoft.Spatial.Tests
         public void ErrorOnNullDestinationInCtor()
         {
             Action act = () => new TrivialReader(null);
-#if NETCOREAPP3_1            
+#if NETCOREAPP            
             SpatialTestUtils.VerifyExceptionThrown<ArgumentNullException>(act, "Value cannot be null. (Parameter 'destination')");
 #else
             SpatialTestUtils.VerifyExceptionThrown<ArgumentNullException>(act, "Value cannot be null.\r\nParameter name: destination");
@@ -62,7 +62,7 @@ namespace Microsoft.Spatial.Tests
             var reader = new TrivialReader(new CallSequenceLoggingPipeline());
             Action[] acts = { () => reader.ReadGeography(null), () => reader.ReadGeometry(null) };
 
-#if NETCOREAPP3_1
+#if NETCOREAPP
             foreach (var act in acts)
             {
                 SpatialTestUtils.VerifyExceptionThrown<ArgumentNullException>(act, "Value cannot be null. (Parameter 'input')");

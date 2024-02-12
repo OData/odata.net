@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>AstoriaUnitTests.ClientExtensions</AssemblyName>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <TransparentAssembly>true</TransparentAssembly>
     <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>

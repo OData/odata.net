@@ -3,7 +3,7 @@
     <AssemblyName>Microsoft.Test.OData.Services.ODataPluggableFormatService</AssemblyName>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>

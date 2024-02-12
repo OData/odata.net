@@ -3,7 +3,7 @@
     <AssemblyName>Microsoft.OData.Service</AssemblyName>
     <DefineConstants>$(DefineConstants);ODATA_SERVICE</DefineConstants>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <EnableDefaultCompileItems>false</EnableDefaultCompileItems>

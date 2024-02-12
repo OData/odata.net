@@ -8,7 +8,7 @@
     <RootNamespace>ODataSamples.Services.Core</RootNamespace>
     <SignAssemblyAttribute>true</SignAssemblyAttribute>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -32,6 +32,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+	  <Reference Include="System.ComponentModel.Composition" />
   </ItemGroup>
 
   <ItemGroup>

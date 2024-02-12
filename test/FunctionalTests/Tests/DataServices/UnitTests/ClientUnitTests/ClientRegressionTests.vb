@@ -478,7 +478,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             ctx.AttachTo("Customers", custs)
             Dim descriptor2 = ctx.GetEntityDescriptor(custs)
 
-            Dim fi = GetType(EntityDescriptor).GetField("identity", Reflection.BindingFlags.Instance Or Reflection.BindingFlags.NonPublic)
+            Dim fi = GetType(EntityDescriptor).GetField("identity", System.Reflection.BindingFlags.Instance Or System.Reflection.BindingFlags.NonPublic)
             fi.SetValue(descriptor2, New Uri("urn:foo-$identity"))
 
             Dim newOrder = New Order() With {.ID = 0, .Customer = custs}

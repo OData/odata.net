@@ -4,7 +4,7 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <Optimize>true</Optimize>
     <AssemblyName>Microsoft.Spatial.Tests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1;</TargetFrameworks>
+    <TargetFrameworks>net8.0;net48</TargetFrameworks>
     <RestorePackages>true</RestorePackages>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
@@ -32,18 +32,8 @@
     <Compile Remove="Properties\AssemblyInfo.cs" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1' ">
-    <PackageReference Include="System.Xml.XPath.XmlDocument" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
-    <PackageReference Include="System.Xml.XPath" Version="4.3.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
   </ItemGroup>
 
   <ItemGroup>
@@ -57,7 +47,7 @@
     <ProjectReference Include="..\Microsoft.OData.TestCommon\Microsoft.OData.TestCommon.csproj" />
   </ItemGroup>
   
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net452'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net48'">
     <Exec Command="&quot;$([System.Environment]::GetFolderPath(SpecialFolder.ProgramFilesX86))\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe&quot; /Vr $(OutputPath)\Microsoft.Spatial.dll" />
   </Target>
 </Project>

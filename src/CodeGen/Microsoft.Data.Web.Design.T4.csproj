@@ -7,7 +7,7 @@
     <ConditionalAPTCA_L2>true</ConditionalAPTCA_L2>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
     <RestorePackages>true</RestorePackages>
-    <TargetFrameworks>net45</TargetFrameworks>
+    <TargetFrameworks>net48</TargetFrameworks>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
