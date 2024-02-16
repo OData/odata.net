@@ -30,18 +30,6 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Property that only return <see cref="AggregateExpression"/>s.
-        /// </summary>
-        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
-        public IEnumerable<AggregateExpression> Expressions
-        {
-            get
-            {
-                return expressions.OfType<AggregateExpression>();
-            }
-        }
-
-        /// <summary>
         /// Property that returns a list of all <see cref="AggregateExpressionBase"/>s of this transformation node.
         /// </summary>
         public IEnumerable<AggregateExpressionBase> AggregateExpressions

@@ -318,36 +318,6 @@ namespace Microsoft.OData
                 (context) => context.CreateODataDeltaResourceSetWriterAsync(entitySet, entityType));
         }
 
-        /// <summary>
-        /// Creates an <see cref="ODataDeltaWriter" /> to write a delta response.
-        /// </summary>
-        /// <returns>The created writer.</returns>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-        [Obsolete("Use CreateODataDeltaResourceSetWriter.", false)]
-        public ODataDeltaWriter CreateODataDeltaWriter(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
-        {
-            this.VerifyCanCreateODataDeltaWriter();
-            return this.WriteToOutput(
-                ODataPayloadKind.ResourceSet,
-                (context) => context.CreateODataDeltaWriter(entitySet, entityType));
-        }
-
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataDeltaWriter" /> to write a delta response.
-        /// </summary>
-        /// <param name="entitySet">The entity set we are going to write entities for.</param>
-        /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
-        /// <returns>A running task for the created writer.</returns>
-        [Obsolete("Use CreateODataDeltaResourceSetWriterAsync.", false)]
-        public Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
-        {
-            this.VerifyCanCreateODataResourceSetWriter();
-            return this.WriteToOutputAsync(
-                ODataPayloadKind.ResourceSet,
-                (context) => context.CreateODataDeltaWriterAsync(entitySet, entityType));
-        }
-
         /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>The created writer.</returns>
         public ODataWriter CreateODataResourceWriter()

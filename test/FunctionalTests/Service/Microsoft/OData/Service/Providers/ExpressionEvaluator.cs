@@ -84,14 +84,11 @@ namespace Microsoft.OData.Service.Providers
         /// <returns>The visited MethodCallExpression expression </returns>
         internal override Expression VisitMethodCall(MethodCallExpression m)
         {
-#pragma warning disable 618 // Disable "obsolete" warning for the IExpandProvider interface. Used for backwards compatibilty.
             Debug.Assert(
                 m.Method.DeclaringType == typeof(Queryable) ||
                 m.Method.DeclaringType == typeof(Enumerable) ||
-                m.Method.DeclaringType == typeof(DataServiceExecutionProviderMethods) ||
-                m.Method.DeclaringType == typeof(IExpandProvider),
+                m.Method.DeclaringType == typeof(DataServiceExecutionProviderMethods),
                 "Expecting method defined in Queryable, Enumerable, DataServiceExecutionProviderMethods or IExpandProvider. Current method: " + m.Method.DeclaringType.FullName + "." + m.Method.Name);
-#pragma warning restore 618
 
             object instance = m.Object == null ? null : ((ConstantExpression)this.Visit(m.Object)).Value;
             try

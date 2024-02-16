@@ -240,7 +240,6 @@
     <Compile Include="Microsoft\OData\Service\IDataService.cs" />
     <Compile Include="Microsoft\OData\Service\IDataServiceConfiguration.cs" />
     <Compile Include="Microsoft\OData\Service\IDataServiceHost.cs" />
-    <Compile Include="Microsoft\OData\Service\IExpandProvider.cs" />
     <Compile Include="Microsoft\OData\Service\IExpandedResult.cs" />
     <Compile Include="Microsoft\OData\Service\Internal\ProjectedWrapper.cs">
       <ExcludeFromStyleCop>true</ExcludeFromStyleCop>

@@ -17,7 +17,7 @@ ODataResponseMessage_StreamTaskIsNull=The IODataResponseMessageAsync.GetStreamAs
 ODataResponseMessage_MessageStreamIsNull=The IODataResponseMessage.GetStream or IODataResponseMessageAsync.GetStreamAsync method returned a null stream value. The message can never return a null stream.
 
 AsyncBufferedStream_WriterDisposedWithoutFlush=A writer or stream has been disposed with data still in the buffer. You must call Flush or FlushAsync before calling Dispose when some data has already been written.
-ODataFormat_AtomFormatObsoleted=ATOM support is obsolete.
+
 ODataOutputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not support writing a payload of kind '{1}'.
 
 ODataInputContext_UnsupportedPayloadKindForFormat=The format '{0}' does not support reading a payload of kind '{1}'.

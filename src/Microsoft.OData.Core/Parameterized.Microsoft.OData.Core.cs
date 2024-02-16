@@ -106,17 +106,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "ATOM support is obsolete."
-        /// </summary>
-        internal static string ODataFormat_AtomFormatObsoleted
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataFormat_AtomFormatObsoleted);
-            }
-        }
-
-        /// <summary>
         /// A string like "The format '{0}' does not support writing a payload of kind '{1}'."
         /// </summary>
         internal static string ODataOutputContext_UnsupportedPayloadKindForFormat(object p0, object p1)

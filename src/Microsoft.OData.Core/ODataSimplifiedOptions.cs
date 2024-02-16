@@ -80,27 +80,6 @@ namespace Microsoft.OData
         public bool EnableWritingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// True if control information should be written without the prefix 'odata.', otherwise false.
-        /// The default value is false for OData 4.0, true for OData 4.01.
-        /// The option is applied during serialization.
-        /// </summary>
-        [Obsolete("Deprecated. Use Get/SetOmitODataPrefix()")]
-        public bool EnableWritingODataAnnotationWithoutPrefix
-        {
-            get
-            {
-                return this.enableWritingODataAnnotationWithoutPrefix;
-            }
-
-            set
-            {
-                this.enableWritingODataAnnotationWithoutPrefix =
-                this.omitODataPrefix =
-                this.omitODataPrefix40 = value;
-            }
-        }
-
-        /// <summary>
         /// Creates a shallow copy of this <see cref="ODataSimplifiedOptions"/>.
         /// </summary>
         /// <returns>A shallow copy of this <see cref="ODataSimplifiedOptions"/>.</returns>
