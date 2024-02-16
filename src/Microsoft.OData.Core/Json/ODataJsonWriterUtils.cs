@@ -165,50 +165,6 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Asynchronously writes the function's name and start the JSONP scope if we are writing a response and the
-        /// JSONP function name is not null or empty.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        internal static Task StartJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                return StartJsonPaddingIfRequiredInnerAsync(jsonWriter, settings);
-
-                async Task StartJsonPaddingIfRequiredInnerAsync(IJsonWriterAsync innerJsonWriter, ODataMessageWriterSettings innerSettings)
-                {
-                    await innerJsonWriter.WritePaddingFunctionNameAsync(innerSettings.JsonPCallback).ConfigureAwait(false);
-                    await innerJsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
-                }
-            }
-
-            return TaskUtils.CompletedTask;
-        }
-
-        /// <summary>
-        /// If we are writing a response and the given Json Padding function name is not null or empty
-        /// this function will close the JSONP scope asynchronously.
-        /// </summary>
-        /// <param name="jsonWriter">JsonWriter to write to.</param>
-        /// <param name="settings">Writer settings.</param>
-        /// <returns>A task that represents the asynchronous operation.</returns>
-        internal static Task EndJsonPaddingIfRequiredAsync(IJsonWriterAsync jsonWriter, ODataMessageWriterSettings settings)
-        {
-            Debug.Assert(jsonWriter != null, "jsonWriter should not be null");
-
-            if (settings.HasJsonPaddingFunction())
-            {
-                return jsonWriter.EndPaddingFunctionScopeAsync();
-            }
-
-            return TaskUtils.CompletedTask;
-        }
-
-        /// <summary>
         /// Write an error message.
         /// </summary>
         /// <param name="jsonWriter">JSON writer.</param>

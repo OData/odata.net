@@ -21,11 +21,13 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Start the padding function scope.
         /// </summary>
+        [Obsolete("This will be dropped in the 9.x release.")]
         void StartPaddingFunctionScope();
 
         /// <summary>
         /// End the padding function scope.
         /// </summary>
+        [Obsolete("This will be dropped in the 9.x release.")]
         void EndPaddingFunctionScope();
 
         /// <summary>
@@ -58,6 +60,7 @@ namespace Microsoft.OData.Json
         /// Writes a function name for JSON padding.
         /// </summary>
         /// <param name="functionName">Name of the padding function to write.</param>
+        [Obsolete("This will be dropped in the 9.x release.")]
         void WritePaddingFunctionName(string functionName);
 
         /// <summary>
