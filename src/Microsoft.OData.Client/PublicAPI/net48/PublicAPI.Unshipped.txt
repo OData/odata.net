@@ -5,7 +5,6 @@ virtual Microsoft.OData.Client.DataServiceContext.BeginDeepInsert<T>(System.Asyn
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
-virtual Microsoft.OData.Client.DataServiceContext.EndDeepInsert(System.CreateODataDeltaWriter asyncResult) -> Microsoft.OData.Client.DataServiceResponse
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedEnded(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedStarted(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.ReadingDeltaFeedArgs
@@ -871,6 +870,7 @@ virtual Microsoft.OData.Client.DataServiceContext.DisableInstanceAnnotationMater
 virtual Microsoft.OData.Client.DataServiceContext.DisableInstanceAnnotationMaterialization.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.EnableWritingODataAnnotationWithoutPrefix.get -> bool
 virtual Microsoft.OData.Client.DataServiceContext.EnableWritingODataAnnotationWithoutPrefix.set -> void
+virtual Microsoft.OData.Client.DataServiceContext.EndDeepInsert(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
 virtual Microsoft.OData.Client.DataServiceContext.EndExecute(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.OperationResponse
 virtual Microsoft.OData.Client.DataServiceContext.EndExecute<TElement>(System.IAsyncResult asyncResult) -> System.Collections.Generic.IEnumerable<TElement>
 virtual Microsoft.OData.Client.DataServiceContext.EndExecuteBatch(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
