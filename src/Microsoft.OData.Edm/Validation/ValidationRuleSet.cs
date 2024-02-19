@@ -35,7 +35,6 @@ namespace Microsoft.OData.Edm.Validation
                 ValidationRules.EntityTypeEntityKeyMustBeScalar,
                 ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor,
                 ValidationRules.EntityTypeBoundEscapeFunctionMustBeUnique,
-                ValidationRules.NavigationSourceTypeHasNoKeys, 
                 ValidationRules.StructuredTypeInvalidMemberNameMatchesTypeName,
                 ValidationRules.StructuredTypePropertyNameAlreadyDefined,
                 ValidationRules.StructuralPropertyInvalidPropertyType,
