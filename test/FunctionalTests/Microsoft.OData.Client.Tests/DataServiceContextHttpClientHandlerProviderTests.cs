@@ -89,7 +89,6 @@ namespace Microsoft.OData.Client.Tests
                     {
                         var directoryDataService = new DirectoryDataService(rootUri);
                         directoryDataService.HttpClientHandlerProvider = provider;
-                        directoryDataService.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
 
                         directoryDataService.AddObject(entitySet, new User());
 
@@ -125,7 +124,6 @@ namespace Microsoft.OData.Client.Tests
 
                 var context = new DataServiceContext(new Uri(BaseUri));
                 context.HttpClientHandlerProvider = provider;
-                context.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
 
                 var nameQuery = new DataServiceQuerySingle<string>(context, "People(1)/Name/$value");
                 string personName = await nameQuery.GetValueAsync();

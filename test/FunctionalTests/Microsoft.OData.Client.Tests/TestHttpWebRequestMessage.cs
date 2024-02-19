@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.OData.Client.Tests
 {
-    public class TestHttpWebRequestMessage : HttpWebRequestMessage
+    public class TestHttpWebRequestMessage : HttpClientRequestMessage
     {
         private readonly Func<Stream> getResponseStream;
         private readonly int statusCode;
