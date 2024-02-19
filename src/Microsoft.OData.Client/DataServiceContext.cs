@@ -52,22 +52,6 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
-    /// Describes the method that the client will use in making Http requests to the server. 
-    /// </summary>
-    public enum HttpRequestTransportMode
-    {
-        /// <summary>
-        /// Uses HttpWebRequest
-        /// </summary>
-        HttpWebRequest = 0,
-
-        /// <summary>
-        /// Uses HttpClient.
-        /// </summary>
-        HttpClient = 1,
-    }
-
-    /// <summary>
     /// The <see cref="Microsoft.OData.Client.DataServiceContext" /> represents the runtime context of the data service.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506", Justification = "Central class of the API, likely to have many cross-references")]
@@ -156,9 +140,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>Options that can overwrite ignoreMissingProperties.</summary>
         private UndeclaredPropertyBehavior undeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
-
-        /// <summary>The mode to use in making Http requests. Uses HttpWebRequest as the default. </summary>
-        private HttpRequestTransportMode httpRequestTransportMode = HttpRequestTransportMode.HttpWebRequest;
 
         /// <summary>The URL key delimiter to use.</summary>
         private DataServiceUrlKeyDelimiter urlKeyDelimiter;
@@ -719,22 +700,10 @@ namespace Microsoft.OData.Client
             set { this.undeclaredPropertyBehavior = value; }
         }
 
-        /// <summary>Gets or sets the HttpRequest mode to use in making Http Requests.</summary>
-        /// <returns>HttpRequestTransportMode.</returns>
-        public HttpRequestTransportMode HttpRequestTransportMode
-        {
-            get { return this.httpRequestTransportMode; }
-            set { this.httpRequestTransportMode = value; }
-        }
-
         /// <summary>
-        /// Gets or sets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> to use when making a request
-        /// under the <see cref="HttpRequestTransportMode.HttpClient"/>.
+        /// Gets or sets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> to use when making a request.
         /// If <see cref="HttpClientHandlerProvider"/> is null, a new <see cref="HttpClientHandler"/> instance will be created for each request.
         /// </summary>
-        /// <remarks>
-        /// This setting is ignored if the request transport mode is not <see cref="HttpRequestTransportMode.HttpClient"/>.
-        /// </remarks>
         public IHttpClientHandlerProvider HttpClientHandlerProvider { get; set; }
 
         /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>

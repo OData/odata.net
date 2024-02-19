@@ -20,16 +20,7 @@ namespace Microsoft.OData.Client
 
         public DataServiceClientRequestMessage CreateRequestMessage(DataServiceClientRequestMessageArgs args, DataServiceContext dataServiceContext)
         {
-            if (dataServiceContext.HttpRequestTransportMode == HttpRequestTransportMode.HttpWebRequest)
-            {
-#pragma warning disable CS0618 // Type or member is obsolete
-                return new HttpWebRequestMessage(args);
-#pragma warning restore CS0618 // Type or member is obsolete
-            }
-            else
-            {
-                return new HttpClientRequestMessage(args);
-            }
+            return new HttpClientRequestMessage(args);
         }
     }
 }
