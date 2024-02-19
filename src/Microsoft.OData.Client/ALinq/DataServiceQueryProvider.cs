@@ -87,6 +87,23 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+        private static Expression MakeCountExpression(Expression sourceExpression) 
+        {
+            return Expression.Call(
+                typeof(Enumerable), 
+                "Count", 
+                new Type[] { sourceExpression.Type.GetGenericArguments()[0] },
+                sourceExpression
+            );
+        }
+
+        private TElement GetValueForAny<TElement>(MethodCallExpression mce)
+        {
+            var countExpression = MakeCountExpression(mce.Arguments[0]);
+            DataServiceQuery<TElement> query = new DataServiceQuery<TElement>.DataServiceOrderedQuery(countExpression, this);
+            return query.GetValue(Context, ParseQuerySetCount<TElement>);
+        }
+
         /// <summary>Creates and executes a DataServiceQuery based on the passed in expression which results a single value</summary>
         /// <typeparam name="TElement">generic type</typeparam>
         /// <param name="expression">The expression for the new query</param>
@@ -114,6 +131,8 @@ namespace Microsoft.OData.Client
                     case SequenceMethod.LongCount:
                     case SequenceMethod.Count:
                         return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
+                    case SequenceMethod.Any:
+                        return GetValueForAny<TElement>(mce);
                     case SequenceMethod.SumIntSelector:
                     case SequenceMethod.SumDoubleSelector:
                     case SequenceMethod.SumDecimalSelector:
