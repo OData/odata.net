@@ -9,7 +9,6 @@ namespace Microsoft.OData.Client
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.IO;
     using System.Net;
     using Microsoft.OData;
@@ -51,7 +50,7 @@ namespace Microsoft.OData.Client
         /// Constructor.
         /// </summary>
         /// <param name="httpResponse">HttpWebResponse instance.</param>
-        public HttpWebResponseMessage(HttpWebResponse httpResponse)
+        internal HttpWebResponseMessage(HttpWebResponse httpResponse)
         {
             Util.CheckArgumentNull(httpResponse, "httpResponse");
             this.headers = new HeaderCollection(httpResponse.Headers);
@@ -84,17 +83,6 @@ namespace Microsoft.OData.Client
             get
             {
                 return this.headers.AsEnumerable();
-            }
-        }
-
-        /// <summary>
-        /// Gets the underlying <see cref="System.Net.HttpWebResponse"/>.
-        /// </summary>
-        public System.Net.HttpWebResponse Response
-        {
-            get
-            {
-                return this.httpWebResponse;
             }
         }
 

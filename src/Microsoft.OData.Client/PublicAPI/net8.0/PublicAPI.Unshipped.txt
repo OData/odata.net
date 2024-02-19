@@ -522,8 +522,6 @@ Microsoft.OData.Client.HttpClientRequestMessage.HttpClientRequestMessage(Microso
 Microsoft.OData.Client.HttpWebResponseMessage
 Microsoft.OData.Client.HttpWebResponseMessage.Dispose() -> void
 Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream) -> void
-Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Net.HttpWebResponse httpResponse) -> void
-Microsoft.OData.Client.HttpWebResponseMessage.Response.get -> System.Net.HttpWebResponse
 Microsoft.OData.Client.IBaseEntityType
 Microsoft.OData.Client.IBaseEntityType.Context.get -> Microsoft.OData.Client.DataServiceContext
 Microsoft.OData.Client.IBaseEntityType.Context.set -> void

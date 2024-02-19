@@ -1,8 +1,6 @@
 Microsoft.OData.Client.HttpWebResponseMessage
 Microsoft.OData.Client.HttpWebResponseMessage.Dispose() -> void
 Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream) -> void
-Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Net.HttpWebResponse httpResponse) -> void
-Microsoft.OData.Client.HttpWebResponseMessage.Response.get -> System.Net.HttpWebResponse
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
