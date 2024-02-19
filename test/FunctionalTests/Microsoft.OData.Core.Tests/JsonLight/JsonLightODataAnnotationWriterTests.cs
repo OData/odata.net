@@ -20,23 +20,23 @@ namespace Microsoft.OData.Tests.JsonLight
     {
         private StringBuilder builder;
         private StringWriter stringWriter;
-        private IJsonWriterAsync asyncJsonWriter;
-        private JsonLightODataAnnotationWriter asyncODataAnnotationWriter;
+        private IJsonWriter jsonWriter;
+        private JsonLightODataAnnotationWriter odataAnnotationWriter;
 
         public JsonLightODataAnnotationWriterTests()
         {
             this.builder = new StringBuilder();
             this.stringWriter = new StringWriter(builder);
-            this.asyncJsonWriter = (IJsonWriterAsync)new JsonWriter(this.stringWriter, isIeee754Compatible: true);
-            this.asyncODataAnnotationWriter = new JsonLightODataAnnotationWriter(
-                this.asyncJsonWriter, false, ODataVersion.V4);
+            this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
+            this.odataAnnotationWriter = new JsonLightODataAnnotationWriter(
+                this.jsonWriter, false, ODataVersion.V4);
         }
 
         [Fact]
         public async Task WriteInstanceAnnotationNameAsync_WritesInstanceAnnotationName()
         {
-            await this.asyncJsonWriter.StartObjectScopeAsync();
-            await this.asyncODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataType);
+            await this.jsonWriter.StartObjectScopeAsync();
+            await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataType);
             Assert.Equal("{\"@odata.type\":", this.builder.ToString());
         }
 
@@ -45,24 +45,24 @@ namespace Microsoft.OData.Tests.JsonLight
         [InlineData("NS.Customer", false)]
         public async Task WriteODataTypeInstanceAnnotationAsync_WritesODataTypeInstanceAnnotation(string typeName, bool writeRawValue)
         {
-            await this.asyncJsonWriter.StartObjectScopeAsync();
-            await this.asyncODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName, writeRawValue);
+            await this.jsonWriter.StartObjectScopeAsync();
+            await this.odataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName, writeRawValue);
             Assert.Equal("{\"@odata.type\":\"#NS.Customer\"", this.builder.ToString());
         }
 
         [Fact]
         public async Task WritePropertyAnnotationNameAsync_WritesPropertyAnnotationName()
         {
-            await this.asyncJsonWriter.StartObjectScopeAsync();
-            await this.asyncODataAnnotationWriter.WritePropertyAnnotationNameAsync("FavoriteColor", ODataAnnotationNames.ODataType);
+            await this.jsonWriter.StartObjectScopeAsync();
+            await this.odataAnnotationWriter.WritePropertyAnnotationNameAsync("FavoriteColor", ODataAnnotationNames.ODataType);
             Assert.Equal("{\"FavoriteColor@odata.type\":", this.builder.ToString());
         }
 
         [Fact]
         public async Task WriteODataTypePropertyAnnotationAsync_WritesODataTypePropertyAnnotation()
         {
-            await this.asyncJsonWriter.StartObjectScopeAsync();
-            await this.asyncODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync("FavoriteColor", "NS.Color");
+            await this.jsonWriter.StartObjectScopeAsync();
+            await this.odataAnnotationWriter.WriteODataTypePropertyAnnotationAsync("FavoriteColor", "NS.Color");
             Assert.Equal("{\"FavoriteColor@odata.type\":\"#NS.Color\"", this.builder.ToString());
         }
     }

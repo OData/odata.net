@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-# if NETCOREAPP3_1_OR_GREATER
+# if NETCOREAPP
 using Microsoft.OData.Json;
 using System.IO;
 using System.Text;
@@ -14,22 +14,15 @@ namespace Microsoft.OData.Tests.Json
     internal sealed class MockStreamBasedJsonWriterFactory : IStreamBasedJsonWriterFactory
     {
         private readonly IJsonWriter jsonWriter;
-        private readonly IJsonWriterAsync asyncJsonWriter;
 
-        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter, IJsonWriterAsync asyncJsonWriter)
+        public MockStreamBasedJsonWriterFactory(IJsonWriter jsonWriter)
         {
             this.jsonWriter = jsonWriter;
-            this.asyncJsonWriter = asyncJsonWriter;
         }
 
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             return this.jsonWriter;
-        }
-
-        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
-        {
-            return this.asyncJsonWriter;
         }
     }
 }

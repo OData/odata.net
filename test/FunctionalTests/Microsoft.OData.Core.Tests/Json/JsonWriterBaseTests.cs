@@ -4,7 +4,7 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -229,7 +229,7 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public void WritesJsonElementCorrectly()
         {

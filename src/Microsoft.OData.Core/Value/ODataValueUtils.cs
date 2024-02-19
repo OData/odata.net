@@ -7,7 +7,7 @@
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -49,7 +49,7 @@ namespace Microsoft.OData
                 return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ","));
             }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             // Ideally, the JsonElement should be wrapped inside an ODataJsonElementValue
             // when being assigned to an ODataProperty, that will avoid
             // this conversion and avoid boxing the JsonElement.

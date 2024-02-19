@@ -38,11 +38,6 @@ namespace Microsoft.OData.JsonLight
         private readonly SimpleLazy<JsonLightODataAnnotationWriter> odataAnnotationWriter;
 
         /// <summary>
-        /// Asynchronous OData annotation writer.
-        /// </summary>
-        private readonly SimpleLazy<JsonLightODataAnnotationWriter> asynchronousODataAnnotationWriter;
-
-        /// <summary>
         /// Set to true when odata.context is written; set to false otherwise.
         /// When value is false, all URIs written to the payload must be absolute.
         /// </summary>
@@ -72,11 +67,6 @@ namespace Microsoft.OData.JsonLight
             this.odataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(
                 () => new JsonLightODataAnnotationWriter(
                     this.jsonLightOutputContext.JsonWriter,
-                    this.jsonLightOutputContext.OmitODataPrefix,
-                    this.MessageWriterSettings.Version));
-            this.asynchronousODataAnnotationWriter = new SimpleLazy<JsonLightODataAnnotationWriter>(
-                () => new JsonLightODataAnnotationWriter(
-                    this.jsonLightOutputContext.AsynchronousJsonWriter,
                     this.jsonLightOutputContext.OmitODataPrefix,
                     this.MessageWriterSettings.Version));
 
@@ -110,16 +100,6 @@ namespace Microsoft.OData.JsonLight
                 return this.jsonLightOutputContext.JsonWriter;
             }
         }
-        /// <summary>
-        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message asynchronously.
-        /// </summary>
-        internal IJsonWriterAsync AsynchronousJsonWriter
-        {
-            get
-            {
-                return this.jsonLightOutputContext.AsynchronousJsonWriter;
-            }
-        }
 
         /// <summary>
         /// Instance annotation writer.
@@ -140,17 +120,6 @@ namespace Microsoft.OData.JsonLight
             get
             {
                 return this.odataAnnotationWriter.Value;
-            }
-        }
-
-        /// <summary>
-        /// OData annotation writer.
-        /// </summary>
-        internal JsonLightODataAnnotationWriter AsynchronousODataAnnotationWriter
-        {
-            get
-            {
-                return this.asynchronousODataAnnotationWriter.Value;
             }
         }
 
@@ -258,12 +227,12 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.MessageWriterSettings.HasJsonPaddingFunction())
             {
-                return WritePayloadStartInnerAsync(this.AsynchronousJsonWriter, this.MessageWriterSettings.JsonPCallback);
+                return WritePayloadStartInnerAsync(this.JsonWriter, this.MessageWriterSettings.JsonPCallback);
             }
 
             return Task.CompletedTask;
 
-            async Task WritePayloadStartInnerAsync(IJsonWriterAsync localJsonWriter, string jsonPCallback)
+            async Task WritePayloadStartInnerAsync(IJsonWriter localJsonWriter, string jsonPCallback)
             {
                 await localJsonWriter.WritePaddingFunctionNameAsync(jsonPCallback).ConfigureAwait(false);
                 await localJsonWriter.StartPaddingFunctionScopeAsync().ConfigureAwait(false);
@@ -278,7 +247,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.MessageWriterSettings.HasJsonPaddingFunction())
             {
-                return this.AsynchronousJsonWriter.EndPaddingFunctionScopeAsync();
+                return this.JsonWriter.EndPaddingFunctionScopeAsync();
             }
 
             return Task.CompletedTask;
@@ -349,7 +318,7 @@ namespace Microsoft.OData.JsonLight
                 thisParam,
                 errorParam,
                 includeDebugInformationParam) => ODataJsonWriterUtils.WriteErrorAsync(
-                    thisParam.AsynchronousJsonWriter,
+                    thisParam.JsonWriter,
                     thisParam.InstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
                     errorParam,
                     includeDebugInformationParam,
@@ -682,16 +651,16 @@ namespace Microsoft.OData.JsonLight
             {
                 if (string.IsNullOrEmpty(propertyName))
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataContext)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataContext)
                         .ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataContext)
+                    await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataContext)
                         .ConfigureAwait(false);
                 }
 
-                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString)
+                await this.JsonWriter.WritePrimitiveValueAsync(contextUri.IsAbsoluteUri ? contextUri.AbsoluteUri : contextUri.OriginalString)
                     .ConfigureAwait(false);
                 this.allowRelativeUri = true;
 

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="JsonWriterAsyncExtensions.cs" company="Microsoft">
+// <copyright file="JsonWriterExtensions.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -17,10 +17,7 @@ namespace Microsoft.OData.Json
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
-    /// <summary>
-    /// Extension methods for the asynchronous JSON writer.
-    /// </summary>
-    internal static class JsonWriterAsyncExtensions
+    internal static partial class JsonWriterExtensions
     {
         /// <summary>
         /// Asynchronously writes the json object value to the <paramref name="jsonWriter"/>.
@@ -30,9 +27,9 @@ namespace Microsoft.OData.Json
         /// <param name="injectPropertyDelegate">Called when the top-level object is started to possibly inject first property into the object.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal static async Task WriteJsonObjectValueAsync(
-            this IJsonWriterAsync jsonWriter,
+            this IJsonWriter jsonWriter,
             IDictionary<string, object> jsonObjectValue,
-            Func<IJsonWriterAsync, Task> injectPropertyDelegate)
+            Func<IJsonWriter, Task> injectPropertyDelegate)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(jsonObjectValue != null, "jsonObjectValue != null");
@@ -59,7 +56,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="value">The value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static Task WritePrimitiveValueAsync(this IJsonWriterAsync jsonWriter, object value)
+        internal static Task WritePrimitiveValueAsync(this IJsonWriter jsonWriter, object value)
         {
             if (value is bool)
             {
@@ -153,7 +150,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="odataValue">value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static Task WriteODataValueAsync(this IJsonWriterAsync jsonWriter, ODataValue odataValue)
+        internal static Task WriteODataValueAsync(this IJsonWriter jsonWriter, ODataValue odataValue)
         {
             if (odataValue == null || odataValue is ODataNullValue)
             {
@@ -174,7 +171,7 @@ namespace Microsoft.OData.Json
                 return WriteODataResourceValueAsync(jsonWriter, resourceValue);
 
                 async Task WriteODataResourceValueAsync(
-                    IJsonWriterAsync innerJsonWriter,
+                    IJsonWriter innerJsonWriter,
                     ODataResourceValue innerResourceValue)
                 {
                     await innerJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
@@ -194,7 +191,7 @@ namespace Microsoft.OData.Json
                 return WriteODataCollectionValueAsync(jsonWriter, collectionValue);
 
                 async Task WriteODataCollectionValueAsync(
-                    IJsonWriterAsync innerJsonWriter,
+                    IJsonWriter innerJsonWriter,
                     ODataCollectionValue innerCollectionValue)
                 {
                     await innerJsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
@@ -227,7 +224,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="arrayValue">Writes the json array value to the underlying json writer.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteJsonArrayValueAsync(this IJsonWriterAsync jsonWriter, IEnumerable arrayValue)
+        private static async Task WriteJsonArrayValueAsync(this IJsonWriter jsonWriter, IEnumerable arrayValue)
         {
             Debug.Assert(arrayValue != null, "arrayValue != null");
 
@@ -247,7 +244,7 @@ namespace Microsoft.OData.Json
         /// <param name="jsonWriter">The <see cref="JsonWriter"/> to write to.</param>
         /// <param name="propertyValue">value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static Task WriteJsonValueAsync(this IJsonWriterAsync jsonWriter, object propertyValue)
+        private static Task WriteJsonValueAsync(this IJsonWriter jsonWriter, object propertyValue)
         {
             if (propertyValue == null)
             {

@@ -64,7 +64,7 @@ namespace Microsoft.OData.Tests
 
         public override void Flush()
         {
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             throw new SynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Tests
             throw new SynchronousIOException();
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override int Read(Span<byte> buffer)
         {
             throw new SynchronousIOException();
@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             throw new SynchronousIOException();
 #else
             // We allow synchronous flushing in older frameworks
@@ -104,16 +104,16 @@ namespace Microsoft.OData.Tests
 #endif
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override void CopyTo(Stream destination, int bufferSize) => throw new SynchronousIOException();
 #endif
 
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override void Write(ReadOnlySpan<byte> buffer) => throw new SynchronousIOException();
 #endif
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         protected override void Dispose(bool disposing) => throw new SynchronousIOException();
 #else
         // In .NET Core <= 3.1 we don't support the async alternative DisposeAsync()
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Tests
         protected override void Dispose(bool disposing) => this.innerStream.Dispose();
 #endif
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override void Close() => throw new SynchronousIOException();
 #endif
 
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Tests
             this.innerStream.SetLength(value);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override ValueTask<int> ReadAsync(Memory<byte> buffer, CancellationToken cancellationToken = default) =>
             this.innerStream.ReadAsync(buffer, cancellationToken);
 #endif
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Tests
         public override Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
             => this.innerStream.WriteAsync(buffer, offset, count, cancellationToken);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 
         public override ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
             => this.innerStream.WriteAsync(buffer, cancellationToken);
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests
 
         public override Task FlushAsync(CancellationToken cancellationToken) => this.innerStream.FlushAsync(cancellationToken);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override async ValueTask DisposeAsync()
         {
             await this.innerStream.DisposeAsync();
@@ -164,7 +164,7 @@ namespace Microsoft.OData.Tests
         public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken) =>
             this.innerStream.CopyToAsync(destination, bufferSize, cancellationToken);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override IAsyncResult BeginRead(byte[] buffer, int offset, int count, AsyncCallback callback, object state) =>
             this.innerStream.BeginRead(buffer, offset, count, callback, state);
 

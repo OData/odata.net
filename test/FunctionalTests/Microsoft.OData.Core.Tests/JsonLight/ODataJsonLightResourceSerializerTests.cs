@@ -477,10 +477,10 @@ namespace Microsoft.OData.Tests.JsonLight
             ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext();
             var jsonLightResourceSerializer = new ODataJsonLightResourceSerializer(jsonLightOutputContext);
 
-            await jsonLightResourceSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+            await jsonLightResourceSerializer.JsonWriter.StartObjectScopeAsync();
             await func(jsonLightResourceSerializer);
             await jsonLightResourceSerializer.JsonLightOutputContext.FlushAsync();
-            await jsonLightResourceSerializer.AsynchronousJsonWriter.FlushAsync();
+            await jsonLightResourceSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

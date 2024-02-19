@@ -18,7 +18,7 @@ using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
 using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -582,7 +582,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 result);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public void WritingJsonElementProperties_ShouldSerializeJsonInput()
         {

@@ -164,7 +164,7 @@ namespace Microsoft.OData.JsonLight
             // NOTE: we are always writing a request payload here.
             await this.jsonLightValueSerializer.WritePayloadStartAsync()
                 .ConfigureAwait(false);
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonLightOutputContext.JsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -176,7 +176,7 @@ namespace Microsoft.OData.JsonLight
         {
             // NOTE: we are always writing a request payload here.
             this.jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonLightOutputContext.JsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
             await this.jsonLightValueSerializer.WritePayloadEndAsync()
                 .ConfigureAwait(false);
@@ -193,11 +193,11 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+            await this.jsonLightOutputContext.JsonWriter.WriteNameAsync(parameterName)
                 .ConfigureAwait(false);
             if (parameterValue == null)
             {
-                await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync((string)null)
+                await this.jsonLightOutputContext.JsonWriter.WriteValueAsync((string)null)
                     .ConfigureAwait(false);
             }
             else
@@ -230,7 +230,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+            await this.jsonLightOutputContext.JsonWriter.WriteNameAsync(parameterName)
                 .ConfigureAwait(false);
             return new ODataJsonLightCollectionWriter(this.jsonLightOutputContext, expectedItemType, /*listener*/this);
         }
@@ -246,7 +246,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+            await this.jsonLightOutputContext.JsonWriter.WriteNameAsync(parameterName)
                 .ConfigureAwait(false);
             return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/false, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }
@@ -262,7 +262,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
-            await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(parameterName)
+            await this.jsonLightOutputContext.JsonWriter.WriteNameAsync(parameterName)
                 .ConfigureAwait(false);
             return new ODataJsonLightWriter(this.jsonLightOutputContext, null, null, /*writingResourceSet*/true, /*writingParameter*/true, /*writingDelta*/false, /*listener*/this);
         }

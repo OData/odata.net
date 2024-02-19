@@ -101,7 +101,7 @@ namespace Microsoft.OData.JsonLight
             if (this.writingTopLevelCollection)
             {
                 // "{"
-                await this.AsynchronousJsonWriter.StartObjectScopeAsync()
+                await this.JsonWriter.StartObjectScopeAsync()
                     .ConfigureAwait(false);
 
                 // "@odata.context":...
@@ -116,29 +116,29 @@ namespace Microsoft.OData.JsonLight
                 // "@odata.count":...
                 if (collectionStart.Count.HasValue)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataCount)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataCount)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(collectionStart.Count.Value)
+                    await this.JsonWriter.WriteValueAsync(collectionStart.Count.Value)
                         .ConfigureAwait(false);
                 }
 
                 // "@odata.nextlink":...
                 if (collectionStart.NextPageLink != null)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNextLink)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNextLink)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(collectionStart.NextPageLink))
+                    await this.JsonWriter.WriteValueAsync(this.UriToString(collectionStart.NextPageLink))
                         .ConfigureAwait(false);
                 }
 
                 // "value":
-                await this.AsynchronousJsonWriter.WriteValuePropertyNameAsync()
+                await this.JsonWriter.WriteValuePropertyNameAsync()
                     .ConfigureAwait(false);
             }
 
             // Write the start of the array for the collection items
             // "["
-            await this.AsynchronousJsonWriter.StartArrayScopeAsync()
+            await this.JsonWriter.StartArrayScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -149,13 +149,13 @@ namespace Microsoft.OData.JsonLight
         {
             // Write the end of the array for the collection items
             // "]"
-            await this.AsynchronousJsonWriter.EndArrayScopeAsync()
+            await this.JsonWriter.EndArrayScopeAsync()
                 .ConfigureAwait(false);
 
             if (this.writingTopLevelCollection)
             {
                 // "}"
-                await this.AsynchronousJsonWriter.EndObjectScopeAsync()
+                await this.JsonWriter.EndObjectScopeAsync()
                     .ConfigureAwait(false);
             }
         }

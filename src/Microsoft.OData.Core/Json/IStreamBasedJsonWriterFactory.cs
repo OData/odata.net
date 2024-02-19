@@ -11,7 +11,7 @@ using System.Text;
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// The interface of factories that create <see cref="IJsonWriter"/> and <see cref="IJsonWriterAsync"/> instances
+    /// The interface of factories that create <see cref="IJsonWriter"/> instances
     /// that write directly to a <see cref="Stream"/> rather than a <see cref="TextWriter"/>.
     /// </summary>
     [CLSCompliant(false)]
@@ -25,16 +25,5 @@ namespace Microsoft.OData.Json
         /// <param name="encoding">The text encoding of the output data.</param>
         /// <returns>The JSON writer created.</returns>
         IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
-
-        /// <summary>
-        /// Creates an asynchronous JSON writer of <see cref="IJsonWriterAsync"/>.
-        /// The returned instance should also implement the synchronous <see cref="IJsonWriter"/>
-        /// interface.
-        /// </summary>
-        /// <param name="stream">Output stream to which the resulting <see cref="IJsonWriterAsync"/> should write data.</param>
-        /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
-        /// <param name="encoding">The text encoding of the output data.</param>
-        /// <returns>The JSON writer created.</returns>
-        IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
     }
 }

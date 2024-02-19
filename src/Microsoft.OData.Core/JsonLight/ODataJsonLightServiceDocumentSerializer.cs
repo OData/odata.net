@@ -146,7 +146,7 @@ namespace Microsoft.OData.JsonLight
                 async (thisParam, serviceDocumentParam) =>
                 {
                     // "{"
-                    await thisParam.AsynchronousJsonWriter.StartObjectScopeAsync()
+                    await thisParam.JsonWriter.StartObjectScopeAsync()
                         .ConfigureAwait(false);
 
                     // "@odata.context":...
@@ -154,11 +154,11 @@ namespace Microsoft.OData.JsonLight
                         .ConfigureAwait(false);
 
                     // "value":
-                    await thisParam.AsynchronousJsonWriter.WriteValuePropertyNameAsync()
+                    await thisParam.JsonWriter.WriteValuePropertyNameAsync()
                         .ConfigureAwait(false);
 
                     // "["
-                    await thisParam.AsynchronousJsonWriter.StartArrayScopeAsync()
+                    await thisParam.JsonWriter.StartArrayScopeAsync()
                         .ConfigureAwait(false);
 
                     if (serviceDocumentParam.EntitySets != null)
@@ -200,11 +200,11 @@ namespace Microsoft.OData.JsonLight
                     }
 
                     // "]"
-                    await thisParam.AsynchronousJsonWriter.EndArrayScopeAsync()
+                    await thisParam.JsonWriter.EndArrayScopeAsync()
                         .ConfigureAwait(false);
 
                     // "}"
-                    await thisParam.AsynchronousJsonWriter.EndObjectScopeAsync()
+                    await thisParam.JsonWriter.EndObjectScopeAsync()
                         .ConfigureAwait(false);
                 },
                 this,
@@ -222,22 +222,22 @@ namespace Microsoft.OData.JsonLight
             ValidationUtils.ValidateServiceDocumentElement(serviceDocumentElement, ODataFormat.Json);
 
             // "{"
-            await this.AsynchronousJsonWriter.StartObjectScopeAsync()
+            await this.JsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             // "name": ...
-            await this.AsynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementName)
+            await this.JsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementName)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(serviceDocumentElement.Name)
+            await this.JsonWriter.WriteValueAsync(serviceDocumentElement.Name)
                 .ConfigureAwait(false);
 
             // Do not write title if it is null or empty, or if title is the same as name.
             if (!string.IsNullOrEmpty(serviceDocumentElement.Title) && !serviceDocumentElement.Title.Equals(serviceDocumentElement.Name, StringComparison.Ordinal))
             {
                 // "title": ...
-                await this.AsynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementTitle)
+                await this.JsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementTitle)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(serviceDocumentElement.Title)
+                await this.JsonWriter.WriteValueAsync(serviceDocumentElement.Title)
                     .ConfigureAwait(false);
             }
 
@@ -245,20 +245,20 @@ namespace Microsoft.OData.JsonLight
             if (kind != null)
             {
                 // "kind": ...
-                await this.AsynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementKind)
+                await this.JsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementKind)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(kind)
+                await this.JsonWriter.WriteValueAsync(kind)
                     .ConfigureAwait(false);
             }
 
             // "url": ...
-            await this.AsynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementUrlName)
+            await this.JsonWriter.WriteNameAsync(JsonLightConstants.ODataServiceDocumentElementUrlName)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(serviceDocumentElement.Url))
+            await this.JsonWriter.WriteValueAsync(this.UriToString(serviceDocumentElement.Url))
                 .ConfigureAwait(false);
 
             // "}"
-            await this.AsynchronousJsonWriter.EndObjectScopeAsync()
+            await this.JsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
     }

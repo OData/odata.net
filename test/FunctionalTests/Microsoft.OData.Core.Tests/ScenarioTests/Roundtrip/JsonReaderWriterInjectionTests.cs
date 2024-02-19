@@ -14,7 +14,7 @@ using Microsoft.OData.Json;
 using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.Test.OData.Utils.ODataLibTest;
 using Xunit;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -374,7 +374,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
-        private class TestJsonWriter : IJsonWriter, IJsonWriterAsync
+        private class TestJsonWriter : IJsonWriter
         {
             private readonly TextWriter textWriter;
 
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
 #endif
 
@@ -537,9 +537,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 return this.textWriter.FlushAsync();
             }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
 #endif
+
+            public Stream StartStreamValueScope() => throw new NotImplementedException();
+
+            public TextWriter StartTextWriterValueScope(string contentType) => throw new NotImplementedException();
+
+            public void EndStreamValueScope() => throw new NotImplementedException();
+
+            public void EndTextWriterValueScope() => throw new NotImplementedException();
+
+            public Task<Stream> StartStreamValueScopeAsync() => throw new NotImplementedException();
+
+            public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType) => throw new NotImplementedException();
+
+            public Task EndStreamValueScopeAsync() => throw new NotImplementedException();
+
+            public Task EndTextWriterValueScopeAsync() => throw new NotImplementedException();
         }
 
         private class TestJsonReader : IJsonReader

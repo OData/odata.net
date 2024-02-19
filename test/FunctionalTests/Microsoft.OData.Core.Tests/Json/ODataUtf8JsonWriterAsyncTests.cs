@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.Json
     /// </summary>
     public sealed class ODataUtf8JsonWriterAsyncTests: JsonWriterAsyncBaseTests, IAsyncDisposable
     {
-        private IJsonWriterAsync writer;
+        private IJsonWriter writer;
         private Stream stream;
         private bool disposed;
 
@@ -308,7 +308,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteJsonObjectValueAsync_CallsInjectedPropertyAction()
         {
             var properties = new Dictionary<string, object> { { "Name", "Sue" } };
-            Func<IJsonWriterAsync, Task> injectPropertyDelegate = async (IJsonWriterAsync actionWriter) =>
+            Func<IJsonWriter, Task> injectPropertyDelegate = async (IJsonWriter actionWriter) =>
             {
                 await actionWriter.WriteNameAsync("Id");
                 await actionWriter.WriteValueAsync(7);
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Tests.Json
         /// <param name="stream">The stream to read from.</param>
         /// <param name="encoding">The encoding of the data in the stream.</param>
         /// <returns>The text content in the stream.</returns>
-        private async Task<string> ReadStreamAsync(IJsonWriterAsync writer, Stream stream, Encoding encoding)
+        private async Task<string> ReadStreamAsync(IJsonWriter writer, Stream stream, Encoding encoding)
         {
             await writer.FlushAsync();
             stream.Seek(0, SeekOrigin.Begin);
@@ -577,7 +577,7 @@ namespace Microsoft.OData.Tests.Json
             return contents;
         }
 
-        protected override IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        protected override IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
         }

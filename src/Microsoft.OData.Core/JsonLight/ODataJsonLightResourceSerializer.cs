@@ -360,12 +360,12 @@ namespace Microsoft.OData.JsonLight
             {
                 if (propertyName == null)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                    await this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
                         .ConfigureAwait(false);
                 }
                 else
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(propertyName, typeName)
+                    await this.ODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(propertyName, typeName)
                         .ConfigureAwait(false);
                 }
             }
@@ -391,7 +391,7 @@ namespace Microsoft.OData.JsonLight
 
             if (typeName != null && !string.Equals(typeName, ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
             {
-                await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                await this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
                     .ConfigureAwait(false);
             }
 
@@ -399,14 +399,14 @@ namespace Microsoft.OData.JsonLight
             Uri id;
             if (resourceState?.ResourceType?.TypeKind != EdmTypeKind.Complex && resource.MetadataBuilder.TryGetIdForSerialization(out id))
             {
-                await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
+                await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
                     .ConfigureAwait(false);
                 if (id != null && !resource.HasNonComputedId)
                 {
                     id = this.MetadataDocumentBaseUri.MakeRelativeUri(id);
                 }
 
-                await this.AsynchronousJsonWriter.WriteValueAsync(id == null ? null : this.UriToString(id))
+                await this.JsonWriter.WriteValueAsync(id == null ? null : this.UriToString(id))
                     .ConfigureAwait(false);
             }
 
@@ -414,9 +414,9 @@ namespace Microsoft.OData.JsonLight
             string etag = resource.ETag;
             if (etag != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataETag)
+                await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataETag)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(etag)
+                await this.JsonWriter.WriteValueAsync(etag)
                     .ConfigureAwait(false);
             }
         }
@@ -438,9 +438,9 @@ namespace Microsoft.OData.JsonLight
             // Write the "@odata.editLink": "edit-link-uri"
             if (resource.EditLink != null && !resourceState.EditLinkWritten)
             {
-                await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataEditLink)
+                await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataEditLink)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(GetEditLinkForWriting(resource))
+                await this.JsonWriter.WriteValueAsync(GetEditLinkForWriting(resource))
                     .ConfigureAwait(false);
                 resourceState.EditLinkWritten = true;
             }
@@ -449,10 +449,10 @@ namespace Microsoft.OData.JsonLight
             // If readlink is identical to editlink, don't write readlink.
             if (resource.ReadLink != null && resource.ReadLink != resource.EditLink && !resourceState.ReadLinkWritten)
             {
-                await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataReadLink)
+                await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataReadLink)
                     .ConfigureAwait(false);
 
-                await this.AsynchronousJsonWriter.WriteValueAsync(GetReadLinkForWriting(resource))
+                await this.JsonWriter.WriteValueAsync(GetReadLinkForWriting(resource))
                     .ConfigureAwait(false);
                 resourceState.ReadLinkWritten = true;
             }
@@ -464,9 +464,9 @@ namespace Microsoft.OData.JsonLight
                 // Write the "@odata.mediaEditLink": "edit-link-uri"
                 if (mediaResource.EditLink != null && !resourceState.MediaEditLinkWritten)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaEditLink)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaEditLink)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(GetEditLinkForWriting(mediaResource))
+                    await this.JsonWriter.WriteValueAsync(GetEditLinkForWriting(mediaResource))
                         .ConfigureAwait(false);
                     resourceState.MediaEditLinkWritten = true;
                 }
@@ -475,9 +475,9 @@ namespace Microsoft.OData.JsonLight
                 // If mediaReadLink is identical to mediaEditLink, don't write readlink.
                 if (mediaResource.ReadLink != null && mediaResource.ReadLink != mediaResource.EditLink && !resourceState.MediaReadLinkWritten)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaReadLink)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaReadLink)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(GetReadLinkForWriting(mediaResource))
+                    await this.JsonWriter.WriteValueAsync(GetReadLinkForWriting(mediaResource))
                         .ConfigureAwait(false);
                     resourceState.MediaReadLinkWritten = true;
                 }
@@ -486,9 +486,9 @@ namespace Microsoft.OData.JsonLight
                 string mediaContentType = mediaResource.ContentType;
                 if (mediaContentType != null && !resourceState.MediaContentTypeWritten)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaContentType)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaContentType)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(mediaContentType)
+                    await this.JsonWriter.WriteValueAsync(mediaContentType)
                         .ConfigureAwait(false);
                     resourceState.MediaContentTypeWritten = true;
                 }
@@ -497,9 +497,9 @@ namespace Microsoft.OData.JsonLight
                 string mediaETag = mediaResource.ETag;
                 if (mediaETag != null && !resourceState.MediaETagWritten)
                 {
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaETag)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataMediaETag)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(mediaETag)
+                    await this.JsonWriter.WriteValueAsync(mediaETag)
                         .ConfigureAwait(false);
                     resourceState.MediaETagWritten = true;
                 }
@@ -587,9 +587,9 @@ namespace Microsoft.OData.JsonLight
             if (navigationLinkUrl != null)
             {
                 // The navigation link URL is a property annotation "NestedResourceInfoName@odata.navigationLinkUrl: 'url'"
-                await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl)
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(navigationLinkName, ODataAnnotationNames.ODataNavigationLinkUrl)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(navigationLinkUrl))
+                await this.JsonWriter.WriteValueAsync(this.UriToString(navigationLinkUrl))
                     .ConfigureAwait(false);
             }
         }
@@ -854,9 +854,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(associationLinkUrl != null, "associationLinkUrl != null");
 
             // The association link URL is a property annotation "NestedResourceInfoName@odata.associationLinkUrl: 'url'"
-            await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataAssociationLinkUrl)
+            await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataAssociationLinkUrl)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(associationLinkUrl))
+            await this.JsonWriter.WriteValueAsync(this.UriToString(associationLinkUrl))
                 .ConfigureAwait(false);
         }
 
@@ -871,12 +871,12 @@ namespace Microsoft.OData.JsonLight
         private async Task WriteOperationMetadataGroupAsync(IGrouping<string, ODataOperation> operations)
         {
             this.ValidateOperationMetadataGroup(operations);
-            await this.JsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(operations.Key)
+            await this.JsonLightOutputContext.JsonWriter.WriteNameAsync(operations.Key)
                 .ConfigureAwait(false);
             bool useArray = operations.Count() > 1;
             if (useArray)
             {
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.StartArrayScopeAsync()
+                await this.JsonLightOutputContext.JsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
             }
 
@@ -888,7 +888,7 @@ namespace Microsoft.OData.JsonLight
 
             if (useArray)
             {
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.EndArrayScopeAsync()
+                await this.JsonLightOutputContext.JsonWriter.EndArrayScopeAsync()
                     .ConfigureAwait(false);
             }
         }
@@ -906,27 +906,27 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(operation != null, "operation must not be null.");
             Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
 
-            await this.JsonLightOutputContext.AsynchronousJsonWriter.StartObjectScopeAsync()
+            await this.JsonLightOutputContext.JsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             if (operation.Title != null)
             {
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(JsonConstants.ODataOperationTitleName)
+                await this.JsonLightOutputContext.JsonWriter.WriteNameAsync(JsonConstants.ODataOperationTitleName)
                     .ConfigureAwait(false);
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync(operation.Title)
+                await this.JsonLightOutputContext.JsonWriter.WriteValueAsync(operation.Title)
                     .ConfigureAwait(false);
             }
 
             if (operation.Target != null)
             {
                 string targetUrlString = this.GetOperationTargetUriString(operation);
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.WriteNameAsync(JsonConstants.ODataOperationTargetName)
+                await this.JsonLightOutputContext.JsonWriter.WriteNameAsync(JsonConstants.ODataOperationTargetName)
                     .ConfigureAwait(false);
-                await this.JsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync(targetUrlString)
+                await this.JsonLightOutputContext.JsonWriter.WriteValueAsync(targetUrlString)
                     .ConfigureAwait(false);
             }
 
-            await this.JsonLightOutputContext.AsynchronousJsonWriter.EndObjectScopeAsync()
+            await this.JsonLightOutputContext.JsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 

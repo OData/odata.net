@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.IO;
 using System.Text;
@@ -43,21 +43,6 @@ namespace Microsoft.OData.Json
                 throw new ArgumentNullException(nameof(stream));
             }
         
-            if (encoding == null)
-            {
-                throw new ArgumentNullException(nameof(encoding));
-            }
-
-            return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding, encoder: this.encoder, leaveStreamOpen: true);
-        }
-
-        public IJsonWriterAsync CreateAsynchronousJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
-        {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
-
             if (encoding == null)
             {
                 throw new ArgumentNullException(nameof(encoding));

@@ -219,7 +219,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 this.WriteJsonElementProperty(jsonElementValue);
@@ -275,7 +275,7 @@ namespace Microsoft.OData.JsonLight
             return this.WriteTopLevelPayloadAsync(
                 async (thisParam, propertyParam) =>
                 {
-                    await thisParam.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                    await thisParam.JsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
                     ODataPayloadKind kind = thisParam.GetPayloadKind();
 
                     if (!(thisParam.JsonLightOutputContext.MetadataLevel is JsonNoMetadataLevel))
@@ -299,7 +299,7 @@ namespace Microsoft.OData.JsonLight
 
                     thisParam.JsonLightValueSerializer.AssertRecursionDepthIsZero();
                     thisParam.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
-                    await thisParam.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+                    await thisParam.JsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
                 },
                 this,
                 property);
@@ -440,7 +440,7 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 await this.WriteJsonElementPropertyAsync(jsonElementValue)
@@ -522,7 +522,7 @@ namespace Microsoft.OData.JsonLight
             return;
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Writes a <see cref="System.Text.Json.JsonElement"/> property.
         /// </summary>
@@ -925,22 +925,22 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteUntypedValueAsync(ODataUntypedValue untypedValue)
         {
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
             await this.jsonLightValueSerializer.WriteUntypedValueAsync(untypedValue)
                 .ConfigureAwait(false);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Asynchronously writes an <see cref="System.Text.Json.JsonElement"/> value.
         /// </summary>
         /// <param name="jsonElementvalue">The value to be written.</param>
         private async Task WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementvalue)
         {
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(jsonElementvalue.Value)
+            await this.JsonWriter.WriteValueAsync(jsonElementvalue.Value)
                 .ConfigureAwait(false);
         }
 
@@ -1010,11 +1010,11 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (isTopLevel)
                     {
-                        return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName);
+                        return this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName);
                     }
                     else
                     {
-                        return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
+                        return this.ODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(property.Name, typeName);
 
                     }
                 }
@@ -1037,36 +1037,36 @@ namespace Microsoft.OData.JsonLight
             Uri mediaEditLink = streamInfo.EditLink;
             if (mediaEditLink != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaEditLink)
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaEditLink)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(mediaEditLink))
+                await this.JsonWriter.WriteValueAsync(this.UriToString(mediaEditLink))
                     .ConfigureAwait(false);
             }
 
             Uri mediaReadLink = streamInfo.ReadLink;
             if (mediaReadLink != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaReadLink)
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaReadLink)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(mediaReadLink))
+                await this.JsonWriter.WriteValueAsync(this.UriToString(mediaReadLink))
                     .ConfigureAwait(false);
             }
 
             string mediaContentType = streamInfo.ContentType;
             if (mediaContentType != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaContentType)
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaContentType)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(mediaContentType)
+                await this.JsonWriter.WriteValueAsync(mediaContentType)
                     .ConfigureAwait(false);
             }
 
             string mediaETag = streamInfo.ETag;
             if (mediaETag != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaETag)
+                await this.ODataAnnotationWriter.WritePropertyAnnotationNameAsync(propertyName, ODataAnnotationNames.ODataMediaETag)
                     .ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WriteValueAsync(mediaETag)
+                await this.JsonWriter.WriteValueAsync(mediaETag)
                     .ConfigureAwait(false);
             }
         }
@@ -1089,9 +1089,9 @@ namespace Microsoft.OData.JsonLight
                     ODataLibraryCompatibility.Version7 && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
-                    await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNull)
+                    await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNull)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValueAsync(true)
+                    await this.JsonWriter.WriteValueAsync(true)
                         .ConfigureAwait(false);
                 }
                 else
@@ -1106,7 +1106,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                await this.AsynchronousJsonWriter.WriteNameAsync(property.Name)
+                await this.JsonWriter.WriteNameAsync(property.Name)
                     .ConfigureAwait(false);
                 await this.JsonLightValueSerializer.WriteNullValueAsync()
                     .ConfigureAwait(false);
@@ -1126,7 +1126,7 @@ namespace Microsoft.OData.JsonLight
             bool isOpenPropertyType)
         {
             Debug.Assert(!this.currentPropertyInfo.IsTopLevel, "Resource property should not be top level");
-            await this.AsynchronousJsonWriter.WriteNameAsync(property.Name)
+            await this.JsonWriter.WriteNameAsync(property.Name)
                 .ConfigureAwait(false);
 
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker = this.GetDuplicatePropertyNameChecker();
@@ -1153,7 +1153,7 @@ namespace Microsoft.OData.JsonLight
             ResolveEnumValueTypeName(enumValue, isOpenPropertyType);
 
             await this.WritePropertyTypeNameAsync().ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
             await this.JsonLightValueSerializer.WriteEnumValueAsync(enumValue, this.currentPropertyInfo.MetadataType.TypeReference)
                 .ConfigureAwait(false);
@@ -1173,7 +1173,7 @@ namespace Microsoft.OData.JsonLight
 
             await this.WritePropertyTypeNameAsync()
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
 
             // passing false for 'isTopLevel' because the outer wrapping object has already been written.
@@ -1194,7 +1194,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteStreamPropertyAsync(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
         {
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
             await this.JsonLightValueSerializer.WriteStreamValueAsync(streamValue)
                 .ConfigureAwait(false);
@@ -1215,7 +1215,7 @@ namespace Microsoft.OData.JsonLight
             WriterValidationUtils.ValidatePropertyDerivedTypeConstraint(this.currentPropertyInfo);
 
             await this.WritePropertyTypeNameAsync().ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
+            await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
             await this.JsonLightValueSerializer.WritePrimitiveValueAsync(primitiveValue.Value, this.currentPropertyInfo.ValueType.TypeReference, this.currentPropertyInfo.MetadataType.TypeReference)
                 .ConfigureAwait(false);
@@ -1233,11 +1233,11 @@ namespace Microsoft.OData.JsonLight
                 // We write the type name as an instance annotation (named "odata.type") for top-level properties, but as a property annotation (e.g., "...@odata.type") if not top level.
                 if (this.currentPropertyInfo.IsTopLevel)
                 {
-                    return this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
+                    return this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeNameToWrite);
                 }
                 else
                 {
-                    return this.AsynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite);
+                    return this.ODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(this.currentPropertyInfo.PropertyName, typeNameToWrite);
                 }
             }
 

@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.Diagnostics;
 using System.Globalization;
@@ -20,10 +20,10 @@ using Microsoft.OData.Edm;
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// Implementation of <see cref="IJsonWriter"/> and <see cref="IJsonWriterAsync"/>that is based on
+    /// Implementation of <see cref="IJsonWriter"/> that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IJsonWriterAsync, IAsyncDisposable
+    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
@@ -884,7 +884,47 @@ namespace Microsoft.OData.Json
             }
         }
 
-#endregion
+        public Stream StartStreamValueScope()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TextWriter StartTextWriterValueScope(string contentType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndStreamValueScope()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void EndTextWriterValueScope()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Stream> StartStreamValueScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EndStreamValueScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task EndTextWriterValueScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
     }
 }

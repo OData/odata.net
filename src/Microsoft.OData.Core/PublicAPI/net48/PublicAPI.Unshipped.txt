@@ -1,3 +1,37 @@
+Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndStreamValueScope() -> void
+Microsoft.OData.Json.IJsonWriter.EndStreamValueScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndTextWriterValueScope() -> void
+Microsoft.OData.Json.IJsonWriter.EndTextWriterValueScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.FlushAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartArrayScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartObjectScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartStreamValueScope() -> System.IO.Stream
+Microsoft.OData.Json.IJsonWriter.StartStreamValueScopeAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Json.IJsonWriter.StartTextWriterValueScope(string contentType) -> System.IO.TextWriter
+Microsoft.OData.Json.IJsonWriter.StartTextWriterValueScopeAsync(string contentType) -> System.Threading.Tasks.Task<System.IO.TextWriter>
+Microsoft.OData.Json.IJsonWriter.WriteNameAsync(string name) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WritePaddingFunctionNameAsync(string functionName) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteRawValueAsync(string rawValue) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(bool value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte[] value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(decimal value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(double value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(float value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(int value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(long value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.Date value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.TimeOfDay value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(sbyte value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(short value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(string value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateTimeOffset value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.Task
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
@@ -176,7 +210,6 @@ Microsoft.OData.IODataResponseMessage.StatusCode.set -> void
 Microsoft.OData.IODataResponseMessageAsync
 Microsoft.OData.IODataResponseMessageAsync.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.Json.DefaultJsonWriterFactory
-Microsoft.OData.Json.DefaultJsonWriterFactory.CreateAsynchronousJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriterAsync
 Microsoft.OData.Json.DefaultJsonWriterFactory.CreateJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory() -> void
 Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory(Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption) -> void
@@ -200,16 +233,6 @@ Microsoft.OData.Json.IJsonStreamReaderAsync
 Microsoft.OData.Json.IJsonStreamReaderAsync.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.Json.IJsonStreamReaderAsync.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.Json.IJsonStreamReaderAsync.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
-Microsoft.OData.Json.IJsonStreamWriter
-Microsoft.OData.Json.IJsonStreamWriter.EndStreamValueScope() -> void
-Microsoft.OData.Json.IJsonStreamWriter.EndTextWriterValueScope() -> void
-Microsoft.OData.Json.IJsonStreamWriter.StartStreamValueScope() -> System.IO.Stream
-Microsoft.OData.Json.IJsonStreamWriter.StartTextWriterValueScope(string contentType) -> System.IO.TextWriter
-Microsoft.OData.Json.IJsonStreamWriterAsync
-Microsoft.OData.Json.IJsonStreamWriterAsync.EndStreamValueScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonStreamWriterAsync.EndTextWriterValueScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonStreamWriterAsync.StartStreamValueScopeAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.Json.IJsonStreamWriterAsync.StartTextWriterValueScopeAsync(string contentType) -> System.Threading.Tasks.Task<System.IO.TextWriter>
 Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.IJsonWriter.EndArrayScope() -> void
 Microsoft.OData.Json.IJsonWriter.EndObjectScope() -> void
@@ -237,37 +260,8 @@ Microsoft.OData.Json.IJsonWriter.WriteValue(string value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.DateTimeOffset value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.Guid value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.TimeSpan value) -> void
-Microsoft.OData.Json.IJsonWriterAsync
-Microsoft.OData.Json.IJsonWriterAsync.EndArrayScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.EndObjectScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.FlushAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.StartArrayScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.StartObjectScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.StartPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteNameAsync(string name) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WritePaddingFunctionNameAsync(string functionName) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteRawValueAsync(string rawValue) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(bool value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(byte value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(byte[] value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(decimal value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(double value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(float value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(int value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(long value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(Microsoft.OData.Edm.Date value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(Microsoft.OData.Edm.TimeOfDay value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(sbyte value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(short value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(string value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(System.DateTimeOffset value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriterAsync.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriterFactory
 Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriter
-Microsoft.OData.Json.IJsonWriterFactoryAsync
-Microsoft.OData.Json.IJsonWriterFactoryAsync.CreateAsynchronousJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriterAsync
 Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.JsonNodeType.EndArray = 4 -> Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.JsonNodeType.EndObject = 2 -> Microsoft.OData.Json.JsonNodeType
@@ -2493,7 +2487,6 @@ virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedPrecision(
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedScale(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.UriPathParser.ParsePathIntoSegments(System.Uri fullUri, System.Uri serviceBaseUri) -> System.Collections.Generic.ICollection<string>
 Microsoft.OData.Json.IStreamBasedJsonWriterFactory
-Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateAsynchronousJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriterAsync
 Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.get -> bool
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.set -> void

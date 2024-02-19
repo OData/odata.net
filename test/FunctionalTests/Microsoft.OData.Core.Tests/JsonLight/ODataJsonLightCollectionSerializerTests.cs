@@ -234,7 +234,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var jsonLightCollectionSerializer = CreateODataJsonLightCollectionSerializer(true, container, true, writingTopLevelCollection);
             await func(jsonLightCollectionSerializer);
             await jsonLightCollectionSerializer.JsonLightOutputContext.FlushAsync();
-            await jsonLightCollectionSerializer.AsynchronousJsonWriter.FlushAsync();
+            await jsonLightCollectionSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

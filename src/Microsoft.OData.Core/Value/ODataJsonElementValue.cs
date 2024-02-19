@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 
 namespace Microsoft.OData

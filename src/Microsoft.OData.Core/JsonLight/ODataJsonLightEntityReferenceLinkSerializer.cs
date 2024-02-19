@@ -204,7 +204,7 @@ namespace Microsoft.OData.JsonLight
 
             WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
 
-            await this.AsynchronousJsonWriter.StartObjectScopeAsync()
+            await this.JsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             if (isTopLevel)
@@ -213,14 +213,14 @@ namespace Microsoft.OData.JsonLight
                     .ConfigureAwait(false);
             }
 
-            await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
+            await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(entityReferenceLink.Url))
+            await this.JsonWriter.WriteValueAsync(this.UriToString(entityReferenceLink.Url))
                 .ConfigureAwait(false);
 
             await this.InstanceAnnotationWriter.WriteInstanceAnnotationsAsync(entityReferenceLink.InstanceAnnotations)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.EndObjectScopeAsync()
+            await this.JsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -235,7 +235,7 @@ namespace Microsoft.OData.JsonLight
             bool wroteNextLink = false;
 
             // {
-            await this.AsynchronousJsonWriter.StartObjectScopeAsync()
+            await this.JsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             // "@odata.context": ...
@@ -263,11 +263,11 @@ namespace Microsoft.OData.JsonLight
             this.InstanceAnnotationWriter.WriteInstanceAnnotations(entityReferenceLinks.InstanceAnnotations);
 
             // "value":
-            await this.AsynchronousJsonWriter.WriteValuePropertyNameAsync()
+            await this.JsonWriter.WriteValuePropertyNameAsync()
                 .ConfigureAwait(false);
 
             // "[":
-            await this.AsynchronousJsonWriter.StartArrayScopeAsync()
+            await this.JsonWriter.StartArrayScopeAsync()
                 .ConfigureAwait(false);
 
             IEnumerable<ODataEntityReferenceLink> entityReferenceLinksEnumerable = entityReferenceLinks.Links;
@@ -282,7 +282,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // "]"
-            await this.AsynchronousJsonWriter.EndArrayScopeAsync()
+            await this.JsonWriter.EndArrayScopeAsync()
                 .ConfigureAwait(false);
 
             if (!wroteNextLink && entityReferenceLinks.NextPageLink != null)
@@ -293,7 +293,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // "}"
-            await this.AsynchronousJsonWriter.EndObjectScopeAsync()
+            await this.JsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -305,9 +305,9 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(nextPageLink != null, "Expected non-null next link.");
 
-            await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNextLink)
+            await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNextLink)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(this.UriToString(nextPageLink))
+            await this.JsonWriter.WriteValueAsync(this.UriToString(nextPageLink))
                 .ConfigureAwait(false);
         }
 
@@ -317,9 +317,9 @@ namespace Microsoft.OData.JsonLight
         /// <param name="countValue">The value of the count property to write.</param>
         private async Task WriteCountAnnotationAsync(long countValue)
         {
-            await this.AsynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataCount)
+            await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataCount)
                 .ConfigureAwait(false);
-            await this.AsynchronousJsonWriter.WriteValueAsync(countValue)
+            await this.JsonWriter.WriteValueAsync(countValue)
                 .ConfigureAwait(false);
         }
     }

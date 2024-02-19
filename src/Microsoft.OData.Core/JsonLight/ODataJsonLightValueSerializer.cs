@@ -330,7 +330,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(value != null, "value != null");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 // We don't perform validation for ODataJsonElementValue.
@@ -386,20 +386,11 @@ namespace Microsoft.OData.JsonLight
 
         public virtual void WriteStreamValue(ODataBinaryStreamValue streamValue)
         {
-            IJsonStreamWriter streamWriter = this.JsonWriter as IJsonStreamWriter;
-            if (streamWriter == null)
-            {
-                // write as a byte array
-                this.JsonWriter.WritePrimitiveValue(streamValue.Stream.ReadAllBytes());
-            }
-            else
-            {
-                Stream stream = streamWriter.StartStreamValueScope();
-                streamValue.Stream.CopyTo(stream);
-                stream.Flush();
-                stream.Dispose();
-                streamWriter.EndStreamValueScope();
-            }
+            Stream stream = this.JsonWriter.StartStreamValueScope();
+            streamValue.Stream.CopyTo(stream);
+            stream.Flush();
+            stream.Dispose();
+            this.JsonWriter.EndStreamValueScope();
 
             if (!streamValue.LeaveOpen)
             {
@@ -413,7 +404,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         public virtual Task WriteNullValueAsync()
         {
-            return this.AsynchronousJsonWriter.WriteValueAsync((string)null);
+            return this.JsonWriter.WriteValueAsync((string)null);
         }
 
         /// <summary>
@@ -432,7 +423,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                return this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value.Value);
+                return this.JsonWriter.WritePrimitiveValueAsync(value.Value);
             }
         }
 
@@ -457,7 +448,7 @@ namespace Microsoft.OData.JsonLight
             this.IncreaseRecursionDepth();
 
             // Start the object scope which will represent the entire resource instance;
-            await this.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+            await this.JsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
             string typeName = resourceValue.TypeName;
 
@@ -477,7 +468,7 @@ namespace Microsoft.OData.JsonLight
             typeName = this.JsonLightOutputContext.TypeNameOracle.GetValueTypeNameForWriting(resourceValue, metadataTypeReference, resourceValueTypeReference, isOpenPropertyType);
             if (typeName != null)
             {
-                await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                await this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
                     .ConfigureAwait(false);
             }
 
@@ -494,7 +485,7 @@ namespace Microsoft.OData.JsonLight
                 null).ConfigureAwait(false);
 
             // End the object scope which represents the resource instance;
-            await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+            await this.JsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
 
             this.DecreaseRecursionDepth();
         }
@@ -560,16 +551,16 @@ namespace Microsoft.OData.JsonLight
                     useValueProperty = true;
 
                     // "{"
-                    await this.AsynchronousJsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
-                    await this.AsynchronousODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
+                    await this.JsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
+                    await this.ODataAnnotationWriter.WriteODataTypeInstanceAnnotationAsync(typeName)
                         .ConfigureAwait(false);
-                    await this.AsynchronousJsonWriter.WriteValuePropertyNameAsync().ConfigureAwait(false);
+                    await this.JsonWriter.WriteValuePropertyNameAsync().ConfigureAwait(false);
                 }
             }
 
             // [
             // This represents the array of items in the CollectionValue
-            await this.AsynchronousJsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
+            await this.JsonWriter.StartArrayScopeAsync().ConfigureAwait(false);
 
             // Iterate through the CollectionValue items and write them out (treat null Items as an empty enumeration)
             IEnumerable items = collectionValue.Items;
@@ -636,11 +627,11 @@ namespace Microsoft.OData.JsonLight
             }
 
             // End the array scope which holds the items
-            await this.AsynchronousJsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
+            await this.JsonWriter.EndArrayScopeAsync().ConfigureAwait(false);
 
             if (useValueProperty)
             {
-                await this.AsynchronousJsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+                await this.JsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
             }
 
             this.DecreaseRecursionDepth();
@@ -674,12 +665,12 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(value != null, "value != null");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 // We don't perform validation for ODataJsonElementValue.
                 // We assume the content is valid.
-                await this.AsynchronousJsonWriter.WriteValueAsync(jsonElementValue.Value).ConfigureAwait(false);
+                await this.JsonWriter.WriteValueAsync(jsonElementValue.Value).ConfigureAwait(false);
                 return;
             }
 #endif
@@ -713,7 +704,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
+                await this.JsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
             }
         }
 
@@ -732,7 +723,7 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
             }
 
-            return this.AsynchronousJsonWriter.WriteRawValueAsync(value.RawValue);
+            return this.JsonWriter.WriteRawValueAsync(value.RawValue);
         }
 
         /// <summary>
@@ -742,28 +733,19 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         public virtual async Task WriteStreamValueAsync(ODataBinaryStreamValue streamValue)
         {
-            IJsonStreamWriterAsync streamWriter = this.AsynchronousJsonWriter as IJsonStreamWriterAsync;
-            if (streamWriter == null)
-            {
-                byte[] value = await streamValue.Stream.ReadAllBytesAsync().ConfigureAwait(false);
-                await this.AsynchronousJsonWriter.WritePrimitiveValueAsync(value).ConfigureAwait(false);
-            }
-            else
-            {
-                Stream stream = await streamWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
-                await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
-                await stream.FlushAsync().ConfigureAwait(false);
-#if NETCOREAPP3_1_OR_GREATER
-                await stream.DisposeAsync();
+            Stream stream = await this.JsonWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
+            await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
+            await stream.FlushAsync().ConfigureAwait(false);
+#if NETCOREAPP
+            await stream.DisposeAsync();
 #else
                 stream.Dispose();
 #endif
-                await streamWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
-            }
+            await this.JsonWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
 
             if (!streamValue.LeaveOpen)
             {
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                 await streamValue.Stream.DisposeAsync();
 #else
                 streamValue.Stream.Dispose();

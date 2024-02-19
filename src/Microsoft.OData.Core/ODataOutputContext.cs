@@ -19,7 +19,7 @@ namespace Microsoft.OData
     /// Base class for all output contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
     public abstract class ODataOutputContext : IDisposable, IAsyncDisposable
 #else
     public abstract class ODataOutputContext : IDisposable
@@ -690,7 +690,7 @@ namespace Microsoft.OData
         {
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// IAsyncDisposable.DisposeAsync() implementation to asynchronously cleanup unmanaged resources of the context.
         /// </summary>

@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
 
                     writerSettings.SetServiceDocumentUri(new Uri(ServiceUri));
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))
 #else
                     using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))

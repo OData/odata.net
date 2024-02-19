@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.Json
     public class ODataJsonWriterUtilsAsyncTests
     {
         private StringWriter stringWriter;
-        private IJsonWriterAsync jsonWriter;
+        private IJsonWriter jsonWriter;
         private Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
 
         public ODataJsonWriterUtilsAsyncTests()

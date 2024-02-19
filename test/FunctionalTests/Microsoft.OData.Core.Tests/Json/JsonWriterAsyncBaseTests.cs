@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
 namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
-    /// Verifies that different implementations of IJsonWriterAsync produce similar output for the same inputs
+    /// Verifies that different implementations of IJsonWriter produce similar output for the same inputs
     /// </summary>
     public abstract class JsonWriterAsyncBaseTests
     {
@@ -20,14 +20,14 @@ namespace Microsoft.OData.Tests.Json
         const string SampleJsonInput = "{\"jsonInput\":{\"foo\":\"bar\"}}";
         const string MixedJsonInputAndRawValue = "{\"StringProp\":\"John\",\"JsonInputProp\":{\"jsonInput\":{\"foo\":\"bar\"}},\"RawStringProp\":\"foobar\",\"JsonInputAfterRawValue\":{\"jsonInput\":{\"foo\":\"bar\"}},\"ArrayProp\":[\"raw\",{\"jsonInput\":{\"foo\":\"bar\"}},\"foobar\",{\"jsonInput\":{\"foo\":\"bar\"}},\"raw\"]}";
 
-        protected abstract IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding);
+        protected abstract IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding);
 
         [Fact]
         public async Task WritesMixedObjectWithRawValuesCorrectlyAsync()
         {
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
                 await jsonWriter.StartObjectScopeAsync();
 
                 await jsonWriter.WriteNameAsync("StringProp");
@@ -230,14 +230,14 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public async Task WritesJsonElementCorrectly()
         {
             using (JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson))
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
                 await jsonWriter.WriteValueAsync(jsonDoc.RootElement);
 
                 await jsonWriter.FlushAsync();
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Tests.Json
             using (JsonDocument jsonInput = JsonDocument.Parse(SampleJsonInput))
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
                 await jsonWriter.StartObjectScopeAsync();
 
                 await jsonWriter.WriteNameAsync("StringProp");

@@ -9,7 +9,9 @@ using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
 using System.Threading.Tasks;
-#if NETCOREAPP3_1_OR_GREATER
+using System.IO;
+
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -20,7 +22,7 @@ namespace Microsoft.OData.Tests.Json
     /// 
     /// So far only a a few things have been implemented.
     /// </summary>
-    internal class MockJsonWriter : IJsonWriter, IJsonWriterAsync
+    internal class MockJsonWriter : IJsonWriter
     {
         public Action<string> WriteNameVerifier;
         public Action<string> WriteValueVerifier;
@@ -85,7 +87,7 @@ namespace Microsoft.OData.Tests.Json
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
 #endif
 
@@ -169,8 +171,24 @@ namespace Microsoft.OData.Tests.Json
 
         public Task FlushAsync() => throw new NotImplementedException();
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
 #endif
+
+        public Stream StartStreamValueScope() => throw new NotImplementedException();
+
+        public TextWriter StartTextWriterValueScope(string contentType) => throw new NotImplementedException();
+
+        public void EndStreamValueScope() => throw new NotImplementedException();
+
+        public void EndTextWriterValueScope() => throw new NotImplementedException();
+
+        public Task<Stream> StartStreamValueScopeAsync() => throw new NotImplementedException();
+
+        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType) => throw new NotImplementedException();
+
+        public Task EndStreamValueScopeAsync() => throw new NotImplementedException();
+
+        public Task EndTextWriterValueScopeAsync() => throw new NotImplementedException();
     }
 }

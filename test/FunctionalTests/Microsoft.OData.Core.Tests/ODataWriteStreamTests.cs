@@ -67,7 +67,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public async Task WriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {

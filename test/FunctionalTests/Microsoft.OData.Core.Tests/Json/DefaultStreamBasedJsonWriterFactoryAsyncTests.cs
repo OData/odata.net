@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -26,7 +26,7 @@ namespace Microsoft.OData.Tests.Json
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
 
-            Assert.Throws<ArgumentNullException>("stream", () => factory.CreateAsynchronousJsonWriter(null, false, Encoding.UTF8));
+            Assert.Throws<ArgumentNullException>("stream", () => factory.CreateJsonWriter(null, false, Encoding.UTF8));
         }
 
         [Fact]
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.Json
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
-            Assert.Throws<ArgumentNullException>("encoding", () => factory.CreateAsynchronousJsonWriter(stream, false, null));
+            Assert.Throws<ArgumentNullException>("encoding", () => factory.CreateJsonWriter(stream, false, null));
         }
 
         #endregion
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Tests.Json
         {
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
-            IJsonWriterAsync jsonWriter = factory.CreateAsynchronousJsonWriter(stream, isIeee754Compatible: false, encoding);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
 
             await jsonWriter.StartObjectScopeAsync();
             await jsonWriter.WriteNameAsync("Foo");
@@ -81,7 +81,7 @@ namespace Microsoft.OData.Tests.Json
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
-            IJsonWriterAsync jsonWriter = factory.CreateAsynchronousJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
 
             await jsonWriter.StartObjectScopeAsync();
             await jsonWriter.WriteNameAsync("Foo");
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Tests.Json
             DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
             using MemoryStream stream = new MemoryStream();
 
-            IJsonWriterAsync jsonWriter = factory.CreateAsynchronousJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
+            IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
 
             await jsonWriter.StartObjectScopeAsync();
             await jsonWriter.WriteNameAsync("Foo");
@@ -130,7 +130,7 @@ namespace Microsoft.OData.Tests.Json
             DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
             using TestStream stream = new TestStream();
 
-            IAsyncDisposable jsonWriter = factory.CreateAsynchronousJsonWriter(stream, false, Encoding.UTF8) as IAsyncDisposable;
+            IAsyncDisposable jsonWriter = factory.CreateJsonWriter(stream, false, Encoding.UTF8) as IAsyncDisposable;
             await jsonWriter.DisposeAsync();
 
             Assert.False(stream.Disposed);
