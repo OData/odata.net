@@ -548,7 +548,7 @@ namespace Microsoft.OData.JsonLight
                 CultureInfo.InvariantCulture,
                 "JSON condition failed: the JsonReader is on node {0} (Value: {1}) but it was expected be on {2}.",
                 this.JsonReader.NodeType.ToString(),
-                this.JsonReader.Value,
+                this.JsonReader.GetValue(),
                 string.Join(",", allowedNodeTypes.Select(n => n.ToString()).ToArray()));
             Debug.Assert(false, message);
 #endif
@@ -907,7 +907,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                annotationValue = this.JsonReader.Value;
+                annotationValue = this.JsonReader.GetValue();
                 this.JsonReader.SkipValue();
             }
 

@@ -117,24 +117,21 @@ namespace Microsoft.OData.Json
         /// Depending on whether buffering is on or off this will return the node type of the last
         /// buffered read or the node type of the last unbuffered read.
         /// </remarks>
-        public object Value
+        public object GetValue()
         {
-            get
+            if (this.bufferedNodesHead != null)
             {
-                if (this.bufferedNodesHead != null)
+                if (this.isBuffering)
                 {
-                    if (this.isBuffering)
-                    {
-                        Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
-                        return this.currentBufferedNode.Value;
-                    }
-
-                    // in non-buffering mode if we have buffered nodes satisfy the request from the first node there
-                    return this.bufferedNodesHead.Value;
+                    Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
+                    return this.currentBufferedNode.Value;
                 }
 
-                return this.innerReader.Value;
+                // in non-buffering mode if we have buffered nodes satisfy the request from the first node there
+                return this.bufferedNodesHead.Value;
             }
+
+            return this.innerReader.GetValue();
         }
 
         /// <summary>
@@ -190,8 +187,8 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CreateReadStream();
             }
 
-            Stream result = this.Value == null ? Stream.Null :
-                new MemoryStream(Convert.FromBase64String((string)this.Value));
+            Stream result = this.GetValue() == null ? Stream.Null :
+                new MemoryStream(Convert.FromBase64String((string)this.GetValue()));
             this.innerReader.Read();
             return result;
         }
@@ -207,7 +204,7 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CreateTextReader();
             }
 
-            TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
+            TextReader result = new StringReader(this.GetValue() == null ? "" : (string)this.GetValue());
             this.innerReader.Read();
             return result;
         }
@@ -223,7 +220,7 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CanStream();
             }
 
-            return (this.Value is string || this.Value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
+            return (this.GetValue() is string || this.GetValue() == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
         }
 
         /// <summary>
@@ -383,7 +380,7 @@ namespace Microsoft.OData.Json
             if (this.bufferedNodesHead == null)
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
-                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.Value);
+                this.bufferedNodesHead = new BufferedNode(this.innerReader.NodeType, this.innerReader.GetValue());
             }
             else
             {
@@ -582,7 +579,7 @@ namespace Microsoft.OData.Json
                         result = this.innerReader.Read();
 
                         // Add the new node to the end
-                        this.AddNewNodeToTheEndOfBufferedNodesList(this.innerReader.NodeType, this.innerReader.Value);
+                        this.AddNewNodeToTheEndOfBufferedNodesList(this.innerReader.NodeType, this.innerReader.GetValue());
                     }
                     else
                     {

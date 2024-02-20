@@ -1195,7 +1195,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
                 (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null),
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null),
                 "Pre-Condition: JsonNodeType.EndObject or JsonNodeType.PrimitiveValue (null)");
 
             // We have to cache these values here, since the PopScope below will destroy them.
@@ -1397,7 +1397,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                 "Pre-Condition: expected JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
@@ -1744,7 +1744,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                     "If a primitive value is representing an expanded resource its value must be null.");
 
                 IEdmStructuralProperty structuralProperty =
@@ -1832,7 +1832,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.GetValue();
                 if (primitiveValue != null)
                 {
                     // primitive value in an untyped collection
@@ -2099,7 +2099,7 @@ namespace Microsoft.OData.JsonLight
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {
                         // we are at a null value, or a non-null primitive value within an untyped collection
-                        object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                        object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.GetValue();
                         if (primitiveValue != null)
                         {
                             this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
@@ -2318,7 +2318,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");

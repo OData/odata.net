@@ -104,7 +104,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(inputContext != null, "inputContext != null");
 
-            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null)
+            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.GetValue() == null)
             {
                 jsonReader.ReadNext();
 

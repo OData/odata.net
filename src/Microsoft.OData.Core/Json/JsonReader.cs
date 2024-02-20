@@ -211,37 +211,34 @@ namespace Microsoft.OData.Json
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
         /// </remarks>
-        public virtual object Value
+        public virtual object GetValue()
         {
-            get
+            if (this.readingStream)
             {
-                if (this.readingStream)
-                {
-                    throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotAccessValueInStreamState);
-                }
-
-                if (this.canStream)
-                {
-                    if (this.nodeType != JsonNodeType.Property)
-                    {
-                        this.canStream = false;
-                    }
-
-                    if (this.nodeType == JsonNodeType.PrimitiveValue)
-                    {
-                        if (this.characterBuffer[this.tokenStartIndex] == 'n')
-                        {
-                            this.nodeValue = this.ParseNullPrimitiveValue();
-                        }
-                        else
-                        {
-                            this.nodeValue = this.ParseStringPrimitiveValue(out _);
-                        }
-                    }
-                }
-
-                return this.nodeValue;
+                throw JsonReaderExtensions.CreateException(Strings.JsonReader_CannotAccessValueInStreamState);
             }
+
+            if (this.canStream)
+            {
+                if (this.nodeType != JsonNodeType.Property)
+                {
+                    this.canStream = false;
+                }
+
+                if (this.nodeType == JsonNodeType.PrimitiveValue)
+                {
+                    if (this.characterBuffer[this.tokenStartIndex] == 'n')
+                    {
+                        this.nodeValue = this.ParseNullPrimitiveValue();
+                    }
+                    else
+                    {
+                        this.nodeValue = this.ParseStringPrimitiveValue(out _);
+                    }
+                }
+            }
+
+            return this.nodeValue;
         }
 
         /// <summary>

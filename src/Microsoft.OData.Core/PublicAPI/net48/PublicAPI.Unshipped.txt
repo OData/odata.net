@@ -4,6 +4,7 @@ Microsoft.OData.Json.IJsonReader.CreateReadStream() -> System.IO.Stream
 Microsoft.OData.Json.IJsonReader.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.Json.IJsonReader.CreateTextReader() -> System.IO.TextReader
 Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
+Microsoft.OData.Json.IJsonReader.GetValue() -> object
 Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
 Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
@@ -192,7 +193,6 @@ Microsoft.OData.Json.IJsonReader
 Microsoft.OData.Json.IJsonReader.IsIeee754Compatible.get -> bool
 Microsoft.OData.Json.IJsonReader.NodeType.get -> Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.IJsonReader.Read() -> bool
-Microsoft.OData.Json.IJsonReader.Value.get -> object
 Microsoft.OData.Json.IJsonReaderFactory
 Microsoft.OData.Json.IJsonReaderFactory.CreateJsonReader(System.IO.TextReader textReader, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonReader
 Microsoft.OData.Json.IJsonStreamWriter

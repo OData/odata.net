@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonReader, duplicateChecker) =>
                 {
                     jsonReader.ShouldBeOn(JsonNodeType.PrimitiveValue, "N\uffff");
-                    Assert.Equal(2, (jsonReader.Value as string).Length);
+                    Assert.Equal(2, (jsonReader.GetValue() as string).Length);
                 });
         }
 

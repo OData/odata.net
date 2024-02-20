@@ -14,7 +14,7 @@ namespace Microsoft.OData.Tests.JsonLight
         internal static IJsonReader ShouldBeOn(this IJsonReader jsonReader, JsonNodeType nodeType, object value)
         {
             Assert.Equal(nodeType, jsonReader.NodeType);
-            Assert.Equal(value, jsonReader.Value);
+            Assert.Equal(value, jsonReader.GetValue());
             return jsonReader;
         }
     }
