@@ -188,10 +188,6 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
             {
                 return new DSPStreamProvider(DSPServiceDefinition.Current.MediaResourceStorage);
             }
-            else if (serviceType == typeof(IExpandProvider) && DSPServiceDefinition.Current.SupportIExpandProvider)
-            {
-                return new DSPExpandProvider(this.resourceQueryProvider);
-            }
             else if (serviceType == typeof(IDataServiceActionProvider))
             {
                 return DSPServiceDefinition.Current.ActionProvider;

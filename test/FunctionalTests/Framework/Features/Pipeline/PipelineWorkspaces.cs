@@ -50,7 +50,7 @@ namespace System.Data.Test.Astoria
                     if (Versioning.Server.SupportsV2Features)
                     {
                         w = (Workspace)Activator.CreateInstance(t);
-                        AddExpandProvider(w);
+                       // AddExpandProvider(w);
                         constructed.Add(w);
                     }
                 }
@@ -63,7 +63,7 @@ namespace System.Data.Test.Astoria
                         AddPagingProvider(w);
                     }
 
-                    AddExpandProvider(w);
+                   // AddExpandProvider(w);
                     constructed.Add(w);
                 }
 
@@ -103,7 +103,7 @@ namespace System.Data.Test.Astoria
             w.WebServiceName = w.WebServiceName + "_PP";
         }
 
-        private void AddExpandProvider(Workspace w)
+        /*private void AddExpandProvider(Workspace w)
         {
             w.Settings.HasExpandProvider = true;
             w.ServiceModifications.Interfaces.IServiceProvider.Services[typeof(Microsoft.OData.Service.IExpandProvider)]
@@ -120,7 +120,7 @@ namespace System.Data.Test.Astoria
                     "}"
                 });
             w.WebServiceName = w.WebServiceName + "_EP";
-        }
+        }*/
 
         protected override void WorkspaceCallback(Workspace workspace)
         {

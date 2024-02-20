@@ -687,7 +687,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            public class CustomDataContextWithExpand : CustomDataContext, IExpandProvider
+            public class CustomDataContextWithExpand : CustomDataContext
             {
                 public IEnumerable ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
                 {
@@ -3133,7 +3133,7 @@ OData-Version: 4.0
                 }
             }
 
-            public class OldExpandCustomDataContext : CustomDataContext, IExpandProvider
+            public class OldExpandCustomDataContext : CustomDataContext
             {
                 #region IExpandProvider Members
 
@@ -3145,7 +3145,7 @@ OData-Version: 4.0
                 #endregion
             }
 
-            public class OldExpandCustomObjectContext : ocs.CustomObjectContext, IExpandProvider
+            public class OldExpandCustomObjectContext : ocs.CustomObjectContext
             {
                 #region IExpandProvider Members
 

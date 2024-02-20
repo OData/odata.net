@@ -145,8 +145,6 @@ namespace System.Data.Test.Astoria
 
                     if (interfaceType == typeof(Microsoft.OData.Service.IUpdatable))
                         code.AppendLine("       System.Data.Test.Astoria.CallOrder.APICallLog.Current.Updatable." + methodCall);
-                    else if (interfaceType == typeof(Microsoft.OData.Service.IExpandProvider))
-                        code.AppendLine("       System.Data.Test.Astoria.CallOrder.APICallLog.Current.ExpandProvider." + methodCall);
                     else
                         AstoriaTestLog.FailAndThrow("Not sure how to build wrapper for type '" + interfaceType.FullName + "'");
 

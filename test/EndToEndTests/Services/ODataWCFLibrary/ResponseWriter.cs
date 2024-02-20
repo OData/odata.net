@@ -334,7 +334,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             }
         }
 
-        public static void WriteDeltaFeed(ODataDeltaWriter deltaWriter, List<ODataItem> items, bool? countOption, Uri newDeltaLink)
+        public static void WriteDeltaFeed(ODataWriter deltaWriter, List<ODataItem> items, bool? countOption, Uri newDeltaLink)
         {
             var deltaFeed = new ODataDeltaResourceSet
             {
@@ -350,7 +350,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             foreach (ODataItem item in items)
             {
                 var entry = item as ODataResource;
-                var deletedEntry = item as ODataDeltaDeletedEntry;
+                var deletedEntry = item as ODataDeletedResource;
                 var deltaLink = item as ODataDeltaLink;
                 var deltaDeletedLink = item as ODataDeltaDeletedLink;
 
@@ -361,7 +361,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                 }
                 else if (deletedEntry != null)
                 {
-                    deltaWriter.WriteDeltaDeletedEntry(deletedEntry);
+                    deltaWriter.Write(deletedEntry);
                 }
                 else if (deltaLink != null)
                 {

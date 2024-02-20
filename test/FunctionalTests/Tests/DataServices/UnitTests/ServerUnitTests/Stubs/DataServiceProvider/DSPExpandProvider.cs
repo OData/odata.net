@@ -14,7 +14,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
     using System.Linq;
 
 
-    public class DSPExpandProvider : IExpandProvider
+    public class DSPExpandProvider
     {
         private IDataServiceQueryProvider queryProvider;
 
