@@ -10,15 +10,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using System.Collections.Generic;
     using System.Net;
     using Microsoft.OData.Client;
-    using Microsoft.OData.TestCommon;
+    //using Microsoft.OData.TestCommon;
+    //using Microsoft.OData.TestCommon;
     using Microsoft.Test.Taupo.Astoria.Contracts;
     using Microsoft.Test.Taupo.Astoria.Contracts.Client;
     using Microsoft.Test.Taupo.Astoria.Contracts.Http;
     using Microsoft.Test.Taupo.Astoria.Contracts.Wrappers;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.Wrappers;
-
-    /// <summary>
+ /// <summary>
     /// Creates a wrapped DataServiceContext
     /// </summary>
     [ImplementationName(typeof(IDataServiceContextCreator), "Default")]
@@ -95,9 +95,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             WrappedDataServiceContext ctx = scope.CreateDataServiceContext(dataServiceContextType, serviceBaseUri, this.MaxProtocolVersion);
             DataServiceContext context = ctx.Product as DataServiceContext;
 
-            TestHttpClientFactoryOptions options = new TestHttpClientFactoryOptions();
+            /*TestHttpClientFactoryOptions options = new TestHttpClientFactoryOptions();
             this.SetCredentials(options);
-            context.HttpClientFactory = new TestHttpClientFactory(options);
+            context.HttpClientFactory = new TestHttpClientFactory(options);*/
             this.authenticationHeaders = this.AuthenticationProvider.GetAuthenticationHeaders();
 
             this.SetAcceptAndContentTypeHeaders(context);
@@ -170,7 +170,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
         }
 
-        private void SetCredentials(TestHttpClientFactoryOptions options)
+       /* private void SetCredentials(TestHttpClientFactoryOptions options)
         {
             if (this.AuthenticationProvider.UseDefaultCredentials)
             {
@@ -180,6 +180,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             {
                 options.Credentials = this.AuthenticationProvider.GetAuthenticationCredentials();
             }
-        }
+        }*/
     }
 }
