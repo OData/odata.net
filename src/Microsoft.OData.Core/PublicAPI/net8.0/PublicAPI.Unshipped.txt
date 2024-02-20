@@ -33,6 +33,14 @@ Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateTimeOffset value) ->
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonReader.CanStream() -> bool
+Microsoft.OData.Json.IJsonReader.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
+Microsoft.OData.Json.IJsonReader.CreateReadStream() -> System.IO.Stream
+Microsoft.OData.Json.IJsonReader.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Json.IJsonReader.CreateTextReader() -> System.IO.TextReader
+Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
+Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
+Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
