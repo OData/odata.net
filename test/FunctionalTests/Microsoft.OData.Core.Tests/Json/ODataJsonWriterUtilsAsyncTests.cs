@@ -21,56 +21,13 @@ namespace Microsoft.OData.Tests.Json
     {
         private StringWriter stringWriter;
         private IJsonWriterAsync jsonWriter;
-        private ODataMessageWriterSettings settings;
         private Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate;
 
         public ODataJsonWriterUtilsAsyncTests()
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
-            this.settings = new ODataMessageWriterSettings();
             this.writeInstanceAnnotationsDelegate = async (ICollection<ODataInstanceAnnotation> instanceAnnotations) => await TaskUtils.CompletedTask;
-        }
-
-        [Fact]
-        public async Task StartJsonPaddingIfRequiredAsync_DoesNothingIfNullFunctionName()
-        {
-            settings.JsonPCallback = null;
-            await ODataJsonWriterUtils.StartJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public async Task StartJsonPaddingIfRequiredAsync_DoesNothingIfEmptyFunctionName()
-        {
-            settings.JsonPCallback = "";
-            await ODataJsonWriterUtils.StartJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public async Task EndJsonPaddingIfRequiredAsync_DoesNothingIfNullFunctionName()
-        {
-            settings.JsonPCallback = null;
-            await ODataJsonWriterUtils.EndJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public async Task EndJsonPaddingIfRequiredAsync_DoesNothingIfEmptyFunctionName()
-        {
-            settings.JsonPCallback = "";
-            await ODataJsonWriterUtils.EndJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            Assert.Empty(stringWriter.GetStringBuilder().ToString());
-        }
-
-        [Fact]
-        public async Task StartAndEndJsonPaddingAsync_SuccessTest()
-        {
-            settings.JsonPCallback = "functionName";
-            await ODataJsonWriterUtils.StartJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            await ODataJsonWriterUtils.EndJsonPaddingIfRequiredAsync(this.jsonWriter, settings);
-            Assert.Equal("functionName()", stringWriter.GetStringBuilder().ToString());
         }
 
         [Fact]

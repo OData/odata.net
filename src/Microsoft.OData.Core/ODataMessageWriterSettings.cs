@@ -137,6 +137,7 @@ namespace Microsoft.OData
         /// <returns>The callback function used to wrap the response from server.</returns>
         /// <remarks>If it has a value and we are writing a JSON response, then we will wrap the entirety of the response in
         /// the provided function name and parenthesis for JSONP. Otherwise this value is ignored.</remarks>
+        [Obsolete("This will be dropped in the 9.x release.")]
         public string JsonPCallback { get; set; }
 
         /// <summary>

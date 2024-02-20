@@ -23,12 +23,14 @@ namespace Microsoft.OData.Json
         /// Asynchronously starts the padding function scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        [Obsolete("This will be dropped in the 9.x release.")]
         Task StartPaddingFunctionScopeAsync();
 
         /// <summary>
         /// Asynchronously ends the padding function scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
+        [Obsolete("This will be dropped in the 9.x release.")]
         Task EndPaddingFunctionScopeAsync();
 
         /// <summary>
@@ -67,6 +69,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="functionName">Name of the padding function to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
+        [Obsolete("This will be dropped in the 9.x release.")]
         Task WritePaddingFunctionNameAsync(string functionName);
 
         /// <summary>
