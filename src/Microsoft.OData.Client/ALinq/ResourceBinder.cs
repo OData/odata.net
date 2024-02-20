@@ -255,26 +255,8 @@ namespace Microsoft.OData.Client
 
             if (inputPredicates != null)
             {
-                List<Expression> keyPredicates = null;
-
-                if (keyPredicates != null)
-                {
-                    input.SetKeyPredicate(keyPredicates);
-                    input.RemoveFilterExpression();
-                }
-
-                // A key predicate cannot be applied if query options other than 'Expand' are present,
-                // so merge the key predicate into the filter query option instead.
-                if (keyPredicates != null && input.HasSequenceQueryOptions)
-                {
-                    input.ConvertKeyToFilterExpression();
-                }
-
-                if (keyPredicates == null)
-                {
-                    input.ConvertKeyToFilterExpression();
-                    input.AddFilter(inputPredicates);
-                }
+                input.ConvertKeyToFilterExpression();
+                input.AddFilter(inputPredicates);
             }
 
             return input; // No need to adjust this.currentResource - filters are merged in all cases
