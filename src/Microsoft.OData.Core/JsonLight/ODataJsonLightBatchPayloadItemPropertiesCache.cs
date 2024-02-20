@@ -80,11 +80,6 @@ namespace Microsoft.OData.JsonLight
         private IJsonReader jsonReader;
 
         /// <summary>
-        /// The JSON reader for asynchronously reading payload item in Json format.
-        /// </summary>
-        private IJsonReaderAsync asynchronousJsonReader;
-
-        /// <summary>
         /// The Json batch reader for batch processing.
         /// </summary>
         private IODataStreamListener listener;
@@ -108,7 +103,6 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(jsonBatchReader != null, $"{nameof(jsonBatchReader)} != null");
 
             this.jsonReader = jsonBatchReader.JsonLightInputContext.JsonReader;
-            this.asynchronousJsonReader = jsonBatchReader.JsonLightInputContext.JsonReader;
             this.listener = jsonBatchReader;
         }
 
@@ -341,7 +335,7 @@ namespace Microsoft.OData.JsonLight
             // Serialization of json object to batch buffer.
             ODataJsonLightBatchBodyContentReaderStream stream = new ODataJsonLightBatchBodyContentReaderStream(listener);
 
-            this.isStreamPopulated = await stream.PopulateBodyContentAsync(this.asynchronousJsonReader, contentTypeHeader)
+            this.isStreamPopulated = await stream.PopulateBodyContentAsync(this.jsonReader, contentTypeHeader)
                 .ConfigureAwait(false);
 
             return stream;
@@ -353,7 +347,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous read operation.</returns>
         private async Task ScanJsonPropertiesAsync()
         {
-            Debug.Assert(this.asynchronousJsonReader != null, $"{nameof(this.asynchronousJsonReader)} != null");
+            Debug.Assert(this.jsonReader != null, $"{nameof(this.jsonReader)} != null");
             Debug.Assert(this.jsonProperties == null, $"{nameof(this.jsonProperties)} == null");
 
             this.jsonProperties = new Dictionary<string, object>();
@@ -363,13 +357,13 @@ namespace Microsoft.OData.JsonLight
             try
             {
                 // Request object start.
-                await this.asynchronousJsonReader.ReadStartObjectAsync()
+                await this.jsonReader.ReadStartObjectAsync()
                     .ConfigureAwait(false);
 
-                while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndObject)
+                while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                 {
                     // Convert to upper case to support case-insensitive request property names
-                    string propertyName = Normalize(await this.asynchronousJsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
+                    string propertyName = Normalize(await this.jsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
 
                     // Throw an ODataException, if a duplicate json property was detected
                     if (jsonProperties.ContainsKey(propertyName))
@@ -385,27 +379,27 @@ namespace Microsoft.OData.JsonLight
                         case PropertyNameUrl:
                             jsonProperties.Add(
                                 propertyName,
-                                await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
+                                await this.jsonReader.ReadStringValueAsync().ConfigureAwait(false));
 
                             break;
 
                         case PropertyNameStatus:
                             jsonProperties.Add(
                                 propertyName,
-                                await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
+                                await this.jsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false));
 
                             break;
 
                         case PropertyNameDependsOn:
                             List<string> dependsOnIds = new List<string>();
-                            await this.asynchronousJsonReader.ReadStartArrayAsync()
+                            await this.jsonReader.ReadStartArrayAsync()
                                 .ConfigureAwait(false);
-                            while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndArray)
+                            while (this.jsonReader.NodeType != JsonNodeType.EndArray)
                             {
-                                dependsOnIds.Add(await this.asynchronousJsonReader.ReadStringValueAsync().ConfigureAwait(false));
+                                dependsOnIds.Add(await this.jsonReader.ReadStringValueAsync().ConfigureAwait(false));
                             }
 
-                            await this.asynchronousJsonReader.ReadEndArrayAsync()
+                            await this.jsonReader.ReadEndArrayAsync()
                                 .ConfigureAwait(false);
 
                             jsonProperties.Add(propertyName, dependsOnIds);
@@ -418,14 +412,14 @@ namespace Microsoft.OData.JsonLight
                             // Use empty string (non-null value) to indicate that content-type header has been processed.
                             contentTypeHeader = "";
 
-                            await this.asynchronousJsonReader.ReadStartObjectAsync()
+                            await this.jsonReader.ReadStartObjectAsync()
                                 .ConfigureAwait(false);
 
-                            while (this.asynchronousJsonReader.NodeType != JsonNodeType.EndObject)
+                            while (this.jsonReader.NodeType != JsonNodeType.EndObject)
                             {
-                                string headerName = await this.asynchronousJsonReader.ReadPropertyNameAsync()
+                                string headerName = await this.jsonReader.ReadPropertyNameAsync()
                                     .ConfigureAwait(false);
-                                string headerValue = (await this.asynchronousJsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
+                                string headerValue = (await this.jsonReader.ReadPrimitiveValueAsync().ConfigureAwait(false))?.ToString();
 
                                 // Throw an ODataException, if a duplicate header was detected
                                 if (headers.ContainsKeyOrdinal(headerName))
@@ -442,7 +436,7 @@ namespace Microsoft.OData.JsonLight
                                 headers.Add(headerName, headerValue);
                             }
 
-                            await this.asynchronousJsonReader.ReadEndObjectAsync()
+                            await this.jsonReader.ReadEndObjectAsync()
                                 .ConfigureAwait(false);
 
                             jsonProperties.Add(propertyName, headers);
@@ -469,13 +463,13 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // Request object end.
-                await this.asynchronousJsonReader.ReadEndObjectAsync()
+                await this.jsonReader.ReadEndObjectAsync()
                     .ConfigureAwait(false);
             }
             finally
             {
                 // We don't need to use the Json reader anymore.
-                this.asynchronousJsonReader = null;
+                this.jsonReader = null;
             }
         }
     }

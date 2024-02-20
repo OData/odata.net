@@ -22,7 +22,11 @@ namespace Microsoft.OData.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {Value}")]
-    internal class JsonReader : IJsonStreamReader, IJsonStreamReaderAsync, IDisposable
+#if NETCOREAPP
+    internal class JsonReader : IJsonReader, IDisposable, IAsyncDisposable
+#else
+    internal class JsonReader : IJsonReader, IDisposable
+#endif
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -825,6 +829,14 @@ namespace Microsoft.OData.Json
                 this.characterBuffer = null;
             }
         }
+
+#if NETCOREAPP
+        public ValueTask DisposeAsync()
+        {
+            Dispose();
+            return ValueTask.CompletedTask;
+        }
+#endif
 
         /// <summary>
         /// Determines if a given character is a whitespace character.

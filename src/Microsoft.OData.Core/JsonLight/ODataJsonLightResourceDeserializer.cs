@@ -2267,17 +2267,6 @@ namespace Microsoft.OData.JsonLight
             }
 
             /// <summary>
-            /// The asynchronous JSON reader to read the operations value from.
-            /// </summary>
-            public IJsonReaderAsync AsynchronousJsonReader
-            {
-                get
-                {
-                    return this.jsonLightResourceDeserializer.JsonReader;
-                }
-            }
-
-            /// <summary>
             /// Given a URI from the payload, this method will try to make it absolute, or fail otherwise.
             /// </summary>
             /// <param name="uriFromPayload">The URI string from the payload to process.</param>
@@ -4043,16 +4032,16 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
             Debug.Assert(ODataJsonLightUtils.IsMetadataReferenceProperty(metadataReferencePropertyName), "ODataJsonLightReaderUtils.IsMetadataReferenceProperty(metadataReferencePropertyName)");
 
-            if (readerContext.AsynchronousJsonReader.NodeType != JsonNodeType.StartObject)
+            if (readerContext.JsonReader.NodeType != JsonNodeType.StartObject)
             {
                 throw new ODataException(
                     ODataErrorStrings.ODataJsonOperationsDeserializerUtils_OperationsPropertyMustHaveObjectValue(
                         metadataReferencePropertyName,
-                        readerContext.AsynchronousJsonReader.NodeType));
+                        readerContext.JsonReader.NodeType));
             }
 
             // Read over the start-object node of the metadata object for the operations
-            await readerContext.AsynchronousJsonReader.ReadStartObjectAsync()
+            await readerContext.JsonReader.ReadStartObjectAsync()
                 .ConfigureAwait(false);
 
             ODataOperation operation = this.CreateODataOperationAndAddToEntry(readerContext, metadataReferencePropertyName);
@@ -4060,25 +4049,25 @@ namespace Microsoft.OData.JsonLight
             // Ignore the unrecognized operation.
             if (operation == null)
             {
-                while (readerContext.AsynchronousJsonReader.NodeType == JsonNodeType.Property)
+                while (readerContext.JsonReader.NodeType == JsonNodeType.Property)
                 {
-                    await readerContext.AsynchronousJsonReader.ReadPropertyNameAsync()
+                    await readerContext.JsonReader.ReadPropertyNameAsync()
                         .ConfigureAwait(false);
-                    await readerContext.AsynchronousJsonReader.SkipValueAsync()
+                    await readerContext.JsonReader.SkipValueAsync()
                         .ConfigureAwait(false);
                 }
 
-                await readerContext.AsynchronousJsonReader.ReadEndObjectAsync()
+                await readerContext.JsonReader.ReadEndObjectAsync()
                     .ConfigureAwait(false);
                 return;
             }
 
             Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
 
-            while (readerContext.AsynchronousJsonReader.NodeType == JsonNodeType.Property)
+            while (readerContext.JsonReader.NodeType == JsonNodeType.Property)
             {
                 string operationPropertyName = ODataAnnotationNames.RemoveAnnotationPrefix(
-                    await readerContext.AsynchronousJsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
+                    await readerContext.JsonReader.ReadPropertyNameAsync().ConfigureAwait(false));
                 switch (operationPropertyName)
                 {
                     case JsonConstants.ODataOperationTitleName:
@@ -4090,7 +4079,7 @@ namespace Microsoft.OData.JsonLight
                                     metadataReferencePropertyName));
                         }
 
-                        string titleString = await readerContext.AsynchronousJsonReader.ReadStringValueAsync(JsonConstants.ODataOperationTitleName)
+                        string titleString = await readerContext.JsonReader.ReadStringValueAsync(JsonConstants.ODataOperationTitleName)
                             .ConfigureAwait(false);
                         ODataJsonLightValidationUtils.ValidateOperationPropertyValueIsNotNull(titleString, operationPropertyName, metadataReferencePropertyName);
                         operation.Title = titleString;
@@ -4105,7 +4094,7 @@ namespace Microsoft.OData.JsonLight
                                     metadataReferencePropertyName));
                         }
 
-                        string targetString = await readerContext.AsynchronousJsonReader.ReadStringValueAsync(JsonConstants.ODataOperationTargetName)
+                        string targetString = await readerContext.JsonReader.ReadStringValueAsync(JsonConstants.ODataOperationTargetName)
                             .ConfigureAwait(false);
                         ODataJsonLightValidationUtils.ValidateOperationPropertyValueIsNotNull(targetString, operationPropertyName, metadataReferencePropertyName);
                         operation.Target = readerContext.ProcessUriFromPayload(targetString);
@@ -4114,7 +4103,7 @@ namespace Microsoft.OData.JsonLight
                     default:
                         // Skip over all unknown properties and read the next property or
                         // the end of the metadata for the current propertyName
-                        await readerContext.AsynchronousJsonReader.SkipValueAsync()
+                        await readerContext.JsonReader.SkipValueAsync()
                             .ConfigureAwait(false);
                         break;
                 }
@@ -4126,7 +4115,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // read the end-object node of the target / title pair
-            await readerContext.AsynchronousJsonReader.ReadEndObjectAsync()
+            await readerContext.JsonReader.ReadEndObjectAsync()
                 .ConfigureAwait(false);
 
             // Sets the metadata builder to evaluate by convention any operation property that's not on the wire.
@@ -4262,9 +4251,9 @@ namespace Microsoft.OData.JsonLight
             IODataJsonOperationsDeserializerContext readerContext = new OperationsDeserializerContext(resourceState.Resource, this);
 
             bool insideArray = false;
-            if (readerContext.AsynchronousJsonReader.NodeType == JsonNodeType.StartArray)
+            if (readerContext.JsonReader.NodeType == JsonNodeType.StartArray)
             {
-                await readerContext.AsynchronousJsonReader.ReadStartArrayAsync()
+                await readerContext.JsonReader.ReadStartArrayAsync()
                     .ConfigureAwait(false);
                 insideArray = true;
             }
@@ -4274,11 +4263,11 @@ namespace Microsoft.OData.JsonLight
                 await this.ReadSingleOperationValueAsync(readerContext, resourceState, metadataReferencePropertyName, insideArray)
                     .ConfigureAwait(false);
             }
-            while (insideArray && readerContext.AsynchronousJsonReader.NodeType != JsonNodeType.EndArray);
+            while (insideArray && readerContext.JsonReader.NodeType != JsonNodeType.EndArray);
 
             if (insideArray)
             {
-                await readerContext.AsynchronousJsonReader.ReadEndArrayAsync()
+                await readerContext.JsonReader.ReadEndArrayAsync()
                     .ConfigureAwait(false);
             }
 

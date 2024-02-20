@@ -20,7 +20,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format (http://www.json.org) that supports look-ahead.
     /// </summary>
-    internal class BufferingJsonReader : IJsonStreamReader, IJsonStreamReaderAsync
+    internal class BufferingJsonReader : IJsonReader
     {
         /// <summary>The (possibly empty) list of buffered nodes.</summary>
         /// <remarks>This is a circular linked list where this field points to the first item of the list.</remarks>
@@ -35,11 +35,6 @@ namespace Microsoft.OData.Json
         /// The inner JSON reader.
         /// </summary>
         private readonly IJsonReader innerReader;
-
-        /// <summary>
-        /// The inner asynchronous JSON reader.
-        /// </summary>
-        private readonly IJsonReaderAsync asyncInnerReader;
 
         /// <summary>
         /// The maximum number of recursive internalexception objects to allow when reading in-stream errors.
@@ -80,11 +75,6 @@ namespace Microsoft.OData.Json
             Debug.Assert(innerReader != null, "innerReader != null");
 
             this.innerReader = innerReader;
-            // IJsonReaderAsync inherits from IJsonReader in the current case
-            if (innerReader is IJsonReaderAsync asyncInnerReader)
-            {
-                this.asyncInnerReader = asyncInnerReader;
-            }
 
             this.inStreamErrorPropertyName = inStreamErrorPropertyName;
             this.maxInnerErrorDepth = maxInnerErrorDepth;
@@ -195,10 +185,9 @@ namespace Microsoft.OData.Json
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
         public virtual Stream CreateReadStream()
         {
-            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
-            if (!this.isBuffering && streamReader != null)
+            if (!this.isBuffering)
             {
-                return streamReader.CreateReadStream();
+                return this.innerReader.CreateReadStream();
             }
 
             Stream result = this.Value == null ? Stream.Null :
@@ -213,10 +202,9 @@ namespace Microsoft.OData.Json
         /// <returns>A TextReader for reading the text value.</returns>
         public virtual TextReader CreateTextReader()
         {
-            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
-            if (!this.isBuffering && streamReader != null)
+            if (!this.isBuffering)
             {
-                return streamReader.CreateTextReader();
+                return this.innerReader.CreateTextReader();
             }
 
             TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
@@ -230,10 +218,9 @@ namespace Microsoft.OData.Json
         /// <returns>True if the current value can be streamed, otherwise false</returns>
         public virtual bool CanStream()
         {
-            IJsonStreamReader streamReader = this.innerReader as IJsonStreamReader;
-            if (!this.isBuffering && streamReader != null)
+            if (!this.isBuffering)
             {
-                return streamReader.CanStream();
+                return this.innerReader.CanStream();
             }
 
             return (this.Value is string || this.Value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
@@ -277,7 +264,7 @@ namespace Microsoft.OData.Json
                 return Task.FromResult(this.bufferedNodesHead.Value);
             }
 
-            return this.asyncInnerReader.GetValueAsync();
+            return this.innerReader.GetValueAsync();
         }
 
         /// <summary>
@@ -303,9 +290,9 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            if (!this.isBuffering && this.asyncInnerReader is IJsonStreamReaderAsync asyncStreamReader)
+            if (!this.isBuffering)
             {
-                return await asyncStreamReader.CanStreamAsync()
+                return await this.innerReader.CanStreamAsync()
                     .ConfigureAwait(false);
             }
 
@@ -324,10 +311,9 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            IJsonStreamReaderAsync asyncStreamReader = this.asyncInnerReader as IJsonStreamReaderAsync;
-            if (!this.isBuffering && asyncStreamReader != null)
+            if (!this.isBuffering)
             {
-                return await asyncStreamReader.CreateReadStreamAsync()
+                return await this.innerReader.CreateReadStreamAsync()
                     .ConfigureAwait(false);
             }
 
@@ -345,7 +331,7 @@ namespace Microsoft.OData.Json
                 result = new MemoryStream(Convert.FromBase64String((string)value));
             }
 
-            await this.asyncInnerReader.ReadAsync()
+            await this.innerReader.ReadAsync()
                 .ConfigureAwait(false);
 
             return result;
@@ -360,10 +346,9 @@ namespace Microsoft.OData.Json
         {
             this.AssertAsynchronous();
 
-            IJsonStreamReaderAsync asyncStreamReader = this.asyncInnerReader as IJsonStreamReaderAsync;
-            if (!this.isBuffering && asyncStreamReader != null)
+            if (!this.isBuffering)
             {
-                return await asyncStreamReader.CreateTextReaderAsync()
+                return await this.innerReader.CreateTextReaderAsync()
                     .ConfigureAwait(false);
             }
 
@@ -382,7 +367,7 @@ namespace Microsoft.OData.Json
             }
 
 
-            await this.asyncInnerReader.ReadAsync()
+            await this.innerReader.ReadAsync()
                 .ConfigureAwait(false);
 
             return result;
@@ -507,8 +492,8 @@ namespace Microsoft.OData.Json
             {
                 // capture the current state of the reader as the first item in the buffer (if there are none)
                 this.bufferedNodesHead = new BufferedNode(
-                    this.asyncInnerReader.NodeType,
-                    await this.asyncInnerReader.GetValueAsync().ConfigureAwait(false));
+                    this.innerReader.NodeType,
+                    await this.innerReader.GetValueAsync().ConfigureAwait(false));
             }
             else
             {
@@ -723,13 +708,13 @@ namespace Microsoft.OData.Json
                 else if (this.parsingInStreamError)
                 {
                     // Read more from the input stream and buffer it
-                    result = await this.asyncInnerReader.ReadAsync()
+                    result = await this.innerReader.ReadAsync()
                         .ConfigureAwait(false);
 
                     // Add the new node to the end
                     this.AddNewNodeToTheEndOfBufferedNodesList(
-                        this.asyncInnerReader.NodeType,
-                        await this.asyncInnerReader.GetValueAsync().ConfigureAwait(false));
+                        this.innerReader.NodeType,
+                        await this.innerReader.GetValueAsync().ConfigureAwait(false));
                 }
                 else
                 {
@@ -745,7 +730,7 @@ namespace Microsoft.OData.Json
                 // else read the next node from the input stream and check
                 // whether it is an in-stream error
                 result = this.parsingInStreamError ?
-                    await this.asyncInnerReader.ReadAsync().ConfigureAwait(false) :
+                    await this.innerReader.ReadAsync().ConfigureAwait(false) :
                     await this.ReadNextAndCheckForInStreamErrorAsync().ConfigureAwait(false);
             }
             else
@@ -1372,7 +1357,7 @@ namespace Microsoft.OData.Json
                 bool result = await this.ReadInternalAsync()
                     .ConfigureAwait(false);
 
-                if (this.asyncInnerReader.NodeType == JsonNodeType.StartObject)
+                if (this.innerReader.NodeType == JsonNodeType.StartObject)
                 {
                     // If we find a StartObject node we have to read ahead and check whether this
                     // JSON object represents an in-stream error. If we are currently in buffering
@@ -1939,7 +1924,7 @@ namespace Microsoft.OData.Json
         private void AssertAsynchronous()
         {
 #if DEBUG
-            Debug.Assert(this.asyncInnerReader != null, "The method should only be called on an asynchronous buffering json reader.");
+            Debug.Assert(this.innerReader != null, "The method should only be called on an asynchronous buffering json reader.");
 #endif
         }
 
