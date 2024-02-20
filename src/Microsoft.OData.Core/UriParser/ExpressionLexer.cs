@@ -83,6 +83,11 @@ namespace Microsoft.OData.UriParser
         /// <summary>Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</summary>
         private readonly bool parsingFunctionParameters;
 
+        /// <summary>
+        /// Whether or not to interpret the semantics of a token that appears to be an identifier (i.e. consider if it is a keyword instead of an identifier)
+        /// </summary>
+        private readonly bool applySemanticsToIdentifiers;
+
         /// <summary>Lexer ignores whitespace</summary>
         private bool ignoreWhitespace;
 
@@ -108,6 +113,19 @@ namespace Microsoft.OData.UriParser
         /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
         /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
         internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters)
+            : this(expression, moveToFirstToken, useSemicolonDelimiter, parsingFunctionParameters, true)
+        {
+        }
+
+        /// <summary>Initializes a new <see cref="ExpressionLexer"/>.</summary>
+        /// <param name="expression">Expression to parse.</param>
+        /// <param name="moveToFirstToken">If true, this constructor will call NextToken() to move to the first token.</param>
+        /// <param name="useSemicolonDelimiter">If true, the lexer will tokenize based on semicolons as well.</param>
+        /// <param name="parsingFunctionParameters">Whether the lexer is being used to parse function parameters. If true, will allow/recognize parameter aliases and typed nulls.</param>
+        /// <param name="applySemanticsToIdentifiers">
+        /// Whether or not to interpret the semantics of a token that appears to be an identifier (i.e. consider if it is a keyword instead of an identifier)
+        /// </param>
+        internal ExpressionLexer(string expression, bool moveToFirstToken, bool useSemicolonDelimiter, bool parsingFunctionParameters, bool applySemanticsToIdentifiers)
         {
             Debug.Assert(expression != null, "expression != null");
 
@@ -116,6 +134,7 @@ namespace Microsoft.OData.UriParser
             this.TextLen = this.Text.Length;
             this.useSemicolonDelimiter = useSemicolonDelimiter;
             this.parsingFunctionParameters = parsingFunctionParameters;
+            this.applySemanticsToIdentifiers = applySemanticsToIdentifiers;
             this.parsingDoubleQuotedString = false;
 
             this.SetTextPos(0);
@@ -810,7 +829,7 @@ namespace Microsoft.OData.UriParser
 
                 this.HandleQuotedValues();
             }
-            else
+            else if (this.applySemanticsToIdentifiers)
             {
                 // Handle keywords.
                 // Get built in type literal prefix.
