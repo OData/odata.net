@@ -288,7 +288,7 @@ namespace Microsoft.OData.Client
             this.httpStack = HttpStack.Auto;
             this.UsingDataServiceCollection = false;
             this.UsePostTunneling = false;
-            this.keyComparisonGeneratesFilterQuery = false;
+            this.keyComparisonGeneratesFilterQuery = true;
             this.deleteLinkUriOption = DeleteLinkUriOption.IdQueryParam;
         }
 
@@ -696,8 +696,10 @@ namespace Microsoft.OData.Client
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
         /// <summary>
-        /// Indicates whether a Where clause that just compares the key property generates a $filter query option.
+        /// When true, a Where clause that just compares the key property generates a $filter query option, otherwise a key segment is generated.
+        /// The default value is true.
         /// </summary>
+        [Obsolete("This property will be removed in a future major release.")]
         public virtual bool KeyComparisonGeneratesFilterQuery
         {
             get { return this.keyComparisonGeneratesFilterQuery; }
