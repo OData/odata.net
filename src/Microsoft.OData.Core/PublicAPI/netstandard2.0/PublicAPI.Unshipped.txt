@@ -1,2 +1,3 @@
+Microsoft.OData.ODataBinaryStreamValue.ODataBinaryStreamValue(System.IO.Stream stream, bool leaveOpen = false) -> void
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void

@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="stream">Input stream</param>
         /// <param name="leaveOpen">Whether the provided stream should be left open.</param>
-        public ODataBinaryStreamValue(Stream stream, bool leaveOpen)
+        public ODataBinaryStreamValue(Stream stream, bool leaveOpen = false)
         {
             ExceptionUtils.CheckArgumentNotNull(stream, "stream");
 
