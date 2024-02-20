@@ -2628,9 +2628,9 @@ namespace Microsoft.OData.Tests.JsonLight
         private async Task SetupJsonLightPropertyAndValueDeserializerAndRunProcessPropertyTestAsync(
             string payload,
             PropertyAndAnnotationCollector propertyAndAnnotationCollector = null,
-            Func<IJsonReaderAsync, string, Task<object>> readPropertyAnnotationValueDelegate = null,
-            Func<IJsonReaderAsync, Task> setupDelegate = null,
-            Func<IJsonReaderAsync, PropertyAndAnnotationCollector, PropertyParsingResult, string, Task> verificationDelegate = null)
+            Func<IJsonReader, string, Task<object>> readPropertyAnnotationValueDelegate = null,
+            Func<IJsonReader, Task> setupDelegate = null,
+            Func<IJsonReader, PropertyAndAnnotationCollector, PropertyParsingResult, string, Task> verificationDelegate = null)
         {
             using (var jsonInputContext = CreateJsonLightInputContext(payload, EdmCoreModel.Instance, isAsync: true))
             {
