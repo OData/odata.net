@@ -2350,7 +2350,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="typeReference">Type of navigation property</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected static async Task ValidateExpandedNestedResourceInfoPropertyValueAsync(
-            IJsonReaderAsync asyncJsonReader,
+            IJsonReader asyncJsonReader,
             bool? isCollection,
             string propertyName,
             IEdmTypeReference typeReference)

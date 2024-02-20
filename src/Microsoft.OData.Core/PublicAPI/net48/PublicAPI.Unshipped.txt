@@ -226,9 +226,6 @@ Microsoft.OData.Json.IJsonReader.IsIeee754Compatible.get -> bool
 Microsoft.OData.Json.IJsonReader.NodeType.get -> Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.IJsonReader.Read() -> bool
 Microsoft.OData.Json.IJsonReader.Value.get -> object
-Microsoft.OData.Json.IJsonReaderAsync
-Microsoft.OData.Json.IJsonReaderAsync.GetValueAsync() -> System.Threading.Tasks.Task<object>
-Microsoft.OData.Json.IJsonReaderAsync.ReadAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.Json.IJsonReaderFactory
 Microsoft.OData.Json.IJsonReaderFactory.CreateJsonReader(System.IO.TextReader textReader, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonReader
 Microsoft.OData.Json.IJsonReaderFactoryAsync
