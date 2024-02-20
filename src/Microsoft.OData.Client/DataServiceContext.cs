@@ -695,15 +695,6 @@ namespace Microsoft.OData.Client
         /// </summary>
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
-        /// <summary>
-        /// Indicates whether a Where clause that just compares the key property generates a $filter query option.
-        /// </summary>
-        public virtual bool KeyComparisonGeneratesFilterQuery
-        {
-            get { return this.keyComparisonGeneratesFilterQuery; }
-            set { this.keyComparisonGeneratesFilterQuery = value; }
-        }
-
         /// <summary>Gets or sets the option for the form of Uri to be generated for a delete link request.</summary>
         public virtual DeleteLinkUriOption DeleteLinkUriOption
         {

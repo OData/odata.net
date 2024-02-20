@@ -256,25 +256,6 @@ namespace Microsoft.OData.Client
             if (inputPredicates != null)
             {
                 List<Expression> keyPredicates = null;
-                List<Expression> nonKeyPredicates = null;
-
-                // Get the current key predicates
-                List<Expression> currentPredicates = input.KeyPredicateConjuncts.ToList();
-
-                if (input.Filter != null && input.Filter.PredicateConjuncts.Count > 0)
-                {
-                    // Get the filter predicates
-                    currentPredicates = currentPredicates.Union(input.Filter.PredicateConjuncts.Union(inputPredicates)).ToList();
-                }
-                else
-                {
-                    currentPredicates = currentPredicates.Union(inputPredicates).ToList();
-                }
-
-                if (!input.UseFilterAsPredicate && !context.KeyComparisonGeneratesFilterQuery)
-                {
-                    keyPredicates = ExtractKeyPredicate(input, currentPredicates, model, out nonKeyPredicates);
-                }
 
                 if (keyPredicates != null)
                 {
@@ -373,8 +354,6 @@ namespace Microsoft.OData.Client
 
             if (nonKeyPredicates != null && nonKeyPredicates.Count > 0)
             {
-                // If there is any non-key predicate, everything must go in filter statement,
-                target.UseFilterAsPredicate = true;
                 keyPredicates = null;
             }
             else

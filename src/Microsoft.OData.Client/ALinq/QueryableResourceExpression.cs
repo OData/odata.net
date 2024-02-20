@@ -156,12 +156,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// If this expresssion contains at least one non-key predicate
-        /// This indicates that a filter should be used
-        /// </summary>
-        internal bool UseFilterAsPredicate { get; set; }
-
-        /// <summary>
         /// Filter query option for ResourceSet
         /// </summary>
         internal FilterQueryOptionExpression Filter
