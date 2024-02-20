@@ -15,7 +15,7 @@ namespace Microsoft.OData.Json
     public interface IJsonReader
     {
         /// <summary>
-        /// The value of the last reported node.
+        /// Returns the value of the last reported node.
         /// </summary>
         /// <remarks>This is non-null only if the last node was a PrimitiveValue or Property.
         /// If the last node is a PrimitiveValue this property returns the value:
@@ -27,7 +27,7 @@ namespace Microsoft.OData.Json
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
         /// </remarks>
-        object Value { get; }
+        object GetValue();
 
         /// <summary>
         /// The type of the last node read.

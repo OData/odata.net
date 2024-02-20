@@ -173,9 +173,9 @@ namespace Microsoft.OData.JsonLight
                             }
                         }
                     }
-                    else if (this.JsonReader.Value != null)
+                    else if (this.JsonReader.GetValue() != null)
                     {
-                        throw new ODataException(Strings.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(this.JsonReader.Value));
+                        throw new ODataException(Strings.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(this.JsonReader.GetValue()));
                     }
 
                     // read over end object or null value
@@ -654,7 +654,7 @@ namespace Microsoft.OData.JsonLight
             {
                 // #### annotation 1 ####
                 // built-in "odata." annotation value is added to propertyAndAnnotationCollector then later to resourceSet.InstanceAnnotations.
-                propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, this.JsonReader.Value);
+                propertyAndAnnotationCollector.AddODataScopeAnnotation(annotationName, this.JsonReader.GetValue());
             }
 
             // When we are reading the start of a resource set (in scan-ahead mode or not) or when
@@ -1579,7 +1579,7 @@ namespace Microsoft.OData.JsonLight
 
             payloadTypeReference = ResolveUntypedType(
                 this.JsonReader.NodeType,
-                this.JsonReader.Value,
+                this.JsonReader.GetValue(),
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,

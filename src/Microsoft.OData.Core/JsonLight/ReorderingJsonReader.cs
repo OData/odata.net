@@ -43,12 +43,12 @@ namespace Microsoft.OData.JsonLight
             Stream result;
             try
             {
-                result = this.Value == null ? Stream.Null :
-                    new MemoryStream(Convert.FromBase64String((string)this.Value));
+                result = this.GetValue() == null ? Stream.Null :
+                    new MemoryStream(Convert.FromBase64String((string)this.GetValue()));
             }
             catch (FormatException)
             {
-                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(this.Value));
+                throw new ODataException(Strings.JsonReader_InvalidBinaryFormat(this.GetValue()));
             }
 
             this.Read();
@@ -68,7 +68,7 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(Strings.JsonReader_CannotCreateTextReader);
             }
 
-            TextReader result = new StringReader(this.Value == null ? "" : (string)this.Value);
+            TextReader result = new StringReader(this.GetValue() == null ? "" : (string)this.GetValue());
             this.Read();
 
             return result;
@@ -80,7 +80,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>True if the current value can be streamed, otherwise false.</returns>
         public override bool CanStream()
         {
-            return (this.Value is string || this.Value == null);
+            return (this.GetValue() is string || this.GetValue() == null);
         }
 
 

@@ -564,9 +564,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             private object value;
             private JsonNodeType nodeType = JsonNodeType.None;
 
-            public object Value
+            public object GetValue()
             {
-                get { return this.value; }
+                return this.value;
             }
 
             public JsonNodeType NodeType

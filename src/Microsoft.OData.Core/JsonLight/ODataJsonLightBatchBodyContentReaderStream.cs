@@ -387,9 +387,9 @@ namespace Microsoft.OData.JsonLight
                 {
                     case JsonNodeType.PrimitiveValue:
                         {
-                            if (reader.Value != null)
+                            if (reader.GetValue() != null)
                             {
-                                jsonWriter.WritePrimitiveValue(reader.Value);
+                                jsonWriter.WritePrimitiveValue(reader.GetValue());
                             }
                             else
                             {
@@ -401,7 +401,7 @@ namespace Microsoft.OData.JsonLight
 
                     case JsonNodeType.Property:
                         {
-                            jsonWriter.WriteName(reader.Value.ToString());
+                            jsonWriter.WriteName(reader.GetValue().ToString());
                         }
 
                         break;

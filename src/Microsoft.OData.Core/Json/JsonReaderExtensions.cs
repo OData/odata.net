@@ -80,7 +80,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonReader.NodeType == JsonNodeType.Property, "jsonReader.NodeType == JsonNodeType.Property");
 
             // NOTE: the JSON reader already verifies that property names are strings and not null/empty
-            string propertyName = (string)jsonReader.Value;
+            string propertyName = (string)jsonReader.GetValue();
 
             return propertyName;
         }
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
 
-            object value = jsonReader.Value;
+            object value = jsonReader.GetValue();
             ReadNext(jsonReader, JsonNodeType.PrimitiveValue);
             return value;
         }
@@ -258,13 +258,13 @@ namespace Microsoft.OData.Json
                         switch (jsonReader.NodeType)
                         {
                             case JsonNodeType.PrimitiveValue:
-                                if (jsonReader.Value == null)
+                                if (jsonReader.GetValue() == null)
                                 {
                                     jsonWriter.WriteValue((string)null);
                                 }
                                 else
                                 {
-                                    jsonWriter.WritePrimitiveValue(jsonReader.Value);
+                                    jsonWriter.WritePrimitiveValue(jsonReader.GetValue());
                                 }
 
                                 break;

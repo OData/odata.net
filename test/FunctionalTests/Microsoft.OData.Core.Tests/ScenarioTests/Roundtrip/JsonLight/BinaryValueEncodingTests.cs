@@ -61,7 +61,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
             // Parsing binary literal
             var jsonReader = new JsonReader(new StringReader(builder.ToString()), isIeee754Compatible: true);
             jsonReader.Read();
-            Assert.Equal(encodedByteArr, jsonReader.Value);
+            Assert.Equal(encodedByteArr, jsonReader.GetValue());
 
             object defaultParsedByteArray;
             Assert.True(DefaultLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(defaultFormattedByteArray), out defaultParsedByteArray));
