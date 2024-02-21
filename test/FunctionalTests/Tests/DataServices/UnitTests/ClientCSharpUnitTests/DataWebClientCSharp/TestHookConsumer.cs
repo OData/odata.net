@@ -12,6 +12,7 @@ namespace AstoriaUnitTests.Tests
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
+    using System.Linq;
     using System.Net;
     using System.Net.Http.Headers;
     using System.Xml.Linq;
@@ -31,14 +32,7 @@ namespace AstoriaUnitTests.Tests
 
         public HttpTestHookConsumer(DataServiceContext context, bool silverlight)
         {
-            if (context.HttpRequestTransportMode == HttpRequestTransportMode.HttpClient)
-            {
-                context.Configurations.RequestPipeline.OnMessageCreating = this.OnHttpClientMessageCreating;
-            }
-            else
-            {
-                context.Configurations.RequestPipeline.OnMessageCreating = this.OnWebRequestClientMessageCreating;
-            }
+            context.Configurations.RequestPipeline.OnMessageCreating = this.OnHttpClientMessageCreating;
         }
         public List<Dictionary<string, string>> RequestHeaders
         {
@@ -105,49 +99,30 @@ namespace AstoriaUnitTests.Tests
             Assert.IsNotNull(requestMessage, "sendRequest test hook was called with null request message");
 
             HttpClientRequestMessage httpClientRequestMessage = requestMessage as HttpClientRequestMessage;
-            if (httpClientRequestMessage != null)
+            Dictionary<string, string> headers = WrapHttpRequestHeaders(httpClientRequestMessage.HttpRequestMessage.Headers);
+            headers.Add("__Uri", httpClientRequestMessage.Url.AbsoluteUri);
+            headers.Add("__HttpVerb", httpClientRequestMessage.HttpRequestMessage.Method.ToString());
+            requestHeaders.Add(headers);
+
+            requestMessage.SetHeader("__Uri", httpClientRequestMessage.Url.AbsoluteUri);
+            requestMessage.SetHeader("__HttpVerb", httpClientRequestMessage.Method);
+
+            if (null != this.CustomSendRequestAction)
             {
-                Dictionary<string, string> headers = WrapHttpRequestHeaders(httpClientRequestMessage.HttpRequestMessage.Headers);
-                headers.Add("__Uri", httpClientRequestMessage.Url.AbsoluteUri);
-                headers.Add("__HttpVerb", httpClientRequestMessage.HttpRequestMessage.Method.ToString());
-                requestHeaders.Add(headers);
-
-                requestMessage.SetHeader("__Uri", httpClientRequestMessage.Url.AbsoluteUri);
-                requestMessage.SetHeader("__HttpVerb", httpClientRequestMessage.Method);
-
-                if (null != this.CustomSendRequestAction)
-                {
-                    this.CustomSendRequestAction(httpClientRequestMessage.HttpRequestMessage);
-                }
-            }
-            else
-            {
-                HttpWebRequestMessage webRequestMessage = requestMessage as HttpWebRequestMessage;
-                Dictionary<string, string> headers = WrapHttpHeaders(webRequestMessage.HttpWebRequest.Headers);
-                headers.Add("__Uri", webRequestMessage.Url.AbsoluteUri);
-                headers.Add("__HttpVerb", webRequestMessage.HttpWebRequest.Method.ToString());
-                requestHeaders.Add(headers);
-
-                requestMessage.SetHeader("__Uri", webRequestMessage.Url.AbsoluteUri);
-                requestMessage.SetHeader("__HttpVerb", webRequestMessage.Method);
-
-                if (null != this.CustomSendRequestAction)
-                {
-                    this.CustomSendRequestAction(webRequestMessage.HttpWebRequest);
-                }
+                this.CustomSendRequestAction(httpClientRequestMessage.HttpRequestMessage);
             }
         }
 
         public void SendResponse(HttpWebResponseMessage responseMessage)
         {
             Assert.IsNotNull(responseMessage, "sendResponse test hook was called with null response message");
-            Dictionary<string, string> headers = WrapHttpHeaders(responseMessage.Response.Headers);
-            headers.Add("__HttpStatusCode", responseMessage.Response.StatusCode.ToString());
+            Dictionary<string, string> headers = WrapHttpHeaders(responseMessage.Headers);
+            headers.Add("__HttpStatusCode", responseMessage.StatusCode.ToString());
             responseHeaders.Add(headers);
 
             if (null != this.CustomSendResponseAction)
             {
-                this.CustomSendResponseAction(responseMessage.Response);
+                this.CustomSendResponseAction(responseMessage);
             }
         }
 
@@ -157,6 +132,17 @@ namespace AstoriaUnitTests.Tests
             foreach (string name in headerCollection.AllKeys)
             {
                 headers.Add(name, headerCollection[name]);
+            }
+
+            return headers;
+        }
+
+        private Dictionary<string, string> WrapHttpHeaders(IEnumerable<KeyValuePair<string, string>> headerCollection)
+        {
+            var headers = new Dictionary<string, string>();
+            foreach (var header in headerCollection)
+            {
+                headers.Add(header.Key, header.Value);
             }
 
             return headers;
@@ -178,12 +164,6 @@ namespace AstoriaUnitTests.Tests
         private DataServiceClientRequestMessage OnHttpClientMessageCreating(DataServiceClientRequestMessageArgs args)
         {
             this.testMessage = new TestHttpClientRequestMessage(args, this.SendRequest, this.SendResponse, this.GetRequestWrappingStream, this.GetResponseWrappingStream);
-            return this.testMessage;
-        }
-
-        private DataServiceClientRequestMessage OnWebRequestClientMessageCreating(DataServiceClientRequestMessageArgs args)
-        {
-            this.testMessage = new TestHttpWebRequestMessage(args, this.SendRequest, this.SendResponse, this.GetRequestWrappingStream, this.GetResponseWrappingStream);
             return this.testMessage;
         }
     }
@@ -243,17 +223,14 @@ namespace AstoriaUnitTests.Tests
             TestHttpWebResponseMessage responseMessage;
             try
             {
-                var httpResponse = (HttpWebResponse)this.GetResponse();
+                var httpResponse = (HttpWebResponseMessage)this.GetResponse();
                 responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
                 this.SendResponse(responseMessage);
                 return responseMessage;
             }
             catch (WebException webException)
             {
-                var httpResponse = (HttpWebResponse)webException.Response;
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                throw new DataServiceTransportException(responseMessage, webException);
+                throw new DataServiceTransportException(response: null, webException);
             }
         }
 
@@ -272,125 +249,23 @@ namespace AstoriaUnitTests.Tests
             TestHttpWebResponseMessage responseMessage;
             try
             {
-                var httpResponse = (HttpWebResponse)this.EndGetResponse(asyncResult);
+                var httpResponse = (HttpWebResponseMessage)this.EndGetResponse(asyncResult);
                 responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
                 this.SendResponse(responseMessage);
                 return responseMessage;
             }
             catch (WebException webException)
             {
-                var httpResponse = (HttpWebResponse)webException.Response;
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                throw new DataServiceTransportException(responseMessage, webException);
+                throw new DataServiceTransportException(response: null, webException);
             }
             
         }
     }
 
-    // Test Class for HttpWebRequestMessage
-    public class TestHttpWebRequestMessage : HttpWebRequestMessage
-    {
-        private bool requestHeadersAdded;
-
-        public TestHttpWebRequestMessage(
-            DataServiceClientRequestMessageArgs args,
-            Action<DataServiceClientRequestMessage> sendRequest,
-            Action<HttpWebResponseMessage> sendResponse,
-            Func<Stream, Stream> wrapRequestStream,
-            Func<Stream, Stream> wrapResponseStream) : base(args)
-        {
-            this.SendRequest = sendRequest;
-            this.SendResponse = sendResponse;
-            this.WrapRequestStream = wrapRequestStream;
-            this.WrapResponseStream = wrapResponseStream;
-        }
-
-        private Action<DataServiceClientRequestMessage> SendRequest { get; set; }
-        private Action<HttpWebResponseMessage> SendResponse { get; set; }
-        private Func<Stream, Stream> WrapRequestStream { get; set; }
-        private Func<Stream, Stream> WrapResponseStream { get; set; }
-
-        public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
-        {
-            this.SendRequest(this);
-            this.requestHeadersAdded = true;
-            return base.BeginGetRequestStream(callback, state);
-        }
-
-        public override Stream EndGetRequestStream(IAsyncResult asyncResult)
-        {
-            var requestStream = base.EndGetRequestStream(asyncResult);
-            return this.WrapRequestStream(requestStream);
-        }
-
-        public override Stream GetStream()
-        {
-            this.SendRequest(this);
-            this.requestHeadersAdded = true;
-
-            var requestStream = base.GetStream();
-            return this.WrapRequestStream(requestStream);
-        }
-
-        public override IODataResponseMessage GetResponse()
-        {
-            if (!this.requestHeadersAdded)
-            {
-                this.SendRequest(this);
-            }
-
-            TestHttpWebResponseMessage responseMessage;
-            try
-            {
-                var httpResponse = (HttpWebResponse)this.GetResponse();
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                return responseMessage;
-            }
-            catch (WebException webException)
-            {
-                var httpResponse = (HttpWebResponse)webException.Response;
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                throw new DataServiceTransportException(responseMessage, webException);
-            }
-        }
-
-        public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
-        {
-            if (!this.requestHeadersAdded)
-            {
-                this.SendRequest(this);
-            }
-
-            return base.BeginGetResponse(callback, state);
-        }
-
-        public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
-        {
-            TestHttpWebResponseMessage responseMessage;
-            try
-            {
-                var httpResponse = (HttpWebResponse)this.EndGetResponse(asyncResult);
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                return responseMessage;
-            }
-            catch (WebException webException)
-            {
-                var httpResponse = (HttpWebResponse)webException.Response;
-                responseMessage = new TestHttpWebResponseMessage(httpResponse, this.WrapResponseStream);
-                this.SendResponse(responseMessage);
-                throw new DataServiceTransportException(responseMessage, webException);
-            }
-
-        }
-    }
-
     public class TestHttpWebResponseMessage : HttpWebResponseMessage
     {
-        public TestHttpWebResponseMessage(HttpWebResponse response, Func<Stream, Stream> addResponseStream) : base(response)
+        public TestHttpWebResponseMessage(HttpWebResponseMessage response, Func<Stream, Stream> addResponseStream)
+            : base(response.Headers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value), response.StatusCode, () => response.GetStream())
         {
             this.AddResponseStream = addResponseStream;
         }

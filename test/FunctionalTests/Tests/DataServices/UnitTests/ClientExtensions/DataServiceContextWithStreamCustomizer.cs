@@ -11,6 +11,9 @@ namespace AstoriaUnitTests.ClientExtensions
     using System.Net;
     using Microsoft.OData.Client;
     using Microsoft.OData;
+    using System.Collections;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public static class ContextUtils
     {
@@ -45,7 +48,7 @@ namespace AstoriaUnitTests.ClientExtensions
             public override IODataResponseMessage GetResponse()
             {
                 var responseMessage = (HttpWebResponseMessage)base.GetResponse();
-                return new TestHttpResponseMessage(responseMessage.Response, this.responseStreamInterceptor);
+                return new TestHttpResponseMessage(responseMessage, this.responseStreamInterceptor);
             }
 
             public override Stream EndGetRequestStream(IAsyncResult asyncResult)
@@ -62,8 +65,8 @@ namespace AstoriaUnitTests.ClientExtensions
         private class TestHttpResponseMessage : HttpWebResponseMessage
         {
             private readonly Func<Stream, Stream> responseStreamInterceptor;
-            public TestHttpResponseMessage(HttpWebResponse httpResponse, Func<Stream, Stream> responseStreamInterceptor)
-                : base(httpResponse)
+            public TestHttpResponseMessage(HttpWebResponseMessage responseMessage, Func<Stream, Stream> responseStreamInterceptor)
+                : base(responseMessage.Headers.ToDictionary(kvp => kvp.Key, kvp => kvp.Value), responseMessage.StatusCode, () => responseMessage.GetStream())
             {
                 this.responseStreamInterceptor = responseStreamInterceptor;
             }

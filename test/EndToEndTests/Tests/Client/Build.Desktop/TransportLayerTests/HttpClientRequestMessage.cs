@@ -335,14 +335,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
 
         private static DataServiceTransportException ConvertToDataServiceWebException(WebException webException)
         {
-            HttpWebResponseMessage errorResponseMessage = null;
-            if (webException.Response != null)
-            {
-                var httpResponse = (HttpWebResponse)webException.Response;
-                errorResponseMessage = new HttpWebResponseMessage(httpResponse);
-            }
-
-            return new DataServiceTransportException(errorResponseMessage, webException);
+            return new DataServiceTransportException(response: null, webException);
         }
     }
 }

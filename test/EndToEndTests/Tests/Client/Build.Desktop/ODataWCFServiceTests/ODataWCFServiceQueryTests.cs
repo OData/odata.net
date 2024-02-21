@@ -655,7 +655,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             TestClientContext.Format.UseJson(Model);
 
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpWebRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
             var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName/$value"));
             List<string> enumResult = middleName.ToList();
             Assert.Equal(0, enumResult.Count);

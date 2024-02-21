@@ -105,14 +105,11 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             testSubject.InferServerTypeNameFromServerModel(this.entityDescriptor).Should().Be(null);
         }
 
-        [InlineData(HttpRequestTransportMode.HttpClient)]
-        [InlineData(HttpRequestTransportMode.HttpWebRequest)]
-        [Theory]
-        public void RequestInfoShouldCreateTunneledDeleteRequestMessageDeleteMethodAndDeleteInHttpXMethodHeader(HttpRequestTransportMode requestTransportMode)
+        [Fact]
+        public void RequestInfoShouldCreateTunneledDeleteRequestMessageDeleteMethodAndDeleteInHttpXMethodHeader()
         {
             bool previousPostTunnelingValue = ctx.UsePostTunneling;
             ctx.UsePostTunneling = true;
-            ctx.HttpRequestTransportMode = requestTransportMode;
             HeaderCollection headersCollection = new HeaderCollection();
             var descriptor = new EntityDescriptor(this.clientEdmModel) { ServerTypeName = this.serverTypeName, Entity = new Customer() };
             var buildingRequestArgs = new BuildingRequestEventArgs("DELETE", new Uri("http://localhost/fakeService.svc/"), headersCollection, descriptor, HttpStack.Auto);
@@ -124,28 +121,18 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             requestMessage.GetHeader(XmlConstants.HttpContentType).Should().BeNullOrEmpty();
             requestMessage.Method.Should().Be("DELETE");
 
-            if (requestTransportMode == HttpRequestTransportMode.HttpClient)
-            {
-                ((HttpClientRequestMessage)requestMessage).HttpRequestMessage.Method.Should().Be(HttpMethod.Post);
 
-            }
-            else
-            {
-                ((HttpWebRequestMessage)requestMessage).HttpWebRequest.Method.Should().Be("POST");
-            }
+            ((HttpClientRequestMessage)requestMessage).HttpRequestMessage.Method.Should().Be(HttpMethod.Post);
         
             // undoing change so this is applicable only for this test.
             ctx.UsePostTunneling = previousPostTunnelingValue;
         }
 
-        [InlineData(HttpRequestTransportMode.HttpClient)]
-        [InlineData(HttpRequestTransportMode.HttpWebRequest)]
-        [Theory]
-        public void RequestInfoShouldCreateTunneledPatchRequestMessagePostMethodAndPatchInHttpXMethodHeader(HttpRequestTransportMode requestTransportMode)
+        [Fact]
+        public void RequestInfoShouldCreateTunneledPatchRequestMessagePostMethodAndPatchInHttpXMethodHeader()
         {
             bool previousPostTunnelingValue = ctx.UsePostTunneling;
             ctx.UsePostTunneling = true;
-            ctx.HttpRequestTransportMode = requestTransportMode;
             HeaderCollection headersCollection = new HeaderCollection();
             var descriptor = new EntityDescriptor(this.clientEdmModel) { ServerTypeName = this.serverTypeName, Entity = new Customer() };
             var buildingRequestArgs = new BuildingRequestEventArgs("PATCH", new Uri("http://localhost/fakeService.svc/"), headersCollection, descriptor, HttpStack.Auto);
@@ -154,16 +141,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
             requestMessage.GetHeader(XmlConstants.HttpXMethod).Should().Be("PATCH");
             requestMessage.Method.Should().Be("PATCH");
-            if (requestTransportMode == HttpRequestTransportMode.HttpClient)
-            {
-                ((HttpClientRequestMessage)requestMessage).HttpRequestMessage.Method.Should().Be(HttpMethod.Post);
-
-            }
-            else
-            {
-                ((HttpWebRequestMessage)requestMessage).HttpWebRequest.Method.Should().Be("POST");
-            }
-
+            ((HttpClientRequestMessage)requestMessage).HttpRequestMessage.Method.Should().Be(HttpMethod.Post);
             // undoing change so this is applicable only for this test.
             ctx.UsePostTunneling = previousPostTunnelingValue;
         }
@@ -180,7 +158,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             ctx.Configurations.RequestPipeline.OnMessageCreating = (args) =>
             {
                 buildingRequestArgs.Headers.Keys.Should().NotContain(XmlConstants.HttpContentType);
-                return new HttpWebRequestMessage(args);
+                return new HttpClientRequestMessage(args);
             };
 
             testSubject.CreateRequestMessage(buildingRequestArgs);

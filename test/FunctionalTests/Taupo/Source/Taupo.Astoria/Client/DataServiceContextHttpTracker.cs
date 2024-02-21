@@ -193,32 +193,16 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             /// </summary>
             internal void RegisterCallbacks()
             {
-                if (context.HttpRequestTransportMode == HttpRequestTransportMode.HttpClient)
-                {
-                    this.context.Configurations.RequestPipeline.OnMessageCreating =
-                    (requestMessageArgs) =>
-                        {
-                            TestHttpWebRequestMessage requestMessage = new TestHttpWebRequestMessage(requestMessageArgs);
-                            requestMessage.InternalGetRequestWrappingStream = this.getRequestWrappingStream;
-                            requestMessage.InternalGetResponseWrappingStream = this.getResponseWrappingStream;
-                            requestMessage.InternalSendRequest = this.sendRequest;
-                            requestMessage.InternalSendResponse = this.sendResponse;
-                            return requestMessage;
-                        };
-                }
-                else
-                {
-                    this.context.Configurations.RequestPipeline.OnMessageCreating =
+                this.context.Configurations.RequestPipeline.OnMessageCreating =
                     (requestMessageArgs) =>
                     {
-                        TestHttpWebRequestMessage requestMessage = new TestHttpWebRequestMessage(requestMessageArgs);
+                        TestHttpClientRequestMessage requestMessage = new TestHttpClientRequestMessage(requestMessageArgs);
                         requestMessage.InternalGetRequestWrappingStream = this.getRequestWrappingStream;
                         requestMessage.InternalGetResponseWrappingStream = this.getResponseWrappingStream;
                         requestMessage.InternalSendRequest = this.sendRequest;
                         requestMessage.InternalSendResponse = this.sendResponse;
                         return requestMessage;
                     };
-                }
             }
 
             /// <summary>
@@ -513,107 +497,13 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
                     try
                     {
-                        responseMessage = (HttpWebResponseMessage)getWebResponse();
-                        responseMessage = new TestHttpWebResponseMessage(responseMessage.Response, this.InternalGetResponseWrappingStream);
+                        responseMessage = getWebResponse();
+                        responseMessage = new TestHttpWebResponseMessage(responseMessage, this.InternalGetResponseWrappingStream);
                         return responseMessage;
                     }
                     catch (DataServiceTransportException e)
                     {
-                        var httpWebResponse = ((HttpWebResponseMessage)e.Response).Response;
-                        responseMessage = new TestHttpWebResponseMessage(httpWebResponse, this.InternalGetResponseWrappingStream);
-                        throw new DataServiceTransportException(responseMessage, e);
-                    }
-                    finally
-                    {
-                        this.InternalSendResponse(responseMessage);
-                    }
-                }
-            }
-
-            private class TestHttpWebRequestMessage : HttpWebRequestMessage
-            {
-                private bool requestHeadersSent;
-
-                public TestHttpWebRequestMessage(DataServiceClientRequestMessageArgs requestMessageArgs) :
-                    base(requestMessageArgs)
-                {
-                }
-
-                internal Func<Stream, Stream> InternalGetRequestWrappingStream { get; set; }
-
-                internal Func<Stream, Stream> InternalGetResponseWrappingStream { get; set; }
-
-                internal Action<object> InternalSendRequest { get; set; }
-
-                internal Action<object> InternalSendResponse { get; set; }
-
-                public override Stream GetStream()
-                {
-                    ExceptionUtilities.Assert(!this.requestHeadersSent, "requestHeaders must not be set yet");
-                    this.InternalSendRequest(this.HttpWebRequest);
-                    this.requestHeadersSent = true;
-                    var stream = base.GetStream();
-                    return this.InternalGetRequestWrappingStream(stream);
-                }
-
-                public override IAsyncResult BeginGetRequestStream(AsyncCallback callback, object state)
-                {
-                    ExceptionUtilities.Assert(!this.requestHeadersSent, "requestHeaders must not be set yet");
-                    this.InternalSendRequest(this.HttpWebRequest);
-                    this.requestHeadersSent = true;
-
-                    return base.BeginGetRequestStream(callback, state);
-                }
-
-                public override Stream EndGetRequestStream(IAsyncResult asyncResult)
-                {
-                    var stream = base.EndGetRequestStream(asyncResult);
-                    return this.InternalGetRequestWrappingStream(stream);
-                }
-
-                public override IAsyncResult BeginGetResponse(AsyncCallback callback, object state)
-                {
-                    if (!this.requestHeadersSent)
-                    {
-                        this.InternalSendRequest(this.HttpWebRequest);
-                        this.requestHeadersSent = true;
-                    }
-
-                    return base.BeginGetResponse(callback, state);
-                }
-
-                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
-                public override IODataResponseMessage EndGetResponse(IAsyncResult asyncResult)
-                {
-                    return BuildResponse(() => ((HttpWebResponseMessage)base.EndGetResponse(asyncResult)));
-                }
-
-                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
-                public override IODataResponseMessage GetResponse()
-                {
-                    return BuildResponse(() => ((HttpWebResponseMessage)base.GetResponse()));
-                }
-
-                [SuppressMessage("Microsoft.Reliability", "CA2000:Dispose objects before losing scope", Justification = "HttpWebResponse is passed to TestHttpWebResponseMessage, which will get disposed by DataServiceContext.")]
-                private IODataResponseMessage BuildResponse(Func<HttpWebResponseMessage> getWebResponse)
-                {
-                    if (!this.requestHeadersSent)
-                    {
-                        this.InternalSendRequest(this.HttpWebRequest);
-                        this.requestHeadersSent = true;
-                    }
-
-                    HttpWebResponseMessage responseMessage = null;
-
-                    try
-                    {
-                        responseMessage = (HttpWebResponseMessage)getWebResponse();
-                        responseMessage = new TestHttpWebResponseMessage(responseMessage.Response, this.InternalGetResponseWrappingStream);
-                        return responseMessage;
-                    }
-                    catch (DataServiceTransportException e)
-                    {
-                        var httpWebResponse = ((HttpWebResponseMessage)e.Response).Response;
+                        var httpWebResponse = (HttpWebResponseMessage)e.Response;
                         responseMessage = new TestHttpWebResponseMessage(httpWebResponse, this.InternalGetResponseWrappingStream);
                         throw new DataServiceTransportException(responseMessage, e);
                     }
@@ -628,8 +518,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             {
                 private readonly Func<Stream, Stream> getResponseWrappingStream;
 
-                public TestHttpWebResponseMessage(HttpWebResponse httpWebResponse, Func<Stream, Stream> getResponseWrappingStream) :
-                    base(httpWebResponse)
+                public TestHttpWebResponseMessage(HttpWebResponseMessage responseMessage, Func<Stream, Stream> getResponseWrappingStream) :
+                    base(responseMessage.Headers.ToDictionary(h => h.Key, h => h.Value), responseMessage.StatusCode, () => responseMessage.GetStream())
                 {
                     this.getResponseWrappingStream = getResponseWrappingStream;
                 }

@@ -962,9 +962,13 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 return arg.Descriptor.State.ToString();
             }
-            else
+            else if (arg.Descriptor != null)
             {
-                return (arg.ResponseMessage as HttpWebResponseMessage).Response.ResponseUri.Segments.Last();
+                return arg.Descriptor.State.ToString();
+            }
+            {
+                // this is the top-level batch request
+                return "$batch";
             }
         }
 
@@ -1157,7 +1161,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             Assert.AreEqual("CustomHeaderValue", arg.ResponseMessage.GetHeader("CustomHeader"));
                             Assert.AreEqual("Custom_Header2_Value", arg.ResponseMessage.GetHeader("Custom_Header2"));
 
-                            if (!arg.IsBatchPart && (arg.ResponseMessage as HttpWebResponseMessage).Response.ResponseUri.Segments.Last() == "$batch")
+                            if (!arg.IsBatchPart)
                             {
                                 Assert.IsNull(arg.Descriptor);
                             }
