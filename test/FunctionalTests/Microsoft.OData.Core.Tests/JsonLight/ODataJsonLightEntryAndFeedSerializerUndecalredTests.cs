@@ -235,6 +235,29 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
             Assert.Equal(result, actual);
         }
 
+        [Fact]
+        public void ODataBinaryStreamValue_Leaves_Stream_Not_Open_By_Default()
+        {
+            // With type name
+            // ODataBinaryStreamValue
+            var stream = new MemoryStream();
+            var writer = new BinaryWriter(stream);
+            writer.Write("1234567890");
+            writer.Flush();
+            stream.Position = 0;
+
+            var property = new ODataProperty
+            {
+                Name = "Data",
+                Value = new ODataBinaryStreamValue(stream)
+            };
+
+            string result = WriteDeclaredUntypedProperty(property);
+            Assert.Equal("{\"@odata.context\":\"http://www.sampletest.com/$metadata#serverEntitySet/$entity\",\"Data\":\"CjEyMzQ1Njc4OTA=\"}", result);
+
+            Assert.False(stream.CanRead);
+        }
+
         private string WriteDeclaredUntypedProperty(ODataProperty untypedProperty)
         {
             var entry = new ODataResource
