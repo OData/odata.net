@@ -496,14 +496,7 @@ namespace Microsoft.OData.Client
 
         private static DataServiceTransportException ConvertToDataServiceTransportException(WebException webException)
         {
-            HttpWebResponseMessage errorResponseMessage = null;
-            if (webException.Response != null)
-            {
-                HttpWebResponse httpResponse = (HttpWebResponse)webException.Response;
-                errorResponseMessage = new HttpWebResponseMessage(httpResponse);
-            }
-
-            return new DataServiceTransportException(errorResponseMessage, webException);
+            return new DataServiceTransportException(response: null, webException);
         }
 
         /// <summary>

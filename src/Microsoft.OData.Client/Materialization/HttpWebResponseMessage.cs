@@ -49,19 +49,6 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="httpResponse">HttpWebResponse instance.</param>
-        internal HttpWebResponseMessage(HttpWebResponse httpResponse)
-        {
-            Util.CheckArgumentNull(httpResponse, "httpResponse");
-            this.headers = new HeaderCollection(httpResponse.Headers);
-            this.statusCode = (int)httpResponse.StatusCode;
-            this.getResponseStream = httpResponse.GetResponseStream;
-            this.httpWebResponse = httpResponse;
-        }
-
-        /// <summary>
-        /// Constructor.
-        /// </summary>
         /// <param name="headers">The headers.</param>
         /// <param name="statusCode">The status code.</param>
         /// <param name="getResponseStream">A function returning the response stream.</param>
