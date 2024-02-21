@@ -21,7 +21,7 @@ namespace Microsoft.OData
 /// <summary>
 /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
 /// </summary>
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
     public sealed class ODataMessageWriter : IDisposable, IAsyncDisposable
 #else
     public sealed class ODataMessageWriter : IDisposable
@@ -734,7 +734,7 @@ namespace Microsoft.OData
             GC.SuppressFinalize(this);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// <see cref="System.IAsyncDisposable.DisposeAsync"/> implementation to asynchronously
         /// clean up unmanaged resources of the writer.
@@ -1214,7 +1214,7 @@ namespace Microsoft.OData
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Asynchronously performs the actual cleanup work.
         /// </summary>

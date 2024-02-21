@@ -348,7 +348,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <inheritdoc/>
         public override ValueTask DisposeAsync()
         {
@@ -365,7 +365,7 @@ namespace Microsoft.OData
         }
 #endif
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Asynchronously releases all resources used by the <see cref="ODataNotificationWriter"/> object.
         /// </summary>

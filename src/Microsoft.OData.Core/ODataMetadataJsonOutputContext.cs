@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -206,7 +206,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -265,7 +265,7 @@ namespace Microsoft.OData
 
             await this.jsonWriter.FlushAsync().ConfigureAwait(false);
             await this.jsonWriter.DisposeAsync().ConfigureAwait(false);
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             await this.asynchronousOutputStream.DisposeAsync().ConfigureAwait(false);
 #else
             this.asynchronousOutputStream.Dispose();

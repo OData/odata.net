@@ -82,7 +82,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public override async ValueTask DisposeAsync()
         {
             await DisposeAsyncCore()
@@ -104,7 +104,7 @@ namespace Microsoft.OData
         }
 #endif
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Encapsulates the common asynchronous cleanup operations.
         /// </summary>

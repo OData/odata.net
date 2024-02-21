@@ -17,7 +17,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
     /// </summary>
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
     internal sealed class RawValueWriter : IDisposable, IAsyncDisposable
 #else
     internal sealed class RawValueWriter : IDisposable
@@ -90,7 +90,7 @@ namespace Microsoft.OData
             this.textWriter = null;
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Asynchronously disposes the <see cref="RawValueWriter"/>.
         /// It flushes itself and then disposes its inner <see cref="System.IO.TextWriter"/>.

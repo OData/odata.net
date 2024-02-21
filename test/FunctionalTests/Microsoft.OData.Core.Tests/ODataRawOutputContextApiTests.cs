@@ -69,7 +69,7 @@ namespace Microsoft.OData.Tests
             };
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.asyncStream };
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
 #else
             using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests
                 var responseMessage = await asynchronousWriter.CreateResponseMessageAsync();
                 responseMessage.StatusCode = 200;
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings, this.model))
 #else
                 using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings, this.model))
@@ -169,7 +169,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
         public async Task WriteValue_APIsShouldYieldSameResult(object value, string expected)
         {
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.asyncStream };
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
 #else
             using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
@@ -211,7 +211,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
             var asyncException = await Assert.ThrowsAsync<ODataException>(async () =>
             {
                 IODataResponseMessage asyncResponseMessage = new InMemoryMessage { StatusCode = 200, Stream = this.asyncStream };
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                 await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
 #else
                 using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, writerSettings))
@@ -223,7 +223,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     responseMessage.StatusCode = 200;
 
                     // Next section added is to demonstrate that what was already written is flushed to the buffer before exception is thrown
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings))
 #else
                     using (var nestedMessageWriter = new ODataMessageWriter(responseMessage, nestedWriterSettings))

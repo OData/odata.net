@@ -84,11 +84,6 @@ namespace Microsoft.OData.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// The underlying asynchronous JSON writer.
-        /// </summary>
-        private readonly IJsonWriterAsync asynchronousJsonWriter;
-
-        /// <summary>
         /// The auto-generated GUID for AtomicityGroup of the Json item. Should be null for Json item
         /// that doesn't belong to atomic group.
         /// </summary>
@@ -114,7 +109,6 @@ namespace Microsoft.OData.JsonLight
             : base(jsonLightOutputContext)
         {
             this.jsonWriter = this.JsonLightOutputContext.JsonWriter;
-            this.asynchronousJsonWriter = this.JsonLightOutputContext.AsynchronousJsonWriter;
         }
 
         /// <summary>
@@ -238,7 +232,7 @@ namespace Microsoft.OData.JsonLight
         {
             this.JsonLightOutputContext.VerifyNotDisposed();
             this.SetState(BatchWriterState.Error);
-            await this.asynchronousJsonWriter.FlushAsync()
+            await this.jsonWriter.FlushAsync()
                 .ConfigureAwait(false);
 
             // The OData protocol spec does not define the behavior when an exception is encountered outside of a batch operation. The batch writer
@@ -326,10 +320,10 @@ namespace Microsoft.OData.JsonLight
             this.SetState(BatchWriterState.BatchCompleted);
 
             // Close the messages array
-            jsonWriter.EndArrayScope();
+            this.jsonWriter.EndArrayScope();
 
             // Close the top level scope
-            jsonWriter.EndObjectScope();
+            this.jsonWriter.EndObjectScope();
         }
 
         /// <summary>
@@ -491,11 +485,11 @@ namespace Microsoft.OData.JsonLight
             this.SetState(BatchWriterState.BatchCompleted);
 
             // Close the messages array
-            await asynchronousJsonWriter.EndArrayScopeAsync()
+            await this.jsonWriter.EndArrayScopeAsync()
                 .ConfigureAwait(false);
 
             // Close the top level scope
-            await asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -577,41 +571,41 @@ namespace Microsoft.OData.JsonLight
             await this.WriteStartBoundaryForOperationAsync()
                 .ConfigureAwait(false);
 
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyId)
+            await this.jsonWriter.WriteNameAsync(PropertyId)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(contentId)
+            await this.jsonWriter.WriteValueAsync(contentId)
                 .ConfigureAwait(false);
 
             if (this.atomicityGroupId != null)
             {
-                await this.asynchronousJsonWriter.WriteNameAsync(PropertyAtomicityGroup)
+                await this.jsonWriter.WriteNameAsync(PropertyAtomicityGroup)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.WriteValueAsync(this.atomicityGroupId)
+                await this.jsonWriter.WriteValueAsync(this.atomicityGroupId)
                     .ConfigureAwait(false);
             }
 
             if (this.CurrentOperationRequestMessage.DependsOnIds != null
                 && this.CurrentOperationRequestMessage.DependsOnIds.Any())
             {
-                await this.asynchronousJsonWriter.WriteNameAsync(PropertyDependsOn)
+                await this.jsonWriter.WriteNameAsync(PropertyDependsOn)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                await this.jsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
 
                 foreach (string dependsOnId in this.CurrentOperationRequestMessage.DependsOnIds)
                 {
                     ValidateDependsOnId(contentId, dependsOnId);
-                    await this.asynchronousJsonWriter.WriteValueAsync(dependsOnId)
+                    await this.jsonWriter.WriteValueAsync(dependsOnId)
                         .ConfigureAwait(false);
                 }
 
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                await this.jsonWriter.EndArrayScopeAsync()
                     .ConfigureAwait(false);
             }
 
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyMethod)
+            await this.jsonWriter.WriteNameAsync(PropertyMethod)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(method)
+            await this.jsonWriter.WriteValueAsync(method)
                 .ConfigureAwait(false);
 
             await this.WriteRequestUriAsync(uri, payloadUriOption)
@@ -918,7 +912,7 @@ namespace Microsoft.OData.JsonLight
         private Task WriteStartBoundaryForOperationAsync()
         {
             // Start the individual message object
-            return this.asynchronousJsonWriter.StartObjectScopeAsync();
+            return this.jsonWriter.StartObjectScopeAsync();
         }
 
         /// <summary>
@@ -928,13 +922,13 @@ namespace Microsoft.OData.JsonLight
         private async Task StartBatchOperationContentAsync()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
-            Debug.Assert(this.asynchronousJsonWriter != null, "Must have an asynchronous Json writer!");
+            Debug.Assert(this.jsonWriter != null, "Must have a Json writer!");
 
             // write the pending headers (if any)
             await this.WritePendingMessageDataAsync(false)
                 .ConfigureAwait(false);
 
-            await this.asynchronousJsonWriter.WriteRawValueAsync(string.Format(CultureInfo.InvariantCulture,
+            await this.jsonWriter.WriteRawValueAsync(string.Format(CultureInfo.InvariantCulture,
                 "{0} \"{1}\" {2}",
                 JsonConstants.ArrayElementSeparator,
                 PropertyBody,
@@ -942,7 +936,7 @@ namespace Microsoft.OData.JsonLight
 
             // flush the text writer to make sure all buffers of the text writer
             // are flushed to the underlying async stream
-            await this.asynchronousJsonWriter.FlushAsync()
+            await this.jsonWriter.FlushAsync()
                 .ConfigureAwait(false);
         }
 
@@ -957,8 +951,8 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.CurrentOperationMessage != null)
             {
-                Debug.Assert(this.asynchronousJsonWriter != null,
-                    "Must have an asynchronous Json writer if pending data exists.");
+                Debug.Assert(this.jsonWriter != null,
+                    "Must have a Json writer if pending data exists.");
 
                 if (this.CurrentOperationRequestMessage != null)
                 {
@@ -991,7 +985,7 @@ namespace Microsoft.OData.JsonLight
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
-            return this.asynchronousJsonWriter.EndObjectScopeAsync();
+            return this.jsonWriter.EndObjectScopeAsync();
         }
 
         /// <summary>
@@ -1002,13 +996,13 @@ namespace Microsoft.OData.JsonLight
         private async Task WriteBatchEnvelopeAsync()
         {
             // Start the top level scope
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             // Start the requests / responses property
-            await this.asynchronousJsonWriter.WriteNameAsync(this.JsonLightOutputContext.WritingResponse ? PropertyResponses : PropertyRequests)
+            await this.jsonWriter.WriteNameAsync(this.JsonLightOutputContext.WritingResponse ? PropertyResponses : PropertyRequests)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.StartArrayScopeAsync()
+            await this.jsonWriter.StartArrayScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -1021,23 +1015,23 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
 
             // headers property.
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyHeaders)
+            await this.jsonWriter.WriteNameAsync(PropertyHeaders)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
             IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationRequestMessage.Headers;
             if (headers != null)
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    await this.asynchronousJsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
+                    await this.jsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
                         .ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.WriteValueAsync(headerPair.Value)
+                    await this.jsonWriter.WriteValueAsync(headerPair.Value)
                         .ConfigureAwait(false);
                 }
             }
 
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -1051,44 +1045,44 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(this.CurrentOperationResponseMessage != null, "this.CurrentOperationResponseMessage != null");
 
             // id property.
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyId)
+            await this.jsonWriter.WriteNameAsync(PropertyId)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.ContentId)
+            await this.jsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.ContentId)
                 .ConfigureAwait(false);
 
             // atomicityGroup property.
             if (this.atomicityGroupId != null)
             {
-                await this.asynchronousJsonWriter.WriteNameAsync(PropertyAtomicityGroup)
+                await this.jsonWriter.WriteNameAsync(PropertyAtomicityGroup)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.WriteValueAsync(this.atomicityGroupId)
+                await this.jsonWriter.WriteValueAsync(this.atomicityGroupId)
                     .ConfigureAwait(false);
             }
 
             // response status property.
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyStatus)
+            await this.jsonWriter.WriteNameAsync(PropertyStatus)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.StatusCode)
+            await this.jsonWriter.WriteValueAsync(this.CurrentOperationResponseMessage.StatusCode)
                 .ConfigureAwait(false);
 
             // headers property.
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyHeaders)
+            await this.jsonWriter.WriteNameAsync(PropertyHeaders)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
             IEnumerable<KeyValuePair<string, string>> headers = this.CurrentOperationMessage.Headers;
             if (headers != null)
             {
                 foreach (KeyValuePair<string, string> headerPair in headers)
                 {
-                    await this.asynchronousJsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
+                    await this.jsonWriter.WriteNameAsync(headerPair.Key.ToLowerInvariant())
                         .ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.WriteValueAsync(headerPair.Value)
+                    await this.jsonWriter.WriteValueAsync(headerPair.Value)
                         .ConfigureAwait(false);
                 }
             }
 
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -1102,7 +1096,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
         {
-            await this.asynchronousJsonWriter.WriteNameAsync(PropertyUrl)
+            await this.jsonWriter.WriteNameAsync(PropertyUrl)
                 .ConfigureAwait(false);
 
             if (uri.IsAbsoluteUri)
@@ -1113,13 +1107,13 @@ namespace Microsoft.OData.JsonLight
                 switch (payloadUriOption)
                 {
                     case BatchPayloadUriOption.AbsoluteUri:
-                        await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
+                        await this.jsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
                             .ConfigureAwait(false);
                         break;
 
                     case BatchPayloadUriOption.AbsoluteUriUsingHostHeader:
                         string absoluteResourcePath = ExtractAbsoluteResourcePath(absoluteUriString);
-                        await this.asynchronousJsonWriter.WriteValueAsync(absoluteResourcePath)
+                        await this.jsonWriter.WriteValueAsync(absoluteResourcePath)
                             .ConfigureAwait(false);
                         this.CurrentOperationRequestMessage.SetHeader("host",
                             string.Format(CultureInfo.InvariantCulture, "{0}:{1}", uri.Host, uri.Port));
@@ -1130,14 +1124,14 @@ namespace Microsoft.OData.JsonLight
                         string baseUriString = UriUtils.UriToString(baseUri);
                         Debug.Assert(uri.AbsoluteUri.StartsWith(baseUriString, StringComparison.Ordinal), "absoluteUriString.StartsWith(baseUriString)");
                         string relativeResourcePath = uri.AbsoluteUri.Substring(baseUriString.Length);
-                        await this.asynchronousJsonWriter.WriteValueAsync(relativeResourcePath)
+                        await this.jsonWriter.WriteValueAsync(relativeResourcePath)
                             .ConfigureAwait(false);
                         break;
                 }
             }
             else
             {
-                await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
+                await this.jsonWriter.WriteValueAsync(UriUtils.UriToString(uri))
                     .ConfigureAwait(false);
             }
         }

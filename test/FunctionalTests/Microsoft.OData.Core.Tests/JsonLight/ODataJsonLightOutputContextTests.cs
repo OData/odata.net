@@ -438,7 +438,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -556,7 +556,6 @@ namespace Microsoft.OData.Tests.JsonLight
             messageInfo.Container = ContainerBuilderHelper.BuildContainer(builder =>
             {
                 builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => new DefaultJsonWriterFactory());
-                builder.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => new DefaultJsonWriterFactory());
             });
 
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);

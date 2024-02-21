@@ -464,7 +464,7 @@ namespace Microsoft.OData.JsonLight
         private async Task WriteJsonContentAsync(IJsonReaderAsync reader)
         {
             // Reader is on the value node after the "body" property name node.
-            IJsonWriterAsync jsonWriter = new JsonWriter(
+            IJsonWriter jsonWriter = new JsonWriter(
                 new StreamWriter(this),
                 reader.IsIeee754Compatible);
 
@@ -507,7 +507,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="reader">The Json reader providing the data.</param>
         /// <param name="jsonWriter">The Json writer writes data into memory stream.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteCurrentJsonObjectAsync(IJsonReaderAsync reader, IJsonWriterAsync jsonWriter)
+        private static async Task WriteCurrentJsonObjectAsync(IJsonReaderAsync reader, IJsonWriter jsonWriter)
         {
             Stack<JsonNodeType> nodeTypes = new Stack<JsonNodeType>();
 

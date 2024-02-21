@@ -216,7 +216,7 @@ namespace Microsoft.OData.JsonLight
             if (item == null)
             {
                 this.jsonLightOutputContext.WriterValidator.ValidateNullCollectionItem(expectedItemType);
-                await this.jsonLightOutputContext.AsynchronousJsonWriter.WriteValueAsync((string)null)
+                await this.jsonLightOutputContext.JsonWriter.WriteValueAsync((string)null)
                     .ConfigureAwait(false);
             }
             else

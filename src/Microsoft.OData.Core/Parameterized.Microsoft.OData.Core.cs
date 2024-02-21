@@ -774,28 +774,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "The provided IJsonWriterAsync instance must also implement IJsonWriter."
-        /// </summary>
-        internal static string ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
-            }
-        }
-
-        /// <summary>
-        /// A string like "Detected different instances of IJsonWriter and IJsonWriterAsync. The writer instance returned by the factory should implement both IJsonWriter and IJsonWriterAsync."
-        /// </summary>
-        internal static string ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances
-        {
-            get
-            {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
-            }
-        }
-
-        /// <summary>
         /// A string like "The requested buffer capacity {0} exceeds the max buffer size."
         /// </summary>
         internal static string ODataMessageWriter_Buffer_Maximum_Size_Exceeded(object p0)

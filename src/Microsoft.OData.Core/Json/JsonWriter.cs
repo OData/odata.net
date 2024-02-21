@@ -15,9 +15,8 @@ namespace Microsoft.OData.Json
     using System.IO;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
     using System.Text.Json;
-    using System.Threading.Tasks;
 #endif
     #endregion Namespaces
 
@@ -25,10 +24,10 @@ namespace Microsoft.OData.Json
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-#if NETCOREAPP3_1_OR_GREATER
-    internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable, IAsyncDisposable
+#if NETCOREAPP
+    internal sealed partial class JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
 #else
-    internal sealed partial class JsonWriter : IJsonStreamWriter, IJsonStreamWriterAsync, IDisposable
+    internal sealed partial class JsonWriter : IJsonWriter, IDisposable
 #endif
     {
         /// <summary>
@@ -414,7 +413,7 @@ namespace Microsoft.OData.Json
             JsonValueUtils.WriteValue(this.writer, value, this.wrappedBuffer, this.ArrayPool);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public void WriteValue(JsonElement value)
         {
             switch (value.ValueKind)

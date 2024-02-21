@@ -164,7 +164,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Encapsulates the common asynchronous cleanup operations.
         /// </summary>

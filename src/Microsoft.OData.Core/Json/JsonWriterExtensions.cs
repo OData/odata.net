@@ -19,7 +19,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Extension methods for the JSON writer.
     /// </summary>
-    internal static class JsonWriterExtensions
+    internal static partial class JsonWriterExtensions
     {
         /// <summary>
         /// Writes the json object value to the <paramref name="jsonWriter"/>.

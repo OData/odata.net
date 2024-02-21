@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonWriterAsync.cs" company="Microsoft">
+// <copyright file="JsonWriter.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -8,23 +8,17 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System;
-    using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
-    using System.Text;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
     using System.Text.Json;
 #endif
     #endregion Namespaces
 
-    /// <summary>
-    /// Writer for the JSON format. http://www.json.org
-    /// </summary>
     internal sealed partial class JsonWriter
     {
         /// <inheritdoc/>
@@ -248,7 +242,7 @@ namespace Microsoft.OData.Json
             await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public Task WriteValueAsync(JsonElement value)
         {
             switch (value.ValueKind)
@@ -379,7 +373,7 @@ namespace Microsoft.OData.Json
             return this.writer.FlushAsync();
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         public async ValueTask DisposeAsync()
         {
             if (this.ArrayPool != null && this.wrappedBuffer.Value != null)
@@ -423,7 +417,7 @@ namespace Microsoft.OData.Json
         public async Task EndStreamValueScopeAsync()
         {
             await this.binaryValueStream.FlushAsync().ConfigureAwait(false);
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             await this.binaryValueStream.DisposeAsync().ConfigureAwait(false);
 #else
             this.binaryValueStream.Dispose();

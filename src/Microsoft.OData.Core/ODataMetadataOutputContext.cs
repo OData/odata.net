@@ -223,7 +223,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try

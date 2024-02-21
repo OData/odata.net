@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -13,7 +13,7 @@ namespace Microsoft.OData.Json
 {
     // This class has been adapated from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
     /// <summary>
-    /// An implementation of <see cref="IBufferWriter{byte}"/> that rents
+    /// An implementation of <see cref="IBufferWriter{T}"/> that rents
     /// buffers from an array pool instead of allocating a new array every time.
     /// </summary>
     internal sealed class PooledByteBufferWriter : IBufferWriter<byte>, IDisposable
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Gets a <see cref="ReadOnlyMemory{byte}"/> that contains the data
+        /// Gets a <see cref="ReadOnlyMemory{T}"/> that contains the data
         /// written to the underlying buffer so far.
         /// </summary>
         public ReadOnlyMemory<byte> WrittenMemory

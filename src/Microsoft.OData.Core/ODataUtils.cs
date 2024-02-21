@@ -192,7 +192,7 @@ namespace Microsoft.OData
 
         public static T[] GetEmptyArray<T>()
         {
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             return Array.Empty<T>();
 #else
             return new T[0];

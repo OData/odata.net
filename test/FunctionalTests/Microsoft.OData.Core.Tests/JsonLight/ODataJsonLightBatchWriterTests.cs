@@ -110,7 +110,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage1 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
 #else
                     using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
@@ -203,7 +203,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage2 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
 #else
                     using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
@@ -246,7 +246,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage1 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
 #else
                     using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage2 = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
 #else
                     using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
@@ -311,7 +311,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), /*contentId*/ null);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -387,7 +387,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                     var operationResponseMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
@@ -423,7 +423,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
                     var operationResponseMessage = await jsonLightBatchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings, this.model))
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public async Task WriteBatchResponseAsync_WithStreamCopy_UsingODataUtf8JsonWriter()
         {
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -605,7 +605,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -803,7 +803,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
@@ -835,7 +835,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     var operationRequestMessage = await jsonLightBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
 #else
                     using (var messageWriter = new ODataMessageWriter(operationRequestMessage))

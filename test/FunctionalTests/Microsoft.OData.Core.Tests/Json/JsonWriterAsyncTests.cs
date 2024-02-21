@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.Json
     public class JsonWriterAsyncTests : JsonWriterAsyncBaseTests
     {
         private StringBuilder builder;
-        private IJsonWriterAsync writer;
+        private IJsonWriter writer;
 
         public JsonWriterAsyncTests()
         {
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteJsonObjectValueAsyncCallsInjectedPropertyAction()
         {
             var properties = new Dictionary<string, object> { { "Name", "Sue" } };
-            Func<IJsonWriterAsync, Task> injectPropertyDelegate = async (IJsonWriterAsync actionWriter) =>
+            Func<IJsonWriter, Task> injectPropertyDelegate = async (IJsonWriter actionWriter) =>
             {
                 await actionWriter.WriteNameAsync("Id");
                 await actionWriter.WriteValueAsync(7);
@@ -415,7 +415,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.True(rentVerified);
         }
 
-        protected override IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        protected override IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             return new JsonWriter(new StreamWriter(stream, encoding), isIeee754Compatible);
         }

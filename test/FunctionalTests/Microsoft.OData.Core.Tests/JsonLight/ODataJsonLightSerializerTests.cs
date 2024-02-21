@@ -332,7 +332,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 null,
                 async (jsonLightSerializer) =>
                 {
-                    await jsonLightSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightSerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument);
                 });
 
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Tests.JsonLight
                         jsonLightSerializer.JsonLightOutputContext.MessageWriterSettings.ODataUri,
                         jsonLightSerializer.Model);
 
-                    await jsonLightSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightSerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.Resource,
                         () => contextUrlInfo, /* parentContextUrlInfo */ null, propertyName: "Prop");
                 });
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     return jsonLightSerializer.WriteTopLevelPayloadAsync(
                         () =>
                         {
-                            return jsonLightSerializer.AsynchronousJsonWriter.WriteValueAsync(13);
+                            return jsonLightSerializer.JsonWriter.WriteValueAsync(13);
                         });
                 });
 
@@ -433,7 +433,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var jsonLightSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
             await func(jsonLightSerializer);
             await jsonLightSerializer.JsonLightOutputContext.FlushAsync();
-            await jsonLightSerializer.AsynchronousJsonWriter.FlushAsync();
+            await jsonLightSerializer.JsonWriter.FlushAsync();
             stream.Position = 0;
             var streamReader = new StreamReader(stream);
 

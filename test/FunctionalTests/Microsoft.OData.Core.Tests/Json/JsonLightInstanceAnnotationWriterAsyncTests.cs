@@ -327,10 +327,10 @@ namespace Microsoft.OData.Tests.Json
         private async Task<string> SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(Func<JsonLightInstanceAnnotationWriter, Task> func, IServiceProvider container = null)
         {
             var jsonLightInstanceAnnotationWriter = CreateJsonLightInstanceAnnotationWriter(true, container, true);
-            await this.jsonLightValueSerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+            await this.jsonLightValueSerializer.JsonWriter.StartObjectScopeAsync();
             await func(jsonLightInstanceAnnotationWriter);
             await this.jsonLightValueSerializer.JsonLightOutputContext.FlushAsync();
-            await this.jsonLightValueSerializer.AsynchronousJsonWriter.FlushAsync();
+            await this.jsonLightValueSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

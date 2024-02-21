@@ -79,7 +79,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                 async (jsonLightPropertySerializer) =>
                 {
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightPropertySerializer.WritePropertyInfoAsync(
                         this.undeclaredPropertyWithInstanceAnnotations,
                         /* owningType */ null,
@@ -99,7 +99,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                 async (jsonLightPropertySerializer) =>
                 {
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightPropertySerializer.WritePropertyInfoAsync(
                         this.declaredPropertyWithInstanceAnnotations,
                         this.entityType,
@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                 async (jsonLightPropertySerializer) =>
                 {
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightPropertySerializer.WritePropertyInfoAsync(
                         this.streamProperty,
                         /* owningType */ null,
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                 async (jsonLightPropertySerializer) =>
                 {
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightPropertySerializer.WritePropertyAsync(
                         property,
                         owningType,
@@ -273,7 +273,7 @@ namespace Microsoft.OData.Tests.JsonLight
             Assert.Equal("{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"value\":13}", result);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         [Fact]
         public async Task WritingJsonElementPropertiesAsync_ShouldSerializeJsonInput()
         {
@@ -289,14 +289,14 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                 async (jsonLightPropertySerializer) =>
                 {
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                     await jsonLightPropertySerializer.WritePropertyAsync(
                         property,
                         owningType: null,
                         isTopLevel: false,
                         duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
                         metadataBuilder: null);
-                    await jsonLightPropertySerializer.AsynchronousJsonWriter.EndObjectScopeAsync();
+                    await jsonLightPropertySerializer.JsonWriter.EndObjectScopeAsync();
                 });
 
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
@@ -322,14 +322,14 @@ namespace Microsoft.OData.Tests.JsonLight
             var result = await this.SetupSerializerAndRunTestAsync(
                async (jsonLightPropertySerializer) =>
                {
-                   await jsonLightPropertySerializer.AsynchronousJsonWriter.StartObjectScopeAsync();
+                   await jsonLightPropertySerializer.JsonWriter.StartObjectScopeAsync();
                    await jsonLightPropertySerializer.WritePropertyAsync(
                        property,
                        owningType: null,
                        isTopLevel: false,
                        duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
                        metadataBuilder: null);
-                   await jsonLightPropertySerializer.AsynchronousJsonWriter.EndObjectScopeAsync();
+                   await jsonLightPropertySerializer.JsonWriter.EndObjectScopeAsync();
                }, configureServices);
 
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
@@ -344,7 +344,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             await func(jsonLightPropertySerializer);
             await jsonLightPropertySerializer.JsonLightOutputContext.FlushAsync();
-            await jsonLightPropertySerializer.AsynchronousJsonWriter.FlushAsync();
+            await jsonLightPropertySerializer.JsonWriter.FlushAsync();
 
             outputStream.Position = 0;
 

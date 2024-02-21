@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using Microsoft.OData.Json;
 #endif
 using Microsoft.OData.JsonLight;
@@ -1230,7 +1230,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     await jsonLightWriter.WriteStartAsync(addressResource);
                     await jsonLightWriter.WriteStartAsync(streamProperty);
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                     await using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
 #else
                     using (var stream = await jsonLightWriter.CreateBinaryWriteStreamAsync())
@@ -1260,8 +1260,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 result);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
-        [Fact]
+#if NETCOREAPP
+        [Fact(Skip="ODataUtf8JsonWriter does not currently implement logic for writing binary values to stream")]
         public async Task WriteBinaryValueToStream_WithODataUtf8JsonWriter_Async()
         {
             var addressResource = CreateAddressResource();

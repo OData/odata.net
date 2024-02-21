@@ -318,7 +318,7 @@ namespace Microsoft.OData
             }
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         /// <summary>
         /// Closes the text writer asynchronously.
         /// </summary>
@@ -376,7 +376,7 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try

@@ -196,7 +196,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var jsonLightEntityReferenceLinkSerializer = CreateODataJsonLightEntityReferenceLinkSerializer(true, container, true);
             await func(jsonLightEntityReferenceLinkSerializer);
             await jsonLightEntityReferenceLinkSerializer.JsonLightOutputContext.FlushAsync();
-            await jsonLightEntityReferenceLinkSerializer.AsynchronousJsonWriter.FlushAsync();
+            await jsonLightEntityReferenceLinkSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

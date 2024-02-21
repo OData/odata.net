@@ -16,7 +16,7 @@ using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.OData.UriParser;
 using Xunit;
 using System.Xml;
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
 using System.Text.Json;
 #endif
 
@@ -194,74 +194,6 @@ namespace Microsoft.OData.Tests
             write.Throws<ODataException>("The value of type 'System.UInt16' could not be converted to a raw string.");
         }
 
-        [Fact]
-        public void InjectingDifferentInstancesOfJsonWriterAndIJsonWriterAsync_ShouldThrowException()
-        {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                InMemoryMessage request = new InMemoryMessage() { Stream = stream };
-
-                IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
-                {
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                    ServiceLifetime.Singleton, sp => new MockJsonWriterFactory(new MockSyncOnlyJsonWriter()));
-                    containerBuilder.AddService<IJsonWriterFactoryAsync>(
-                        ServiceLifetime.Singleton, _ => new MockJsonWriterFactoryAsync(new MockAsyncOnlyJsonWriter()));
-                });
-
-                request.Container = container;
-
-                settings.ODataUri.ServiceRoot = new Uri("http://www.example.com");
-                settings.SetContentType(ODataFormat.Json);
-                EdmModel model = new EdmModel();
-                using (ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model))
-                {
-                    Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
-                    {
-                        Name = "Name",
-                        Value = "This is a test ия"
-                    });
-
-                    writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
-                }
-            }
-        }
-
-        [Fact]
-        public void InjectingAnIJsonWriterThatDoesNotImplementSyncIJsonWriteraAsync_ShouldThrowException()
-        {
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-
-            using (MemoryStream stream = new MemoryStream())
-            {
-                InMemoryMessage request = new InMemoryMessage() { Stream = stream };
-
-                IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
-                {
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                    ServiceLifetime.Singleton, _ => new MockJsonWriterFactory(new MockSyncOnlyJsonWriter()));
-                });
-
-                request.Container = container;
-
-                settings.ODataUri.ServiceRoot = new Uri("http://www.example.com");
-                settings.SetContentType(ODataFormat.Json);
-                EdmModel model = new EdmModel();
-                using (ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model))
-                {
-                    Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
-                    {
-                        Name = "Name",
-                        Value = "This is a test ия"
-                    });
-
-                    writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_IJsonWriter_And_IJsonWriterAsync_Are_Different_Instances);
-                }
-            }
-        }
-
 #if NETCOREAPP
         #region "ODataUtf8JsonWriter support"
         [Fact]
@@ -292,74 +224,6 @@ namespace Microsoft.OData.Tests
             IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
             Assert.IsType<DefaultStreamBasedJsonWriterFactory>(factory);
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
-        }
-
-        [Fact]
-        public void WhenInjectingStreamBasedJsonWriterFactory_DoesNotCreateSynchronousWriter_IfAsyncWriterImplementsSynchronousInterface()
-        {
-            // Arrange
-            MockStreamBasedJsonWriterFactoryWrapper writerFactory =
-                new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Default);
-            EdmModel model = new EdmModel();
-
-            // Act
-            Action<ODataMessageWriter> writePropertyAction = (writer) => writer.WriteProperty(new ODataProperty()
-            {
-                Name = "Name",
-                Value = "This is a test ия"
-            });
-
-            string output = WriteAndGetPayload(
-                model,
-                "application/json",
-                writePropertyAction,
-                configureServices: (containerBuilder) =>
-                {
-                    containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                        ServiceLifetime.Singleton, _ => writerFactory);
-                });
-
-            // Assert
-            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedAsyncWriter);
-            Assert.Null(writerFactory.CreatedWriter);
-            Assert.Equal(1, writerFactory.NumCalls);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
-        }
-
-        [Fact]
-        public void WhenInjectingStreamBasedJsonWriterFactory_ThrowsException_IfAsyncWriterDoesNotImplementSynchronousInterface()
-        {
-            // Arrange
-            ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
-            MockStreamBasedJsonWriterFactory writerFactory =
-                new MockStreamBasedJsonWriterFactory(jsonWriter: null, asyncJsonWriter: new MockAsyncOnlyJsonWriter());
-
-            using MemoryStream stream = new MemoryStream();
-            InMemoryMessage request = new InMemoryMessage() { Stream = stream };
-
-            IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
-            {
-                containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                ServiceLifetime.Singleton, sp => writerFactory);
-            });
-
-            request.Container = container;
-
-            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
-            Assert.IsType<MockStreamBasedJsonWriterFactory>(factory);
-
-            settings.ODataUri.ServiceRoot = new Uri("http://www.example.com");
-            EdmModel model = new EdmModel();
-            using ODataMessageWriter writer = new ODataMessageWriter((IODataRequestMessage)request, settings, model);
-
-            // Act
-            Action writePropertyAction = () => writer.WriteProperty(new ODataProperty()
-            {
-                Name = "Name",
-                Value = "This is a test ия"
-            });
-
-            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_IJsonWriterAsync_Must_Implement_IJsonWriter);
         }
 
         [Theory]
@@ -393,7 +257,7 @@ namespace Microsoft.OData.Tests
                 });
 
             // Assert
-            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedAsyncWriter);
+            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
@@ -410,7 +274,7 @@ namespace Microsoft.OData.Tests
             IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
             {
                 containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                    ServiceLifetime.Singleton, sp => new MockStreamBasedJsonWriterFactory(null, null));
+                    ServiceLifetime.Singleton, sp => new MockStreamBasedJsonWriterFactory(null));
             });
 
             request.Container = container;
@@ -483,7 +347,7 @@ namespace Microsoft.OData.Tests
                 });
 
             // Assert
-            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedAsyncWriter);
+            Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
@@ -1315,7 +1179,7 @@ namespace Microsoft.OData.Tests
                 };
             }
 
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
             await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
 #else
             using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
@@ -1336,7 +1200,7 @@ namespace Microsoft.OData.Tests
                 string contents = await reader.ReadToEndAsync();
 
                 // Dispose stream manually to avoid synchronous I/O
-#if NETCOREAPP3_1_OR_GREATER
+#if NETCOREAPP
                 await message.Stream.DisposeAsync();
 #else
                 message.Stream.Dispose();

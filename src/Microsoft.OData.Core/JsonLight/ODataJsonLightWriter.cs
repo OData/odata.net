@@ -53,29 +53,9 @@ namespace Microsoft.OData.JsonLight
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// The underlying JSON writer.
-        /// </summary>
-        private readonly IJsonStreamWriter jsonStreamWriter;
-
-        /// <summary>
         /// OData annotation writer.
         /// </summary>
         private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
-
-        /// <summary>
-        /// The underlying asynchronous JSON writer.
-        /// </summary>
-        private readonly IJsonWriterAsync asynchronousJsonWriter;
-
-        /// <summary>
-        /// The underlying asynchronous JSON writer.
-        /// </summary>
-        private readonly IJsonStreamWriterAsync asynchronousJsonStreamWriter;
-
-        /// <summary>
-        /// OData asynchronous annotation writer.
-        /// </summary>
-        private readonly JsonLightODataAnnotationWriter asynchronousODataAnnotationWriter;
 
         /// <summary>
         /// OData instance annotation writer
@@ -121,11 +101,7 @@ namespace Microsoft.OData.JsonLight
 
             this.writingParameter = writingParameter;
             this.jsonWriter = this.jsonLightOutputContext.JsonWriter;
-            this.jsonStreamWriter = this.jsonWriter as IJsonStreamWriter;
             this.odataAnnotationWriter = this.jsonLightValueSerializer.ODataAnnotationWriter;
-            this.asynchronousJsonWriter = this.jsonLightOutputContext.AsynchronousJsonWriter;
-            this.asynchronousJsonStreamWriter = this.asynchronousJsonWriter as IJsonStreamWriterAsync;
-            this.asynchronousODataAnnotationWriter = this.jsonLightValueSerializer.AsynchronousODataAnnotationWriter;
             this.instanceAnnotationWriter = this.jsonLightValueSerializer.InstanceAnnotationWriter;
             this.writingResponse = this.jsonLightOutputContext.WritingResponse;
             this.messageWriterSettings = this.jsonLightOutputContext.MessageWriterSettings;
@@ -914,14 +890,14 @@ namespace Microsoft.OData.JsonLight
             }
 
             Stream stream;
-            if (this.jsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 this.jsonLightOutputContext.BinaryValueStream = new MemoryStream();
                 stream = this.jsonLightOutputContext.BinaryValueStream;
             }
             else
             {
-                stream = this.jsonStreamWriter.StartStreamValueScope();
+                stream = this.jsonWriter.StartStreamValueScope();
             }
 
             return stream;
@@ -932,7 +908,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         protected sealed override void EndBinaryStream()
         {
-            if (this.jsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 this.jsonWriter.WriteValue(this.jsonLightOutputContext.BinaryValueStream.ToArray());
                 this.jsonLightOutputContext.BinaryValueStream.Flush();
@@ -941,7 +917,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                this.jsonStreamWriter.EndStreamValueScope();
+                this.jsonWriter.EndStreamValueScope();
             }
         }
 
@@ -960,7 +936,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             TextWriter writer;
-            if (this.jsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 this.jsonLightOutputContext.StringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
                 writer = this.jsonLightOutputContext.StringWriter;
@@ -974,7 +950,7 @@ namespace Microsoft.OData.JsonLight
                     contentType = streamInfo.ContentType;
                 }
 
-                writer = this.jsonStreamWriter.StartTextWriterValueScope(contentType);
+                writer = this.jsonWriter.StartTextWriterValueScope(contentType);
             }
 
             return writer;
@@ -985,7 +961,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         protected sealed override void EndTextWriter()
         {
-            if (this.jsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 Debug.Assert(this.jsonLightOutputContext.StringWriter != null, "Calling EndTextWriter with a non-streaming JsonWriter and a null StringWriter");
                 this.jsonLightOutputContext.StringWriter.Flush();
@@ -995,7 +971,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                this.jsonStreamWriter.EndTextWriterValueScope();
+                this.jsonWriter.EndTextWriterValueScope();
             }
         }
 
@@ -1331,7 +1307,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (parentNavLink.TypeAnnotation?.TypeName != null)
                     {
-                        await this.asynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(
+                        await this.odataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(
                             parentNavLink.Name,
                             parentNavLink.TypeAnnotation.TypeName).ConfigureAwait(false);
                     }
@@ -1342,19 +1318,19 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // Write the property name of an expanded navigation property to start the value.
-                await this.asynchronousJsonWriter.WriteNameAsync(parentNavLink.Name)
+                await this.jsonWriter.WriteNameAsync(parentNavLink.Name)
                     .ConfigureAwait(false);
             }
 
             if (resource == null)
             {
-                await this.asynchronousJsonWriter.WriteValueAsync((string)null)
+                await this.jsonWriter.WriteValueAsync((string)null)
                     .ConfigureAwait(false);
                 return;
             }
 
             // Write just the object start, nothing else, since we might not have complete information yet
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             JsonLightResourceScope resourceScope = this.CurrentResourceScope;
@@ -1445,7 +1421,7 @@ namespace Microsoft.OData.JsonLight
             this.jsonLightResourceSerializer.ReturnDuplicatePropertyNameChecker(resourceScope.DuplicatePropertyNameChecker);
 
             // Close the object scope
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -1504,14 +1480,14 @@ namespace Microsoft.OData.JsonLight
             if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // Start array which will hold the entries in the resource set.
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                await this.jsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
             }
             else if (this.ParentNestedResourceInfo == null)
             {
                 // Top-level resource set.
                 // "{"
-                await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                await this.jsonWriter.StartObjectScopeAsync()
                     .ConfigureAwait(false);
 
                 // @odata.context
@@ -1556,11 +1532,11 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
                 // "value":
-                await this.asynchronousJsonWriter.WriteValuePropertyNameAsync()
+                await this.jsonWriter.WriteValuePropertyNameAsync()
                     .ConfigureAwait(false);
 
                 // Start array which will hold the entries in the resource set.
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                await this.jsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
             }
             else
@@ -1596,11 +1572,11 @@ namespace Microsoft.OData.JsonLight
                         isUndeclared).ConfigureAwait(false);
 
                     // And then write the property name to start the value.
-                    await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
+                    await this.jsonWriter.WriteNameAsync(propertyName)
                         .ConfigureAwait(false);
 
                     // Start array which will hold the entries in the resource set.
-                    await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                    await this.jsonWriter.StartArrayScopeAsync()
                         .ConfigureAwait(false);
                 }
                 else
@@ -1611,7 +1587,7 @@ namespace Microsoft.OData.JsonLight
                         // Close the entity reference link array (if written)
                         if (navigationLinkScope.EntityReferenceLinkWritten)
                         {
-                            await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                            await this.jsonWriter.EndArrayScopeAsync()
                                 .ConfigureAwait(false);
                         }
 
@@ -1623,11 +1599,11 @@ namespace Microsoft.OData.JsonLight
                             isUndeclared).ConfigureAwait(false);
 
                         // And then write the property name to start the value.
-                        await this.asynchronousJsonWriter.WriteNameAsync(propertyName)
+                        await this.jsonWriter.WriteNameAsync(propertyName)
                             .ConfigureAwait(false);
 
                         // Start array which will hold the entries in the resource set.
-                        await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                        await this.jsonWriter.StartArrayScopeAsync()
                             .ConfigureAwait(false);
 
                         navigationLinkScope.ResourceSetWritten = true;
@@ -1652,13 +1628,13 @@ namespace Microsoft.OData.JsonLight
             if (this.ParentNestedResourceInfo == null && (this.writingParameter || this.ParentScope.State == WriterState.ResourceSet))
             {
                 // End the array which holds the entries in the resource set.
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                await this.jsonWriter.EndArrayScopeAsync()
                     .ConfigureAwait(false);
             }
             else if (this.ParentNestedResourceInfo == null)
             {
                 // End the array which holds the entries in the resource set.
-                await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                await this.jsonWriter.EndArrayScopeAsync()
                     .ConfigureAwait(false);
 
                 // Write custom instance annotations
@@ -1678,7 +1654,7 @@ namespace Microsoft.OData.JsonLight
                 }
 
                 // Close the object wrapper.
-                await this.asynchronousJsonWriter.EndObjectScopeAsync()
+                await this.jsonWriter.EndObjectScopeAsync()
                     .ConfigureAwait(false);
             }
             else
@@ -1698,7 +1674,7 @@ namespace Microsoft.OData.JsonLight
                     // NOTE: in requests we will only write the EndArray of a resource set
                     //       when we hit the nested resource info end since a nested resource info
                     //       can contain multiple resource sets that get collapsed into a single array value.
-                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                    await this.jsonWriter.EndArrayScopeAsync()
                         .ConfigureAwait(false);
 
                     // Write the next link if it's available.
@@ -1721,7 +1697,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.ParentNestedResourceInfo == null)
             {
-                await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                await this.jsonWriter.StartObjectScopeAsync()
                     .ConfigureAwait(false);
 
                 // Write ContextUrl
@@ -1747,9 +1723,9 @@ namespace Microsoft.OData.JsonLight
                     this.CurrentDeltaResourceSetScope.InstanceAnnotationWriteTracker).ConfigureAwait(false);
 
                 // Write Value Start
-                await this.asynchronousJsonWriter.WriteValuePropertyNameAsync()
+                await this.jsonWriter.WriteValuePropertyNameAsync()
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                await this.jsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
             }
             else
@@ -1770,12 +1746,12 @@ namespace Microsoft.OData.JsonLight
                     .ConfigureAwait(false);
 
                 //// Write the name for the nested delta payload
-                await this.asynchronousJsonWriter.WritePropertyAnnotationNameAsync(
+                await this.jsonWriter.WritePropertyAnnotationNameAsync(
                     propertyName,
                     JsonLightConstants.ODataDeltaPropertyName).ConfigureAwait(false);
 
                 // Start array which will hold the entries in the nested delta resource set.
-                await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                await this.jsonWriter.StartArrayScopeAsync()
                     .ConfigureAwait(false);
             }
         }
@@ -1796,7 +1772,7 @@ namespace Microsoft.OData.JsonLight
                 async Task EndDeltaResourceSetInnerAsync(ODataDeltaResourceSet innerDeltaResourceSet)
                 {
                     // End the array which holds the entries in the resource set.
-                    await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                    await this.jsonWriter.EndArrayScopeAsync()
                         .ConfigureAwait(false);
 
                     // Write custom instance annotations
@@ -1813,14 +1789,14 @@ namespace Microsoft.OData.JsonLight
                         .ConfigureAwait(false);
 
                     // Close the object wrapper.
-                    await this.asynchronousJsonWriter.EndObjectScopeAsync()
+                    await this.jsonWriter.EndObjectScopeAsync()
                         .ConfigureAwait(false);
                 }
             }
             else
             {
                 // End the array which holds the entries in the resource set.
-                return this.asynchronousJsonWriter.EndArrayScopeAsync();
+                return this.jsonWriter.EndArrayScopeAsync();
             }
         }
 
@@ -1846,9 +1822,9 @@ namespace Microsoft.OData.JsonLight
                 else
                 {
                     // Write the property name of an expanded navigation property to start the value.
-                    await this.asynchronousJsonWriter.WriteNameAsync(parentNavLink.Name)
+                    await this.jsonWriter.WriteNameAsync(parentNavLink.Name)
                         .ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                    await this.jsonWriter.StartObjectScopeAsync()
                         .ConfigureAwait(false);
                     await this.WriteDeletedEntryContentsAsync(resource)
                         .ConfigureAwait(false);
@@ -1860,7 +1836,7 @@ namespace Microsoft.OData.JsonLight
                 DeltaResourceSetScope deltaResourceSetScope = this.ParentScope as DeltaResourceSetScope;
                 Debug.Assert(this.ParentScope.State == WriterState.Start || deltaResourceSetScope != null, "Writing child of delta set and parent scope is not DeltaResourceSetScope");
 
-                await this.asynchronousJsonWriter.StartObjectScopeAsync()
+                await this.jsonWriter.StartObjectScopeAsync()
                     .ConfigureAwait(false);
 
                 if (this.Version == null || this.Version < ODataVersion.V401)
@@ -1911,7 +1887,7 @@ namespace Microsoft.OData.JsonLight
             }
 
             // Close the object scope
-            return this.asynchronousJsonWriter.EndObjectScopeAsync();
+            return this.jsonWriter.EndObjectScopeAsync();
         }
 
         /// <summary>
@@ -1923,7 +1899,7 @@ namespace Microsoft.OData.JsonLight
         {
             Debug.Assert(link != null, "link != null");
 
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
             if (link is ODataDeltaLink)
@@ -1944,7 +1920,7 @@ namespace Microsoft.OData.JsonLight
                 .ConfigureAwait(false);
             await this.WriteDeltaLinkTargetAsync(link)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -1959,20 +1935,20 @@ namespace Microsoft.OData.JsonLight
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
             {
                 // writing a stream property - write the property name
-                await this.asynchronousJsonWriter.WriteNameAsync(property.Name)
+                await this.jsonWriter.WriteNameAsync(property.Name)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.FlushAsync()
+                await this.jsonWriter.FlushAsync()
                     .ConfigureAwait(false);
             }
 
-            if (this.asynchronousJsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 this.jsonLightOutputContext.BinaryValueStream = new MemoryStream();
                 return this.jsonLightOutputContext.BinaryValueStream;
             }
             else
             {
-                return await this.asynchronousJsonStreamWriter.StartStreamValueScopeAsync()
+                return await this.jsonWriter.StartStreamValueScopeAsync()
                     .ConfigureAwait(false);
             }
         }
@@ -1983,13 +1959,13 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected sealed override Task EndBinaryStreamAsync()
         {
-            if (this.asynchronousJsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 return EndBinaryStreamInnerAsync();
 
                 async Task EndBinaryStreamInnerAsync()
                 {
-                    await this.asynchronousJsonWriter.WriteValueAsync(
+                    await this.jsonWriter.WriteValueAsync(
                     this.jsonLightOutputContext.BinaryValueStream.ToArray()).ConfigureAwait(false);
                     await this.jsonLightOutputContext.BinaryValueStream.FlushAsync()
                         .ConfigureAwait(false);
@@ -1999,7 +1975,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                return this.asynchronousJsonStreamWriter.EndStreamValueScopeAsync();
+                return this.jsonWriter.EndStreamValueScopeAsync();
             }
         }
 
@@ -2014,14 +1990,14 @@ namespace Microsoft.OData.JsonLight
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
             {
                 // Writing a text property - write the property name
-                await this.asynchronousJsonWriter.WriteNameAsync(property.Name)
+                await this.jsonWriter.WriteNameAsync(property.Name)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.FlushAsync()
+                await this.jsonWriter.FlushAsync()
                     .ConfigureAwait(false);
             }
 
             TextWriter writer;
-            if (this.asynchronousJsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 this.jsonLightOutputContext.StringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
                 writer = this.jsonLightOutputContext.StringWriter;
@@ -2035,7 +2011,7 @@ namespace Microsoft.OData.JsonLight
                     contentType = streamInfo.ContentType;
                 }
 
-                writer = await this.asynchronousJsonStreamWriter.StartTextWriterValueScopeAsync(contentType)
+                writer = await this.jsonWriter.StartTextWriterValueScopeAsync(contentType)
                     .ConfigureAwait(false);
             }
 
@@ -2048,7 +2024,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected sealed override Task EndTextWriterAsync()
         {
-            if (this.asynchronousJsonStreamWriter == null)
+            if (this.jsonWriter == null)
             {
                 Debug.Assert(this.jsonLightOutputContext.StringWriter != null,
                     "Calling EndTextWriter with a non-streaming asynchronous JsonWriter and a null StringWriter");
@@ -2059,7 +2035,7 @@ namespace Microsoft.OData.JsonLight
                 {
                     await this.jsonLightOutputContext.StringWriter.FlushAsync()
                     .ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.WriteValueAsync(
+                    await this.jsonWriter.WriteValueAsync(
                         this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString()).ConfigureAwait(false);
                     this.jsonLightOutputContext.StringWriter.Dispose();
                     this.jsonLightOutputContext.StringWriter = null;
@@ -2067,7 +2043,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                return this.asynchronousJsonStreamWriter.EndTextWriterValueScopeAsync();
+                return this.jsonWriter.EndTextWriterValueScopeAsync();
             }
         }
 
@@ -2081,7 +2057,7 @@ namespace Microsoft.OData.JsonLight
             ODataPropertyInfo property;
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
             {
-                await this.asynchronousJsonWriter.WriteNameAsync(property.Name)
+                await this.jsonWriter.WriteNameAsync(property.Name)
                     .ConfigureAwait(false);
             }
 
@@ -2182,7 +2158,7 @@ namespace Microsoft.OData.JsonLight
 
                     if (navigationLinkScope.EntityReferenceLinkWritten && !navigationLinkScope.ResourceSetWritten && innerNestedResourceInfo.IsCollection.Value)
                     {
-                        await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                        await this.jsonWriter.EndArrayScopeAsync()
                             .ConfigureAwait(false);
                     }
 
@@ -2191,7 +2167,7 @@ namespace Microsoft.OData.JsonLight
                     if (navigationLinkScope.ResourceSetWritten)
                     {
                         Debug.Assert(innerNestedResourceInfo.IsCollection == null || innerNestedResourceInfo.IsCollection.Value, "nestedResourceInfo.IsCollection.Value");
-                        await this.asynchronousJsonWriter.EndArrayScopeAsync()
+                        await this.jsonWriter.EndArrayScopeAsync()
                             .ConfigureAwait(false);
                     }
                 }
@@ -2235,13 +2211,13 @@ namespace Microsoft.OData.JsonLight
                     if (this.Version == null || this.Version < ODataVersion.V401)
                     {
                         // Write the property annotation for the entity reference link(s)
-                        await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
+                        await this.odataAnnotationWriter.WritePropertyAnnotationNameAsync(
                             parentNestedResourceInfo.Name,
                             ODataAnnotationNames.ODataBind).ConfigureAwait(false);
                     }
                     else
                     {
-                        await this.asynchronousJsonWriter.WriteNameAsync(parentNestedResourceInfo.Name)
+                        await this.jsonWriter.WriteNameAsync(parentNestedResourceInfo.Name)
                             .ConfigureAwait(false);
                     }
 
@@ -2249,7 +2225,7 @@ namespace Microsoft.OData.JsonLight
                     if (parentNestedResourceInfo.IsCollection.Value)
                     {
                         // Write [ for the collection
-                        await this.asynchronousJsonWriter.StartArrayScopeAsync()
+                        await this.jsonWriter.StartArrayScopeAsync()
                             .ConfigureAwait(false);
                     }
                 }
@@ -2261,7 +2237,7 @@ namespace Microsoft.OData.JsonLight
                     {
                         // Write the property name for single-nested resource,
                         // for the collection nested resource, it's write at top level when writing ODataResourceSet
-                        await this.asynchronousJsonWriter.WriteNameAsync(parentNestedResourceInfo.Name)
+                        await this.jsonWriter.WriteNameAsync(parentNestedResourceInfo.Name)
                             .ConfigureAwait(false);
                     }
                 }
@@ -2273,7 +2249,7 @@ namespace Microsoft.OData.JsonLight
             {
                 Debug.Assert(entityReferenceLink.Url != null,
                     "The entity reference link Url should have been validated by now.");
-                await this.asynchronousJsonWriter.WriteValueAsync(
+                await this.jsonWriter.WriteValueAsync(
                     this.jsonLightResourceSerializer.UriToString(entityReferenceLink.Url)).ConfigureAwait(false);
             }
             else
@@ -2709,21 +2685,21 @@ namespace Microsoft.OData.JsonLight
 
             WriterValidationUtils.ValidateEntityReferenceLink(entityReferenceLink);
 
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
 
-            await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
+            await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataId)
                 .ConfigureAwait(false);
 
             Uri id = this.messageWriterSettings.MetadataDocumentUri.MakeRelativeUri(entityReferenceLink.Url);
 
-            await this.asynchronousJsonWriter.WriteValueAsync(
+            await this.jsonWriter.WriteValueAsync(
                 id == null ? null : this.jsonLightResourceSerializer.UriToString(id)).ConfigureAwait(false);
 
             await this.instanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                 entityReferenceLink.InstanceAnnotations).ConfigureAwait(false);
 
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
         }
 
@@ -2744,17 +2720,17 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (innerPropertyName == null)
                     {
-                        await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                        await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                             ODataAnnotationNames.ODataCount).ConfigureAwait(false);
                     }
                     else
                     {
-                        await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
+                        await this.odataAnnotationWriter.WritePropertyAnnotationNameAsync(
                             innerPropertyName,
                             ODataAnnotationNames.ODataCount).ConfigureAwait(false);
                     }
 
-                    await this.asynchronousJsonWriter.WriteValueAsync(innerCount)
+                    await this.jsonWriter.WriteValueAsync(innerCount)
                         .ConfigureAwait(false);
                 }
             }
@@ -2782,17 +2758,17 @@ namespace Microsoft.OData.JsonLight
                 {
                     if (innerPropertyName == null)
                     {
-                        await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                        await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                             ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
                     }
                     else
                     {
-                        await this.asynchronousODataAnnotationWriter.WritePropertyAnnotationNameAsync(
+                        await this.odataAnnotationWriter.WritePropertyAnnotationNameAsync(
                             innerPropertyName,
                             ODataAnnotationNames.ODataNextLink).ConfigureAwait(false);
                     }
 
-                    await this.asynchronousJsonWriter.WriteValueAsync(
+                    await this.jsonWriter.WriteValueAsync(
                         this.jsonLightResourceSerializer.UriToString(innerNextPageLink)).ConfigureAwait(false);
 
                     if (this.State == WriterState.ResourceSet)
@@ -2835,9 +2811,9 @@ namespace Microsoft.OData.JsonLight
 
                 async Task WriteResourceSetDeltaLinkInnerAsync(Uri innerDeltaLink)
                 {
-                    await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+                    await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                         ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.WriteValueAsync(
+                    await this.jsonWriter.WriteValueAsync(
                         this.jsonLightResourceSerializer.UriToString(innerDeltaLink)).ConfigureAwait(false);
 
                     if (this.State == WriterState.ResourceSet)
@@ -2874,13 +2850,13 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private async Task WriteDeletedEntryContentsAsync(ODataDeletedResource resource)
         {
-            await this.asynchronousODataAnnotationWriter.WriteInstanceAnnotationNameAsync(
+            await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                 ODataAnnotationNames.ODataRemoved).ConfigureAwait(false);
-            await this.asynchronousJsonWriter.StartObjectScopeAsync()
+            await this.jsonWriter.StartObjectScopeAsync()
                 .ConfigureAwait(false);
             await this.WriteDeltaResourceReasonAsync(resource)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.EndObjectScopeAsync()
+            await this.jsonWriter.EndObjectScopeAsync()
                 .ConfigureAwait(false);
 
             JsonLightDeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
@@ -2914,9 +2890,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(resource != null, "resource != null");
             if (this.Version == null || this.Version < ODataVersion.V401)
             {
-                await this.asynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataIdPropertyName)
+                await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataIdPropertyName)
                     .ConfigureAwait(false);
-                await this.asynchronousJsonWriter.WriteValueAsync(resource.Id.OriginalString)
+                await this.jsonWriter.WriteValueAsync(resource.Id.OriginalString)
                     .ConfigureAwait(false);
             }
             else
@@ -2924,9 +2900,9 @@ namespace Microsoft.OData.JsonLight
                 Uri id;
                 if (resource.MetadataBuilder.TryGetIdForSerialization(out id))
                 {
-                    await this.asynchronousJsonWriter.WriteInstanceAnnotationNameAsync(
+                    await this.jsonWriter.WriteInstanceAnnotationNameAsync(
                         JsonLightConstants.ODataIdPropertyName).ConfigureAwait(false);
-                    await this.asynchronousJsonWriter.WriteValueAsync(id.OriginalString)
+                    await this.jsonWriter.WriteValueAsync(id.OriginalString)
                         .ConfigureAwait(false);
                 }
             }
@@ -2972,17 +2948,17 @@ namespace Microsoft.OData.JsonLight
                 return;
             }
 
-            await this.asynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataReasonPropertyName)
+            await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataReasonPropertyName)
                 .ConfigureAwait(false);
 
             switch (resource.Reason.Value)
             {
                 case DeltaDeletedEntryReason.Deleted:
-                    await this.asynchronousJsonWriter.WriteValueAsync(JsonLightConstants.ODataReasonDeletedValue)
+                    await this.jsonWriter.WriteValueAsync(JsonLightConstants.ODataReasonDeletedValue)
                         .ConfigureAwait(false);
                     break;
                 case DeltaDeletedEntryReason.Changed:
-                    await this.asynchronousJsonWriter.WriteValueAsync(JsonLightConstants.ODataReasonChangedValue)
+                    await this.jsonWriter.WriteValueAsync(JsonLightConstants.ODataReasonChangedValue)
                         .ConfigureAwait(false);
                     break;
                 default:
@@ -3015,9 +2991,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
                 "link must be either DeltaLink or DeltaDeletedLink.");
 
-            await this.asynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataSourcePropertyName)
+            await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataSourcePropertyName)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(link.Source))
+            await this.jsonWriter.WriteValueAsync(UriUtils.UriToString(link.Source))
                 .ConfigureAwait(false);
         }
 
@@ -3032,9 +3008,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
                 "link must be either DeltaLink or DeltaDeletedLink.");
 
-            await this.asynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataRelationshipPropertyName)
+            await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataRelationshipPropertyName)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(link.Relationship)
+            await this.jsonWriter.WriteValueAsync(link.Relationship)
                 .ConfigureAwait(false);
         }
 
@@ -3049,9 +3025,9 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
                 "link must be either DeltaLink or DeltaDeletedLink.");
 
-            await this.asynchronousJsonWriter.WriteNameAsync(JsonLightConstants.ODataTargetPropertyName)
+            await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataTargetPropertyName)
                 .ConfigureAwait(false);
-            await this.asynchronousJsonWriter.WriteValueAsync(UriUtils.UriToString(link.Target))
+            await this.jsonWriter.WriteValueAsync(UriUtils.UriToString(link.Target))
                 .ConfigureAwait(false);
         }
 

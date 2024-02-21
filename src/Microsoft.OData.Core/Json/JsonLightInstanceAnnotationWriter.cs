@@ -39,19 +39,9 @@ namespace Microsoft.OData
         private readonly IJsonWriter jsonWriter;
 
         /// <summary>
-        /// Asynchronous JsonWriter instance to use for writing term names.
-        /// </summary>
-        private readonly IJsonWriterAsync asynchronousJsonWriter;
-
-        /// <summary>
         /// OData annotation writer.
         /// </summary>
         private readonly JsonLightODataAnnotationWriter odataAnnotationWriter;
-
-        /// <summary>
-        /// Asynchronous OData annotation writer.
-        /// </summary>
-        private readonly JsonLightODataAnnotationWriter asynchronousODataAnnotationWriter;
 
         /// <summary>
         /// The writer validator used during writing.
@@ -71,8 +61,6 @@ namespace Microsoft.OData
             this.typeNameOracle = typeNameOracle;
             this.jsonWriter = this.valueSerializer.JsonWriter;
             this.odataAnnotationWriter = this.valueSerializer.ODataAnnotationWriter;
-            this.asynchronousJsonWriter = this.valueSerializer.AsynchronousJsonWriter;
-            this.asynchronousODataAnnotationWriter = this.valueSerializer.AsynchronousODataAnnotationWriter;
             this.writerValidator = this.valueSerializer.MessageWriterSettings.Validator;
         }
 
@@ -436,7 +424,7 @@ namespace Microsoft.OData
                 string collectionTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(collectionValue, expectedType, typeFromCollectionValue, treatLikeOpenProperty);
                 if (collectionTypeNameToWrite != null)
                 {
-                    await this.asynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(annotationName, collectionTypeNameToWrite)
+                    await this.odataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(annotationName, collectionTypeNameToWrite)
                         .ConfigureAwait(false);
                 }
 
@@ -480,7 +468,7 @@ namespace Microsoft.OData
             string primitiveTypeNameToWrite = this.typeNameOracle.GetValueTypeNameForWriting(primitiveValue, expectedType, typeFromPrimitiveValue, treatLikeOpenProperty);
             if (primitiveTypeNameToWrite != null)
             {
-                await this.asynchronousODataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(annotationName, primitiveTypeNameToWrite)
+                await this.odataAnnotationWriter.WriteODataTypePropertyAnnotationAsync(annotationName, primitiveTypeNameToWrite)
                     .ConfigureAwait(false);
             }
 
@@ -630,11 +618,11 @@ namespace Microsoft.OData
         {
             if (propertyName != null)
             {
-                return this.asynchronousJsonWriter.WritePropertyAnnotationNameAsync(propertyName, annotationName);
+                return this.jsonWriter.WritePropertyAnnotationNameAsync(propertyName, annotationName);
             }
             else
             {
-                return this.asynchronousJsonWriter.WriteInstanceAnnotationNameAsync(annotationName);
+                return this.jsonWriter.WriteInstanceAnnotationNameAsync(annotationName);
             }
         }
     }
