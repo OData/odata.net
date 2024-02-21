@@ -236,7 +236,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Writer.JsonLight
         }
 
         [Fact]
-        public void ODataBinaryStreamValue_Leaves_Stream_Not_Open_By_Default()
+        public void ODataBinaryStreamValue_Closes_Stream_By_Default()
         {
             // With type name
             // ODataBinaryStreamValue
