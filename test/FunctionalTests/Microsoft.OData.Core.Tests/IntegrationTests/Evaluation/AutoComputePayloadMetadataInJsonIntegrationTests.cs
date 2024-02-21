@@ -3210,11 +3210,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         {
             MemoryStream outputStream = new MemoryStream();
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().SetOmitODataPrefix(enableWritingODataAnnotationWithoutPrefix);
             IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
 
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
+            settings.SetOmitODataPrefix(enableWritingODataAnnotationWithoutPrefix);
             var result = new ODataQueryOptionParser(edmModel, edmEntityType, edmEntitySet, new Dictionary<string, string> { { "$select", selectClause }, { "$expand", expandClause } }).ParseSelectAndExpand();
 
             ODataUri odataUri = new ODataUri()

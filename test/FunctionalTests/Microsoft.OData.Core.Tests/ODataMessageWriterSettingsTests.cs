@@ -187,6 +187,43 @@ namespace Microsoft.OData.Tests
             Assert.Equal(ODataConstants.DefaultOutputBufferSize, this.settings.BufferSize);
         }
 
+        [Fact]
+        public void EnableWritingKeyAsSegmentFalseByDefault()
+        {
+            var settings = new ODataMessageWriterSettings();
+            Assert.False(settings.EnableWritingKeyAsSegment);
+        }
+
+        [Fact]
+        public void ValidDefaultODataPrefixsettings()
+        {
+            var settings = new ODataMessageWriterSettings();
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+        }
+
+        [Fact]
+        public void ValidateDefaultODataPrefixSettingsOnV40()
+        {
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+        }
+
+        [Fact]
+        public void ValidateDefaultODataPrefixsettingsOnV401()
+        {
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V401 };
+            Assert.True(settings.GetOmitODataPrefix());
+            Assert.True(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+        }
+
         #endregion Default settings tests
 
         #region Copy constructor tests
@@ -516,5 +553,145 @@ namespace Microsoft.OData.Tests
             Assert.Equal("utf8", copyOfSettings.AcceptableCharsets);
         }
         #endregion Set content type tests
+
+        #region SetOmitODataPrefix tests
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetDefaultODataPrefixWritingTrue(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(true);
+            Assert.True(settings.GetOmitODataPrefix());
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.True(settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetDefaultODataPrefixWritingFalse(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(false);
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.False(settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetV4ODataPrefixWritingTrue(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(true, ODataVersion.V4);
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetV401ODataPrefixWritingTrue(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(true, ODataVersion.V401);
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetV4ODataPrefixWritingFalse(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(false, ODataVersion.V4);
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+
+        public void SetV401ODataPrefixWritingFalse(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(false, ODataVersion.V401);
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.Equal(version != null && version != ODataVersion.V4, settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+
+        public void SetEnableWritingODataAnnotationWithoutPrefixTrue(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(true);
+            Assert.True(settings.GetOmitODataPrefix());
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.True(settings.GetOmitODataPrefix());
+        }
+
+        [Theory]
+        [InlineData(ODataVersion.V4)]
+        [InlineData(ODataVersion.V401)]
+        [InlineData(null)]
+        public void SetEnableWritingODataAnnotationWithoutPrefixFalse(ODataVersion? version)
+        {
+            var settings = new ODataMessageWriterSettings { Version = version };
+            settings.SetOmitODataPrefix(false);
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.False(settings.GetOmitODataPrefix());
+        }
+
+        [Fact]
+        public void SetDefaultEnableWritingODataAnnotationWithoutPrefixFalse()
+        {
+            var settings = new ODataMessageWriterSettings();
+            settings.SetOmitODataPrefix(false);
+            Assert.False(settings.GetOmitODataPrefix());
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.False(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.False(settings.GetOmitODataPrefix());
+        }
+
+        [Fact]
+        public void SetDefaultEnableWritingODataAnnotationWithoutPrefixTrue()
+        {
+            var settings = new ODataMessageWriterSettings();
+            settings.SetOmitODataPrefix(true);
+            Assert.True(settings.GetOmitODataPrefix());
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V4));
+            Assert.True(settings.GetOmitODataPrefix(ODataVersion.V401));
+            Assert.True(settings.GetOmitODataPrefix());
+        }
     }
+
+    #endregion
 }

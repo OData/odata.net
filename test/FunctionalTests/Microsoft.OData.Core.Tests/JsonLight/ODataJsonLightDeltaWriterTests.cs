@@ -299,7 +299,7 @@ namespace Microsoft.OData.Tests.JsonLight
             });
 
             var outputContext = CreateJsonLightOutputContext(this.stream, this.GetModel(), false, null, ODataVersion.V4, isResponse);
-            outputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment = true;
+            outputContext.MessageWriterSettings.EnableWritingKeyAsSegment = true;
             ODataJsonLightDeltaWriter writer = new ODataJsonLightDeltaWriter(outputContext, this.GetProducts(), this.GetProductType());
             writer.WriteStart(feed);
             writer.WriteStart(containedEntry);
@@ -647,7 +647,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             MemoryStream stream = new MemoryStream();
             ODataJsonLightOutputContext outputContext = CreateJsonLightOutputContext(stream, this.GetModel(), false, null, version, isResponse);
-            outputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment = keyAsSegment;
+            outputContext.MessageWriterSettings.EnableWritingKeyAsSegment = keyAsSegment;
 
             ODataJsonLightWriter writer = new ODataJsonLightWriter(outputContext, this.GetCustomers(), this.GetCustomerType(), true, false, true);
             writer.WriteStart(isResponse ? feed : requestFeed);

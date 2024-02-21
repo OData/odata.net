@@ -41,9 +41,21 @@ Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tas
 Microsoft.OData.Json.IJsonReader.GetValue() -> object
 Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
 Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
+Microsoft.OData.ODataMessageReaderSettings.EnableReadingKeyAsSegment.get -> bool
+Microsoft.OData.ODataMessageReaderSettings.EnableReadingKeyAsSegment.set -> void
+Microsoft.OData.ODataMessageReaderSettings.EnableReadingODataAnnotationWithoutPrefix.get -> bool
+Microsoft.OData.ODataMessageReaderSettings.EnableReadingODataAnnotationWithoutPrefix.set -> void
+Microsoft.OData.ODataMessageWriterSettings.EnableWritingKeyAsSegment.get -> bool
+Microsoft.OData.ODataMessageWriterSettings.EnableWritingKeyAsSegment.set -> void
+Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix() -> bool
+Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix(Microsoft.OData.ODataVersion version) -> bool
+Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool enabled) -> void
+Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool enabled, Microsoft.OData.ODataVersion version) -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
+Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegmentUrl.get -> bool
+Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegmentUrl.set -> void
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 override Microsoft.OData.ODataEnumValue.ToString() -> string
 override Microsoft.OData.ODataPrimitiveValue.ToString() -> string
@@ -994,22 +1006,6 @@ Microsoft.OData.ODataServiceDocumentElement.Title.get -> string
 Microsoft.OData.ODataServiceDocumentElement.Title.set -> void
 Microsoft.OData.ODataServiceDocumentElement.Url.get -> System.Uri
 Microsoft.OData.ODataServiceDocumentElement.Url.set -> void
-Microsoft.OData.ODataSimplifiedOptions
-Microsoft.OData.ODataSimplifiedOptions.Clone() -> Microsoft.OData.ODataSimplifiedOptions
-Microsoft.OData.ODataSimplifiedOptions.EnableParsingKeyAsSegmentUrl.get -> bool
-Microsoft.OData.ODataSimplifiedOptions.EnableParsingKeyAsSegmentUrl.set -> void
-Microsoft.OData.ODataSimplifiedOptions.EnableReadingKeyAsSegment.get -> bool
-Microsoft.OData.ODataSimplifiedOptions.EnableReadingKeyAsSegment.set -> void
-Microsoft.OData.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix.get -> bool
-Microsoft.OData.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix.set -> void
-Microsoft.OData.ODataSimplifiedOptions.EnableWritingKeyAsSegment.get -> bool
-Microsoft.OData.ODataSimplifiedOptions.EnableWritingKeyAsSegment.set -> void
-Microsoft.OData.ODataSimplifiedOptions.GetOmitODataPrefix() -> bool
-Microsoft.OData.ODataSimplifiedOptions.GetOmitODataPrefix(Microsoft.OData.ODataVersion version) -> bool
-Microsoft.OData.ODataSimplifiedOptions.ODataSimplifiedOptions() -> void
-Microsoft.OData.ODataSimplifiedOptions.ODataSimplifiedOptions(Microsoft.OData.ODataVersion? version) -> void
-Microsoft.OData.ODataSimplifiedOptions.SetOmitODataPrefix(bool enabled) -> void
-Microsoft.OData.ODataSimplifiedOptions.SetOmitODataPrefix(bool enabled, Microsoft.OData.ODataVersion version) -> void
 Microsoft.OData.ODataSingletonInfo
 Microsoft.OData.ODataSingletonInfo.ODataSingletonInfo() -> void
 Microsoft.OData.ODataStreamItem

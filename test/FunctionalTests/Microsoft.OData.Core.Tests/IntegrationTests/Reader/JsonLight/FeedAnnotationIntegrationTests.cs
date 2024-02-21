@@ -535,12 +535,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             string payload = payloadPrefix + payloadBody + payloadSuffix;
 
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
 
             var message = new InMemoryMessage() { Container = container };
             message.Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
             message.SetHeader("Content-Type", "application/json;odata.metadata=minimal;odata.streaming=true");
             var messageSettings = new ODataMessageReaderSettings();
+            messageSettings.EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
 
             if (isResponse)
             {

@@ -219,7 +219,7 @@ namespace Microsoft.OData.JsonLight
         {
             get
             {
-                return this.ODataSimplifiedOptions.GetOmitODataPrefix(this.MessageWriterSettings.Version ?? ODataVersion.V4);
+                return this.MessageWriterSettings.GetOmitODataPrefix(this.MessageWriterSettings.Version ?? ODataVersion.V4);
             }
         }
 

@@ -165,10 +165,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         private static ODataMessageReader CreateODataMessageReader(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = false };
+            var readerSettings = new ODataMessageReaderSettings {
+                EnableMessageStreamDisposal = false,
+                EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix
+            };
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix =
-                enableReadingODataAnnotationWithoutPrefix;
             ODataMessageReader messageReader;
             if (isResponse)
             {

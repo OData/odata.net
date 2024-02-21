@@ -280,7 +280,7 @@ namespace Microsoft.OData.JsonLight
 
                 ODataConventionalUriBuilder uriBuilder = new ODataConventionalUriBuilder(
                     new Uri(this.messageWriterSettings.MetadataDocumentUri, "./"),
-                    this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses
+                    this.jsonLightOutputContext.MessageWriterSettings.EnableWritingKeyAsSegment ? ODataUrlKeyDelimiter.Slash : ODataUrlKeyDelimiter.Parentheses
                     );
 
                 Uri uri = uriBuilder.BuildBaseUri();
@@ -2384,7 +2384,7 @@ namespace Microsoft.OData.JsonLight
                 resourceType,
                 selectedProperties,
                 this.writingResponse,
-                this.jsonLightOutputContext.ODataSimplifiedOptions.EnableWritingKeyAsSegment,
+                this.jsonLightOutputContext.MessageWriterSettings.EnableWritingKeyAsSegment,
                 uri,
                 this.messageWriterSettings);
 

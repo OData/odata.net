@@ -159,7 +159,7 @@ namespace Microsoft.OData.JsonLight
             {
                 if (this.MessageReaderSettings.Version == ODataVersion.V4)
                 {
-                    return this.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix;
+                    return this.MessageReaderSettings.EnableReadingODataAnnotationWithoutPrefix;
                 }
 
                 return true;

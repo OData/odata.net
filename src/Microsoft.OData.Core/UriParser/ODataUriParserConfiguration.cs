@@ -35,7 +35,6 @@ namespace Microsoft.OData.UriParser
             this.Model = model;
             this.Container = container;
             this.Resolver = ODataUriResolver.GetUriResolver(container);
-            this.urlKeyDelimiter = ODataUrlKeyDelimiter.GetODataUrlKeyDelimiter(container);
 
             if (this.Container == null)
             {
@@ -46,6 +45,7 @@ namespace Microsoft.OData.UriParser
                 this.Settings = this.Container.GetRequiredService<ODataUriParserSettings>();
             }
 
+            this.urlKeyDelimiter = ODataUrlKeyDelimiter.GetODataUrlKeyDelimiter(this.Settings);
             this.EnableUriTemplateParsing = false;
         }
 

@@ -124,8 +124,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ContainerBuilderHelper.BuildContainer(action);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = true;
+            var container = ContainerBuilderHelper.BuildContainer(builder =>
+            {
+                action?.Invoke(builder);
+                var readerSettings = new ODataMessageReaderSettings
+                {
+                    EnableReadingODataAnnotationWithoutPrefix = true
+                };
+                builder.AddService(ServiceLifetime.Scoped, _ => readerSettings);
+            });
+
             var resource = GetReadedResource(messageContent, model, entitySet, entityType, container);
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
@@ -140,7 +148,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("DefaultNs.Person");
             var container = ContainerBuilderHelper.BuildContainer(action);
-            container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = true;
+            container.GetRequiredService<ODataMessageReaderSettings>().EnableReadingODataAnnotationWithoutPrefix = true;
             var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, container);
 
             var resourceDict = new Dictionary<string, IEnumerable<ODataProperty>>();

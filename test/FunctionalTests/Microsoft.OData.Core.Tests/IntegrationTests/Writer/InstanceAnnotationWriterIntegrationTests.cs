@@ -699,13 +699,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
 
         private void WriteAnnotationsAndValidatePayload(Action<ODataWriter> action, IEdmNavigationSource navigationSource, ODataFormat format, string expectedPayload, bool request, bool createFeedWriter, bool enableWritingODataAnnotationWithoutPrefix = false, IEdmStructuredType resourceType = null)
         {
-            var writerSettings = new ODataMessageWriterSettings { EnableMessageStreamDisposal = false };
+            var writerSettings = new ODataMessageWriterSettings {
+                EnableMessageStreamDisposal = false
+            };
+            writerSettings.SetOmitODataPrefix(enableWritingODataAnnotationWithoutPrefix);
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
             var container = ContainerBuilderHelper.BuildContainer(null);
-            container.GetRequiredService<ODataSimplifiedOptions>().SetOmitODataPrefix(
-                enableWritingODataAnnotationWithoutPrefix);
 
             MemoryStream stream = new MemoryStream();
             if (request)

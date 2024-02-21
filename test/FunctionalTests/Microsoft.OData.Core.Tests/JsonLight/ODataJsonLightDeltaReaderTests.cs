@@ -4113,6 +4113,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var settings = new ODataMessageReaderSettings
             {
                 ShouldIncludeAnnotation = s => true,
+                EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix
             };
 
             var messageInfo = new ODataMessageInfo
@@ -4127,8 +4128,6 @@ namespace Microsoft.OData.Tests.JsonLight
             using (var inputContext = new ODataJsonLightInputContext(
                 new StringReader(payload), messageInfo, settings))
             {
-                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-                    .EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
                 var jsonLightReader = new ODataJsonLightDeltaReader(inputContext, navigationSource, entityType);
                 while (jsonLightReader.Read())
                 {
@@ -4270,6 +4269,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var settings = new ODataMessageReaderSettings
             {
                 ShouldIncludeAnnotation = s => true,
+                EnableReadingKeyAsSegment = keyAsSegment,
             };
 
             var messageInfo = new ODataMessageInfo
@@ -4283,9 +4283,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var inputContext = new ODataJsonLightInputContext(
                 new StringReader(deltaPayload), messageInfo, settings);
-            inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-                   .EnableReadingKeyAsSegment = keyAsSegment;
-            inputContext.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix = true;
+            inputContext.MessageReaderSettings.EnableReadingODataAnnotationWithoutPrefix = true;
             return new ODataJsonLightReader(inputContext, navigationSource, entityType, /*readingResourceSet*/!singleResource, /*readingParameter*/false, /*readingDelta*/ true);
         }
 
@@ -4607,7 +4605,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             using (var jsonLightInputContext = CreateJsonLightInputContext(payload, isAsync: true, isResponse: isResponse))
             {
-                jsonLightInputContext.Container.GetRequiredService<ODataSimplifiedOptions>().EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
+                jsonLightInputContext.MessageReaderSettings.EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix;
                 var jsonLightDeltaReader = new ODataJsonLightDeltaReader(
                     jsonLightInputContext,
                     navigationSource,

@@ -1186,7 +1186,7 @@ namespace Microsoft.OData.JsonLight
 
             ODataResourceMetadataBuilder builder =
                 this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
-                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                    this.JsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                     /*isDelta*/ false);
             mediaResource.SetMetadataBuilder(builder, /*propertyName*/ null);
             resource.MediaResource = mediaResource;
@@ -1786,7 +1786,7 @@ namespace Microsoft.OData.JsonLight
             ReadStreamInfo(streamReferenceValue, resourceState, streamPropertyName);
             ODataResourceMetadataBuilder builder =
             this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
-                this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                this.JsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                 /*isDelta*/ false);
 
             // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
@@ -1812,7 +1812,7 @@ namespace Microsoft.OData.JsonLight
             ReadStreamInfo(streamInfo, resourceState, streamPropertyName);
             ODataResourceMetadataBuilder builder =
             this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
-                this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                this.JsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                 /*isDelta*/ false);
 
             // Note that we set the metadata builder even when streamProperty is null, which is the case when the stream property is undeclared.
@@ -2060,7 +2060,7 @@ namespace Microsoft.OData.JsonLight
         {
             ODataResourceMetadataBuilder builder =
                 this.MetadataContext.GetResourceMetadataBuilderForReader(resourceState,
-                    this.JsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                    this.JsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                     /*isDelta*/ false);
             operation.SetMetadataBuilder(builder, this.ContextUriParseResult.MetadataDocumentUri);
         }
