@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.IO;
-using System.Threading.Tasks;
-
 namespace Microsoft.OData.Json
 {
+    using System.IO;
+    using System.Threading.Tasks;
+
     /// <summary>
     /// Interface for a class that can read arbitrary JSON.
     /// </summary>

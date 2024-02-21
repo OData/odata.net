@@ -627,45 +627,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 return true;
             }
 
-            public Task<bool> ReadAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<bool> ReadAsync() => throw new NotImplementedException();
 
-            public bool CanStream()
-            {
-                throw new NotImplementedException();
-            }
+            public bool CanStream() => throw new NotImplementedException();
 
-            public Task<bool> CanStreamAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<bool> CanStreamAsync() => throw new NotImplementedException();
 
-            public Stream CreateReadStream()
-            {
-                throw new NotImplementedException();
-            }
+            public Stream CreateReadStream() => throw new NotImplementedException();
 
-            public Task<Stream> CreateReadStreamAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<Stream> CreateReadStreamAsync() => throw new NotImplementedException();
 
-            public TextReader CreateTextReader()
-            {
-                throw new NotImplementedException();
-            }
+            public TextReader CreateTextReader() => throw new NotImplementedException();
 
-            public Task<TextReader> CreateTextReaderAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<TextReader> CreateTextReaderAsync() => throw new NotImplementedException();
 
-            public Task<object> GetValueAsync()
-            {
-                throw new NotImplementedException();
-            }
+            public Task<object> GetValueAsync() => throw new NotImplementedException();
         }
     }
 }

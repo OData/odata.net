@@ -464,16 +464,12 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A stream for reading the stream property.</returns>
         protected override Stream CreateReadStreamImplementation()
         {
-            Stream stream = this.jsonLightInputContext.JsonReader.CreateReadStream();
-
-            return stream;
+            return this.jsonLightInputContext.JsonReader.CreateReadStream();
         }
 
         protected override TextReader CreateTextReaderImplementation()
         {
-            TextReader reader = this.jsonLightInputContext.JsonReader.CreateTextReader();
-
-            return reader;
+            return this.jsonLightInputContext.JsonReader.CreateTextReader();
         }
 
         /// <summary>

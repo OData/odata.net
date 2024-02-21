@@ -187,8 +187,9 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CreateReadStream();
             }
 
-            Stream result = this.GetValue() == null ? Stream.Null :
-                new MemoryStream(Convert.FromBase64String((string)this.GetValue()));
+            object value = this.GetValue();
+            Stream result = value == null ? Stream.Null :
+                new MemoryStream(Convert.FromBase64String((string)value));
             this.innerReader.Read();
             return result;
         }
@@ -204,7 +205,8 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CreateTextReader();
             }
 
-            TextReader result = new StringReader(this.GetValue() == null ? "" : (string)this.GetValue());
+            object value = this.GetValue();
+            TextReader result = new StringReader(value == null ? "" : (string)value);
             this.innerReader.Read();
             return result;
         }
@@ -220,7 +222,8 @@ namespace Microsoft.OData.Json
                 return this.innerReader.CanStream();
             }
 
-            return (this.GetValue() is string || this.GetValue() == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
+            object value = this.GetValue();
+            return (value is string || value == null || this.NodeType == JsonNodeType.StartArray || this.NodeType == JsonNodeType.StartObject);
         }
 
         /// <summary>

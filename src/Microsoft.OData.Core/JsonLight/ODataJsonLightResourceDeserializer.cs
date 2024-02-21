@@ -173,9 +173,13 @@ namespace Microsoft.OData.JsonLight
                             }
                         }
                     }
-                    else if (this.JsonReader.GetValue() != null)
+                    else
                     {
-                        throw new ODataException(Strings.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(this.JsonReader.GetValue()));
+                        object value = this.JsonReader.GetValue();
+                        if (value != null)
+                        {
+                            throw new ODataException(Strings.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(value));
+                        }
                     }
 
                     // read over end object or null value
