@@ -124,17 +124,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ContainerBuilderHelper.BuildContainer(builder =>
-            {
-                action?.Invoke(builder);
-                var readerSettings = new ODataMessageReaderSettings
-                {
-                    EnableReadingODataAnnotationWithoutPrefix = true
-                };
-                builder.AddService(ServiceLifetime.Scoped, _ => readerSettings);
-            });
+            var container = ContainerBuilderHelper.BuildContainer(action);
 
-            var resource = GetReadedResource(messageContent, model, entitySet, entityType, container);
+            var readerSettings = new ODataMessageReaderSettings
+            {
+                EnableReadingODataAnnotationWithoutPrefix = true
+            };
+
+            var resource = GetReadedResource(messageContent, model, entitySet, entityType, container, readerSettings);
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
             Assert.Equal(999, propertyList[0].Value);
@@ -309,7 +306,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
         }
 
-        private static ODataResource GetReadedResource(string messageContent, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container)
+        private static ODataResource GetReadedResource(string messageContent, EdmModel model, IEdmEntitySetBase entitySet, EdmEntityType entityType, IServiceProvider container, ODataMessageReaderSettings settings)
         {
             var outputStream = new MemoryStream();
             var writer = new StreamWriter(outputStream);
@@ -324,7 +321,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             };
             message.SetHeader("Content-Type", "application/json");
 
-            var settings = new ODataMessageReaderSettings();
             using (var messageReader = new ODataMessageReader(message, settings, model))
             {
                 var reader = messageReader.CreateODataResourceReader(entitySet, entityType);

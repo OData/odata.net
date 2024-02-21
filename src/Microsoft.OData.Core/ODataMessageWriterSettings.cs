@@ -84,13 +84,18 @@ namespace Microsoft.OData
         /// </summary>
         private bool omitODataPrefix = true;
 
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. </summary>
+        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings.</summary>
         public ODataMessageWriterSettings()
             : this(null)
         {
         }
 
-        internal ODataMessageWriterSettings(ODataVersion? version)
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. for the
+        /// specified OData version.
+        /// </summary>
+        /// <param name="version">OData Version for which to create default settings.</param>
+        public ODataMessageWriterSettings(ODataVersion? version)
         {
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;

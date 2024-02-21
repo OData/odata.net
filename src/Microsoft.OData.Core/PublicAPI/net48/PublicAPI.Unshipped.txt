@@ -49,6 +49,7 @@ Microsoft.OData.ODataMessageWriterSettings.EnableWritingKeyAsSegment.get -> bool
 Microsoft.OData.ODataMessageWriterSettings.EnableWritingKeyAsSegment.set -> void
 Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix() -> bool
 Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix(Microsoft.OData.ODataVersion version) -> bool
+Microsoft.OData.ODataMessageWriterSettings.ODataMessageWriterSettings(Microsoft.OData.ODataVersion? version) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool enabled) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool enabled, Microsoft.OData.ODataVersion version) -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
