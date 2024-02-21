@@ -171,9 +171,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
         protected override void ConfigureContainer(IContainerBuilder builder)
         {
             base.ConfigureContainer(builder);
-            builder.AddServicePrototype(new ODataSimplifiedOptions()
+            var writerSettings = new ODataMessageWriterSettings();
+            writerSettings.SetOmitODataPrefix(true);
+            builder.AddServicePrototype(writerSettings);
+
+            builder.AddServicePrototype(new ODataMessageReaderSettings()
             {
-                EnableWritingODataAnnotationWithoutPrefix = true,
                 EnableReadingODataAnnotationWithoutPrefix = true,
             });
         }
