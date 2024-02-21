@@ -696,7 +696,7 @@ namespace Microsoft.OData.Client
         public virtual bool EnableWritingODataAnnotationWithoutPrefix { get; set; }
 
         /// <summary>
-        /// When true, a Where clause that just compares the key property generates a $filter query option, otherwise a key segment is generated.
+        /// When true, a Where clause that has only the key property in the predicate generates a $filter query option, otherwise a key segment is generated.
         /// The default value is true.
         /// </summary>
         [Obsolete("This property will be removed in a future major release.")]

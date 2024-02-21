@@ -1323,8 +1323,6 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
         public void Linq_Where_Generates_Filter_When_KeyComparisonGeneratesFilterQuery_Is_True()
         {
             var context = this.CreateWrappedContext<DefaultContainer>().Context;
-            // By default context.KeyComparisonGeneratesFilterQuery = true;
-            // So we don't need to set it
             var query = context.Customer.Where(c => c.CustomerId == -10);
             var uri = query.ToString();
             Assert.EndsWith("$filter=CustomerId eq -10", uri);
