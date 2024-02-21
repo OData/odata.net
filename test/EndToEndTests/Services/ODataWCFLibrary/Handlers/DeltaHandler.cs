@@ -59,7 +59,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                         newDeltaLink = new Uri(string.Format("{0}?{1}={2}", this.ServiceRootUri, ServiceConstants.QueryOption_Delta, newDeltaToken));
                         responseMessage.AddPreferenceApplied(ServiceConstants.Preference_TrackChanging);
                     }
-                    ODataDeltaWriter resultWriter = messageWriter.CreateODataDeltaWriter(entitySet, entityType);
+                    ODataWriter resultWriter = messageWriter.CreateODataDeltaResourceSetWriter(entitySet, entityType);
                     ResponseWriter.WriteDeltaFeed(resultWriter, this.DeltaItems, this.QueryContext.CountOption, newDeltaLink);
 
                     resultWriter.Flush();

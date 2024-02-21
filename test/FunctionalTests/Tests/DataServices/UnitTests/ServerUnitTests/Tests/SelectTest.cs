@@ -247,7 +247,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             #region Old IExpandProvider
-            public class OldExpandProvider : IExpandProvider
+            public class OldExpandProvider
             {
                 public enum Modifications
                 {
@@ -344,7 +344,7 @@ namespace AstoriaUnitTests.Tests
             }
 
 
-            public class OldExpandCustomDataContext : CustomDataContext, IExpandProvider
+            public class OldExpandCustomDataContext : CustomDataContext
             {
                 public IEnumerable ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
                 {
@@ -352,7 +352,7 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            public class OldExpandCustomObjectContext : ocs.CustomObjectContext, IExpandProvider
+            public class OldExpandCustomObjectContext : ocs.CustomObjectContext
             {
                 public IEnumerable ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
                 {
@@ -380,8 +380,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         OpenWebDataServiceHelper.GetServiceCustomizer.Value = type =>
                         {
-                            if (type == typeof(IExpandProvider)) return new OldExpandProvider();
-                            else return null;
+                            return null;
                         };
 
                         request.DataServiceType = (Type)values["ServiceType"];
@@ -3190,7 +3189,7 @@ namespace AstoriaUnitTests.Tests
                 UnitTestsUtil.VerifyXPaths(document, "count(/atom:feed/atom:entry/@adsm:etag)!=0");
             }
 
-            public class CustomDataContextWithExpand : CustomDataContext, IExpandProvider
+            public class CustomDataContextWithExpand : CustomDataContext
             {
                 public IEnumerable ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
                 {

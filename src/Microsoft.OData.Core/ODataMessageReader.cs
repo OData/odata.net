@@ -433,38 +433,6 @@ namespace Microsoft.OData
                 ODataPayloadKind.Delta);
         }
 
-        /// <summary>
-        /// Creates an <see cref="ODataDeltaReader" /> to read a resource set.
-        /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
-        /// <returns>The created reader.</returns>
-        [Obsolete("Use CreateODataDeltaResourceSetReader.", false)]
-        public ODataDeltaReader CreateODataDeltaReader(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
-        {
-            this.VerifyCanCreateODataDeltaReader(entitySet, expectedBaseEntityType);
-            expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
-            return this.ReadFromInput(
-                (context) => context.CreateDeltaReader(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.ResourceSet);
-        }
-
-        /// <summary>
-        /// Asynchronously creates an <see cref="ODataDeltaReader" /> to read a resource set.
-        /// </summary>
-        /// <param name="entitySet">The entity set we are going to read entities for.</param>
-        /// <param name="expectedBaseEntityType">The expected base type for the entities in the delta response.</param>
-        /// <returns>A running task for the created reader.</returns>
-        [Obsolete("Use CreateODataDeltaResourceSetReader.", false)]
-        public Task<ODataDeltaReader> CreateODataDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
-        {
-            this.VerifyCanCreateODataResourceSetReader(entitySet, expectedBaseEntityType);
-            expectedBaseEntityType = expectedBaseEntityType ?? this.edmTypeResolver.GetElementType(entitySet);
-            return this.ReadFromInputAsync(
-                (context) => context.CreateDeltaReaderAsync(entitySet, expectedBaseEntityType),
-                ODataPayloadKind.ResourceSet);
-        }
-
         /// <summary>Creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>The created reader.</returns>
         public ODataReader CreateODataResourceReader()

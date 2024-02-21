@@ -611,8 +611,6 @@ Microsoft.OData.ODataMessageReader.CreateODataCollectionReader() -> Microsoft.OD
 Microsoft.OData.ODataMessageReader.CreateODataCollectionReader(Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference) -> Microsoft.OData.ODataCollectionReader
 Microsoft.OData.ODataMessageReader.CreateODataCollectionReaderAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataCollectionReader>
 Microsoft.OData.ODataMessageReader.CreateODataCollectionReaderAsync(Microsoft.OData.Edm.IEdmTypeReference expectedItemTypeReference) -> System.Threading.Tasks.Task<Microsoft.OData.ODataCollectionReader>
-Microsoft.OData.ODataMessageReader.CreateODataDeltaReader(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType) -> Microsoft.OData.ODataDeltaReader
-Microsoft.OData.ODataMessageReader.CreateODataDeltaReaderAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType expectedBaseEntityType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataDeltaReader>
 Microsoft.OData.ODataMessageReader.CreateODataDeltaResourceSetReader() -> Microsoft.OData.ODataReader
 Microsoft.OData.ODataMessageReader.CreateODataDeltaResourceSetReader(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> Microsoft.OData.ODataReader
 Microsoft.OData.ODataMessageReader.CreateODataDeltaResourceSetReader(Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> Microsoft.OData.ODataReader
@@ -716,8 +714,6 @@ Microsoft.OData.ODataMessageWriter.CreateODataDeltaResourceSetWriter(Microsoft.O
 Microsoft.OData.ODataMessageWriter.CreateODataDeltaResourceSetWriterAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 Microsoft.OData.ODataMessageWriter.CreateODataDeltaResourceSetWriterAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 Microsoft.OData.ODataMessageWriter.CreateODataDeltaResourceSetWriterAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
-Microsoft.OData.ODataMessageWriter.CreateODataDeltaWriter(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType) -> Microsoft.OData.ODataDeltaWriter
-Microsoft.OData.ODataMessageWriter.CreateODataDeltaWriterAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmEntityType entityType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataDeltaWriter>
 Microsoft.OData.ODataMessageWriter.CreateODataParameterWriter(Microsoft.OData.Edm.IEdmOperation operation) -> Microsoft.OData.ODataParameterWriter
 Microsoft.OData.ODataMessageWriter.CreateODataParameterWriterAsync(Microsoft.OData.Edm.IEdmOperation operation) -> System.Threading.Tasks.Task<Microsoft.OData.ODataParameterWriter>
 Microsoft.OData.ODataMessageWriter.CreateODataResourceSetWriter() -> Microsoft.OData.ODataWriter
@@ -1013,8 +1009,6 @@ Microsoft.OData.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix
 Microsoft.OData.ODataSimplifiedOptions.EnableReadingODataAnnotationWithoutPrefix.set -> void
 Microsoft.OData.ODataSimplifiedOptions.EnableWritingKeyAsSegment.get -> bool
 Microsoft.OData.ODataSimplifiedOptions.EnableWritingKeyAsSegment.set -> void
-Microsoft.OData.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix.get -> bool
-Microsoft.OData.ODataSimplifiedOptions.EnableWritingODataAnnotationWithoutPrefix.set -> void
 Microsoft.OData.ODataSimplifiedOptions.GetOmitODataPrefix() -> bool
 Microsoft.OData.ODataSimplifiedOptions.GetOmitODataPrefix(Microsoft.OData.ODataVersion version) -> bool
 Microsoft.OData.ODataSimplifiedOptions.ODataSimplifiedOptions() -> void
@@ -1152,13 +1146,11 @@ Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken.MethodDefinition.
 Microsoft.OData.UriParser.Aggregation.AggregateToken
 Microsoft.OData.UriParser.Aggregation.AggregateToken.AggregateExpressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateTokenBase>
 Microsoft.OData.UriParser.Aggregation.AggregateToken.AggregateToken(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateTokenBase> expressions) -> void
-Microsoft.OData.UriParser.Aggregation.AggregateToken.Expressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateExpressionToken>
 Microsoft.OData.UriParser.Aggregation.AggregateTokenBase
 Microsoft.OData.UriParser.Aggregation.AggregateTokenBase.AggregateTokenBase() -> void
 Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode
 Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode.AggregateExpressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase>
 Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode.AggregateTransformationNode(System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateExpressionBase> expressions) -> void
-Microsoft.OData.UriParser.Aggregation.AggregateTransformationNode.Expressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.UriParser.Aggregation.AggregateExpression>
 Microsoft.OData.UriParser.Aggregation.AggregationMethod
 Microsoft.OData.UriParser.Aggregation.AggregationMethod.Average = 3 -> Microsoft.OData.UriParser.Aggregation.AggregationMethod
 Microsoft.OData.UriParser.Aggregation.AggregationMethod.CountDistinct = 4 -> Microsoft.OData.UriParser.Aggregation.AggregationMethod

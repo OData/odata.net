@@ -5,7 +5,6 @@ virtual Microsoft.OData.Client.DataServiceContext.BeginDeepInsert<T>(System.Asyn
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource, System.Threading.CancellationToken cancellationToken) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>
-virtual Microsoft.OData.Client.DataServiceContext.EndDeepInsert(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedEnded(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration.OnDeltaFeedStarted(System.Action<Microsoft.OData.Client.ReadingDeltaFeedArgs> action) -> Microsoft.OData.Client.DataServiceClientResponsePipelineConfiguration
 Microsoft.OData.Client.ReadingDeltaFeedArgs
@@ -66,7 +65,6 @@ Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken.MethodDefinition
 Microsoft.OData.Client.ALinq.UriParser.AggregateToken
 Microsoft.OData.Client.ALinq.UriParser.AggregateToken.AggregateExpressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase>
 Microsoft.OData.Client.ALinq.UriParser.AggregateToken.AggregateToken(System.Collections.Generic.IEnumerable<Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase> expressions) -> void
-Microsoft.OData.Client.ALinq.UriParser.AggregateToken.Expressions.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Client.ALinq.UriParser.AggregateExpressionToken>
 Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase
 Microsoft.OData.Client.ALinq.UriParser.AggregateTokenBase.AggregateTokenBase() -> void
 Microsoft.OData.Client.ALinq.UriParser.AllToken
@@ -812,7 +810,6 @@ override Microsoft.OData.Client.HttpWebRequestMessage.Timeout.set -> void
 override Microsoft.OData.Client.HttpWebRequestMessage.Url.get -> System.Uri
 override Microsoft.OData.Client.HttpWebRequestMessage.Url.set -> void
 override Microsoft.OData.Client.QueryOperationResponse<T>.Count.get -> long
-override Microsoft.OData.Client.QueryOperationResponse<T>.TotalCount.get -> long
 static Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken.Merge(Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token1, Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken token2) -> Microsoft.OData.Client.ALinq.UriParser.EntitySetAggregateToken
 static Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken.EmptyParameterList -> Microsoft.OData.Client.ALinq.UriParser.FunctionParameterToken[]
 static Microsoft.OData.Client.DataServiceExtensions.CountDistinct<TSource, TTarget>(this System.Collections.Generic.IEnumerable<TSource> source, System.Func<TSource, TTarget> selector) -> int
@@ -873,6 +870,7 @@ virtual Microsoft.OData.Client.DataServiceContext.DisableInstanceAnnotationMater
 virtual Microsoft.OData.Client.DataServiceContext.DisableInstanceAnnotationMaterialization.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.EnableWritingODataAnnotationWithoutPrefix.get -> bool
 virtual Microsoft.OData.Client.DataServiceContext.EnableWritingODataAnnotationWithoutPrefix.set -> void
+virtual Microsoft.OData.Client.DataServiceContext.EndDeepInsert(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
 virtual Microsoft.OData.Client.DataServiceContext.EndExecute(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.OperationResponse
 virtual Microsoft.OData.Client.DataServiceContext.EndExecute<TElement>(System.IAsyncResult asyncResult) -> System.Collections.Generic.IEnumerable<TElement>
 virtual Microsoft.OData.Client.DataServiceContext.EndExecuteBatch(System.IAsyncResult asyncResult) -> Microsoft.OData.Client.DataServiceResponse
@@ -1001,8 +999,6 @@ virtual Microsoft.OData.Client.DataServiceQuery<TElement>.GetKeyPath(string keyS
 virtual Microsoft.OData.Client.DataServiceQuery<TElement>.GetPath(string nextSegment) -> string
 virtual Microsoft.OData.Client.DataServiceQuery<TElement>.IncludeCount() -> Microsoft.OData.Client.DataServiceQuery<TElement>
 virtual Microsoft.OData.Client.DataServiceQuery<TElement>.IncludeCount(bool countQuery) -> Microsoft.OData.Client.DataServiceQuery<TElement>
-virtual Microsoft.OData.Client.DataServiceQuery<TElement>.IncludeTotalCount() -> Microsoft.OData.Client.DataServiceQuery<TElement>
-virtual Microsoft.OData.Client.DataServiceQuery<TElement>.IncludeTotalCount(bool countQuery) -> Microsoft.OData.Client.DataServiceQuery<TElement>
 virtual Microsoft.OData.Client.DataServiceQuery<TElement>.IsComposable.get -> bool
 virtual Microsoft.OData.Client.DataServiceQuerySingle<TElement>.AppendRequestUri(string nextSegment) -> string
 virtual Microsoft.OData.Client.DataServiceQuerySingle<TElement>.BeginGetValue(System.AsyncCallback callback, object state) -> System.IAsyncResult
@@ -1027,4 +1023,3 @@ virtual Microsoft.OData.Client.HttpWebResponseMessage.SetHeader(string headerNam
 virtual Microsoft.OData.Client.HttpWebResponseMessage.StatusCode.get -> int
 virtual Microsoft.OData.Client.HttpWebResponseMessage.StatusCode.set -> void
 virtual Microsoft.OData.Client.QueryOperationResponse.Count.get -> long
-virtual Microsoft.OData.Client.QueryOperationResponse.TotalCount.get -> long

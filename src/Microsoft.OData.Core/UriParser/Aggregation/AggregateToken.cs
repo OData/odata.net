@@ -40,18 +40,6 @@ namespace Microsoft.OData.UriParser.Aggregation
         }
 
         /// <summary>
-        /// Create an AggregateToken.
-        /// </summary>
-        [Obsolete("Use AggregateExpressions for all aggregation expressions or AggregateExpressions.OfType<AggregateExpressionToken>()  for aggregate(..) expressions only.")]
-        public IEnumerable<AggregateExpressionToken> Expressions
-        {
-            get
-            {
-                return expressions.OfType<AggregateExpressionToken>();
-            }
-        }
-
-        /// <summary>
         /// Gets the expressions of this token.
         /// </summary>
         public IEnumerable<AggregateTokenBase> AggregateExpressions

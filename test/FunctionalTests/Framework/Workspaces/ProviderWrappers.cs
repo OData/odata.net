@@ -439,32 +439,6 @@ namespace System.Data.Test.Astoria.Providers
     }
     #endregion
 
-    #region IExpandProvider
-#pragma warning disable 618 // Disable "obsolete" warning for the IExpandProvider interface. Used for backwards compatibilty.
-    public class ExpandProviderWrapper : ProviderWrapper<Microsoft.OData.Service.IExpandProvider>, Microsoft.OData.Service.IExpandProvider
-    {
-        public ExpandProviderWrapper(Microsoft.OData.Service.IExpandProvider underlying)
-            : base(underlying)
-        { }
-
-        #region IExpandProvider Members
-        public IEnumerable ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-        {
-            APICallLog.Current.ExpandProvider.ApplyExpansions(queryable, expandPaths);
-            try
-            {
-                return UnderlyingProvider.ApplyExpansions(queryable, expandPaths);
-            }
-            finally
-            {
-                APICallLog.Current.Pop();
-            }
-        }
-        #endregion
-    }
-#pragma warning restore 618
-    #endregion
-
     #region IDataServiceHost
     public class IDSHWrapper : ProviderWrapper<Microsoft.OData.Service.IDataServiceHost>, Microsoft.OData.Service.IDataServiceHost
     {

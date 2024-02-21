@@ -846,18 +846,9 @@ namespace AstoriaUnitTests.Tests
                 }
             }
 
-            public class ContextImplementingEveryInterface : IExpandProvider, DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
+            public class ContextImplementingEveryInterface : DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
             {
                 public ContextImplementingEveryInterface() { }
-
-                #region IExpandProvider Members
-
-                IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-                {
-                    throw new NotImplementedException();
-                }
-
-                #endregion
 
                 #region IConcurrencyProvider Members
 
@@ -1156,7 +1147,7 @@ namespace AstoriaUnitTests.Tests
                 #endregion
             }
 
-            private class DataServiceWithISPforV1ProviderWithUpdatable<T> : DataService<T>, IServiceProvider, IExpandProvider, DSP.IDataServiceStreamProvider, IUpdatable, DSP.IDataServicePagingProvider
+            private class DataServiceWithISPforV1ProviderWithUpdatable<T> : DataService<T>, IServiceProvider, DSP.IDataServiceStreamProvider, IUpdatable, DSP.IDataServicePagingProvider
             {
                 public static void InitializeService(DataServiceConfiguration configuration)
                 {
@@ -1179,15 +1170,6 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     return this;
-                }
-
-                #endregion
-
-                #region IExpandProvider Members
-
-                IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-                {
-                    throw new NotImplementedException();
                 }
 
                 #endregion
@@ -1315,7 +1297,7 @@ namespace AstoriaUnitTests.Tests
                 #endregion
             }
 
-            private class DataServiceWithISPforV1Provider<T> : DataService<T>, IServiceProvider, IExpandProvider, DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
+            private class DataServiceWithISPforV1Provider<T> : DataService<T>, IServiceProvider, DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
             {
                 public static void InitializeService(DataServiceConfiguration configuration)
                 {
@@ -1337,15 +1319,6 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     return this;
-                }
-
-                #endregion
-
-                #region IExpandProvider Members
-
-                IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-                {
-                    throw new NotImplementedException();
                 }
 
                 #endregion
@@ -1489,8 +1462,7 @@ namespace AstoriaUnitTests.Tests
 
             private class DataServiceWithISPforIDSP<T> : 
                 DataService<T>, 
-                IServiceProvider, 
-                IExpandProvider, 
+                IServiceProvider,
                 DSP.IDataServiceStreamProvider, 
                 DSP.IDataServiceUpdateProvider, 
                 DSP.IDataServicePagingProvider
@@ -1523,15 +1495,6 @@ namespace AstoriaUnitTests.Tests
                     }
 
                     return this;
-                }
-
-                #endregion
-
-                #region IExpandProvider Members
-
-                IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-                {
-                    throw new NotImplementedException();
                 }
 
                 #endregion
@@ -1825,18 +1788,9 @@ namespace AstoriaUnitTests.Tests
                 #endregion
             }
 
-            public class IDSPImplementingEveryInterfaces : DSP.IDataServiceMetadataProvider, DSP.IDataServiceQueryProvider, IExpandProvider, DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
+            public class IDSPImplementingEveryInterfaces : DSP.IDataServiceMetadataProvider, DSP.IDataServiceQueryProvider, DSP.IDataServiceStreamProvider, DSP.IDataServiceUpdateProvider, DSP.IDataServicePagingProvider
             {
                 public IDSPImplementingEveryInterfaces() { }
-
-                #region IExpandProvider Members
-
-                IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-                {
-                    throw new NotImplementedException();
-                }
-
-                #endregion
 
                 #region IConcurrencyProvider Members
 
@@ -2105,7 +2059,6 @@ namespace AstoriaUnitTests.Tests
 
             private static Type[] KnownInterfaceTypes = new Type[]
             {
-                typeof(IExpandProvider),
                 typeof(DSP.IDataServiceUpdateProvider),
                 typeof(DSP.IDataServiceStreamProvider),
                 typeof(IUpdatable),

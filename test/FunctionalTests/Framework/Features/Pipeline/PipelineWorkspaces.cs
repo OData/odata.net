@@ -7,7 +7,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Xml;
-using Microsoft.Test.KoKoMo;
 
 namespace System.Data.Test.Astoria
 {
@@ -50,7 +49,6 @@ namespace System.Data.Test.Astoria
                     if (Versioning.Server.SupportsV2Features)
                     {
                         w = (Workspace)Activator.CreateInstance(t);
-                        AddExpandProvider(w);
                         constructed.Add(w);
                     }
                 }
@@ -63,7 +61,6 @@ namespace System.Data.Test.Astoria
                         AddPagingProvider(w);
                     }
 
-                    AddExpandProvider(w);
                     constructed.Add(w);
                 }
 
@@ -101,25 +98,6 @@ namespace System.Data.Test.Astoria
                     "}"
                 });
             w.WebServiceName = w.WebServiceName + "_PP";
-        }
-
-        private void AddExpandProvider(Workspace w)
-        {
-            w.Settings.HasExpandProvider = true;
-            w.ServiceModifications.Interfaces.IServiceProvider.Services[typeof(Microsoft.OData.Service.IExpandProvider)]
-                = "new ExpandProviderWrapper(new SimpleExpandProvider())";
-
-            w.GlobalAdditionalCode += string.Join(Environment.NewLine, new string[]
-                {
-                    "internal class SimpleExpandProvider : IExpandProvider",
-                    "{",
-                    "   IEnumerable IExpandProvider.ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)",
-                    "   {",
-                    "       return queryable;",
-                    "   }",
-                    "}"
-                });
-            w.WebServiceName = w.WebServiceName + "_EP";
         }
 
         protected override void WorkspaceCallback(Workspace workspace)

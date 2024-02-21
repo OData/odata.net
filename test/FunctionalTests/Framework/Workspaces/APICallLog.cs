@@ -121,7 +121,6 @@ namespace System.Data.Test.Astoria.CallOrder
             Updatable = new IUpdatableCallLog(this);
             ServiceProvider = new IServiceProviderCallLog(this);
             DataService = new DataServiceAPICallLog(this);
-            ExpandProvider = new IExpandProviderCallLog(this);
             Stream = new StreamCallLog(this);
 
 #if !ASTORIA_PRE_V2
@@ -269,12 +268,6 @@ namespace System.Data.Test.Astoria.CallOrder
         }
 
         public DataServiceAPICallLog DataService
-        {
-            get;
-            private set;
-        }
-
-        public IExpandProviderCallLog ExpandProvider
         {
             get;
             private set;
@@ -544,23 +537,6 @@ namespace System.Data.Test.Astoria.CallOrder
             Parent.Add(method, Parent.Serialize(o), action.ToString());
         }
     }
-    #endregion
-
-    #region IExpandProvider
-#pragma warning disable 618 // Disable "obsolete" warning for the IExpandProvider interface. Used for backwards compatibilty.
-    public class IExpandProviderCallLog : InterfaceCallLog<IExpandProvider>
-    {
-        internal IExpandProviderCallLog(APICallLog parent)
-            : base(parent)
-        {
-        }
-
-        public void ApplyExpansions(IQueryable queryable, ICollection<ExpandSegmentCollection> expandPaths)
-        {
-            Add("ApplyExpansions", Parent.Serialize(queryable), string.Join(",", expandPaths.Select(esc => string.Join("/", esc.Select(es => es.Name).ToArray())).ToArray()));
-        }
-    }
-#pragma warning restore 618
     #endregion
 
     #region IDataServiceHost

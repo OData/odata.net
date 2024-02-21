@@ -31,7 +31,6 @@ namespace Microsoft.OData
         internal const string ODataResponseMessage_StreamTaskIsNull = "ODataResponseMessage_StreamTaskIsNull";
         internal const string ODataResponseMessage_MessageStreamIsNull = "ODataResponseMessage_MessageStreamIsNull";
         internal const string AsyncBufferedStream_WriterDisposedWithoutFlush = "AsyncBufferedStream_WriterDisposedWithoutFlush";
-        internal const string ODataFormat_AtomFormatObsoleted = "ODataFormat_AtomFormatObsoleted";
         internal const string ODataOutputContext_UnsupportedPayloadKindForFormat = "ODataOutputContext_UnsupportedPayloadKindForFormat";
         internal const string ODataInputContext_UnsupportedPayloadKindForFormat = "ODataInputContext_UnsupportedPayloadKindForFormat";
         internal const string ODataOutputContext_MetadataDocumentUriMissing = "ODataOutputContext_MetadataDocumentUriMissing";

@@ -1285,13 +1285,11 @@ namespace Microsoft.OData.Edm.Tests.Validation
             EdmEntityType entity = new EdmEntityType("NS", "Entity", baseEntity);
             entity.AddKeys(entity.AddStructuralProperty("Id2", EdmPrimitiveTypeKind.String));
 
-#pragma warning disable CS0618 // Type or member is obsolete
             ValidateError(
-                ValidationRules.EntityTypeInvalidKeyKeyDefinedInBaseClass,
+                ValidationRules.EntityTypeInvalidKeyKeyDefinedInAncestor,
                 entity,
                 EdmErrorCode.InvalidKey,
                 Strings.EdmModel_Validator_Semantic_InvalidKeyKeyDefinedInBaseClass(entity.Name, entity.BaseEntityType().Name));
-#pragma warning restore CS0618 // Type or member is obsolete
         }
 
         [Fact]

@@ -330,23 +330,6 @@ namespace Microsoft.OData.Client
 
         /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
         /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> object that has the inline count option set.</returns>
-        [Obsolete("Please use IncludeCount()")]
-        public virtual DataServiceQuery<TElement> IncludeTotalCount()
-        {
-            return this.IncludeCount(true);
-        }
-
-        /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> object that has the inline count option set.</returns>
-        /// <param name="countQuery">Whether to include total count.</param>
-        [Obsolete("Please use IncludeCount(bool countQuery)")]
-        public virtual DataServiceQuery<TElement> IncludeTotalCount(bool countQuery)
-        {
-            return this.IncludeCount(countQuery);
-        }
-
-        /// <summary>Requests that the count of all entities in the entity set be returned inline with the query results.</summary>
-        /// <returns>A new <see cref="Microsoft.OData.Client.DataServiceQuery{TElement}" /> object that has the inline count option set.</returns>
         public virtual DataServiceQuery<TElement> IncludeCount()
         {
             return this.IncludeCount(true);

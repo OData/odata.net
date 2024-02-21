@@ -36,7 +36,6 @@ namespace System.Data.Test.Astoria
             this.DataService = new DataServiceAPICallLogBuilder(this);
             this.ProcessingPipeline = new DataServiceProcessingPipelineCallLogBuilder(this);
             this.PagingProvider = new IDataServicePagingProviderCallLogBuilder(this);
-            this.ExpandProvider = new IExpandProviderCallLogBuilder(this);
 
             this.Entries = new List<APICallLogEntry>();
             this.CurrentFormat = null;
@@ -62,12 +61,6 @@ namespace System.Data.Test.Astoria
 
         #region interfaces
         public IUpdatableCallLogBuilder Updatable
-        {
-            get;
-            private set;
-        }
-
-        public IExpandProviderCallLogBuilder ExpandProvider
         {
             get;
             private set;
@@ -514,18 +507,6 @@ namespace System.Data.Test.Astoria
                 if (e == null || e.Deferred)
                 {
                     continue;
-                }
-
-                if (this.ExpandProvider.ServiceHasInterface)
-                {
-                    if (property.Facets.IsClrProperty)
-                    {
-                        this.QueryProvider.GetResourceType(type);
-                    }
-                    else
-                    {
-                        this.QueryProvider.GetPropertyValue(type, property);
-                    }
                 }
 
                 ResourceContainer otherContainer = container.FindDefaultRelatedContainer(property);
@@ -1068,37 +1049,6 @@ namespace System.Data.Test.Astoria
         public void SetValue(string typeName, string propertyName, string propertyValue)
         {
             Add("SetValue", typeName, propertyName, propertyValue);
-        }
-    }
-    #endregion
-
-    #region IExpandProvider
-    public class IExpandProviderCallLogBuilder : InterfaceCallLogBuilder<IExpandProvider>
-    {
-        internal IExpandProviderCallLogBuilder(APICallLogBuilder parent)
-            : base(parent)
-        {
-        }
-
-        public override bool ServiceHasInterface
-        {
-            get 
-            {
-                return Parent.Workspace.ServiceModifications.Interfaces.IServiceProvider.Services.ContainsKey(typeof(IExpandProvider));
-            }
-        }
-
-        public override void GetService()
-        {
-            if (this.Parent.ServiceProvider.GetService(this.Interface) && !this.ServiceHasInterface)
-            {
-                this.Parent.QueryProvider.GetCurrentDataSource();
-            }
-        }
-
-        public void ApplyExpansions(ResourceContainer container, string expandedProperties)
-        {
-            Add("ApplyExpansions", Parent.QueryProvider.GetQueryableTypeName(container), expandedProperties);
         }
     }
     #endregion
