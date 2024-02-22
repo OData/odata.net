@@ -1003,7 +1003,7 @@ Content-Type: application/json;odata.metadata=none
         {
             Action<IContainerBuilder> configure = (IContainerBuilder builder) =>
             {
-                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
             };
 
             BatchJsonLightTestUsingBatchFormat(BatchFormat.MultipartMIME, 0, configure);
@@ -1014,7 +1014,7 @@ Content-Type: application/json;odata.metadata=none
         {
             Action<IContainerBuilder> configure = (IContainerBuilder builder) =>
             {
-                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
             };
 
             BatchJsonLightTestUsingBatchFormat(BatchFormat.ApplicationJson, 0, configure);

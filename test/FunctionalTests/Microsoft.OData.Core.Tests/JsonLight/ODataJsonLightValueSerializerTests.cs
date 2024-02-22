@@ -349,9 +349,9 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var builder = new TestContainerBuilder();
             builder.AddDefaultODataServices();
-            builder.AddService<IStreamBasedJsonWriterFactory>(
+            builder.AddService<IJsonWriterFactory>(
                 ServiceLifetime.Singleton,
-                (sp) => DefaultStreamBasedJsonWriterFactory.Default);
+                (sp) => ODataUtf8JsonWriterFactory.Default);
             var container = builder.BuildContainer();
 
             var result = this.SetupSerializerAndRunTest(

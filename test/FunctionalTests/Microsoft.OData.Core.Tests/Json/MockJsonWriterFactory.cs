@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.IO;
+using System.Text;
 using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Tests.Json
@@ -17,7 +18,8 @@ namespace Microsoft.OData.Tests.Json
         {
             this.jsonWriter = jsonWriter;
         }
-        public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
+
+        public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             return jsonWriter;
         }

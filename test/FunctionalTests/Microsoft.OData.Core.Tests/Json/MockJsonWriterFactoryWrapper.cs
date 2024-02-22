@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="MockStreamBasedJsonWriterFactoryWrapper.cs" company="Microsoft">
+// <copyright file="MockJsonWriterFactoryWrapper.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,15 +13,15 @@ using Microsoft.OData.Json;
 namespace Microsoft.OData.Tests.Json
 {
     /// <summary>
-    /// This wraps an <see cref="IStreamBasedJsonWriterFactory"/> to
-    /// intercept calls made to create a writer in order to allow
+    /// This wraps an <see cref="IJsonWriterFactory"/> to
+    /// intercept calls made to create an <see cref="IJsonWriter"/> in order to allow
     /// testing code paths around JSON writer construction.
     /// </summary>
-    internal sealed class MockStreamBasedJsonWriterFactoryWrapper : IStreamBasedJsonWriterFactory
+    internal sealed class MockJsonWriterFactoryWrapper : IJsonWriterFactory
     {
-        private readonly IStreamBasedJsonWriterFactory innerFactory;
+        private readonly IJsonWriterFactory innerFactory;
 
-        public MockStreamBasedJsonWriterFactoryWrapper(IStreamBasedJsonWriterFactory wrappedFactory)
+        public MockJsonWriterFactoryWrapper(IJsonWriterFactory wrappedFactory)
         {
             if (wrappedFactory == null)
             {
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         /// <summary>
-        /// The <see cref="IJsonWriter"/> that was last created by the wrapped <see cref="IStreamBasedJsonWriterFactory"/>.
+        /// The <see cref="IJsonWriter"/> that was last created by the <see cref="IJsonWriterFactory"/>.
         /// </summary>
         public IJsonWriter CreatedWriter { get; private set; }
 

@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DefaultStreamBasedJsonWriterFactoryTests.cs" company="Microsoft">
+// <copyright file="ODataUtf8JsonWriterFactoryTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -15,7 +15,7 @@ using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
-    public sealed class DefaultStreamBasedJsonWriterFactoryTests
+    public sealed class ODataUtf8JsonWriterFactoryTests
     {
 
         #region Argument validation
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void CreateJsonWriter_ThrowsIfStreamIsNull()
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
 
             Assert.Throws<ArgumentNullException>("stream", () => factory.CreateJsonWriter(null, false, Encoding.UTF8));
         }
@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void CreateJsonWriter_ThrowsIfEncodingIsNull()
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
             Assert.Throws<ArgumentNullException>("encoding", () => factory.CreateJsonWriter(stream, false, null));
@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(Encodings))]
         public void CreateJsonWriterWithSpecifiedEncoding(Encoding encoding)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding);
 
@@ -77,7 +77,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(Encodings))]
         public void CreateJsonWriterWithIeee754Compatibility(Encoding encoding)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
             using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: true, encoding: encoding);
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(Encodings))]
         public void CreateJsonWriterWithCustomEncoder(Encoding encoding)
         {
-            DefaultStreamBasedJsonWriterFactory factory = new DefaultStreamBasedJsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            ODataUtf8JsonWriterFactory factory = new ODataUtf8JsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
             using MemoryStream stream = new MemoryStream();
 
             IJsonWriter jsonWriter = factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding);
@@ -127,7 +127,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void CreatedJsonWriterShouldNotCloseOutputStream()
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
             using TestStream stream = new TestStream();
 
             IDisposable jsonWriter = factory.CreateJsonWriter(stream, false, Encoding.UTF8) as IDisposable;
