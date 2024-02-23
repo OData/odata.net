@@ -70,17 +70,17 @@ namespace Microsoft.OData
         private ValidationKinds validations;
 
         /// <summary>
-        /// default setting for writing control information without a prefix
+        /// Default setting for writing control information without the 'odata' prefix.
         /// </summary>
         private bool enableWritingODataAnnotationWithoutPrefix;
 
         /// <summary>
-        /// OData 4.0-specific setting for writing control information without a prefix
+        /// OData 4.0-specific setting for writing control information without the 'odata' prefix.
         /// </summary>
         private bool omitODataPrefix40 = false;
 
         /// <summary>
-        /// OData 4.01 and greater setting for writing control information without a prefix
+        /// OData 4.01 and greater setting for writing control information without the 'odata' prefix.
         /// </summary>
         private bool omitODataPrefix = true;
 
@@ -91,10 +91,10 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings. for the
+        /// Initializes a new instance of the <see cref="Microsoft.OData.ODataMessageWriterSettings" /> class with default settings for the
         /// specified OData version.
         /// </summary>
-        /// <param name="version">OData Version for which to create default settings.</param>
+        /// <param name="version">OData version for which to create default settings.</param>
         public ODataMessageWriterSettings(ODataVersion? version)
         {
             this.EnableMessageStreamDisposal = true;
@@ -391,12 +391,12 @@ namespace Microsoft.OData
         public bool EnableWritingKeyAsSegment { get; set; }
 
         /// <summary>
-        /// Get whether to write OData control information without a prefix
-        /// True if control information can be read without prefix 'odata.', otherwise false.
+        /// Get whether to write OData control information without the 'odata' prefix.
+        /// true if control information should be written without the 'odata.' prefix, otherwise false.
         /// The default value is false for OData 4.0 and true for OData 4.01.
-        /// The option is applied during deserialization.
+        /// The setting is applied during deserialization.
         /// </summary>
-        /// <returns>Whether to omit the OData prefix for the specified version.</returns>
+        /// <returns>Returns a value indicating whether control information should be written with the 'odata' prefix.</returns>
         public bool GetOmitODataPrefix()
         {
             return this.enableWritingODataAnnotationWithoutPrefix;
@@ -408,7 +408,7 @@ namespace Microsoft.OData
         /// The default value is false for OData 4.0 and true for OData 4.01.
         /// The option is applied during deserialization.
         /// </summary>
-        /// <param name="version">The version of the version-specific behavior being requested.</param>
+        /// <param name="version">The OData version.</param>
         /// <returns>Whether to omit the OData prefix for the specified version.</returns>
         public bool GetOmitODataPrefix(ODataVersion version)
         {
@@ -427,7 +427,7 @@ namespace Microsoft.OData
         /// The default value is false for OData 4.0 and true for OData 4.01.
         /// The option is applied during deserialization.
         /// </summary>
-        /// <param name="enabled">True to omit writing the OData prefix, False to write the prefix.</param>
+        /// <param name="value">true to write control information with the 'odata' prefix, otherwise false.</param>
         public void SetOmitODataPrefix(bool enabled)
         {
             this.enableWritingODataAnnotationWithoutPrefix =
@@ -441,8 +441,8 @@ namespace Microsoft.OData
         /// The default value is false for OData 4.0 and true for OData 4.01.
         /// The option is applied during deserialization.
         /// </summary>
-        /// <param name="enabled">True to omit writing the OData prefix, False to write the prefix.</param>
-        /// <param name="version">The version for which to specify the omit prefix behavior.</param>
+        /// <param name="value">true to write control information with the 'odata' prefix, otherwise false.</param>
+        /// <param name="version">The OData version for which to set the omit prefix behavior.</param>
         public void SetOmitODataPrefix(bool enabled, ODataVersion version)
         {
             if (version == ODataVersion.V4)
