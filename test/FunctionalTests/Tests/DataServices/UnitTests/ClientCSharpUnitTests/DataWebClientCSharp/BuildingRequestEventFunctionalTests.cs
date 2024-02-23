@@ -966,6 +966,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 return arg.Descriptor.State.ToString();
             }
+            else
             {
                 // this is the top-level batch request
                 return "$batch";

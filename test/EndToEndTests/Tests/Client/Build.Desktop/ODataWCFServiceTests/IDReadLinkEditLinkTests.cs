@@ -39,9 +39,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void UpdateObject(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");
 
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
             TestClientContext.Format.UseJson(Model);
 
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
@@ -86,9 +86,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void QueryObjectWhenItIsTransient(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
 
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
 
             TestClientContext.Format.UseJson(Model);
 
@@ -120,9 +120,9 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void QueryObjectsWhenTheyAreTransient(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "IsTransient");
 
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
             TestClientContext.Format.UseJson(Model);
 
             var entryResults = TestClientContext.Execute<Person>(new Uri(ServiceBaseUri + "/People?$filter=PersonID eq 1")).ToArray();
@@ -153,8 +153,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         private void LoadProperty(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "ReadLink");
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "ReadLink");
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
             TestClientContext.Format.UseJson(Model);
 
             var person = TestClientContext.People.Where(p => p.PersonID == 2).SingleOrDefault();
@@ -197,7 +197,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         public void AddDeleteLink(string mimeType)
         {
             TestClientContext.MergeOption = MergeOption.OverwriteChanges;
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", mimeType);
             TestClientContext.Format.UseJson(Model);
 
             //preparation
@@ -207,7 +207,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             var intOriginalOrderCount = detailsInAProdct.Count();
             var prodct = TestClientContext.Products.Where(c => c.ProductID == 5).SingleOrDefault();
 
-            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");//this is make sure EditLink is replaced with a random value.
+            TestClientContext.SendingRequest2 += (sender, eventArgs) => ((HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader(TestHeader, "EditLink");//this is make sure EditLink is replaced with a random value.
 
             var productDetail = TestClientContext.ProductDetails.Where(o => o.ProductDetailID == 1 && o.ProductID == 6).SingleOrDefault();
 
