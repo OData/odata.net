@@ -392,24 +392,20 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Get whether to write OData control information without the 'odata' prefix.
-        /// true if control information should be written without the 'odata.' prefix, otherwise false.
         /// The default value is false for OData 4.0 and true for OData 4.01.
-        /// The setting is applied during deserialization.
         /// </summary>
-        /// <returns>Returns a value indicating whether control information should be written with the 'odata' prefix.</returns>
+        /// <returns>true if control information should be written with the 'odata' prefix, otherwise false.</returns>
         public bool GetOmitODataPrefix()
         {
             return this.enableWritingODataAnnotationWithoutPrefix;
         }
 
         /// <summary>
-        /// Version-specific behavior for writing OData control information without a prefix
-        /// True if control information can be read without prefix 'odata.', otherwise false.
+        /// Returns a value indicating whether control information should be written with the 'odata' prefix for the specified OData version.
         /// The default value is false for OData 4.0 and true for OData 4.01.
-        /// The option is applied during deserialization.
         /// </summary>
         /// <param name="version">The OData version.</param>
-        /// <returns>Whether to omit the OData prefix for the specified version.</returns>
+        /// <returns>true if control information should be written with the 'odata' prefix, otherwise false</returns>
         public bool GetOmitODataPrefix(ODataVersion version)
         {
             if (version >= ODataVersion.V401)
@@ -422,36 +418,30 @@ namespace Microsoft.OData
 
 
         /// <summary>
-        /// Whether to write OData control information without a prefix
-        /// True to read control information without the prefix 'odata.', otherwise false.
-        /// The default value is false for OData 4.0 and true for OData 4.01.
-        /// The option is applied during deserialization.
+        /// Sets a value indicating whether control information should be written with or without the 'odata' prefix.
         /// </summary>
         /// <param name="value">true to write control information with the 'odata' prefix, otherwise false.</param>
-        public void SetOmitODataPrefix(bool enabled)
+        public void SetOmitODataPrefix(bool value)
         {
             this.enableWritingODataAnnotationWithoutPrefix =
             this.omitODataPrefix =
-            this.omitODataPrefix40 = enabled;
+            this.omitODataPrefix40 = value;
         }
 
         /// <summary>
-        /// Version-specific behavior for writing OData control information without a prefix
-        /// True to read control information without the prefix 'odata.', otherwise false.
-        /// The default value is false for OData 4.0 and true for OData 4.01.
-        /// The option is applied during deserialization.
+        /// Sets a value indicating whether control information should be written with or without the 'odata' prefix for the specified OData version
         /// </summary>
         /// <param name="value">true to write control information with the 'odata' prefix, otherwise false.</param>
         /// <param name="version">The OData version for which to set the omit prefix behavior.</param>
-        public void SetOmitODataPrefix(bool enabled, ODataVersion version)
+        public void SetOmitODataPrefix(bool value, ODataVersion version)
         {
             if (version == ODataVersion.V4)
             {
-                this.omitODataPrefix40 = enabled;
+                this.omitODataPrefix40 = value;
             }
             else
             {
-                this.omitODataPrefix = enabled;
+                this.omitODataPrefix = value;
             }
         }
 
