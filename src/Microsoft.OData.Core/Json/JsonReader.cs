@@ -21,7 +21,7 @@ namespace Microsoft.OData.Json
     /// <summary>
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
-    [DebuggerDisplay("{NodeType}: {Value}")]
+    [DebuggerDisplay("{NodeType}: {GetValue()}")]
 #if NETCOREAPP
     internal class JsonReader : IJsonReader, IDisposable, IAsyncDisposable
 #else
