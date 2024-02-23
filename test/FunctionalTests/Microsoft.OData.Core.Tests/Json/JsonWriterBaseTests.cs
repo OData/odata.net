@@ -6,6 +6,7 @@ using System.Text;
 using Xunit;
 #if NETCOREAPP
 using System.Text.Json;
+using System.Buffers.Text;
 #endif
 
 namespace Microsoft.OData.Tests.Json
@@ -293,6 +294,314 @@ namespace Microsoft.OData.Tests.Json
         }
 #endif
 
+        [Fact]
+        public void WritesLargeByteArraysCorrectly()
+        {
+            byte[] input = GenerateByteArray(1024 * 1024);
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                jsonWriter.WriteValue(input);
+                jsonWriter.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                string expected = Convert.ToBase64String(input);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expected}\"", rawOutput);
+                }
+            }
+        }
+
+        [Fact]
+        public void WritesSimpleLargeStringsCorrectly()
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength);
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                jsonWriter.WriteValue(input);
+                jsonWriter.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{input}\"", rawOutput);
+                }
+            }
+        }
+
+        [Fact]
+        public void WriteMixedJsonWithLargeValues()
+        {
+            byte[] largeBinaryData = GenerateByteArray(256 * 1024);
+            string largeBase64Data = Convert.ToBase64String(largeBinaryData);
+
+            string largeStringData = new string('a', 256 * 1024);
+
+            string expectedJson =
+                $"{{\"s1\":\"test\"," +
+                $"\"lgS1\":\"{largeStringData}\"," +
+                $"\"i1\":10," +
+                $"\"lgB641\":\"{largeBase64Data}\"," +
+                $"\"b1\":true," +
+                $"\"obj1\":{{\"lgB64AtObjStart\":\"{largeBase64Data}\",\"s2\":\"test\"}}," +
+                $"\"obj2\":{{\"dtProp\":\"2014-12-31\",\"lgB64AtObjEnd\":\"{largeBase64Data}\"}}," +
+                $"\"obj3\":{{\"lgB64BeforeRawVal\":\"{largeBase64Data}\",\"raw1\":\"foobar\"}}," +
+                $"\"obj4\":{{\"raw2\":\"foobar\",\"lgB64AfterRawVal\":\"{largeBase64Data}\"}}," +
+                $"\"arrWithLgB64\":[\"{largeBase64Data}\"]," +
+                $"\"arrWithLgB64AtStart\":[\"{largeBase64Data}\",\"test\",\"test\"]," +
+                $"\"arrWithLgB64AtEnd\":[1,2,\"{largeBase64Data}\"]," +
+                $"\"arrWithManyLgB64AtStart\":[\"{largeBase64Data}\",\"{largeBase64Data}\",\"{largeBase64Data}\",1,\"test\"]," +
+                $"\"arrWithManyLgB64AtEnd\":[1,\"test\",\"{largeBase64Data}\",\"{largeBase64Data}\",\"{largeBase64Data}\"]," +
+                $"\"arrWithManyLgB64Only\":[\"{largeBase64Data}\",\"{largeBase64Data}\",\"{largeBase64Data}\"]," +
+                $"\"obj5\":{{\"lgSAtObjStart\":\"{largeStringData}\",\"s2\":\"test\"}}," +
+                $"\"obj6\":{{\"dtProp\":\"2014-12-31\",\"lgSAtObjEnd\":\"{largeStringData}\"}}," +
+                $"\"obj7\":{{\"lgSBeforeRawVal\":\"{largeStringData}\",\"raw1\":\"foobar\"}}," +
+                $"\"obj8\":{{\"raw2\":\"foobar\",\"lgSAfterRawVal\":\"{largeStringData}\"}}," +
+                $"\"arrWithLgS\":[\"{largeStringData}\"]," +
+                $"\"arrWithLgSAtStart\":[\"{largeStringData}\",\"test\",\"test\"]," +
+                $"\"arrWithLgSAtEnd\":[1,2,\"{largeStringData}\"]," +
+                $"\"arrWithManyLgSAtStart\":[\"{largeStringData}\",\"{largeStringData}\",\"{largeStringData}\",1,\"test\"]," +
+                $"\"arrWithManyLgSAtEnd\":[1,\"test\",\"{largeStringData}\",\"{largeStringData}\",\"{largeStringData}\"]," +
+                $"\"arrWithManyLgSOnly\":[\"{largeStringData}\",\"{largeStringData}\",\"{largeStringData}\"]," +
+                $"\"arrWithLgSAndLgB64Mix1\":[\"{largeBase64Data}\",\"{largeStringData}\",\"{largeBase64Data}\",\"{largeStringData}\"]," +
+                $"\"arrWithLgSAndLgB64Mix2\":[\"{largeStringData}\",\"{largeBase64Data}\",\"{largeStringData}\",\"{largeBase64Data}\"]," +
+                $"\"arrWithLgSAndLgB64Mix3\":[\"{largeStringData}\",\"raw\",\"{largeBase64Data}\",\"raw\",\"{largeStringData}\",\"{largeBase64Data}\",\"raw\",\"raw\"]," +
+                $"\"arrWithLgSAndLgB64Mix4\":[\"raw\",\"raw\",\"{largeStringData}\",\"raw\",\"{largeBase64Data}\",\"{largeStringData}\",\"{largeBase64Data}\"]" +
+                $"}}";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+                jsonWriter.StartObjectScope();
+
+                jsonWriter.WriteName("s1");
+                jsonWriter.WriteValue("test");
+                jsonWriter.WriteName("lgS1");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteName("i1");
+                jsonWriter.WriteValue(10);
+                jsonWriter.WriteName("lgB641");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteName("b1");
+                jsonWriter.WriteValue(true);
+
+                jsonWriter.WriteName("obj1");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("lgB64AtObjStart");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteName("s2");
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj2");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("dtProp");
+                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteName("lgB64AtObjEnd");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj3");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("lgB64BeforeRawVal");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteName("raw1");
+                jsonWriter.WriteRawValue("\"foobar\"");
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj4");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("raw2");
+                jsonWriter.WriteRawValue("\"foobar\"");
+                jsonWriter.WriteName("lgB64AfterRawVal");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("arrWithLgB64");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgB64AtStart");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue("test");
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgB64AtEnd");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue(2);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgB64AtStart");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgB64AtEnd");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue("test");
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgB64Only");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.WriteValue(largeBinaryData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("obj5");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("lgSAtObjStart");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteName("s2");
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj6");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("dtProp");
+                jsonWriter.WriteValue(new Date(2014, 12, 31));
+                jsonWriter.WriteName("lgSAtObjEnd");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj7");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("lgSBeforeRawVal");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteName("raw1");
+                jsonWriter.WriteRawValue("\"foobar\"");
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("obj8");
+                jsonWriter.StartObjectScope();
+                jsonWriter.WriteName("raw2");
+                jsonWriter.WriteRawValue("\"foobar\"");
+                jsonWriter.WriteName("lgSAfterRawVal");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.WriteName("arrWithLgS");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgSAtStart");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue("test");
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgSAtEnd");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue(2);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgSAtStart");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue("test");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgSAtEnd");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(1);
+                jsonWriter.WriteValue("test");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithManyLgSOnly");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndArrayScope();
+
+                // mixed scenarios
+                jsonWriter.WriteName("arrWithLgSAndLgB64Mix1");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgSAndLgB64Mix2");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgSAndLgB64Mix3");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.WriteName("arrWithLgSAndLgB64Mix4");
+                jsonWriter.StartArrayScope();
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteRawValue("\"raw\"");
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.WriteValue(largeStringData);
+                jsonWriter.WriteValue(largeBase64Data);
+                jsonWriter.EndArrayScope();
+
+                jsonWriter.EndObjectScope();
+
+                jsonWriter.Flush();
+                stream.Seek(0, SeekOrigin.Begin);
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    string normalizedOutput = NormalizeJsonText(rawOutput);
+                    string normalizedExpectedOutput = NormalizeJsonText(expectedJson);
+                    Assert.Equal(normalizedExpectedOutput, normalizedOutput);
+                }
+            }
+        }
+
+
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make
@@ -311,6 +620,17 @@ namespace Microsoft.OData.Tests.Json
                 .Replace(@"\u0022", @"\""")
                 // Utf8JsonWriter writes + as \u002b when writing JsonElement
                 .Replace(@"\u002b", "+");
+        }
+
+        private static byte[] GenerateByteArray(int length)
+        {
+            byte[] byteArray = new byte[length];
+            for (int i = 0; i < length; i++)
+            {
+                byteArray[i] = (byte)(i % 256);
+            }
+
+            return byteArray;
         }
     }
 }
