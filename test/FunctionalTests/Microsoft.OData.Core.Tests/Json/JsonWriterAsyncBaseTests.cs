@@ -302,7 +302,7 @@ namespace Microsoft.OData.Tests.Json
 
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
 
                 await jsonWriter.WriteValueAsync(input);
                 await jsonWriter.FlushAsync();
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Tests.Json
 
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
 
                 await jsonWriter.WriteValueAsync(input);
                 await jsonWriter.FlushAsync();
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Tests.Json
 
             using (MemoryStream stream = new MemoryStream())
             {
-                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
                 jsonWriter.StartObjectScopeAsync();
 
                 await jsonWriter.WriteNameAsync("s1");
