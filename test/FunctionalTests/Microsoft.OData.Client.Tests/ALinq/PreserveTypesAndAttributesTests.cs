@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="SelectExpandPathBuilderTests.cs" company="Microsoft">
+// <copyright file="PreserveTypesAndAttributesTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -135,9 +135,9 @@ namespace Microsoft.OData.Client.Tests.ALinq
     [Key("CustomerID")]
     public class OneLevelCustomer1 : ICustomer
     {
-
         [OriginalName("CustomerID")]
         public string Id { get; set; }
+
         public string City { get; set; }
 
         [OriginalName("CompanyName")]
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
     {
         List<Order> OrdersList { get; set; }
     }
-    
+
     [Key("CustomerID")]
     public class TwoLevelCustomer2 : ICustomer2
     {
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
         [OriginalName("ContactName")]
         public string Name { get; set; }
-    
+
     	[OriginalName("Orders")]
         public List<Order> OrdersList { get; set; }
     }
