@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client
                 newType,
                 this.source,
                 this.MemberExpression,
-                newResourceType,
+                this.ResourceType,
                 this.ExpandPaths.ToList(),
                 this.CountOption,
                 this.CustomQueryOptions.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
