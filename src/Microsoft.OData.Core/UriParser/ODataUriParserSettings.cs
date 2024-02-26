@@ -86,7 +86,7 @@ namespace Microsoft.OData.UriParser
 
             this.MaximumExpansionDepth = int.MaxValue;
             this.MaximumExpansionCount = int.MaxValue;
-            this.EnableParsingKeyAsSegmentUrl = true;
+            this.EnableParsingKeyAsSegment = true;
         }
 
         /// <summary>
@@ -142,7 +142,7 @@ namespace Microsoft.OData.UriParser
         /// <summary>
         /// True if url parser support parsing path with key as segment, otherwise false. The default is true.
         /// </summary>
-        public bool EnableParsingKeyAsSegmentUrl { get; set; }
+        public bool EnableParsingKeyAsSegment { get; set; }
 
         /// <summary>
         /// Gets or Sets the maximum recursive depth for a select and expand clause, which limits the maximum depth of the tree that can be parsed by the

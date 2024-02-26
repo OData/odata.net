@@ -1221,7 +1221,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             builder.AddServicePrototype(new ODataUriParserSettings()
             {
-                EnableParsingKeyAsSegmentUrl = false,
+                EnableParsingKeyAsSegment = false,
             });
         }
     }

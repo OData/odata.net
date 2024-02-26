@@ -416,7 +416,6 @@ namespace Microsoft.OData
             return this.omitODataPrefix40;
         }
 
-
         /// <summary>
         /// Sets a value indicating whether control information should be written with or without the 'odata' prefix.
         /// </summary>

@@ -66,7 +66,7 @@ namespace Microsoft.OData
 
         internal static ODataUrlKeyDelimiter GetODataUrlKeyDelimiter(ODataUriParserSettings settings)
         {
-            return settings.EnableParsingKeyAsSegmentUrl
+            return settings.EnableParsingKeyAsSegment
                     ? ODataUrlKeyDelimiter.Slash
                     : ODataUrlKeyDelimiter.Parentheses;
         }

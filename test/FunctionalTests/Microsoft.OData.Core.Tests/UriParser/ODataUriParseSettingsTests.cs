@@ -15,7 +15,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal(ODataUriParserSettings.DefaultSearchLimit, settings.SearchLimit);
             Assert.Equal(int.MaxValue, settings.MaximumExpansionDepth);
             Assert.Equal(int.MaxValue, settings.MaximumExpansionCount);
-            Assert.True(settings.EnableParsingKeyAsSegmentUrl);
+            Assert.True(settings.EnableParsingKeyAsSegment);
         }
     }
 }
