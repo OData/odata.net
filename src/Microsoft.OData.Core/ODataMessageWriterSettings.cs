@@ -419,6 +419,10 @@ namespace Microsoft.OData
         /// <summary>
         /// Sets a value indicating whether control information should be written with or without the 'odata' prefix.
         /// </summary>
+        /// <remarks>
+        /// This method updates the setting for both OData version 4.0 and 4.01. If you want to target a specific version instead,
+        /// use the <see cref="SetOmitODataPrefix(bool, ODataVersion)"/> overload.
+        /// </remarks>
         /// <param name="value">true to write control information with the 'odata' prefix, otherwise false.</param>
         public void SetOmitODataPrefix(bool value)
         {
