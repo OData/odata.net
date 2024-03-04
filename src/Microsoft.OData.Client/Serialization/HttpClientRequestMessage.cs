@@ -14,6 +14,7 @@ namespace Microsoft.OData.Client
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
+    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -51,6 +52,7 @@ namespace Microsoft.OData.Client
         private readonly HttpClient _client;
         private readonly MemoryStream _messageStream;
         private readonly bool _shouldDisposeClient;
+        private CancellationTokenSource _abortRequestCancellationTokenSource;
 
         /// <summary>
         /// This will be used to cache content headers to be retrieved later. 
@@ -76,6 +78,8 @@ namespace Microsoft.OData.Client
             : base(args.ActualMethod)
         {
             _messageStream = new MemoryStream();
+
+            _abortRequestCancellationTokenSource = new CancellationTokenSource();
 
             IHttpClientProvider clientProvider = args.HttpClientProvider;
             if (clientProvider == null)
@@ -314,7 +318,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         public override void Abort()
         {
-            _client.CancelPendingRequests();
+            _abortRequestCancellationTokenSource.Cancel();
         }
 
         /// <summary>
@@ -405,7 +409,7 @@ namespace Microsoft.OData.Client
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
-            return _client.SendAsync(_requestMessage);
+            return _client.SendAsync(_requestMessage, _abortRequestCancellationTokenSource.Token);
         }
 
         private static IDictionary<string, string> HttpHeadersToStringDictionary(HttpHeaders headers)
