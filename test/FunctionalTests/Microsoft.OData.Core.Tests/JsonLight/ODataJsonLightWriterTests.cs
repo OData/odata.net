@@ -11,8 +11,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 #if NETCOREAPP
@@ -22,8 +25,6 @@ using Microsoft.OData.JsonLight;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Tests;
 using Xunit;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.Core.Tests.DependencyInjection;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
 {
@@ -1264,7 +1265,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         }
 
 #if NETCOREAPP
-        [Fact(Skip="ODataUtf8JsonWriter does not currently implement logic for writing binary values to stream")]
+        [Fact]
         public async Task WriteBinaryValueToStream_WithODataUtf8JsonWriter_Async()
         {
             var addressResource = CreateAddressResource();
@@ -1291,10 +1292,10 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
-                        await stream.WriteAsync(bytes, 0, 4);
-                        await stream.WriteAsync(bytes, 4, 4);
-                        await stream.WriteAsync(bytes, 8, 2);
-                        await stream.FlushAsync();
+                        await stream.WriteAsync(bytes, 0, 4, CancellationToken.None);
+                        await stream.WriteAsync(bytes, 4, 4, CancellationToken.None);
+                        await stream.WriteAsync(bytes, 8, 2, CancellationToken.None);
+                        await stream.FlushAsync(CancellationToken.None);
                     }
 
                     await jsonLightWriter.WriteEndAsync();
@@ -1311,6 +1312,53 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 "\"Stream@odata.mediaReadLink\":\"http://tempuri.org/Orders(1)/ShippingAddress/Stream/read\"," +
                 "\"Stream@odata.mediaContentType\":\"text/plain\"," +
                 "\"Stream\":\"AQIDBAUGBwgJAA==\"}",
+                result);
+        }
+
+        [Fact]
+        public async Task WriteStringValueToTextWriter_WithODataUtf8JsonWriter_Async()
+        {
+            var addressResource = CreateAddressResource();
+            var pangramProperty = new ODataPropertyInfo { Name = "Pangram" };
+
+            Action<IServiceCollection> configureWriter = (builder) =>
+            {
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
+            };
+
+            var result = await SetupJsonLightWriterAndRunTestAsync(
+                async (jsonLightWriter) =>
+                {
+                    await jsonLightWriter.WriteStartAsync(addressResource);
+                    await jsonLightWriter.WriteStartAsync(pangramProperty);
+
+                    using (var textWriter = await jsonLightWriter.CreateTextWriterAsync())
+                    {
+                        string value = "The quick brown";
+                        string value1 = " fox jumps over";
+                        string value2 = " the lazy dog";
+                        char[] charArray = value.ToCharArray();
+                        char[] charArray1 = value1.ToCharArray();
+                        char[] charArray2 = value2.ToCharArray();
+
+                        // Call WriteAsync passing in the byte array
+                        await textWriter.WriteAsync(charArray, 0, charArray.Length);
+                        await textWriter.WriteAsync(charArray1, 0, charArray1.Length);
+                        await textWriter.WriteAsync(charArray2, 0, charArray2.Length);
+                        await textWriter.FlushAsync();
+                    }
+
+                    await jsonLightWriter.WriteEndAsync();
+                    await jsonLightWriter.WriteEndAsync();
+                },
+                this.orderEntitySet,
+                this.orderEntityType,
+                configAction: configureWriter);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/NS.Address/$entity\"," +
+                "\"Street\":\"One Microsoft Way\",\"City\":\"Redmond\"," +
+                "\"Pangram\":\"The quick brown fox jumps over the lazy dog\"}",
                 result);
         }
 

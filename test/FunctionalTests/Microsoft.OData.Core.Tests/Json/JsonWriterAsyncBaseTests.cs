@@ -298,7 +298,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WritesLargeByteArraysCorrectly()
         {
-            byte[] input = GenerateByteArray(1024 * 1024);
+            byte[] input = GenerateByteArray(1024 * 1024);// 1MB
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -321,7 +321,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WritesSimpleLargeStringsCorrectly()
         {
-            int inputLength = 1024 * 1024; // 1MB
+            int inputLength = 1024 * 1024;
             string input = new string('a', inputLength);
 
             using (MemoryStream stream = new MemoryStream())

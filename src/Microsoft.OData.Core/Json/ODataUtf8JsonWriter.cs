@@ -25,7 +25,7 @@ namespace Microsoft.OData.Json
     /// Implementation of <see cref="IJsonWriter"/> that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
+    internal sealed partial class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
@@ -46,6 +46,18 @@ namespace Microsoft.OData.Json
         private readonly Encoding outputEncoding;
         private bool disposed;
         private const int chunkSize = 2048;
+        /// <summary>
+        /// Content type of a value being written using TextWriter
+        /// </summary>
+        private string currentTextWriterContentType;
+        /// <summary>
+        /// Current stream for writing a binary property.
+        /// </summary>
+        private Stream binaryValueStream = null;
+        /// <summary>
+        /// Current textwriter for writing a stream property.
+        /// </summary>
+        private TextWriter textWriter = null;
         /// <summary>
         /// Represents the threshold value used for determining whether to use stackalloc for char arrays.
         /// </summary>
@@ -1253,47 +1265,6 @@ namespace Microsoft.OData.Json
                 await this.FlushAsync().ConfigureAwait(false);
             }
         }
-
-        public Stream StartStreamValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TextWriter StartTextWriterValueScope(string contentType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndStreamValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndTextWriterValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> StartStreamValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task EndStreamValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task EndTextWriterValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
     }
