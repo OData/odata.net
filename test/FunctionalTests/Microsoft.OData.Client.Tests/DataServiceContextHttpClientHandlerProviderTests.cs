@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client.Tests
                 }
             }))
             {
-                var provider = new MockHttpClientHandlerProvider(handler);
+                var provider = new MockHttpClientProvider(handler);
                 Func<Uri, string, IHttpClientProvider, DataServiceContext> createRequestForEntityWithDynamicCollectionOfUntypedValues = 
                     (uri, set, handlerProvider) =>
                     {
@@ -120,7 +120,7 @@ namespace Microsoft.OData.Client.Tests
         {
             using (var handler = new MockHttpClientHandler(HandleRequest))
             {
-                var provider = new MockHttpClientHandlerProvider(handler);
+                var provider = new MockHttpClientProvider(handler);
 
                 var context = new DataServiceContext(new Uri(BaseUri));
                 context.HttpClientProvider = provider;
