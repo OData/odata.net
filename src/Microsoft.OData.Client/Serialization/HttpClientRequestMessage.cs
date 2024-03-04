@@ -41,9 +41,6 @@ namespace Microsoft.OData.Client
             "Last-Modified",
         }, StringComparer.OrdinalIgnoreCase);
 
-        /// <summary>Request Url.</summary>
-        private readonly Uri _requestUrl;
-
         /// <summary> The effective HTTP method. </summary>
         private readonly string _effectiveHttpMethod;
 
@@ -109,8 +106,7 @@ namespace Microsoft.OData.Client
             
             _contentHeaderValueCache = new Dictionary<string, string>();
             _effectiveHttpMethod = args.Method;
-            _requestUrl = args.RequestUri;
-            _requestMessage = new HttpRequestMessage(new HttpMethod(this.ActualMethod), _requestUrl);
+            _requestMessage = new HttpRequestMessage(new HttpMethod(this.ActualMethod), args.RequestUri);
             _timeout = _client.Timeout;
 
             // Now set the headers.
@@ -143,7 +139,11 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return _requestUrl;
+                return _requestMessage.RequestUri;
+            }
+            set
+            {
+                _requestMessage.RequestUri = value;
             }
         }
 

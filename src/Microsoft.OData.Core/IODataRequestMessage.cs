@@ -33,6 +33,7 @@ namespace Microsoft.OData
         Uri Url
         {
             get;
+            set;
         }
 
         /// <summary>Gets or sets the HTTP method used for this request message.</summary>

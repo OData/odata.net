@@ -73,6 +73,10 @@ namespace Microsoft.OData.Client
             {
                 return this.requestMessage.Url;
             }
+            set
+            {
+                this.requestMessage.Url = value;
+            }
         }
 
         /// <summary>

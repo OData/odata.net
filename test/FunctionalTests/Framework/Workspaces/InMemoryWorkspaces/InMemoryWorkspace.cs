@@ -343,7 +343,7 @@ namespace System.Data.Test.Astoria
         {
             if (_workaroundDateTimeQuery != null)
             {
-                args = new DataServiceClientRequestMessageArgs("GET", new Uri(_workaroundDateTimeQuery), false, false, new Dictionary<string, string>());
+                args = new DataServiceClientRequestMessageArgs("GET", new Uri(_workaroundDateTimeQuery), false, new Dictionary<string, string>());
                 _workaroundDateTimeQuery = null;
             }
             HttpClientRequestMessage clientRequestMessage = new HttpClientRequestMessage(args);

@@ -2538,7 +2538,6 @@ namespace AstoriaUnitTests.Tests
                     Microsoft.OData.Client.DataServiceContext ctx = new northwindClient.northwindContext(new Uri(request.BaseUri));
                     //ctx.EnableAtom = true;
                     //ctx.Format.UseAtom();
-                    ctx.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
 
                     var q1 = ctx.CreateQuery<northwindClient.Customers>("Customers").Select(c => c as northwindClient.Customers);
 

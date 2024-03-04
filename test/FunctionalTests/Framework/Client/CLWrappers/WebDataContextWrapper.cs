@@ -55,6 +55,7 @@ namespace System.Data.Test.Astoria
     using TestSL;
     using System.Security.Permissions;
     using System.Security;
+    using AstoriaTestFramework.Client.CLWrappers;
 
     public enum ContextAction
     {
@@ -255,7 +256,10 @@ namespace System.Data.Test.Astoria
 
             // Create new data service context to interact with messaging service.
             SLDataService = new DataServiceContext(new Uri(validMQuri, UriKind.Absolute));
-            SLDataService.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
+            SLDataService.HttpClientProvider = new TestHttpClientProvider(new TestHttpClientProviderOptions
+            {
+                Credentials = CredentialCache.DefaultNetworkCredentials
+            });
 
             HasRemote = true;
         }
@@ -2149,22 +2153,6 @@ namespace System.Data.Test.Astoria
 
         #endregion
         #endregion
-
-        //not in Silverlight
-        public System.Net.ICredentials Credentials
-        {
-
-            get
-            {
-                return this._DataServiceContext.Credentials;
-            }
-            set
-            {
-                if (!SilverlightRemote.HasRemote)
-                    this._DataServiceContext.Credentials = value;
-            }
-
-        }
 
         //not in Silverlight
         public int Timeout

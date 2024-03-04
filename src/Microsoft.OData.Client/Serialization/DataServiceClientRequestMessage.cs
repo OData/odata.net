@@ -44,6 +44,7 @@ namespace Microsoft.OData.Client
         public abstract Uri Url
         {
             get;
+            set;
         }
 
         /// <summary>

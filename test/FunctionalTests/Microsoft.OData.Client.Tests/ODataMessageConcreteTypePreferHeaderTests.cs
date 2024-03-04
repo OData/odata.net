@@ -24,7 +24,6 @@ namespace Microsoft.OData.Client.Tests
                 requestEventArgs.Method,
                 requestEventArgs.RequestUri,
                 false,
-                false,
                 requestEventArgs.Headers);
 
             HttpClientRequestMessage request = new HttpClientRequestMessage(args);

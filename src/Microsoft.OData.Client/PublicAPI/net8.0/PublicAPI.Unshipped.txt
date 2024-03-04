@@ -1,3 +1,4 @@
+abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
@@ -8,6 +9,7 @@ Microsoft.OData.Client.IHttpClientProvider.GetHttpClient() -> System.Net.Http.Ht
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
+override Microsoft.OData.Client.HttpClientRequestMessage.Url.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.BeginDeepInsert<T>(System.AsyncCallback callback, object state, T resource) -> System.IAsyncResult
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsert<T>(T resource) -> Microsoft.OData.Client.DataServiceResponse
 virtual Microsoft.OData.Client.DataServiceContext.DeepInsertAsync<T>(T resource) -> System.Threading.Tasks.Task<Microsoft.OData.Client.DataServiceResponse>

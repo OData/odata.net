@@ -36,6 +36,7 @@ namespace AstoriaUnitTests.ClientExtensions
         public override Uri Url
         {
             get { return this.requestMessage.Url; }
+            set { this.requestMessage.Url = value; }
         }
 
         public override string Method
