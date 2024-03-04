@@ -49,8 +49,8 @@ namespace Microsoft.OData.Client
         /// <summary>HttpRequestMessage instance.</summary>
         private readonly HttpRequestMessage _requestMessage;
         private readonly HttpClient _client;
-        private readonly HttpClientHandler _handler;
         private readonly MemoryStream _messageStream;
+        private readonly bool _shouldDisposeClient;
 
         /// <summary>
         /// This will be used to cache content headers to be retrieved later. 
@@ -77,18 +77,21 @@ namespace Microsoft.OData.Client
         {
             _messageStream = new MemoryStream();
 
-            IHttpClientHandlerProvider clientHandlerProvider = args.HttpClientHandlerProvider;
-            if (clientHandlerProvider == null)
+            IHttpClientProvider clientProvider = args.HttpClientProvider;
+            if (clientProvider == null)
             {
-                _handler = new HttpClientHandler();
-                _client = new HttpClient(_handler, disposeHandler: true);
+                _client = new HttpClient();
+                _shouldDisposeClient = true;
             }
             else
             {
                 try
                 {
-                    _handler = clientHandlerProvider.GetHttpClientHandler();
-                    _client = new HttpClient(_handler, disposeHandler: false);
+                    _client = clientProvider.GetHttpClient();
+                    // Do not dispose the client provided by the caller because
+                    // it may be reused. It's the responsibility of the caller
+                    // to manage that client's lifetime.
+                    _shouldDisposeClient = false;
                 }
                 catch
                 {
@@ -134,10 +137,6 @@ namespace Microsoft.OData.Client
             {
                 return _requestUrl;
             }
-            set
-            {
-                throw new NotSupportedException();
-            }
         }
 
         /// <summary>
@@ -155,24 +154,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>
-        ///  Gets or set the credentials for this request.
-        /// </summary>
-        [Obsolete("The recommended way to configure credentials is to provide an already-configured HttpClientHandler using an IHttpClientHandlerProvider.")]
-        public override ICredentials Credentials
-        {
-            get
-            {
-                return _handler.Credentials;
-            }
-            set
-            {
-                _handler.Credentials = value;
-            }
-        }
-
-
-#if !(NETCOREAPP1_0 || NETCOREAPP2_0)
 
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
@@ -190,28 +171,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// <see cref="HttpClientRequestMessage"/> internally uses <see cref="HttpClient"/> class to 
-        /// Send HTTP requests and receive responses from a resource identified by the specified URI.
-        /// <see cref="HttpClient"/> class does not support read and write timeout.
-        /// Currently, this property just sets the<see cref= "Timeout" /> value.
-        /// It is retained for backward compatibility and will be dropped in a future major release.
-        /// </summary>
-        [Obsolete("Use Timeout property instead. Read and write timeout not supported by HttpClient used internally.")]
-#pragma warning disable CS0809 // Obsolete member overrides non-obsolete member
-        public override int ReadWriteTimeout
-#pragma warning restore CS0809 // Obsolete member overrides non-obsolete member
-        {
-            get
-            {
-                return Timeout;
-            }
-            set
-            {
-                Timeout = value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments. 
         /// </summary>
         public override bool SendChunked
@@ -225,7 +184,6 @@ namespace Microsoft.OData.Client
                 _requestMessage.Headers.TransferEncodingChunked = value;
             }
         }
-#endif
 
         /// <summary>
         /// Returns the value of the header with the given name.
@@ -541,7 +499,11 @@ namespace Microsoft.OData.Client
                     ((IDisposable)response).Dispose();
                 }
 
-                _client.Dispose();
+                if (_shouldDisposeClient)
+                {
+                    _client.Dispose();
+                }
+                
             }
 
             _disposed = true;

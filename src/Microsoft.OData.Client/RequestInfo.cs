@@ -133,27 +133,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the authentication information used by each query created using the context object.
-        /// </summary>
-        internal System.Net.ICredentials Credentials
-        {
-            get { return this.Context.Credentials; }
-        }
-
-        /// <summary>
         /// Get the timeout span in seconds to use for the underlying HTTP request to the data service.
         /// </summary>
         internal int Timeout
         {
             get { return this.Context.Timeout; }
-        }
-
-        /// <summary>
-        /// Get the read or write timeout span in seconds to use for the underlying HTTP request to the data service.
-        /// </summary>
-        internal int ReadWriteTimeout
-        {
-            get { return this.Context.ReadWriteTimeout; }
         }
 
         /// <summary>
@@ -453,7 +437,7 @@ namespace Microsoft.OData.Client
                 this.UseDefaultCredentials,
                 this.UsePostTunneling,
                 headersDictionary,
-                this.Context.HttpClientHandlerProvider);
+                this.Context.HttpClientProvider);
 
             DataServiceClientRequestMessage clientRequestMessage;
             if (this.Configurations.RequestPipeline.OnMessageCreating != null)

@@ -221,7 +221,6 @@ Microsoft.OData.IODataRequestMessage.Method.get -> string
 Microsoft.OData.IODataRequestMessage.Method.set -> void
 Microsoft.OData.IODataRequestMessage.SetHeader(string headerName, string headerValue) -> void
 Microsoft.OData.IODataRequestMessage.Url.get -> System.Uri
-Microsoft.OData.IODataRequestMessage.Url.set -> void
 Microsoft.OData.IODataRequestMessageAsync
 Microsoft.OData.IODataRequestMessageAsync.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.IODataResponseMessage

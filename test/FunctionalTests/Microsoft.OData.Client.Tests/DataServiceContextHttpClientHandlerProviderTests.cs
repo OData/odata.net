@@ -84,11 +84,11 @@ namespace Microsoft.OData.Client.Tests
             }))
             {
                 var provider = new MockHttpClientHandlerProvider(handler);
-                Func<Uri, string, IHttpClientHandlerProvider, DataServiceContext> createRequestForEntityWithDynamicCollectionOfUntypedValues = 
+                Func<Uri, string, IHttpClientProvider, DataServiceContext> createRequestForEntityWithDynamicCollectionOfUntypedValues = 
                     (uri, set, handlerProvider) =>
                     {
                         var directoryDataService = new DirectoryDataService(rootUri);
-                        directoryDataService.HttpClientHandlerProvider = provider;
+                        directoryDataService.HttpClientProvider = provider;
 
                         directoryDataService.AddObject(entitySet, new User());
 
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Client.Tests
                 var provider = new MockHttpClientHandlerProvider(handler);
 
                 var context = new DataServiceContext(new Uri(BaseUri));
-                context.HttpClientHandlerProvider = provider;
+                context.HttpClientProvider = provider;
 
                 var nameQuery = new DataServiceQuerySingle<string>(context, "People(1)/Name/$value");
                 string personName = await nameQuery.GetValueAsync();

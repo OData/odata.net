@@ -44,7 +44,6 @@ namespace Microsoft.OData.Client
         public abstract Uri Url
         {
             get;
-            set;
         }
 
         /// <summary>
@@ -57,20 +56,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or set the credentials for this request.
-        /// </summary>
-        [Obsolete("The recommended way to configure credentials is to provide an already-configured HttpClientHandler using an IHttpClientHandlerProvider.")]
-        public abstract ICredentials Credentials { get; set; }
-
-        /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
         public abstract int Timeout { get; set; }
-
-        /// <summary>
-        /// Gets or sets the read and write timeout (in seconds) for this request.
-        /// </summary>
-        public abstract int ReadWriteTimeout { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether to send data in segments to the

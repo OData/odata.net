@@ -40,8 +40,8 @@ namespace Microsoft.OData.Client
         /// <param name="useDefaultCredentials">True if the default credentials need to be sent with the request. Otherwise false.</param>
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
-        /// <param name="httpClientHandlerProvider">The <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/> that should be used to send the request message.</param>
-        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientHandlerProvider httpClientHandlerProvider)
+        /// <param name="httpClientHandlerProvider">The <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClientHandler"/> that should be used to send the request message.</param>
+        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientProvider httpClientHandlerProvider)
         {
             Debug.Assert(method != null, "method cannot be null");
             Debug.Assert(requestUri != null, "requestUri cannot be null");
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
             this.RequestUri = requestUri;
             this.UsePostTunneling = usePostTunneling;
             this.UseDefaultCredentials = useDefaultCredentials;
-            this.HttpClientHandlerProvider = httpClientHandlerProvider;
+            this.HttpClientProvider = httpClientHandlerProvider;
 
             this.actualMethod = this.Method;
             if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
@@ -98,9 +98,9 @@ namespace Microsoft.OData.Client
         public bool UseDefaultCredentials { get; private set; }
 
         /// <summary>
-        /// Gets the <see cref="IHttpClientHandlerProvider"/> that provides the <see cref="HttpClientHandler"/>
+        /// Gets the <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClientHandler"/>
         /// that should be used to send the request message.
         /// </summary>
-        public IHttpClientHandlerProvider HttpClientHandlerProvider { get; private set; }
+        public IHttpClientProvider HttpClientProvider { get; private set; }
     }
 }

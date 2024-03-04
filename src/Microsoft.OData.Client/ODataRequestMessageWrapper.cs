@@ -154,20 +154,10 @@ namespace Microsoft.OData.Client
 
             var requestMessage = requestInfo.CreateRequestMessage(requestMessageArgs);
 
-            if (requestInfo.Credentials != null)
-            {
-                requestMessage.Credentials = requestInfo.Credentials;
-            }
-
             if (requestInfo.Timeout != 0)
             {
                 requestMessage.Timeout = requestInfo.Timeout;
                
-            }
-
-            if (requestInfo.ReadWriteTimeout != 0)
-            {
-                requestMessage.ReadWriteTimeout = requestInfo.ReadWriteTimeout;
             }
 
             return new TopLevelRequestMessageWrapper(requestMessage, requestInfo, requestMessageArgs.Descriptor);

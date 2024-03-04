@@ -267,7 +267,7 @@ namespace Microsoft.OData.Client
                     context.UseDefaultCredentials,
                     context.UsePostTunneling,
                     requestEventArgs.Headers,
-                    context.HttpClientHandlerProvider);
+                    context.HttpClientProvider);
 
                 httpRequest = new HttpClientRequestMessage(args);
             }
