@@ -25,7 +25,7 @@ namespace Microsoft.OData.Json
     /// Implementation of <see cref="IJsonWriter"/> that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
+    internal sealed partial class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
@@ -1253,47 +1253,6 @@ namespace Microsoft.OData.Json
                 await this.FlushAsync().ConfigureAwait(false);
             }
         }
-
-        public Stream StartStreamValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public TextWriter StartTextWriterValueScope(string contentType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndStreamValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void EndTextWriterValueScope()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<Stream> StartStreamValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task EndStreamValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task EndTextWriterValueScopeAsync()
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
 
     }
