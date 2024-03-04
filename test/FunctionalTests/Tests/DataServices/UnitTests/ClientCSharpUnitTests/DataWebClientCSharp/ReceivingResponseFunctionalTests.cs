@@ -964,14 +964,9 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     receivingResponseHitCount++;
 
-                    // modify the response message headers and add cookies
-                    HttpWebResponse response = (arg.ResponseMessage as HttpWebResponseMessage).Response;
-                    response.Headers["Content-Type"] = "application/json";
-                    response.Headers["Content-Length"] = "0";
+                    HttpWebResponseMessage response = (arg.ResponseMessage as HttpWebResponseMessage);
 
-                    Assert.AreEqual("SimpleValue", response.Headers["CustomResponseHeader"]);
-                    response.Cookies.Add(new Cookie("CustomCookie", "CustomCookieValue"));
-                    response.Headers["OData-MaxVersion"] = "4.0;";
+                    Assert.AreEqual("SimpleValue", response.Headers.FirstOrDefault(h => h.Key == "CustomResponseHeaders").Value);
                 });
 
                 var query = ctx.CreateQuery<Customer>("Customers").Where(c => c.ID == 1) as DataServiceQuery<Customer>;
@@ -1047,7 +1042,6 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 {
                     var responseMessage = eventArgs.ResponseMessage as HttpWebResponseMessage;
                     responseMessage.Should().NotBeNull();
-                    responseMessage.Response.Should().NotBeNull();
                 }
 
                 if (additionalValidation != null)

@@ -59,7 +59,6 @@ namespace Microsoft.OData.Client.Tests.ALinq
             SetupContextWithRequestPipelineForSaving(
             new DataServiceContext[] { DefaultContext }, Response, "http://localhost:8000/Products");
             const string stringOfCast = "cast(Id,Edm.Byte)";
-            DefaultContext.HttpRequestTransportMode = HttpRequestTransportMode.HttpClient;
             var result = DefaultContext.Products.Where(a=>(Byte)a.Id > 0);
             var stringOfQuery = result.ToString();
             Assert.Contains(stringOfCast, stringOfQuery);

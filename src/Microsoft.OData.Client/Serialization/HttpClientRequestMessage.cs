@@ -8,14 +8,12 @@ namespace Microsoft.OData.Client
 { 
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Globalization;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -498,14 +496,7 @@ namespace Microsoft.OData.Client
 
         private static DataServiceTransportException ConvertToDataServiceTransportException(WebException webException)
         {
-            HttpWebResponseMessage errorResponseMessage = null;
-            if (webException.Response != null)
-            {
-                HttpWebResponse httpResponse = (HttpWebResponse)webException.Response;
-                errorResponseMessage = new HttpWebResponseMessage(httpResponse);
-            }
-
-            return new DataServiceTransportException(errorResponseMessage, webException);
+            return new DataServiceTransportException(response: null, webException);
         }
 
         /// <summary>

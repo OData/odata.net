@@ -26,7 +26,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             IDictionary<string, string> Headers = new Dictionary<string, string>();
             DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
             new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpUserAgent, "MyUserAgent");
-            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpUserAgent, "MyUserAgent");
         }
 
         [Fact]
@@ -36,7 +35,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             IDictionary<string, string> Headers = new Dictionary<string, string>();
             DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
             new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpAcceptCharset, "utf8");
-            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpAcceptCharset, "utf8");
         }
 
         [Fact]
@@ -46,7 +44,6 @@ namespace AstoriaUnitTests.TDD.Tests.Client
             IDictionary<string, string> Headers = new Dictionary<string, string>();
             DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(request.Method.ToString(), request.RequestUri, true, false, Headers);
             new HttpClientRequestMessage(args).SetHeader(XmlConstants.HttpContentLength, 1.ToString(CultureInfo.InvariantCulture.NumberFormat));
-            new HttpWebRequestMessage(args).SetHeader(XmlConstants.HttpContentLength, 1.ToString(CultureInfo.InvariantCulture.NumberFormat));
         }
     }
 }

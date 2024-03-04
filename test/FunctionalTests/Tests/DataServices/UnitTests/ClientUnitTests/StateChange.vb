@@ -51,9 +51,9 @@ Partial Public Class ClientModule
         End Sub
 
         Private Sub SendingRequestListenHttpMethod(ByVal sender As Object, ByVal args As SendingRequest2EventArgs)
-            Dim httpRequestMessage = TryCast(args.RequestMessage, HttpWebRequestMessage)
+            Dim httpRequestMessage = TryCast(args.RequestMessage, HttpClientRequestMessage)
             If httpRequestMessage IsNot Nothing Then
-                Dim httpRequest = httpRequestMessage.HttpWebRequest
+                Dim httpRequest = httpRequestMessage.HttpRequestMessage
                 sentRequests.Add(httpRequest)
             End If
         End Sub
