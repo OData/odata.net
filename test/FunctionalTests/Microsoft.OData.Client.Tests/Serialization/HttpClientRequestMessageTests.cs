@@ -68,7 +68,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void WhenHttpClientHandlerIsProvided_DoesNotDisposeHandler()
+        public async Task WhenHttpClientHandlerIsProvided_DoesNotDisposeHandler()
         {
             // Arrange
             string expectedResponse = "Foo";
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void Abort_CancelsTheSpecifiedRequest()
+        public async Task Abort_CancelsTheSpecifiedRequest()
         {
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void Abort_DoesNotCancelOtherRequestsFromTheSameClient()
+        public async Task Abort_DoesNotCancelOtherRequestsFromTheSameClient()
         {
             // Arrange
             using (var handler = new MockDelayedHttpClientHandler("Success", delayMilliseconds: 2000))
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void Timeout_CancelsPendingRequestAfterTimeout()
+        public async Task Timeout_CancelsPendingRequestAfterTimeout()
         {
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
@@ -261,5 +261,65 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 }
             }
         }
+
+        [Fact]
+        public async Task Timeout_DoesNotCancelOtherRequestsFromTheSameClient()
+        {
+            // Arrange
+            using (var handler = new MockUnresponsiveHttpClientHandler())
+            {
+                var httpClientProvider = new MockHttpClientProvider(handler);
+                var args1 = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost/request1"),
+                    useDefaultCredentials: false,
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientProvider);
+
+                var args2 = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost/request2"),
+                    useDefaultCredentials: false,
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientProvider);
+
+                using (var request1 = new HttpClientRequestMessage(args1))
+                using (var request2 = new HttpClientRequestMessage(args2))
+                {
+                    request1.Timeout = 1;
+
+                    // Act
+                    Task<IODataResponseMessage> getResponse1Task =
+                            Task.Run(() => Task.Factory.FromAsync(request1.BeginGetResponse, request1.EndGetResponse, null));
+
+                    Task<IODataResponseMessage> getResponse2Task =
+                            Task.Run(() => Task.Factory.FromAsync(request2.BeginGetResponse, request2.EndGetResponse, null));
+
+                    // Assert
+                    // Request 1 should timeout
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#else
+                    await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#endif
+
+                    // Request 2 should succeed;
+                    var response2 = await getResponse2Task;
+                    var stream = response2.GetStream();
+                    var reader = new StreamReader(stream);
+                    var data = reader.ReadToEnd();
+                    Assert.Equal("Success", data);
+                }
+            }
+        }
+
     }
 }
