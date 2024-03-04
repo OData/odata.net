@@ -104,7 +104,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(inputContext != null, "inputContext != null");
 
-            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null)
+            if (jsonReader.NodeType == JsonNodeType.PrimitiveValue && jsonReader.GetValue() == null)
             {
                 jsonReader.ReadNext();
 
@@ -135,7 +135,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property whose value is being read, if applicable (used for error reporting).</param>
         /// <returns>An instance of the spatial type.</returns>
         internal static async Task<ISpatial> ReadSpatialValueAsync(
-            IJsonReaderAsync jsonReader,
+            IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
             IEdmPrimitiveTypeReference expectedValueTypeReference,
@@ -199,7 +199,7 @@ namespace Microsoft.OData.Json
 #else
         internal static async Task<bool> TryReadNullValueAsync(
 #endif
-            IJsonReaderAsync jsonReader,
+            IJsonReader jsonReader,
             ODataInputContext inputContext,
             IEdmTypeReference expectedTypeReference,
             bool validateNullValue,
@@ -340,7 +340,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains an instance of IDictionary containing the spatial value.</returns>
         private static async Task<Dictionary<string, object>> ReadObjectValueAsync(
-            IJsonReaderAsync jsonReader,
+            IJsonReader jsonReader,
             bool insideJsonObjectValue,
             ODataInputContext inputContext,
             int recursionDepth)
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a lit of JSON objects.</returns>
         /// <returns>a list of json objects.</returns>
-        private static async Task<List<object>> ReadArrayValueAsync(IJsonReaderAsync jsonReader, ODataInputContext inputContext, int recursionDepth)
+        private static async Task<List<object>> ReadArrayValueAsync(IJsonReader jsonReader, ODataInputContext inputContext, int recursionDepth)
         {
             Debug.Assert(jsonReader != null, "jsonReader != null");
             Debug.Assert(jsonReader.NodeType == JsonNodeType.StartArray, "jsonReader.NodeType == JsonNodeType.StartArray");

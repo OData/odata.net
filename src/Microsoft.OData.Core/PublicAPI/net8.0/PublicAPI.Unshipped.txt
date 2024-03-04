@@ -33,6 +33,15 @@ Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateTimeOffset value) ->
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonReader.CanStream() -> bool
+Microsoft.OData.Json.IJsonReader.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
+Microsoft.OData.Json.IJsonReader.CreateReadStream() -> System.IO.Stream
+Microsoft.OData.Json.IJsonReader.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Json.IJsonReader.CreateTextReader() -> System.IO.TextReader
+Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
+Microsoft.OData.Json.IJsonReader.GetValue() -> object
+Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
+Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
@@ -222,22 +231,8 @@ Microsoft.OData.Json.IJsonReader
 Microsoft.OData.Json.IJsonReader.IsIeee754Compatible.get -> bool
 Microsoft.OData.Json.IJsonReader.NodeType.get -> Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.IJsonReader.Read() -> bool
-Microsoft.OData.Json.IJsonReader.Value.get -> object
-Microsoft.OData.Json.IJsonReaderAsync
-Microsoft.OData.Json.IJsonReaderAsync.GetValueAsync() -> System.Threading.Tasks.Task<object>
-Microsoft.OData.Json.IJsonReaderAsync.ReadAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.Json.IJsonReaderFactory
 Microsoft.OData.Json.IJsonReaderFactory.CreateJsonReader(System.IO.TextReader textReader, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonReader
-Microsoft.OData.Json.IJsonReaderFactoryAsync
-Microsoft.OData.Json.IJsonReaderFactoryAsync.CreateAsynchronousJsonReader(System.IO.TextReader textReader, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonReaderAsync
-Microsoft.OData.Json.IJsonStreamReader
-Microsoft.OData.Json.IJsonStreamReader.CanStream() -> bool
-Microsoft.OData.Json.IJsonStreamReader.CreateReadStream() -> System.IO.Stream
-Microsoft.OData.Json.IJsonStreamReader.CreateTextReader() -> System.IO.TextReader
-Microsoft.OData.Json.IJsonStreamReaderAsync
-Microsoft.OData.Json.IJsonStreamReaderAsync.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
-Microsoft.OData.Json.IJsonStreamReaderAsync.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.Json.IJsonStreamReaderAsync.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
 Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.IJsonWriter.EndArrayScope() -> void
 Microsoft.OData.Json.IJsonWriter.EndObjectScope() -> void

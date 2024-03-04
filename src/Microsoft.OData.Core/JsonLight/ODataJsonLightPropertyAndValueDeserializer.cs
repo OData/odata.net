@@ -506,7 +506,7 @@ namespace Microsoft.OData.JsonLight
             object propertyValue = null;
             payloadTypeReference = ResolveUntypedType(
                 this.JsonReader.NodeType,
-                this.JsonReader.Value,
+                this.JsonReader.GetValue(),
                 payloadTypeName,
                 payloadTypeReference,
                 this.MessageReaderSettings.PrimitiveTypeResolver,
@@ -586,7 +586,7 @@ namespace Microsoft.OData.JsonLight
                     throw new ODataException(ODataErrorStrings.ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource(nodeType, propertyName));
                 }
             }
-            else if ((nodeType == JsonNodeType.PrimitiveValue && jsonReader.Value == null) || nodeType == JsonNodeType.StartObject)
+            else if ((nodeType == JsonNodeType.PrimitiveValue && jsonReader.GetValue() == null) || nodeType == JsonNodeType.StartObject)
             {
                 // Expanded resource (null or non-null)
                 if (isCollection == true)
@@ -1902,7 +1902,7 @@ namespace Microsoft.OData.JsonLight
             {
                 targetTypeReference = ResolveUntypedType(
                     this.JsonReader.NodeType,
-                    this.JsonReader.Value,
+                    this.JsonReader.GetValue(),
                     payloadTypeName,
                     expectedTypeReference,
                     this.MessageReaderSettings.PrimitiveTypeResolver,
@@ -2350,7 +2350,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="typeReference">Type of navigation property</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
         protected static async Task ValidateExpandedNestedResourceInfoPropertyValueAsync(
-            IJsonReaderAsync asyncJsonReader,
+            IJsonReader asyncJsonReader,
             bool? isCollection,
             string propertyName,
             IEdmTypeReference typeReference)

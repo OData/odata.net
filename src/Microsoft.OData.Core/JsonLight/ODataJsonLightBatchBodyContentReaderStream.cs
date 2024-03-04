@@ -159,7 +159,7 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous write operation.
         /// The value of the TResult parameter contains true if body content is written to stream; false otherwise.
         /// </returns>
-        internal async Task<bool> PopulateBodyContentAsync(IJsonReaderAsync jsonReader, string contentTypeHeader)
+        internal async Task<bool> PopulateBodyContentAsync(IJsonReader jsonReader, string contentTypeHeader)
         {
             bool isStreamPopulated = false;
 
@@ -387,9 +387,10 @@ namespace Microsoft.OData.JsonLight
                 {
                     case JsonNodeType.PrimitiveValue:
                         {
-                            if (reader.Value != null)
+                            object value = reader.GetValue();
+                            if (value != null)
                             {
-                                jsonWriter.WritePrimitiveValue(reader.Value);
+                                jsonWriter.WritePrimitiveValue(value);
                             }
                             else
                             {
@@ -401,7 +402,7 @@ namespace Microsoft.OData.JsonLight
 
                     case JsonNodeType.Property:
                         {
-                            jsonWriter.WriteName(reader.Value.ToString());
+                            jsonWriter.WriteName(reader.GetValue().ToString());
                         }
 
                         break;
@@ -461,7 +462,7 @@ namespace Microsoft.OData.JsonLight
         /// be populated into an memory stream.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteJsonContentAsync(IJsonReaderAsync reader)
+        private async Task WriteJsonContentAsync(IJsonReader reader)
         {
             // Reader is on the value node after the "body" property name node.
             IJsonWriter jsonWriter = new JsonWriter(
@@ -507,7 +508,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="reader">The Json reader providing the data.</param>
         /// <param name="jsonWriter">The Json writer writes data into memory stream.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteCurrentJsonObjectAsync(IJsonReaderAsync reader, IJsonWriter jsonWriter)
+        private static async Task WriteCurrentJsonObjectAsync(IJsonReader reader, IJsonWriter jsonWriter)
         {
             Stack<JsonNodeType> nodeTypes = new Stack<JsonNodeType>();
 

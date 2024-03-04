@@ -464,42 +464,12 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A stream for reading the stream property.</returns>
         protected override Stream CreateReadStreamImplementation()
         {
-            Stream stream;
-            IJsonStreamReader streamReader = this.jsonLightInputContext.JsonReader as IJsonStreamReader;
-            if (streamReader != null)
-            {
-                stream = streamReader.CreateReadStream();
-            }
-            else
-            {
-                // JSONReader doesn't support streaming; read as a string and convert
-                // Skip over property or start array
-                this.jsonLightInputContext.JsonReader.Read();
-                string valueAsString = this.jsonLightInputContext.JsonReader.ReadStringValue();
-                stream = new MemoryStream(Convert.FromBase64String(valueAsString.Replace('_', '/').Replace('-', '+')));
-            }
-
-            return stream;
+            return this.jsonLightInputContext.JsonReader.CreateReadStream();
         }
 
         protected override TextReader CreateTextReaderImplementation()
         {
-            TextReader reader;
-            IJsonStreamReader jsonStreamReader = this.jsonLightInputContext.JsonReader as IJsonStreamReader;
-            if (jsonStreamReader != null)
-            {
-                reader = jsonStreamReader.CreateTextReader();
-            }
-            else
-            {
-                // JSONReader doesn't support streaming; read as a string and convert
-                // Skip over property or start array
-                this.jsonLightInputContext.JsonReader.Read();
-                string valueAsString = this.jsonLightInputContext.JsonReader.ReadStringValue();
-                reader = new StringReader(valueAsString);
-            }
-
-            return reader;
+            return this.jsonLightInputContext.JsonReader.CreateTextReader();
         }
 
         /// <summary>
@@ -509,27 +479,9 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
         /// </returns>
-        protected override async Task<Stream> CreateReadStreamImplementationAsync()
+        protected override Task<Stream> CreateReadStreamImplementationAsync()
         {
-            Stream stream;
-
-            if (this.jsonLightInputContext.JsonReader is IJsonStreamReaderAsync streamReader)
-            {
-                stream = await streamReader.CreateReadStreamAsync()
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                // JsonReader doesn't support streaming; read as a string and convert
-                // Skip over property or start array
-                await this.jsonLightInputContext.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-                string valueAsString = await this.jsonLightInputContext.JsonReader.ReadStringValueAsync()
-                    .ConfigureAwait(false);
-                stream = new MemoryStream(Convert.FromBase64String(valueAsString.Replace('_', '/').Replace('-', '+')));
-            }
-
-            return stream;
+            return this.jsonLightInputContext.JsonReader.CreateReadStreamAsync();
         }
 
         /// <summary>
@@ -539,27 +491,9 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property.
         /// </returns>
-        protected override async Task<TextReader> CreateTextReaderImplementationAsync()
+        protected override Task<TextReader> CreateTextReaderImplementationAsync()
         {
-            TextReader reader;
-
-            if (this.jsonLightInputContext.JsonReader is IJsonStreamReaderAsync jsonStreamReader)
-            {
-                reader = await jsonStreamReader.CreateTextReaderAsync()
-                    .ConfigureAwait(false);
-            }
-            else
-            {
-                // JsonReader doesn't support streaming; read as a string and convert
-                // Skip over property or start array
-                await this.jsonLightInputContext.JsonReader.ReadAsync()
-                    .ConfigureAwait(false);
-                string valueAsString = await this.jsonLightInputContext.JsonReader.ReadStringValueAsync()
-                    .ConfigureAwait(false);
-                reader = new StringReader(valueAsString);
-            }
-
-            return reader;
+            return this.jsonLightInputContext.JsonReader.CreateTextReaderAsync();
         }
 
         #endregion
@@ -1257,7 +1191,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
                 (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null),
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null),
                 "Pre-Condition: JsonNodeType.EndObject or JsonNodeType.PrimitiveValue (null)");
 
             // We have to cache these values here, since the PopScope below will destroy them.
@@ -1459,7 +1393,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                 "Pre-Condition: expected JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
@@ -1806,7 +1740,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                Debug.Assert(this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                     "If a primitive value is representing an expanded resource its value must be null.");
 
                 IEdmStructuralProperty structuralProperty =
@@ -1894,7 +1828,7 @@ namespace Microsoft.OData.JsonLight
 
             if (this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.GetValue();
                 if (primitiveValue != null)
                 {
                     // primitive value in an untyped collection
@@ -2161,7 +2095,7 @@ namespace Microsoft.OData.JsonLight
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {
                         // we are at a null value, or a non-null primitive value within an untyped collection
-                        object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.Value;
+                        object primitiveValue = this.jsonLightResourceDeserializer.JsonReader.GetValue();
                         if (primitiveValue != null)
                         {
                             this.EnterScope(new JsonLightPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
@@ -2380,7 +2314,7 @@ namespace Microsoft.OData.JsonLight
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
                 this.jsonLightResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsonLightResourceDeserializer.JsonReader.Value == null,
+                this.jsonLightResourceDeserializer.JsonReader.GetValue() == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");
@@ -3260,7 +3194,7 @@ namespace Microsoft.OData.JsonLight
 
             await this.jsonLightResourceDeserializer.ReadResourceSetContentStartAsync()
                 .ConfigureAwait(false);
-            IJsonReaderAsync jsonReader = this.jsonLightResourceDeserializer.JsonReader;
+            IJsonReader jsonReader = this.jsonLightResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray
                 && jsonReader.NodeType != JsonNodeType.StartObject
                 && jsonReader.NodeType != JsonNodeType.PrimitiveValue
