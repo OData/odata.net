@@ -31,7 +31,7 @@ namespace Microsoft.OData.Edm
 
         private readonly IList<IEdmSchemaElement> coreSchemaElements = new List<IEdmSchemaElement>();
 
-        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>();
+        private readonly IDictionary<string, IEdmSchemaType> coreSchemaTypes = new Dictionary<string, IEdmSchemaType>(StringComparer.OrdinalIgnoreCase);
 
         private readonly EdmCoreModelComplexType complexType = EdmCoreModelComplexType.Instance;
         private readonly EdmCoreModelEntityType entityType = EdmCoreModelEntityType.Instance;
