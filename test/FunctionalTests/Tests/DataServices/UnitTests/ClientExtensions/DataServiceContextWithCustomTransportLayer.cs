@@ -65,7 +65,6 @@ namespace AstoriaUnitTests.ClientExtensions
         internal DataServiceClientRequestMessage CreateMessage(DataServiceClientRequestMessageArgs requestMessageArgs)
         {
             var requestMessage = this.getRequestMessage();
-            requestMessage.Url = requestMessageArgs.RequestUri;
             requestMessage.Method = requestMessageArgs.Method;
             
             foreach (var header in requestMessageArgs.Headers)

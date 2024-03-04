@@ -83,6 +83,7 @@
     <Compile Include="Client\SaveChangesVerifier.cs" />
     <Compile Include="Client\SaveChangesVerifierBase.cs" />
     <Compile Include="Client\SendingRequestEventVerifier.cs" />
+    <Compile Include="Client\TestHttpClientProvider.cs" />
     <Compile Include="ClrMetadataProviderTypesStrategy.cs" />
     <Compile Include="CollectionsModelFixup.cs" />
     <Compile Include="Common\AstoriaPseudoLocalizationFixup.cs" />

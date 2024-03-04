@@ -94,7 +94,9 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             WrappedDataServiceContext ctx = scope.CreateDataServiceContext(dataServiceContextType, serviceBaseUri, this.MaxProtocolVersion);
             DataServiceContext context = ctx.Product as DataServiceContext;
 
-            this.SetCredentials(context);
+            TestHttpClientProviderOptions options = new TestHttpClientProviderOptions();
+            this.SetCredentials(options);
+            context.HttpClientProvider = new TestHttpClientProvider(options);
             this.authenticationHeaders = this.AuthenticationProvider.GetAuthenticationHeaders();
 
             this.SetAcceptAndContentTypeHeaders(context);
@@ -167,15 +169,15 @@ namespace Microsoft.Test.Taupo.Astoria.Client
             }
         }
 
-        private void SetCredentials(DataServiceContext context)
+        private void SetCredentials(TestHttpClientProviderOptions options)
         {
             if (this.AuthenticationProvider.UseDefaultCredentials)
             {
-                context.Credentials = CredentialCache.DefaultNetworkCredentials;
+                options.Credentials = CredentialCache.DefaultNetworkCredentials;
             }
             else if (this.AuthenticationProvider.GetAuthenticationCredentials() != null)
             {
-                context.Credentials = this.AuthenticationProvider.GetAuthenticationCredentials();
+                options.Credentials = this.AuthenticationProvider.GetAuthenticationCredentials();
             }
         }
     }

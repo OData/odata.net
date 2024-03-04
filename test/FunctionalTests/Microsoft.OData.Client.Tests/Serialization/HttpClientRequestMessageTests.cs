@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         [Fact]
         public void UnwrapAggregateException()
         {
-            var msg = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>()));
+            var msg = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, new Dictionary<string, string>()));
             var task = new Task<HttpResponseMessage>(() => throw new Exception("single exception"));
             task.RunSynchronously();
 
@@ -42,7 +42,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientHandlerProvider);
@@ -80,7 +79,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -125,7 +123,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -167,7 +164,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request1"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -175,7 +171,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args2 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request2"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -233,7 +228,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -272,7 +266,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request1"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -280,7 +273,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args2 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request2"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -334,7 +326,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);

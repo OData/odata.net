@@ -36,7 +36,6 @@ namespace AstoriaUnitTests.ClientExtensions
         public override Uri Url
         {
             get { return this.requestMessage.Url; }
-            set { this.requestMessage.Url = value; }
         }
 
         public override string Method
@@ -61,32 +60,8 @@ namespace AstoriaUnitTests.ClientExtensions
         }
 #endif
 
-        public override System.Net.ICredentials Credentials
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout
-        {
-            get
-            {
-                throw new NotImplementedException();
-            }
-            set
-            {
-                throw new NotImplementedException();
-            }
-        }
-
-        public override int ReadWriteTimeout
         {
             get
             {

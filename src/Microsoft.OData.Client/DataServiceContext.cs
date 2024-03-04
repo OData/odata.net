@@ -108,9 +108,6 @@ namespace Microsoft.OData.Client
         /// <summary>The resolver for baseUris</summary>
         private UriResolver baseUriResolver;
 
-        /// <summary>Authentication interface for retrieving credentials for Web client authentication.</summary>
-        private System.Net.ICredentials credentials;
-
         /// <summary>resolve type from a typename</summary>
         private Func<Type, string> resolveName;
 
@@ -418,14 +415,6 @@ namespace Microsoft.OData.Client
             }
         }
 
-        /// <summary>Gets or sets the authentication information that is used by each query created by using the <see cref="Microsoft.OData.Client.DataServiceContext" /> object.</summary>
-        /// <returns>The base authentication interface for retrieving credentials for Web client authentication.</returns>
-        public virtual System.Net.ICredentials Credentials
-        {
-            get { return this.credentials; }
-            set { this.credentials = value; }
-        }
-
         /// <summary>Gets or sets the option for sending entity parameters to service.</summary>
         /// <returns>One of the members of the <see cref="Microsoft.OData.Client.EntityParameterSendOption" /> enumeration.</returns>
         public virtual EntityParameterSendOption EntityParameterSendOption
@@ -715,12 +704,6 @@ namespace Microsoft.OData.Client
             get { return this.requestMessageFactory; }
             set { this.requestMessageFactory = value; }
         }
-
-
-        /// <summary>
-        /// Gets or sets a System.Boolean value that controls whether default credentials are sent with requests.
-        /// </summary>
-        internal bool UseDefaultCredentials { get; set; }
 
         /// <summary>Gets a value that indicates the type of HTTP implementation to use when accessing the data service in Silverlight.</summary>
         /// <returns>A <see cref="Microsoft.OData.Client.HttpStack" /> value that indicates the HTTP implementation to use when accessing the data service.</returns>

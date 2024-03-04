@@ -181,14 +181,6 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets a System.Boolean value that controls whether default credentials are sent with requests.
-        /// </summary>
-        internal bool UseDefaultCredentials
-        {
-            get { return this.Context.UseDefaultCredentials; }
-        }
-
-        /// <summary>
         /// Gets IsIeee754Compatible header value.
         /// This value determines if the request should be treated as IEEE 754 Compatible.
         /// </summary>
@@ -434,7 +426,6 @@ namespace Microsoft.OData.Client
             var clientRequestMessageArgs = new DataServiceClientRequestMessageArgs(
                 requestMessageArgs.Method,
                 requestMessageArgs.RequestUri,
-                this.UseDefaultCredentials,
                 this.UsePostTunneling,
                 headersDictionary,
                 this.Context.HttpClientProvider);

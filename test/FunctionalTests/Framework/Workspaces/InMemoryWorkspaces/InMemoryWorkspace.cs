@@ -347,7 +347,6 @@ namespace System.Data.Test.Astoria
                 _workaroundDateTimeQuery = null;
             }
             HttpClientRequestMessage clientRequestMessage = new HttpClientRequestMessage(args);
-            clientRequestMessage.Credentials = CredentialCache.DefaultCredentials;
             return clientRequestMessage;
         }
 

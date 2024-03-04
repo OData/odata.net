@@ -1,4 +1,5 @@
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientHandlerProvider) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
 Microsoft.OData.Client.DataServiceContext.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
 Microsoft.OData.Client.DataServiceContext.HttpClientProvider.set -> void
@@ -329,11 +330,9 @@ Microsoft.OData.Client.DataServiceClientRequestMessage
 Microsoft.OData.Client.DataServiceClientRequestMessage.DataServiceClientRequestMessage(string actualMethod) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.ActualMethod.get -> string
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Headers.get -> System.Collections.Generic.IDictionary<string, string>
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Method.get -> string
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.RequestUri.get -> System.Uri
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.UseDefaultCredentials.get -> bool
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.UsePostTunneling.get -> bool
 Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration
 Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration.OnEntityReferenceLink(System.Action<Microsoft.OData.Client.WritingEntityReferenceLinkArgs> action) -> Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration
@@ -815,8 +814,6 @@ virtual Microsoft.OData.Client.DataServiceContext.CreateFunctionQuerySingle<T>(s
 virtual Microsoft.OData.Client.DataServiceContext.CreateQuery<T>(string entitySetName) -> Microsoft.OData.Client.DataServiceQuery<T>
 virtual Microsoft.OData.Client.DataServiceContext.CreateQuery<T>(string resourcePath, bool isComposable) -> Microsoft.OData.Client.DataServiceQuery<T>
 virtual Microsoft.OData.Client.DataServiceContext.CreateSingletonQuery<T>(string singletonName) -> Microsoft.OData.Client.DataServiceQuery<T>
-virtual Microsoft.OData.Client.DataServiceContext.Credentials.get -> System.Net.ICredentials
-virtual Microsoft.OData.Client.DataServiceContext.Credentials.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLink(object source, string sourceProperty, object target) -> void
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLinkUriOption.get -> Microsoft.OData.Client.DeleteLinkUriOption
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLinkUriOption.set -> void
