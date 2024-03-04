@@ -53,6 +53,7 @@ namespace Microsoft.OData.Client
         private readonly MemoryStream _messageStream;
         private readonly bool _shouldDisposeClient;
         private CancellationTokenSource _abortRequestCancellationTokenSource;
+        private int? _timeout = null;
 
         /// <summary>
         /// This will be used to cache content headers to be retrieved later. 
@@ -166,11 +167,11 @@ namespace Microsoft.OData.Client
         {
             get
             {
-                return (int)_client.Timeout.TotalSeconds;
+                return _timeout ?? -1;
             }
             set
             {
-               _client.Timeout = new TimeSpan(0, 0, value);
+                _timeout = value;
             }
         }
 
@@ -409,6 +410,11 @@ namespace Microsoft.OData.Client
             }
 
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
+            if (_timeout.HasValue)
+            {
+                _abortRequestCancellationTokenSource.CancelAfter(_timeout.Value);
+            }
+
             return _client.SendAsync(_requestMessage, _abortRequestCancellationTokenSource.Token);
         }
 
@@ -507,7 +513,8 @@ namespace Microsoft.OData.Client
                 {
                     _client.Dispose();
                 }
-                
+
+                _abortRequestCancellationTokenSource.Dispose();
             }
 
             _disposed = true;
