@@ -321,5 +321,45 @@ namespace Microsoft.OData.Client.Tests.Serialization
             }
         }
 
+        [Fact]
+        public async Task WhenTimeoutNotSet_HttpClientTimeoutStillApplies()
+        {
+            // Arrange
+            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 2000))
+            {
+                var httpClientProvider = new MockHttpClientProvider(handler, new MockHttpClientProviderOptions
+                {
+                    Timeout = 1
+                });
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    useDefaultCredentials: false,
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientProvider);
+
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    // Act
+                    Task<IODataResponseMessage> getResponseTask =
+                        Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
+
+                    // Assert
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#else
+                    await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#endif
+                }
+            }
+        }
+
     }
 }

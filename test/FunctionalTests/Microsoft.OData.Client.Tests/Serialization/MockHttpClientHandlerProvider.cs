@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Net.Http;
 using System.Threading;
 
@@ -24,9 +25,15 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// Creates a new instance of <see cref="MockHttpClientProvider"/>.
         /// </summary>
         /// <param name="handler">The <see cref="HttpClientHandler"/> based on which to create HttpClient.</param>
-        public MockHttpClientProvider(HttpClientHandler handler)
+        public MockHttpClientProvider(HttpClientHandler handler, MockHttpClientProviderOptions options = default)
         {
             _client = new HttpClient(handler);
+
+            options = options == null ? new MockHttpClientProviderOptions() : options;
+            if (options.Timeout.HasValue)
+            {
+                _client.Timeout = TimeSpan.FromSeconds(options.Timeout.Value);
+            }
         }
 
         /// <summary>
@@ -40,5 +47,10 @@ namespace Microsoft.OData.Client.Tests.Serialization
             Interlocked.Increment(ref _numCalls);
             return _client;
         }
+    }
+
+    internal sealed class  MockHttpClientProviderOptions
+    {
+        public int? Timeout { get; set; }
     }
 }

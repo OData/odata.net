@@ -11,6 +11,10 @@ using System.Threading;
 
 namespace Microsoft.OData.Client.Tests.Serialization
 {
+    /// <summary>
+    /// A mock HttpClientHandler that responds to HTTP requests with a mocked
+    /// response after a specified time delay.
+    /// </summary>
     internal sealed class MockDelayedHttpClientHandler : MockHttpClientHandler
     {
         private readonly int _delay;
