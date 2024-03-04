@@ -43,8 +43,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // If it's been running for this long, then there's probably something
-                // wrong with the test
                 if (stopwatch.ElapsedMilliseconds > _delay)
                 {
                     break;
@@ -65,8 +63,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                // If it's been running for this long, then there's probably something
-                // wrong with the test
                 if (stopwatch.ElapsedMilliseconds > _delay)
                 {
                     break;

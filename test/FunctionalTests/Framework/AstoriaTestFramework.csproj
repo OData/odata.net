@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
+    <Compile Include="Client\CLWrappers\TestHttpClientProvider.cs" />
     <Compile Include="Features\Expressions\PatternSimpleProjection.cs" />
     <Compile Include="Features\Expressions\PatternSelectSingleEntity.cs" />
     <Compile Include="Features\Expressions\PatternSetBase.cs" />
