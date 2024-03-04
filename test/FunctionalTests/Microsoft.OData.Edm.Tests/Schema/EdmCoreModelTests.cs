@@ -70,7 +70,7 @@ namespace Microsoft.OData.Edm.Tests.Library
         [Theory]
         [InlineData("Edm.Unknown")]
         [InlineData("Unknown")]
-		[InlineData("unknown")]
+        [InlineData("unknown")]
         [InlineData("NS.EntityType")]
         public void FindDeclaredTypeShouldReturnNullForUnknownTypeName(string qualifiedName)
         {
