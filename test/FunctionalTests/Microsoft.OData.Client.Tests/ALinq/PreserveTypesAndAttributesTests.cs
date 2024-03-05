@@ -28,95 +28,95 @@ namespace Microsoft.OData.Client.Tests.ALinq
         [Fact]
         public void OneLevelCase1()
         {
-            IQueryable<ICustomer> q1 = ctx.OneLevelCustomers1;
-            var r1 = q1.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<ICustomer> query1 = ctx.OneLevelCustomers1;
+            var result1 = query1.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(5).ToList();
                         
-            IQueryable<OneLevelCustomer1> q2 = ctx.OneLevelCustomers1;
-            var r2 = q2.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<OneLevelCustomer1> query2 = ctx.OneLevelCustomers1;
+            var result2 = query2.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(5).ToList();
             
-            Assert.Equal(r1.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r1[i].City, r2[i].City);
-                Assert.Equal(r1[i].CorporationName, r2[i].CorporationName);
-                Assert.Equal(r1[i].Name, r2[i].Name);
-                Assert.Equal(r1[i].Id, r2[i].Id);
+            Assert.Equal(result1.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result1[i].City, result2[i].City);
+                Assert.Equal(result1[i].CorporationName, result2[i].CorporationName);
+                Assert.Equal(result1[i].Name, result2[i].Name);
+                Assert.Equal(result1[i].Id, result2[i].Id);
             }
         }
         
         [Fact]
         public void OneLevelCase2()
         {
-            IQueryable<BaseCustomer> q1 = ctx.OneLevelCustomers2;
-            var r1 = q1.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(5).ToList();
+            IQueryable<BaseCustomer> query1 = ctx.OneLevelCustomers2;
+            var result1 = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(5).ToList();
                         
-            IQueryable<OneLevelCustomer2> q2 = ctx.OneLevelCustomers2;
-            var r2 = q2.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(5).ToList();
+            IQueryable<OneLevelCustomer2> query2 = ctx.OneLevelCustomers2;
+            var result2 = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(5).ToList();
             
-            Assert.Equal(r1.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r1[i].Id, r2[i].Id);
+            Assert.Equal(result1.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result1[i].Id, result2[i].Id);
             }
         }
 
         [Fact]
         public void MoreThanOneLevelLevelCase1()
         {
-            IQueryable<ICustomer> q1 = ctx.TwoLevelCustomers1;
-            q1 = q1.Where(c => c.Name.Contains("a"));
-            var r1 = q1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<ICustomer> query1 = ctx.TwoLevelCustomers1;
+            query1 = query1.Where(c => c.Name.Contains("a"));
+            var result1 = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
 
-            IQueryable<ACustomer> q2 = ctx.TwoLevelCustomers1;
-            q2 = q2.Where(c => c.Name.Contains("a"));
-            var r2 = q2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<ACustomer> query2 = ctx.TwoLevelCustomers1;
+            query2 = query2.Where(c => c.Name.Contains("a"));
+            var result2 = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
 
-            IQueryable<TwoLevelCustomer1> q3 = ctx.TwoLevelCustomers1;
-            q3 = q3.Where(c => c.Name.Contains("a"));
-            var r3 = q3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<TwoLevelCustomer1> query3 = ctx.TwoLevelCustomers1;
+            query3 = query3.Where(c => c.Name.Contains("a"));
+            var result3 = query3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
             
-            Assert.Equal(r1.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r1[i].Id, r2[i].Id);
-                Assert.Equal(r1[i].CorporationName, r2[i].CorporationName);
-                Assert.Equal(r1[i].City, r2[i].City);
-                Assert.Equal(r1[i].Name, r2[i].Name);
+            Assert.Equal(result1.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result1[i].Id, result2[i].Id);
+                Assert.Equal(result1[i].CorporationName, result2[i].CorporationName);
+                Assert.Equal(result1[i].City, result2[i].City);
+                Assert.Equal(result1[i].Name, result2[i].Name);
             }
-            Assert.Equal(r3.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r3[i].Id, r2[i].Id);
-                Assert.Equal(r3[i].CorporationName, r2[i].CorporationName);
-                Assert.Equal(r3[i].City, r2[i].City);
-                Assert.Equal(r3[i].Name, r2[i].Name);
+            Assert.Equal(result3.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result3[i].Id, result2[i].Id);
+                Assert.Equal(result3[i].CorporationName, result2[i].CorporationName);
+                Assert.Equal(result3[i].City, result2[i].City);
+                Assert.Equal(result3[i].Name, result2[i].Name);
             }
         }
 
         [Fact]
         public void MoreThanOneLevelLevelCase2()
         {
-            IQueryable<ICustomer> q1 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            q1 = q1.Where(c => c.Name.Contains("a"));
-            var r1 = q1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<ICustomer> query1 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
+            query1 = query1.Where(c => c.Name.Contains("a"));
+            var result1 = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
 
-            IQueryable<ICustomer2> q2 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            q2 = q2.Where(c => c.Name.Contains("a"));
-            var r2 = q2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<ICustomer2> query2 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
+            query2 = query2.Where(c => c.Name.Contains("a"));
+            var result2 = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
 
-            IQueryable<TwoLevelCustomer2> q3 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            q3 = q3.Where(c => c.Name.Contains("a"));
-            var r3 = q3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
+            IQueryable<TwoLevelCustomer2> query3 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
+            query3 = query3.Where(c => c.Name.Contains("a"));
+            var result3 = query3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(5).ToList();
 
-            Assert.Equal(r1.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r1[i].Id, r2[i].Id);
-                Assert.Equal(r1[i].CorporationName, r2[i].CorporationName);
-                Assert.Equal(r1[i].City, r2[i].City);
-                Assert.Equal(r1[i].Name, r2[i].Name);
+            Assert.Equal(result1.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result1[i].Id, result2[i].Id);
+                Assert.Equal(result1[i].CorporationName, result2[i].CorporationName);
+                Assert.Equal(result1[i].City, result2[i].City);
+                Assert.Equal(result1[i].Name, result2[i].Name);
             }
-            Assert.Equal(r3.Count, r2.Count);
-            for (var i = 0; i < r1.Count; i++) {
-                Assert.Equal(r3[i].Id, r2[i].Id);
-                Assert.Equal(r3[i].CorporationName, r2[i].CorporationName);
-                Assert.Equal(r3[i].City, r2[i].City);
-                Assert.Equal(r3[i].Name, r2[i].Name);
+            Assert.Equal(result3.Count, result2.Count);
+            for (var i = 0; i < result1.Count; i++) {
+                Assert.Equal(result3[i].Id, result2[i].Id);
+                Assert.Equal(result3[i].CorporationName, result2[i].CorporationName);
+                Assert.Equal(result3[i].City, result2[i].City);
+                Assert.Equal(result3[i].Name, result2[i].Name);
             }
         }
     }
