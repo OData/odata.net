@@ -260,7 +260,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         public async Task Timeout_DoesNotCancelOtherRequestsFromTheSameClient()
         {
             // Arrange
-            using (var handler = new MockDelayedHttpClientHandler("Success", 3000))
+            using (var handler = new MockDelayedHttpClientHandler("Success", 5000))
             {
                 var httpClientProvider = new MockHttpClientProvider(handler);
                 var args1 = new DataServiceClientRequestMessageArgs(
@@ -317,7 +317,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         public async Task WhenTimeoutNotSet_HttpClientTimeoutStillApplies()
         {
             // Arrange
-            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 3000))
+            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
             {
                 var httpClientProvider = new MockHttpClientProvider(handler, new MockHttpClientProviderOptions
                 {
