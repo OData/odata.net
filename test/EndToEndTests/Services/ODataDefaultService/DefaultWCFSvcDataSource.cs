@@ -13,6 +13,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Collections.ObjectModel;
     using System.Linq;
     using Microsoft.OData.Edm;
+    using Microsoft.OData.UriParser;
     using Microsoft.Spatial;
     using Microsoft.Test.OData.Services.ODataWCFService.DataSource;
 
@@ -1208,11 +1209,19 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
         protected override void ConfigureContainer(IContainerBuilder builder)
         {
             base.ConfigureContainer(builder);
-            builder.AddServicePrototype(new ODataSimplifiedOptions()
+            builder.AddServicePrototype(new ODataMessageWriterSettings()
             {
                 EnableWritingKeyAsSegment = false,
+            });
+
+            builder.AddServicePrototype(new ODataMessageReaderSettings()
+            {
                 EnableReadingKeyAsSegment = false,
-                EnableParsingKeyAsSegmentUrl = false,
+            });
+
+            builder.AddServicePrototype(new ODataUriParserSettings()
+            {
+                EnableParsingKeyAsSegment = false,
             });
         }
     }

@@ -1087,7 +1087,7 @@ namespace Microsoft.OData.JsonLight
                 ODataResourceMetadataBuilder builder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
-                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                        this.jsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                         this.ReadingDelta);
                 if (builder != currentResource.MetadataBuilder)
                 {
@@ -2343,7 +2343,7 @@ namespace Microsoft.OData.JsonLight
                 ODataResourceMetadataBuilder resourceMetadataBuilder =
                     this.jsonLightResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
-                        this.jsonLightInputContext.ODataSimplifiedOptions.EnableReadingKeyAsSegment,
+                        this.jsonLightInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                         this.ReadingDelta);
                 nestedResourceInfo.MetadataBuilder = resourceMetadataBuilder;
             }

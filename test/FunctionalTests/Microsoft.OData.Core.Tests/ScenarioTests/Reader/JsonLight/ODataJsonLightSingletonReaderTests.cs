@@ -395,7 +395,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
 
         private ODataResource ReadSingleton(string payload, bool odataSimplified = false)
         {
-            var settings = new ODataMessageReaderSettings();
+            var settings = new ODataMessageReaderSettings()
+            {
+                EnableReadingODataAnnotationWithoutPrefix = odataSimplified
+            };
 
             var messageInfo = new ODataMessageInfo
             {
@@ -409,8 +412,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             using (var inputContext = new ODataJsonLightInputContext(
                 new StringReader(payload), messageInfo, settings))
             {
-                inputContext.Container.GetRequiredService<ODataSimplifiedOptions>()
-                    .EnableReadingODataAnnotationWithoutPrefix = odataSimplified;
                 var jsonLightReader = new ODataJsonLightReader(inputContext, singleton, webType, /*readingFeed*/ false);
                 while (jsonLightReader.Read())
                 {

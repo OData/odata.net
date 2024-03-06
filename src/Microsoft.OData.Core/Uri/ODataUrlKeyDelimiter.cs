@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using Microsoft.OData.UriParser;
 using System;
 
 namespace Microsoft.OData
@@ -63,9 +64,9 @@ namespace Microsoft.OData
             }
         }
 
-        internal static ODataUrlKeyDelimiter GetODataUrlKeyDelimiter(IServiceProvider container)
+        internal static ODataUrlKeyDelimiter GetODataUrlKeyDelimiter(ODataUriParserSettings settings)
         {
-            return ODataSimplifiedOptions.GetODataSimplifiedOptions(container).EnableParsingKeyAsSegmentUrl
+            return settings.EnableParsingKeyAsSegment
                     ? ODataUrlKeyDelimiter.Slash
                     : ODataUrlKeyDelimiter.Parentheses;
         }
