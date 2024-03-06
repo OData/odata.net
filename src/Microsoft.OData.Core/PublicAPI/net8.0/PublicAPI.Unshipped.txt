@@ -63,7 +63,6 @@ Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream
 Microsoft.OData.Json.ODataUtf8JsonWriterFactory
 Microsoft.OData.Json.ODataUtf8JsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.ODataUtf8JsonWriterFactory.ODataUtf8JsonWriterFactory(System.Text.Encodings.Web.JavaScriptEncoder encoder = null) -> void
-Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 static Microsoft.OData.Json.ODataUtf8JsonWriterFactory.Default.get -> Microsoft.OData.Json.ODataUtf8JsonWriterFactory
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.Text.Json.JsonElement value) -> void
