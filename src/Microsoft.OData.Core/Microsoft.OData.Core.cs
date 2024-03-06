@@ -99,7 +99,7 @@ namespace Microsoft.OData
         internal const string ODataMessageWriter_JsonPaddingOnInvalidContentType = "ODataMessageWriter_JsonPaddingOnInvalidContentType";
         internal const string ODataMessageWriter_NonCollectionType = "ODataMessageWriter_NonCollectionType";
         internal const string ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue = "ODataMessageWriter_NotAllowedWriteTopLevelPropertyWithResourceValue";
-        internal const string ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull = "ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull";
+        internal const string ODataMessageWriter_JsonWriterFactory_ReturnedNull = "ODataMessageWriter_JsonWriterFactory_ReturnedNull";
         internal const string ODataMessageWriter_Buffer_Maximum_Size_Exceeded = "ODataMessageWriter_Buffer_Maximum_Size_Exceeded";
         internal const string ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth = "ODataMessageWriterSettings_MessageWriterSettingsXmlCustomizationCallbacksMustBeSpecifiedBoth";
         internal const string ODataCollectionWriterCore_InvalidTransitionFromStart = "ODataCollectionWriterCore_InvalidTransitionFromStart";

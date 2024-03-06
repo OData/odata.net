@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
@@ -360,8 +361,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
         private class TestJsonWriterFactory : IJsonWriterFactory
         {
-            public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
+            public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
             {
+                var textWriter = new StreamWriter(stream);
+
                 return new TestJsonWriter(textWriter);
             }
         }

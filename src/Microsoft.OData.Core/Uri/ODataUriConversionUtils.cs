@@ -245,8 +245,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(resourceValue, "resourceValue");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            StringBuilder builder = new StringBuilder();
-            using (TextWriter textWriter = new StringWriter(builder, CultureInfo.InvariantCulture))
+            using (Stream memoryStream = new MemoryStream())
             {
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
@@ -260,15 +259,16 @@ namespace Microsoft.OData
                 WriteJsonLightLiteral(
                     model,
                     messageWriterSettings,
-                    textWriter,
+                    memoryStream,
                     (serializer, duplicatePropertyNamesChecker) => serializer.WriteResourceValue(
                         resourceValue,
                         metadataTypeReference : null,
                         isOpenPropertyType : true,
                         duplicatePropertyNamesChecker: duplicatePropertyNamesChecker));
-            }
 
-            return builder.ToString();
+                memoryStream.Position = 0;
+                return new StreamReader(memoryStream).ReadToEnd();
+            }
         }
 
         /// <summary>
@@ -296,8 +296,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(collectionValue, "collectionValue");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            StringBuilder builder = new StringBuilder();
-            using (TextWriter textWriter = new StringWriter(builder, CultureInfo.InvariantCulture))
+            using (Stream memoryStream = new MemoryStream())
             {
                 ODataMessageWriterSettings messageWriterSettings = new ODataMessageWriterSettings()
                 {
@@ -312,7 +311,7 @@ namespace Microsoft.OData
                 WriteJsonLightLiteral(
                     model,
                     messageWriterSettings,
-                    textWriter,
+                    memoryStream,
                     (serializer, duplicatePropertyNameChecker) => serializer.WriteCollectionValue(
                         collectionValue,
                         metadataTypeReference : null,
@@ -321,9 +320,10 @@ namespace Microsoft.OData
                         isInUri: true,
                         isOpenPropertyType: false),
                         isResourceValue: false);
-            }
 
-            return builder.ToString();
+                memoryStream.Position = 0;
+                return new StreamReader(memoryStream).ReadToEnd();
+            }
         }
 
         /// <summary>
@@ -553,15 +553,21 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="model">EDM Model to use for validation and type lookups.</param>
         /// <param name="messageWriterSettings">Settings to use when writing.</param>
-        /// <param name="textWriter">TextWriter to use as the output for the value.</param>
+        /// <param name="stream">The stream to write to.</param>
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
         /// <param name="isResourceValue">We want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate when writing Resource value but not Collection value.</param>
-        private static void WriteJsonLightLiteral(IEdmModel model, ODataMessageWriterSettings messageWriterSettings, TextWriter textWriter, Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue, bool isResourceValue = true)
+        private static void WriteJsonLightLiteral(
+            IEdmModel model,
+            ODataMessageWriterSettings messageWriterSettings,
+            Stream stream,
+            Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue,
+            bool isResourceValue = true)
         {
             IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
             {
                 { MimeConstants.MimeIeee754CompatibleParameterName, messageWriterSettings.IsIeee754Compatible.ToString() }
             };
+
             ODataMediaType mediaType = new ODataMediaType(MimeConstants.MimeApplicationType, MimeConstants.MimeJsonSubType, parameters);
 
             // Calling dispose since it's the right thing to do, but when created from a custom-built TextWriter
@@ -572,11 +578,12 @@ namespace Microsoft.OData
                 Model = model,
                 IsAsync = false,
                 IsResponse = false,
-                MediaType = mediaType
+                MediaType = mediaType,
+                Encoding = Encoding.UTF8,
             };
 
             using (ODataJsonLightOutputContext jsonOutputContext =
-                new ODataJsonLightOutputContext(textWriter, messageInfo, messageWriterSettings))
+                new ODataJsonLightOutputContext(stream, messageInfo, messageWriterSettings))
             {
                 ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
 
@@ -592,6 +599,7 @@ namespace Microsoft.OData
                 }
 
                 jsonLightValueSerializer.AssertRecursionDepthIsZero();
+                jsonOutputContext.JsonWriter.Flush();
             }
         }
 
@@ -628,6 +636,8 @@ namespace Microsoft.OData
                     new ODataJsonLightOutputContext(messageInfo, messageWriterSettings))
                 {
                     writeAction(jsonOutputContext);
+
+                    jsonOutputContext.JsonWriter.Flush();
                     stream.Position = 0;
                     return new StreamReader(stream).ReadToEnd();
                 }
@@ -649,6 +659,7 @@ namespace Microsoft.OData
                     IsResponse = false,
                     IsAsync = false,
                     MessageStream = null,
+                    Encoding = Encoding.UTF8,
                 };
 
                 using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(reader, messageInfo, settings))

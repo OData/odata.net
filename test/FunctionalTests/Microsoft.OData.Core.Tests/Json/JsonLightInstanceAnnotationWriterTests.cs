@@ -737,23 +737,29 @@ namespace Microsoft.OData.Tests.Json
 
         private static string WriteInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, IEdmModel model)
         {
-            var stringWriter = new StringWriter();
-            var outputContext = new ODataJsonLightOutputContext(
-                stringWriter,
-                new ODataMessageInfo { Model = model, IsResponse = false, IsAsync = false },
-                new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") });
+            using (var stream = new MemoryStream())
+            {
+                using (var outputContext = new ODataJsonLightOutputContext(
+                    stream,
+                    new ODataMessageInfo { Model = model, IsResponse = false, IsAsync = false, Encoding = Encoding.UTF8 },
+                    new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") }))
+                {
+                    var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
 
-            var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
+                    // The JSON Writer will complain if there is no active scope, so start an object scope.
+                    valueSerializer.JsonWriter.StartObjectScope();
+                    var instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(valueSerializer, new JsonMinimalMetadataTypeNameOracle());
 
-            // The JSON Writer will complain if there is no active scope, so start an object scope.
-            valueSerializer.JsonWriter.StartObjectScope();
-            var instanceAnnotationWriter = new JsonLightInstanceAnnotationWriter(valueSerializer, new JsonMinimalMetadataTypeNameOracle());
+                    // The method under test.
+                    instanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
 
-            // The method under test.
-            instanceAnnotationWriter.WriteInstanceAnnotation(instanceAnnotation);
+                    valueSerializer.JsonWriter.EndObjectScope();
 
-            valueSerializer.JsonWriter.EndObjectScope();
-            return stringWriter.ToString();
+                    outputContext.JsonWriter.Flush();
+                    stream.Position = 0;
+                    return new StreamReader(stream).ReadToEnd();
+                }
+            }
         }
         #endregion type name short-span integration tests
 

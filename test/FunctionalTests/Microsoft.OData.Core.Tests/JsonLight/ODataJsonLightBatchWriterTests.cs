@@ -505,7 +505,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         {
             Action<IContainerBuilder> configureServices = (builder) =>
             {
-                builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ =>DefaultStreamBasedJsonWriterFactory.Default);
+                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
             };
 
             var result = await SetupJsonLightBatchWriterAndRunTestAsync(
