@@ -40,6 +40,10 @@ namespace Microsoft.OData.Client
             "Expires",
             "Last-Modified",
         }, StringComparer.OrdinalIgnoreCase);
+        /// <summary>
+        /// HttpClient to use when the caller does not provide one.
+        /// </summary>
+        private static readonly HttpClient DefaultClient = new HttpClient();
 
         /// <summary> The effective HTTP method. </summary>
         private readonly string _effectiveHttpMethod;
@@ -84,7 +88,7 @@ namespace Microsoft.OData.Client
             IHttpClientProvider clientProvider = args.HttpClientProvider;
             if (clientProvider == null)
             {
-                _client = new HttpClient();
+                _client = DefaultClient;
                 _shouldDisposeClient = true;
             }
             else
