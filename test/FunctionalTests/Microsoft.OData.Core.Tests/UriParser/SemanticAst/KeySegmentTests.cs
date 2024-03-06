@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void KeySetCorrectly()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
-            KeySegment segment = new KeySegment(Key, set.EntityType(), set);
+            KeySegment segment = new KeySegment(Key, set.EntityType, set);
             var key = Assert.Single(segment.Keys);
             Assert.Equal("key", key.Key);
             Assert.Equal("value", key.Value);
@@ -30,7 +30,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void IdentifierByDefaultIsKeyDefaultName()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
-            KeySegment segment = new KeySegment(Key, set.EntityType(), set);
+            KeySegment segment = new KeySegment(Key, set.EntityType, set);
             Assert.Equal("{key}", segment.Identifier);
         }
 
@@ -38,15 +38,15 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TypeIsSetCorrectly()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
-            KeySegment segment = new KeySegment(Key, set.EntityType(), set);
-            Assert.Same(set.EntityType(), segment.EdmType);
+            KeySegment segment = new KeySegment(Key, set.EntityType, set);
+            Assert.Same(set.EntityType, segment.EdmType);
         }
 
         [Fact]
         public void SetIsCopiedFromPreviousSegment()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
-            KeySegment segment = new KeySegment(Key, set.EntityType(), set);
+            KeySegment segment = new KeySegment(Key, set.EntityType, set);
             Assert.Same(set, segment.NavigationSource);
         }
 

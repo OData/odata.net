@@ -316,7 +316,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     var parameters = filterClause.Expression.ShouldBeSingleValueFunctionCallQueryNode(function).Parameters;
                     var paramNode = Assert.IsType<NamedFunctionParameterNode>(parameters.Last());
                     paramNode.Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
-                    aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+                    aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
                 });
         }
 
@@ -334,7 +334,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     var paramNode = Assert.IsType<NamedFunctionParameterNode>(parameters.Last());
                     paramNode.Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
-                    aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+                    aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
                 });
         }
 
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                     var paramNode = Assert.IsType<NamedFunctionParameterNode>(parameters.Last());
                     paramNode.Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
                     aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
-                    aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+                    aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
                 });
         }
 
@@ -1033,7 +1033,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
                 IEdmEntitySet entitySet = entitySource as IEdmEntitySet;
 
                 var dic = queries.ToDictionary(customQueryOptionToken => customQueryOptionToken.Name, customQueryOptionToken => queries.GetQueryOptionValue(customQueryOptionToken.Name));
-                ODataQueryOptionParser queryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, entitySet.EntityType(), entitySet, dic)
+                ODataQueryOptionParser queryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, entitySet?.EntityType, entitySet, dic)
                 {
                     Configuration = { ParameterAliasValueAccessor = parser.ParameterAliasValueAccessor }
                 };

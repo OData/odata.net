@@ -324,11 +324,11 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(wild.Elements.Count() == 2, "Wild: correct number of Elements");
             Assert.AreEqual("Pets", wild.Elements.First().Name, "Wild: correct first element");
             Assert.AreEqual(EdmContainerElementKind.EntitySet, wild.Elements.First().ContainerElementKind, "Wild: first element type");
-            Assert.AreEqual("Hot.Pet", ((IEdmEntitySet)wild.Elements.First()).EntityType().FullName(), "Wild: element type for first entityset");
+            Assert.AreEqual("Hot.Pet", ((IEdmEntitySet)wild.Elements.First()).EntityType.FullName(), "Wild: element type for first entityset");
 
             Assert.AreEqual("People", wild.Elements.ElementAt(1).Name, "Wild: correct second element");
             Assert.AreEqual(EdmContainerElementKind.EntitySet, wild.Elements.ElementAt(1).ContainerElementKind, "Zero: second element type");
-            Assert.AreEqual("Hot.Person", ((IEdmEntitySet)wild.Elements.ElementAt(1)).EntityType().FullName(), "Zero: element type for second entityset");
+            Assert.AreEqual("Hot.Person", ((IEdmEntitySet)wild.Elements.ElementAt(1)).EntityType.FullName(), "Zero: element type for second entityset");
 
             IEdmEntityType person = (IEdmEntityType)model.FindType("Hot.Person");
             IEdmEntityType pet = (IEdmEntityType)model.FindType("Hot.Pet");
@@ -529,13 +529,13 @@ namespace EdmLibTests.FunctionalTests
 
             Assert.AreEqual("AnotherSingletonPeople", wild.Elements.ElementAt(1).Name, "AnotherSingletonPeople: correct second element");
             Assert.AreEqual(EdmContainerElementKind.Singleton, wild.Elements.ElementAt(1).ContainerElementKind, "Wild: second element type");
-            Assert.AreEqual("Hot.Person", ((IEdmSingleton)wild.Elements.ElementAt(1)).EntityType().FullName(), "Wild: type for first singleton");
+            Assert.AreEqual("Hot.Person", ((IEdmSingleton)wild.Elements.ElementAt(1)).EntityType.FullName(), "Wild: type for first singleton");
 
             IEdmEntityType person = (IEdmEntityType)model.FindType("Hot.Person");
             IEdmEntityType pet = (IEdmEntityType)model.FindType("Hot.Pet");
             IEdmSingleton singletonPeople = wild.FindSingleton("SingletonPeople");
             Assert.IsNotNull(singletonPeople, "singletonPeople singleton is not null");
-            Assert.AreEqual(person, singletonPeople.EntityType(), "the type of singletonPeople is Person");
+            Assert.AreEqual(person, singletonPeople.EntityType, "the type of singletonPeople is Person");
             IEdmSingleton anotherPeople = wild.FindSingleton("AnotherSingletonPeople");
             Assert.IsNotNull(anotherPeople, "anotherPeople singleton is not null");
             Assert.AreEqual(person, singletonPeople.Type, "the type of singletonPeople is Person");
@@ -1443,7 +1443,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(peopleSet, eset, "Return EntitySet name is correct");
             IEdmEntitySetBase fiEntitySet;
             Assert.IsTrue(peopleWhoAreAwesome.TryGetStaticEntitySet(model, out fiEntitySet), "peopleWhoAreAwesome.TryGetStaticEntitySet");
-            Assert.AreEqual(personType, fiEntitySet.EntityType(), "Return EntitySet type is correct");
+            Assert.AreEqual(personType, fiEntitySet.EntityType, "Return EntitySet type is correct");
             Assert.AreEqual("peopleWhoAreAwesomeAction", peopleWhoAreAwesome.Name, "FunctionImport name is correct");
             Assert.AreEqual(EdmTypeKind.Collection, peopleWhoAreAwesome.Operation.ReturnType.Definition.TypeKind, "Return typekind is correct");
             Assert.AreEqual(personType, peopleWhoAreAwesome.Operation.ReturnType.AsCollection().ElementType().Definition, "Return entitytype is correct");
@@ -1573,8 +1573,8 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsTrue(validated, "validate");
 
             var people = model.EntityContainer.FindEntitySet("People");
-            Assert.AreEqual("Person", people.EntityType().Name, "people.ElementType.Name");
-            Assert.IsFalse(((IEdmNavigationProperty)people.EntityType().FindProperty("Orders")).ContainsTarget, "Orders.ContainsTarget");
+            Assert.AreEqual("Person", people.EntityType.Name, "people.ElementType.Name");
+            Assert.IsFalse(((IEdmNavigationProperty)people.EntityType.FindProperty("Orders")).ContainsTarget, "Orders.ContainsTarget");
 
             var operationImports = model.EntityContainer.OperationImports().ToArray();
             Assert.AreEqual(11, operationImports.Length, "# of operation imports");

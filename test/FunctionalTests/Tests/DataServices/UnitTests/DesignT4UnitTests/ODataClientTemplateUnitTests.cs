@@ -1454,10 +1454,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             foreach (var edmEntitySet in entitySets)
             {
                 List<IEdmNavigationSource> navigationSourceList = null;
-                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType(), out navigationSourceList))
+                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType, out navigationSourceList))
                 {
                     navigationSourceList = new List<IEdmNavigationSource>();
-                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType(), navigationSourceList);
+                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType, navigationSourceList);
                 }
 
                 navigationSourceList.Add(edmEntitySet);
@@ -1571,10 +1571,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             foreach (var edmEntitySet in entitySets)
             {
                 List<IEdmNavigationSource> navigationSourceList = null;
-                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType(), out navigationSourceList))
+                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType, out navigationSourceList))
                 {
                     navigationSourceList = new List<IEdmNavigationSource>();
-                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType(), navigationSourceList);
+                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType, navigationSourceList);
                 }
 
                 navigationSourceList.Add(edmEntitySet);
@@ -1617,10 +1617,10 @@ namespace Microsoft.OData.Client.Design.T4.UnitTests
             foreach (var edmEntitySet in entitySets)
             {
                 List<IEdmNavigationSource> navigationSourceList = null;
-                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType(), out navigationSourceList))
+                if (!Context.ElementTypeToNavigationSourceMap.TryGetValue(edmEntitySet.EntityType, out navigationSourceList))
                 {
                     navigationSourceList = new List<IEdmNavigationSource>();
-                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType(), navigationSourceList);
+                    Context.ElementTypeToNavigationSourceMap.Add(edmEntitySet.EntityType, navigationSourceList);
                 }
 
                 navigationSourceList.Add(edmEntitySet);

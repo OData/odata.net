@@ -45,6 +45,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private readonly ConcurrentDictionary<IEdmNavigationProperty, IEnumerable<IEdmNavigationPropertyBinding>> navigationPropertyBindingCache = 
             new ConcurrentDictionary<IEdmNavigationProperty, IEnumerable<IEdmNavigationPropertyBinding>>();
 
+        private IEdmEntityType entityType;
+        private bool entityTypeSet = false;
+
         public CsdlSemanticsNavigationSource(CsdlSemanticsEntityContainer container, CsdlAbstractNavigationSource navigationSource)
             : base(navigationSource)
         {
@@ -85,6 +88,21 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         public IEnumerable<IEdmNavigationPropertyBinding> NavigationPropertyBindings
         {
             get { return this.navigationTargetsCache.GetValue(this, ComputeNavigationTargetsFunc, null); }
+        }
+
+        /// <inheritdoc/>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (!this.entityTypeSet)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                    this.entityTypeSet = true;
+                }
+
+                return this.entityType;
+            }
         }
 
         public IEdmNavigationSource FindNavigationTarget(IEdmNavigationProperty property, IEdmPathExpression bindingPath)

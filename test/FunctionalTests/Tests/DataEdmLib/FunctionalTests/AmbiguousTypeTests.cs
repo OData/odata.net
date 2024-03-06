@@ -62,7 +62,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmContainerElementKind.EntitySet, ambiguous.ContainerElementKind, "Correct container element kind");
             Assert.AreEqual("NS1.Baz", ambiguous.Container.FullName(), "Correct container name");
             Assert.AreEqual("Foo", ambiguous.Name, "Correct Name");
-            Assert.IsTrue(ambiguous.EntityType().IsBad(), "Association is bad.");
+            Assert.IsTrue(ambiguous.EntityType.IsBad(), "Association is bad.");
         }
 
         [TestMethod]

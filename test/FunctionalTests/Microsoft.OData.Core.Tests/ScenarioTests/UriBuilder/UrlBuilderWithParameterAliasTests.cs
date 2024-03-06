@@ -235,7 +235,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.NotNull(function);
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(function);
             Assert.IsType<NamedFunctionParameterNode>(functionCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
-            aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+            aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -259,7 +259,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             var functionCallNode = odataUri.Filter.Expression.ShouldBeSingleValueFunctionCallQueryNode(function);
             Assert.IsType<NamedFunctionParameterNode>(functionCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
-            aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+            aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -284,7 +284,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             Assert.IsType<NamedFunctionParameterNode>(functionCallNode.Parameters.Last()).Value.ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
             aliasNodes["@p1"].ShouldBeParameterAliasNode("@p2", EdmCoreModel.Instance.GetString(true));
-            aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+            aliasNodes["@p2"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
 
             IDictionary<string, SingleValueNode> aliasNodes = odataUri.ParameterAliasNodes;
             Assert.IsType<SingleValueFunctionCallNode>(odataUri.Filter.Expression).Parameters.First().ShouldBeParameterAliasNode("@p1", EdmCoreModel.Instance.GetString(true));
-            aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType().FindProperty("Name"));
+            aliasNodes["@p1"].ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetPeopleSet().EntityType.FindProperty("Name"));
 
             Uri actualUri = odataUri.BuildUri(ODataUrlKeyDelimiter.Parentheses);
             Assert.Equal(fullUri, actualUri, new UriComparer<Uri>());

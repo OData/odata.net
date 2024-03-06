@@ -131,7 +131,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 var odataItemStack = new Stack<ODataItem>();
                 var entityStack = new Stack<IEdmEntitySetBase>();
-                var entryReader = messageReader.CreateODataResourceReader(entitySet, entitySet.EntityType());
+                var entryReader = messageReader.CreateODataResourceReader(entitySet, entitySet.EntityType);
                 var currentTargetEntitySet = entitySet;
 
                 while (entryReader.Read())
@@ -228,12 +228,12 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                             {
                                 odataItemStack.Push(entryReader.Item);
                                 var nestedResourceInfo = (ODataNestedResourceInfo)entryReader.Item;
-                                IEdmNavigationProperty navigationProperty = currentTargetEntitySet == null ? null : currentTargetEntitySet.EntityType().FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
+                                IEdmNavigationProperty navigationProperty = currentTargetEntitySet == null ? null : currentTargetEntitySet.EntityType.FindProperty(nestedResourceInfo.Name) as IEdmNavigationProperty;
 
                                 // Current model implementation doesn't expose associations otherwise this would be much cleaner.
                                 if (navigationProperty != null)
                                 {
-                                    currentTargetEntitySet = this.DataSource.Model.EntityContainer.EntitySets().Single(s => s.EntityType() == navigationProperty.Type.Definition);
+                                    currentTargetEntitySet = this.DataSource.Model.EntityContainer.EntitySets().Single(s => s.EntityType == navigationProperty.Type.Definition);
                                 }
                                 else
                                 {

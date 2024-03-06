@@ -32,7 +32,7 @@ namespace Microsoft.OData.Edm.Tests.Library
             EdmSingleton singleton = new EdmSingleton(this.entityContainer, "VIP", customerType);
             Assert.Same(this.entityContainer, singleton.Container);
             Assert.Equal(EdmContainerElementKind.Singleton, singleton.ContainerElementKind);
-            Assert.Same(customerType, singleton.EntityType());
+            Assert.Same(customerType, singleton.EntityType);
         }
 
         [Fact]

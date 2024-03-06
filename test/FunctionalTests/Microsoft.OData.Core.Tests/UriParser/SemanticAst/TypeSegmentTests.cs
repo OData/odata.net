@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void SetIsSetCorrectly()
         {
             var set = ModelBuildingHelpers.BuildValidEntitySet();
-            IEdmType type = set.EntityType();
+            IEdmType type = set.EntityType;
             TypeSegment segment = new TypeSegment(type, set);
             Assert.Same(set, segment.NavigationSource);
         }

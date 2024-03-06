@@ -2306,12 +2306,12 @@ namespace Microsoft.OData
                         // if the (deleted) resource is in the top level of a delta resource set, it doesn't
                         // need to match the delta resource set, but must match the navigation source resolved for
                         // the current scope
-                        if (!resourceScope.NavigationSource.EntityType().IsAssignableFrom(resourceType))
+                        if (!resourceScope.NavigationSource.EntityType.IsAssignableFrom(resourceType))
                         {
-                            throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), resourceScope.NavigationSource.EntityType()));
+                            throw new ODataException(Strings.ResourceSetWithoutExpectedTypeValidator_IncompatibleTypes(resourceType.FullTypeName(), resourceScope.NavigationSource.EntityType));
                         }
 
-                        resourceScope.ResourceTypeFromMetadata = resourceScope.NavigationSource.EntityType();
+                        resourceScope.ResourceTypeFromMetadata = resourceScope.NavigationSource.EntityType;
                     }
                     else
                     {
@@ -2605,7 +2605,7 @@ namespace Microsoft.OData
                                     ODataUriParser uriParser = new ODataUriParser(model, new Uri(serializationInfo.NavigationSourceName, UriKind.Relative), this.outputContext.Container);
                                     odataUri = new ODataUriSlim(uriParser.ParseUri());
                                     navigationSource = odataUri.Path.NavigationSource();
-                                    itemType = itemType ?? navigationSource.EntityType();
+                                    itemType = itemType ?? navigationSource?.EntityType;
                                 }
 
                                 if (typeNameFromResource == null)

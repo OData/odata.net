@@ -820,7 +820,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 messageWriter =  new ODataMessageWriter(responseMessage, settings, this.GetModel());
             }
 
-            ODataWriter writer = messageWriter.CreateODataResourceWriter(this.customersEntitySet, this.customersEntitySet.EntityType());
+            ODataWriter writer = messageWriter.CreateODataResourceWriter(this.customersEntitySet, this.customersEntitySet.EntityType);
             return writer;
         }
 

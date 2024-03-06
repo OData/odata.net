@@ -209,11 +209,11 @@ namespace Microsoft.OData.Edm
             }
             else if (element is IEdmEntitySet entitySet)
             {
-                elementEdmType = entitySet.EntityType().AsElementType();
+                elementEdmType = entitySet.EntityType.AsElementType();
             }
             else if (element is IEdmSingleton singleton)
             {
-                elementEdmType = singleton.EntityType().AsElementType();
+                elementEdmType = singleton.EntityType.AsElementType();
             }
 
             if (elementEdmType != null)

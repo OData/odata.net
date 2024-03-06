@@ -52,7 +52,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             var namedValues = new[] { new NamedValue(null, new LiteralToken(123)), new NamedValue(null, new LiteralToken(456)), };
 
             Action bind = () => this.keyBinder.BindKeyValues(collectionNode, namedValues, model);
-            bind.Throws<ODataException>(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType().FullTypeName()));
+            bind.Throws<ODataException>(Strings.MetadataBinder_UnnamedKeyValueOnTypeWithMultipleKeyProperties(HardCodedTestModel.GetLionSet().EntityType.FullTypeName()));
         }
 
         [Fact]

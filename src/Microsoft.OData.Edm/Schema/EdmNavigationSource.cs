@@ -23,6 +23,9 @@ namespace Microsoft.OData.Edm
         private readonly Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> navigationTargetsCache = new Cache<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>>();
         private static readonly Func<EdmNavigationSource, IEnumerable<IEdmNavigationPropertyBinding>> ComputeNavigationTargetsFunc = (me) => me.ComputeNavigationTargets();
 
+        private IEdmEntityType entityType;
+        private bool entityTypeSet = false;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EdmNavigationSource"/> class.
         /// </summary>
@@ -44,6 +47,23 @@ namespace Microsoft.OData.Edm
         /// Gets the type of this navigation source.
         /// </summary>
         public abstract IEdmType Type { get; }
+
+        /// <summary>
+        /// Gets the entity type of the navigation source. Can be null.
+        /// </summary>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (!this.entityTypeSet)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                    this.entityTypeSet = true;
+                }
+
+                return this.entityType;
+            }
+        }
 
         /// <summary>
         /// Gets the path that a navigation property targets.

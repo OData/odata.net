@@ -162,7 +162,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
 
             // Use query option parser to help create the filter because it takes care of a bunch of instantiations
             ODataQueryOptionParser queryOptionParser =
-                new ODataQueryOptionParser(HardCodedTestModel.TestModel, entitySet.EntityType(), entitySet, queryOptions);
+                new ODataQueryOptionParser(HardCodedTestModel.TestModel, entitySet?.EntityType, entitySet, queryOptions);
 
             return queryOptionParser.ParseFilter();
         }

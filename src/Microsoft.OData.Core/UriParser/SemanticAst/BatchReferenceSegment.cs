@@ -63,7 +63,7 @@ namespace Microsoft.OData.UriParser
 
             if (entitySet != null)
             {
-                ExceptionUtil.ThrowIfTypesUnrelated(edmType, entitySet.EntityType(), "BatchReferenceSegments");
+                ExceptionUtil.ThrowIfTypesUnrelated(edmType, entitySet.EntityType, "BatchReferenceSegments");
             }
         }
 

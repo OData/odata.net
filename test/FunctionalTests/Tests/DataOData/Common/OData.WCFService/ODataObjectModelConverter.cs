@@ -30,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// <returns>The converted ODataResource.</returns>
         public static ODataResource ConvertToODataEntry(object element, IEdmEntitySet entitySet, ODataVersion targetVersion)
         {
-            IEdmEntityType entityType = entitySet.EntityType();
+            IEdmEntityType entityType = entitySet.EntityType;
 
             Uri entryUri = BuildEntryUri(element, entitySet, targetVersion);
 
@@ -96,7 +96,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         /// <returns>The generated URI.</returns>
         public static Uri BuildEntryUri(object entry, IEdmEntitySet entitySet, ODataVersion targetVersion)
         {
-            string keySegment = BuildKeyString(entry, entitySet.EntityType(), targetVersion);
+            string keySegment = BuildKeyString(entry, entitySet.EntityType, targetVersion);
             return new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(" + keySegment + ")");
         }
 

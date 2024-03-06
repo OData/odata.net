@@ -640,7 +640,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteRequiredProperty("$Collection", true);
 
             // The entity set object MUST contain the member $Type whose string value is the qualified name of an entity type.
-            this.jsonWriter.WriteRequiredProperty("$Type", entitySet.EntityType().FullName());
+            this.jsonWriter.WriteRequiredProperty("$Type", entitySet.EntityType.FullName());
 
             // It MAY contain the members $IncludeInServiceDocument. Absence of the member means true.
             this.jsonWriter.WriteOptionalProperty("$IncludeInServiceDocument", entitySet.IncludeInServiceDocument, true);
@@ -659,7 +659,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteStartObject();
 
             // The singleton object MUST contain the member $Type whose string value is the qualified name of an entity type.
-            this.jsonWriter.WriteRequiredProperty("$Type", singleton.EntityType().FullName());
+            this.jsonWriter.WriteRequiredProperty("$Type", singleton.EntityType.FullName());
 
             // The singleton object MAY contain the member $Nullable. In OData 4.0 responses this member MUST NOT be specified.
             // So far, IEdmSingleton doesn't have the property defined, so skip it now.

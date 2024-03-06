@@ -342,7 +342,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         /// <param name="resourceSetReference">true if the property should be a entity set reference, false if it should be an entity reference.</param>
         private IEdmNavigationProperty AddReferenceProperty(IEdmEntityType entityType, string name, IEdmEntitySet targetEntitySet, IEdmEntityType targetEntityType, bool resourceSetReference, bool containsTarget)
         {
-            targetEntityType = targetEntityType ?? targetEntitySet.EntityType();
+            targetEntityType = targetEntityType ?? targetEntitySet.EntityType;
 
             IEdmTypeReference navPropertyTypeReference = resourceSetReference
                 ? new EdmCollectionType(targetEntityType.ToTypeReference(true)).ToTypeReference(true)

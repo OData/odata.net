@@ -14,6 +14,7 @@ namespace Microsoft.OData
         private readonly IEdmNavigationProperty navigationProperty;
         private readonly IEdmNavigationSource parentNavigationSource;
         private IEdmPathExpression path;
+        private IEdmEntityType entityType;
 
         public UnknownEntitySet(IEdmNavigationSource parentNavigationSource, IEdmNavigationProperty navigationProperty)
         {
@@ -41,6 +42,20 @@ namespace Microsoft.OData
             get
             {
                 return this.navigationProperty.Type.Definition;
+            }
+        }
+
+        /// <inheritdoc/>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (this.entityType == null)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                }
+
+                return this.entityType;
             }
         }
 

@@ -45,7 +45,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
         "DeprecatedNavigationSourceRule",
         (ODataUrlValidationContext context, IEdmNavigationSource source) =>
         {
-            Validate(source, source.EntityType(), context);
+            Validate(source, source.EntityType, context);
         },
         /*includeImpliedProperties*/ true);
 

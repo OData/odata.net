@@ -41,7 +41,7 @@ namespace Microsoft.OData.UriParser
         /// <exception cref="System.ArgumentNullException">Throws if the actual edmType is null.</exception>
         /// <exception cref="ODataException">Throws if the actual edmType is not related to the type of elements in the input navigationSource.</exception>
         public TypeSegment(IEdmType actualType, IEdmNavigationSource navigationSource)
-            : this(actualType, navigationSource == null ? actualType : navigationSource.EntityType(), navigationSource)
+            : this(actualType, navigationSource == null ? actualType : navigationSource.EntityType, navigationSource)
         {
         }
 

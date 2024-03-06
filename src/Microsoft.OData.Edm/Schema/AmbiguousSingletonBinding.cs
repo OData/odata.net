@@ -12,6 +12,8 @@ namespace Microsoft.OData.Edm
 {
     internal class AmbiguousSingletonBinding : AmbiguousBinding<IEdmSingleton>, IEdmSingleton
     {
+        private IEdmEntityType entityType;
+
         public AmbiguousSingletonBinding(IEdmSingleton first, IEdmSingleton second)
             : base(first, second)
         {
@@ -22,6 +24,19 @@ namespace Microsoft.OData.Edm
             get { return new BadEntityType(String.Empty, this.Errors); }
         }
 
+        /// <inheritdoc/>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (this.entityType == null)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                }
+
+                return this.entityType;
+            }
+        }
 
         public EdmContainerElementKind ContainerElementKind
         {

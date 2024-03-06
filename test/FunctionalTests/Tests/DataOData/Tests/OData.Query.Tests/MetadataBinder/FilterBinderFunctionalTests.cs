@@ -539,7 +539,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
                     CollectionResourceNode entityCollectionNode = new EntitySetNode(entitySet);
                     var expectedFilter = new FilterClause(
                         testCase.ExpectedFilterCondition,
-                        new ResourceRangeVariable(ExpressionConstants.It, entitySet.EntityType().ToTypeReference(false).AsEntity(), entityCollectionNode)
+                        new ResourceRangeVariable(ExpressionConstants.It, entitySet.EntityType.ToTypeReference(false).AsEntity(), entityCollectionNode)
                         );
 
                     QueryNodeUtils.VerifyFilterClausesAreEqual(

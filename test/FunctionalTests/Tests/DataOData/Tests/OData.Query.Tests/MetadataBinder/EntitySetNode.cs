@@ -39,7 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Query.Tests.MetadataBinder
         {
             ExceptionUtils.CheckArgumentNotNull(entitySet, "entitySet");
             this.entitySet = entitySet;
-            this.entityType = new EdmEntityTypeReference(this.NavigationSource.EntityType(), false);
+            this.entityType = new EdmEntityTypeReference(this.NavigationSource.EntityType, false);
             this.collectionTypeReference = EdmCoreModel.GetCollection(this.entityType);
         }
 

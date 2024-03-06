@@ -1303,7 +1303,7 @@ namespace EdmLibTests.FunctionalTests
 
             var openEntitySet = model.EntityContainer.FindEntitySet("OpenEntityType");
             Assert.IsNotNull(openEntityType, "Invalid entity set.");
-            Assert.AreEqual(openEntityType, openEntitySet.EntityType(), "Invalid entity set type.");
+            Assert.AreEqual(openEntityType, openEntitySet.EntityType, "Invalid entity set type.");
         }
 
         [TestMethod]
@@ -1329,7 +1329,7 @@ namespace EdmLibTests.FunctionalTests
 
             var streamSet = model.EntityContainer.FindEntitySet("NamedStreamEntityType");
             Assert.IsNotNull(streamSet, "Invalid entity set.");
-            Assert.AreEqual(streamEntityType, streamSet.EntityType(), "Invalid element type.");
+            Assert.AreEqual(streamEntityType, streamSet.EntityType, "Invalid element type.");
         }
 
         private void CheckImmediateAnnotation(IEdmDirectValueAnnotation immediateAnnotation, string termName, string value)

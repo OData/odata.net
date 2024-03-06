@@ -34,6 +34,14 @@ namespace Microsoft.Test.Taupo.Edmlib.StubEdm
         public IEdmType Type { get; set; }
 
         /// <summary>
+        /// Gets the entity type of the navigation source. Can be null.
+        /// </summary>
+        public IEdmEntityType EntityType
+        {
+            get { return this.Type.AsElementType() as IEdmEntityType; }
+        }
+
+        /// <summary>
         /// Gets or sets the name
         /// </summary>
         public string Name { get; set; }

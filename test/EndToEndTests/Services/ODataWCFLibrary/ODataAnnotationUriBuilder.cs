@@ -96,18 +96,18 @@ namespace Microsoft.OData.Core.Evaluation
 
             var navigationSource = this.ComputeNavigationSource();
             this.entitySetName = navigationSource.Name;
-            this.entityTypeName = navigationSource.EntityType().FullTypeName();
+            this.entityTypeName = navigationSource.EntityType.FullTypeName();
 
             this.computedUri = this.ServiceRoot;
 
             switch (navigationSource.NavigationSourceKind())
             {
                 case EdmNavigationSourceKind.EntitySet:
-                    this.keyProperties = ValidateKeyPropertiesAgainstEntityType(keyProperties, navigationSource.EntityType());
+                    this.keyProperties = ValidateKeyPropertiesAgainstEntityType(keyProperties, navigationSource.EntityType);
                     return this.keyProperties != null ? this.ComputeIdForEntitySet() : null;
 
                 case EdmNavigationSourceKind.ContainedEntitySet:
-                    this.keyProperties = ValidateKeyPropertiesAgainstEntityType(keyProperties, navigationSource.EntityType());
+                    this.keyProperties = ValidateKeyPropertiesAgainstEntityType(keyProperties, navigationSource.EntityType);
                     return this.keyProperties != null ? this.ComputeIdForContainedEntitySet() : null;
 
                 case EdmNavigationSourceKind.Singleton:

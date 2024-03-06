@@ -34,7 +34,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
             writer.WriteStart(entry);
 
             // Here, we write out the links for the navigation properties off of the entity type
-            WriteNavigationLinks(writer, element, entry.ReadLink, entitySet.EntityType(), model, targetVersion, expandedNavigationProperties);
+            WriteNavigationLinks(writer, element, entry.ReadLink, entitySet.EntityType, model, targetVersion, expandedNavigationProperties);
 
             writer.WriteEnd();
         }
@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                     if (propertyValue != null)
                     {
                         var propertyEntityType = propertyTypeReference.Definition as IEdmEntityType;
-                        IEdmEntitySet targetEntitySet = model.EntityContainer.EntitySets().Single(s => s.EntityType() == propertyEntityType);
+                        IEdmEntitySet targetEntitySet = model.EntityContainer.EntitySets().Single(s => s.EntityType == propertyEntityType);
 
                         if (isCollection)
                         {

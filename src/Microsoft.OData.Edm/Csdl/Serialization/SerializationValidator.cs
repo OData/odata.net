@@ -58,12 +58,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             new ValidationRule<IEdmEntitySet>(
                 (context, set) =>
                 {
-                    if (!EdmUtil.IsQualifiedName(set.EntityType().FullName()))
+                    if (!EdmUtil.IsQualifiedName(set.EntityType.FullName()))
                     {
                         context.AddError(
                             set.Location(),
                             EdmErrorCode.ReferencedTypeMustHaveValidName,
-                            Strings.Serializer_ReferencedTypeMustHaveValidName(set.EntityType().FullName()));
+                            Strings.Serializer_ReferencedTypeMustHaveValidName(set.EntityType.FullName()));
                     }
                 });
 

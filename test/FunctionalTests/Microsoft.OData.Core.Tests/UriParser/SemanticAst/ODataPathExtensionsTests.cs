@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 new EntitySetSegment(entitySet)
             });
 
-            IEdmType entitySetCollection = new EdmCollectionType(new EdmEntityTypeReference(entitySet.EntityType(), false));
+            IEdmType entitySetCollection = new EdmCollectionType(new EdmEntityTypeReference(entitySet.EntityType, false));
             Assert.True(path.EdmType().IsEquivalentTo(entitySetCollection.ToTypeReference()));
         }
 

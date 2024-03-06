@@ -21,7 +21,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
 
             Assert.Equal("Boss", segment.Identifier);
             Assert.Same(singleton, segment.TargetEdmNavigationSource);
-            Assert.Same(singleton.EntityType(), segment.TargetEdmType);
+            Assert.Same(singleton.EntityType, segment.TargetEdmType);
             Assert.Equal(RequestTargetKind.Resource, segment.TargetKind);
             Assert.True(segment.SingleResult);
         }

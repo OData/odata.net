@@ -446,7 +446,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                 var entitySetName = entitySetElement.GetAttributeValue("Name");
                 var entitySet = entitySets.SingleOrDefault(e => e.Name == entitySetName);
                 ExceptionUtilities.Assert(entitySet != null, "Failed to find entity set " + entitySetName);
-                ExceptionUtilities.Assert(entitySetElement.GetAttributeValue("EntityType") == entitySet.EntityType().FullName(), "Unexpected type for entity set " + entitySetName);
+                ExceptionUtilities.Assert(entitySetElement.GetAttributeValue("EntityType") == entitySet.EntityType.FullName(), "Unexpected type for entity set " + entitySetName);
 
                 // Compare Navigation Property Bindings
                 var navigationPropertyBindingElements = entitySetElement.EdmElements("NavigationPropertyBinding").ToArray();
@@ -471,7 +471,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                         var derivedType = entityTypes.SingleOrDefault(t => t.FullName() == splitPath.ElementAt(0));
                         ExceptionUtilities.Assert(derivedType != null, "Failed to find entity type " + derivedTypeName + " described in navigation property binding path");
                         ExceptionUtilities.Assert(derivedType.DeclaredNavigationProperties().SingleOrDefault(p => p.Name == propertyName) != null, "Failed to find nav property on derived type");
-                        EdmModelUtils.AssertEntityTypeIsDerivedFrom(derivedType, entitySet.EntityType());
+                        EdmModelUtils.AssertEntityTypeIsDerivedFrom(derivedType, entitySet.EntityType);
                     }
 
                     var navigationTarget = entitySet.NavigationPropertyBindings.SingleOrDefault(nt => nt.NavigationProperty.Name == propertyName && nt.Target.Name == targetValue);

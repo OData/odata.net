@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
             // Check that the type they gave us is related to the type of the set
             if (navigationSource != null)
             {
-                ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType(), "KeySegments");
+                ExceptionUtil.ThrowIfTypesUnrelated(edmType, navigationSource.EntityType, "KeySegments");
             }
 
             // We don't need to regenerate the identifier.

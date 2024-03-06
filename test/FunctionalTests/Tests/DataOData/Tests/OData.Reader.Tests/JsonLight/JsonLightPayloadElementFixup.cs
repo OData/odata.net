@@ -560,7 +560,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
         private static IEdmEntitySet FindEntitySet(IEdmModel model, IEdmSchemaType entityType)
         {
-            var entitySets = model.EntityContainer.EntitySets().Where(s => entityType.IsOrInheritsFrom(s.EntityType()));
+            var entitySets = model.EntityContainer.EntitySets().Where(s => entityType.IsOrInheritsFrom(s.EntityType));
             ExceptionUtilities.Assert(entitySets.Count() == 1, "Expected one entity set for entity type {0}. Found: {1}", entityType.Name, entitySets.Count());
             return entitySets.Single();
         }

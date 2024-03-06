@@ -305,13 +305,13 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
             }
 
 
-            if (entitySet.EntityType() == entityDataType)
+            if (entitySet.EntityType == entityDataType)
             {
                 // same types; nothing to add to the context URI
                 return;
             }
 
-            if (entityDataType.InheritsFrom(entitySet.EntityType()))
+            if (entityDataType.InheritsFrom(entitySet.EntityType))
             {
                 // derived type; add the type cast segment
                 builder.Append("/");

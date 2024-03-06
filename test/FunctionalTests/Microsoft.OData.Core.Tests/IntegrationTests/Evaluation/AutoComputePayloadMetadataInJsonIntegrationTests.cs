@@ -572,7 +572,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 var writer = new ODataMessageWriter((IODataResponseMessage)message, settings, model);
 
                 // write payload
-                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet, entitySet.EntityType());
+                var entitySetWriter = writer.CreateODataResourceSetWriter(entitySet, entitySet.EntityType);
                 entitySetWriter.WriteStart(new ODataResourceSet());
                 var resource = new ODataResource
                 {
@@ -2118,7 +2118,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             {
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
                 ExpectedTypeName = EntityType.FullName(),
-                NavigationSourceEntityTypeName = EntitySet.EntityType().FullName(),
+                NavigationSourceEntityTypeName = EntitySet.EntityType.FullName(),
                 IsFromCollection = true,
                 NavigationSourceName = EntitySet.Name
             };

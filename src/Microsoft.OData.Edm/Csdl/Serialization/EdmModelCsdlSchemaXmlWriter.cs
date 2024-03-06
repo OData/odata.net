@@ -122,14 +122,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_EntitySet);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, entitySet.Name, EdmValueWriter.StringAsXml);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_EntityType, entitySet.EntityType().FullName(), EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_EntityType, entitySet.EntityType.FullName(), EdmValueWriter.StringAsXml);
         }
 
         internal override void WriteSingletonElementHeader(IEdmSingleton singleton)
         {
             this.xmlWriter.WriteStartElement(CsdlConstants.Element_Singleton);
             this.WriteRequiredAttribute(CsdlConstants.Attribute_Name, singleton.Name, EdmValueWriter.StringAsXml);
-            this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, singleton.EntityType().FullName(), EdmValueWriter.StringAsXml);
+            this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, singleton.EntityType.FullName(), EdmValueWriter.StringAsXml);
         }
 
         internal override void WriteEntityTypeElementHeader(IEdmEntityType entityType)

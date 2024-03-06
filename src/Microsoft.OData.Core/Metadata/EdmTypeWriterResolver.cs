@@ -35,7 +35,7 @@ namespace Microsoft.OData.Metadata
         /// <returns>The <see cref="IEdmEntityType"/> representing the entity type of the <paramref name="navigationSource" />.</returns>
         internal override IEdmEntityType GetElementType(IEdmNavigationSource navigationSource)
         {
-            return navigationSource.EntityType();
+            return navigationSource?.EntityType;
         }
 
         /// <summary>

@@ -319,7 +319,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 if (typeAnnotation != null)
                 {
                     var edmEntityType = typeAnnotation.EdmModelType;
-                    return model.EntityContainersAcrossModels().First().EntitySets().SingleOrDefault(es => es.EntityType().FullName() == edmEntityType.FullName());
+                    return model.EntityContainersAcrossModels().First().EntitySets().SingleOrDefault(es => es.EntityType.FullName() == edmEntityType.FullName());
                 }
 
                 return null;

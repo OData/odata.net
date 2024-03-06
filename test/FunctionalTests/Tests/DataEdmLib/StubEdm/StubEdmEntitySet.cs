@@ -74,6 +74,14 @@ namespace EdmLibTests.StubEdm
         public IEdmType Type { get; set; }
 
         /// <summary>
+        /// Gets the entity type of the navigation source. Can be null.
+        /// </summary>
+        public IEdmEntityType EntityType
+        {
+            get { return this.Type.AsElementType() as IEdmEntityType; }
+        }
+
+        /// <summary>
         /// Gets or sets whether to include in service doucment
         /// </summary>
         public bool IncludeInServiceDocument

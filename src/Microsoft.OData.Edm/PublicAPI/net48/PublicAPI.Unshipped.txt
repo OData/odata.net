@@ -348,6 +348,7 @@ Microsoft.OData.Edm.EdmNavigationSource
 Microsoft.OData.Edm.EdmNavigationSource.AddNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target) -> void
 Microsoft.OData.Edm.EdmNavigationSource.AddNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmNavigationSource target, Microsoft.OData.Edm.IEdmPathExpression bindingPath) -> void
 Microsoft.OData.Edm.EdmNavigationSource.EdmNavigationSource(string name) -> void
+Microsoft.OData.Edm.EdmNavigationSource.EntityType.get -> Microsoft.OData.Edm.IEdmEntityType
 Microsoft.OData.Edm.EdmNavigationSource.NavigationPropertyBindings.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>
 Microsoft.OData.Edm.EdmNavigationSourceKind
 Microsoft.OData.Edm.EdmNavigationSourceKind.ContainedEntitySet = 3 -> Microsoft.OData.Edm.EdmNavigationSourceKind
@@ -648,6 +649,7 @@ Microsoft.OData.Edm.IEdmNavigationPropertyBinding.NavigationProperty.get -> Micr
 Microsoft.OData.Edm.IEdmNavigationPropertyBinding.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
 Microsoft.OData.Edm.IEdmNavigationPropertyBinding.Target.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.Edm.IEdmNavigationSource
+Microsoft.OData.Edm.IEdmNavigationSource.EntityType.get -> Microsoft.OData.Edm.IEdmEntityType
 Microsoft.OData.Edm.IEdmNavigationSource.FindNavigationPropertyBindings(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmNavigationPropertyBinding>
 Microsoft.OData.Edm.IEdmNavigationSource.FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty) -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.Edm.IEdmNavigationSource.FindNavigationTarget(Microsoft.OData.Edm.IEdmNavigationProperty navigationProperty, Microsoft.OData.Edm.IEdmPathExpression bindingPath) -> Microsoft.OData.Edm.IEdmNavigationSource

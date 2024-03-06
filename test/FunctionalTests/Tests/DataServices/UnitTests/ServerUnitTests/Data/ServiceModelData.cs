@@ -406,7 +406,7 @@ namespace AstoriaUnitTests.Data
             // Simplification: no MEST, no inheritance.
             IEdmEntityContainer container = this.model.EntityContainer;
             IEdmEntitySet entitySet = container.FindEntitySet(containerName);
-            return entitySet.EntityType().FullName();
+            return entitySet.EntityType.FullName();
         }
 
         /// <summary>Enumerates the properties that make up the ETag for the type.</summary>

@@ -36,11 +36,11 @@ namespace Microsoft.OData.UriParser
             this.entitySet = entitySet;
 
             // creating a new collection type here because the type in the entity set is just the item type, there is no user-provided collection type.
-            this.type = new EdmCollectionType(new EdmEntityTypeReference(this.entitySet.EntityType(), false));
+            this.type = new EdmCollectionType(new EdmEntityTypeReference(this.entitySet.EntityType, false));
 
             this.Identifier = entitySet.Name;
             this.TargetEdmNavigationSource = entitySet;
-            this.TargetEdmType = entitySet.EntityType();
+            this.TargetEdmType = entitySet.EntityType;
             this.TargetKind = RequestTargetKind.Resource;
             this.SingleResult = false;
         }

@@ -110,7 +110,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 var navProp = entityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { Name = "NavigationProp", Target = payloadEntityType, TargetMultiplicity = isSingletonRelationship ? EdmMultiplicity.One : EdmMultiplicity.Many });
                 model.AddElement(entityType);
                 var entitySet = container.AddEntitySet(entityTypeName, entityType);
-                var targetSet = container.EntitySets().Where(s => payloadEntityType.IsOrInheritsFrom(s.EntityType())).Single();
+                var targetSet = container.EntitySets().Where(s => payloadEntityType.IsOrInheritsFrom(s.EntityType)).Single();
                 entitySet.AddNavigationTarget(navProp, targetSet);
             }
             string fullTypeName = entityType == null ? null : entityType.FullName();
@@ -667,7 +667,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 }
                 else
                 {
-                    resultSet = container.EntitySets().Where(s => resultEntityType.IsOrInheritsFrom(s.EntityType())).Single() as EdmEntitySet;
+                    resultSet = container.EntitySets().Where(s => resultEntityType.IsOrInheritsFrom(s.EntityType)).Single() as EdmEntitySet;
                 }
                 foreach (var p in properties)
                 {
@@ -730,7 +730,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                             navProp.SetAnnotation(navigationPropertyCardinality);
                         }
                         var resultNavProp = resultEntityType.AddUnidirectionalNavigation(new EdmNavigationPropertyInfo() { Name = navProp.Name, Target = navigationPropertyType, TargetMultiplicity = isCollection ? EdmMultiplicity.Many : EdmMultiplicity.One });
-                        var targetSet = container.EntitySets().Where(s => navigationPropertyType.IsOrInheritsFrom(s.EntityType())).Single();
+                        var targetSet = container.EntitySets().Where(s => navigationPropertyType.IsOrInheritsFrom(s.EntityType)).Single();
                         resultSet.AddNavigationTarget(resultNavProp, targetSet);
                     }
                 }

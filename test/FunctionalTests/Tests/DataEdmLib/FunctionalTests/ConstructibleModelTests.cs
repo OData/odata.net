@@ -543,8 +543,8 @@ namespace EdmLibTests.FunctionalTests
             E2.AddNavigationTarget(p201, E1);
             E2.AddNavigationTarget(p203, E1);
 
-            Assert.IsTrue(E1.EntityType() == t1, "EntitySet element type");
-            Assert.IsTrue(E2.EntityType() == t2, "EntitySet element type");
+            Assert.IsTrue(E1.EntityType == t1, "EntitySet element type");
+            Assert.IsTrue(E2.EntityType == t2, "EntitySet element type");
         }
 
         [TestMethod]
@@ -596,8 +596,8 @@ namespace EdmLibTests.FunctionalTests
             E1.AddNavigationTarget(p201, S1);
             E1.AddNavigationTarget(p203, S1);
 
-            Assert.IsTrue(S1.EntityType() == t1, "EntitySet element type");
-            Assert.IsTrue(S2.EntityType() == t2, "EntitySet element type");
+            Assert.IsTrue(S1.EntityType == t1, "EntitySet element type");
+            Assert.IsTrue(S2.EntityType == t2, "EntitySet element type");
         }
 
         [TestMethod]
