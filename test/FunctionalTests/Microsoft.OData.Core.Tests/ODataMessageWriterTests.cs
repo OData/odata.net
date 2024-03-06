@@ -197,7 +197,7 @@ namespace Microsoft.OData.Tests
 #if NETCOREAPP
         #region "ODataUtf8JsonWriter support"
         [Fact]
-        public void SupportsStreamBasedJsonWriter()
+        public void SupportsODataUtf8JsonWriter()
         {
             using MemoryStream stream = new MemoryStream();
             InMemoryMessage request = new InMemoryMessage() { Stream = stream };
@@ -217,12 +217,12 @@ namespace Microsoft.OData.Tests
                 configureServices: (containerBuilder) =>
                 {
                     containerBuilder.AddDefaultODataServices();
-                    containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => DefaultStreamBasedJsonWriterFactory.Default);
+                    containerBuilder.AddService<IJsonWriterFactory>(
+                        ServiceLifetime.Singleton, sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
-            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
-            Assert.IsType<DefaultStreamBasedJsonWriterFactory>(factory);
+            IJsonWriterFactory factory = request.Container.GetService<IJsonWriterFactory>();
+            Assert.IsType<ODataUtf8JsonWriterFactory>(factory);
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
         }
 
@@ -231,11 +231,11 @@ namespace Microsoft.OData.Tests
         [InlineData("utf-16")]
         [InlineData("utf-16BE")]
         [InlineData("utf-32")]
-        public void WhenInjectingStreamBasedJsonWriterFactory_CreatesWriterUsingConfiguredEncoding(string encodingCharset)
+        public void WhenInjectingODataUtf8JsonWriterFactory_CreatesWriterUsingConfiguredEncoding(string encodingCharset)
         {
             // Arrange
-            MockStreamBasedJsonWriterFactoryWrapper writerFactory =
-                new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Default);
+            MockJsonWriterFactoryWrapper writerFactory =
+                new MockJsonWriterFactoryWrapper(ODataUtf8JsonWriterFactory.Default);
             EdmModel model = new EdmModel();
 
             // Act
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Tests
                 encoding: Encoding.GetEncoding(encodingCharset),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                    containerBuilder.AddService<IJsonWriterFactory>(
                         ServiceLifetime.Singleton, sp => writerFactory);
                 });
 
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void WhenInjectingStreamBasedJsonWriterFactory_ThrowException_IfFactoryReturnsNull()
+        public void WhenInjectingODataUtf8JsonWriterFactory_ThrowException_IfFactoryReturnsNull()
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
@@ -273,14 +273,14 @@ namespace Microsoft.OData.Tests
 
             IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
             {
-                containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                    ServiceLifetime.Singleton, sp => new MockStreamBasedJsonWriterFactory(null));
+                containerBuilder.AddService<IJsonWriterFactory>(
+                    ServiceLifetime.Singleton, sp => new MockJsonWriterFactory(null));
             });
 
             request.Container = container;
 
-            IStreamBasedJsonWriterFactory factory = request.Container.GetService<IStreamBasedJsonWriterFactory>();
-            Assert.IsType<MockStreamBasedJsonWriterFactory>(factory);
+            IJsonWriterFactory factory = request.Container.GetService<IJsonWriterFactory>();
+            Assert.IsType<MockJsonWriterFactory>(factory);
 
             settings.ODataUri.ServiceRoot = new Uri("http://www.example.com");
             settings.SetContentType(ODataFormat.Json);
@@ -292,11 +292,11 @@ namespace Microsoft.OData.Tests
                 Value = "This is a test ия"
             });
 
-            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(Encoding.UTF8.WebName, false));
+            writePropertyAction.Throws<ODataException>(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(false, Encoding.UTF8.WebName));
         }
 
         [Fact]
-        public async Task SupportsStreamBasedJsonWriterAsync()
+        public async Task SupportsODataUtf8JsonWriterAsync()
         {
             EdmModel model = new EdmModel();
             string output = await WriteAndGetPayloadAsync(
@@ -309,8 +309,8 @@ namespace Microsoft.OData.Tests
                 }),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => DefaultStreamBasedJsonWriterFactory.Default);
+                    containerBuilder.AddService<IJsonWriterFactory>(
+                        ServiceLifetime.Singleton, sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
@@ -321,11 +321,11 @@ namespace Microsoft.OData.Tests
         [InlineData("utf-16")]
         [InlineData("utf-16BE")]
         [InlineData("utf-32")]
-        public async Task WhenInjectingStreamBasedJsonWriterFactoryAsync_CreatesWriterUsingConfiguredEncoding(string encodingCharset)
+        public async Task WhenInjectingODataUtf8JsonWriterFactoryAsync_CreatesWriterUsingConfiguredEncoding(string encodingCharset)
         {
             // Arrange
-            MockStreamBasedJsonWriterFactoryWrapper writerFactory =
-                new MockStreamBasedJsonWriterFactoryWrapper(DefaultStreamBasedJsonWriterFactory.Default);
+            MockJsonWriterFactoryWrapper writerFactory =
+                new MockJsonWriterFactoryWrapper(ODataUtf8JsonWriterFactory.Default);
             EdmModel model = new EdmModel();
 
             // Act
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Tests
                 encoding: Encoding.GetEncoding(encodingCharset),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IStreamBasedJsonWriterFactory>(
+                    containerBuilder.AddService<IJsonWriterFactory>(
                         ServiceLifetime.Singleton, sp => writerFactory);
                 });
 

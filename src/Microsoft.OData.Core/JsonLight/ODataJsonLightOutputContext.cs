@@ -28,11 +28,6 @@ namespace Microsoft.OData.JsonLight
         internal MemoryStream BinaryValueStream = null;
 
         /// <summary>
-        /// An in-memory StringWriter for writing string properties to non-streaming json writer.
-        /// </summary>
-        internal StringWriter StringWriter = null;
-
-        /// <summary>
         /// The json metadata level (i.e., full, none, minimal) being written.
         /// </summary>
         private readonly JsonLightMetadataLevel metadataLevel;
@@ -43,16 +38,8 @@ namespace Microsoft.OData.JsonLight
         /// <summary>The message output stream.</summary>
         private Stream messageOutputStream;
 
-#if NETSTANDARD1_1
-        /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-        private AsyncBufferedStream asynchronousOutputStream;
-#else
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
         private Stream asynchronousOutputStream;
-#endif
-
-        /// <summary>The text writer created for the output stream.</summary>
-        private TextWriter textWriter;
 
         /// <summary>The JSON writer to write to.</summary>
         /// <remarks>This field is also used to determine if the output context has been disposed already.</remarks>
@@ -85,43 +72,33 @@ namespace Microsoft.OData.JsonLight
             {
                 this.messageOutputStream = messageInfo.MessageStream;
 
-                
-
                 bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
 
-                // We first attempt to create a JSON writer which directly writes to the stream
-                IStreamBasedJsonWriterFactory streamBasedJsonWriterFactory = this.Container?.GetService<IStreamBasedJsonWriterFactory>();
+                IJsonWriterFactory jsonWriterFactory = this.Container?.GetService<IJsonWriterFactory>();
 
-                if (streamBasedJsonWriterFactory != null)
+#if NETCOREAPP
+                if (jsonWriterFactory is ODataUtf8JsonWriterFactory)
                 {
-                    // When using IStreamBasedJsonWriterFactory, we do not wrap the ouput stream in a buffered stream.
+                    // When using ODataUtf8JsonWriterFactory, we do not wrap the ouput stream in a buffered stream.
                     // The default ODataUtf8JsonWriter will be used, and that writer handles
                     // its own buffering (more efficiently). It leads to too many byte[] array allocations if we have
                     // both the BufferedStream and ODataUtf8JsonWriter allocating buffers unnecessarily.
                     this.asynchronousOutputStream = this.messageOutputStream;
                     this.jsonWriter = CreateJsonWriter(
-                        streamBasedJsonWriterFactory,
+                        this.Container,
                         this.messageOutputStream,
                         isIeee754Compatible,
+                        messageWriterSettings,
                         messageInfo.Encoding);
                 }
+#endif
 
-                // Then fallback to the TextWriter-based approach
+                // Fallback if not using ODataUtf8JsonWriterFactory
                 if (this.jsonWriter == null)
                 {
-                    Stream outputStream;
-                    if (this.Synchronous)
-                    {
-                        outputStream = this.messageOutputStream;
-                    }
-                    else
-                    {
-                        this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, this.MessageWriterSettings.BufferSize);
-                        outputStream = this.asynchronousOutputStream;
-                    }
+                    Stream outputStream = InitializeOutputStream();
 
-                    this.textWriter = new StreamWriter(outputStream, messageInfo.Encoding);
-                    this.jsonWriter = CreateJsonWriter(this.Container, this.textWriter, isIeee754Compatible, messageWriterSettings);
+                    this.jsonWriter = CreateJsonWriter(this.Container, outputStream, isIeee754Compatible, messageWriterSettings, messageInfo.Encoding);
                 }
             }
             catch (Exception e)
@@ -144,29 +121,28 @@ namespace Microsoft.OData.JsonLight
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="textWriter">The text writer to write to.</param>
+        /// <param name="stream">The stream to write to.</param>
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         internal ODataJsonLightOutputContext(
-            TextWriter textWriter,
+            Stream stream,
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
             : base(ODataFormat.Json, messageInfo, messageWriterSettings)
         {
             Debug.Assert(!this.WritingResponse, "Expecting WritingResponse to always be false for this constructor, so no need to validate the MetadataDocumentUri on the writer settings.");
-            Debug.Assert(textWriter != null, "textWriter != null");
+            Debug.Assert(stream != null, "stream != null");
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
-            this.textWriter = textWriter;
             bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
-            this.jsonWriter = CreateJsonWriter(messageInfo.Container, textWriter, ieee754CompatibleSetToTrue, messageWriterSettings);
+            this.jsonWriter = CreateJsonWriter(messageInfo.Container, stream, ieee754CompatibleSetToTrue, messageWriterSettings, messageInfo.Encoding);
 
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
         }
 
         /// <summary>
-        /// Returns the <see cref="JsonWriter"/> which is to be used to write the content of the message.
+        /// Returns the <see cref="IJsonWriter"/> which is to be used to write the content of the message.
         /// </summary>
         public IJsonWriter JsonWriter
         {
@@ -579,11 +555,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-#if NETSTANDARD1_1
-                this.asynchronousOutputStream.FlushSync();
-#else
                 this.asynchronousOutputStream.Flush();
-#endif
             }
         }
 
@@ -595,11 +567,7 @@ namespace Microsoft.OData.JsonLight
         {
             if (this.asynchronousOutputStream != null)
             {
-#if NETSTANDARD1_1
                 return this.asynchronousOutputStream.FlushAsync();
-#else
-                return this.asynchronousOutputStream.FlushAsync();
-#endif
             }
 
             return TaskUtils.CompletedTask;
@@ -843,14 +811,9 @@ namespace Microsoft.OData.JsonLight
                         // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                         if (this.asynchronousOutputStream != null)
                         {
-#if NETSTANDARD1_1
-                            this.asynchronousOutputStream.FlushSync();
-                            this.asynchronousOutputStream.Dispose();
-#else
                             this.asynchronousOutputStream.Flush();
                             // We are working with a BufferedStream here. We flushed it already, so there is nothing else to dispose. And it would dispose the 
                             // inner stream as well.
-#endif
                         }
 
                         // Dispose the message stream (note that we OWN this stream, so we always dispose it).
@@ -862,21 +825,13 @@ namespace Microsoft.OData.JsonLight
                         this.BinaryValueStream.Flush();
                         this.BinaryValueStream.Dispose();
                     }
-
-                    if (this.StringWriter != null)
-                    {
-                        this.StringWriter.Flush();
-                        this.StringWriter.Dispose();
-                    }
                 }
                 finally
                 {
                     this.messageOutputStream = null;
                     this.asynchronousOutputStream = null;
                     this.BinaryValueStream = null;
-                    this.textWriter = null;
                     this.jsonWriter = null;
-                    this.StringWriter = null;
                 }
             }
 
@@ -916,21 +871,13 @@ namespace Microsoft.OData.JsonLight
                     await this.BinaryValueStream.FlushAsync().ConfigureAwait(false);
                     await this.BinaryValueStream.DisposeAsync().ConfigureAwait(false);
                 }
-
-                if (this.StringWriter != null)
-                {
-                    await this.StringWriter.FlushAsync().ConfigureAwait(false);
-                    await this.StringWriter.DisposeAsync().ConfigureAwait(false);
-                }
             }
             finally
             {
                 this.messageOutputStream = null;
                 this.asynchronousOutputStream = null;
                 this.BinaryValueStream = null;
-                this.textWriter = null;
                 this.jsonWriter = null;
-                this.StringWriter = null;
             }
         }
 #endif
@@ -939,29 +886,37 @@ namespace Microsoft.OData.JsonLight
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>.
         /// </summary>
         /// <param name="container">The dependency injection container to get related services.</param>
-        /// <param name="textWriter">The text writer to write to.</param>
+        /// <param name="stream">The stream to write to.</param>
         /// <param name="isIeee754Compatible">true if the writer should write large integers as strings.</param>
         /// <param name="writerSettings">Configuration settings for the OData writer.</param>
+        /// <param name="encoding">The character encoding to use.</param>
         /// <returns>An <see cref="IJsonWriter"/> instance.</returns>
         private static IJsonWriter CreateJsonWriter(
             IServiceProvider container,
-            TextWriter textWriter,
+            Stream stream,
             bool isIeee754Compatible,
-            ODataMessageWriterSettings writerSettings)
+            ODataMessageWriterSettings writerSettings,
+            Encoding encoding)
         {
             IJsonWriter jsonWriter;
             if (container == null)
             {
+                TextWriter textWriter = new StreamWriter(stream, encoding);
+
                 jsonWriter = new JsonWriter(textWriter, isIeee754Compatible);
             }
             else
             {
                 IJsonWriterFactory jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
-                jsonWriter = jsonWriterFactory.CreateJsonWriter(textWriter, isIeee754Compatible);
-                Debug.Assert(jsonWriter != null, "jsonWriter != null");
+                jsonWriter = jsonWriterFactory.CreateJsonWriter(stream, isIeee754Compatible, encoding);
+
+                if (jsonWriter == null)
+                {
+                    throw new ODataException(Strings.ODataMessageWriter_JsonWriterFactory_ReturnedNull(isIeee754Compatible, encoding.WebName));
+                }
             }
 
-            if (jsonWriter is Json.JsonWriter defaultJsonWriter)
+            if (jsonWriter is JsonWriter defaultJsonWriter)
             {
                 defaultJsonWriter.ArrayPool = writerSettings.ArrayPool;
             }
@@ -970,29 +925,20 @@ namespace Microsoft.OData.JsonLight
         }
 
         /// <summary>
-        /// Creates a new JSON writer of <see cref="IJsonWriter"/> that can write
-        /// directly to the output stream. Returns null if unable to create
-        /// such a writer with the given constraints.
+        /// Initializes the output stream.
         /// </summary>
-        /// <param name="factory">The factory used to create the <see cref="IJsonWriter"/> instance.</param>
-        /// <param name="outputStream">The output stream to write to.</param>
-        /// <param name="isIeee754Compatible">True if the writer should write decimals and longs as strings.</param>
-        /// <param name="encoding">The text encoding of the output data.</param>
-        /// <returns>The JSON writer instance, or null if none could be created.</returns>
-        private static IJsonWriter CreateJsonWriter(
-            IStreamBasedJsonWriterFactory factory,
-            Stream outputStream,
-            bool isIeee754Compatible,
-            Encoding encoding)
+        /// <param name="stream">The supplied message stream.</param>
+        /// <returns>The output stream.</returns>
+        private Stream InitializeOutputStream()
         {
-            IJsonWriter jsonWriter = factory.CreateJsonWriter(outputStream, isIeee754Compatible, encoding);
-
-            if (jsonWriter == null)
+            if (this.Synchronous)
             {
-                throw new ODataException(Strings.ODataMessageWriter_StreamBasedJsonWriterFactory_ReturnedNull(encoding.WebName, isIeee754Compatible));
+                return this.messageOutputStream;
             }
 
-            return jsonWriter;
+            this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, this.MessageWriterSettings.BufferSize);
+
+            return this.asynchronousOutputStream;
         }
 
         /// <summary>

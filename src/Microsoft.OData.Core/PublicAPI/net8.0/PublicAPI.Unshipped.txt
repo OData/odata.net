@@ -1,3 +1,4 @@
+Microsoft.OData.Json.DefaultJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
@@ -58,6 +59,14 @@ Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.get -> bool
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.set -> void
+Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.Json.ODataUtf8JsonWriterFactory
+Microsoft.OData.Json.ODataUtf8JsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.Json.ODataUtf8JsonWriterFactory.ODataUtf8JsonWriterFactory(System.Text.Encodings.Web.JavaScriptEncoder encoder = null) -> void
+Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
+Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
+Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
+static Microsoft.OData.Json.ODataUtf8JsonWriterFactory.Default.get -> Microsoft.OData.Json.ODataUtf8JsonWriterFactory
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.Text.Json.JsonElement value) -> void
 Microsoft.OData.ODataJsonElementValue
@@ -237,7 +246,6 @@ Microsoft.OData.IODataResponseMessage.StatusCode.set -> void
 Microsoft.OData.IODataResponseMessageAsync
 Microsoft.OData.IODataResponseMessageAsync.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
 Microsoft.OData.Json.DefaultJsonWriterFactory
-Microsoft.OData.Json.DefaultJsonWriterFactory.CreateJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory() -> void
 Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory(Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption) -> void
 Microsoft.OData.Json.IJsonReader
@@ -274,7 +282,6 @@ Microsoft.OData.Json.IJsonWriter.WriteValue(System.DateTimeOffset value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.Guid value) -> void
 Microsoft.OData.Json.IJsonWriter.WriteValue(System.TimeSpan value) -> void
 Microsoft.OData.Json.IJsonWriterFactory
-Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.TextWriter textWriter, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.JsonNodeType.EndArray = 4 -> Microsoft.OData.Json.JsonNodeType
 Microsoft.OData.Json.JsonNodeType.EndObject = 2 -> Microsoft.OData.Json.JsonNodeType
@@ -2478,14 +2485,8 @@ virtual Microsoft.OData.UriParser.SelectItemTranslator<T>.Translate(Microsoft.OD
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedPrecision(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.TypeFacetsPromotionRules.GetPromotedScale(int? left, int? right) -> int?
 virtual Microsoft.OData.UriParser.UriPathParser.ParsePathIntoSegments(System.Uri fullUri, System.Uri serviceBaseUri) -> System.Collections.Generic.ICollection<string>
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
-Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.DefaultStreamBasedJsonWriterFactory(System.Text.Encodings.Web.JavaScriptEncoder encoder = null) -> void
-Microsoft.OData.Json.IStreamBasedJsonWriterFactory
-Microsoft.OData.Json.IStreamBasedJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.get -> bool
 Microsoft.OData.ODataMessageReaderSettings.EnableUntypedCollections.set -> void
-static Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory.Default.get -> Microsoft.OData.Json.DefaultStreamBasedJsonWriterFactory
 static Microsoft.OData.UriParser.ODataPathExtensions.EdmType(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmTypeReference
 static Microsoft.OData.UriParser.ODataPathExtensions.IsCollection(this Microsoft.OData.UriParser.ODataPath path) -> bool
 static Microsoft.OData.UriParser.ODataPathExtensions.NavigationSource(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.Edm.IEdmNavigationSource

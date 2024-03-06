@@ -935,25 +935,14 @@ namespace Microsoft.OData.JsonLight
                 this.jsonWriter.Flush();
             }
 
-            TextWriter writer;
-            if (this.jsonWriter == null)
+            string contentType = "text/plain";
+            ODataStreamPropertyInfo streamInfo = property as ODataStreamPropertyInfo;
+            if (streamInfo != null && streamInfo.ContentType != null)
             {
-                this.jsonLightOutputContext.StringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-                writer = this.jsonLightOutputContext.StringWriter;
-            }
-            else
-            {
-                string contentType = "text/plain";
-                ODataStreamPropertyInfo streamInfo = property as ODataStreamPropertyInfo;
-                if (streamInfo != null && streamInfo.ContentType != null)
-                {
-                    contentType = streamInfo.ContentType;
-                }
-
-                writer = this.jsonWriter.StartTextWriterValueScope(contentType);
+                contentType = streamInfo.ContentType;
             }
 
-            return writer;
+            return this.jsonWriter.StartTextWriterValueScope(contentType);
         }
 
         /// <summary>
@@ -961,18 +950,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         protected sealed override void EndTextWriter()
         {
-            if (this.jsonWriter == null)
-            {
-                Debug.Assert(this.jsonLightOutputContext.StringWriter != null, "Calling EndTextWriter with a non-streaming JsonWriter and a null StringWriter");
-                this.jsonLightOutputContext.StringWriter.Flush();
-                this.jsonWriter.WriteValue(this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString());
-                this.jsonLightOutputContext.StringWriter.Dispose();
-                this.jsonLightOutputContext.StringWriter = null;
-            }
-            else
-            {
-                this.jsonWriter.EndTextWriterValueScope();
-            }
+            this.jsonWriter.EndTextWriterValueScope();
         }
 
         /// <summary>
@@ -1996,26 +1974,15 @@ namespace Microsoft.OData.JsonLight
                     .ConfigureAwait(false);
             }
 
-            TextWriter writer;
-            if (this.jsonWriter == null)
+            string contentType = "text/plain";
+            ODataStreamPropertyInfo streamInfo = property as ODataStreamPropertyInfo;
+            if (streamInfo?.ContentType != null)
             {
-                this.jsonLightOutputContext.StringWriter = new StringWriter(System.Globalization.CultureInfo.InvariantCulture);
-                writer = this.jsonLightOutputContext.StringWriter;
-            }
-            else
-            {
-                string contentType = "text/plain";
-                ODataStreamPropertyInfo streamInfo = property as ODataStreamPropertyInfo;
-                if (streamInfo?.ContentType != null)
-                {
-                    contentType = streamInfo.ContentType;
-                }
-
-                writer = await this.jsonWriter.StartTextWriterValueScopeAsync(contentType)
-                    .ConfigureAwait(false);
+                contentType = streamInfo.ContentType;
             }
 
-            return writer;
+            return await this.jsonWriter.StartTextWriterValueScopeAsync(contentType)
+                .ConfigureAwait(false);
         }
 
         /// <summary>
@@ -2024,27 +1991,7 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A task that represents the asynchronous write operation.</returns>
         protected sealed override Task EndTextWriterAsync()
         {
-            if (this.jsonWriter == null)
-            {
-                Debug.Assert(this.jsonLightOutputContext.StringWriter != null,
-                    "Calling EndTextWriter with a non-streaming asynchronous JsonWriter and a null StringWriter");
-
-                return EndTextWriterInnerAsync();
-
-                async Task EndTextWriterInnerAsync()
-                {
-                    await this.jsonLightOutputContext.StringWriter.FlushAsync()
-                    .ConfigureAwait(false);
-                    await this.jsonWriter.WriteValueAsync(
-                        this.jsonLightOutputContext.StringWriter.GetStringBuilder().ToString()).ConfigureAwait(false);
-                    this.jsonLightOutputContext.StringWriter.Dispose();
-                    this.jsonLightOutputContext.StringWriter = null;
-                }
-            }
-            else
-            {
-                return this.jsonWriter.EndTextWriterValueScopeAsync();
-            }
+            return this.jsonWriter.EndTextWriterValueScopeAsync();
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Text;
 
 namespace Microsoft.OData.Json
 {
@@ -37,11 +38,13 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>.
         /// </summary>
-        /// <param name="textWriter">Writer to which text needs to be written.</param>
+        /// <param name="stream">The stream to write to.</param>
         /// <param name="isIeee754Compatible">True if it is IEEE754Compatible.</param>
         /// <returns>The JSON writer created.</returns>
-        public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
+        public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
+            TextWriter textWriter = new StreamWriter(stream, encoding);
+
             return new JsonWriter(textWriter, isIeee754Compatible, this.stringEscapeOption);
         }
     }
