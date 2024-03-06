@@ -1,17 +1,3 @@
-Microsoft.OData.Json.IJsonReader.Value.get -> object
-Microsoft.OData.Json.IJsonReaderAsync
-Microsoft.OData.Json.IJsonReaderAsync.GetValueAsync() -> System.Threading.Tasks.Task<object>
-Microsoft.OData.Json.IJsonReaderAsync.ReadAsync() -> System.Threading.Tasks.Task<bool>
-Microsoft.OData.Json.IJsonReaderFactoryAsync
-Microsoft.OData.Json.IJsonReaderFactoryAsync.CreateAsynchronousJsonReader(System.IO.TextReader textReader, bool isIeee754Compatible) -> Microsoft.OData.Json.IJsonReaderAsync
-Microsoft.OData.Json.IJsonStreamReader
-Microsoft.OData.Json.IJsonStreamReader.CanStream() -> bool
-Microsoft.OData.Json.IJsonStreamReader.CreateReadStream() -> System.IO.Stream
-Microsoft.OData.Json.IJsonStreamReader.CreateTextReader() -> System.IO.TextReader
-Microsoft.OData.Json.IJsonStreamReaderAsync
-Microsoft.OData.Json.IJsonStreamReaderAsync.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
-Microsoft.OData.Json.IJsonStreamReaderAsync.CreateReadStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.Json.IJsonStreamReaderAsync.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
 Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
