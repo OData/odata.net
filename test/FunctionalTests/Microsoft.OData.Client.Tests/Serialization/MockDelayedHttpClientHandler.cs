@@ -34,26 +34,9 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
 #if NETCOREAPP
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            NotifyRequestStart(request);
-            Stopwatch stopwatch = new Stopwatch();
-            stopwatch.Start();
-
-            while (true)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-
-                if (stopwatch.ElapsedMilliseconds > _delay)
-                {
-                    break;
-                }
-            }
-
-            stopwatch.Stop();
-            return base.Send(request, cancellationToken);
-        }
 #else
         public override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+#endif
         {
             NotifyRequestStart(request);
             Stopwatch stopwatch = new Stopwatch();
@@ -72,7 +55,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
             stopwatch.Stop();
             return base.Send(request, cancellationToken);
         }
-#endif
 
         private void NotifyRequestStart(HttpRequestMessage request)
         {

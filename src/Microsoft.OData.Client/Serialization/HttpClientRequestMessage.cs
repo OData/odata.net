@@ -43,7 +43,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// HttpClient to use when the caller does not provide one.
         /// </summary>
-        private static readonly HttpClient DefaultClient = new HttpClient();
+        private static readonly HttpClient _defaultClient = new HttpClient();
 
         /// <summary> The effective HTTP method. </summary>
         private readonly string _effectiveHttpMethod;
@@ -52,7 +52,6 @@ namespace Microsoft.OData.Client
         private readonly HttpRequestMessage _requestMessage;
         private readonly HttpClient _client;
         private readonly MemoryStream _messageStream;
-        private readonly bool _shouldDisposeClient;
         private CancellationTokenSource _abortRequestCancellationTokenSource;
         private TimeSpan _timeout;
         // Whether the _timeout value has been changed from the default or not
@@ -88,18 +87,13 @@ namespace Microsoft.OData.Client
             IHttpClientProvider clientProvider = args.HttpClientProvider;
             if (clientProvider == null)
             {
-                _client = DefaultClient;
-                _shouldDisposeClient = true;
+                _client = _defaultClient;
             }
             else
             {
                 try
                 {
                     _client = clientProvider.GetHttpClient();
-                    // Do not dispose the client provided by the caller because
-                    // it may be reused. It's the responsibility of the caller
-                    // to manage that client's lifetime.
-                    _shouldDisposeClient = false;
                 }
                 catch
                 {
@@ -517,11 +511,6 @@ namespace Microsoft.OData.Client
                 if (response != null)
                 {
                     ((IDisposable)response).Dispose();
-                }
-
-                if (_shouldDisposeClient)
-                {
-                    _client.Dispose();
                 }
 
                 _abortRequestCancellationTokenSource.Dispose();

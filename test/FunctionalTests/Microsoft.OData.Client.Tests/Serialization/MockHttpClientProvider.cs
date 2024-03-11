@@ -15,7 +15,6 @@ namespace Microsoft.OData.Client.Tests.Serialization
     /// for testing purposes.
     /// </summary>
     internal sealed class MockHttpClientProvider
-
         : IHttpClientProvider
     {
         private readonly HttpClient _client;

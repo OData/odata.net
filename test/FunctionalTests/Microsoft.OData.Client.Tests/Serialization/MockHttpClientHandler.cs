@@ -61,19 +61,14 @@ namespace Microsoft.OData.Client.Tests.Serialization
 
 #if NETCOREAPP
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-        {
-            _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
-            HttpResponseMessage response = _requestHandler(request);
-            return response;
-        }
 #else
         public virtual HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+#endif
         {
             _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
             HttpResponseMessage response = _requestHandler(request);
             return response;
         }
-#endif
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {

@@ -1,6 +1,6 @@
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientHandlerProvider) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientProvider httpClientProvider) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
 Microsoft.OData.Client.DataServiceContext.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
 Microsoft.OData.Client.DataServiceContext.HttpClientProvider.set -> void
