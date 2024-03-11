@@ -55,7 +55,7 @@ namespace Microsoft.OData.Client
         private CancellationTokenSource _abortRequestCancellationTokenSource;
         private TimeSpan _timeout;
         // Whether the _timeout value has been changed from the default or not
-        bool _isCustomTimeout = false;
+        bool _isTimeoutProvidedByCaller = false;
 
         /// <summary>
         /// This will be used to cache content headers to be retrieved later. 
@@ -173,7 +173,7 @@ namespace Microsoft.OData.Client
             set
             {
                 _timeout = TimeSpan.FromSeconds(value);
-                _isCustomTimeout = true;
+                _isTimeoutProvidedByCaller = true;
             }
         }
 
@@ -414,7 +414,7 @@ namespace Microsoft.OData.Client
             _requestMessage.Method = new HttpMethod(_effectiveHttpMethod);
             // If the timeout value is still the default, don't schedule cancellation.
             // The timeout from the HttpClient will take effect.
-            if (_isCustomTimeout)
+            if (_isTimeoutProvidedByCaller)
             {
                 _abortRequestCancellationTokenSource.CancelAfter(_timeout);
             }
