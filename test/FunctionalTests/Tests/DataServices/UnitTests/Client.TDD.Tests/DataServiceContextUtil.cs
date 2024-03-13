@@ -29,7 +29,6 @@ namespace Microsoft.OData.Client.TDDUnitTests
                     "GET",
                     new Uri("http://temp.org/"),
                     false,
-                    false,
                     new Dictionary<string, string>()),
                 ValidEdmx,
                 new Dictionary<string, string>());

@@ -26,7 +26,6 @@ namespace AstoriaUnitTests
     using Microsoft.OData.Edm;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Suites.Data.Test;
-    using AstoriaTestFramework.Client.CLWrappers;
 
     public static class DataServiceContextExtensions
     {

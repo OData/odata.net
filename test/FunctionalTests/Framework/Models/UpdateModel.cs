@@ -286,7 +286,6 @@ namespace System.Data.Test.Astoria
         public void CreateContext()
         {
             Context = new WebDataCtxWrapper(this.workSpace.ServiceRoot);
-            Context.Credentials = CredentialCache.DefaultNetworkCredentials;
             AstoriaTestLog.WriteLineIgnore(this.workSpace.ServiceRoot.ToString());
         }
 
@@ -554,7 +553,6 @@ namespace System.Data.Test.Astoria
         {
 
             _context = new WebDataCtxWrapper(this.workSpace.ServiceRoot);
-            _context.Credentials = CredentialCache.DefaultNetworkCredentials;
             AstoriaTestLog.WriteLineIgnore(this.workSpace.ServiceRoot.ToString());
             //Source = SourceResourceType.CreateInstance( false );
             //Target = TargetResourceType.CreateInstance( false );
@@ -995,7 +993,6 @@ namespace System.Data.Test.Astoria
         public virtual void CreateContext()
         {
             this.Context = new WebDataCtxWrapper(this.Workspace.ServiceRoot);
-            this.Context.Credentials = CredentialCache.DefaultNetworkCredentials;
             AstoriaTestLog.WriteLineIgnore(this.Workspace.ServiceRoot.ToString());
         }
 
@@ -1339,17 +1336,11 @@ namespace System.Data.Test.Astoria
                 }
 
             }
-
-
-
-
-
         }
 
         public static void Verify(object entity, string uri, EntityStates state, Workspace w)
         {
             WebDataCtxWrapper ctx = new WebDataCtxWrapper(w.ServiceRoot);
-            ctx.Credentials = CredentialCache.DefaultNetworkCredentials;
 
             MethodInfo mi = ctx.GetType().GetMethod("Execute", new Type[] { typeof(System.Uri) });
             MethodInfo execMethod = mi.MakeGenericMethod(entity.GetType());
@@ -1409,11 +1400,7 @@ namespace System.Data.Test.Astoria
                     }
                 }
             }
-
         }
-
-
-
         #endregion
     }
 

@@ -102,7 +102,6 @@
     <Compile Include="Models\CustomDataBinding.cs" />
     <Compile Include="Models\SimpleNorthwind.cs" />
     <Compile Include="Services\NamedStreamService.cs" />
-    <Compile Include="TestHttpClientProvider.cs" />
     <Compile Include="Utils\AssertUtil.cs" />
   </ItemGroup>
   <ItemGroup>

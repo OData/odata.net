@@ -75,7 +75,6 @@
     <Compile Include="Data\NorthwindClientModel.cs" />
     <Compile Include="Data\Aruba.Edm.ObjectLayer.cs" />
     <Compile Include="Data\Northwind.Edm.ObjectLayer.cs" />
-    <Compile Include="TestHttpClientProvider.cs" />
     <!-- Utility files. -->
     <Compile Include="Util\DataServiceContextTestUtil.cs" />
     <Compile Include="Util\DataUtil.cs" />

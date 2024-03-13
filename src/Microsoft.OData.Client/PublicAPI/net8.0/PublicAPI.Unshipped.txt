@@ -2,10 +2,8 @@ abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, System.Net.Http.IHttpClientFactory httpClientFactory) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
-Microsoft.OData.Client.DataServiceContext.HttpClientProvider.get -> Microsoft.OData.Client.IHttpClientProvider
-Microsoft.OData.Client.DataServiceContext.HttpClientProvider.set -> void
-Microsoft.OData.Client.IHttpClientProvider
-Microsoft.OData.Client.IHttpClientProvider.GetHttpClient() -> System.Net.Http.HttpClient
+Microsoft.OData.Client.DataServiceContext.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
+Microsoft.OData.Client.DataServiceContext.HttpClientFactory.set -> void
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void

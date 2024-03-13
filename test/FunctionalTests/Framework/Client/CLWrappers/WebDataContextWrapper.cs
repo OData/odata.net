@@ -50,12 +50,11 @@ namespace TestSL
 
 namespace System.Data.Test.Astoria
 {
-    using System.Diagnostics;
     using Microsoft.OData.Edm;
     using TestSL;
     using System.Security.Permissions;
     using System.Security;
-    using AstoriaTestFramework.Client.CLWrappers;
+    using Microsoft.OData.TestCommon;
 
     public enum ContextAction
     {
@@ -256,7 +255,7 @@ namespace System.Data.Test.Astoria
 
             // Create new data service context to interact with messaging service.
             SLDataService = new DataServiceContext(new Uri(validMQuri, UriKind.Absolute));
-            SLDataService.HttpClientProvider = new TestHttpClientProvider(new TestHttpClientProviderOptions
+            SLDataService.HttpClientFactory = new TestHttpClientFactory(new TestHttpClientFactoryOptions
             {
                 Credentials = CredentialCache.DefaultNetworkCredentials
             });
