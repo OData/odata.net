@@ -266,7 +266,7 @@ namespace Microsoft.OData.Client
                     requestEventArgs.RequestUri,
                     context.UsePostTunneling,
                     requestEventArgs.Headers,
-                    context.HttpClientProvider);
+                    context.HttpClientFactory);
 
                 httpRequest = new HttpClientRequestMessage(args);
             }

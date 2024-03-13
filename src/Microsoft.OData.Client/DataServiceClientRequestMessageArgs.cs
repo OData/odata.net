@@ -27,7 +27,7 @@ namespace Microsoft.OData.Client
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool usePostTunneling, IDictionary<string, string> headers)
-            : this(method, requestUri, usePostTunneling, headers, httpClientProvider: null)
+            : this(method, requestUri, usePostTunneling, headers, httpClientFactory: null)
         {
         }
 
@@ -38,8 +38,8 @@ namespace Microsoft.OData.Client
         /// <param name="requestUri">The Request Uri.</param>
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
-        /// <param name="httpClientProvider">The <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClient"/> that should be used to send the request message.</param>
-        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientProvider httpClientProvider)
+        /// <param name="httpClientFactory">The <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClient"/> that should be used to send the request message.</param>
+        public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientFactory httpClientFactory)
         {
             Debug.Assert(method != null, "method cannot be null");
             Debug.Assert(requestUri != null, "requestUri cannot be null");
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Client
             this.Method = method;
             this.RequestUri = requestUri;
             this.UsePostTunneling = usePostTunneling;
-            this.HttpClientProvider = httpClientProvider;
+            this.HttpClientFactory = httpClientFactory;
 
             this.actualMethod = this.Method;
             if (this.UsePostTunneling && this.Headers.ContainsKey(XmlConstants.HttpXMethod))
@@ -90,9 +90,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClient"/>
+        /// Gets the <see cref="IHttpClientFactory"/> that provides the <see cref="HttpClient"/>
         /// that should be used to send the request message.
         /// </summary>
-        public IHttpClientProvider HttpClientProvider { get; private set; }
+        public IHttpClientFactory HttpClientFactory { get; private set; }
     }
 }

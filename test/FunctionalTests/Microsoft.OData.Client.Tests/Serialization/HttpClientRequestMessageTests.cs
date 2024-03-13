@@ -37,7 +37,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
 
-                var httpClientHandlerProvider = new MockHttpClientProvider(handler);
+                var httpClientHandlerProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
@@ -74,7 +74,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
 
-                var httpClientProvider = new MockHttpClientProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
 
-                var httpClientProvider = new MockHttpClientProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockDelayedHttpClientHandler("Success", delayMilliseconds: 2000))
             {
 
-                var httpClientProvider = new MockHttpClientProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
 
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
@@ -224,7 +224,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
-                var httpClientProvider = new MockHttpClientProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
@@ -262,7 +262,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockDelayedHttpClientHandler("Success", 5000))
             {
-                var httpClientProvider = new MockHttpClientProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request1"),
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
             {
-                var httpClientProvider = new MockHttpClientProvider(handler, new MockHttpClientProviderOptions
+                var httpClientProvider = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
                 {
                     Timeout = 1
                 });

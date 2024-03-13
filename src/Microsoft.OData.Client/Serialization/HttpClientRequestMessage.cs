@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
-
+    
     /// <summary>
     /// HttpClient based implementation of DataServiceClientRequestMessage.
     /// </summary>
@@ -84,8 +84,8 @@ namespace Microsoft.OData.Client
 
             _abortRequestCancellationTokenSource = new CancellationTokenSource();
 
-            IHttpClientProvider clientProvider = args.HttpClientProvider;
-            if (clientProvider == null)
+            IHttpClientFactory clientFactory = args.HttpClientFactory;
+            if (clientFactory == null)
             {
                 _client = _defaultClient;
             }
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Client
             {
                 try
                 {
-                    _client = clientProvider.GetHttpClient();
+                    _client = clientFactory.CreateClient();
                 }
                 catch
                 {

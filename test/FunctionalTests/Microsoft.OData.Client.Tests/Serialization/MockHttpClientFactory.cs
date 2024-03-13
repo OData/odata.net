@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="MockHttpClientProvider.cs" company="Microsoft">
+// <copyright file="MockHttpClientFactory.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,24 +11,24 @@ using System.Threading;
 namespace Microsoft.OData.Client.Tests.Serialization
 {
     /// <summary>
-    /// A mock implementation of <see cref="IHttpClientProvider"/>
+    /// A mock implementation of <see cref="IHttpClientFactory"/>
     /// for testing purposes.
     /// </summary>
-    internal sealed class MockHttpClientProvider
-        : IHttpClientProvider
+    internal sealed class MockHttpClientFactory
+        : IHttpClientFactory
     {
         private readonly HttpClient _client;
         private int _numCalls = 0;
 
         /// <summary>
-        /// Creates a new instance of <see cref="MockHttpClientProvider"/>.
+        /// Creates a new instance of <see cref="MockHttpClientFactory"/>.
         /// </summary>
         /// <param name="handler">The <see cref="HttpClientHandler"/> based on which to create HttpClient.</param>
-        public MockHttpClientProvider(HttpClientHandler handler, MockHttpClientProviderOptions options = default)
+        public MockHttpClientFactory(HttpClientHandler handler, MockHttpClientFactoryOptions options = default)
         {
             _client = new HttpClient(handler);
 
-            options = options == null ? new MockHttpClientProviderOptions() : options;
+            options = options == null ? new MockHttpClientFactoryOptions() : options;
             if (options.Timeout.HasValue)
             {
                 _client.Timeout = TimeSpan.FromSeconds(options.Timeout.Value);
@@ -36,19 +36,19 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         /// <summary>
-        /// Number of times <see cref="GetHttpClient()"/> was
+        /// Number of times <see cref="CreateClient()"/> was
         /// called.
         /// </summary>
         public int NumCalls => _numCalls;
 
-        public HttpClient GetHttpClient()
+        public HttpClient CreateClient(string name)
         {
             Interlocked.Increment(ref _numCalls);
             return _client;
         }
     }
 
-    internal sealed class  MockHttpClientProviderOptions
+    internal sealed class  MockHttpClientFactoryOptions
     {
         public int? Timeout { get; set; }
     }

@@ -692,10 +692,10 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or sets the <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClient"/> to use when making a request.
-        /// If <see cref="HttpClientProvider"/> is null, a new <see cref="HttpClient"/> instance will be created for each request.
+        /// Gets or sets the <see cref="IHttpClientFactory"/> that provides the <see cref="HttpClient"/> to use when making a request.
+        /// If <see cref="HttpClientFactory"/> is null, a new <see cref="HttpClient"/> instance will be created for each request.
         /// </summary>
-        public IHttpClientProvider HttpClientProvider { get; set; }
+        public IHttpClientFactory HttpClientFactory { get; set; }
 
         /// <summary>Gets or sets the <see cref="IDataServiceRequestMessageFactory"/> used to build request messages.</summary>
         /// <returns>RequestMessageFactory</returns>

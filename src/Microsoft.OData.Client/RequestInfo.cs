@@ -428,7 +428,7 @@ namespace Microsoft.OData.Client
                 requestMessageArgs.RequestUri,
                 this.UsePostTunneling,
                 headersDictionary,
-                this.Context.HttpClientProvider);
+                this.Context.HttpClientFactory);
 
             DataServiceClientRequestMessage clientRequestMessage;
             if (this.Configurations.RequestPipeline.OnMessageCreating != null)
