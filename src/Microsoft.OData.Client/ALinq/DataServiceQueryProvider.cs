@@ -227,8 +227,10 @@ namespace Microsoft.OData.Client
         /// <returns></returns>
         private TElement ParseAggregateSingletonResult<TElement>(QueryResult queryResult)
         {
-            IDictionary<string, string> responseHeaders = new Dictionary<string, string>();
-            responseHeaders.Add(ODataConstants.ContentTypeHeader, "application/json");
+            IDictionary<string, string> responseHeaders = new Dictionary<string, string>
+            {
+                { ODataConstants.ContentTypeHeader, "application/json" }
+            };
             HttpWebResponseMessage httpWebResponseMessage = new HttpWebResponseMessage(
                 responseHeaders, (int)queryResult.StatusCode, queryResult.GetResponseStream);
 
@@ -248,9 +250,10 @@ namespace Microsoft.OData.Client
                     {
                         case ODataReaderState.ResourceEnd:
                             entry = reader.Item as ODataResource;
-                            if (entry != null && entry.Properties.Any())
+                            IEnumerable<ODataProperty> properties = entry.Properties.OfType<ODataProperty>();
+                            if (entry != null && properties.Any())
                             {
-                                ODataProperty aggregationProperty = entry.Properties.First();
+                                ODataProperty aggregationProperty = properties.First();
                                 ODataUntypedValue untypedValue = aggregationProperty.Value as ODataUntypedValue;
 
                                 Type underlyingType = Nullable.GetUnderlyingType(typeof(TElement));

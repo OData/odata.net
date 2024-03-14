@@ -72,7 +72,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// the payload.
         /// </summary>
         /// <param name="entry">The <see cref="ODataResource"/> to process the properties for.</param>
-        public static void ProcessPropertiesPreservingPayloadOrder(this ODataResource entry, Action<ODataProperty> propertyAction, Action<ODataNestedResourceInfo> navigationLinkAction)
+        public static void ProcessPropertiesPreservingPayloadOrder(this ODataResource entry, Action<ODataPropertyInfo> propertyAction, Action<ODataNestedResourceInfo> navigationLinkAction)
         {
             ExceptionUtilities.CheckArgumentNotNull(entry, "entry");
             ExceptionUtilities.CheckArgumentNotNull(propertyAction, "propertyAction");
@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
             // NOTE: we are preserving the same order of items as in the payload, i.e., if regular
             //       properties and navigation properties are interleaved we preserve their relative order.
-            using (IEnumerator<ODataProperty> propertyEnumerator = entry.Properties.GetEnumerator())
+            using (IEnumerator<ODataPropertyInfo> propertyEnumerator = entry.Properties.GetEnumerator())
             {
                 ODataNestedResourceInfo navigationLink;
                 for (int i = 0; i < totalPropertyCount; ++i)

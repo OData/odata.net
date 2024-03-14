@@ -78,7 +78,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 Assert.IsNotNull(entry);
                 Assert.AreEqual("TestNS.Address", entry.TypeName);
                 var zip = entry.Properties.Single();
-                Assert.AreEqual(5L, zip.Value);
+                Assert.AreEqual(5L, (zip as ODataProperty).Value);
                 Assert.IsTrue(avroReader.Read());
                 Assert.AreEqual(ODataReaderState.NestedResourceInfoEnd, avroReader.State);
                 Assert.IsTrue(avroReader.Read());
@@ -86,8 +86,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
                 Assert.AreEqual("TestNS.Person", entry.TypeName);
-                var properties = entry.Properties.ToList();
-                Assert.AreEqual(2, properties.Count);
+                Assert.AreEqual(2, entry.Properties.Count());
+                var properties = entry.Properties.OfType<ODataProperty>().ToList();
                 Assert.AreEqual("Id", properties[0].Name);
                 Assert.AreEqual(-5, properties[0].Value);
                 Assert.AreEqual("Title", properties[1].Name);
@@ -149,8 +149,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 Assert.AreEqual(ODataReaderState.ResourceEnd, avroReader.State);
                 var entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
-                var properties = entry.Properties.ToList();
-                Assert.AreEqual(2, properties.Count);
+                Assert.AreEqual(2, entry.Properties.Count());
+                var properties = entry.Properties.OfType<ODataProperty>().ToList();
                 Assert.AreEqual("Id", properties[0].Name);
                 Assert.AreEqual(1, properties[0].Value);
                 Assert.AreEqual("Title", properties[1].Name);
@@ -163,8 +163,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
                 Assert.AreEqual(ODataReaderState.ResourceEnd, avroReader.State);
                 entry = avroReader.Item as ODataResource;
                 Assert.IsNotNull(entry);
-                properties = entry.Properties.ToList();
-                Assert.AreEqual(2, properties.Count);
+                Assert.AreEqual(2, entry.Properties.Count());
+                properties = entry.Properties.OfType<ODataProperty>().ToList();
                 Assert.AreEqual("Id", properties[0].Name);
                 Assert.AreEqual(2, properties[0].Value);
                 Assert.AreEqual("Title", properties[1].Name);
@@ -366,8 +366,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             Assert.AreEqual(ODataReaderState.Completed, ew.State);
 
             Assert.IsNotNull(entry);
-            var properties = entry.Properties.ToList();
-            Assert.AreEqual(2, properties.Count);
+            Assert.AreEqual(2, entry.Properties.Count());
+            var properties = entry.Properties.OfType<ODataProperty>().ToList();
             Assert.AreEqual("Id", properties[0].Name);
             Assert.AreEqual(5, properties[0].Value);
             Assert.AreEqual("Title", properties[1].Name);

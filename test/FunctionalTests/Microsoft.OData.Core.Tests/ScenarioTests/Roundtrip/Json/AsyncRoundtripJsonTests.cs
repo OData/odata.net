@@ -131,10 +131,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             return messageReader.CreateODataAsynchronousReader();
         }
 
-        private bool PropertiesEqual(IEnumerable<ODataProperty> first, IEnumerable<ODataProperty> second)
+        private bool PropertiesEqual(IEnumerable<ODataPropertyInfo> first, IEnumerable<ODataPropertyInfo> second)
         {
-            List<ODataProperty> firstList = first.ToList();
-            List<ODataProperty> secondList = second.ToList();
+            List<ODataPropertyInfo> firstList = first.ToList();
+            List<ODataPropertyInfo> secondList = second.ToList();
             
             if (firstList.Count != secondList.Count)
             {
@@ -143,7 +143,17 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             for (int i = 0; i < firstList.Count; ++i)
             {
-                if (!firstList[i].Name.Equals(secondList[i].Name) || !firstList[i].Value.Equals(secondList[i].Value))
+                if (!firstList[i].Name.Equals(secondList[i].Name))
+                {
+                    return false;
+                }
+
+                if (!firstList[i].GetType().Equals(secondList[i].GetType()))
+                {
+                    return false;
+                }
+
+                if ((firstList[i] is ODataProperty firstProperty) && (secondList[i] is ODataProperty secondProperty) && !firstProperty.Value.Equals(secondProperty.Value))
                 {
                     return false;
                 }

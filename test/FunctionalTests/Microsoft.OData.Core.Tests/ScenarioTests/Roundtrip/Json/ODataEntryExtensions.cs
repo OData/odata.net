@@ -15,10 +15,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
     {
         public static void Property(this ODataResource entry, string propertyName, object value)
         {
-            List<ODataProperty> properties = entry.Properties as List<ODataProperty>;
+            List<ODataPropertyInfo> properties = entry.Properties as List<ODataPropertyInfo>;
             if (properties == null)
             {
-                properties = new List<ODataProperty>();
+                properties = new List<ODataPropertyInfo>();
                 if (entry.Properties != null)
                 {
                     properties.AddRange(entry.Properties);

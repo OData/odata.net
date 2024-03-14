@@ -81,7 +81,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                 switch (resourceCounter)
                                 {
                                     case 0:
-                                        var property = Assert.Single(properties);
+                                        var property = Assert.IsType<ODataProperty>(Assert.Single(properties));
                                         Assert.Equal("FirstName", property.Name);
                                         Assert.Equal("GGGG", property.Value);
                                         Assert.EndsWith("/Customers(1)", entry.Id.AbsoluteUri);
@@ -95,7 +95,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 1:
                                         Assert.Equal(2, properties.Length);
                                         Assert.Equal("OrderID", properties[0].Name);
-                                        Assert.Equal(100, properties[0].Value);
+                                        Assert.Equal(100, Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("OrderDate", properties[1].Name);
                                         Assert.EndsWith("/Orders(100)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
@@ -246,7 +246,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                 switch (resourceCounter)
                                 {
                                     case 0:
-                                        var property = Assert.Single(properties);
+                                        var property = Assert.IsType<ODataProperty>(Assert.Single(properties));
                                         Assert.Equal("FriendlyName", property.Name);
                                         Assert.Equal("GGGG", property.Value);
                                         Assert.EndsWith("/Accounts(103)/MyPaymentInstruments(103901)", entry.Id.AbsoluteUri);
@@ -260,11 +260,11 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 1:
                                         Assert.Equal(3, properties.Length);
                                         Assert.Equal("TransactionType", properties[0].Name);
-                                        Assert.Equal("OnlinePurchase", properties[0].Value);
+                                        Assert.Equal("OnlinePurchase", Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("TransactionDescription", properties[1].Name);
-                                        Assert.Equal("unknown purchase", properties[1].Value);
+                                        Assert.Equal("unknown purchase", Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.Equal("Amount", properties[2].Name);
-                                        Assert.Equal(32.1, properties[2].Value);
+                                        Assert.Equal(32.1, Assert.IsType<ODataProperty>(properties[2]).Value);
                                         Assert.EndsWith("/Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901005)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
                                         {
@@ -410,7 +410,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                 switch (resourceCounter)
                                 {
                                     case 0:
-                                        var property = Assert.Single(properties);
+                                        var property = Assert.IsType<ODataProperty>(Assert.Single(properties));
                                         Assert.Equal("City", property.Name);
                                         Assert.Equal("GGGG", property.Value);
                                         Assert.EndsWith("/People(1)", entry.Id.AbsoluteUri);
@@ -424,7 +424,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 1:
                                         Assert.Equal(2, properties.Length);
                                         Assert.Equal("OrderID", properties[0].Name);
-                                        Assert.Equal(100, properties[0].Value);
+                                        Assert.Equal(100, Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("OrderDate", properties[1].Name);
                                         Assert.EndsWith("/Orders(100)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
@@ -577,15 +577,15 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 0: // HomeAddress complex property
                                         Assert.Equal(3, properties.Length);
                                         Assert.Equal("Street", properties[0].Name);
-                                        Assert.Equal("Zixing Road", properties[0].Value);
+                                        Assert.Equal("Zixing Road", Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("City", properties[1].Name);
-                                        Assert.Equal("Shanghai", properties[1].Value);
+                                        Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.Equal("PostalCode", properties[2].Name);
-                                        Assert.Equal("200001", properties[2].Value);
+                                        Assert.Equal("200001", Assert.IsType<ODataProperty>(properties[2]).Value);
 
                                         break;
                                     case 1: // InfoFromCustomer complex property
-                                        var customerMessageProperty = Assert.Single(properties);
+                                        var customerMessageProperty = Assert.IsType<ODataProperty>(Assert.Single(properties));
                                         Assert.Equal("CustomerMessage", customerMessageProperty.Name);
                                         Assert.Equal("XXL", customerMessageProperty.Value);
 
@@ -594,9 +594,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                         Assert.Equal(6, properties.Length);
                                         Assert.Equal("OrderDate", properties[0].Name);
                                         Assert.Equal("OrderID", properties[1].Name);
-                                        Assert.Equal(8, properties[1].Value);
+                                        Assert.Equal(8, Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.Equal("OrderShelfLifes", properties[2].Name);
-                                        var orderShelfLifesValue = Assert.IsType<ODataCollectionValue>(properties[2].Value);
+                                        var orderShelfLifesValue = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(properties[2]).Value);
                                         Assert.Single(orderShelfLifesValue.Items);
                                         Assert.Equal("ShelfLife", properties[3].Name);
                                         Assert.Equal("ShipDate", properties[4].Name);
@@ -612,17 +612,17 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 3:
                                         Assert.Equal(6, properties.Length);
                                         Assert.Equal("FirstName", properties[0].Name);
-                                        Assert.Equal("Jill", properties[0].Value);
+                                        Assert.Equal("Jill", Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("LastName", properties[1].Name);
-                                        Assert.Equal("Jones", properties[1].Value);
+                                        Assert.Equal("Jones", Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.Equal("Numbers", properties[2].Name);
-                                        Assert.Empty(Assert.IsType<ODataCollectionValue>(properties[2].Value).Items);
+                                        Assert.Empty(Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(properties[2]).Value).Items);
                                         Assert.Equal("Emails", properties[3].Name);
-                                        Assert.Empty(Assert.IsType<ODataCollectionValue>(properties[3].Value).Items);
+                                        Assert.Empty(Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(properties[3]).Value).Items);
                                         Assert.Equal("PersonID", properties[4].Name);
-                                        Assert.Equal(2, properties[4].Value);
+                                        Assert.Equal(2, Assert.IsType<ODataProperty>(properties[4]).Value);
                                         Assert.Equal("Home", properties[5].Name);
-                                        Assert.IsAssignableFrom<GeographyPoint>(properties[5].Value);
+                                        Assert.IsAssignableFrom<GeographyPoint>(Assert.IsType<ODataProperty>(properties[5]).Value);
                                         Assert.EndsWith("People(2)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
                                         {
@@ -632,7 +632,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
 
                                         break;
                                     case 4:
-                                        var firstNameProperty = Assert.Single(properties);
+                                        var firstNameProperty = Assert.IsType<ODataProperty>(Assert.Single(properties));
                                         Assert.Equal("FirstName", firstNameProperty.Name);
                                         Assert.Equal("GGGG", firstNameProperty.Value);
                                         Assert.EndsWith("/Customers(1)", entry.Id.AbsoluteUri);
@@ -810,13 +810,13 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 0:
                                         Assert.Equal(4, properties.Length);
                                         Assert.Equal("PersonID", properties[0].Name);
-                                        Assert.Equal(1, properties[0].Value);
+                                        Assert.Equal(1, Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("FirstName", properties[1].Name);
-                                        Assert.Equal("FFFF", properties[1].Value);
+                                        Assert.Equal("FFFF", Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.Equal("LastName", properties[2].Name);
-                                        Assert.Equal("LLLL", properties[2].Value);
-                                        Assert.Equal("City", properties[3].Name);
-                                        Assert.Equal("Beijing", properties[3].Value);
+                                        Assert.Equal("LLLL", Assert.IsType<ODataProperty>(properties[2]).Value);
+                                        Assert.Equal("City", Assert.IsType<ODataProperty>(properties[3]).Name);
+                                        Assert.Equal("Beijing", Assert.IsType<ODataProperty>(properties[3]).Value);
                                         Assert.EndsWith("/Customers(1)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
                                         {
@@ -828,7 +828,7 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 1:
                                         Assert.Equal(2, properties.Length);
                                         Assert.Equal("OrderID", properties[0].Name);
-                                        Assert.Equal(100, properties[0].Value);
+                                        Assert.Equal(100, Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("OrderDate", properties[1].Name);
                                         Assert.EndsWith("/Orders(100)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
@@ -841,9 +841,9 @@ namespace Microsoft.Test.OData.Tests.Client.DeltaTests
                                     case 2:
                                         Assert.Equal(2, properties.Length);
                                         Assert.Equal("PersonID", properties[0].Name);
-                                        Assert.Equal(2, properties[0].Value);
+                                        Assert.Equal(2, Assert.IsType<ODataProperty>(properties[0]).Value);
                                         Assert.Equal("FirstName", properties[1].Name);
-                                        Assert.Equal("AAAA", properties[1].Value);
+                                        Assert.Equal("AAAA", Assert.IsType<ODataProperty>(properties[1]).Value);
                                         Assert.EndsWith("/Customers(2)", entry.Id.AbsoluteUri);
                                         if (mimeType.EndsWith("odata.metadata=full"))
                                         {

@@ -74,6 +74,7 @@ Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix(Microsoft.OData.OD
 Microsoft.OData.ODataMessageWriterSettings.ODataMessageWriterSettings(Microsoft.OData.ODataVersion? version) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value, Microsoft.OData.ODataVersion version) -> void
+Microsoft.OData.ODataResourceValue.Properties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>
 Microsoft.OData.UriParser.EntitySetSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.UriParser.INavigationSourceSegment
 Microsoft.OData.UriParser.INavigationSourceSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
@@ -959,7 +960,7 @@ Microsoft.OData.ODataResourceBase.IsTransient.set -> void
 Microsoft.OData.ODataResourceBase.MediaResource.get -> Microsoft.OData.ODataStreamReferenceValue
 Microsoft.OData.ODataResourceBase.MediaResource.set -> void
 Microsoft.OData.ODataResourceBase.ODataResourceBase() -> void
-Microsoft.OData.ODataResourceBase.Properties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>
+Microsoft.OData.ODataResourceBase.Properties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPropertyInfo>
 Microsoft.OData.ODataResourceBase.Properties.set -> void
 Microsoft.OData.ODataResourceBase.ReadLink.get -> System.Uri
 Microsoft.OData.ODataResourceBase.ReadLink.set -> void
@@ -1001,7 +1002,6 @@ Microsoft.OData.ODataResourceValue
 Microsoft.OData.ODataResourceValue.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
 Microsoft.OData.ODataResourceValue.InstanceAnnotations.set -> void
 Microsoft.OData.ODataResourceValue.ODataResourceValue() -> void
-Microsoft.OData.ODataResourceValue.Properties.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataProperty>
 Microsoft.OData.ODataResourceValue.Properties.set -> void
 Microsoft.OData.ODataResourceValue.TypeName.get -> string
 Microsoft.OData.ODataResourceValue.TypeName.set -> void

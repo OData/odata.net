@@ -84,24 +84,24 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                     }
                 });
             Assert.Equal(2, entries.Count);
-            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(34.98f, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(56.01d, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(78.62m, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalId", StringComparison.OrdinalIgnoreCase)).Value);
+            ValidateProperty(entries[0], "LongId", 12L);
+            ValidateProperty(entries[0], "FloatId", 34.98f);
+            ValidateProperty(entries[0], "DoubleId", 56.01d);
+            ValidateProperty(entries[0], "DecimalId", 78.62m);
 
             var complextProperty = entries[1];
-            Assert.Equal(1L, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(1.0F, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(-1.0D, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDoubleId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(0.0M, complextProperty.Properties.FirstOrDefault(s => string.Equals(s.Name, "CDecimalId", StringComparison.OrdinalIgnoreCase)).Value);
+            ValidateProperty(complextProperty, "CLongId", 1L);
+            ValidateProperty(complextProperty, "CFloatId", 1.0F);
+            ValidateProperty(complextProperty, "CDoubleId", -1.0D);
+            ValidateProperty(complextProperty, "CDecimalId", 0.0M);
 
-            var longCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            var longCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongNumbers", StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(longCollection);
             Assert.Contains(-1L, longCollection.Items);
             Assert.Contains(long.MinValue, longCollection.Items);
             Assert.Contains(long.MaxValue, longCollection.Items);
 
-            var floatCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            var floatCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "FloatNumbers", StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(floatCollection);
             Assert.Contains(-1F, floatCollection.Items);
             Assert.Contains(float.MinValue, floatCollection.Items);
@@ -110,7 +110,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Contains(float.NegativeInfinity, floatCollection.Items);
             Assert.Contains(float.NaN, floatCollection.Items);
 
-            var doubleCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            var doubleCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DoubleNumbers", StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(doubleCollection);
             Assert.Contains(1.0D, doubleCollection.Items);
             Assert.Contains(double.MinValue, doubleCollection.Items);
@@ -119,7 +119,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Assert.Contains(double.NegativeInfinity, doubleCollection.Items);
             Assert.Contains(double.NaN, doubleCollection.Items);
 
-            var decimalCollection = entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+            var decimalCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "DecimalNumbers", StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(decimalCollection);
             Assert.Contains(0M, decimalCollection.Items);
             Assert.Contains(decimal.MinValue, decimalCollection.Items);
@@ -153,11 +153,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             this.ReadEntryPayload(mainModel, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; });
             Assert.NotNull(entry);
 
-            var intCollection = entry.Properties.FirstOrDefault(
+            var intCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.FirstOrDefault(
                 s => string.Equals(
                     s.Name,
                     "NullableIntNumbers",
-                    StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+                    StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(intCollection);
             var list = new List<int?>();
             foreach (var val in intCollection.Items)
@@ -225,11 +225,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 });
             Assert.NotNull(entry);
 
-            var intCollection = entry.Properties.FirstOrDefault(
+            var intCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.FirstOrDefault(
                 s => string.Equals(
                     s.Name,
                     "OpenPrimitiveCollection",
-                    StringComparison.OrdinalIgnoreCase)).Value as ODataCollectionValue;
+                    StringComparison.OrdinalIgnoreCase))).Value);
             Assert.NotNull(intCollection);
             var list = new List<int?>();
             foreach (var val in intCollection.Items)
@@ -245,7 +245,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             foreach (var val in complexCollection)
             {
-                Assert.Equal(1L, val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+                Assert.Equal(1L, Assert.IsType<ODataProperty>(val.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase))).Value);
             }
         }
 
@@ -367,13 +367,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            Assert.Equal("Weight", propertyList[1].Name);
-            Assert.Equal(60.5, propertyList[1].Value);
+            IList<ODataPropertyInfo> propertyList = entries[0].Properties.ToList();
+            ODataProperty propertyAt1 = Assert.IsType<ODataProperty>(propertyList[1]);
+            Assert.Equal("Weight", propertyAt1.Name);
+            Assert.Equal(60.5, propertyAt1.Value);
 
             Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("China", Assert.IsType<ODataProperty>(address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase))).Value);
         }
 
         [Fact]
@@ -438,16 +439,18 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 });
             Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            Assert.Equal("Weight", propertyList[1].Name);
-            Assert.Equal(60, propertyList[1].Value);
+            IList<ODataPropertyInfo> propertyList = entries[0].Properties.ToList();
+            ODataProperty propertyAt1 = Assert.IsType<ODataProperty>(propertyList[1]);
+            Assert.Equal("Weight", propertyAt1.Name);
+            Assert.Equal(60, propertyAt1.Value);
 
-            Assert.Equal("Height", propertyList[2].Name);
-            Assert.Equal(180, propertyList[2].Value);
+            ODataProperty propertyAt2 = Assert.IsType<ODataProperty>(propertyList[2]);
+            Assert.Equal("Height", propertyAt2.Name);
+            Assert.Equal(180, propertyAt2.Value);
 
             Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("China", Assert.IsType<ODataProperty>(address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase))).Value);
         }
 
         [Fact]
@@ -516,13 +519,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            Assert.Equal("Weight", propertyList[1].Name);
-            Assert.Equal(60.5, propertyList[1].Value);
+            IList<ODataPropertyInfo> propertyList = entries[0].Properties.ToList();
+            ODataProperty propertyAt1 = Assert.IsType<ODataProperty>(propertyList[1]);
+            Assert.Equal("Weight", propertyAt1.Name);
+            Assert.Equal(60.5, propertyAt1.Value);
 
             Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("China", Assert.IsType<ODataProperty>(address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase))).Value);
         }
 
         [Fact]
@@ -588,13 +592,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             Assert.Equal(2, entries.Count);
 
-            IList<ODataProperty> propertyList = entries[0].Properties.ToList();
-            Assert.Equal("Weight", propertyList[1].Name);
-            Assert.Equal(60.5, propertyList[1].Value);
+            IList<ODataPropertyInfo> propertyList = entries[0].Properties.ToList();
+            ODataProperty propertyAt1 = Assert.IsType<ODataProperty>(propertyList[1]);
+            Assert.Equal("Weight", propertyAt1.Name);
+            Assert.Equal(60.5, propertyAt1.Value);
 
             Assert.Equal("Address", navigationLink.Name);
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            Assert.Equal("China", Assert.IsType<ODataProperty>(address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase))).Value);
         }
 
         [Fact]
@@ -976,8 +981,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, serviceProvider: serviceProvider);
             Assert.NotNull(entry);
 
-            IList<ODataProperty> propertyList = entry.Properties.ToList();
-            var birthday = propertyList[1].Value as DateTimeOffset?;
+            IList<ODataPropertyInfo> propertyList = entry.Properties.ToList();
+            ODataProperty propertyAt1 = Assert.IsType<ODataProperty>(propertyList[1]);
+            var birthday = propertyAt1.Value as DateTimeOffset?;
             Assert.True(birthday.HasValue);
             Assert.Equal(new DateTimeOffset(2012, 4, 12, 18, 43, 10, TimeSpan.Zero), birthday.Value);
         }
@@ -1000,7 +1006,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("birthday", odataProperty.Name);
                 ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
                 Assert.Equal("\"2021-10-28T21:33:26+08:00\"", untypedValue.RawValue);
@@ -1011,7 +1017,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", false, s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("birthday", odataProperty.Name);
                 string value = Assert.IsType<string>(odataProperty.Value);
                 Assert.Equal("2021-10-28T21:33:26+08:00", value);
@@ -1022,7 +1028,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadDateTimeOffsetPayloadAndVerify(model, entitySet, entityType, "birthday", true, s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("Birthday", odataProperty.Name);
                 Assert.Equal(new DateTimeOffset(2021, 10, 28, 21, 33, 26, TimeSpan.FromHours(8)), odataProperty.Value);
             });
@@ -1066,7 +1072,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadPayloadAndVerify(model, entitySet, entityType, "\"Name\":\"abc\"", s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("Name", odataProperty.Name);
                 Assert.Equal("abc", odataProperty.Value);
             });
@@ -1075,7 +1081,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadPayloadAndVerify(model, entitySet, entityType, "\"nAme\":42", s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("nAme", odataProperty.Name);
                 Assert.Equal(42, odataProperty.Value);
             });
@@ -1084,7 +1090,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadPayloadAndVerify(model, entitySet, entityType, "\"naMe\":3.14", s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("naMe", odataProperty.Name);
                 Assert.Equal(3.14, odataProperty.Value);
             });
@@ -1093,7 +1099,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadPayloadAndVerify(model, entitySet, entityType, "\"name\":\"Dynamic Property\"", s =>
             {
                 Assert.NotNull(s);
-                ODataProperty odataProperty = Assert.Single(s.Properties);
+                ODataProperty odataProperty = Assert.IsType<ODataProperty>(Assert.Single(s.Properties));
                 Assert.Equal("name", odataProperty.Name);
                 ODataUntypedValue untypedValue = Assert.IsType<ODataUntypedValue>(odataProperty.Value);
                 Assert.Equal("\"Dynamic Property\"", untypedValue.RawValue);
@@ -1141,6 +1147,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                     action(reader);
                 }
             }
+        }
+
+        private void ValidateProperty(ODataResource resource, string propertyName, object expectedValue)
+        {
+            ODataPropertyInfo property = resource.Properties.FirstOrDefault(p => p.Name == propertyName);
+
+            Assert.NotNull(property);
+            Assert.Equal(expectedValue, Assert.IsType<ODataProperty>(property).Value);
         }
     }
 }

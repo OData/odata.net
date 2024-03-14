@@ -216,7 +216,7 @@ namespace Microsoft.OData.Tests
             AssertODataPropertiesAreEqual(resourceValue1.Properties, resourceValue2.Properties);
         }
 
-        public static void AssertODataPropertiesAreEqual(IEnumerable<ODataProperty> properties1, IEnumerable<ODataProperty> properties2)
+        public static void AssertODataPropertiesAreEqual(IEnumerable<ODataPropertyInfo> properties1, IEnumerable<ODataPropertyInfo> properties2)
         {
             if (properties1 == null && properties2 == null)
             {
@@ -230,7 +230,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(propertyArray1.Length, propertyArray2.Length);
             for (int i = 0; i < propertyArray1.Length; i++)
             {
-                AssertODataPropertyAreEqual(propertyArray1[i], propertyArray2[i]);
+                AssertODataPropertyAreEqual(propertyArray1[i] as ODataProperty, propertyArray2[i] as ODataProperty);
             }
         }
 

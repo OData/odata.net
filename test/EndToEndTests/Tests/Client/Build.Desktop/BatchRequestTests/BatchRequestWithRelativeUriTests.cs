@@ -170,8 +170,8 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                         }
                                     }
                                     Assert.Equal(ODataReaderState.Completed, entryReader.State);
-                                    Assert.Equal(1, pis.Count);
-                                    Assert.Equal(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                    Assert.Single(pis);
+                                    Assert.Equal(102910, Assert.IsType<ODataProperty>(pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                                 }
                                 else if (batchOperationId == 2)
                                 {
@@ -192,8 +192,8 @@ namespace Microsoft.Test.OData.Tests.Client.BatchRequestTests
                                         }
                                     }
                                     Assert.Equal(ODataReaderState.Completed, entryReader.State);
-                                    Assert.Equal(1, statements.Count);
-                                    Assert.Equal(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
+                                    Assert.Single(statements);
+                                    Assert.Equal(103901001, Assert.IsType<ODataProperty>(statements[0].Properties.Single(p => p.Name == "StatementID")).Value);
                                 }
                             }
                             batchOperationId++;

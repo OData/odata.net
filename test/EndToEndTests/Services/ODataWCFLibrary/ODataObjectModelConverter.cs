@@ -453,14 +453,15 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
                     PropertyInfo targetProperty = type.GetProperty(p.Name);
                     // If the value is a odata collection value that contains no element, set the value to a empty collection.
                     // ConvertPropertyValue won't work here because it could not know what the type it its.
-                    var collectionValue = p.Value as ODataCollectionValue;
+                    if (!(p is ODataProperty property)) continue;
+                    var collectionValue = property.Value as ODataCollectionValue;
                     if (collectionValue != null && !collectionValue.Items.Cast<object>().Any())
                     {
                         targetProperty.SetValue(newInstance, Utility.QuickCreateInstance(targetProperty.PropertyType), new object[] { });
                     }
                     else
                     {
-                        targetProperty.SetValue(newInstance, ConvertPropertyValue(p.Value), new object[] { });
+                        targetProperty.SetValue(newInstance, ConvertPropertyValue(property.Value), new object[] { });
                     }
                 }
 

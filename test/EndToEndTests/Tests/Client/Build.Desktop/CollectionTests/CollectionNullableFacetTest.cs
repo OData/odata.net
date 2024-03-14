@@ -113,8 +113,8 @@ using Microsoft.Test.OData.Tests.Client.Common;
                     // verify the update
                     Assert.Equal(204, responseMessage.StatusCode);
                     ODataResource updatedProduct = this.QueryEntityItem("Customers(1)") as ODataResource;
-                    ODataCollectionValue testCollection = updatedProduct.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
-                    ODataCollectionValue expectValue = personToAdd.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+                    ODataCollectionValue testCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(updatedProduct.Properties.Single(p => p.Name == testProperty)).Value);
+                    ODataCollectionValue expectValue = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(personToAdd.Properties.Single(p => p.Name == testProperty)).Value);
                     var actIter = testCollection.Items.GetEnumerator();
                     var expIter = expectValue.Items.GetEnumerator();
                     while ((actIter.MoveNext()) && (expIter.MoveNext()))
@@ -126,7 +126,7 @@ using Microsoft.Test.OData.Tests.Client.Common;
                 {
                     if (!isNullable)
                     {
-                        Assert.Equal(exception.Message, "A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.");
+                        Assert.Equal("A null value was detected in the items of a collection property value; non-nullable instances of collection types do not support null values as items.", exception.Message);
                     }
                     else
                     {

@@ -1483,7 +1483,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
 
             if (!hasModel)
             {
-                loginEntry.Properties.Single(p => p.Name == "Username")
+                (loginEntry.Properties.Single(p => p.Name == "Username") as ODataProperty)
                           .SetSerializationInfo(new ODataPropertySerializationInfo()
                           {
                               PropertyKind = ODataPropertyKind.Key

@@ -9,11 +9,10 @@ namespace Microsoft.OData.Client.Materialization
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Linq;
     using System.Reflection;
+    using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
-    using Microsoft.OData;
     using Microsoft.OData.Edm;
     using DSClient = Microsoft.OData.Client;
 
@@ -229,10 +228,10 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Materializes the primitive data values in the given list of <paramref name="values"/>.
+        /// Materializes the primitive data values in the given list of <paramref name="properties"/>.
         /// </summary>
         /// <param name="actualType">Actual type for properties being materialized.</param>
-        /// <param name="values">List of values to materialize.</param>
+        /// <param name="properties">List of values to materialize.</param>
         /// <param name="undeclaredPropertyBehavior">
         /// Whether properties missing from the client types should be supported or throw exception.
         /// </param>
@@ -240,14 +239,16 @@ namespace Microsoft.OData.Client.Materialization
         /// Values are materialized in-place with each <see cref="ODataProperty"/>
         /// instance.
         /// </remarks>
-        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataProperty> values, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
+        internal void MaterializeDataValues(ClientTypeAnnotation actualType, IEnumerable<ODataPropertyInfo> properties, UndeclaredPropertyBehavior undeclaredPropertyBehavior)
         {
             Debug.Assert(actualType != null, "actualType != null");
-            Debug.Assert(values != null, "values != null");
+            Debug.Assert(properties != null, "values != null");
 
-            foreach (var odataProperty in values)
+            foreach (ODataPropertyInfo propertyInfo in properties)
             {
-                if (odataProperty.Value is ODataStreamReferenceValue)
+                // Property without value or stream property
+                if (propertyInfo is not ODataProperty odataProperty
+                    || odataProperty.Value is ODataStreamReferenceValue)
                 {
                     continue;
                 }

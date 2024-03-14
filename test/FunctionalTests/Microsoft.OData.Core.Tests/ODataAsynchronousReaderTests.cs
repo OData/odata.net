@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests
                     if (reader.State == ODataReaderState.ResourceEnd)
                     {
                         ODataResource entry = reader.Item as ODataResource;
-                        Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
+                        Assert.Equal(1, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Id")).Value);
                     }
                 }
             }

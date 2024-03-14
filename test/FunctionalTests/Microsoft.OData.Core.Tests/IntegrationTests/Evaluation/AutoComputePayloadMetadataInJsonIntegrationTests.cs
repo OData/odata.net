@@ -1320,14 +1320,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             // #1
             ODataResource nestedResource = nestedResources.First(c => c.TypeName == "NS.Address");
             Assert.Equal(3, nestedResource.Properties.Count());
-            Assert.Equal("Redmond", nestedResource.Properties.First(p => p.Name == "City").Value);
-            Assert.Equal(98052, nestedResource.Properties.First(p => p.Name == "ZipCode").Value);
-            Assert.Equal(true, nestedResource.Properties.First(p => p.Name == "Data").Value);
+            Assert.Equal("Redmond", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "City")).Value);
+            Assert.Equal(98052, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "ZipCode")).Value);
+            Assert.Equal(true, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Data")).Value);
 
             // #2
             nestedResource = nestedResources.First(c => c.TypeName == "NS.Customer");
             Assert.Single(nestedResource.Properties);
-            Assert.Equal(42, nestedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(42, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
         }
 
         private static IEdmModel GetModelWithAbstractType(out EdmEntitySet entitySet)
@@ -2110,8 +2110,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 
             this.entryWithOnlyData2.TypeName = EntityType.FullName();
             this.entryWithOnlyData2.MediaResource = new ODataStreamReferenceValue();
-            this.entryWithOnlyData2.Properties.First(p => p.Name == "ID").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
-            this.entryWithOnlyData2.Properties.First(p => p.Name == "Name").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
+            ((ODataProperty)this.entryWithOnlyData2.Properties.First(p => p.Name == "ID")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
+            ((ODataProperty)this.entryWithOnlyData2.Properties.First(p => p.Name == "Name")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
             this.entryWithOnlyData2.SerializationInfo = new ODataResourceSerializationInfo()
             {
                 NavigationSourceKind = EdmNavigationSourceKind.EntitySet,
@@ -2691,16 +2691,16 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             feed.SetSerializationInfo(serializationInfo);
             this.entryWithOnlyData.TypeName = EntityType.FullName();
             this.entryWithOnlyData.MediaResource = new ODataStreamReferenceValue();
-            this.entryWithOnlyData.Properties.First(p => p.Name == "ID").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
-            this.entryWithOnlyData.Properties.First(p => p.Name == "Name").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
+            ((ODataProperty)this.entryWithOnlyData.Properties.First(p => p.Name == "ID")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
+            ((ODataProperty)this.entryWithOnlyData.Properties.First(p => p.Name == "Name")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
             this.entryWithOnlyData2.TypeName = EntityType.FullName();
             this.entryWithOnlyData2.MediaResource = new ODataStreamReferenceValue();
-            this.entryWithOnlyData2.Properties.First(p => p.Name == "ID").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
-            this.entryWithOnlyData2.Properties.First(p => p.Name == "Name").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
+            ((ODataProperty)this.entryWithOnlyData2.Properties.First(p => p.Name == "ID")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
+            ((ODataProperty)this.entryWithOnlyData2.Properties.First(p => p.Name == "Name")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
             this.entryWithOnlyData3.TypeName = EntityType.FullName();
             this.entryWithOnlyData3.MediaResource = new ODataStreamReferenceValue();
-            this.entryWithOnlyData3.Properties.First(p => p.Name == "ID").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
-            this.entryWithOnlyData3.Properties.First(p => p.Name == "Name").SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
+            ((ODataProperty)this.entryWithOnlyData3.Properties.First(p => p.Name == "ID")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key });
+            ((ODataProperty)this.entryWithOnlyData3.Properties.First(p => p.Name == "Name")).SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.ETag });
 
             ODataItem[] itemsToWrite = new ODataItem[]
             {

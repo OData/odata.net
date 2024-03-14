@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
         }
 
-        public static void AssertODataPropertiesEqual(IEnumerable<ODataProperty> expectedProperties, IEnumerable<ODataProperty> actualProperties)
+        public static void AssertODataPropertiesEqual(IEnumerable<ODataPropertyInfo> expectedProperties, IEnumerable<ODataPropertyInfo> actualProperties)
         {
             if (expectedProperties == null && actualProperties == null)
             {
@@ -83,12 +83,12 @@ namespace Microsoft.Test.OData.Tests.Client.Common
             }
         }
 
-        public static void AssertODataPropertyEqual(ODataProperty expectedOdataProperty, ODataProperty actualOdataProperty)
+        public static void AssertODataPropertyEqual(ODataPropertyInfo expectedOdataProperty, ODataPropertyInfo actualOdataProperty)
         {
             Assert.NotNull(expectedOdataProperty);
             Assert.NotNull(actualOdataProperty);
             Assert.Equal(expectedOdataProperty.Name, actualOdataProperty.Name);
-            AssertODataValueEqual(ToODataValue(expectedOdataProperty.Value), ToODataValue(actualOdataProperty.Value));
+            AssertODataValueEqual(ToODataValue(Assert.IsType<ODataProperty>(expectedOdataProperty).Value), ToODataValue(Assert.IsType<ODataProperty>(actualOdataProperty).Value));
         }
 
         public static void AssertODataPropertyAndResourceEqual(ODataResource expectedOdataProperty, ODataResource actualOdataProperty)

@@ -126,8 +126,8 @@ OData-Version: 4.0
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Amount", properties[1].Name);
@@ -137,8 +137,8 @@ OData-Version: 4.0
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -225,8 +225,8 @@ OData-Version: 4.0
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Amount", properties[1].Name);
@@ -236,8 +236,8 @@ OData-Version: 4.0
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -333,8 +333,8 @@ OData-Version: 4.0
                                                 resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);
-                                                var properties = resource.Properties.ToArray();
-                                                Assert.Equal(2, properties.Length);
+                                                Assert.Equal(2, resource.Properties.Count());
+                                                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                                                 Assert.Equal("Id", properties[0].Name);
                                                 Assert.Equal(1, properties[0].Value);
                                                 Assert.Equal("Name", properties[1].Name);
@@ -383,8 +383,8 @@ OData-Version: 4.0
                                                 resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);
-                                                var properties = resource.Properties.ToArray();
-                                                Assert.Equal(2, properties.Length);
+                                                Assert.Equal(2, resource.Properties.Count());
+                                                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                                                 Assert.Equal("Id", properties[0].Name);
                                                 Assert.Equal(1, properties[0].Value);
                                                 Assert.Equal("Name", properties[1].Name);

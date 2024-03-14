@@ -106,7 +106,7 @@ namespace Microsoft.OData.Json
         /// <param name="metadataBuilder">The metadatabuilder for writing the property.</param>
         internal void WriteProperties(
             IEdmStructuredType owningType,
-            IEnumerable<ODataProperty> properties,
+            IEnumerable<ODataPropertyInfo> properties,
             bool isComplexValue,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
@@ -116,7 +116,7 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            foreach (ODataProperty property in properties)
+            foreach (ODataPropertyInfo property in properties)
             {
                 this.WriteProperty(
                     property,
@@ -130,20 +130,25 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Writes a name/value pair for a property.
         /// </summary>
-        /// <param name="property">The property to write out.</param>
-        /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
+        /// <param name="propertyInfo">The property to write out.</param>
+        /// <param name="owningType">The owning type for the <paramref name="propertyInfo"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         internal void WriteProperty(
-            ODataProperty property,
+            ODataPropertyInfo propertyInfo,
             IEdmStructuredType owningType,
             bool isTopLevel,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
         {
-            this.WritePropertyInfo(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder);
+            this.WritePropertyInfo(propertyInfo, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder);
+
+            if (propertyInfo is not ODataProperty property)
+            {
+                return;
+            }
 
             ODataValue value = property.ODataValue;
 
@@ -291,7 +296,7 @@ namespace Microsoft.OData.Json
                     IDuplicatePropertyNameChecker duplicatePropertyNameChecker = thisParam.GetDuplicatePropertyNameChecker();
 
                     await thisParam.WritePropertyAsync(
-                        property: propertyParam,
+                        propertyInfo: propertyParam,
                         owningType : null,
                         isTopLevel : true,
                         duplicatePropertyNameChecker : duplicatePropertyNameChecker,
@@ -319,7 +324,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal async Task WritePropertiesAsync(
             IEdmStructuredType owningType,
-            IEnumerable<ODataProperty> properties,
+            IEnumerable<ODataPropertyInfo> properties,
             bool isComplexValue,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
@@ -329,7 +334,7 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-            foreach (ODataProperty property in properties)
+            foreach (ODataPropertyInfo property in properties)
             {
                 await this.WritePropertyAsync(
                     property,
@@ -343,22 +348,27 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously writes a name/value pair for a property.
         /// </summary>
-        /// <param name="property">The property to write out.</param>
-        /// <param name="owningType">The owning type for the <paramref name="property"/> or null if no metadata is available.</param>
+        /// <param name="propertyInfo">The property to write out.</param>
+        /// <param name="owningType">The owning type for the <paramref name="propertyInfo"/> or null if no metadata is available.</param>
         /// <param name="isTopLevel">true when writing a top-level property; false for nested properties.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
         internal async Task WritePropertyAsync(
-            ODataProperty property,
+            ODataPropertyInfo propertyInfo,
             IEdmStructuredType owningType,
             bool isTopLevel,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker,
             ODataResourceMetadataBuilder metadataBuilder)
         {
-            await this.WritePropertyInfoAsync(property, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder)
+            await this.WritePropertyInfoAsync(propertyInfo, owningType, isTopLevel, duplicatePropertyNameChecker, metadataBuilder)
                 .ConfigureAwait(false);
+
+            if (propertyInfo is not ODataProperty property)
+            {
+                return;
+            }
 
             ODataValue value = property.ODataValue;
 

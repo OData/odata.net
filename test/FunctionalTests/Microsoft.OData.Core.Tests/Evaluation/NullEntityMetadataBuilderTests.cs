@@ -64,6 +64,32 @@ namespace Microsoft.OData.Tests.Evaluation
         }
 
         [Fact]
+        public void NullEntityMetadataBuilderShouldReturnPropertiesOfTypeODataPropertyInfo()
+        {
+            var properties = new List<ODataPropertyInfo>
+            {
+                new ODataProperty { Name = "Id", Value = 1 },
+                new ODataProperty { Name = "Name", Value = "foobar" },
+                new ODataPropertyInfo { Name = "Age" }
+            };
+
+            Assert.Equal(3, this.testSubject.GetProperties(properties).Count());
+        }
+
+        [Fact]
+        public void NullEntityMetadataBuilderShouldNotReturnPropertiesOfTypeODataStreamPropertyInfo()
+        {
+            var properties = new List<ODataPropertyInfo>
+            {
+                new ODataProperty { Name = "Id", Value = 1 },
+                new ODataProperty { Name = "Name", Value = "foobar" },
+                new ODataStreamPropertyInfo { Name = "Photo" }
+            };
+
+            Assert.Equal(2, this.testSubject.GetProperties(properties).Count());
+        }
+
+        [Fact]
         public void NullEntityMetadataBuilderShouldReturnNullMediaResource()
         {
             Assert.Null(this.testSubject.GetMediaResource());

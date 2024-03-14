@@ -536,8 +536,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
-            var property = Assert.Single(deletedResource.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
             Assert.Equal(1, property.Value);
         }
 
@@ -586,7 +585,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.FirstOrDefault(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -608,7 +607,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.FirstOrDefault(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -630,7 +629,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.FirstOrDefault(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -652,7 +651,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            Assert.Equal(1, deletedResource.Properties.FirstOrDefault(p => p.Name == "Id").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.FirstOrDefault(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -675,8 +674,8 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.NotNull(deletedResource);
             Assert.Equal(2, deletedResource.Properties.Count());
-            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Samantha Stones", deletedResource.Properties.First(p => p.Name == "ContactName").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Samantha Stones", Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "ContactName")).Value);
             Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
         }
 
@@ -735,8 +734,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Scissors", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -805,14 +804,14 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.NotNull(deltaResource);
             Assert.Equal(2, deltaResource.Properties.Count());
-            Assert.Equal(1, deltaResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Samantha Stones", deltaResource.Properties.First(p => p.Name == "ContactName").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deltaResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Samantha Stones", Assert.IsType<ODataProperty>(deltaResource.Properties.First(p => p.Name == "ContactName")).Value);
             Assert.NotNull(nestedResourceInfo);
             Assert.Equal("ProductBeingViewed", nestedResourceInfo.Name);
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Scissors", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -852,8 +851,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.NotNull(nestedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedResource.Reason);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Scissors", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Scissors", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -894,9 +893,10 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("MyNS.PhysicalProduct", nestedResource.TypeName);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedResource.Reason);
             Assert.Equal(3, nestedResource.Properties.Count());
-            Assert.Equal(10, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("car", nestedResource.Properties.First(p => p.Name == "Name").Value);
-            Assert.Equal("gold", nestedResource.Properties.First(p => p.Name == "Material").Value);
+            var properties = nestedResource.Properties.OfType<ODataProperty>();
+            Assert.Equal(10, properties.First(p => p.Name == "Id").Value);
+            Assert.Equal("car", properties.First(p => p.Name == "Name").Value);
+            Assert.Equal("gold", properties.First(p => p.Name == "Material").Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -932,8 +932,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.NotNull(nestedDeletedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
             Assert.Equal(2, nestedDeletedResource.Properties.Count());
-            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Scissors", nestedDeletedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Scissors", Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Name")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -991,12 +991,12 @@ namespace Microsoft.OData.Tests.Json
             }
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedDeletedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
             Assert.Single(nestedDeletedResource.Properties);
-            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1097,12 +1097,12 @@ namespace Microsoft.OData.Tests.Json
             }
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedDeletedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
             Assert.Single(nestedDeletedResource.Properties);
-            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1160,12 +1160,12 @@ namespace Microsoft.OData.Tests.Json
             }
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedDeletedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
             Assert.Single(nestedDeletedResource.Properties);
-            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [Fact]
@@ -1214,12 +1214,12 @@ namespace Microsoft.OData.Tests.Json
             Assert.NotNull(nestedDeltaResourceSet);
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedDeletedResource);
             Assert.Equal(DeltaDeletedEntryReason.Deleted, nestedDeletedResource.Reason);
             Assert.Single(nestedDeletedResource.Properties);
-            Assert.Equal(10, nestedDeletedResource.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedDeletedResource.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [Fact]
@@ -1289,11 +1289,11 @@ namespace Microsoft.OData.Tests.Json
             }
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedResource2);
             Assert.Single(nestedResource2.Properties);
-            Assert.Equal(10, nestedResource2.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedResource2.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1349,11 +1349,11 @@ namespace Microsoft.OData.Tests.Json
             }
             Assert.NotNull(nestedResource);
             Assert.Equal(2, nestedResource.Properties.Count());
-            Assert.Equal(1, nestedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Car", nestedResource.Properties.First(p => p.Name == "Name").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Car", Assert.IsType<ODataProperty>(nestedResource.Properties.First(p => p.Name == "Name")).Value);
             Assert.NotNull(nestedResource2);
             Assert.Single(nestedResource2.Properties);
-            Assert.Equal(10, nestedResource2.Properties.First(p => p.Name == "Id").Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(nestedResource2.Properties.First(p => p.Name == "Id")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1375,7 +1375,7 @@ namespace Microsoft.OData.Tests.Json
             }
 
             Assert.NotNull(deletedResource);
-            var property = Assert.Single(deletedResource.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
             Assert.Equal("Id", property.Name);
             Assert.Equal(1, property.Value);
         }
@@ -1401,8 +1401,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.NotNull(deletedResource);
             Assert.Equal(2, deletedResource.Properties.Count());
             Assert.Equal("MyNS.PreferredCustomer", deletedResource.TypeName);
-            Assert.Equal(1, deletedResource.Properties.First(p => p.Name == "Id").Value);
-            Assert.Equal("Gold", deletedResource.Properties.First(p => p.Name == "HonorLevel").Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "Id")).Value);
+            Assert.Equal("Gold", Assert.IsType<ODataProperty>(deletedResource.Properties.First(p => p.Name == "HonorLevel")).Value);
         }
 
         [InlineData(/*isResponse*/true)]
@@ -1459,8 +1459,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -1472,7 +1472,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -1492,7 +1492,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                 Assert.NotNull(deltaResource.Id);
                 Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
-                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                 Assert.Equal("ContactName", contactNameProperty.Name);
                 Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
             });
@@ -1595,8 +1595,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -1608,7 +1608,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -1628,7 +1628,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                 Assert.NotNull(deltaResource.Id);
                 Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
-                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                 Assert.Equal("ContactName", contactNameProperty.Name);
                 Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
             });
@@ -1730,8 +1730,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -1743,7 +1743,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -1763,7 +1763,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                 Assert.NotNull(deltaResource.Id);
                 Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
-                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                 Assert.Equal("ContactName", contactNameProperty.Name);
                 Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
             });
@@ -1866,8 +1866,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -1879,7 +1879,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -1899,7 +1899,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                 Assert.NotNull(deltaResource.Id);
                 Assert.EndsWith("Customers('BOTTM')", deltaResource.Id.OriginalString);
-                var contactNameProperty = Assert.Single(deltaResource.Properties);
+                var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                 Assert.Equal("ContactName", contactNameProperty.Name);
                 Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
             });
@@ -1977,8 +1977,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -1990,7 +1990,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2120,7 +2120,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Order", resource.TypeName);
                 Assert.NotNull(resource.Id);
                 Assert.EndsWith("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10643, idProperty.Value);
             });
@@ -2128,8 +2128,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -2141,7 +2141,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2157,7 +2157,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.EndsWith("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
-                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     },
@@ -2208,7 +2208,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
                 Assert.NotNull(resource.EditLink);
                 Assert.Equal("http://host/service/Orders(10643)", resource.EditLink.AbsoluteUri);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10643, idProperty.Value);
             });
@@ -2216,8 +2216,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -2229,7 +2229,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2275,7 +2275,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
                         Assert.NotNull(deltaResource.EditLink);
                         Assert.EndsWith("Customers('BOTTM')", deltaResource.EditLink.OriginalString);
-                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     },
@@ -2322,8 +2322,8 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Product", resource.TypeName);
                 Assert.NotNull(resource.Id);
                 Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -2335,7 +2335,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Order", resource.TypeName);
                 Assert.NotNull(resource.Id);
                 Assert.Equal("http://host/service/Orders(10643)", resource.Id.AbsoluteUri);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10643, idProperty.Value);
             });
@@ -2343,8 +2343,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -2356,7 +2356,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2372,7 +2372,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
-                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     },
@@ -2410,8 +2410,8 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Product", resource.TypeName);
                 Assert.NotNull(resource.Id);
                 Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -2421,8 +2421,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.ProductDetail", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Detail", properties[1].Name);
@@ -2440,7 +2440,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
-                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     },
@@ -2480,8 +2480,8 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Equal("MyNS.Product", resource.TypeName);
                 Assert.NotNull(resource.Id);
                 Assert.Equal("http://host/service/Products(1)", resource.Id.AbsoluteUri);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -2491,8 +2491,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.ProductDetail", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Detail", properties[1].Name);
@@ -2510,7 +2510,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Customer", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.Equal("http://host/service/Customers('BOTTM')", deltaResource.Id.AbsoluteUri);
-                        var contactNameProperty = Assert.Single(deltaResource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     },
@@ -2547,8 +2547,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -2560,7 +2560,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2576,7 +2576,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Order", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.Equal("http://host/service/Orders(10643)", deltaResource.Id.AbsoluteUri);
-                        var idProperty = Assert.Single(deltaResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10643, idProperty.Value);
                     },
@@ -2618,8 +2618,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("ZixingRoad.", properties[0].Value);
                 Assert.Equal("PostalCode", properties[1].Name);
@@ -2629,7 +2629,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Shanghai", cityNameProperty.Value);
             });
@@ -2637,8 +2637,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Street", properties[0].Name);
                 Assert.Equal("23 Tsawassen Blvd.", properties[0].Value);
                 Assert.Equal("Region", properties[1].Name);
@@ -2650,7 +2650,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.City", resource.TypeName);
-                var cityNameProperty = Assert.Single(resource.Properties);
+                var cityNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("CityName", cityNameProperty.Name);
                 Assert.Equal("Tsawassen", cityNameProperty.Value);
             });
@@ -2666,7 +2666,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Order", deltaResource.TypeName);
                         Assert.NotNull(deltaResource.Id);
                         Assert.Equal("http://host/service/Orders(10643)", deltaResource.Id.AbsoluteUri);
-                        var idProperty = Assert.Single(deltaResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deltaResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10643, idProperty.Value);
                     },
@@ -2923,7 +2923,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     },
@@ -2931,8 +2931,8 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("MyNS.Product", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
-                        Assert.Equal(2, properties.Length);
+                        Assert.Equal(2, resource.Properties.Count());
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal("Name", properties[0].Name);
                         Assert.Equal("Scissors", properties[0].Value);
                         Assert.Equal("Id", properties[1].Name);
@@ -2964,7 +2964,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     },
@@ -2992,8 +2992,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("ContactName", properties[1].Name);
@@ -3003,8 +3003,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Name", properties[0].Name);
                 Assert.Equal("Scissors", properties[0].Value);
                 Assert.Equal("Id", properties[1].Name);
@@ -3046,7 +3046,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3055,8 +3055,8 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Product", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                var properties = deletedResource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, deletedResource.Properties.Count());
+                var properties = deletedResource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Name", properties[0].Name);
                 Assert.Equal("Scissors", properties[0].Value);
                 Assert.Equal("Id", properties[1].Name);
@@ -3098,7 +3098,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3107,8 +3107,8 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.PhysicalProduct", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                var properties = deletedResource.Properties.ToArray();
-                Assert.Equal(3, properties.Length);
+                Assert.Equal(3, deletedResource.Properties.Count());
+                var properties = deletedResource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(10, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3155,8 +3155,8 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Product", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                        var properties = deletedResource.Properties.ToArray();
-                        Assert.Equal(2, properties.Length);
+                        Assert.Equal(2, deletedResource.Properties.Count());
+                        var properties = deletedResource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal("Name", properties[0].Name);
                         Assert.Equal("Scissors", properties[0].Value);
                         Assert.Equal("Id", properties[1].Name);
@@ -3167,7 +3167,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("MyNS.Customer", resource.TypeName);
-                        var idProperty = Assert.Single(resource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     }),
@@ -3201,7 +3201,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3210,7 +3210,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Product", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3236,8 +3236,8 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("MyNS.Product", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
-                        Assert.Equal(2, properties.Length);
+                        Assert.Equal(2, resource.Properties.Count());
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
                         Assert.Equal("Name", properties[1].Name);
@@ -3266,7 +3266,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3275,7 +3275,7 @@ namespace Microsoft.OData.Tests.Json
                 Assert.NotNull(deletedResource);
                 Assert.Equal("MyNS.Product", deletedResource.TypeName);
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                var idProperty = Assert.Single(deletedResource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3296,8 +3296,8 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("MyNS.Product", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
-                        Assert.Equal(2, properties.Length);
+                        Assert.Equal(2, resource.Properties.Count());
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
                         Assert.Equal("Name", properties[1].Name);
@@ -3346,7 +3346,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     }));
@@ -3378,7 +3378,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     }),
@@ -3412,7 +3412,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3420,8 +3420,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3444,7 +3444,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Product", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10, idProperty.Value);
                     },
@@ -3475,7 +3475,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3483,8 +3483,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3502,7 +3502,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Product", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10, idProperty.Value);
                     },
@@ -3533,7 +3533,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3541,8 +3541,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3565,7 +3565,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Product", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10, idProperty.Value);
                     },
@@ -3594,7 +3594,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3602,8 +3602,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3620,7 +3620,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Product", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(10, idProperty.Value);
                     },
@@ -3654,7 +3654,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3662,8 +3662,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3681,7 +3681,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     },
@@ -3717,7 +3717,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3725,8 +3725,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3744,7 +3744,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Customer", deletedResource.TypeName);
                         Assert.Equal(DeltaDeletedEntryReason.Changed, deletedResource.Reason);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     },
@@ -3777,7 +3777,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3785,7 +3785,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3793,8 +3793,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3836,7 +3836,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -3844,7 +3844,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(10, idProperty.Value);
             });
@@ -3852,8 +3852,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("MyNS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(1, properties[0].Value);
                 Assert.Equal("Name", properties[1].Name);
@@ -3900,7 +3900,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.Order", deletedResource.TypeName);
-                        var idProperty = Assert.Single(deletedResource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(deletedResource.Properties));
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
                     },
@@ -3910,7 +3910,7 @@ namespace Microsoft.OData.Tests.Json
                         Assert.Equal("MyNS.Customer", resource.TypeName);
                         Assert.NotNull(resource.Id);
                         Assert.EndsWith("Customers('BOTTM')", resource.Id.OriginalString);
-                        var contactNameProperty = Assert.Single(resource.Properties);
+                        var contactNameProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                         Assert.Equal("ContactName", contactNameProperty.Name);
                         Assert.Equal("Susan Halvenstern", contactNameProperty.Value);
                     }),
@@ -3936,7 +3936,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(deletedResource);
                         Assert.Equal("MyNS.PreferredCustomer", deletedResource.TypeName);
-                        var properties = deletedResource.Properties.ToArray();
+                        var properties = deletedResource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
                         Assert.Equal("HonorLevel", properties[1].Name);
@@ -4216,23 +4216,23 @@ namespace Microsoft.OData.Tests.Json
                                 Assert.NotNull(entry);
                                 if (entry.TypeName == "MyNS.Order")
                                 {
-                                    Assert.Equal(10643, entry.Properties.Single(p => p.Name == "Id").Value);
+                                    Assert.Equal(10643, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Id")).Value);
                                 }
                                 else if (entry.TypeName == "MyNS.Product")
                                 {
-                                    Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
+                                    Assert.Equal(1, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Id")).Value);
                                 }
                                 else if (entry.TypeName == "MyNS.ProductDetail")
                                 {
-                                    Assert.Equal(1, entry.Properties.Single(p => p.Name == "Id").Value);
+                                    Assert.Equal(1, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Id")).Value);
                                 }
                                 else if (entry.TypeName == "MyNS.Address")
                                 {
-                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "Street").Value);
+                                    Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Street")).Value);
                                 }
                                 else if (entry.TypeName == "MyNS.City")
                                 {
-                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "CityName").Value);
+                                    Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "CityName")).Value);
                                 }
                                 break;
                             case ODataReaderState.ResourceStart:
@@ -4333,19 +4333,22 @@ namespace Microsoft.OData.Tests.Json
             return lastSegment == 0 ? uriString : uriString.Substring(lastSegment);
         }
 
-        private bool PropertiesEqual(IEnumerable<ODataProperty> first, IEnumerable<ODataProperty> second)
+        private bool PropertiesEqual(IEnumerable<ODataPropertyInfo> first, IEnumerable<ODataPropertyInfo> second)
         {
             var i = first.GetEnumerator();
             var j = second.GetEnumerator();
 
             while (i.MoveNext() && j.MoveNext())
             {
-                if (!i.Current.Name.Equals(j.Current.Name))
+                var iCurrent = Assert.IsType<ODataProperty>(i.Current);
+                var jCurrent = Assert.IsType<ODataProperty>(j.Current);
+
+                if (!iCurrent.Name.Equals(jCurrent.Name))
                 {
                     return false;
                 }
 
-                if (!i.Current.Value.Equals(j.Current.Value))
+                if (!iCurrent.Value.Equals(jCurrent.Value))
                 {
                     return false;
                 }

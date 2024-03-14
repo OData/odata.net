@@ -1005,7 +1005,7 @@ namespace Microsoft.OData.Tests.Evaluation
         {
             var photoProperty = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetProperties( /*nonComputedProperties*/null).Single();
             Assert.Equal("Photo", photoProperty.Name);
-            var photo = (ODataStreamReferenceValue)photoProperty.Value;
+            var photo = Assert.IsType<ODataStreamReferenceValue>(Assert.IsType<ODataProperty>(photoProperty).Value);
             Assert.NotNull(photo);
             Assert.Equal(photo.EditLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
             Assert.Equal(photo.ReadLink, new Uri("http://odata.org/base/Products(KeyA='keya',KeyB=1)/TestModel.DerivedMleProduct/Photo"));
@@ -1018,7 +1018,7 @@ namespace Microsoft.OData.Tests.Evaluation
             this.derivedMultiKeyMultiEtagMleEntry.ReadLink = new Uri("http://somereadlink");
             var photoProperty = this.derivedMultiKeyMultiEtagMleConventionalEntityMetadataBuilder.GetProperties( /*nonComputedProperties*/null).Single();
             Assert.Equal("Photo", photoProperty.Name);
-            var photo = (ODataStreamReferenceValue)photoProperty.Value;
+            var photo = Assert.IsType<ODataStreamReferenceValue>(Assert.IsType<ODataProperty>(photoProperty).Value);
             Assert.NotNull(photo);
             Assert.Equal(photo.EditLink, new Uri("http://someeditlink/Photo"));
             Assert.Equal(photo.ReadLink, new Uri("http://somereadlink/Photo"));

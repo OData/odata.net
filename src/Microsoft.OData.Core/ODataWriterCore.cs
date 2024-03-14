@@ -2349,7 +2349,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type.</param>
         /// <param name="properties">The set of properties.</param>
         /// <returns>True if the set of properties include all key properties for the entity type; otherwise false.</returns>
-        private static bool HasKeyProperties(IEdmEntityType entityType, IEnumerable<ODataProperty> properties)
+        private static bool HasKeyProperties(IEdmEntityType entityType, IEnumerable<ODataPropertyInfo> properties)
         {
             Debug.Assert(entityType != null, "entityType null");
             if (properties == null)

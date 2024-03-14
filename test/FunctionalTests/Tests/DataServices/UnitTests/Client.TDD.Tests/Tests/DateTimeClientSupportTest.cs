@@ -151,7 +151,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
                 {
                     var properties = args.Entry.Properties;
                     Assert.True(properties.Count() == 2);
-                    var dateTimePropertyInEntry = args.Entry.Properties.Where(p => p.Name == "Id").FirstOrDefault().Value;
+                    var dateTimePropertyInEntry = Assert.IsType<ODataProperty>(args.Entry.Properties.Where(p => p.Name == "Id").FirstOrDefault()).Value;
                     Assert.True(dateTimePropertyInEntry is DateTimeOffset);
                     payloadChecked = true;
                 });

@@ -174,7 +174,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 }
             }
 
-            foreach (var property in entry.Properties)
+            foreach (var property in entry.Properties.OfType<ODataProperty>())
             {
                 ODataCollectionValue collectionValue = property.Value as ODataCollectionValue;
                 if (collectionValue != null)

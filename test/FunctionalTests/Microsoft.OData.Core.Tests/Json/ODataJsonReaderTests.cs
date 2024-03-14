@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests.Json
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(3, properties.Length);
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Tests.Json
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(3, properties.Length);
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
@@ -223,7 +223,7 @@ namespace Microsoft.OData.Tests.Json
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(2, properties.Length);
                         Assert.Equal("Id", properties[0].Name);
                         Assert.Equal(1, properties[0].Value);
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -466,7 +466,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -492,7 +492,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -603,7 +603,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Street", properties[0].Name);
@@ -616,7 +616,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -696,7 +696,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -709,7 +709,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -926,7 +926,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1027,7 +1027,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1070,7 +1070,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1083,7 +1083,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1126,7 +1126,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1139,7 +1139,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1182,7 +1182,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("NS.Customer", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(2, properties.Length);
 
                         Assert.Equal("Id", properties[0].Name);
@@ -1209,7 +1209,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1222,7 +1222,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1263,7 +1263,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1276,7 +1276,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1318,7 +1318,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1331,7 +1331,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1376,7 +1376,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("NS.Customer", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(2, properties.Length);
 
                         Assert.Equal("Id", properties[0].Name);
@@ -1414,7 +1414,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("NS.Customer", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(3, properties.Length);
 
                         Assert.Equal("Id", properties[0].Name);
@@ -1453,7 +1453,7 @@ namespace Microsoft.OData.Tests.Json
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
-                        var idProperty = Assert.Single<ODataProperty>(resource.Properties);
+                        var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
 
                         Assert.Equal("Id", idProperty.Name);
                         Assert.Equal(1, idProperty.Value);
@@ -1489,7 +1489,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("NS.Customer", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(3, properties.Length);
 
                         Assert.Equal("Id", properties[0].Name);
@@ -1523,7 +1523,7 @@ namespace Microsoft.OData.Tests.Json
                     {
                         Assert.NotNull(resource);
                         Assert.Equal("NS.Customer", resource.TypeName);
-                        var properties = resource.Properties.ToArray();
+                        var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                         Assert.Equal(2, properties.Length);
 
                         Assert.Equal("Id", properties[0].Name);
@@ -1567,7 +1567,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1581,7 +1581,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Product", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);
@@ -1593,7 +1593,7 @@ namespace Microsoft.OData.Tests.Json
             verifyResourceActionStack.Push((resource) =>
             {
                 Assert.NotNull(resource);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Name", properties[0].Name);
@@ -1607,7 +1607,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal(2, properties.Length);
 
                 Assert.Equal("Id", properties[0].Name);

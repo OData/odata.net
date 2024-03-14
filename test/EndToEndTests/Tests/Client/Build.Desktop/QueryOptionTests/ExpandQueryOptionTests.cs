@@ -57,7 +57,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.Equal("suger soft drink", details.First().Properties.Single(p => p.Name == "Description").Value);
+                    Assert.Equal("suger soft drink", Assert.IsType<ODataProperty>(details.First().Properties.Single(p => p.Name == "Description")).Value);
                 }
 
                 // $filter
@@ -65,7 +65,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.Equal(5, details.First().Properties.Single(p => p.Name == "ProductDetailID").Value);
+                    Assert.Equal(5, Assert.IsType<ODataProperty>(details.First().Properties.Single(p => p.Name == "ProductDetailID")).Value);
                 }
 
                 // $count
@@ -112,9 +112,9 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     var details = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.Equal(1, details.Count);
-                    Assert.Equal(1, details.First().Properties.Count());
-                    Assert.Equal("fitness drink!", details.First().Properties.Single(p => p.Name == "Description").Value);
+                    Assert.Single(details);
+                    Assert.Single(details.First().Properties);
+                    Assert.Equal("fitness drink!", Assert.IsType<ODataProperty>(details.First().Properties.Single(p => p.Name == "Description")).Value);
                 }
 
                 // Nested $expand
@@ -124,8 +124,8 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     Assert.Equal(8, entries.Count);
                     var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                     Assert.Equal(2, reviews.Count);
-                    Assert.Equal(1, reviews.First().Properties.Count());
-                    Assert.Equal("Not so good as other brands", reviews.First().Properties.Single(p => p.Name == "Comment").Value);
+                    Assert.Single(reviews.First().Properties);
+                    Assert.Equal("Not so good as other brands", Assert.IsType<ODataProperty>(reviews.First().Properties.Single(p => p.Name == "Comment")).Value);
                 }
 
                 // Nested $expand with $ref
@@ -144,7 +144,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     Assert.Equal(4, entries.Count);
                     var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                     Assert.Equal(2, reviews.Count);
-                    Assert.Equal("Not so good as other brands", reviews.First().Properties.Single(p => p.Name == "Comment").Value);
+                    Assert.Equal("Not so good as other brands", Assert.IsType<ODataProperty>(reviews.First().Properties.Single(p => p.Name == "Comment")).Value);
                 }
             }
         }

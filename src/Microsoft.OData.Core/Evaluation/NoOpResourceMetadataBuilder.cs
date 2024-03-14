@@ -92,7 +92,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="nonComputedProperties">Non-computed properties from the entity.</param>
         /// <returns>The the computed and non-computed entity properties.</returns>
-        internal override IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
+        internal override IEnumerable<ODataPropertyInfo> GetProperties(IEnumerable<ODataPropertyInfo> nonComputedProperties)
         {
             return nonComputedProperties;
         }

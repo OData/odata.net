@@ -290,7 +290,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
-            ODataProperty property = tempEntry.Properties.First();
+            ODataProperty property = tempEntry.Properties.First() as ODataProperty;
 
             // Note - the property can be null - it is a valid test case !!!!
 
@@ -323,7 +323,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
-            ODataProperty property = tempEntry.Properties.First();
+            ODataProperty property = tempEntry.Properties.First() as ODataProperty;
             Debug.Assert(property != null, "A single property is expected.");
             object propertyValue = property.Value;
 
@@ -369,7 +369,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         {
             ODataResource tempEntry = testDescriptor.PayloadItems[0] as ODataResource;
             Debug.Assert(tempEntry != null, "A single entry payload is expected.");
-            ODataProperty namedStreamProperty = tempEntry.Properties.FirstOrDefault(p => p != null && p.Value is ODataStreamReferenceValue);
+            ODataProperty namedStreamProperty = tempEntry.Properties.OfType<ODataProperty>().FirstOrDefault(p => p != null && p.Value is ODataStreamReferenceValue);
 
             // Note - the named stream can be null - it is a valid test case !!!!
 

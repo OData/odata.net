@@ -281,10 +281,10 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal("http://host/City(111)", entryLists[0].Id.OriginalString);
             Assert.Equal("DefaultNs.Address", entryLists[1].TypeName);
-            Assert.Equal("Zixing", entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("Zixing", Assert.IsType<ODataProperty>(entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road")).Value);
             Assert.Equal("http://host/City(222)", entryLists[2].Id.OriginalString);
             Assert.Equal("DefaultNs.WorkAddress", entryLists[3].TypeName);
-            Assert.Equal("Ziyue", entryLists[3].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("Ziyue", Assert.IsType<ODataProperty>(entryLists[3].Properties.FirstOrDefault(s => s.Name == "Road")).Value);
             Assert.Equal("http://host/People('abc')", entryLists[4].Id.OriginalString);
         }
 
@@ -308,8 +308,8 @@ namespace Microsoft.OData.Tests
 
             Assert.Equal("http://host/City(111)", entryLists[0].Id.OriginalString);
             Assert.Equal("DefaultNs.WorkAddress", entryLists[1].TypeName);
-            Assert.Equal("workplace", entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road").Value);
-            Assert.Equal("Zixing", entryLists[2].Properties.FirstOrDefault(s => s.Name == "Road").Value);
+            Assert.Equal("workplace", Assert.IsType<ODataProperty>(entryLists[1].Properties.FirstOrDefault(s => s.Name == "Road")).Value);
+            Assert.Equal("Zixing", Assert.IsType<ODataProperty>(entryLists[2].Properties.FirstOrDefault(s => s.Name == "Road")).Value);
             Assert.Equal("http://host/People('abc')", entryLists[3].Id.OriginalString);
         }
 

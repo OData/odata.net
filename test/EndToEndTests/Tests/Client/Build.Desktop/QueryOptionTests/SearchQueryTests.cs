@@ -46,15 +46,15 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=NOT (drink OR snack)", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(0, details.Count);
+                    Assert.Empty(details);
                 }
 
                 //Implicit AND
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=snack sweet", mimeType);
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(1, details.Count);
-                    Assert.Equal("sweet snack", details.First().Properties.Single(p => p.Name == "Description").Value);
+                    Assert.Single(details);
+                    Assert.Equal("sweet snack", Assert.IsType<ODataProperty>(details.First().Properties.Single(p => p.Name == "Description")).Value);
                 }
 
                 details = this.TestsHelper.QueryFeed("ProductDetails?$search=snack NOT sweet", mimeType);
@@ -83,9 +83,9 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                     Assert.Equal(2, details.Count);
                     foreach (var detail in details)
                     {
-                        Assert.Equal(1, detail.Properties.Count());
-                        var description = detail.Properties.Single(p => p.Name == "Description").Value as string;
-                        Assert.True(description.Contains("drink"));
+                        Assert.Single(detail.Properties);
+                        var description = Assert.IsType<string>(Assert.IsType<ODataProperty>(detail.Properties.Single(p => p.Name == "Description")).Value);
+                        Assert.Contains("drink", description);
                     }
                 }
 
@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.QueryOptionTests
                 {
                     Assert.Equal(7, entries.Count);
                     var productDetails = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductDetails"));
-                    Assert.Equal("Candy", productDetails.First().Properties.Single(p=>p.Name == "ProductName").Value);
+                    Assert.Equal("Candy", Assert.IsType<ODataProperty>(productDetails.First().Properties.Single(p=>p.Name == "ProductName")).Value);
                     var reviews = entries.FindAll(e => e.Id.AbsoluteUri.Contains("ProductReviews"));
                     Assert.Equal(4, reviews.Count);
                 }

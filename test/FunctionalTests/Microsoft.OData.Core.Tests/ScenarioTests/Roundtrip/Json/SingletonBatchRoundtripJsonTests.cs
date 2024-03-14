@@ -1520,8 +1520,9 @@ Content-Type: application/json;odata.metadata=none
                                         if (reader.State == ODataReaderState.ResourceEnd)
                                         {
                                             ODataResource entry = reader.Item as ODataResource;
-                                            Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
-                                            Assert.Equal("WebSingleton", entry.Properties.Single(p => p.Name == "Name").Value);
+                                            var properties = entry.Properties.OfType<ODataProperty>();
+                                            Assert.Equal(10, properties.Single(p => p.Name == "WebId").Value);
+                                            Assert.Equal("WebSingleton", properties.Single(p => p.Name == "Name").Value);
                                         }
                                     }
                                 }

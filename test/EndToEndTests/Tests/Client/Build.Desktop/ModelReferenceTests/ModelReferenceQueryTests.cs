@@ -84,7 +84,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                                 Assert.NotNull(reader.Item as ODataResourceSet);
                             }
                         }
-                        Assert.NotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
                         //string.Format("{0}.TruckDemo.TruckType", TestModelNameSpace)
                         Assert.NotNull(entry.TypeName);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -117,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                                 entries.Add(reader.Item as ODataResource);
                             }
                         }
-                        Assert.Equal("Key1", entries.Last().Properties.Single(p => p.Name == "Key").Value);
+                        Assert.Equal("Key1", Assert.IsType<ODataProperty>(entries.Last().Properties.Single(p => p.Name == "Key")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -154,7 +154,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                             }
                         }
 
-                        Assert.NotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -186,7 +186,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                                 entries.Add(reader.Item as ODataResource);
                             }
                         }
-                        Assert.Equal("VehicleKey2", entries.Last().Properties.Single(p => p.Name == "Key").Value);
+                        Assert.Equal("VehicleKey2", Assert.IsType<ODataProperty>(entries.Last().Properties.Single(p => p.Name == "Key")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -223,7 +223,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                             }
                         }
 
-                        Assert.NotNull(entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "DisplayName")).Value);
                         // string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace)
                         Assert.NotNull(entry.TypeName);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -256,8 +256,8 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null & entry.TypeName.EndsWith("VehicleGPSType"))
                                 {
-                                    Assert.Equal("VehicleKey6", entry.Properties.Single(p => p.Name == "Key").Value);
-                                    Assert.Equal("DisplayName6", entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                                    Assert.Equal("VehicleKey6", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
+                                    Assert.Equal("DisplayName6", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "DisplayName")).Value);
                                     Assert.Equal(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
                                 }
                             }
@@ -320,7 +320,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                             }
                         }
 
-                        Assert.NotNull(entry.Properties.Single(p => p.Name == "Key").Value);
+                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -351,8 +351,8 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null & entry.TypeName.EndsWith("VehicleGPSType"))
                                 {
-                                    Assert.Equal("DerivedVehicleGPSInGPSKey3", entry.Properties.Single(p => p.Name == "Key").Value);
-                                    Assert.Equal("DerivedVehicleGPSInGPSDP", entry.Properties.Single(p => p.Name == "DisplayName").Value);
+                                    Assert.Equal("DerivedVehicleGPSInGPSKey3", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
+                                    Assert.Equal("DerivedVehicleGPSInGPSDP", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "DisplayName")).Value);
                                     Assert.Equal(entry.TypeName, string.Format("{0}.TruckDemo.DerivedVehicleGPSType", TestModelNameSpace));
                                 }
                             }
@@ -540,8 +540,8 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                         }
 
                         Assert.Equal(ODataReaderState.Completed, reader.State);
-                        Assert.Equal("DisplayName5", entries[0].Properties.SingleOrDefault(p => p.Name == "DisplayName").Value);
-                        Assert.Equal("DisplayName4", entries[1].Properties.SingleOrDefault(p => p.Name == "DisplayName").Value);
+                        Assert.Equal("DisplayName5", Assert.IsType<ODataProperty>(entries[0].Properties.SingleOrDefault(p => p.Name == "DisplayName")).Value);
+                        Assert.Equal("DisplayName4", Assert.IsType<ODataProperty>(entries[1].Properties.SingleOrDefault(p => p.Name == "DisplayName")).Value);
                     }
                 }
             }
@@ -569,7 +569,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.Equal(204, responseMessage.StatusCode);
 
-            var actual = (this.QueryEntityItem("VehicleGPSSet('VehicleKey6')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed").Value;
+            var actual = Assert.IsType<ODataProperty>((this.QueryEntityItem("VehicleGPSSet('VehicleKey6')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed")).Value;
             Assert.Equal((double)80, actual);
         }
 
@@ -591,7 +591,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
             var responseMessage = requestMessage.GetResponse();
             Assert.Equal(200, responseMessage.StatusCode);
 
-            var actual = (this.QueryEntityItem("VehicleGPSSetInGPS('VehicleGPSSetInGPSKey2')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed").Value;
+            var actual = Assert.IsType<ODataProperty>((this.QueryEntityItem("VehicleGPSSetInGPS('VehicleGPSSetInGPSKey2')") as ODataResource).Properties.Single(p => p.Name == "VehicleSpeed")).Value;
             Assert.Equal((double)80, actual);
         }
 
@@ -634,7 +634,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                     }
                 }
 
-                Assert.Equal(1, perp.Properties.Single(p => p.Name == "Severity").Value);
+                Assert.Equal(1, Assert.IsType<ODataProperty>(perp.Properties.Single(p => p.Name == "Severity")).Value);
             }
         }
 

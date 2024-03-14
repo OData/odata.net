@@ -33,7 +33,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
         public static RecordSchema GetSchema(ODataResource entry)
         {
             RecordSchema rs = Schema.CreateRecord(entry.TypeName, null);
-            Schema.SetFields(rs, entry.Properties.Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
+            Schema.SetFields(rs, entry.Properties.OfType<ODataProperty>().Select(property => Schema.CreateField(property.Name, GetSchema(property.Value))));
             return rs;
         }
 

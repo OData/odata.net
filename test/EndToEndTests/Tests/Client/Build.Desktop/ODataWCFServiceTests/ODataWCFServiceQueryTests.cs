@@ -90,7 +90,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                    Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonID")).Value);
                                 }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
@@ -129,7 +129,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.Equal(1, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                    Assert.Equal(1, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonID")).Value);
                                 }
                             }
                         }
@@ -217,7 +217,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             }
                         }
 
-                        Assert.Equal(8, entry.Properties.Single(p => p.Name == "OrderID").Value);
+                        Assert.Equal(8, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "OrderID")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -377,7 +377,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                         Assert.NotNull(entry);
                         //String.Format("Mime:{0},URL:{1}", mimeType, testCase.Key)
-                        Assert.Equal(testCase.Value, entry.Properties.Single(p => p.Name == "PersonID").Value);
+                        Assert.Equal(testCase.Value, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonID")).Value);
                     }
                 }
             }
@@ -433,16 +433,16 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                             var order = entries.FirstOrDefault(e => e != null && e.Id != null && e.Id.AbsoluteUri.Contains("Orders"));
                             Assert.NotNull(order);
-                            Assert.Equal(8, order.Properties.Single(p => p.Name == "OrderID").Value);
+                            Assert.Equal(8, Assert.IsType<ODataProperty>(order.Properties.Single(p => p.Name == "OrderID")).Value);
 
                             var customer = entries.FirstOrDefault(e => e.Id != null && e.Id.AbsoluteUri.Contains("Customers"));
                             Assert.NotNull(customer);
-                            Assert.Equal(1, customer.Properties.Single(p => p.Name == "PersonID").Value);
+                            Assert.Equal(1, Assert.IsType<ODataProperty>(customer.Properties.Single(p => p.Name == "PersonID")).Value);
 
                             if (testCase.Value /*single property selected*/)
                             {
-                                Assert.Equal(1, order.Properties.Count());
-                                Assert.Equal(1, customer.Properties.Count());
+                                Assert.Single(order.Properties);
+                                Assert.Single(customer.Properties);
                             }
                             else
                             {
@@ -487,8 +487,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                                     ODataResource entry = reader.Item as ODataResource;
                                     if (entry != null && entry.TypeName.EndsWith("Customer"))
                                     {
-                                        Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
-                                        Assert.NotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
+                                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonID")).Value);
+                                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FirstName")).Value);
                                         Assert.Equal(testCase.Value, entry.Properties.Count());
                                         count++;
                                     }
@@ -580,8 +580,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                         Assert.Equal(testCase.Value,
                             String.Compare(
-                            entry1.Properties.Single(p => p.Name == "PersonID").Value.ToString(),
-                            entry2.Properties.Single(p => p.Name == "PersonID").Value.ToString()));
+                            Assert.IsType<ODataProperty>(entry1.Properties.Single(p => p.Name == "PersonID")).Value.ToString(),
+                            Assert.IsType<ODataProperty>(entry2.Properties.Single(p => p.Name == "PersonID")).Value.ToString()));
 
                     }
                 }
@@ -629,7 +629,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             ODataResource entry = reader.Item as ODataResource;
                             if (entry != null && entry.TypeName.EndsWith("Customer"))
                             {
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "PersonID").Value);
+                                Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonID")).Value);
                             }
                         }
                     }
@@ -647,7 +647,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
             var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName"));
             List<string> enumResult = middleName.ToList();
-            Assert.Equal(0, enumResult.Count);
+            Assert.Empty(enumResult);
         }
 
         [Fact]
@@ -658,7 +658,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             TestClientContext.SendingRequest2 += (sender, eventArgs) => ((Microsoft.OData.Client.HttpClientRequestMessage)eventArgs.RequestMessage).SetHeader("Accept", "text/plain");
             var middleName = TestClientContext.Execute<string>(new Uri(ServiceBaseUri.AbsoluteUri + "/People(5)/MiddleName/$value"));
             List<string> enumResult = middleName.ToList();
-            Assert.Equal(0, enumResult.Count);
+            Assert.Empty(enumResult);
         }
 #endif
 
@@ -687,7 +687,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                         ODataResource entry = reader.Item as ODataResource;
                         if (entry != null && entry.TypeName.EndsWith("Order"))
                         {
-                            Assert.NotNull(entry.Properties.Single(p => p.Name == "OrderID").Value);
+                            Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "OrderID")).Value);
                         }
                     }
                     else if (reader.State == ODataReaderState.ResourceSetEnd)

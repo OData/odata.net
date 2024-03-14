@@ -281,7 +281,7 @@ namespace Microsoft.OData.Tests.Json
             var pair = Assert.Single(result.Entries);
             Assert.Equal("entry", pair.Key);
             var entry = Assert.Single(pair.Value);
-            var property = Assert.Single(entry.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entry.Properties));
             Assert.Equal(1, property.Value);
         }
 
@@ -302,9 +302,9 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("entry", pair.Key);
             Assert.Equal(2, pair.Value.Count);
             var complex = pair.Value.ElementAt(0);
-            Assert.Equal("ComplexName", Assert.Single(complex.Properties).Value);
+            Assert.Equal("ComplexName", Assert.IsType<ODataProperty>(Assert.Single(complex.Properties)).Value);
             var entry = pair.Value.Last();
-            Assert.Equal(1, Assert.Single(entry.Properties).Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(Assert.Single(entry.Properties)).Value);
 
             var pair2 = result.Entries.Last();
             Assert.Equal("complex", pair2.Key);
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("entry", pair.Key);
             var entry = Assert.Single(pair.Value);
             Assert.Equal(2, entry.Properties.Count());
-            var untypedValue = Assert.IsType<ODataUntypedValue>(entry.Properties.ElementAt(1).Value);
+            var untypedValue = Assert.IsType<ODataUntypedValue>(entry.Properties.OfType<ODataProperty>().ElementAt(1).Value);
             Assert.Equal("\"DynamicValue\"", untypedValue.RawValue);
         }
 
@@ -342,8 +342,9 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("entry", pair.Key);
             var entry = Assert.Single(pair.Value);
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal(1, entry.Properties.First().Value);
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            var properties = entry.Properties.OfType<ODataProperty>();
+            Assert.Equal(1, properties.ElementAt(0).Value);
+            Assert.Equal("TestName", properties.ElementAt(1).Value);
         }
 
         [Fact]
@@ -374,7 +375,7 @@ namespace Microsoft.OData.Tests.Json
             var pair = Assert.Single(result.Entries);
             Assert.Equal("feed", pair.Key);
             var entry = Assert.Single(pair.Value);
-            var property = Assert.Single(entry.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entry.Properties));
             Assert.Equal(1, property.Value);
         }
 
@@ -394,14 +395,14 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feedA", feedA.Key);
             Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            var property = Assert.Single(entryA.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties));
             Assert.Equal(1, property.Value);
 
             var feedB = result.Feeds.Last();
             Assert.Equal("feedB", feedB.Key);
             Assert.Single(feedB.Value);
             var entryB = result.Entries.ElementAt(1).Value.First();
-            property = Assert.Single(entryB.Properties);
+            property = Assert.IsType<ODataProperty>(Assert.Single(entryB.Properties));
             Assert.Equal(2, property.Value);
         }
 
@@ -422,14 +423,14 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feedA", feedA.Key);
             Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            var property = Assert.Single(entryA.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties));
             Assert.Equal(1, property.Value);
 
             var feedB = result.Feeds.ElementAt(1);
             Assert.Equal("feedB", feedB.Key);
             Assert.Single(feedB.Value);
             var entryB = result.Entries.ElementAt(1).Value.First();
-            property = Assert.Single(entryB.Properties);
+            property = Assert.IsType<ODataProperty>(Assert.Single(entryB.Properties));
             Assert.Equal(2, property.Value);
         }
 
@@ -450,7 +451,7 @@ namespace Microsoft.OData.Tests.Json
             var feedA = result.Feeds.First();
             Assert.Equal("feedA", feedA.Key);
             var entryA = Assert.Single(result.Entries.First().Value);
-            var property = Assert.Single(entryA.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties));
             Assert.Equal(1, property.Value);
 
             var feedB = result.Feeds.ElementAt(1);
@@ -458,8 +459,8 @@ namespace Microsoft.OData.Tests.Json
             Assert.Single(feedB.Value);
             var entryB = result.Entries.ElementAt(1).Value.First();
             Assert.Equal(2, entryB.Properties.Count());
-            Assert.Equal(2, entryB.Properties.First().Value);
-            Assert.Equal("testName", entryB.Properties.ElementAt(1).Value);
+            Assert.Equal(2, Assert.IsType<ODataProperty>(entryB.Properties.First()).Value);
+            Assert.Equal("testName", Assert.IsType<ODataProperty>(entryB.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -478,12 +479,12 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.Equal(2, result.Entries.Count);
             var entryA = result.Entries.First().Value.First();
-            var property = Assert.Single(entryA.Properties);
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties));
             Assert.Equal(1, property.Value);
             var pair = result.Entries.ElementAt(1);
             Assert.Equal("entryB", pair.Key);
             var entryB = pair.Value.First();
-            property = Assert.Single(entryB.Properties);
+            property = Assert.IsType<ODataProperty>(Assert.Single(entryB.Properties));
             Assert.Equal(2, property.Value);
         }
 
@@ -503,10 +504,10 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feed", feedA.Key);
             Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties)).Value);
 
             var entryB = result.Entries.Last().Value.Single();
-            Assert.Equal("ComplexName", Assert.Single(entryB.Properties).Value);
+            Assert.Equal("ComplexName", Assert.IsType<ODataProperty>(Assert.Single(entryB.Properties)).Value);
         }
 
         [Fact]
@@ -523,7 +524,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feed", feedA.Key);
             Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties)).Value);
 
             var item = Assert.Single(result.Values);
             Assert.Equal("property", item.Key);
@@ -547,7 +548,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feed", feedA.Key);
             Assert.Single(feedA.Value);
             var entryA = result.Entries.First().Value.First();
-            Assert.Equal(1, Assert.Single(entryA.Properties).Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(Assert.Single(entryA.Properties)).Value);
             Assert.IsType<ODataEnumValue>(Assert.Single(result.Values).Value);
         }
 
@@ -566,11 +567,11 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feed", pair.Key);
             Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
-            Assert.Equal(1, Assert.Single(entry.Properties).Value);
+            Assert.Equal(1, Assert.IsType<ODataProperty>(Assert.Single(entry.Properties)).Value);
 
             entry = pair.Value.ElementAt(1);
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -588,7 +589,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("feed", pair.Key);
             var entry = Assert.Single(pair.Value);
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -608,7 +609,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -628,7 +629,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -648,7 +649,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -668,7 +669,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(2, pair.Value.Count());
             var entry = pair.Value.First();
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("TestName", entry.Properties.ElementAt(1).Value);
+            Assert.Equal("TestName", Assert.IsType<ODataProperty>(entry.Properties.ElementAt(1)).Value);
         }
 
         [Fact]
@@ -942,7 +943,7 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Address", resource.TypeName);
-                            var streetProperty = Assert.Single(resource.Properties);
+                            var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                             Assert.Equal("Street", streetProperty.Name);
                             Assert.Equal("One Way", streetProperty.Value);
                         })));
@@ -971,8 +972,8 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.BuildingAddress", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                            Assert.Equal(2, resource.Properties.Count());
+                            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                             Assert.Equal("Building", properties[0].Name);
                             Assert.Equal("Studio A", properties[0].Value);
                             Assert.Equal("Street", properties[1].Name);
@@ -996,7 +997,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var streetProperty = Assert.Single(resource.Properties);
+                var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Street", streetProperty.Name);
                 Assert.Equal("Two Way", streetProperty.Value);
             });
@@ -1004,7 +1005,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var streetProperty = Assert.Single(resource.Properties);
+                var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Street", streetProperty.Name);
                 Assert.Equal("One Way", streetProperty.Value);
             });
@@ -1044,7 +1045,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var streetProperty = Assert.Single(resource.Properties);
+                var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Street", streetProperty.Name);
                 Assert.Equal("Two Way", streetProperty.Value);
             });
@@ -1052,8 +1053,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.BuildingAddress", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Building", properties[0].Name);
                 Assert.Equal("Studio A", properties[0].Value);
                 Assert.Equal("Street", properties[1].Name);
@@ -1098,8 +1099,8 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                            Assert.Equal(2, resource.Properties.Count());
+                            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                             Assert.Equal("Id", properties[0].Name);
                             Assert.Equal(1, properties[0].Value);
                             Assert.Equal("Name", properties[1].Name);
@@ -1150,8 +1151,8 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.EnterpriseCustomer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                            Assert.Equal(2, resource.Properties.Count());
+                            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                             Assert.Equal("Id", properties[0].Name);
                             Assert.Equal(1, properties[0].Value);
                             Assert.Equal("CreditLimit", properties[1].Name);
@@ -1180,8 +1181,8 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                            Assert.Equal(2, resource.Properties.Count());
+                            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                             Assert.Equal("Id", properties[0].Name);
                             Assert.Equal(1, properties[0].Value);
                             Assert.Equal("DynamicProp", properties[1].Name);
@@ -1212,8 +1213,8 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Customer", resource.TypeName);
-                            var properties = resource.Properties.ToArray();
-                            Assert.Equal(2, properties.Length);
+                            Assert.Equal(2, resource.Properties.Count());
+                            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                             Assert.Equal("Id", properties[0].Name);
                             Assert.Equal(1, properties[0].Value);
                             Assert.Equal("Name", properties[1].Name);
@@ -1240,7 +1241,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(2, idProperty.Value);
             });
@@ -1248,7 +1249,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1295,8 +1296,8 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.EnterpriseCustomer", resource.TypeName);
-                var properties = resource.Properties.ToArray();
-                Assert.Equal(2, properties.Length);
+                Assert.Equal(2, resource.Properties.Count());
+                var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                 Assert.Equal("Id", properties[0].Name);
                 Assert.Equal(2, properties[0].Value);
                 Assert.Equal("CreditLimit", properties[1].Name);
@@ -1306,7 +1307,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1355,7 +1356,7 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Customer", resource.TypeName);
-                            var idProperty = Assert.Single(resource.Properties);
+                            var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                             Assert.Equal("Id", idProperty.Name);
                             Assert.Equal(1, idProperty.Value);
                         })));
@@ -1392,7 +1393,7 @@ namespace Microsoft.OData.Tests.Json
                         {
                             Assert.NotNull(resource);
                             Assert.Equal("NS.Customer", resource.TypeName);
-                            var idProperty = Assert.Single(resource.Properties);
+                            var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                             Assert.Equal("Id", idProperty.Name);
                             Assert.Equal(1, idProperty.Value);
                         })));
@@ -1420,7 +1421,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var streetProperty = Assert.Single(resource.Properties);
+                var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Street", streetProperty.Name);
                 Assert.Equal("Two Way", streetProperty.Value);
             });
@@ -1428,7 +1429,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1436,7 +1437,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Address", resource.TypeName);
-                var streetProperty = Assert.Single(resource.Properties);
+                var streetProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Street", streetProperty.Name);
                 Assert.Equal("One Way", streetProperty.Value);
             });
@@ -1482,7 +1483,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(2, idProperty.Value);
             });
@@ -1490,7 +1491,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1549,7 +1550,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Order", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(7, idProperty.Value);
             });
@@ -1557,7 +1558,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1598,7 +1599,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1606,7 +1607,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.NextOfKin", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(13, idProperty.Value);
             });
@@ -1647,7 +1648,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Customer", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(1, idProperty.Value);
             });
@@ -1655,7 +1656,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 Assert.NotNull(resource);
                 Assert.Equal("NS.Subsidiary", resource.TypeName);
-                var idProperty = Assert.Single(resource.Properties);
+                var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                 Assert.Equal("Id", idProperty.Name);
                 Assert.Equal(13, idProperty.Value);
             });

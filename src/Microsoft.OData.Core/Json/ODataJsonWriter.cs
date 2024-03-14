@@ -297,8 +297,13 @@ namespace Microsoft.OData.Json
             ICollection<KeyValuePair<string, object>> computedKeyProperties = new List<KeyValuePair<string, object>>();
             foreach (IEdmStructuralProperty edmKeyProperty in entityType.Key())
             {
-                foreach (ODataProperty property in resource.NonComputedProperties)
+                foreach (ODataPropertyInfo propertyInfo in resource.NonComputedProperties)
                 {
+                    if (propertyInfo is not ODataProperty property)
+                    {
+                        continue;
+                    }
+
                     if (property.Name == edmKeyProperty.Name)
                     {
                         object newValue = model.ConvertToUnderlyingTypeIfUIntValue(property.Value);

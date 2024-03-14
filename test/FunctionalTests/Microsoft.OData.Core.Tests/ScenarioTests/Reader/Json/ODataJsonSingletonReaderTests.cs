@@ -68,8 +68,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             ODataResource entry = this.ReadSingleton(payload);
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
-            Assert.Equal("SingletonWeb", entry.Properties.Single(p => p.Name == "Name").Value);
+            var properties = entry.Properties.OfType<ODataProperty>();
+            Assert.Equal(10, properties.Single(p => p.Name == "WebId").Value);
+            Assert.Equal("SingletonWeb", properties.Single(p => p.Name == "Name").Value);
         }
 
         [Fact]
@@ -107,7 +108,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
 
             ODataResource entry = this.ReadSingleton(payload);
 
-            Assert.Equal(10, Assert.Single(entry.Properties).Value);
+            Assert.Equal(10, Assert.IsType<ODataProperty>(Assert.Single(entry.Properties)).Value);
         }
 
         [Fact]
@@ -269,7 +270,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             this.StreamTestSetting();
             ODataResource entry = this.ReadSingleton(payload, enableReadingODataAnnotationWithoutPrefix);
 
-            ODataStreamReferenceValue logo = (ODataStreamReferenceValue)entry.Properties.Single().Value;
+            ODataStreamReferenceValue logo = Assert.IsType<ODataStreamReferenceValue>(Assert.IsType<ODataProperty>(entry.Properties.Single()).Value);
+            Assert.NotNull(logo);
             Assert.Equal("image/jpeg", logo.ContentType);
             Assert.Equal("stream etag", logo.ETag);
         }
@@ -345,7 +347,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             ODataResource entry = this.ReadSingleton(payload);
 
             Assert.Equal(3, entry.Properties.Count());
-            var property = Assert.Single(entry.Properties, p => p.Name == "OpenType2");
+            var property = Assert.IsType<ODataProperty>(Assert.Single(entry.Properties, p => p.Name == "OpenType2"));
             var unTypedValue = Assert.IsType<ODataUntypedValue>(property.Value);
             Assert.Equal("\"BlaBla\"", unTypedValue.RawValue);
         }

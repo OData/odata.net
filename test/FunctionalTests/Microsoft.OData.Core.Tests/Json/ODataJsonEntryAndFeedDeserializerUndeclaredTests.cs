@@ -179,7 +179,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("null", (entry.Properties.Last().ODataValue as ODataUntypedValue).RawValue);
+            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).ODataValue).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -215,7 +215,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal(false, complex1.Properties.First(s => string.Equals("UndeclaredBool", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal(false, Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredBool", s.Name, StringComparison.Ordinal))).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -255,8 +255,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", complex1.Properties
-                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties
+                .First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -296,8 +296,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal(12d, complex1.Properties
-                .First(s => string.Equals("UndeclaredStreetNo", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal(12d, Assert.IsType<ODataProperty>(complex1.Properties
+                .First(s => string.Equals("UndeclaredStreetNo", s.Name, StringComparison.Ordinal))).Value);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -339,7 +339,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal("Server.NS.Address", complex1.TypeName);
             Assert.Equal(2, complex1.Properties.Count());
             Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                (complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -378,7 +378,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(3, (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue as ODataCollectionValue).Items.Count());
+            Assert.Equal(3, Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).ODataValue).Items.Count());
             Assert.Equal(2, complex1.Properties.Count());
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -411,7 +411,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("null", (entry.Properties.Last().Value as ODataUntypedValue).RawValue);
+            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -446,11 +446,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal("12.3", (entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue); // numeric
+            Assert.Equal("12.3", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal))).Value).RawValue); // numeric
             Assert.Equal(2, complex1.Properties.Count());
             Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
-                (complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value as ODataUntypedValue) // string
-                .RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value).RawValue);  // string
         }
 
         [Fact]
@@ -467,7 +466,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}",
-                (entry.Properties.Last().Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
         }
 
         [Fact]
@@ -495,7 +494,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(@"{""@odata.type"":""Server.NS.AddressInValid"",""Street"":""No.999,Zixing Rd Minhang"",""innerComplex1"":{""innerProp1"":null,""inerProp2"":""abc""},""UndeclaredStreet"":""No.10000000999,Zixing Rd Minhang""}",
-                (entry.Properties.Last().Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
         }
 
         [Fact]
@@ -522,7 +521,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(3, entry.Properties.Count());
             Assert.Equal(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]",
-                (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(2, complex1.Properties.Count());
         }
 
@@ -599,11 +598,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             }, /*readUntypedAsValue*/ true);
 
             Assert.Equal(2, entry.Properties.Count());
-            ODataProperty decimalProperty = entry.Properties.First(s => string.Equals("UndeclaredDecimal", s.Name, StringComparison.Ordinal));
+            ODataProperty decimalProperty = Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredDecimal", s.Name, StringComparison.Ordinal)));
             Assert.Equal(12.3M, decimalProperty.Value);
             Assert.Equal("Server.NS.UndeclaredDecimalType", decimalProperty.TypeAnnotation.TypeName);
             Assert.Equal(2, complex1.Properties.Count());
-            ODataProperty addressProperty = complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal));
+            ODataProperty addressProperty = Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)));
             Assert.Equal("No.10000000999,Zixing Rd Minhang", addressProperty.Value);
             Assert.Equal("Server.NS.UndeclaredStreetType", addressProperty.TypeAnnotation.TypeName);
         }
@@ -631,9 +630,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             }, /*readUntypedAsValue*/ true);
 
             Assert.Equal(2, entry.Properties.Count());
-            Assert.Equal(12.3M, entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal(12.3M, Assert.IsType<ODataProperty>(entry.Properties.First(s => string.Equals("UndeclaredFloatId", s.Name, StringComparison.Ordinal))).Value);
             Assert.Equal(2, complex1.Properties.Count());
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(complex1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -662,7 +661,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
             Assert.Equal(2, undeclaredAddress1.Properties.Count());
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -693,7 +692,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Edm.Untyped", undeclaredAddress1.TypeName);
             Assert.Equal(2, undeclaredAddress1.Properties.Count());
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -727,11 +726,11 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.AddressInValid", undeclaredAddress1.TypeName);
             Assert.Equal(2, undeclaredAddress1.Properties.Count());
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
-            Assert.Equal("No.999,Zixing Rd Minhang", undeclaredAddress1.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredAddress1.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredAddress1.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal))).Value);
             Assert.Equal(2, innerComplex1.Properties.Count());
-            Assert.Null(innerComplex1.Properties.First(s => string.Equals("innerProp1", s.Name, StringComparison.Ordinal)).Value);
-            Assert.Equal("abc", innerComplex1.Properties.First(s => string.Equals("innerProp2", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Null(Assert.IsType<ODataProperty>(innerComplex1.Properties.First(s => string.Equals("innerProp1", s.Name, StringComparison.Ordinal))).Value);
+            Assert.Equal("abc", Assert.IsType<ODataProperty>(innerComplex1.Properties.First(s => string.Equals("innerProp2", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -778,12 +777,12 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal("UndeclaredCollection1", undeclaredCollection1.Name);
             Assert.Equal(3, undeclaredCollection1Items.Count());
             Assert.Equal("email1@163.com", undeclaredCollection1Items.First());
-            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(undeclaredCollection1Items));
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", string.Concat(undeclaredCollection1Items));
             Assert.Equal("Address", addressNestedInfo.Name);
             Assert.Equal("Server.NS.Address", address.TypeName);
             Assert.Equal(2, address.Properties.Count());
-            Assert.Equal("No.999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal))).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -835,10 +834,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("Collection(Server.NS.UnknownCollectionType)", undeclaredCollection1.TypeAnnotation.TypeName);
             Assert.Equal(3, untypedCollection.Count());
-            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(untypedCollection.Select(c=>((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal)).Value)));
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", string.Concat(untypedCollection.Select(c=> Assert.IsType<ODataProperty>(c.Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal))).Value)));
             Assert.Equal(2, address.Properties.Count());
-            Assert.Equal("No.999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal))).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
 
         [Fact]
@@ -892,10 +891,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("Collection(Server.NS.UnknownCollectionType)", undeclaredCollection1.TypeAnnotation.TypeName);
             Assert.Equal(3, untypedCollection.Count());
-            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", String.Concat(untypedCollection.Select(c => ((ODataResource)c).Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal)).Value)));
+            Assert.Equal("email1@163.comemail2@gmail.comemail3@gmail2.com", string.Concat(untypedCollection.Select(c => Assert.IsType<ODataProperty>(c.Properties.Single(p => string.Equals(p.Name, "email", StringComparison.Ordinal))).Value)));
             Assert.Equal(2, address.Properties.Count());
-            Assert.Equal("No.999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal)).Value);
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal)).Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("Street", s.Name, StringComparison.Ordinal))).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.First(s => string.Equals("UndeclaredStreet", s.Name, StringComparison.Ordinal))).Value);
         }
         #endregion
 
@@ -913,7 +912,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal("null", (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal)).ODataValue as ODataUntypedValue).RawValue);
+            Assert.Equal("null", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredType1", StringComparison.Ordinal))).ODataValue).RawValue);
         }
 
         [Fact]
@@ -990,7 +989,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(3, (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).ODataValue as ODataCollectionValue).Items
+            Assert.Equal(3, Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).ODataValue).Items
                 .Count());
             Assert.Equal(2, complex1.Properties.Count());
         }
@@ -1021,8 +1020,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}", (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value as ODataUntypedValue).RawValue);
+            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(2, complex1.Properties.Count());
         }
 
@@ -1048,7 +1047,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 }
             });
             Assert.Equal(@"{""@odata.type"":""Server.NS.AddressUndeclared"",""Street"":""No.999,Zixing Rd Minhang""}",
-                (entry.Properties.Last().Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Last()).Value).RawValue);
         }
 
         [Fact]
@@ -1063,8 +1062,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"{}", (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue)
-                .RawValue);
+            Assert.Equal(@"{}",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
         }
 
         [Fact]
@@ -1100,7 +1099,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 });
 
             Assert.Equal(3, entry.Properties.Count());
-            var odataCollection = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataCollectionValue;
+            var odataCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value);
             Assert.Equal(@"""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""",
                 string.Join(",", odataCollection.Items.Cast<ODataUntypedValue>().Select(item => item.RawValue)));
             Assert.Equal(2, complex1.Properties.Count());
@@ -1130,7 +1129,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(3, entry.Properties.Count());
             Assert.Equal(@"[""email1@163.com"",""email2@gmail.com"",""email3@gmail2.com""]",
-                (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(2, complex1.Properties.Count());
         }
 
@@ -1167,10 +1166,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
                 });
 
             Assert.Equal(3, entry.Properties.Count());
-            var odataCollection = entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataCollectionValue;
+            var odataCollection = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value);
             Assert.False(odataCollection.Items.Any());
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""", (complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
-                .Value as ODataUntypedValue).RawValue);
+            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value).RawValue);
         }
 
         [Fact]
@@ -1196,10 +1195,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(3, entry.Properties.Count());
-            Assert.Equal(@"[]", (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal)).Value as ODataUntypedValue)
-                .RawValue);
-            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""", (complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))
-                .Value as ODataUntypedValue).RawValue);
+            Assert.Equal(@"[]",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredCollection1", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(@"""No.10000000999,Zixing Rd Minhang""",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value).RawValue);
         }
 
         #endregion
@@ -1235,8 +1234,8 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(2, undeclaredComplex.Properties.Count());
-            Assert.Equal("aaaaaaaaa", undeclaredComplex.Properties.Single(p => p.Name == "MyProp1").Value);
-            Assert.Equal("bbbbbbb", undeclaredComplex.Properties.Single(p => p.Name == "UndeclaredProp1").Value);
+            Assert.Equal("aaaaaaaaa", Assert.IsType<ODataProperty>(undeclaredComplex.Properties.Single(p => p.Name == "MyProp1")).Value);
+            Assert.Equal("bbbbbbb", Assert.IsType<ODataProperty>(undeclaredComplex.Properties.Single(p => p.Name == "UndeclaredProp1")).Value);
             Assert.Equal(2, address.Properties.Count());
         }
 
@@ -1265,7 +1264,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal("Server.NS.AddressUndeclared", undeclaredComplex1.TypeName);
             Assert.Single(undeclaredComplex1.Properties);
-            Assert.Equal("No.999,Zixing Rd Minhang", undeclaredComplex1.Properties.Single(p => p.Name == "Street").Value);
+            Assert.Equal("No.999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(undeclaredComplex1.Properties.Single(p => p.Name == "Street")).Value);
         }
 
         [Fact]
@@ -1508,7 +1507,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Empty(undeclaredCollection1Items);
             Assert.Equal("Server.NS.Address", address.TypeName);
             Assert.Equal("Address", addressNestedInfo.Name);
-            Assert.Equal("No.10000000999,Zixing Rd Minhang", address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal)).Value);
+            Assert.Equal("No.10000000999,Zixing Rd Minhang", Assert.IsType<ODataProperty>(address.Properties.Single(s => string.Equals(s.Name, "UndeclaredStreet", StringComparison.Ordinal))).Value);
         }
 
         #endregion
@@ -1530,7 +1529,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(entry.Properties);
-            Assert.Equal(1m, entry.Properties.First(p => p.Name == "id").Value);
+            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p => p.Name == "id")).Value);
         }
 
         #endregion
@@ -1614,7 +1613,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(entry.Properties);
-            Assert.Equal(1m, entry.Properties.First(p=>p.Name == "id").Value);
+            Assert.Equal(1m, Assert.IsType<ODataProperty>(entry.Properties.First(p=>p.Name == "id")).Value);
         }
 
         [Theory]
@@ -1643,7 +1642,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Single(resourceMember.Properties);
-            Assert.Equal(1m, resourceMember.Properties.First(p => p.Name == "id").Value);
+            Assert.Equal(1m, Assert.IsType<ODataProperty>(resourceMember.Properties.First(p => p.Name == "id")).Value);
             Assert.Equal("primitiveString", primitiveMember.Value);
         }
 
@@ -1675,9 +1674,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(4, entry.Properties.Count());
             Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp1", StringComparison.Ordinal))).Value).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1718,9 +1717,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(4, entry.Properties.Count());
             Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp2", StringComparison.Ordinal))).Value).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverOpenEntitySet, this.serverOpenEntityType, writer =>
@@ -1760,9 +1759,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(3, entry.Properties.Count());
             Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                (complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "MyEdmUntypedProp3", StringComparison.Ordinal))).Value).RawValue);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
             string result = this.WriteEntryPayload(this.serverEntitySet, this.serverEntityType, writer =>
@@ -1851,7 +1850,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
         private void VerifyResourceAndWrite(ODataResource topLevelResource, ODataResource nestedResource, ODataNestedResourceInfo nestedInfo)
         {
             Assert.Empty(topLevelResource.Properties);
-            ODataProperty property = Assert.Single(nestedResource.Properties);
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(nestedResource.Properties));
             Assert.Equal("Street", property.Name);
             Assert.Equal("Mars Rd", property.Value);
             Assert.Equal("MyEdmUntypedProp1", nestedInfo.Name);
@@ -1914,7 +1913,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
         private static void VerifyEnum(ODataResource topLevelResource)
         {
-            ODataProperty property = Assert.Single(topLevelResource.Properties);
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(topLevelResource.Properties));
             Assert.Equal("MyEdmUntypedProp1", property.Name);
             ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(property.Value);
             Assert.Equal("Server.NS.EnumType", enumValue.TypeName);
@@ -1941,7 +1940,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             readUntypedAsValue, // it doesn't matter since the value is typed.
             true /*reading request*/);
 
-            ODataProperty property = Assert.Single(topLevelResource.Properties);
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(topLevelResource.Properties));
             Assert.Equal("MyEdmUntypedProp1", property.Name);
             ODataCollectionValue collectionValue = Assert.IsType<ODataCollectionValue>(property.Value);
 
@@ -1994,7 +1993,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Equal("MyEdmUntypedProp1", nestedInfo.Name);
             Assert.Equal(5, primitiveValue.Value);
 
-            ODataProperty property = Assert.Single(nestedResource.Properties);
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(nestedResource.Properties));
             Assert.Equal("Street", property.Name);
             Assert.Equal("Mars Rd", property.Value);
         }
@@ -2097,7 +2096,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             ODataResourceSet resourceSet, ODataNestedResourceInfo nestedInfo, ODataPrimitiveValue primitiveValue)
         {
             Assert.Empty(topLevelResource.Properties);
-            ODataProperty property = Assert.Single(nestedResource.Properties);
+            ODataProperty property = Assert.IsType<ODataProperty>(Assert.Single(nestedResource.Properties));
             Assert.Equal("Street", property.Name);
             Assert.Equal("Mars Rd", property.Value);
             Assert.Equal(42, primitiveValue.Value);
@@ -2156,10 +2155,10 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             });
 
             Assert.Equal(4, entry.Properties.Count());
-            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}", (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))
-                .Value as ODataUntypedValue).RawValue);
-            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}", (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).
-                Value as ODataUntypedValue).RawValue);
+            Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
+            Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp1", StringComparison.Ordinal)).TypeAnnotation.TypeName);
             Assert.Null(complex2);
 
@@ -2202,9 +2201,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(4, entry.Properties.Count());
             Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal("Edm.Untyped", entry.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp2", StringComparison.Ordinal)).TypeAnnotation.TypeName);
 
             entry.MetadataBuilder = new Microsoft.OData.Evaluation.NoOpResourceMetadataBuilder(entry);
@@ -2245,9 +2244,9 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
 
             Assert.Equal(3, entry.Properties.Count());
             Assert.Equal(@"{""MyProp1"":""aaaaaaaaa"",""UndeclaredProp1"":""bbbbbbb""}",
-                (entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(s => string.Equals(s.Name, "undeclaredComplex1", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal(@"{""MyProp12"":""bbb222"",""abc"":null}",
-                (complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal)).Value as ODataUntypedValue).RawValue);
+                Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(complex1.Properties.Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal))).Value).RawValue);
             Assert.Equal("Edm.Untyped", complex1.Properties
                 .Single(s => string.Equals(s.Name, "UndeclaredMyEdmUntypedProp3", StringComparison.Ordinal)).TypeAnnotation.TypeName);
 
@@ -2293,7 +2292,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
             Assert.Single(undeclaredProperty.Properties);
-            Assert.Equal("123", undeclaredProperty.Properties.Single(p => p.Name == "Id").Value);
+            Assert.Equal("123", Assert.IsType<ODataProperty>(undeclaredProperty.Properties.Single(p => p.Name == "Id")).Value);
         }
 
         [Fact]
@@ -2335,7 +2334,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.Json
             Assert.Single(entry.Properties);
             Assert.Equal("Server.NS.Undeclared", undeclaredProperty.TypeName);
             Assert.Single(undeclaredProperty.Properties);
-            Assert.Equal("123", undeclaredProperty.Properties.Single(p => p.Name == "Id").Value);
+            Assert.Equal("123", Assert.IsType<ODataProperty>(undeclaredProperty.Properties.Single(p => p.Name == "Id")).Value);
         }
 
         [Fact]

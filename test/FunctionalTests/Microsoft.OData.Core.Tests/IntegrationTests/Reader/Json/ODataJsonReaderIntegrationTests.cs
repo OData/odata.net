@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                                 Assert.Null(resource);
                                 break;
                             case 3:
-                                var enumerator = ((ODataCollectionValue)(resource.Properties.Skip(1).Single().Value)).Items.GetEnumerator();
+                                var enumerator = Assert.IsType<ODataCollectionValue>(Assert.IsType<ODataProperty>(resource.Properties.Skip(1).Single()).Value).Items.GetEnumerator();
                                 enumerator.MoveNext();
                                 Assert.Equal(1L, enumerator.Current);
                                 enumerator.MoveNext();
@@ -388,11 +388,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             });
             read();
             Assert.Equal(2, entries.Count);
-            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(entries[0].Properties, "LongId", 12L);
 
             Assert.Equal("ComplexProperty", navigations[0].Name);
-            Assert.Equal(1L, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(1.0F, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(entries[1].Properties, "CLongId", 1L);
+            VerifyProperty(entries[1].Properties, "CFloatId", 1.0F);
 
             payload =
                 "{" +
@@ -406,11 +406,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             navigations.Clear();
             read();
             Assert.Equal(2, entries.Count);
-            Assert.Equal(12L, entries[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "LongId", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(entries[0].Properties, "LongId", 12L);
 
             Assert.Equal("ComplexProperty", navigations[0].Name);
-            Assert.Equal(1L, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal(1.0F, entries[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "DerivedCFloatId", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(entries[1].Properties, "CLongId", 1L);
+            VerifyProperty(entries[1].Properties, "DerivedCFloatId", 1.0F);
         }
 
         [Fact]
@@ -484,13 +484,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             var complexCollection = entries[1];
 
-            Boolean derived = true;
+            bool derived = true;
             foreach (var complex in entries.Skip(1))
             {
-                Assert.Equal(1L, complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CLongId", StringComparison.OrdinalIgnoreCase)).Value);
+                VerifyProperty(complex.Properties, "CLongId", 1L);
                 if (derived)
                 {
-                    Assert.Equal(1.0F, complex.Properties.FirstOrDefault(s => string.Equals(s.Name, "CFloatId", StringComparison.OrdinalIgnoreCase)).Value);
+                    VerifyProperty(complex.Properties, "CFloatId", 1.0F);
                 }
 
                 derived = false;
@@ -547,9 +547,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 });
 
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            var property = address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase));
-            var value = Assert.IsType<ODataUntypedValue>(property.Value);
+            VerifyProperty(address.Properties, "CountryRegion", "China");
+            var cityProperty = address.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase));
+            var value = Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(cityProperty).Value);
             Assert.Equal("\"Shanghai\"", value.RawValue);
         }
 
@@ -607,8 +607,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 });
 
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Shanghai", entries[2].Properties.FirstOrDefault().Value);
+            VerifyProperty(address.Properties, "CountryRegion", "China");
+            Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(entries[2].Properties.FirstOrDefault()).Value);
         }
 
         [Fact]
@@ -687,11 +687,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 });
 
                 Assert.NotNull(entry);
-                Assert.Equal("China", entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+                VerifyProperty(entry.Properties, "CountryRegion", "China");
 
                 if (payload.Contains("NS.AddressWithCity"))
                 {
-                    Assert.Equal("Shanghai", entry.Properties.FirstOrDefault(s => string.Equals(s.Name, "City", StringComparison.OrdinalIgnoreCase)).Value);
+                    VerifyProperty(entry.Properties, "City", "Shanghai");
                 }
             };
 
@@ -800,9 +800,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos, true, true);
 
             Assert.Equal(3, resources.Count);
-            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(resources[0].Properties, "CountryRegion", "China");
+            VerifyProperty(resources[1].Properties, "CountryRegion", "Korea");
+            VerifyProperty(resources[2].Properties, "CityName", "Seoul");
             Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
@@ -834,9 +834,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(resources[0].Properties, "CountryRegion", "China");
+            VerifyProperty(resources[1].Properties, "CountryRegion", "Korea");
+            VerifyProperty(resources[2].Properties, "CityName", "Seoul");
             Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
@@ -866,9 +866,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(resources[0].Properties, "CountryRegion", "China");
+            VerifyProperty(resources[1].Properties, "CountryRegion", "Korea");
+            VerifyProperty(resources[2].Properties, "CityName", "Seoul");
             Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
@@ -897,9 +897,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadingTopLevelComplexCollectionProperty(payload, ref resources, ref nestedResourceInfos);
 
             Assert.Equal(3, resources.Count);
-            Assert.Equal("China", resources[0].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Korea", resources[1].Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
-            Assert.Equal("Seoul", resources[2].Properties.FirstOrDefault(s => string.Equals(s.Name, "CityName", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(resources[0].Properties, "CountryRegion", "China");
+            VerifyProperty(resources[1].Properties, "CountryRegion", "Korea");
+            VerifyProperty(resources[2].Properties, "CityName", "Seoul");
             Assert.Equal("City", nestedResourceInfos.First().Name);
         }
 
@@ -1004,10 +1004,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 }, true, true);
 
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(address.Properties, "CountryRegion", "China");
 
             var openNavigation = entries[2];
-            Assert.Equal(0, openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(openNavigation.Properties, "Id", 0);
         }
 
         [Fact]
@@ -1043,10 +1043,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
                 }, false, false);
 
             var address = entries[1];
-            Assert.Equal("China", address.Properties.FirstOrDefault(s => string.Equals(s.Name, "CountryRegion", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(address.Properties, "CountryRegion", "China");
 
             var openNavigation = entries[2];
-            Assert.Equal(0, openNavigation.Properties.FirstOrDefault(s => string.Equals(s.Name, "Id", StringComparison.OrdinalIgnoreCase)).Value);
+            VerifyProperty(openNavigation.Properties, "Id", 0);
 
             payload = "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#EntityNs.MyContainer.People/$entity\"," +
@@ -1081,6 +1081,11 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             readEntry = () => this.ReadEntryPayloadForUndeclared(payload, reader => { }, false, true);
 
             readEntry.Throws<ODataException>(Strings.ValidationUtils_PropertyDoesNotExistOnType("OpenNavigationProperty", "NS.Person"));
+        }
+
+        private static void VerifyProperty(IEnumerable<ODataPropertyInfo> properties, string propertyName, object propertyValue)
+        {
+            Assert.Equal(propertyValue, properties.OfType<ODataProperty>().FirstOrDefault(s => string.Equals(s.Name, propertyName, StringComparison.OrdinalIgnoreCase)).Value);
         }
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmStructuredType entityType, Action<ODataReader> action, bool isRequest = false, bool isIeee754Compatible = true)

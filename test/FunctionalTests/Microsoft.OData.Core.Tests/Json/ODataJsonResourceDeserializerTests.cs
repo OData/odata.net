@@ -228,8 +228,8 @@ namespace Microsoft.OData.Tests.Json
                 {
                     var resource = resourceState.Resource;
                     Assert.NotNull(resource);
-                    var properties = resource.Properties.ToArray();
-                    Assert.Equal(3, properties.Length);
+                    Assert.Equal(3, resource.Properties.Count());
+                    var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                     var idProperty = properties[0];
                     var nameProperty = properties[1];
                     var ytdTotalProperty = properties[2];
@@ -363,7 +363,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     var resource = resourceState.Resource;
                     Assert.NotNull(resource);
-                    var idProperty = Assert.Single(resource.Properties);
+                    var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
                     Assert.Equal("Id", idProperty.Name);
                     Assert.Equal(41, idProperty.Value);
 
@@ -653,7 +653,7 @@ namespace Microsoft.OData.Tests.Json
                 this.categoryEntityType,
                 (resourceState) =>
                 {
-                    var idProperty = Assert.Single(resourceState.Resource.Properties);
+                    var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties));
                     Assert.Equal("Id", idProperty.Name);
                     Assert.Equal(1, idProperty.Value);
                     // Name property treated as a nested property
@@ -679,7 +679,7 @@ namespace Microsoft.OData.Tests.Json
                 this.categoryEntityType,
                 (resourceState) =>
                 {
-                    var mediaProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Media")));
+                    var mediaProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Media"))));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(mediaProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Categories(1)/Media", streamReferenceValue.EditLink.AbsoluteUri);
@@ -738,7 +738,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var warehousePinProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("WarehousePin")));
+                    var warehousePinProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("WarehousePin"))));
                     var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(warehousePinProperty.Value);
                     Assert.Equal(22.2, geographyPoint.Latitude);
                     Assert.Equal(22.2, geographyPoint.Longitude);
@@ -762,7 +762,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var piProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Pi")));
+                    var piProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Pi"))));
                     var untypedValue = Assert.IsType<ODataUntypedValue>(piProperty.Value);
                     Assert.Equal("3.1428571429", untypedValue.RawValue);
                 });
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var creditLimitProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit")));
+                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit"))));
                     var untypedValue = Assert.IsType<ODataUntypedValue>(creditLimitProperty.Value);
                     Assert.Equal("1730", untypedValue.RawValue);
                 });
@@ -811,7 +811,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var creditLimitProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit")));
+                    var creditLimitProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("CreditLimit"))));
                     Assert.Equal(1730M, creditLimitProperty.Value);
                 });
         }
@@ -1053,7 +1053,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var photoProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo")));
+                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo"))));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(photoProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Products(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);
@@ -1079,7 +1079,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Assert.Equal(3, resourceState.Resource.Properties.Count());
 
-                    var photoProperty = Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo")));
+                    var photoProperty = Assert.IsType<ODataProperty>(Assert.Single(resourceState.Resource.Properties.Where(d => d.Name.Equals("Photo"))));
                     var streamReferenceValue = Assert.IsType<ODataStreamReferenceValue>(photoProperty.Value);
 
                     Assert.Equal("http://tempuri.org/Products(1)/Photo", streamReferenceValue.EditLink.AbsoluteUri);
@@ -1121,7 +1121,8 @@ namespace Microsoft.OData.Tests.Json
                 {
                     var resource = resourceState.Resource;
                     Assert.NotNull(resource);
-                    var properties = resource.Properties.ToArray();
+                    Assert.Equal(2, resource.Properties.Count());
+                    var properties = resource.Properties.OfType<ODataProperty>().ToArray();
                     Assert.Equal(2, properties.Length);
                     var idProperty = properties[0];
                     var nameProperty = properties[1];
@@ -1947,8 +1948,8 @@ namespace Microsoft.OData.Tests.Json
         {
             var resource = resourceState.Resource;
             Assert.NotNull(resource);
-            var properties = resource.Properties.ToArray();
-            Assert.Equal(2, properties.Length);
+            Assert.Equal(2, resource.Properties.Count());
+            var properties = resource.Properties.OfType<ODataProperty>().ToArray();
             var idProperty = properties[0];
             var nameProperty = properties[1];
             Assert.Equal("Id", idProperty.Name);

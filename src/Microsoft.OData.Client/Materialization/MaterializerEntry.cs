@@ -11,7 +11,6 @@ namespace Microsoft.OData.Client.Materialization
     using System.Diagnostics;
     using Microsoft.OData;
     using Microsoft.OData.Client.Metadata;
-    using DSClient = Microsoft.OData.Client;
 
     /// <summary>
     /// Materializer state for a given ODataResource
@@ -155,7 +154,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <remarks>
         /// Non-property content goes to annotations.
         /// </remarks>
-        public IEnumerable<ODataProperty> Properties
+        public IEnumerable<ODataPropertyInfo> Properties
         {
             get { return this.entry != null ? this.entry.Properties : null; }
         }
@@ -309,12 +308,12 @@ namespace Microsoft.OData.Client.Materialization
                 // Named stream properties are represented on the result type as a DataServiceStreamLink, which contains the
                 // ReadLink and EditLink for the stream. We need to build this metadata information even with NoTracking,
                 // because it is exposed on the result instances directly, not just in the context.
-                foreach (ODataProperty property in this.Properties)
+                foreach (ODataPropertyInfo propertyInfo in this.Properties)
                 {
-                    ODataStreamReferenceValue streamValue = property.Value as ODataStreamReferenceValue;
-                    if (streamValue != null)
+                    if (propertyInfo is ODataProperty property
+                        && property.Value is ODataStreamReferenceValue streamValue)
                     {
-                        StreamDescriptor streamInfo = this.EntityDescriptor.AddStreamInfoIfNotPresent(property.Name);
+                        StreamDescriptor streamInfo = this.EntityDescriptor.AddStreamInfoIfNotPresent(propertyInfo.Name);
 
                         if (streamValue.ReadLink != null)
                         {

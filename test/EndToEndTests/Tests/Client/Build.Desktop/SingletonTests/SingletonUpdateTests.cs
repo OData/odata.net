@@ -35,7 +35,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> entries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(cities[i], entries[1].Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal(cities[i], Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "City")).Value);
                 }
 
                 var properties = new[] { new ODataProperty { Name = "City", Value = cities[i + 1] } };
@@ -44,7 +44,7 @@ namespace Microsoft.Test.OData.Tests.Client.SingletonTests
                 List<ODataResource> updatedEntries = this.QueryEntry("VipCustomer", mimeTypes[i]);
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(cities[i + 1], updatedEntries[1].Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal(cities[i + 1], Assert.IsType<ODataProperty>(updatedEntries[1].Properties.Single(p => p.Name == "City")).Value);
                 }
             }
         }

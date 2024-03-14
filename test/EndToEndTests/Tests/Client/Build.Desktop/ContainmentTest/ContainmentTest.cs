@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.Equal(301, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
+                                Assert.Equal(301, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "GiftCardID")).Value);
                             }
                         }
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -117,7 +117,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 entries.Add(entry);
                             }
                         }
-                        Assert.Equal(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal(101901, Assert.IsType<ODataProperty>(entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                     }
                 }
             }
@@ -167,8 +167,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             }
                         }
                         Assert.Equal(ODataReaderState.Completed, reader.State);
-                        Assert.Equal(101901, entries.Single().Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                        Assert.Equal(newDate, entries.Single().Properties.Single(p => p.Name == "CreatedDate").Value);
+                        var properties = entries.Single().Properties.OfType<ODataProperty>();
+                        Assert.Equal(101901, properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal(newDate, properties.Single(p => p.Name == "CreatedDate").Value);
                     }
                 }
             }
@@ -210,8 +211,9 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                         Assert.Equal(4, entries.Count);
 
-                        Assert.Equal(103905, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                        Assert.Equal("103 new PI", entries[2].Properties.Single(p => p.Name == "FriendlyName").Value);
+                        var properties = entries[2].Properties.OfType<ODataProperty>();
+                        Assert.Equal(103905, properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                        Assert.Equal("103 new PI", properties.Single(p => p.Name == "FriendlyName").Value);
                     }
                 }
             }
@@ -240,7 +242,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.Equal("103 second PI", entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                                Assert.Equal("103 second PI", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FriendlyName")).Value);
                             }
                         }
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -272,7 +274,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.Equal("Digital goods: App", entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
+                                Assert.Equal("Digital goods: App", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "TransactionDescription")).Value);
                             }
                         }
 
@@ -305,10 +307,11 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "StatementID").Value);
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "TransactionType").Value);
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "TransactionDescription").Value);
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "Amount").Value);
+                                var properties = entry.Properties.OfType<ODataProperty>();
+                                Assert.NotNull(properties.Single(p => p.Name == "StatementID").Value);
+                                Assert.NotNull(properties.Single(p => p.Name == "TransactionType").Value);
+                                Assert.NotNull(properties.Single(p => p.Name == "TransactionDescription").Value);
+                                Assert.NotNull(properties.Single(p => p.Name == "Amount").Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
@@ -344,8 +347,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.Equal(802, entry.Properties.Single(p => p.Name == "StoredPIID").Value);
-                                Assert.Equal("AliPay", entry.Properties.Single(p => p.Name == "PIType").Value);
+                                Assert.Equal(802, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "StoredPIID")).Value);
+                                Assert.Equal("AliPay", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PIType")).Value);
                             }
                         }
 
@@ -387,8 +390,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                         Assert.Single(entries);
 
-                        Assert.Equal(800, entries[0].Properties.Single(p => p.Name == "StoredPIID").Value);
-                        Assert.Equal("The Default Stored PI", entries[0].Properties.Single(p => p.Name == "PIName").Value);
+                        Assert.Equal(800, Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "StoredPIID")).Value);
+                        Assert.Equal("The Default Stored PI", Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "PIName")).Value);
                     }
                 }
             }
@@ -416,7 +419,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.Equal(101902, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                Assert.Equal(101902, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                             }
                         }
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -447,7 +450,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
@@ -483,7 +486,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                             if (reader.State == ODataReaderState.ResourceEnd)
                             {
                                 ODataResource entry = reader.Item as ODataResource;
-                                Assert.NotNull(entry.Properties.Single(p => p.Name == "CreditRecordID").Value);
+                                Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "CreditRecordID")).Value);
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
                             {
@@ -521,7 +524,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 entry = reader.Item as ODataResource;
                             }
                         }
-                        Assert.Equal(101, entry.Properties.Single(p => p.Name == "AccountID").Value);
+                        Assert.Equal(101, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "AccountID")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -552,7 +555,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Account"))
                                 {
-                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "AccountID").Value);
+                                    Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "AccountID")).Value);
                                 }
                             }
                             else if (reader.State == ODataReaderState.ResourceSetEnd)
@@ -631,8 +634,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                             Assert.Equal(ODataReaderState.Completed, reader.State);
                             Assert.Equal(2, entries.Count);
-                            Assert.Equal(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.Equal(103905, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(103902, Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                            Assert.Equal(103905, Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                         }
                     }
                 }
@@ -681,10 +684,10 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
 
                             Assert.Equal(ODataReaderState.Completed, reader.State);
                             Assert.Equal(4, entries.Count);
-                            Assert.Equal(103902, entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.Equal(101910, entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.Equal(103901, entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                            Assert.Equal(103905, entries[3].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                            Assert.Equal(103902, Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                            Assert.Equal(101910, Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                            Assert.Equal(103901, Assert.IsType<ODataProperty>(entries[2].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                            Assert.Equal(103905, Assert.IsType<ODataProperty>(entries[3].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                         }
                     }
                 }
@@ -889,7 +892,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 // verify the create
                 Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101904)") as ODataResource;
-                Assert.Equal(101904, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                Assert.Equal(101904, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
 
                 // delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "Accounts(101)/MyPaymentInstruments(101904)"));
@@ -945,7 +948,7 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 // TODO: [tiano] the response code should be 201
                 Assert.Equal(204, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(104)/MyGiftCard") as ODataResource;
-                Assert.Equal(304, entry.Properties.Single(p => p.Name == "GiftCardID").Value);
+                Assert.Equal(304, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "GiftCardID")).Value);
             }
         }
 
@@ -988,8 +991,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 // verify the create
                 Assert.Equal(204, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(101903)") as ODataResource;
-                Assert.Equal(101903, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                Assert.Equal(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                Assert.Equal(101903, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                Assert.Equal(mimeType, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FriendlyName")).Value);
             }
         }
 
@@ -1036,8 +1039,8 @@ namespace Microsoft.Test.OData.Tests.Client.ContainmentTest
                 // verify the create
                 Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("Accounts(101)/MyPaymentInstruments(" + piid + ")") as ODataResource;
-                Assert.Equal(piid, entry.Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
-                Assert.Equal(mimeType, entry.Properties.Single(p => p.Name == "FriendlyName").Value);
+                Assert.Equal(piid, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
+                Assert.Equal(mimeType, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FriendlyName")).Value);
 
                 count++;
             }

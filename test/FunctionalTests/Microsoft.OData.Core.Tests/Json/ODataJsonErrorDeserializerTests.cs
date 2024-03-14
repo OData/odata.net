@@ -149,21 +149,22 @@ namespace Microsoft.OData.Tests.Json
             ODataResourceValue nestedMyNewObject = Assert.IsType<ODataResourceValue>(myNewObjectValue);
 
             Assert.Equal(5, nestedMyNewObject.Properties.Count());
-            Assert.Equal("StringProperty", nestedMyNewObject.Properties.ElementAt(0).Name);
-            Assert.Equal("newProperty", nestedMyNewObject.Properties.ElementAt(0).Value);
+            var properties = nestedMyNewObject.Properties.OfType<ODataProperty>();
+            Assert.Equal("StringProperty", properties.ElementAt(0).Name);
+            Assert.Equal("newProperty", properties.ElementAt(0).Value);
 
-            Assert.Equal("IntProperty", nestedMyNewObject.Properties.ElementAt(1).Name);
-            Assert.Equal(1, nestedMyNewObject.Properties.ElementAt(1).Value);
+            Assert.Equal("IntProperty", properties.ElementAt(1).Name);
+            Assert.Equal(1, properties.ElementAt(1).Value);
 
-            Assert.Equal("BooleanProperty", nestedMyNewObject.Properties.ElementAt(2).Name);
-            Assert.Equal(true, nestedMyNewObject.Properties.ElementAt(2).Value);
+            Assert.Equal("BooleanProperty", properties.ElementAt(2).Name);
+            Assert.Equal(true, properties.ElementAt(2).Value);
 
-            Assert.Equal("type", nestedMyNewObject.Properties.ElementAt(3).Name);
-            Assert.Equal("", nestedMyNewObject.Properties.ElementAt(3).Value);
+            Assert.Equal("type", properties.ElementAt(3).Name);
+            Assert.Equal("", properties.ElementAt(3).Value);
 
-            Assert.Equal("NestedNull", nestedMyNewObject.Properties.ElementAt(4).Name);
+            Assert.Equal("NestedNull", properties.ElementAt(4).Name);
 
-            ODataResourceValue innerValue = nestedMyNewObject.Properties.ElementAt(4).Value as ODataResourceValue;
+            ODataResourceValue innerValue = Assert.IsType<ODataResourceValue>(properties.ElementAt(4).Value);
 
             Assert.NotNull(innerValue);
 
