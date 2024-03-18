@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client
     using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
-    
+   
     /// <summary>
     /// HttpClient based implementation of DataServiceClientRequestMessage.
     /// </summary>
@@ -40,6 +40,7 @@ namespace Microsoft.OData.Client
             "Expires",
             "Last-Modified",
         }, StringComparer.OrdinalIgnoreCase);
+
         /// <summary>
         /// HttpClient to use when the caller does not provide one.
         /// </summary>

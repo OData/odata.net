@@ -159,21 +159,21 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockDelayedHttpClientHandler("Success", delayMilliseconds: 2000))
             {
 
-                var httpClientProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
 
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request1"),
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
-                    httpClientProvider);
+                    httpClientFactory);
 
                 var args2 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request2"),
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
-                    httpClientProvider);
+                    httpClientFactory);
 
                 using (var request1 = new HttpClientRequestMessage(args1))
                 using (var request2 = new HttpClientRequestMessage(args2))
@@ -224,13 +224,13 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
-                var httpClientProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
-                    httpClientProvider);
+                    httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
             {
-                var httpClientProvider = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
+                var httpClientFactory = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
                 {
                     Timeout = 1
                 });
@@ -328,7 +328,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     new Uri("http://localhost"),
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
-                    httpClientProvider);
+                    httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {

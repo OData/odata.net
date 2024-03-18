@@ -38,7 +38,7 @@ namespace Microsoft.OData.Client
         /// <param name="requestUri">The Request Uri.</param>
         /// <param name="usePostTunneling">True if the request message must use POST verb for the request and pass the actual verb in X-HTTP-Method header, otherwise false.</param>
         /// <param name="headers">The set of headers for the request.</param>
-        /// <param name="httpClientFactory">The <see cref="IHttpClientProvider"/> that provides the <see cref="HttpClient"/> that should be used to send the request message.</param>
+        /// <param name="httpClientFactory">The <see cref="IHttpClientFactory"/> that provides the <see cref="HttpClient"/> that should be used to send the request message.</param>
         public DataServiceClientRequestMessageArgs(string method, Uri requestUri, bool usePostTunneling, IDictionary<string, string> headers, IHttpClientFactory httpClientFactory)
         {
             Debug.Assert(method != null, "method cannot be null");
