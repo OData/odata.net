@@ -51,8 +51,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             VisitAndVerifyXml(v => v.VisitSchemaType(complexType),
                 @"<ComplexType Name=""Dimensions"">
   <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" />
-  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
-  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" Scale=""Variable"" />
+  <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""variable"" />
+  <Property Name=""Length"" Type=""Edm.Decimal"" Nullable=""false"" Scale=""variable"" />
   <Property Name=""Breadth"" Type=""Edm.Decimal"" Precision=""6"" Scale=""0"" />
 </ComplexType>");
 
