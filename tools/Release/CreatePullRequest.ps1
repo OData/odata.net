@@ -58,8 +58,13 @@ $body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchN
 
 $body
 
-Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
+$webResponse = Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
+if ($webResponse.StatusCode < 200 || $webResponse.StatusCode >= 300)
+{
+  Write-Error "An error occurred while creating the pull request:"
+  Write-Error $webResponse
+  Exit
+}
 
 Write-Host
-Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; create a PR for that branch by navigating to:"
-Write-Host -ForegroundColor Green "https://github.com/OData/odata.net/compare/master...$branchName"
+Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; a PR for that branch was created at TODO:"
