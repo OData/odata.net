@@ -56,7 +56,7 @@ $headers = @{
 }
 $body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""master""}"
 
-$headers
+$body
 
 Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
 
