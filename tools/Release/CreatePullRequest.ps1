@@ -65,7 +65,7 @@ if ($webResponse.StatusCode -lt 200 -or $webResponse.StatusCode -ge 300)
 }
 
 $responseContent = $webResponse.Content | ConvertFrom-Json
-
+$prUrl = $responseContent.url
 
 Write-Host
-Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; a PR for that branch was created at $responseContent.url"
+Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; a PR for that branch was created at $prUrl"
