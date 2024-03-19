@@ -51,7 +51,7 @@ git push --set-upstream origin $branchName
 
 $headers = @{
 	'Accept' = 'application/vnd.github+json'
-	'Authorization' = 'Bearer $githubPersonalAccessToken'
+	'Authorization' = 'Bearer ' + $githubPersonalAccessToken
 	'X-GitHub-Api-Version' = '2022-11-28'
 }
 $body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""master""}"
