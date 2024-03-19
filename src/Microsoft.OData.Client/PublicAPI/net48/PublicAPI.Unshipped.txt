@@ -1,3 +1,10 @@
+abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Timeout.get -> int
+abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Timeout.set -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, System.Net.Http.IHttpClientFactory httpClientFactory) -> void
+Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
+Microsoft.OData.Client.DataServiceContext.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
+Microsoft.OData.Client.DataServiceContext.HttpClientFactory.set -> void
 Microsoft.OData.Client.HttpWebResponseMessage
 Microsoft.OData.Client.HttpWebResponseMessage.Dispose() -> void
 Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream) -> void
@@ -33,8 +40,6 @@ abstract Microsoft.OData.Client.ALinq.UriParser.QueryToken.Kind.get -> Microsoft
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Abort() -> void
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.BeginGetRequestStream(System.AsyncCallback callback, object state) -> System.IAsyncResult
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.BeginGetResponse(System.AsyncCallback callback, object state) -> System.IAsyncResult
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Credentials.get -> System.Net.ICredentials
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Credentials.set -> void
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.EndGetRequestStream(System.IAsyncResult asyncResult) -> System.IO.Stream
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.EndGetResponse(System.IAsyncResult asyncResult) -> Microsoft.OData.IODataResponseMessage
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.GetHeader(string headerName) -> string
@@ -43,13 +48,9 @@ abstract Microsoft.OData.Client.DataServiceClientRequestMessage.GetStream() -> S
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Headers.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>>
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Method.get -> string
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Method.set -> void
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.ReadWriteTimeout.get -> int
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.ReadWriteTimeout.set -> void
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.SendChunked.get -> bool
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.SendChunked.set -> void
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.SetHeader(string headerName, string headerValue) -> void
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Timeout.get -> int
-abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Timeout.set -> void
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.get -> System.Uri
 abstract Microsoft.OData.Client.DataServiceClientRequestMessage.Url.set -> void
 abstract Microsoft.OData.Client.DataServiceQuery.Expression.get -> System.Linq.Expressions.Expression
@@ -328,13 +329,9 @@ Microsoft.OData.Client.DataServiceClientRequestMessage
 Microsoft.OData.Client.DataServiceClientRequestMessage.DataServiceClientRequestMessage(string actualMethod) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.ActualMethod.get -> string
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers) -> void
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequestMessageArgs(string method, System.Uri requestUri, bool useDefaultCredentials, bool usePostTunneling, System.Collections.Generic.IDictionary<string, string> headers, Microsoft.OData.Client.IHttpClientHandlerProvider httpClientHandlerProvider) -> void
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Headers.get -> System.Collections.Generic.IDictionary<string, string>
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientHandlerProvider.get -> Microsoft.OData.Client.IHttpClientHandlerProvider
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.Method.get -> string
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.RequestUri.get -> System.Uri
-Microsoft.OData.Client.DataServiceClientRequestMessageArgs.UseDefaultCredentials.get -> bool
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.UsePostTunneling.get -> bool
 Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration
 Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration.OnEntityReferenceLink(System.Action<Microsoft.OData.Client.WritingEntityReferenceLinkArgs> action) -> Microsoft.OData.Client.DataServiceClientRequestPipelineConfiguration
@@ -381,8 +378,6 @@ Microsoft.OData.Client.DataServiceContext.DataServiceContext() -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot) -> void
 Microsoft.OData.Client.DataServiceContext.DataServiceContext(System.Uri serviceRoot, Microsoft.OData.Client.ODataProtocolVersion maxProtocolVersion) -> void
 Microsoft.OData.Client.DataServiceContext.DefaultResolveType(string typeName, string fullNamespace, string languageDependentNamespace) -> System.Type
-Microsoft.OData.Client.DataServiceContext.HttpClientHandlerProvider.get -> Microsoft.OData.Client.IHttpClientHandlerProvider
-Microsoft.OData.Client.DataServiceContext.HttpClientHandlerProvider.set -> void
 Microsoft.OData.Client.DataServiceExtensions
 Microsoft.OData.Client.DataServiceQuery
 Microsoft.OData.Client.DataServiceQuery<TElement>
@@ -527,8 +522,6 @@ Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.get -> Microsoft.OData.C
 Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.set -> void
 Microsoft.OData.Client.IgnoreClientPropertyAttribute
 Microsoft.OData.Client.IgnoreClientPropertyAttribute.IgnoreClientPropertyAttribute() -> void
-Microsoft.OData.Client.IHttpClientHandlerProvider
-Microsoft.OData.Client.IHttpClientHandlerProvider.GetHttpClientHandler() -> System.Net.Http.HttpClientHandler
 Microsoft.OData.Client.InvokeResponse
 Microsoft.OData.Client.InvokeResponse.InvokeResponse(System.Collections.Generic.Dictionary<string, string> headers) -> void
 Microsoft.OData.Client.KeyAttribute
@@ -758,8 +751,6 @@ override Microsoft.OData.Client.DataServiceTransportException.GetObjectData(Syst
 override Microsoft.OData.Client.HttpClientRequestMessage.Abort() -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.BeginGetRequestStream(System.AsyncCallback callback, object state) -> System.IAsyncResult
 override Microsoft.OData.Client.HttpClientRequestMessage.BeginGetResponse(System.AsyncCallback callback, object state) -> System.IAsyncResult
-override Microsoft.OData.Client.HttpClientRequestMessage.Credentials.get -> System.Net.ICredentials
-override Microsoft.OData.Client.HttpClientRequestMessage.Credentials.set -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.EndGetRequestStream(System.IAsyncResult asyncResult) -> System.IO.Stream
 override Microsoft.OData.Client.HttpClientRequestMessage.EndGetResponse(System.IAsyncResult asyncResult) -> Microsoft.OData.IODataResponseMessage
 override Microsoft.OData.Client.HttpClientRequestMessage.GetHeader(string headerName) -> string
@@ -768,8 +759,6 @@ override Microsoft.OData.Client.HttpClientRequestMessage.GetStream() -> System.I
 override Microsoft.OData.Client.HttpClientRequestMessage.Headers.get -> System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>>
 override Microsoft.OData.Client.HttpClientRequestMessage.Method.get -> string
 override Microsoft.OData.Client.HttpClientRequestMessage.Method.set -> void
-override Microsoft.OData.Client.HttpClientRequestMessage.ReadWriteTimeout.get -> int
-override Microsoft.OData.Client.HttpClientRequestMessage.ReadWriteTimeout.set -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.SendChunked.get -> bool
 override Microsoft.OData.Client.HttpClientRequestMessage.SendChunked.set -> void
 override Microsoft.OData.Client.HttpClientRequestMessage.SetHeader(string headerName, string headerValue) -> void
@@ -825,8 +814,6 @@ virtual Microsoft.OData.Client.DataServiceContext.CreateFunctionQuerySingle<T>(s
 virtual Microsoft.OData.Client.DataServiceContext.CreateQuery<T>(string entitySetName) -> Microsoft.OData.Client.DataServiceQuery<T>
 virtual Microsoft.OData.Client.DataServiceContext.CreateQuery<T>(string resourcePath, bool isComposable) -> Microsoft.OData.Client.DataServiceQuery<T>
 virtual Microsoft.OData.Client.DataServiceContext.CreateSingletonQuery<T>(string singletonName) -> Microsoft.OData.Client.DataServiceQuery<T>
-virtual Microsoft.OData.Client.DataServiceContext.Credentials.get -> System.Net.ICredentials
-virtual Microsoft.OData.Client.DataServiceContext.Credentials.set -> void
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLink(object source, string sourceProperty, object target) -> void
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLinkUriOption.get -> Microsoft.OData.Client.DeleteLinkUriOption
 virtual Microsoft.OData.Client.DataServiceContext.DeleteLinkUriOption.set -> void

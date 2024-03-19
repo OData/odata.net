@@ -233,8 +233,6 @@ namespace Microsoft.Test.Taupo.Astoria.Client
                         var httpRequestMessage = requestMessage.HttpRequestMessage as HttpRequestMessage;
                         this.assert.IsNotNull(httpRequestMessage, "RequestMessage.HttpRequestMessage should be of type HttpRequestMessage");
 
-                        this.assert.AreSame(this.expectedContext.Credentials, requestMessage.Credentials, "Request credentials were not set");
-
                         this.assert.IsNull(this.uriFromEvent, "Last uri unexpectedly not null. Test hook did not fire");
                         this.assert.AreEqual(requestMessage.Url, httpRequestMessage.RequestUri, "Request Uri does not match RequestUri from HttpWebRequest");
                         this.uriFromEvent = httpRequestMessage.RequestUri;

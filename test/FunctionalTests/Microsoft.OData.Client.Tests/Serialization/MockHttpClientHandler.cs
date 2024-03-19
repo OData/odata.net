@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
     /// A mock implementation of <see cref="HttpClientHandler"/>
     /// for testing purposes.
     /// </summary>
-    internal sealed class MockHttpClientHandler : HttpClientHandler
+    internal class MockHttpClientHandler : HttpClientHandler
     {
         private readonly Func<HttpRequestMessage, HttpResponseMessage> _requestHandler;
         private readonly List<string> _requests = new List<string>();
@@ -59,7 +59,11 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         public bool Disposed { get; private set; } = false;
 
-        public HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+#if NETCOREAPP
+        protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+#else
+        public virtual HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
+#endif
         {
             _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
             HttpResponseMessage response = _requestHandler(request);

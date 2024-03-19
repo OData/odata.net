@@ -156,7 +156,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
 
         private static HttpClientRequestMessage CreateRequestMessage()
         {
-            return new ExtendedHttpWebRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://temp.org"), false, false, new Dictionary<string, string>()));
+            return new ExtendedHttpWebRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://temp.org"), false, new Dictionary<string, string>()));
         }
 
         private static IEnumerable<string> GetInterestingHeaderNames()

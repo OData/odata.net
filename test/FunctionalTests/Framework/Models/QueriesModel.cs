@@ -161,7 +161,6 @@ namespace System.Data.Test.Astoria
         public void VerifyClient(QueryModel qm)
         {
             WebDataCtxWrapper ctx = new WebDataCtxWrapper(new Uri(qm.Workspace.ServiceUri));
-            ctx.Credentials = CredentialCache.DefaultNetworkCredentials;
 
             try
             {
@@ -477,7 +476,6 @@ namespace System.Data.Test.Astoria
             System.Uri uri = new Uri(workspace.ServiceUri);
 
             WebDataCtxWrapper ctx = new WebDataCtxWrapper(uri);
-            ctx.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
             ctx.MergeOption = MergeOption.NoTracking;
 
             Type resType = container.BaseType.ClientClrType;

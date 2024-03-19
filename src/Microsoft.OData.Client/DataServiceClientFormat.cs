@@ -264,10 +264,9 @@ namespace Microsoft.OData.Client
                 DataServiceClientRequestMessageArgs args = new DataServiceClientRequestMessageArgs(
                     requestEventArgs.Method,
                     requestEventArgs.RequestUri,
-                    context.UseDefaultCredentials,
                     context.UsePostTunneling,
                     requestEventArgs.Headers,
-                    context.HttpClientHandlerProvider);
+                    context.HttpClientFactory);
 
                 httpRequest = new HttpClientRequestMessage(args);
             }

@@ -263,12 +263,10 @@ namespace AstoriaUnitTests
                 Assert.AreEqual(MergeOption.AppendOnly, ctx.MergeOption);
                 Assert.IsFalse(ctx.UsePostTunneling);
                 Assert.IsNull(ctx.ResolveType);
-                Assert.IsNull(ctx.Credentials);
                 #endregion
 
                 #region Set some properties to like ResolveType & ResolveName
                 ctx.Timeout = TestConstants.MaxTestTimeout;
-                ctx.Credentials = System.Net.CredentialCache.DefaultNetworkCredentials;
                 ctx.ResolveType = resolveType;
                 ctx.ResolveName = resolveName;
                 #endregion
@@ -571,7 +569,6 @@ namespace AstoriaUnitTests
                 //tmpCtx.Format.UseAtom();
                 //tmpCtx.EnableAtom = true;
                 tmpCtx.Timeout = ctx.Timeout;
-                tmpCtx.Credentials = ctx.Credentials;
 
                 Assert.IsNotNull(tmpCtx);
             }

@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         [Fact]
         public void UnwrapAggregateException()
         {
-            var msg = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, false, new Dictionary<string, string>()));
+            var msg = new HttpClientRequestMessage(new DataServiceClientRequestMessageArgs("GET", new Uri("http://localhost"), false, new Dictionary<string, string>()));
             var task = new Task<HttpResponseMessage>(() => throw new Exception("single exception"));
             task.RunSynchronously();
 
@@ -37,12 +37,11 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
 
-                var httpClientHandlerProvider = new MockHttpClientHandlerProvider(handler);
+                var httpClientHandlerProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientHandlerProvider);
@@ -68,19 +67,18 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void WhenHttpClientHandlerIsProvided_DoesNotDisposeHandler()
+        public async Task WhenHttpClientHandlerIsProvided_DoesNotDisposeHandler()
         {
             // Arrange
             string expectedResponse = "Foo";
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
 
-                var httpClientProvider = new MockHttpClientHandlerProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -114,18 +112,17 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void Abort_CancelsPendingRequest()
+        public async Task Abort_CancelsTheSpecifiedRequest()
         {
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
 
-                var httpClientProvider = new MockHttpClientHandlerProvider(handler);
+                var httpClientProvider = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
@@ -156,21 +153,84 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public async void Timeout_CancelsPendingRequestAfterTimeout()
+        public async Task Abort_DoesNotCancelOtherRequestsFromTheSameClient()
+        {
+            // Arrange
+            using (var handler = new MockDelayedHttpClientHandler("Success", delayMilliseconds: 2000))
+            {
+
+                var httpClientFactory = new MockHttpClientFactory(handler);
+
+                var args1 = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost/request1"),
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientFactory);
+
+                var args2 = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost/request2"),
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientFactory);
+
+                using (var request1 = new HttpClientRequestMessage(args1))
+                using (var request2 = new HttpClientRequestMessage(args2))
+                {
+
+                    // Call Abort() on request1 after it has started
+                    handler.OnRequestStarted = (httpRequest) =>
+                    {
+                        if (httpRequest.RequestUri.AbsolutePath.EndsWith("request1"))
+                        {
+                            request1.Abort();
+                        }
+                    };
+
+                    Task<IODataResponseMessage> getResponse1Task =
+                            Task.Run(() => Task.Factory.FromAsync(request1.BeginGetResponse, request1.EndGetResponse, null));
+
+                    Task<IODataResponseMessage> getResponse2Task =
+                            Task.Run(() => Task.Factory.FromAsync(request2.BeginGetResponse, request2.EndGetResponse, null));
+
+                    // Assert
+                    // Request 1 should fail
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#else
+                    await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#endif
+
+                    // Request 2 should succeed
+                    var response2 = await getResponse2Task;
+                    var stream = response2.GetStream();
+                    var reader = new StreamReader(stream);
+                    var data = reader.ReadToEnd();
+                    Assert.Equal("Success", data);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task Timeout_CancelsPendingRequestAfterTimeout()
         {
             // Arrange
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
-
-                var httpClientProvider = new MockHttpClientHandlerProvider(handler);
-
+                var httpClientFactory = new MockHttpClientFactory(handler);
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
-                    useDefaultCredentials: false,
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
-                    httpClientProvider);
+                    httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {
@@ -197,35 +257,100 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public void WhenClientHandlerIsProvided_CredentialsProperty_AccessHandlerCredentials()
+        public async Task Timeout_DoesNotCancelOtherRequestsFromTheSameClient()
         {
             // Arrange
-            using (var handler = new MockHttpClientHandler("Foo"))
+            using (var handler = new MockDelayedHttpClientHandler("Success", 5000))
             {
-
-                var httpClientProvider = new MockHttpClientHandlerProvider(handler);
-
-                var args = new DataServiceClientRequestMessageArgs(
+                var httpClientProvider = new MockHttpClientFactory(handler);
+                var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
-                    new Uri("http://localhost"),
-                    useDefaultCredentials: false,
+                    new Uri("http://localhost/request1"),
                     usePostTunneling: false,
                     new Dictionary<string, string>(),
                     httpClientProvider);
 
-                using (var request = new HttpClientRequestMessage(args))
+                var args2 = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost/request2"),
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientProvider);
+
+                using (var request1 = new HttpClientRequestMessage(args1))
+                using (var request2 = new HttpClientRequestMessage(args2))
                 {
+                    request1.Timeout = 1;
 
-                    // Act & Assert
-#pragma warning disable CS0618 // Type or member is obsolete
-                    request.Credentials = new NetworkCredential();
-                    Assert.Same(request.Credentials, handler.Credentials);
+                    // Act
+                    Task<IODataResponseMessage> getResponse1Task =
+                            Task.Run(() => Task.Factory.FromAsync(request1.BeginGetResponse, request1.EndGetResponse, null));
 
-                    handler.Credentials = new NetworkCredential();
-                    Assert.Same(handler.Credentials, request.Credentials);
-#pragma warning restore CS0618 // Type or member is obsolete
+                    Task<IODataResponseMessage> getResponse2Task =
+                            Task.Run(() => Task.Factory.FromAsync(request2.BeginGetResponse, request2.EndGetResponse, null));
+
+                    // Assert
+                    // Request 1 should timeout
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#else
+                    await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    {
+                        await getResponse1Task;
+                    });
+#endif
+
+                    // Request 2 should succeed;
+                    var response2 = await getResponse2Task;
+                    var stream = response2.GetStream();
+                    var reader = new StreamReader(stream);
+                    var data = reader.ReadToEnd();
+                    Assert.Equal("Success", data);
                 }
             }
         }
+
+        [Fact]
+        public async Task WhenTimeoutNotSet_HttpClientTimeoutStillApplies()
+        {
+            // Arrange
+            using (var handler = new MockDelayedHttpClientHandler("success", delayMilliseconds: 5000))
+            {
+                var httpClientFactory = new MockHttpClientFactory(handler, new MockHttpClientFactoryOptions
+                {
+                    Timeout = 1
+                });
+                var args = new DataServiceClientRequestMessageArgs(
+                    "GET",
+                    new Uri("http://localhost"),
+                    usePostTunneling: false,
+                    new Dictionary<string, string>(),
+                    httpClientFactory);
+
+                using (var request = new HttpClientRequestMessage(args))
+                {
+                    // Act
+                    Task<IODataResponseMessage> getResponseTask =
+                        Task.Run(() => Task.Factory.FromAsync(request.BeginGetResponse, request.EndGetResponse, null));
+
+                    // Assert
+#if NETCOREAPP
+                    await Assert.ThrowsAsync<DataServiceTransportException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#else
+                    await Assert.ThrowsAsync<OperationCanceledException>(async () =>
+                    {
+                        await getResponseTask;
+                    });
+#endif
+                }
+            }
+        }
+
     }
 }

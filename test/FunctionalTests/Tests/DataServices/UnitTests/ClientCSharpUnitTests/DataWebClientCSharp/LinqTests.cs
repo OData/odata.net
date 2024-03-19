@@ -8419,7 +8419,6 @@ namespace AstoriaUnitTests.Tests
                 //ctx.EnableAtom = true;
                 //ctx.Format.UseAtom();
                 ctx.MergeOption = Microsoft.OData.Client.MergeOption.NoTracking;
-                ctx.Credentials = System.Net.CredentialCache.DefaultCredentials;
 
                 //Queries without a projection
                 //LondonCustomers using DataServiceContext.CreateQuery()

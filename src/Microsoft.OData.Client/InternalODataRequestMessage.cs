@@ -73,10 +73,9 @@ namespace Microsoft.OData.Client
             {
                 return this.requestMessage.Url;
             }
-
             set
             {
-                throw new NotImplementedException();
+                this.requestMessage.Url = value;
             }
         }
 
@@ -97,27 +96,9 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets or set the credentials for this request.
-        /// </summary>
-        public override ICredentials Credentials
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
-        /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
         public override int Timeout
-        {
-            get { throw new NotSupportedException(); }
-            set { throw new NotSupportedException(); }
-        }
-
-        /// <summary>
-        /// Gets or sets the read and write timeout (in seconds) for this request.
-        /// </summary>
-        public override int ReadWriteTimeout
         {
             get { throw new NotSupportedException(); }
             set { throw new NotSupportedException(); }

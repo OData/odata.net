@@ -13,7 +13,7 @@
   <Import Project="..\Build.props" />
 
   <ItemGroup>
-	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="3.1.32" />
+	<PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.0" />
   </ItemGroup>
 
   <Choose>
