@@ -1,9 +1,13 @@
 <#
 .PARAMETER versionPath
+  A github Personal Access Token that has the "repo" scope. A PAT can be created [here](https://github.com/settings/tokens/new)
+.PARAMETER versionPath
   The path to the msbuild props file where the version number is specified
 #>
 
 Param(
+  [string]
+  $githubPersonalAccessToken,
   [string]
   $versionPath
 )
@@ -42,6 +46,17 @@ git add *
 git commit -m "revving version number to $versionNumber and updating PublicAPI.Shipped.txt files to reflect API changes for this release"
 
 git push --set-upstream origin $branchName
+
+# create the new PR
+
+$headers = @{
+	'Accept' = 'application/vnd.github+json'
+	'Authorization' = 'Bearer $githubPersonalAccessToken'
+	'X-GitHub-Api-Version' = '2022-11-28'
+}
+$body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""master""}"
+
+Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
 
 Write-Host
 Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; create a PR for that branch by navigating to:"
