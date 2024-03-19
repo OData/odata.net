@@ -54,7 +54,7 @@ $headers = @{
 	'Authorization' = 'Bearer ' + $githubPersonalAccessToken
 	'X-GitHub-Api-Version' = '2022-11-28'
 }
-$body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""master""}"
+$body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""main""}"
 
 $body
 
