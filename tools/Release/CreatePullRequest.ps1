@@ -56,8 +56,6 @@ $headers = @{
 }
 $body = "{""title"":""$versionNumber release"",""body"":"""",""head"":""$branchName"",""base"":""main""}"
 
-$body
-
 $webResponse = Invoke-WebRequest -Method 'POST' -Uri https://api.github.com/repos/OData/odata.net/pulls -Headers $headers  -Body $body
 if ($webResponse.StatusCode -lt 200 -or $webResponse.StatusCode -ge 300)
 {
@@ -67,7 +65,7 @@ if ($webResponse.StatusCode -lt 200 -or $webResponse.StatusCode -ge 300)
 }
 
 $responseContent = $webResponse.Content | ConvertFrom-Json
-$responseContent
+
 
 Write-Host
-Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; a PR for that branch was created at TODO:"
+Write-Host -ForegroundColor Green "A new release branch at $branchName has been created and pushed; a PR for that branch was created at $responseContent.url"
