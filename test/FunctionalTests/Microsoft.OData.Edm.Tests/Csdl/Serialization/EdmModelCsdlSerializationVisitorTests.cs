@@ -2037,7 +2037,13 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
                 Indent = indent,
                 ConformanceLevel = ConformanceLevel.Auto
             });
-            var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
+
+            CsdlXmlWriterSettings settings = new CsdlXmlWriterSettings
+            {
+                UseLowercaseScaleVariable = false
+            };
+
+            var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, settings);
             var visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
 
             testAction(visitor);

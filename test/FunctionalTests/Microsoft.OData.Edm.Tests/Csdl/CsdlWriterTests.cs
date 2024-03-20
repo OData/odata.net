@@ -2460,6 +2460,176 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void CanWriteAnnotationWithVariousPrimitiveDefaultValues_WithLowerCase_ScaleVariable()
+        {
+            // Arrange
+            EdmModel model = new EdmModel();
+            EdmComplexType complex = new EdmComplexType("NS", "Complex");
+            model.AddElement(complex);
+
+            Action<EdmPrimitiveTypeKind, string> registerAction = (kind, value) =>
+            {
+                string name = $"Default{kind}Term";
+                EdmTerm term = new EdmTerm("NS", name, EdmCoreModel.Instance.GetPrimitive(kind, false), null, value);
+                model.AddElement(term);
+
+                IEdmVocabularyAnnotation annotation = term.CreateVocabularyAnnotation(complex);
+                annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
+                model.SetVocabularyAnnotation(annotation);
+                Assert.NotNull(annotation.Value);
+            };
+
+            registerAction(EdmPrimitiveTypeKind.Binary, "01");
+            registerAction(EdmPrimitiveTypeKind.Decimal, "0.34");
+            registerAction(EdmPrimitiveTypeKind.String, "This is a test");
+            registerAction(EdmPrimitiveTypeKind.Duration, "P11DT23H59M59.999999999999S");
+            registerAction(EdmPrimitiveTypeKind.TimeOfDay, "21:45:00");
+            registerAction(EdmPrimitiveTypeKind.Boolean, "true");
+            registerAction(EdmPrimitiveTypeKind.Single, "0.2");
+            registerAction(EdmPrimitiveTypeKind.Double, "3.94");
+            registerAction(EdmPrimitiveTypeKind.Guid, "21EC2020-3AEA-1069-A2DD-08002B30309D");
+            registerAction(EdmPrimitiveTypeKind.Int16, "4");
+            registerAction(EdmPrimitiveTypeKind.Int32, "4");
+            registerAction(EdmPrimitiveTypeKind.Int64, "4");
+            registerAction(EdmPrimitiveTypeKind.Date, "2000-12-10");
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors));
+
+            CsdlXmlWriterSettings csdlXmlWriterSettings = new CsdlXmlWriterSettings
+            {
+                UseLowercaseScaleVariable = true
+            };
+
+            // Act & Assert for XML
+            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.DefaultBinaryTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultStringTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDurationTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultTimeOfDayTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultBooleanTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultSingleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDoubleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultGuidTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultInt16Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt32Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt64Term\" />" +
+                     "<Annotation Term=\"NS.DefaultDateTerm\" />" +
+                   "</ComplexType>" +
+                 "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" Scale=\"variable\" />" +
+                 "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultTimeOfDayTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultBooleanTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultSingleTerm\" Type=\"Edm.Single\" DefaultValue=\"0.2\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDoubleTerm\" Type=\"Edm.Double\" DefaultValue=\"3.94\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultGuidTerm\" Type=\"Edm.Guid\" DefaultValue=\"21EC2020-3AEA-1069-A2DD-08002B30309D\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt16Term\" Type=\"Edm.Int16\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt32Term\" Type=\"Edm.Int32\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt64Term\" Type=\"Edm.Int64\" DefaultValue=\"4\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>", csdlXmlWriterSettings);
+
+            // Act & Assert for JSON
+            WriteAndVerifyJson(model, @"{
+  ""$Version"": ""4.0"",
+  ""NS"": {
+    ""Complex"": {
+      ""$Kind"": ""ComplexType"",
+      ""@NS.DefaultBinaryTerm"": ""AQ"",
+      ""@NS.DefaultDecimalTerm"": 0.34,
+      ""@NS.DefaultStringTerm"": ""This is a test"",
+      ""@NS.DefaultDurationTerm"": ""P11DT23H59M59.9999999S"",
+      ""@NS.DefaultTimeOfDayTerm"": ""21:45:00.0000000"",
+      ""@NS.DefaultBooleanTerm"": true,
+      ""@NS.DefaultSingleTerm"": 0.2,
+      ""@NS.DefaultDoubleTerm"": 3.94,
+      ""@NS.DefaultGuidTerm"": ""21ec2020-3aea-1069-a2dd-08002b30309d"",
+      ""@NS.DefaultInt16Term"": 4,
+      ""@NS.DefaultInt32Term"": 4,
+      ""@NS.DefaultInt64Term"": 4,
+      ""@NS.DefaultDateTerm"": ""2000-12-10""
+    },
+    ""DefaultBinaryTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Binary"",
+      ""$DefaultValue"": ""01""
+    },
+    ""DefaultDecimalTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Decimal"",
+      ""$DefaultValue"": ""0.34""
+    },
+    ""DefaultStringTerm"": {
+      ""$Kind"": ""Term"",
+      ""$DefaultValue"": ""This is a test""
+    },
+    ""DefaultDurationTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Duration"",
+      ""$DefaultValue"": ""P11DT23H59M59.999999999999S"",
+      ""$Precision"": 0
+    },
+    ""DefaultTimeOfDayTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.TimeOfDay"",
+      ""$DefaultValue"": ""21:45:00"",
+      ""$Precision"": 0
+    },
+    ""DefaultBooleanTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Boolean"",
+      ""$DefaultValue"": ""true""
+    },
+    ""DefaultSingleTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Single"",
+      ""$DefaultValue"": ""0.2""
+    },
+    ""DefaultDoubleTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Double"",
+      ""$DefaultValue"": ""3.94""
+    },
+    ""DefaultGuidTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Guid"",
+      ""$DefaultValue"": ""21EC2020-3AEA-1069-A2DD-08002B30309D""
+    },
+    ""DefaultInt16Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int16"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultInt32Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int32"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultInt64Term"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Int64"",
+      ""$DefaultValue"": ""4""
+    },
+    ""DefaultDateTerm"": {
+      ""$Kind"": ""Term"",
+      ""$Type"": ""Edm.Date"",
+      ""$DefaultValue"": ""2000-12-10""
+    }
+  }
+}");
+        }
+
+        [Fact]
         public void CanWriteNavigationPropertyBindingTargetOnContainmentNavigationProperty()
         {
             EdmModel model = new EdmModel();
@@ -2843,6 +3013,25 @@ var v40Json =
                 {
                     IEnumerable<EdmError> errors;
                     CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                    xw.Flush();
+                }
+
+                string actual = sw.ToString();
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings, CsdlTarget target = CsdlTarget.OData)
+        {
+            using (StringWriter sw = new StringWriter())
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Encoding = System.Text.Encoding.UTF8;
+
+                using (XmlWriter xw = XmlWriter.Create(sw, settings))
+                {
+                    IEnumerable<EdmError> errors;
+                    CsdlWriter.TryWriteCsdl(model, xw, target, csdlXmlWriterSettings, out errors);
                     xw.Flush();
                 }
 

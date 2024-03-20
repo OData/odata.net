@@ -62,6 +62,8 @@ Microsoft.OData.ODataMessageWriterSettings.GetOmitODataPrefix(Microsoft.OData.OD
 Microsoft.OData.ODataMessageWriterSettings.ODataMessageWriterSettings(Microsoft.OData.ODataVersion? version) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value, Microsoft.OData.ODataVersion version) -> void
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseScaleVariable.get -> bool
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseScaleVariable.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void

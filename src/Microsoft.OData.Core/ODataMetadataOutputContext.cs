@@ -267,7 +267,13 @@ namespace Microsoft.OData
         private void WriteMetadataDocumentImplementation()
         {
             IEnumerable<EdmError> errors;
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
+            CsdlXmlWriterSettings settings = new CsdlXmlWriterSettings
+            {
+                UseLowercaseScaleVariable = this.MessageWriterSettings.UseLowercaseScaleVariable,
+                UseLowercaseSridVariable = this.MessageWriterSettings.UseLowercaseSridVariable
+            };
+
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, settings, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 
