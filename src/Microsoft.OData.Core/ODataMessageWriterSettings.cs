@@ -96,7 +96,7 @@ namespace Microsoft.OData
             this.EnableCharactersCheck = false;
             this.Validations = ValidationKinds.All;
             this.Validator = new WriterValidator(this);
-            this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
+            this.LibraryCompatibility = ODataLibraryCompatibility.None;
             this.MultipartNewLine = "\r\n";
             this.AlwaysAddTypeAnnotationsForDerivedTypes = false;
             this.BufferSize = ODataConstants.DefaultOutputBufferSize;

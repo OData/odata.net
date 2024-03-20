@@ -980,7 +980,7 @@ namespace Microsoft.OData.JsonLight
                 // Write @odata.context annotation for navigation property
                 IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
                 if (containedEntitySet != null
-                    && this.messageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7
+                    && this.messageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty)
                     && this.messageWriterSettings.Version < ODataVersion.V401)
                 {
                     ODataContextUrlInfo info = ODataContextUrlInfo.Create(
@@ -2056,7 +2056,7 @@ namespace Microsoft.OData.JsonLight
                     // Write @odata.context annotation for navigation property
                     IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
                     if (containedEntitySet != null
-                        && this.messageWriterSettings.LibraryCompatibility < ODataLibraryCompatibility.Version7
+                        && this.messageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty)
                         && this.messageWriterSettings.Version < ODataVersion.V401)
                     {
                         ODataContextUrlInfo info = ODataContextUrlInfo.Create(

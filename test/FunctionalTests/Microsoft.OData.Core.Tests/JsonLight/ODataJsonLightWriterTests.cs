@@ -1527,7 +1527,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Theory]
         [InlineData(ODataLibraryCompatibility.Version6, "\"Products@odata.context\":\"http://tempuri.org/$metadata#Orders(1)/Products\",")]
         [InlineData(ODataLibraryCompatibility.Version7, "")]
-        [InlineData(ODataLibraryCompatibility.Latest, "")]
+        [InlineData(ODataLibraryCompatibility.None, "")]
         public async Task WriteContainmentAsync(ODataLibraryCompatibility libraryCompatilibity, string containmentContextUrl)
         {
             this.settings.LibraryCompatibility = libraryCompatilibity;

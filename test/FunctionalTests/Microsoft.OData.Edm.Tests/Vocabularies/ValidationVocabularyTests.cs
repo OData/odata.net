@@ -86,7 +86,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   <Term Name=""AllowedValues"" Type=""Collection(Validation.AllowedValue)"" AppliesTo=""Property Parameter TypeDefinition"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""A collection of valid values for the annotated property, parameter, or type definition"" />
   </Term>
-  <Term Name=""MultipleOf"" Type=""Edm.Decimal"" AppliesTo=""Property Parameter Term"" Nullable=""false"" Scale=""Variable"">
+  <Term Name=""MultipleOf"" Type=""Edm.Decimal"" AppliesTo=""Property Parameter Term"" Nullable=""false"" Scale=""variable"">
     <Annotation Term=""Core.Description"" String=""The value of the annotated property, parameter, or term must be an integer multiple of this positive value. For temporal types, the value is measured in seconds."" />
   </Term>
   <Term Name=""Constraint"" Type=""Validation.ConstraintType"" AppliesTo=""Property EntityType ComplexType"" Nullable=""false"">

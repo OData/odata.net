@@ -14,8 +14,11 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
 using Microsoft.OData.UriParser;
-using Microsoft.Test.OData.DependencyInjection;
-using Xunit;using System.Xml;
+using Xunit;
+using System.Xml;
+using System.Xml.Linq;
+using Microsoft.OData.Edm.Csdl;
+
 #if NETCOREAPP
 using System.Text.Json;
 #endif
@@ -903,7 +906,6 @@ namespace Microsoft.OData.Tests
             Assert.True(stream.Disposed);
         }
 
-
         [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingJsonMetadata()
         {
@@ -999,9 +1001,53 @@ namespace Microsoft.OData.Tests
 
             Assert.True(stream.Disposed);
         }
+
+        [Fact]
+        public void WriteMetadataDocument_WorksForLegacyScaleAndSridVariables()
+        {
+            // Arrange
+            IEdmModel edmModel = GetScaleAndSridModel();
+
+            // Act
+            string payload = this.WriteAndGetPayloadForScaleAndSridVariables(edmModel, useLegacyScaleAndSridVariable : true, messageWriter =>
+            {
+                messageWriter.WriteMetadataDocument();
+            });
+
+            // Assert
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"Complex\"><Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"Variable\" />" +
+                "<Property Name=\"DecimalProperty\" Type=\"Edm.Decimal\" Nullable=\"false\" Scale=\"Variable\" />" +
+                "</ComplexType>" +
+                "</Schema></edmx:DataServices></edmx:Edmx>", payload);
+        }
+
+        [Fact]
+        public void WriteMetadataDocument_WorksFor_LowerScaleAndSridVariable()
+        {
+            // Arrange
+            IEdmModel edmModel = GetScaleAndSridModel();
+
+            // Act
+            string payload = this.WriteAndGetPayloadForScaleAndSridVariables(edmModel, useLegacyScaleAndSridVariable : false, messageWriter =>
+            {
+                messageWriter.WriteMetadataDocument();
+            });
+
+            // Assert
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices><Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"Complex\"><Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"variable\" />" +
+                "<Property Name=\"DecimalProperty\" Type=\"Edm.Decimal\" Nullable=\"false\" Scale=\"variable\" />" +
+                "</ComplexType>" +
+                "</Schema></edmx:DataServices></edmx:Edmx>", payload);
+        }
+
 #endif
         #endregion
-
 
         private static IEdmModel _edmModel;
 
@@ -1028,6 +1074,31 @@ namespace Microsoft.OData.Tests
             _edmModel = edmModel;
 
             return edmModel;
+        }
+
+
+        private static IEdmModel GetScaleAndSridModel()
+        {
+            string csdlTemplate = "<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+    "<edmx:DataServices>" +
+    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+    "<ComplexType Name=\"Complex\">" +
+    "<Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"variable\" />" +
+    "<Property Name=\"DecimalProperty\" Type=\"Edm.Decimal\" Nullable=\"false\" Scale=\"variable\" />" +
+    "</ComplexType>" +
+    "</Schema>" +
+    "</edmx:DataServices>+" +
+    "</edmx:Edmx>";
+
+            // Parse into CSDL
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdlTemplate).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
+
+            return model;
         }
 
         /// <summary>
@@ -1096,6 +1167,61 @@ namespace Microsoft.OData.Tests
             }
 
             message.Stream.Seek(0, SeekOrigin.Begin);
+            using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8))
+            {
+                return reader.ReadToEnd();
+            }
+        }
+
+        /// <summary>
+        /// Write a message using an <see cref="ODataMessageWriter"/> instance
+        /// and returns the written payload as a string.
+        /// </summary>
+        /// <param name="edmModel">The <see cref="IEdmModel"/> used to initialize the writer.</param>
+        /// <param name="useLegacyScaleAndSridVariable">If true, use legacy variable for Scale and SRID.Otherwise, don't.</param>
+        /// <param name="writePayload">The action that writes the payload.</param>
+        /// <param name="message">
+        /// The message instance that encapsulate the request.
+        /// If none is provided, a new instance of <see cref="InMemoryMessage"/>.
+        /// The provided instance might be modified by this method.
+        /// </param>
+        /// <param name="encoding">
+        /// The encoding to use when reading from the request stream. This defaults to UTF8.
+        /// If you set a custom <paramref name="contentType"/>, you should specify a matching encoding.
+        /// </param>
+        /// <param name="configureServices">
+        /// Action to inject services to the dependency-injection container.
+        /// If this is set, then the generated <see cref="IServiceProvider"/> will be added to the <paramref name="message"/>.Container property.
+        /// </param>
+        /// <param name="path">
+        /// The OData Uri path.
+        /// </param>
+        /// <returns>The written output.</returns>
+        private string WriteAndGetPayloadForScaleAndSridVariables(
+            IEdmModel edmModel,
+            bool useLegacyScaleAndSridVariable,
+            Action<ODataMessageWriter> writePayload,
+            InMemoryMessage message = null,
+            Encoding encoding = null)
+        {
+            message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
+            {
+                EnableMessageStreamDisposal = false,
+                BaseUri = new Uri("http://www.example.com/"),
+                LibraryCompatibility = useLegacyScaleAndSridVariable ? ODataLibraryCompatibility.UseLegacyVariableCasing : ODataLibraryCompatibility.None
+            };
+
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            using (var msgWriter = new ODataMessageWriter((IODataResponseMessage)message, writerSettings, edmModel))
+            {
+                writePayload(msgWriter);
+            }
+
+            message.Stream.Seek(0, SeekOrigin.Begin);
+
             using (StreamReader reader = new StreamReader(message.Stream, encoding: encoding ?? Encoding.UTF8))
             {
                 return reader.ReadToEnd();

@@ -646,8 +646,8 @@ namespace Microsoft.OData.JsonLight
 
             if (this.currentPropertyInfo.IsTopLevel)
             {
-                if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility <
-                    ODataLibraryCompatibility.Version7 && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
+                if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation)
+                    && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
                     this.ODataAnnotationWriter.WriteInstanceAnnotationName(ODataAnnotationNames.ODataNull);
@@ -1085,8 +1085,8 @@ namespace Microsoft.OData.JsonLight
 
             if (this.currentPropertyInfo.IsTopLevel)
             {
-                if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility <
-                    ODataLibraryCompatibility.Version7 && this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
+                if (this.JsonLightOutputContext.MessageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation) && 
+                    this.JsonLightOutputContext.MessageWriterSettings.Version < ODataVersion.V401)
                 {
                     // The 6.x library used an OData 3.0 protocol element in this case: @odata.null=true
                     await this.ODataAnnotationWriter.WriteInstanceAnnotationNameAsync(ODataAnnotationNames.ODataNull)

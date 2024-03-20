@@ -60,6 +60,10 @@ Microsoft.OData.Edm.Csdl.CsdlTarget.EntityFramework = 0 -> Microsoft.OData.Edm.C
 Microsoft.OData.Edm.Csdl.CsdlTarget.OData = 1 -> Microsoft.OData.Edm.Csdl.CsdlTarget
 Microsoft.OData.Edm.Csdl.CsdlWriter
 Microsoft.OData.Edm.Csdl.CsdlWriter.CsdlWriter(Microsoft.OData.Edm.IEdmModel model, System.Version edmxVersion) -> void
+Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings
+Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings.CsdlXmlWriterSettings() -> void
+Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings.LibraryCompatibility.get -> Microsoft.OData.Edm.EdmLibraryCompatibility
+Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings.LibraryCompatibility.set -> void
 Microsoft.OData.Edm.Csdl.EdmParseException
 Microsoft.OData.Edm.Csdl.EdmParseException.EdmParseException(System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> parseErrors) -> void
 Microsoft.OData.Edm.Csdl.EdmParseException.Errors.get -> System.Collections.ObjectModel.ReadOnlyCollection<Microsoft.OData.Edm.Validation.EdmError>
@@ -287,6 +291,9 @@ Microsoft.OData.Edm.EdmIncludeAnnotations.EdmIncludeAnnotations(string termNames
 Microsoft.OData.Edm.EdmIncludeAnnotations.Qualifier.get -> string
 Microsoft.OData.Edm.EdmIncludeAnnotations.TargetNamespace.get -> string
 Microsoft.OData.Edm.EdmIncludeAnnotations.TermNamespace.get -> string
+Microsoft.OData.Edm.EdmLibraryCompatibility
+Microsoft.OData.Edm.EdmLibraryCompatibility.None = 0 -> Microsoft.OData.Edm.EdmLibraryCompatibility
+Microsoft.OData.Edm.EdmLibraryCompatibility.UseLegacyVariableCasing = 1 -> Microsoft.OData.Edm.EdmLibraryCompatibility
 Microsoft.OData.Edm.EdmLocation
 Microsoft.OData.Edm.EdmLocation.EdmLocation() -> void
 Microsoft.OData.Edm.EdmModel
@@ -1446,6 +1453,7 @@ static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader,
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmModel> references, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(System.Xml.XmlReader reader, System.Func<System.Uri, System.Xml.XmlReader> getReferencedModelReaderFunc, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.GetVersionString(System.Version version) -> string
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, Microsoft.OData.Edm.Csdl.CsdlXmlWriterSettings writerSettings, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdl(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, Microsoft.OData.Edm.IEdmModel reference, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool
 static Microsoft.OData.Edm.Csdl.SchemaReader.TryParse(System.Collections.Generic.IEnumerable<System.Xml.XmlReader> readers, out Microsoft.OData.Edm.IEdmModel model, out System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError> errors) -> bool

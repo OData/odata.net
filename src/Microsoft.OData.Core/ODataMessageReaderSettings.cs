@@ -46,7 +46,7 @@ namespace Microsoft.OData
             this.EnableMessageStreamDisposal = true;
             this.EnableCharactersCheck = false;
             this.Version = odataVersion;
-            this.LibraryCompatibility = ODataLibraryCompatibility.Latest;
+            this.LibraryCompatibility = ODataLibraryCompatibility.None;
             this.EnablePropertyNameCaseInsensitive = false; // for back-compatible
 
             Validator = new ReaderValidator(this);
