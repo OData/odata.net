@@ -104,11 +104,13 @@ namespace Microsoft.OData.Client
         /// <returns>A copy of this with the new types</returns>
         protected override QueryableResourceExpression CreateCloneWithNewTypes(Type newType, Type newResourceType)
         {
+            bool ignoreNewResourceType = newResourceType.IsAbstract || newResourceType.IsInterface;
+            
             return new ResourceSetExpression(
                 newType,
                 this.source,
                 this.MemberExpression,
-                newResourceType,
+                ignoreNewResourceType ? this.ResourceType : newResourceType,
                 this.ExpandPaths.ToList(),
                 this.CountOption,
                 this.CustomQueryOptions.ToDictionary(kvp => kvp.Key, kvp => kvp.Value),
