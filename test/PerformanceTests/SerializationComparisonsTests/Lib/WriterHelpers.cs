@@ -19,25 +19,25 @@ namespace ExperimentsLib
         public static IJsonWriter CreateODataJsonWriter(this Stream stream, Encoding encoding = null)
         {
             return jsonWriterFactory.CreateJsonWriter(
-                new StreamWriter(stream, encoding ?? Encoding.UTF8), false);
+                stream, false, encoding ?? Encoding.UTF8);
         }
 
-        public static IJsonWriterAsync CreateODataJsonWriterAsync(this Stream stream, Encoding encoding = null)
+        public static IJsonWriter CreateODataJsonWriterAsync(this Stream stream, Encoding encoding = null)
         {
-            return jsonWriterFactory.CreateAsynchronousJsonWriter(
-                new StreamWriter(stream, encoding ?? Encoding.UTF8), false);
+            return jsonWriterFactory.CreateJsonWriter(
+                stream, false, encoding ?? Encoding.UTF8);
         }
 
         public static IJsonWriter CreateODataUtf8JsonWriter(this Stream stream, Encoding encoding = null)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            var factory = ODataUtf8JsonWriterFactory.Default;
             return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
         }
 
-        public static IJsonWriterAsync CreateODataUtf8JsonWriterAsync(this Stream stream, Encoding encoding = null)
+        public static IJsonWriter CreateODataUtf8JsonWriterAsync(this Stream stream, Encoding encoding = null)
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
-            return factory.CreateAsynchronousJsonWriter(stream, false, encoding ?? Encoding.UTF8);
+            var factory = ODataUtf8JsonWriterFactory.Default;
+            return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
         }
 
         public static IODataResponseMessage CreateJsonWriterMessage(this Stream stream, string charset = "UTF-8")
@@ -52,25 +52,24 @@ namespace ExperimentsLib
             return stream.CreateODataMessage(services =>
             {
                 services.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
-                services.AddService<IJsonWriterFactoryAsync>(ServiceLifetime.Singleton, _ => factory);
             });
         }
 
         public static IODataResponseMessage CreateUtf8JsonWriterMessage(this Stream stream, string charset="UTF-8")
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            var factory = ODataUtf8JsonWriterFactory.Default;
 
             IContainerBuilder services = new ContainerBuilder();
             services.AddDefaultODataServices();
             return stream.CreateODataMessage(services =>
             {
-                services.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
+                services.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => factory);
             }, charset);
         }
 
         public static IODataResponseMessage CreateODataMessage(this Stream stream, Action<IContainerBuilder> configure = null, string charset = "UTF-8")
         {
-            DefaultStreamBasedJsonWriterFactory factory = DefaultStreamBasedJsonWriterFactory.Default;
+            ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
 
             IContainerBuilder services = new ContainerBuilder();
             services.AddDefaultODataServices();

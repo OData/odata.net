@@ -27,6 +27,8 @@ namespace ExperimentsLib
             writers.AddWriters(
                 ("JsonSerializer", new JsonSerializerPayloadWriter()),
 
+                ("NewWriter", new NewWriterPayloadWriter(model)),
+
                 ("ODataMessageWriter", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage())),
                 ("ODataMessageWriter-NoValidation", new ODataMessageWriterPayloadWriter(model, stream => stream.CreateJsonWriterMessage(), enableValidation: false)),
 

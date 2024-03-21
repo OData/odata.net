@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.IO;
+using System.Text;
 using Microsoft.OData.Json;
 
 namespace ExperimentsLib
@@ -13,9 +14,9 @@ namespace ExperimentsLib
     /// Implementation of <see cref="IJsonWriterFactory"/> that returns
     /// a <see cref="NoopJsonWriter"/> that does nothing.
     /// </summary>
-    public class NoopJsonWriterFactory : IJsonWriterFactory, IJsonWriterFactoryAsync
+    public class NoopJsonWriterFactory : IJsonWriterFactory
     {
-        public IJsonWriterAsync CreateAsynchronousJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
+        public IJsonWriter CreateAsynchronousJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
             return new NoopJsonWriter();
         }
@@ -23,6 +24,11 @@ namespace ExperimentsLib
         public IJsonWriter CreateJsonWriter(TextWriter textWriter, bool isIeee754Compatible)
         {
             return new NoopJsonWriter();
+        }
+
+        public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
+        {
+            throw new System.NotImplementedException();
         }
     }
 }
