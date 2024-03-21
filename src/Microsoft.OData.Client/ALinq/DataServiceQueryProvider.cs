@@ -9,6 +9,7 @@ namespace Microsoft.OData.Client
     #region Namespaces
 
     using System;
+    using System.Collections;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.IO;
@@ -87,13 +88,14 @@ namespace Microsoft.OData.Client
 
         #endregion
 
+
         /// <summary>Creates and executes a DataServiceQuery based on the passed in expression which results a single value</summary>
         /// <typeparam name="TElement">generic type</typeparam>
         /// <param name="expression">The expression for the new query</param>
         /// <returns>single valued results</returns>
         internal TElement ReturnSingleton<TElement>(Expression expression)
         {
-            IQueryable<TElement> query = new DataServiceQuery<TElement>.DataServiceOrderedQuery(expression, this);
+            IQueryable<TElement> query = CreateQuery<TElement>(expression);
 
             MethodCallExpression mce = expression as MethodCallExpression;
             Debug.Assert(mce != null, "mce != null");
@@ -105,15 +107,35 @@ namespace Microsoft.OData.Client
                 {
                     case SequenceMethod.Single:
                         return query.AsEnumerable().Single();
+                    case SequenceMethod.SinglePredicate:
+                        query = CreateQuery<TElement>(NestPredicateExpression(mce));
+                        return query.AsEnumerable().Single();
                     case SequenceMethod.SingleOrDefault:
+                        return query.AsEnumerable().SingleOrDefault();
+                    case SequenceMethod.SingleOrDefaultPredicate:
+                        query = CreateQuery<TElement>(NestPredicateExpression(mce));
                         return query.AsEnumerable().SingleOrDefault();
                     case SequenceMethod.First:
                         return query.AsEnumerable().First();
+                    case SequenceMethod.FirstPredicate:
+                        query = CreateQuery<TElement>(NestPredicateExpression(mce));
+                        return query.AsEnumerable().First();
                     case SequenceMethod.FirstOrDefault:
+                        return query.AsEnumerable().FirstOrDefault();
+                    case SequenceMethod.FirstOrDefaultPredicate:
+                        query = CreateQuery<TElement>(NestPredicateExpression(mce));
                         return query.AsEnumerable().FirstOrDefault();
                     case SequenceMethod.LongCount:
                     case SequenceMethod.Count:
                         return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
+                    case SequenceMethod.LongCountPredicate:
+                    case SequenceMethod.CountPredicate:
+                        query = CreateQuery<TElement>(NestPredicateExpression(mce));
+                        return ((DataServiceQuery<TElement>)query).GetValue(this.Context, ParseQuerySetCount<TElement>);
+                    case SequenceMethod.Any:
+                        return GetValueForAny<TElement>(mce);
+                    case SequenceMethod.AnyPredicate:
+                        return GetValueForAny<TElement>(NestPredicateExpression(mce));
                     case SequenceMethod.SumIntSelector:
                     case SequenceMethod.SumDoubleSelector:
                     case SequenceMethod.SumDecimalSelector:
@@ -194,6 +216,52 @@ namespace Microsoft.OData.Client
             queryComponents.GroupByKeySelectorMap = applyQueryOptionExpr?.KeySelectorMap;
 
             return queryComponents;
+        }
+
+        /// <summary>
+        /// Transforms the 'any' query into a 'count' request since OData does not have a spcific query for 'any'.
+        /// Then the result is casted to the corresponding return type (boolean).
+        /// </summary>
+        /// <typeparam name="TElement">The return type.</typeparam>
+        /// <param name="mce">The original expression with predicate.</param>
+        /// <returns></returns>
+        private TElement GetValueForAny<TElement>(MethodCallExpression mce)
+        {
+            Expression arg0 = mce.Arguments[0];
+            Expression countExpression = Expression.Call(
+                typeof(Enumerable),
+                "Count",
+                new Type[] { arg0.Type.GetGenericArguments()[0] },
+                arg0
+            );
+            var query = CreateQuery<TElement>(countExpression) as DataServiceQuery<TElement>;
+            return query.GetValue(Context, ParseQuerySetCount<TElement>);
+        }
+
+        /// <summary>
+        /// Transforms the expression type to one of type 'where'.
+        /// Then it wraps this 'where' expression into one of the received type but without a predicate.
+        /// </summary>
+        /// <param name="mce">The original expression with predicate.</param>
+        /// <returns>The wrapped expression.</returns>
+        private static MethodCallExpression NestPredicateExpression(MethodCallExpression mce)
+        {
+            Type resourceType = mce.Arguments[0].Type.GetGenericArguments()[0];
+
+            Expression where = Expression.Call(
+                typeof(Queryable),
+                "Where",
+                new Type[] { resourceType },
+                mce.Arguments[0],
+                mce.Arguments[1]
+            );
+
+            return Expression.Call(
+                typeof(Enumerable),
+                mce.Method.Name,
+                new Type[] { resourceType },
+                where
+            );
         }
 
         /// <summary>
