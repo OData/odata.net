@@ -10,11 +10,12 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 using Microsoft.OData.MultipartMixed;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
@@ -1001,9 +1002,9 @@ Content-Type: application/json;odata.metadata=none
         [Fact]
         public void BatchJsonLightTestUsingMultipartMixed_WithODataUtf8JsonWriter()
         {
-            Action<IContainerBuilder> configure = (IContainerBuilder builder) =>
+            Action<IServiceCollection> configure = (IServiceCollection builder) =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
             };
 
             BatchJsonLightTestUsingBatchFormat(BatchFormat.MultipartMIME, 0, configure);
@@ -1012,9 +1013,9 @@ Content-Type: application/json;odata.metadata=none
         [Fact]
         public void BatchJsonLightTestUsingJson_WithODataUtf8JsonWriter()
         {
-            Action<IContainerBuilder> configure = (IContainerBuilder builder) =>
+            Action<IServiceCollection> configure = (IServiceCollection builder) =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
             };
 
             BatchJsonLightTestUsingBatchFormat(BatchFormat.ApplicationJson, 0, configure);
@@ -1231,7 +1232,7 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private void BatchJsonLightTestUsingBatchFormat(BatchFormat batchFormat, int idx, Action<IContainerBuilder> configureAction = null)
+        private void BatchJsonLightTestUsingBatchFormat(BatchFormat batchFormat, int idx, Action<IServiceCollection> configureAction = null)
         {
             byte[] requestPayload = null;
             switch (idx)
@@ -1400,22 +1401,19 @@ Content-Type: application/json;odata.metadata=none
             }
         }
 
-        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(byte[] requestPayload, string batchContentType, Action<IContainerBuilder> configureAction = null)
+        private byte[] ServiceReadSingletonBatchRequestAndWriterBatchResponse(byte[] requestPayload, string batchContentType, Action<IServiceCollection> configureAction = null)
         {
             IServiceProvider container = null;
 
             if (configureAction != null)
             {
-                IContainerBuilder containerBuilder = new TestContainerBuilder();
-                containerBuilder.AddDefaultODataServices();
-                configureAction.Invoke(containerBuilder);
-                container = containerBuilder.BuildContainer();
+                container = ServiceProviderHelper.BuildServiceProvider(configureAction);
             }
 
             IODataRequestMessage requestMessage = new InMemoryMessage()
             {
                 Stream = new MemoryStream(requestPayload),
-                Container = container
+                ServiceProvider = container
             };
             requestMessage.SetHeader("Content-Type", batchContentType);
 

@@ -19,6 +19,8 @@ namespace Microsoft.OData.JsonLight
     using Microsoft.OData.Json;
     // ReSharper disable RedundantUsingDirective
     using ODataErrorStrings = Microsoft.OData.Strings;
+    using Microsoft.Extensions.DependencyInjection;
+
     // ReSharper restore RedundantUsingDirective
     #endregion Namespaces
 

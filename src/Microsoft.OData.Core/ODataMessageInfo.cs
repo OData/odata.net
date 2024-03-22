@@ -39,7 +39,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The optional dependency injection container to get related services for message writing.
         /// </summary>
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         /// <summary>
         /// Whether the message should be read or written asynchronously.

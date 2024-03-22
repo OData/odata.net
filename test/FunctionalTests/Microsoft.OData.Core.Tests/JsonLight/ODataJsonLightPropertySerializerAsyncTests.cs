@@ -10,10 +10,11 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.JsonLight
@@ -314,9 +315,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 Value = new ODataJsonElementValue(jsonDocument.RootElement)
             };
 
-            Action<IContainerBuilder> configureServices = (IContainerBuilder builder) =>
+            Action<IServiceCollection> configureServices = (IServiceCollection builder) =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
             };
 
             var result = await this.SetupSerializerAndRunTestAsync(
@@ -336,7 +337,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 #endif
 
-        private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonLightPropertySerializer, Task> func, Action<IContainerBuilder> configureServices = null)
+        private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonLightPropertySerializer, Task> func, Action<IServiceCollection> configureServices = null)
         {
             Stream outputStream = new AsyncStream(new MemoryStream());
             ODataJsonLightOutputContext jsonLightOutputContext = this.CreateJsonLightOutputContext(outputStream, configureServices);
@@ -351,7 +352,7 @@ namespace Microsoft.OData.Tests.JsonLight
             return await new StreamReader(outputStream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, Action<IContainerBuilder> configureServices = null)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, Action<IServiceCollection> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
@@ -369,10 +370,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             if (configureServices != null)
             {
-                TestContainerBuilder containerBuilder = new TestContainerBuilder();
-                containerBuilder.AddDefaultODataServices();
-                configureServices(containerBuilder);
-                messageInfo.Container = containerBuilder.BuildContainer();
+                messageInfo.ServiceProvider = ServiceProviderHelper.BuildServiceProvider(configureServices);
             }
 
             return new ODataJsonLightOutputContext(messageInfo, settings);

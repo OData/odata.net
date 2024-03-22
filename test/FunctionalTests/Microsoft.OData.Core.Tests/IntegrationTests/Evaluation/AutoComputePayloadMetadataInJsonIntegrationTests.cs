@@ -9,14 +9,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.UriParser;
-using Microsoft.OData.Edm;
-using Microsoft.Test.OData.DependencyInjection;
-using Xunit;
-using System.Xml;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Csdl;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
+using Microsoft.OData.Edm;
+using Microsoft.OData.UriParser;
+using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
 {
@@ -441,14 +439,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 ContainsTarget = true
             });
 
-            var container = new EdmEntityContainer("Namespace", "Container");
-            EntitySet = container.AddEntitySet("EntitySet", EntityType);
+            var entityContainer = new EdmEntityContainer("Namespace", "Container");
+            EntitySet = entityContainer.AddEntitySet("EntitySet", EntityType);
 
             EntitySet.AddNavigationTarget(deferredNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(expandedNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(navLinkDeclaredOnlyInModelProp, EntitySet);
 
-            AnotherEntitySet = container.AddEntitySet("AnotherEntitySet", AnotherEntityType);
+            AnotherEntitySet = entityContainer.AddEntitySet("AnotherEntitySet", AnotherEntityType);
 
             Model = new EdmModel();
             Model.AddElement(Gender);
@@ -456,56 +454,56 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             Model.AddElement(DerivedType);
             Model.AddElement(AnotherEntityType);
             Model.AddElement(EnumAsKeyEntityType);
-            Model.AddElement(container);
+            Model.AddElement(entityContainer);
             Model.SetOptimisticConcurrencyAnnotation(EntitySet, new[] { nameProperty });
 
             var alwaysBindableAction1 = new EdmAction("Namespace", "AlwaysBindableAction1", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             alwaysBindableAction1.AddParameter(new EdmOperationParameter(alwaysBindableAction1, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(alwaysBindableAction1);
-            var alwaysBindableActionImport1 = new EdmActionImport(container, "AlwaysBindableAction1", alwaysBindableAction1);
-            container.AddElement(alwaysBindableActionImport1);
+            var alwaysBindableActionImport1 = new EdmActionImport(entityContainer, "AlwaysBindableAction1", alwaysBindableAction1);
+            entityContainer.AddElement(alwaysBindableActionImport1);
 
             var alwaysBindableAction2 = new EdmAction("Namespace", "AlwaysBindableAction2", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             alwaysBindableAction2.AddParameter(new EdmOperationParameter(alwaysBindableAction2, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(alwaysBindableAction2);
-            var alwaysBindableActionImport2 = new EdmActionImport(container, "AlwaysBindableAction2", alwaysBindableAction2);
-            container.AddElement(alwaysBindableActionImport2);
+            var alwaysBindableActionImport2 = new EdmActionImport(entityContainer, "AlwaysBindableAction2", alwaysBindableAction2);
+            entityContainer.AddElement(alwaysBindableActionImport2);
 
             var action1 = new EdmAction("Namespace", "Action1", null /*returnType*/, false /*isBound*/, null /*entitySetPath*/);
             action1.AddParameter(new EdmOperationParameter(action1, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(action1);
-            var actionImport1 = new EdmActionImport(container, "Action1", action1);
-            container.AddElement(actionImport1);
+            var actionImport1 = new EdmActionImport(entityContainer, "Action1", action1);
+            entityContainer.AddElement(actionImport1);
 
             var action2 = new EdmAction("Namespace", "Action1", null /*returnType*/, false /*isBound*/, null /*entitySetPath*/);
             action2.AddParameter(new EdmOperationParameter(action2, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(action2);
-            var actionImport2 = new EdmActionImport(container, "Action1", action2);
-            container.AddElement(actionImport2);
+            var actionImport2 = new EdmActionImport(entityContainer, "Action1", action2);
+            entityContainer.AddElement(actionImport2);
 
             var alwaysBindableFunction1 = new EdmFunction("Namespace", "AlwaysBindableFunction1", EdmCoreModel.Instance.GetString(isNullable: true), true /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             alwaysBindableFunction1.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(alwaysBindableFunction1);
-            var alwaysBindableFunctionImport1 = new EdmFunctionImport(container, "AlwaysBindableFunction1", alwaysBindableFunction1);
-            container.AddElement(alwaysBindableFunctionImport1);
+            var alwaysBindableFunctionImport1 = new EdmFunctionImport(entityContainer, "AlwaysBindableFunction1", alwaysBindableFunction1);
+            entityContainer.AddElement(alwaysBindableFunctionImport1);
 
             var alwaysBindableFunction2 = new EdmFunction("Namespace", "AlwaysBindableFunction2", EdmCoreModel.Instance.GetString(isNullable: true), true /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             alwaysBindableFunction2.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(alwaysBindableFunction2);
-            var alwaysBindableFunctionImport2 = new EdmFunctionImport(container, "AlwaysBindableFunction2", alwaysBindableFunction2);
-            container.AddElement(alwaysBindableFunctionImport2);
+            var alwaysBindableFunctionImport2 = new EdmFunctionImport(entityContainer, "AlwaysBindableFunction2", alwaysBindableFunction2);
+            entityContainer.AddElement(alwaysBindableFunctionImport2);
 
             var function1 = new EdmFunction("Namespace", "Function1", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             function1.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function1);
-            var functionImport1 = new EdmFunctionImport(container, "Function1", function1);
-            container.AddElement(functionImport1);
+            var functionImport1 = new EdmFunctionImport(entityContainer, "Function1", function1);
+            entityContainer.AddElement(functionImport1);
 
             var function2 = new EdmFunction("Namespace", "Function2", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             function2.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function2);
-            var functionImport2 = new EdmFunctionImport(container, "Function2", function2);
-            container.AddElement(functionImport2);
+            var functionImport2 = new EdmFunctionImport(entityContainer, "Function2", function2);
+            entityContainer.AddElement(functionImport2);
 
             var function3 = new EdmFunction("Namespace", "Function3", new EdmEntityTypeReference(EntityType, false), true /*isBound*/, new EdmPathExpression("p/ContainedNonCollectionNavProp"), false /*iscomposable*/);
             function3.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
@@ -550,10 +548,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 ContainsTarget = true
             });
 
-            var container = new EdmEntityContainer("NS", "Container");
-            var entitySet = container.AddEntitySet("EntitySet", entityType);
+            var serviceProvider = new EdmEntityContainer("NS", "Container");
+            var entitySet = serviceProvider.AddEntitySet("EntitySet", entityType);
 
-            model.AddElements(new IEdmSchemaElement[] { entityType, nestedEntityType, container });
+            model.AddElements(new IEdmSchemaElement[] { entityType, nestedEntityType, serviceProvider });
 
             // setup writer
             string str;
@@ -671,9 +669,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
             entityType.AddKeys(
                 entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.Int64));
-            var container = new EdmEntityContainer("NS", "Container");
-            var entitySet = container.AddEntitySet("EntitySet", entityType);
-            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, container });
+            var serviceProvider = new EdmEntityContainer("NS", "Container");
+            var entitySet = serviceProvider.AddEntitySet("EntitySet", entityType);
+            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, serviceProvider });
 
             // setup writer
             var stream = new MemoryStream();
@@ -790,9 +788,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             var entityType = new EdmEntityType("NS", "EntityType", null, false, true);
             entityType.AddKeys(
                 entityType.AddStructuralProperty("PrimitiveProperty", EdmPrimitiveTypeKind.Int64));
-            var container = new EdmEntityContainer("NS", "Container");
-            var entitySet = container.AddEntitySet("EntitySet", entityType);
-            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, container });
+            var serviceProvider = new EdmEntityContainer("NS", "Container");
+            var entitySet = serviceProvider.AddEntitySet("EntitySet", entityType);
+            model.AddElements(new IEdmSchemaElement[] { complexType, entityType, serviceProvider });
 
             // setup writer
             var stream = new MemoryStream();
@@ -1161,9 +1159,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 TargetMultiplicity = EdmMultiplicity.Many
             });
 
-            var container = new EdmEntityContainer("NS", "Container");
-            var customers = container.AddEntitySet("Customers", customer);
-            model.AddElement(container);
+            var serviceProvider = new EdmEntityContainer("NS", "Container");
+            var customers = serviceProvider.AddEntitySet("Customers", customer);
+            model.AddElement(serviceProvider);
 
             var message = new InMemoryMessage { Stream = stream };
             var settings = new ODataMessageWriterSettings
@@ -1343,9 +1341,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             customer.AddKeys(customer.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             // <Property Name="ComplexProperty" Type="Edm.ComplexType" />
             customer.AddStructuralProperty("ComplexProperty", EdmCoreModel.Instance.GetComplexType(true));
-            var container = new EdmEntityContainer("NS", "Container");
-            entitySet = container.AddEntitySet("Customers", customer);
-            model.AddElements(new IEdmSchemaElement[] { complexType, customer, container });
+            var serviceProvider = new EdmEntityContainer("NS", "Container");
+            entitySet = serviceProvider.AddEntitySet("Customers", customer);
+            model.AddElements(new IEdmSchemaElement[] { complexType, customer, serviceProvider });
 
             IEdmEntityType entityType = EdmCoreModel.Instance.GetEntityType();
             // <NavigationProperty Name="EntityProperty" Type="Edm.EntityType" />
@@ -1366,8 +1364,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void WritingContainedNavigationPropertyWithoutProvideKeyPropertyOnParentResourceWorks(string metadataLevel)
         {
             MemoryStream outputStream = new MemoryStream();
-            var container = ContainerBuilderHelper.BuildContainer(null);
-            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, ServiceProvider = serviceProvider };
 
             message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
             var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
@@ -1449,8 +1447,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public void WritingContainedNavigationPropertyWithKeyPropertyOnParentResourceWorks(string metadataLevel)
         {
             MemoryStream outputStream = new MemoryStream();
-            var container = ContainerBuilderHelper.BuildContainer(null);
-            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, ServiceProvider = serviceProvider };
 
             message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
             var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
@@ -1535,8 +1533,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         public async Task WritingContainedNavigationPropertyWithoutProvideKeyPropertyOnParentResourceSetWorks(string metadataLevel)
         {
             MemoryStream outputStream = new MemoryStream();
-            var container = ContainerBuilderHelper.BuildContainer(null);
-            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, ServiceProvider = serviceProvider };
 
             message.SetHeader("Content-Type", metadataLevel == "full" ? "application/json;odata.metadata=full" : "application/json");
             var queryOptions = new ODataQueryOptionParser(Model, EntityType, EntitySet,
@@ -3209,8 +3207,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         private string GetWriterOutputForContentTypeAndKnobValue(string contentType, bool autoComputePayloadMetadata, ODataItem[] itemsToWrite, EdmModel edmModel, IEdmEntitySetBase edmEntitySet, EdmEntityType edmEntityType, string selectClause = null, string expandClause = null, string resourcePath = null, bool enableWritingODataAnnotationWithoutPrefix = false)
         {
             MemoryStream outputStream = new MemoryStream();
-            var container = ContainerBuilderHelper.BuildContainer(null);
-            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, Container = container };
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+
+            serviceProvider.GetRequiredService<ODataMessageWriterSettings>().SetOmitODataPrefix(enableWritingODataAnnotationWithoutPrefix);
+            IODataResponseMessage message = new InMemoryMessage() { Stream = outputStream, ServiceProvider = serviceProvider };
 
             message.SetHeader("Content-Type", contentType);
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();

@@ -15,7 +15,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
     using System.Threading.Tasks;
     using Microsoft.OData;
 
-    class ODataResponseMessage : IODataResponseMessage, IContainerProvider
+    class ODataResponseMessage : IODataResponseMessage, IServiceCollectionProvider
     {
         private Stream stream;
 
@@ -125,6 +125,6 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             return completionSource.Task;
         }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }

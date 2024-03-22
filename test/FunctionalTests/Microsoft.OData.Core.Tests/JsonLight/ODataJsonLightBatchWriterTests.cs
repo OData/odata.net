@@ -11,11 +11,12 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Core.Tests.JsonLight
@@ -503,9 +504,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         [Fact]
         public async Task WriteBatchResponseAsync_WithStreamCopy_UsingODataUtf8JsonWriter()
         {
-            Action<IContainerBuilder> configureServices = (builder) =>
+            Action<IServiceCollection> configureServices = (builder) =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => ODataUtf8JsonWriterFactory.Default);
+                builder.AddSingleton<IJsonWriterFactory>(_ => ODataUtf8JsonWriterFactory.Default);
             };
 
             var result = await SetupJsonLightBatchWriterAndRunTestAsync(
@@ -1021,7 +1022,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         private async Task<string> SetupJsonLightBatchWriterAndRunTestAsync(
             Func<ODataJsonLightBatchWriter, Task> func,
             bool writingRequest = true,
-            Action<IContainerBuilder> configureServices = null)
+            Action<IServiceCollection> configureServices = null)
         {
             this.stream = new AsyncStream(this.stream);
             var jsonLightOutputContext = CreateJsonLightOutputContext(writingRequest, asynchronous: true, configureServices: configureServices);
@@ -1033,9 +1034,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
 
-        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = true, bool asynchronous = false, Action<IContainerBuilder> configureServices = null)
+        private ODataJsonLightOutputContext CreateJsonLightOutputContext(bool writingRequest = true, bool asynchronous = false, Action<IServiceCollection> configureServices = null)
         {
-            IServiceProvider container = configureServices == null ? null : CreateServiceProvider(configureServices);
+            IServiceProvider serviceProvider = configureServices == null ? null : CreateServiceProvider(configureServices);
 
             var messageInfo = new ODataMessageInfo
             {
@@ -1045,7 +1046,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 IsResponse = !writingRequest,
                 IsAsync = asynchronous,
                 Model = this.model,
-                Container = container,
+                ServiceProvider = serviceProvider,
             };
 
             return new ODataJsonLightOutputContext(messageInfo, this.settings);
@@ -1133,12 +1134,9 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             return stream;
         }
 
-        private static IServiceProvider CreateServiceProvider(Action<IContainerBuilder> configureServices)
+        private static IServiceProvider CreateServiceProvider(Action<IServiceCollection> configureServices)
         {
-            TestContainerBuilder containerBuilder = new TestContainerBuilder();
-            containerBuilder.AddDefaultODataServices();
-            configureServices(containerBuilder);
-            return containerBuilder.BuildContainer();
+            return ServiceProviderHelper.BuildServiceProvider(configureServices);
         }
 
         #endregion Helper Methods

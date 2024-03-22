@@ -10,11 +10,12 @@ using System.Collections.ObjectModel;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -553,9 +554,9 @@ namespace Microsoft.OData.Tests.JsonLight
         public async Task WriteSpatialCollectionPropertyForInjectedJsonWriterFactoryAsync()
         {
             var messageInfo = CreateMessageInfo(this.model, /*synchronous*/ true, /*writingResponse*/ true);
-            messageInfo.Container = ContainerBuilderHelper.BuildContainer(builder =>
+            messageInfo.ServiceProvider = ServiceProviderHelper.BuildServiceProvider(builder =>
             {
-                builder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, _ => new DefaultJsonWriterFactory());
+                builder.AddSingleton<IJsonWriterFactory>(_ => new DefaultJsonWriterFactory());
             });
 
             var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);

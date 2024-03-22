@@ -9,9 +9,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.Tests.JsonLight;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.Test.OData.DependencyInjection;
+using Microsoft.OData.Tests.JsonLight;
 using Xunit;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -970,9 +971,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             ODataResource entry = null;
-            var diContainer = ContainerBuilderHelper.BuildContainer(
-                builder => builder.AddService<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>(ServiceLifetime.Singleton));
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, container: diContainer);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(
+                builder => builder.AddSingleton<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>());
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, serviceProvider: serviceProvider);
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -1117,10 +1118,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType,
-            Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null,
+            Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider serviceProvider = null,
             bool enablePropertyCaseInsensitive = false, bool readUntypedAsString = true)
         {
-            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), Container = container};
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), ServiceProvider = serviceProvider };
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";

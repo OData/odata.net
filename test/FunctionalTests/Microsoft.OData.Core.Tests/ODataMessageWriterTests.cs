@@ -8,14 +8,14 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Json;
-using Microsoft.Test.OData.DependencyInjection;
 using Microsoft.OData.UriParser;
-using Xunit;
-using System.Xml;
+using Microsoft.Test.OData.DependencyInjection;
+using Xunit;using System.Xml;
 #if NETCOREAPP
 using System.Text.Json;
 #endif
@@ -121,10 +121,12 @@ namespace Microsoft.OData.Tests
 
             if (stringEscapeOption != null)
             {
-                var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
-                containerBuilder.AddDefaultODataServices();
-                containerBuilder.AddService(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
-                request.Container = containerBuilder.BuildContainer();
+                IServiceProvider container = CreateTestServiceContainer(services =>
+                {
+                    services.AddSingleton(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                });
+
+                request.ServiceProvider = container;
             }
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
@@ -147,9 +149,8 @@ namespace Microsoft.OData.Tests
         public void WriteTopLevelStringPropertyWithStringEscapeOnlyControlsOptionShouldWork()
         {
             var settings = new ODataMessageWriterSettings();
-            var containerBuilder = new Test.OData.DependencyInjection.TestContainerBuilder();
-            containerBuilder.AddDefaultODataServices();
-            containerBuilder.AddService<IJsonWriterFactory>(ServiceLifetime.Singleton, sp => new DefaultJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
+            IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
+            services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);
@@ -157,7 +158,7 @@ namespace Microsoft.OData.Tests
             IODataRequestMessage request = new InMemoryMessage()
             {
                 Stream = new MemoryStream(),
-                Container = containerBuilder.BuildContainer()
+                ServiceProvider = services.BuildServiceProvider()
             };
             var writer = new ODataMessageWriter(request, settings, model);
             Action write = () => writer.WriteProperty(new ODataProperty()
@@ -217,11 +218,10 @@ namespace Microsoft.OData.Tests
                 configureServices: (containerBuilder) =>
                 {
                     containerBuilder.AddDefaultODataServices();
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => ODataUtf8JsonWriterFactory.Default);
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
-            IJsonWriterFactory factory = request.Container.GetService<IJsonWriterFactory>();
+            IJsonWriterFactory factory = request.ServiceProvider.GetService<IJsonWriterFactory>();
             Assert.IsType<ODataUtf8JsonWriterFactory>(factory);
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
         }
@@ -252,8 +252,7 @@ namespace Microsoft.OData.Tests
                 encoding: Encoding.GetEncoding(encodingCharset),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => writerFactory);
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => writerFactory);
                 });
 
             // Assert
@@ -273,13 +272,12 @@ namespace Microsoft.OData.Tests
 
             IServiceProvider container = CreateTestServiceContainer(containerBuilder =>
             {
-                containerBuilder.AddService<IJsonWriterFactory>(
-                    ServiceLifetime.Singleton, sp => new MockJsonWriterFactory(null));
+                containerBuilder.AddSingleton<IJsonWriterFactory>(new MockJsonWriterFactory(null));
             });
 
-            request.Container = container;
+            request.ServiceProvider = container;
 
-            IJsonWriterFactory factory = request.Container.GetService<IJsonWriterFactory>();
+            IJsonWriterFactory factory = request.ServiceProvider.GetService<IJsonWriterFactory>();
             Assert.IsType<MockJsonWriterFactory>(factory);
 
             settings.ODataUri.ServiceRoot = new Uri("http://www.example.com");
@@ -309,8 +307,7 @@ namespace Microsoft.OData.Tests
                 }),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => ODataUtf8JsonWriterFactory.Default);
+                    containerBuilder.AddSingleton<IJsonWriterFactory>( sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
@@ -342,8 +339,7 @@ namespace Microsoft.OData.Tests
                 encoding: Encoding.GetEncoding(encodingCharset),
                 configureServices: (containerBuilder) =>
                 {
-                    containerBuilder.AddService<IJsonWriterFactory>(
-                        ServiceLifetime.Singleton, sp => writerFactory);
+                    containerBuilder.AddSingleton<IJsonWriterFactory>(sp => writerFactory);
                 });
 
             // Assert
@@ -1064,7 +1060,7 @@ namespace Microsoft.OData.Tests
             Action<ODataMessageWriter> test,
             InMemoryMessage message = null,
             Encoding encoding = null,
-            Action<IContainerBuilder> configureServices = null,
+            Action<IServiceCollection> configureServices = null,
             ODataPath path = null)
         {
             message = message ?? new InMemoryMessage() { Stream = new MemoryStream() };
@@ -1077,7 +1073,7 @@ namespace Microsoft.OData.Tests
             if (configureServices != null)
             {
                 IServiceProvider container = CreateTestServiceContainer(configureServices);
-                message.Container = container;
+                message.ServiceProvider = container;
             }
 
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
@@ -1140,7 +1136,7 @@ namespace Microsoft.OData.Tests
             Func<ODataMessageWriter, Task> test,
             InMemoryMessage message = null,
             Encoding encoding = null,
-            Action<IContainerBuilder> configureServices = null,
+            Action<IServiceCollection> configureServices = null,
             ODataPath path = null,
             bool allowSyncIO = false)
         {
@@ -1162,7 +1158,7 @@ namespace Microsoft.OData.Tests
             if (configureServices != null)
             {
                 IServiceProvider container = CreateTestServiceContainer(configureServices);
-                message.Container = container;
+                message.ServiceProvider = container;
             }
 
             ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
@@ -1209,14 +1205,14 @@ namespace Microsoft.OData.Tests
             }
         }
 
-        private static IServiceProvider CreateTestServiceContainer(Action<IContainerBuilder> configureServices)
+        private static IServiceProvider CreateTestServiceContainer(Action<IServiceCollection> configureServices)
         {
-            IContainerBuilder builder = new TestContainerBuilder();
-            builder.AddDefaultODataServices();
+            IServiceCollection services = new ServiceCollection();
+            services.AddDefaultODataServices();
 
-            configureServices.Invoke(builder);
+            configureServices?.Invoke(services);
 
-            return builder.BuildContainer();
+            return services.BuildServiceProvider();
         }
     }
 }

@@ -14,6 +14,7 @@ namespace Microsoft.OData
     using System.IO;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
     #endregion Namespaces
@@ -43,7 +44,7 @@ namespace Microsoft.OData
         private readonly IODataPayloadUriConverter payloadUriConverter;
 
         /// <summary>The optional dependency injection container to get related services for message writing.</summary>
-        private readonly IServiceProvider container;
+        private readonly IServiceProvider serviceProvider;
 
         /// <summary>The media type resolver to use when interpreting the incoming content type.</summary>
         private readonly ODataMediaTypeResolver mediaTypeResolver;
@@ -105,12 +106,12 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            this.container = GetContainer(requestMessage);
-            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
+            this.serviceProvider = GetServiceProvider(requestMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.serviceProvider, settings);
             this.writingResponse = false;
             this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
-            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
-            this.model = model ?? GetModel(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.serviceProvider);
+            this.model = model ?? GetModel(this.serviceProvider);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
@@ -144,12 +145,12 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            this.container = GetContainer(responseMessage);
-            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.container, settings);
+            this.serviceProvider = GetServiceProvider(responseMessage);
+            this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.serviceProvider, settings);
             this.writingResponse = true;
             this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
-            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.container);
-            this.model = model ?? GetModel(this.container);
+            this.mediaTypeResolver = ODataMediaTypeResolver.GetMediaTypeResolver(this.serviceProvider);
+            this.model = model ?? GetModel(this.serviceProvider);
             WriterValidationUtils.ValidateMessageWriterSettings(this.settings, this.writingResponse);
             this.message = new ODataResponseMessage(responseMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
@@ -748,11 +749,10 @@ namespace Microsoft.OData
             return this.format;
         }
 
-        private static IServiceProvider GetContainer<T>(T message)
+        private static IServiceProvider GetServiceProvider<T>(T message)
             where T : class
         {
-            var containerProvider = message as IContainerProvider;
-            return containerProvider == null ? null : containerProvider.Container;
+            return (message as IServiceCollectionProvider)?.ServiceProvider;
         }
 
         private static IEdmModel GetModel(IServiceProvider container)
@@ -1227,13 +1227,13 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.container == null)
+                if (this.serviceProvider == null)
                 {
                     this.messageInfo = new ODataMessageInfo();
                 }
                 else
                 {
-                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
+                    this.messageInfo = this.serviceProvider.GetRequiredService<ODataMessageInfo>();
                 }
 
                 this.messageInfo.Encoding = this.encoding;
@@ -1242,7 +1242,7 @@ namespace Microsoft.OData
                 this.messageInfo.MediaType = this.mediaType;
                 this.messageInfo.Model = this.model;
                 this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.Container = this.container;
+                this.messageInfo.ServiceProvider = this.serviceProvider;
                 this.messageInfo.MessageStream = messageStream;
             }
 

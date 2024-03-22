@@ -9,15 +9,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
-using Microsoft.Test.OData.DependencyInjection;
-using Microsoft.Test.OData.Utils.ODataLibTest;
-using Xunit;
 #if NETCOREAPP
 using System.Text.Json;
 #endif
+using System.Threading.Tasks;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
+using Microsoft.Test.OData.Utils.ODataLibTest;
+using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
@@ -32,7 +33,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void InjectCustomJsonWriter()
         {
-            RunWriterTest(builder => builder.AddService<IJsonWriterFactory, TestJsonWriterFactory>(ServiceLifetime.Transient),
+            RunWriterTest(builder => builder.AddTransient<IJsonWriterFactory, TestJsonWriterFactory>(),
                 "<\"@context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\",>");
         }
 
@@ -98,11 +99,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         [Fact]
         public void InjectCustomJsonReader()
         {
-            RunReaderTest(builder => builder.AddService<IJsonReaderFactory, TestJsonReaderFactory>(ServiceLifetime.Transient),
+            RunReaderTest(builder => builder.AddTransient<IJsonReaderFactory, TestJsonReaderFactory>(),
                 "<\"@context\":\"http://test/$metadata#People/$entity\",\"PersonId\":999,\"Name\":\"Jack\",>");
         }
 
-        private static void RunWriterTest(Action<IContainerBuilder> action, string expectedOutput)
+        private static void RunWriterTest(Action<IServiceCollection> action, string expectedOutput)
         {
             var resource = new ODataResource
             {
@@ -115,24 +116,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ContainerBuilderHelper.BuildContainer(action);
-            var output = GetWriterOutput(resource, model, entitySet, entityType, container);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
+            var output = GetWriterOutput(resource, model, entitySet, entityType, serviceProvider);
             Assert.Equal(expectedOutput, output);
         }
 
-        private static void RunReaderTest(Action<IContainerBuilder> action, string messageContent)
+        private static void RunReaderTest(Action<IServiceCollection> action, string messageContent)
         {
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ContainerBuilderHelper.BuildContainer(action);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
 
             var readerSettings = new ODataMessageReaderSettings
             {
                 EnableReadingODataAnnotationWithoutPrefix = true
             };
 
-            var resource = GetReadedResource(messageContent, model, entitySet, entityType, container, readerSettings);
+            var resource = GetReadedResource(messageContent, model, entitySet, entityType, serviceProvider, readerSettings);
+
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
             Assert.Equal(999, propertyList[0].Value);
@@ -140,14 +142,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             Assert.Equal("Jack", propertyList[1].Value);
         }
 
-        private static Dictionary<string, IEnumerable<ODataProperty>> RunComplexReaderTest(Action<IContainerBuilder> action, string messageContent)
+        private static Dictionary<string, IEnumerable<ODataProperty>> RunComplexReaderTest(Action<IServiceCollection> action, string messageContent)
         {
             var model = GetModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("DefaultNs.Person");
-            var container = ContainerBuilderHelper.BuildContainer(action);
-            container.GetRequiredService<ODataMessageReaderSettings>().EnableReadingODataAnnotationWithoutPrefix = true;
-            var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, container);
+
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
+            serviceProvider.GetRequiredService<ODataMessageReaderSettings>().EnableReadingODataAnnotationWithoutPrefix = true;
+
+            var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, serviceProvider);
 
             var resourceDict = new Dictionary<string, IEnumerable<ODataProperty>>();
 
@@ -291,7 +295,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             IODataResponseMessage message = new InMemoryMessage
             {
                 Stream = outputStream,
-                Container = container
+                ServiceProvider = container
             };
             message.SetHeader("Content-Type", "application/json");
             var settings = new ODataMessageWriterSettings();
@@ -318,7 +322,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             IODataResponseMessage message = new InMemoryMessage
             {
                 Stream = outputStream,
-                Container = container
+                ServiceProvider = container
             };
             message.SetHeader("Content-Type", "application/json");
 
@@ -341,7 +345,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             IODataResponseMessage message = new InMemoryMessage
             {
                 Stream = outputStream,
-                Container = container
+                ServiceProvider = container
             };
             message.SetHeader("Content-Type", "application/json;odata.metadata=full");
 

@@ -7,7 +7,7 @@
 namespace Microsoft.OData.UriParser
 {
     using System;
-    using System.Collections.Generic;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Edm;
 
     /// <summary>

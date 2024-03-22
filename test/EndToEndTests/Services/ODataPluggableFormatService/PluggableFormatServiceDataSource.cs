@@ -7,6 +7,7 @@
 namespace Microsoft.Test.OData.Services.PluggableFormat
 {
     using System.Collections.Generic;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.PluggableFormat;
@@ -118,10 +119,10 @@ namespace Microsoft.Test.OData.Services.PluggableFormat
             return TestHelper.GetModel("Microsoft.Test.OData.Services.PluggableFormat.Csdl.PluggableFormat.xml");
         }
 
-        protected override void ConfigureContainer(IContainerBuilder builder)
+        protected override void ConfigureContainer(IServiceCollection serviceCollection)
         {
-            base.ConfigureContainer(builder);
-            builder.AddService<ODataMediaTypeResolver, PluggableFormatResolver>(ServiceLifetime.Singleton);
+            base.ConfigureContainer(serviceCollection);
+            serviceCollection.AddSingleton<ODataMediaTypeResolver, PluggableFormatResolver>();
         }
     }
 }

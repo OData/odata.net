@@ -8,8 +8,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
@@ -165,15 +165,18 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         private static ODataMessageReader CreateODataMessageReader(string payload, string contentType, bool isResponse, bool shouldReadAndValidateCustomInstanceAnnotations, bool enableReadingODataAnnotationWithoutPrefix = false)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes(payload));
-            var readerSettings = new ODataMessageReaderSettings {
+
+            var readerSettings = new ODataMessageReaderSettings 
+            { 
                 EnableMessageStreamDisposal = false,
                 EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix
             };
-            var container = ContainerBuilderHelper.BuildContainer(null);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+
             ODataMessageReader messageReader;
             if (isResponse)
             {
-                IODataResponseMessage responseMessage = new InMemoryMessage { StatusCode = 200, Stream = stream, Container = container };
+                IODataResponseMessage responseMessage = new InMemoryMessage { StatusCode = 200, Stream = stream, ServiceProvider = serviceProvider };
                 responseMessage.SetHeader("Content-Type", contentType);
                 if (shouldReadAndValidateCustomInstanceAnnotations)
                 {
@@ -184,7 +187,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             }
             else
             {
-                IODataRequestMessage requestMessage = new InMemoryMessage { Method = "GET", Stream = stream, Container = container };
+                IODataRequestMessage requestMessage = new InMemoryMessage { Method = "GET", Stream = stream, ServiceProvider = serviceProvider };
                 requestMessage.SetHeader("Content-Type", contentType);
                 readerSettings.ShouldIncludeAnnotation = shouldReadAndValidateCustomInstanceAnnotations ? ODataUtils.CreateAnnotationFilter("*") : null;
                 messageReader = new ODataMessageReader(requestMessage, readerSettings, Model);

@@ -6,8 +6,9 @@
 
 using System;
 using System.IO;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
@@ -88,8 +89,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             var settings = new ODataMessageWriterSettings { EnableWritingKeyAsSegment = useKeyAsSegment };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
             var outputStream = new MemoryStream();
-            var container = ContainerBuilderHelper.BuildContainer(null);
-            var responseMessage = new InMemoryMessage { Stream = outputStream, Container = container };
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            serviceProvider.GetRequiredService<ODataMessageWriterSettings>().EnableWritingKeyAsSegment = useKeyAsSegment;
+
+            var responseMessage = new InMemoryMessage { Stream = outputStream, ServiceProvider = serviceProvider };
             responseMessage.SetHeader("Content-Type", "application/json;odata.metadata=full");
             string output;
 

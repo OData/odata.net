@@ -10,6 +10,7 @@ namespace Microsoft.OData
 {
     #region Namespaces
     using System;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.UriParser;
     #endregion Namespaces

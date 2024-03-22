@@ -103,7 +103,7 @@ namespace Microsoft.Test.OData.PluggableFormat
            IEdmModel model = null,
            bool isResponse = false)
         {
-            var message = new InMemoryMessage { Stream = stream, Container = container };
+            var message = new InMemoryMessage { Stream = stream, ServiceProvider = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageReaderSettings()
             {
@@ -130,7 +130,7 @@ namespace Microsoft.Test.OData.PluggableFormat
            IEdmModel model = null,
            bool isResponse = true)
         {
-            var message = new InMemoryMessage { Stream = stream, Container = container };
+            var message = new InMemoryMessage { Stream = stream, ServiceProvider = container };
             message.SetHeader("Content-Type", contenttype);
             var messageSettings = new ODataMessageWriterSettings
             {

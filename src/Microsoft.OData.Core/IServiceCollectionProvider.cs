@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="IContainerProvider.cs" company="Microsoft">
+// <copyright file="IServiceCollectionProvider.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,14 +9,14 @@ using System;
 namespace Microsoft.OData
 {
     /// <summary>
-    /// An interface that provides a dependency injection container.
+    /// An interface that provides a dependency injection <see cref="IServiceProvider"./>
     /// </summary>
-    public interface IContainerProvider
+    public interface IServiceCollectionProvider
     {
         /// <summary>
-        /// Gets a container which implements <see cref="IServiceProvider"/> and contains
+        /// Gets a <see cref="IServiceProvider"/> that contains
         /// all the services registered.
         /// </summary>
-        IServiceProvider Container { get; }
+        IServiceProvider ServiceProvider { get; }
     }
 }

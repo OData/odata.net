@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Message representing an operation in a batch response.
     /// </summary>
-    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IContainerProvider
+    public sealed class ODataBatchOperationResponseMessage : IODataResponseMessageAsync, IODataPayloadUriConverter, IServiceCollectionProvider
     {
         /// <summary>The Content-ID for this response message.</summary>
         public readonly string ContentId;
@@ -42,7 +42,7 @@ namespace Microsoft.OData
         /// <param name="contentId">The content-ID for the operation response message.</param>
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
+        /// <param name="serviceProvider">The dependency injection service provider.</param>
         /// <param name="groupId">Value for the group id that corresponding request belongs to. Can be null.</param>
         internal ODataBatchOperationResponseMessage(
             Func<Stream> contentStreamCreatorFunc,
@@ -51,7 +51,7 @@ namespace Microsoft.OData
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
-            IServiceProvider container,
+            IServiceProvider serviceProvider,
             string groupId)
         {
             Debug.Assert(contentStreamCreatorFunc != null, "contentStreamCreatorFunc != null");
@@ -59,7 +59,7 @@ namespace Microsoft.OData
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
             this.ContentId = contentId;
-            this.Container = container;
+            this.ServiceProvider = serviceProvider;
             this.GroupId = groupId;
         }
 
@@ -87,9 +87,9 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// The dependency injection container to get related services.
+        /// The dependency injection service provider to get related services.
         /// </summary>
-        public IServiceProvider Container { get; private set; }
+        public IServiceProvider ServiceProvider { get; private set; }
 
         /// <summary>
         /// The id of the group or change set that this response message is part of.

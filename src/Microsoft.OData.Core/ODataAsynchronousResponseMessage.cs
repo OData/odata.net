@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Representing the message of a non-batch async response.
     /// </summary>
-    public sealed class ODataAsynchronousResponseMessage : IContainerProvider,
+    public sealed class ODataAsynchronousResponseMessage : IServiceCollectionProvider,
 
         IODataResponseMessageAsync
     {
@@ -139,7 +139,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The dependency injection container to get related services.
         /// </summary>
-        public IServiceProvider Container
+        public IServiceProvider ServiceProvider
         {
             get { return this.container; }
         }

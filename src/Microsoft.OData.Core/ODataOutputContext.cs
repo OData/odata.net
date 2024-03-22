@@ -75,7 +75,7 @@ namespace Microsoft.OData
             this.synchronous = !messageInfo.IsAsync;
             this.model = messageInfo.Model ?? EdmCoreModel.Instance;
             this.payloadUriConverter = messageInfo.PayloadUriConverter;
-            this.container = messageInfo.Container;
+            this.container = messageInfo.ServiceProvider;
             this.edmTypeResolver = EdmTypeWriterResolver.Instance;
             this.payloadValueConverter = ODataPayloadValueConverter.GetPayloadValueConverter(this.container);
             this.writerValidator = messageWriterSettings.Validator;

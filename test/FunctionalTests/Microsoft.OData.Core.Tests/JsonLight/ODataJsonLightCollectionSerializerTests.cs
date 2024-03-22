@@ -203,7 +203,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 result);
         }
 
-        private ODataJsonLightCollectionSerializer CreateODataJsonLightCollectionSerializer(bool writingResponse, IServiceProvider container = null, bool isAsync = false, bool writingTopLevelCollection = false)
+        private ODataJsonLightCollectionSerializer CreateODataJsonLightCollectionSerializer(bool writingResponse, IServiceProvider serviceProvider = null, bool isAsync = false, bool writingTopLevelCollection = false)
         {
             var messageInfo = new ODataMessageInfo
             {
@@ -217,7 +217,7 @@ namespace Microsoft.OData.Tests.JsonLight
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = model,
-                Container = container
+                ServiceProvider = serviceProvider
             };
             var context = new ODataJsonLightOutputContext(messageInfo, this.settings);
             return new ODataJsonLightCollectionSerializer(context, writingTopLevelCollection);

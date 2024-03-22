@@ -14,15 +14,16 @@ using Microsoft.OData.JsonLight;
 using Microsoft.OData.Tests.JsonLight;
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
-using Microsoft.Test.OData.DependencyInjection;
 using Xunit;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Core.Tests.DependencyInjection;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
 {
     public class PrimitiveValuesRoundtripJsonLightTests
     {
         private EdmModel model;
-        private IServiceProvider container;
+        private IServiceProvider serviceProvider;
 
         public PrimitiveValuesRoundtripJsonLightTests()
         {
@@ -60,8 +61,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 Convert.ToBase64String(values[2])
             };
 
-            this.container = ContainerBuilderHelper.BuildContainer(
-                builder => builder.AddService<ODataPayloadValueConverter, BinaryFieldAsStringPrimitivePayloadValueConverter>(ServiceLifetime.Singleton));
+            this.serviceProvider = ServiceProviderHelper.BuildServiceProvider(
+                builder => builder.AddSingleton<ODataPayloadValueConverter, BinaryFieldAsStringPrimitivePayloadValueConverter>());
 
             this.VerifyPrimitiveValuesRoundtripWithTypeInformationAndWithExpectedValues(values, "Edm.Binary", expectedValues);
             this.VerifyPrimitiveValuesRoundtripWithTypeInformation(expectedValues, "Edm.Binary");
@@ -749,7 +750,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 IsResponse = true,
                 IsAsync = false,
                 Model = this.model,
-                Container = this.container
+                ServiceProvider = this.serviceProvider
             };
 
             using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
@@ -768,7 +769,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 IsAsync = false,
                 Model = this.model,
                 MessageStream = stream,
-                Container = this.container
+                ServiceProvider = this.serviceProvider
             };
 
             object actualValue;
@@ -809,7 +810,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 IsResponse = true,
                 IsAsync = false,
                 Model = this.model,
-                Container = this.container
+                ServiceProvider = this.serviceProvider
             };
 
             using (var outputContext = new ODataJsonLightOutputContext(messageInfoForWriter, settings))
@@ -829,7 +830,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.JsonLight
                 IsAsync = false,
                 Model = this.model,
                 MessageStream = stream,
-                Container = this.container
+                ServiceProvider = this.serviceProvider
             };
 
             object actualValue;

@@ -18,7 +18,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Message representing an operation in a batch request.
     /// </summary>
-    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessageAsync, IODataPayloadUriConverter, IContainerProvider
+    public sealed class ODataBatchOperationRequestMessage : IODataRequestMessageAsync, IODataPayloadUriConverter, IServiceCollectionProvider
     {
         /// <summary>
         /// The Content-ID for this request message.</summary>
@@ -56,7 +56,7 @@ namespace Microsoft.OData
         /// <param name="contentId">The content-ID for the operation request message.</param>
         /// <param name="payloadUriConverter">The optional URL converter to perform custom URL conversion for URLs written to the payload.</param>
         /// <param name="writing">true if the request message is being written; false when it is read.</param>
-        /// <param name="container">The dependency injection container to get related services.</param>
+        /// <param name="serviceProvider">The dependency injection service provider.</param>
         /// <param name="dependsOnIds">
         /// Request or group Ids that current request has dependency on. Values are added to a new list.
         /// Empty list will be created if value is null.
@@ -71,7 +71,7 @@ namespace Microsoft.OData
             string contentId,
             IODataPayloadUriConverter payloadUriConverter,
             bool writing,
-            IServiceProvider container,
+            IServiceProvider serviceProvider,
             IEnumerable<string> dependsOnIds,
             string groupId)
         {
@@ -85,7 +85,7 @@ namespace Microsoft.OData
             this.groupId = groupId;
 
             this.message = new ODataBatchOperationMessage(contentStreamCreatorFunc, headers, operationListener, payloadUriConverter, writing);
-            this.Container = container;
+            this.ServiceProvider = serviceProvider;
 
             this.dependsOnIds = dependsOnIds == null
                 ? new List<string>()
@@ -118,7 +118,7 @@ namespace Microsoft.OData
         /// <summary>
         /// The dependency injection container to get related services.
         /// </summary>
-        public IServiceProvider Container { get; private set; }
+        public IServiceProvider ServiceProvider { get; private set; }
 
         /// <summary>
         /// The Group Id for this request message. Can be null.
