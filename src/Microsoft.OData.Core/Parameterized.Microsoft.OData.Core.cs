@@ -7514,6 +7514,14 @@ namespace Microsoft.OData {
             return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ServiceProviderExtensions_NoServiceRegistered, p0);
         }
 
+        /// <summary>
+        /// A string like "The value '{0}' is not a qualified type name. A qualified type name is expected."
+        /// </summary>
+        internal static string TypeUtils_TypeNameIsNotQualified(object p0)
+        {
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.TypeUtils_TypeNameIsNotQualified, p0);
+        }
+
     }
 
     /// <summary>
