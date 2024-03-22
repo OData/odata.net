@@ -1962,9 +1962,10 @@ Microsoft.OData.UriParser.WildcardSelectItem.WildcardSelectItem() -> void
 Microsoft.OData.ValidationKinds
 Microsoft.OData.ValidationKinds.All = -1 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.ValidationKinds.None = 0 -> Microsoft.OData.ValidationKinds
-Microsoft.OData.ValidationKinds.ThrowIfTypeConflictsWithMetadata = 4 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.ValidationKinds.ThrowOnDuplicatePropertyNames = 1 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType = 2 -> Microsoft.OData.ValidationKinds
+Microsoft.OData.ValidationKinds.ThrowIfTypeConflictsWithMetadata = 4 -> Microsoft.OData.ValidationKinds
+Microsoft.OData.ValidationKinds.ThrowIfMissingContentIdInChangeset = 8 -> Microsoft.OData.ValidationKinds
 override Microsoft.OData.HttpHeaderValueElement.ToString() -> string
 override Microsoft.OData.ODataError.ToString() -> string
 override Microsoft.OData.ODataStreamPropertyInfo.PrimitiveTypeKind.get -> Microsoft.OData.Edm.EdmPrimitiveTypeKind

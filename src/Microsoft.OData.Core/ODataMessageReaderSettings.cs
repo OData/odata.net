@@ -93,6 +93,7 @@ namespace Microsoft.OData
                 ThrowOnDuplicatePropertyNames = (validations & ValidationKinds.ThrowOnDuplicatePropertyNames) != 0;
                 ThrowIfTypeConflictsWithMetadata = (validations & ValidationKinds.ThrowIfTypeConflictsWithMetadata) != 0;
                 ThrowOnUndeclaredPropertyForNonOpenType = (validations & ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType) != 0;
+                ThrowIfMissingContentIdInChangeset = (validations & ValidationKinds.ThrowIfMissingContentIdInChangeset) != 0;
             }
         }
 
@@ -236,6 +237,12 @@ namespace Microsoft.OData
         internal bool ThrowOnUndeclaredPropertyForNonOpenType { get; private set; }
 
         /// <summary>
+        /// Require Content-Id header in changesets
+        /// If turned off allows to read OData 2.0 requests without Content-Id header present.
+        /// </summary>
+        internal bool ThrowIfMissingContentIdInChangeset { get; private set; }
+
+        /// <summary>
         /// Creates a shallow copy of this <see cref="ODataMessageReaderSettings"/>.
         /// </summary>
         /// <returns>A shallow copy of this <see cref="ODataMessageReaderSettings"/>.</returns>
@@ -296,6 +303,7 @@ namespace Microsoft.OData
             this.ThrowOnDuplicatePropertyNames = other.ThrowOnDuplicatePropertyNames;
             this.ThrowIfTypeConflictsWithMetadata = other.ThrowIfTypeConflictsWithMetadata;
             this.ThrowOnUndeclaredPropertyForNonOpenType = other.ThrowOnUndeclaredPropertyForNonOpenType;
+            this.ThrowIfMissingContentIdInChangeset = other.ThrowIfMissingContentIdInChangeset;
             this.LibraryCompatibility = other.LibraryCompatibility;
             this.Version = other.Version;
             this.ReadAsStreamFunc = other.ReadAsStreamFunc;

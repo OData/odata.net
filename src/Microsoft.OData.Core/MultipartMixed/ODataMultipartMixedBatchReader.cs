@@ -34,18 +34,26 @@ namespace Microsoft.OData.MultipartMixed
         private string currentContentId;
 
         /// <summary>
+        /// Require Content-Id header in changesets
+        /// If turned off, it allows to reading OData 2.0 requests without Content-Id header present.
+        /// </summary>
+        private bool requireContentId = true;
+
+        /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="inputContext">The input context to read the content from.</param>
         /// <param name="batchBoundary">The boundary string for the batch structure itself.</param>
         /// <param name="batchEncoding">The encoding to use to read from the batch stream.</param>
         /// <param name="synchronous">true if the reader is created for synchronous operation; false for asynchronous.</param>
-        internal ODataMultipartMixedBatchReader(ODataMultipartMixedBatchInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous)
+        /// <param name="requireContentId">If turned off, it allows to reading OData 2.0 requests without Content-Id header present.</param>
+        internal ODataMultipartMixedBatchReader(ODataMultipartMixedBatchInputContext inputContext, string batchBoundary, Encoding batchEncoding, bool synchronous, bool requireContentId)
             : base(inputContext, synchronous)
         {
             Debug.Assert(inputContext != null, "inputContext != null");
             Debug.Assert(!string.IsNullOrEmpty(batchBoundary), "!string.IsNullOrEmpty(batchBoundary)");
 
+            this.requireContentId = requireContentId;
             this.batchStream = new ODataMultipartMixedBatchReaderStream(this.MultipartMixedBatchInputContext, batchBoundary, batchEncoding);
             this.dependsOnIdsTracker = new DependsOnIdsTracker();
         }
@@ -85,7 +93,14 @@ namespace Microsoft.OData.MultipartMixed
 
                     if (this.currentContentId == null)
                     {
-                        throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                        if (requireContentId)
+                        {
+                            throw new ODataException(Strings.ODataBatchOperationHeaderDictionary_KeyNotFound(ODataConstants.ContentIdHeader));
+                        }
+                        else
+                        {
+                            this.currentContentId = Guid.NewGuid().ToString();
+                        }
                     }
                 }
             }

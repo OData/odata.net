@@ -1,2 +1,3 @@
+Microsoft.OData.ValidationKinds.ThrowIfMissingContentIdInChangeset = 8 -> Microsoft.OData.ValidationKinds
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
 Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void

@@ -37,6 +37,12 @@ namespace Microsoft.OData
         ThrowIfTypeConflictsWithMetadata = 4,
 
         /// <summary>
+        /// Require Content-Id header in changesets
+        /// If turned off allows to read OData 2.0 requests without Content-Id header present.
+        /// </summary>
+        ThrowIfMissingContentIdInChangeset = 8,
+
+        /// <summary>
         /// Enable all validations.
         /// </summary>
         All = ~0

@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.MultipartMixed;
@@ -67,6 +68,37 @@ Accept: application/json;odata.metadata=minimal
 Accept-Charset: UTF-8
 
 {""@odata.id"":""$2""}
+--changeset_5e368128--
+--batch_aed653ab--
+";
+
+        private const string batchRequestPayloadWithoutContentId = @"--batch_aed653ab
+Content-Type: multipart/mixed; boundary=changeset_5e368128
+
+--changeset_5e368128
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://tempuri.org/Customers HTTP/1.1
+OData-Version: 4.0
+OData-MaxVersion: 4.0
+Content-Type: application/json;odata.metadata=minimal
+Accept: application/json;odata.metadata=minimal
+Accept-Charset: UTF-8
+
+{""@odata.type"":""NS.Customer"",""Id"":1,""Name"":""Sue""}
+--changeset_5e368128
+Content-Type: application/http
+Content-Transfer-Encoding: binary
+
+POST http://tempuri.org/Orders HTTP/1.1
+OData-Version: 4.0
+OData-MaxVersion: 4.0
+Content-Type: application/json;odata.metadata=minimal
+Accept: application/json;odata.metadata=minimal
+Accept-Charset: UTF-8
+
+{""@odata.type"":""NS.Order"",""Id"":1,""Amount"":13}
 --changeset_5e368128--
 --batch_aed653ab--
 ";
@@ -203,6 +235,77 @@ OData-Version: 4.0
             Assert.Empty(verifyUrlStack);
             Assert.Empty(verifyDependsOnIdsStack);
             Assert.Empty(verifyResourceStack);
+        }
+
+        [Fact]
+        public void ReadMultipartMixedBatchRequestWthoutContentId()
+        {
+            Assert.DoesNotContain("Content-ID", batchRequestPayloadWithoutContentId);
+
+            var verifyResourceStack = new Stack<Action<ODataResource>>();
+            verifyResourceStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Order", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Amount", properties[1].Name);
+                Assert.Equal(13M, properties[1].Value);
+            });
+            verifyResourceStack.Push((resource) =>
+            {
+                Assert.NotNull(resource);
+                Assert.Equal("NS.Customer", resource.TypeName);
+                var properties = resource.Properties.ToArray();
+                Assert.Equal(2, properties.Length);
+                Assert.Equal("Id", properties[0].Name);
+                Assert.Equal(1, properties[0].Value);
+                Assert.Equal("Name", properties[1].Name);
+                Assert.Equal("Sue", properties[1].Value);
+            });
+
+            SetupMultipartMixedBatchReaderAndRunTest(
+                batchRequestPayloadWithoutContentId,
+                (multipartMixedBatchReader) =>
+                {
+                    var operationCount = 0;
+
+                    while (multipartMixedBatchReader.Read())
+                    {
+                        switch (multipartMixedBatchReader.State)
+                        {
+                            case ODataBatchReaderState.Operation:
+                                var operationRequestMessage = multipartMixedBatchReader.CreateOperationRequestMessage();
+                                operationCount++;
+                                using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
+                                {
+                                    if (operationCount == 3)
+                                    {
+                                        var entityReferenceLink = messageReader.ReadEntityReferenceLink();
+                                    }
+                                    else
+                                    {
+                                        var jsonLightResourceReader = messageReader.CreateODataResourceReader();
+                                        while (jsonLightResourceReader.Read())
+                                        {
+                                            switch (jsonLightResourceReader.State)
+                                            {
+                                                case ODataReaderState.ResourceEnd:
+                                                    Assert.NotEmpty(verifyResourceStack);
+                                                    var innerVerifyResourceStack = verifyResourceStack.Pop();
+                                                    innerVerifyResourceStack(jsonLightResourceReader.Item as ODataResource);
+                                                    break;
+                                            }
+                                        }
+                                    }
+                                }
+                                break;
+                        }
+                    }
+                },
+                batchRequestBoundary);
         }
 
         [Fact]
@@ -704,7 +807,8 @@ OData-Version: 4.0
                 multipartMixedBatchInputContext,
                 batchBoundary,
                 MediaTypeUtils.EncodingUtf8NoPreamble,
-                synchronous: true);
+                synchronous: true,
+                requireContentId: false);
 
             action(multipartMixedBatchReader);
         }
@@ -726,7 +830,8 @@ OData-Version: 4.0
                 multipartMixedBatchInputContext,
                 batchBoundary,
                 MediaTypeUtils.EncodingUtf8NoPreamble,
-                synchronous: false);
+                synchronous: false,
+                requireContentId: false);
 
             await func(multipartMixedBatchReader);
         }
