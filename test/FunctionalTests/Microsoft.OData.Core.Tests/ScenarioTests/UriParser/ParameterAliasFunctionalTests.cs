@@ -419,11 +419,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         public void ParseFilter_AliasInFilterPathSegment_AliasAsFirstSegment()
         {
             Action parse = () => ParseUriAndVerify(
-                new Uri("http://gobbledygook/$filter(@p1)&@p1=true"),
+                new Uri("http://gobbledygook/$filter(@p1)?@p1=true"),
                 (oDataPath, filterClause, orderByClause, selectExpandClause, aliasNodes) =>
                 {
                 });
-            parse.Throws<ODataException>(Strings.RequestUriProcessor_SyntaxError);
+            parse.Throws<ODataUnrecognizedPathException>(Strings.RequestUriProcessor_FilterOnRoot);
         }
 
         [Fact]
