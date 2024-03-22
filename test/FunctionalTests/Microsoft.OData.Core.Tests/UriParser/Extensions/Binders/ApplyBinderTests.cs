@@ -757,6 +757,58 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             Assert.Equal(AggregationMethod.VirtualPropertyCount, aggExp.Method);
         }
 
+        [Fact]
+        public void BindApplyWithGroupByAndTypeCastShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((Fully.Qualified.Namespace.Employee/WorkEmail))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+
+            var transformation = Assert.Single(actual.Transformations);
+            GroupByTransformationNode groupBy = Assert.IsType<GroupByTransformationNode>(transformation);
+
+            Assert.Equal(TransformationNodeKind.GroupBy, groupBy.Kind);
+            Assert.Null(groupBy.ChildTransformations);
+            Assert.NotNull(groupBy.GroupingProperties);
+
+            GroupByPropertyNode workEmailNode = Assert.Single(groupBy.GroupingProperties);
+            Assert.NotNull(workEmailNode.Expression);
+            Assert.Empty(workEmailNode.ChildTransformations);
+        }
+
+        [Fact]
+        public void BindApplyWithGroupByComplexAndTypeCastShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/Fully.Qualified.Namespace.HomeAddress/HomeNO))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+
+            var transformation = Assert.Single(actual.Transformations);
+            GroupByTransformationNode groupBy = Assert.IsType<GroupByTransformationNode>(transformation);
+
+            Assert.Equal(TransformationNodeKind.GroupBy, groupBy.Kind);
+            Assert.Null(groupBy.ChildTransformations);
+            Assert.NotNull(groupBy.GroupingProperties);
+
+            GroupByPropertyNode addressNode = Assert.Single(groupBy.GroupingProperties);
+            Assert.Equal("MyAddress", addressNode.Name);
+            Assert.Null(addressNode.Expression);
+
+            GroupByPropertyNode homeNode = Assert.Single(addressNode.ChildTransformations);
+            Assert.NotNull(homeNode.Expression);
+            Assert.Empty(homeNode.ChildTransformations);
+        }
+
         private static ConstantNode _booleanPrimitiveNode = new ConstantNode(true);
 
         private static SingleValueNode BindMethodReturnsBooleanPrimitive(QueryToken token)
