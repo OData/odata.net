@@ -106,7 +106,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            this.serviceProvider = GetContainer(requestMessage);
+            this.serviceProvider = GetServiceProvider(requestMessage);
             this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.serviceProvider, settings);
             this.writingResponse = false;
             this.payloadUriConverter = requestMessage as IODataPayloadUriConverter;
@@ -145,7 +145,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            this.serviceProvider = GetContainer(responseMessage);
+            this.serviceProvider = GetServiceProvider(responseMessage);
             this.settings = ODataMessageWriterSettings.CreateWriterSettings(this.serviceProvider, settings);
             this.writingResponse = true;
             this.payloadUriConverter = responseMessage as IODataPayloadUriConverter;
@@ -749,11 +749,10 @@ namespace Microsoft.OData
             return this.format;
         }
 
-        private static IServiceProvider GetContainer<T>(T message)
+        private static IServiceProvider GetServiceProvider<T>(T message)
             where T : class
         {
-            var containerProvider = message as IServiceCollectionProvider;
-            return containerProvider == null ? null : containerProvider.ServiceProvider;
+            return (message as IServiceCollectionProvider)?.ServiceProvider;
         }
 
         private static IEdmModel GetModel(IServiceProvider container)

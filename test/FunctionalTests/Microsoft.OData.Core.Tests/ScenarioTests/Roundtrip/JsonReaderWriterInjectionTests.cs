@@ -116,8 +116,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ServiceProviderHelper.BuildServiceProvider(action);
-            var output = GetWriterOutput(resource, model, entitySet, entityType, container);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
+            var output = GetWriterOutput(resource, model, entitySet, entityType, serviceProvider);
             Assert.Equal(expectedOutput, output);
         }
 
@@ -126,14 +126,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var model = BuildModel();
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("NS.Person");
-            var container = ServiceProviderHelper.BuildServiceProvider(action);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
 
             var readerSettings = new ODataMessageReaderSettings
             {
                 EnableReadingODataAnnotationWithoutPrefix = true
             };
 
-            var resource = GetReadedResource(messageContent, model, entitySet, entityType, container, readerSettings);
+            var resource = GetReadedResource(messageContent, model, entitySet, entityType, serviceProvider, readerSettings);
 
             var propertyList = resource.Properties.ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
@@ -148,10 +148,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             var entitySet = model.FindDeclaredEntitySet("People");
             var entityType = model.GetEntityType("DefaultNs.Person");
 
-            var container = ServiceProviderHelper.BuildServiceProvider(action);
-            container.GetRequiredService<ODataMessageReaderSettings>().EnableReadingODataAnnotationWithoutPrefix = true;
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(action);
+            serviceProvider.GetRequiredService<ODataMessageReaderSettings>().EnableReadingODataAnnotationWithoutPrefix = true;
 
-            var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, container);
+            var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, serviceProvider);
 
             var resourceDict = new Dictionary<string, IEnumerable<ODataProperty>>();
 

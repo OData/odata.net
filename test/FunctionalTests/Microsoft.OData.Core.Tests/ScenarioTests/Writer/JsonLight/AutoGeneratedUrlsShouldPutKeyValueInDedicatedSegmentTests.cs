@@ -89,10 +89,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             var settings = new ODataMessageWriterSettings { EnableWritingKeyAsSegment = useKeyAsSegment };
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
             var outputStream = new MemoryStream();
-            var container = ServiceProviderHelper.BuildServiceProvider(null);
-            container.GetRequiredService<ODataMessageWriterSettings>().EnableWritingKeyAsSegment = useKeyAsSegment;
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            serviceProvider.GetRequiredService<ODataMessageWriterSettings>().EnableWritingKeyAsSegment = useKeyAsSegment;
 
-            var responseMessage = new InMemoryMessage { Stream = outputStream, ServiceProvider = container };
+            var responseMessage = new InMemoryMessage { Stream = outputStream, ServiceProvider = serviceProvider };
             responseMessage.SetHeader("Content-Type", "application/json;odata.metadata=full");
             string output;
 

@@ -175,9 +175,9 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void CustomizedUriPathParserTest()
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, MultipleSegmentUriPathParser>());
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, MultipleSegmentUriPathParser>());
             Uri fullUri = new Uri("https://serviceRoot/drives('b!3195njZm9ECS0rQfW5QyZ0iJh-jL7uZGn60CTehSbIwT3VAIax8sRKiyg_aD0HNV'):/items('01VL3Q7L36JOJUAPXGDNAZ4FVIGCTMLL46')/folder/childCount");
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
 
             var path = uriParser.ParsePath();
 
@@ -188,9 +188,9 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_FollowedByDynamicPathSegmentsAndProp()
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, MultipleSegmentUriPathParser>());
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, MultipleSegmentUriPathParser>());
             Uri fullUri = new Uri("https://serviceRoot/drives('b!3195njZm9ECS0rQfW5QyZ0iJh-jL7uZGn60CTehSbIwT3VAIax8sRKiyg_aD0HNV')/root:/OData/Doc/OData%20Client%20for%20.NET.pptx:/folder/childCount");
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
 
             var childCountProp = folderType.FindProperty("childCount");
             uriParser.ParseDynamicPathSegmentFunc = (previous, identifier, parenthesisExpression) =>
@@ -298,9 +298,9 @@ namespace Microsoft.OData.Tests.UriParser
 
         private ODataUriParser ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment(Uri fullUri, out ODataPath odataPath)
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
 
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
             uriParser.ParseDynamicPathSegmentFunc = (previous, identifier, parenthesisExpression) =>
             {
                 switch (identifier)
@@ -342,8 +342,8 @@ namespace Microsoft.OData.Tests.UriParser
 
         private ODataPath ParseDynamicPathSegmentFunc_ReturnNavAndSegment(Uri fullUri)
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
 
             uriParser.ParseDynamicPathSegmentFunc = (previous, identifier, parenthesisExpression) =>
             {
@@ -376,9 +376,9 @@ namespace Microsoft.OData.Tests.UriParser
         [Fact]
         public void ParseDynamicPathSegmentFunc_ReturnOperationSegment_WithCollectionReturnType_WithCount()
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
             Uri fullUri = new Uri("https://serviceRoot/drives('b!3195njZm9ECS0rQfW5QyZ0iJh-jL7uZGn60CTehSbIwT3VAIax8sRKiyg_aD0HNV')/recent/$count");
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
 
             var operation = oneDriveModel.SchemaElements.OfType<IEdmOperation>().FirstOrDefault(o => o.Name == "recent");
             uriParser.ParseDynamicPathSegmentFunc = (previous, identifier, parenthesisExpression) =>
@@ -496,8 +496,8 @@ namespace Microsoft.OData.Tests.UriParser
 
         private ODataUriParser ParseDynamicPathSegmentFunc_ReturnDynamicPathSegment_WithCollectionReturnType(Uri fullUri, out ODataPath odataPath, ODataUrlKeyDelimiter uriConventions = null)
         {
-            var container = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
-            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, container);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(builder => builder.AddScoped<UriPathParser, SingleSegmentUriPathParser>());
+            var uriParser = new ODataUriParser(oneDriveModel, ServiceRoot, fullUri, serviceProvider);
 
             if (uriConventions != null)
             {

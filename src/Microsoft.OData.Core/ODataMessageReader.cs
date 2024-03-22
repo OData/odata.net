@@ -42,7 +42,7 @@ namespace Microsoft.OData
         /// <summary>The optional URL converter to perform custom URL conversion for URLs read from the payload.</summary>
         private readonly IODataPayloadUriConverter payloadUriConverter;
 
-        /// <summary>The optional dependency injection container to get related services for message reading.</summary>
+        /// <summary>The optional dependency injection service provider to get related services for message reading.</summary>
         private readonly IServiceProvider serviceProvider;
 
         /// <summary>The resolver to use when determining an entity set's element type.</summary>
@@ -104,7 +104,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(requestMessage, "requestMessage");
 
-            this.serviceProvider = GetContainer(requestMessage);
+            this.serviceProvider = GetServiceProvider(requestMessage);
             this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.serviceProvider, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ false);
 
@@ -149,7 +149,7 @@ namespace Microsoft.OData
         {
             ExceptionUtils.CheckArgumentNotNull(responseMessage, "responseMessage");
 
-            this.serviceProvider = GetContainer(responseMessage);
+            this.serviceProvider = GetServiceProvider(responseMessage);
             this.settings = ODataMessageReaderSettings.CreateReaderSettings(this.serviceProvider, settings);
             ReaderValidationUtils.ValidateMessageReaderSettings(this.settings, /*readingResponse*/ true);
 
@@ -888,16 +888,16 @@ namespace Microsoft.OData
             return this.format;
         }
 
-        private static IServiceProvider GetContainer<T>(T message)
+        private static IServiceProvider GetServiceProvider<T>(T message)
             where T : class
         {
-            var containerProvider = message as IServiceCollectionProvider;
-            return containerProvider == null ? null : containerProvider.ServiceProvider;
+            var serviceCollectionProvider = message as IServiceCollectionProvider;
+            return serviceCollectionProvider?.ServiceProvider;
         }
 
-        private static IEdmModel GetModel(IServiceProvider container)
+        private static IEdmModel GetModel(IServiceProvider serviceProvider)
         {
-            return container == null ? EdmCoreModel.Instance : container.GetRequiredService<IEdmModel>();
+            return serviceProvider == null ? EdmCoreModel.Instance : serviceProvider.GetRequiredService<IEdmModel>();
         }
 
         private ODataMessageInfo GetOrCreateMessageInfo(Stream messageStream, bool isAsync)

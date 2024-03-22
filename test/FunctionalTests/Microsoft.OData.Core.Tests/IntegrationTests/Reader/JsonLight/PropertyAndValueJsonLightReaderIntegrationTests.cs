@@ -971,9 +971,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 "}";
 
             ODataResource entry = null;
-            var diContainer = ServiceProviderHelper.BuildServiceProvider(
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(
                 builder => builder.AddSingleton<ODataPayloadValueConverter, DateTimeOffsetCustomFormatPrimitivePayloadValueConverter>());
-            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, container: diContainer);
+            this.ReadEntryPayload(model, payload, entitySet, entityType, reader => { entry = entry ?? reader.Item as ODataResource; }, serviceProvider: serviceProvider);
             Assert.NotNull(entry);
 
             IList<ODataProperty> propertyList = entry.Properties.ToList();
@@ -1118,10 +1118,10 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
         }
 
         private void ReadEntryPayload(IEdmModel userModel, string payload, EdmEntitySet entitySet, IEdmEntityType entityType,
-            Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider container = null,
+            Action<ODataReader> action, bool isIeee754Compatible = true, IServiceProvider serviceProvider = null,
             bool enablePropertyCaseInsensitive = false, bool readUntypedAsString = true)
         {
-            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), ServiceProvider = container};
+            var message = new InMemoryMessage() { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)), ServiceProvider = serviceProvider };
             string contentType = isIeee754Compatible
                 ? "application/json;odata.metadata=minimal;IEEE754Compatible=true"
                 : "application/json;odata.metadata=minimal;IEEE754Compatible=false";

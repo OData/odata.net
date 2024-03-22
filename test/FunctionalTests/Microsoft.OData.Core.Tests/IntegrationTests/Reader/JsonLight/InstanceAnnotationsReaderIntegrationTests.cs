@@ -171,12 +171,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
                 EnableMessageStreamDisposal = false,
                 EnableReadingODataAnnotationWithoutPrefix = enableReadingODataAnnotationWithoutPrefix
             };
-            var container = ServiceProviderHelper.BuildServiceProvider(null);
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
 
             ODataMessageReader messageReader;
             if (isResponse)
             {
-                IODataResponseMessage responseMessage = new InMemoryMessage { StatusCode = 200, Stream = stream, ServiceProvider = container };
+                IODataResponseMessage responseMessage = new InMemoryMessage { StatusCode = 200, Stream = stream, ServiceProvider = serviceProvider };
                 responseMessage.SetHeader("Content-Type", contentType);
                 if (shouldReadAndValidateCustomInstanceAnnotations)
                 {
@@ -187,7 +187,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.JsonLight
             }
             else
             {
-                IODataRequestMessage requestMessage = new InMemoryMessage { Method = "GET", Stream = stream, ServiceProvider = container };
+                IODataRequestMessage requestMessage = new InMemoryMessage { Method = "GET", Stream = stream, ServiceProvider = serviceProvider };
                 requestMessage.SetHeader("Content-Type", contentType);
                 readerSettings.ShouldIncludeAnnotation = shouldReadAndValidateCustomInstanceAnnotations ? ODataUtils.CreateAnnotationFilter("*") : null;
                 messageReader = new ODataMessageReader(requestMessage, readerSettings, Model);

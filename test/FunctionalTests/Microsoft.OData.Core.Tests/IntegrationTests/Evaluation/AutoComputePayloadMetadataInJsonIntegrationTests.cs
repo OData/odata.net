@@ -439,14 +439,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
                 ContainsTarget = true
             });
 
-            var serviceProvider = new EdmEntityContainer("Namespace", "Container");
-            EntitySet = serviceProvider.AddEntitySet("EntitySet", EntityType);
+            var entityContainer = new EdmEntityContainer("Namespace", "Container");
+            EntitySet = entityContainer.AddEntitySet("EntitySet", EntityType);
 
             EntitySet.AddNavigationTarget(deferredNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(expandedNavLinkProp, EntitySet);
             EntitySet.AddNavigationTarget(navLinkDeclaredOnlyInModelProp, EntitySet);
 
-            AnotherEntitySet = serviceProvider.AddEntitySet("AnotherEntitySet", AnotherEntityType);
+            AnotherEntitySet = entityContainer.AddEntitySet("AnotherEntitySet", AnotherEntityType);
 
             Model = new EdmModel();
             Model.AddElement(Gender);
@@ -454,56 +454,56 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             Model.AddElement(DerivedType);
             Model.AddElement(AnotherEntityType);
             Model.AddElement(EnumAsKeyEntityType);
-            Model.AddElement(serviceProvider);
+            Model.AddElement(entityContainer);
             Model.SetOptimisticConcurrencyAnnotation(EntitySet, new[] { nameProperty });
 
             var alwaysBindableAction1 = new EdmAction("Namespace", "AlwaysBindableAction1", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             alwaysBindableAction1.AddParameter(new EdmOperationParameter(alwaysBindableAction1, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(alwaysBindableAction1);
-            var alwaysBindableActionImport1 = new EdmActionImport(serviceProvider, "AlwaysBindableAction1", alwaysBindableAction1);
-            serviceProvider.AddElement(alwaysBindableActionImport1);
+            var alwaysBindableActionImport1 = new EdmActionImport(entityContainer, "AlwaysBindableAction1", alwaysBindableAction1);
+            entityContainer.AddElement(alwaysBindableActionImport1);
 
             var alwaysBindableAction2 = new EdmAction("Namespace", "AlwaysBindableAction2", null /*returnType*/, true /*isBound*/, null /*entitySetPath*/);
             alwaysBindableAction2.AddParameter(new EdmOperationParameter(alwaysBindableAction2, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(alwaysBindableAction2);
-            var alwaysBindableActionImport2 = new EdmActionImport(serviceProvider, "AlwaysBindableAction2", alwaysBindableAction2);
-            serviceProvider.AddElement(alwaysBindableActionImport2);
+            var alwaysBindableActionImport2 = new EdmActionImport(entityContainer, "AlwaysBindableAction2", alwaysBindableAction2);
+            entityContainer.AddElement(alwaysBindableActionImport2);
 
             var action1 = new EdmAction("Namespace", "Action1", null /*returnType*/, false /*isBound*/, null /*entitySetPath*/);
             action1.AddParameter(new EdmOperationParameter(action1, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(action1);
-            var actionImport1 = new EdmActionImport(serviceProvider, "Action1", action1);
-            serviceProvider.AddElement(actionImport1);
+            var actionImport1 = new EdmActionImport(entityContainer, "Action1", action1);
+            entityContainer.AddElement(actionImport1);
 
             var action2 = new EdmAction("Namespace", "Action1", null /*returnType*/, false /*isBound*/, null /*entitySetPath*/);
             action2.AddParameter(new EdmOperationParameter(action2, "p", new EdmEntityTypeReference(EntityType, isNullable: true)));
             Model.AddElement(action2);
-            var actionImport2 = new EdmActionImport(serviceProvider, "Action1", action2);
-            serviceProvider.AddElement(actionImport2);
+            var actionImport2 = new EdmActionImport(entityContainer, "Action1", action2);
+            entityContainer.AddElement(actionImport2);
 
             var alwaysBindableFunction1 = new EdmFunction("Namespace", "AlwaysBindableFunction1", EdmCoreModel.Instance.GetString(isNullable: true), true /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             alwaysBindableFunction1.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(alwaysBindableFunction1);
-            var alwaysBindableFunctionImport1 = new EdmFunctionImport(serviceProvider, "AlwaysBindableFunction1", alwaysBindableFunction1);
-            serviceProvider.AddElement(alwaysBindableFunctionImport1);
+            var alwaysBindableFunctionImport1 = new EdmFunctionImport(entityContainer, "AlwaysBindableFunction1", alwaysBindableFunction1);
+            entityContainer.AddElement(alwaysBindableFunctionImport1);
 
             var alwaysBindableFunction2 = new EdmFunction("Namespace", "AlwaysBindableFunction2", EdmCoreModel.Instance.GetString(isNullable: true), true /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             alwaysBindableFunction2.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(alwaysBindableFunction2);
-            var alwaysBindableFunctionImport2 = new EdmFunctionImport(serviceProvider, "AlwaysBindableFunction2", alwaysBindableFunction2);
-            serviceProvider.AddElement(alwaysBindableFunctionImport2);
+            var alwaysBindableFunctionImport2 = new EdmFunctionImport(entityContainer, "AlwaysBindableFunction2", alwaysBindableFunction2);
+            entityContainer.AddElement(alwaysBindableFunctionImport2);
 
             var function1 = new EdmFunction("Namespace", "Function1", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             function1.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function1);
-            var functionImport1 = new EdmFunctionImport(serviceProvider, "Function1", function1);
-            serviceProvider.AddElement(functionImport1);
+            var functionImport1 = new EdmFunctionImport(entityContainer, "Function1", function1);
+            entityContainer.AddElement(functionImport1);
 
             var function2 = new EdmFunction("Namespace", "Function2", EdmCoreModel.Instance.GetString(isNullable: true), false /*isBound*/, null /*entitySetPath*/, false /*iscomposable*/);
             function2.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));
             Model.AddElement(function2);
-            var functionImport2 = new EdmFunctionImport(serviceProvider, "Function2", function2);
-            serviceProvider.AddElement(functionImport2);
+            var functionImport2 = new EdmFunctionImport(entityContainer, "Function2", function2);
+            entityContainer.AddElement(functionImport2);
 
             var function3 = new EdmFunction("Namespace", "Function3", new EdmEntityTypeReference(EntityType, false), true /*isBound*/, new EdmPathExpression("p/ContainedNonCollectionNavProp"), false /*iscomposable*/);
             function3.AddParameter("p", new EdmEntityTypeReference(EntityType, isNullable: true));

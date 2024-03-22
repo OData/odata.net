@@ -707,8 +707,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
             writerSettings.SetContentType(format);
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
-            var container = ServiceProviderHelper.BuildServiceProvider(null);
-            container.GetRequiredService<ODataMessageWriterSettings>().SetOmitODataPrefix(
+            var serviceProvider = ServiceProviderHelper.BuildServiceProvider(null);
+            serviceProvider.GetRequiredService<ODataMessageWriterSettings>().SetOmitODataPrefix(
                 enableWritingODataAnnotationWithoutPrefix);
 
             MemoryStream stream = new MemoryStream();
@@ -719,7 +719,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 {
                     Method = "GET",
                     Stream = stream,
-                    ServiceProvider = container
+                    ServiceProvider = serviceProvider
                 };
                 using (var messageWriter = new ODataMessageWriter(requestMessageToWrite, writerSettings, Model))
                 {
@@ -735,7 +735,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer
                 {
                     StatusCode = 200,
                     Stream = stream,
-                    ServiceProvider = container
+                    ServiceProvider = serviceProvider
                 };
                 responseMessageToWrite.PreferenceAppliedHeader().AnnotationFilter = "*";
                 using (var messageWriter = new ODataMessageWriter(responseMessageToWrite, writerSettings, Model))
