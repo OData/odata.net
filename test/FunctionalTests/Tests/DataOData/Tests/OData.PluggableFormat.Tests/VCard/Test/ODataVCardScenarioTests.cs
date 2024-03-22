@@ -14,6 +14,7 @@ namespace Microsoft.Test.OData.PluggableFormat.VCard.Test
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.DependencyInjection;
+    using Microsoft.Test.OData.PluggableFormat.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
