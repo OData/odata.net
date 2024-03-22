@@ -358,7 +358,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
             foreach (var edmNavigationSource in edmContainer.Elements.OfType<IEdmNavigationSource>())
             {
-                var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(edmNavigationSource.EntityType()));
+                var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(edmNavigationSource.EntityType));
                 if (edmNavigationSource is IEdmSingleton)
                 {
                     stockContainer.AddSingleton(edmNavigationSource.Name, stockEntityType);
@@ -371,7 +371,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
 
             foreach (var stockNavigationSource in stockContainer.Elements.OfType<EdmNavigationSource>())
             {
-                var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(stockNavigationSource.EntityType()));
+                var stockEntityType = (EdmEntityType)stockModel.FindType(GetFullName(stockNavigationSource.EntityType));
                 IEdmNavigationSource edmNavigationSource = edmContainer.FindEntitySet(stockNavigationSource.Name);
                 if (edmNavigationSource == null)
                 {
@@ -393,7 +393,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                             var targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                                 (
                                     n =>
-                                        GetBaseTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType().FullName()) && n.Name == targetEdmEntitySet.Name
+                                        GetBaseTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType()).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                                 );
 
                             if (null == targetEntitySetFromContainer)
@@ -401,7 +401,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
                                 targetEntitySetFromContainer = stockContainer.Elements.OfType<EdmEntitySet>().SingleOrDefault
                                 (
                                     n =>
-                                        GetAllDerivedTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType().FullName()) && n.Name == targetEdmEntitySet.Name
+                                        GetAllDerivedTypesAndSelf(((IEdmNavigationProperty)stockNavigationProperty).ToEntityType(), stockModel).Select(m => GetFullName(m)).Contains(n.EntityType.FullName()) && n.Name == targetEdmEntitySet.Name
                                 );
                             }
 

@@ -142,7 +142,7 @@ namespace Microsoft.OData
         internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, ODataUri odataUri, ODataVersion version)
         {
             EdmNavigationSourceKind kind = navigationSource.NavigationSourceKind();
-            string navigationSourceEntityType = navigationSource.EntityType().FullName();
+            string navigationSourceEntityType = navigationSource.EntityType.FullName();
             return new ODataContextUrlInfo()
             {
                 IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,
@@ -169,7 +169,7 @@ namespace Microsoft.OData
         internal static ODataContextUrlInfo Create(IEdmNavigationSource navigationSource, string expectedEntityTypeName, bool isSingle, in ODataUriSlim odataUri, ODataVersion version)
         {
             EdmNavigationSourceKind kind = navigationSource.NavigationSourceKind();
-            string navigationSourceEntityType = navigationSource.EntityType().FullName();
+            string navigationSourceEntityType = navigationSource.EntityType.FullName();
             return new ODataContextUrlInfo()
             {
                 IsUnknownEntitySet = kind == EdmNavigationSourceKind.UnknownEntitySet,

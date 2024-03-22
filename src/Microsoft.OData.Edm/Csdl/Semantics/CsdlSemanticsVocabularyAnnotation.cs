@@ -106,7 +106,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     IEdmNavigationSource navigationSource = bindingTarget as IEdmNavigationSource;
                     if (navigationSource != null)
                     {
-                        bindingContext = navigationSource.EntityType();
+                        bindingContext = navigationSource.EntityType;
                     }
                 }
 

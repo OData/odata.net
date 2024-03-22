@@ -928,7 +928,7 @@ namespace Microsoft.OData.UriParser
             {
                 ImplicitRangeVariable =
                     NodeFactory.CreateImplicitRangeVariable(elementType != null ? elementType :
-                        targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource)
+                        targetNavigationSource.EntityType.ToTypeReference(), targetNavigationSource)
             };
 
             state.AggregatedPropertyNames = generatedProperties;
@@ -941,13 +941,13 @@ namespace Microsoft.OData.UriParser
                 // We are adding a rangeVariable whose navigationSource is the resource path entity set.
                 // ODATA spec: Example 106 http://docs.oasis-open.org/odata/odata/v4.01/csprd05/part2-url-conventions/odata-v4.01-csprd05-part2-url-conventions.html#sec_it
                 RangeVariable explicitRangeVariable = NodeFactory.CreateImplicitRangeVariable(
-                    resourcePathNavigationSource.EntityType().ToTypeReference(), resourcePathNavigationSource);
+                    resourcePathNavigationSource.EntityType.ToTypeReference(), resourcePathNavigationSource);
                 state.RangeVariables.Push(explicitRangeVariable);
             }
 
             // Create $this rangeVariable and add it to the Stack.
             RangeVariable dollarThisRangeVariable = NodeFactory.CreateDollarThisRangeVariable(
-                elementType != null ? elementType : targetNavigationSource.EntityType().ToTypeReference(), targetNavigationSource);
+                elementType != null ? elementType : targetNavigationSource.EntityType.ToTypeReference(), targetNavigationSource);
             state.RangeVariables.Push(dollarThisRangeVariable);
 
             return state;

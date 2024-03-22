@@ -31,7 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         public void TargetEdmTypeIsTypeOfEntitySet()
         {
             EntitySetSegment segment = new EntitySetSegment(HardCodedTestModel.GetPeopleSet());
-            Assert.Same(HardCodedTestModel.GetPeopleSet().EntityType(), segment.TargetEdmType);
+            Assert.Same(HardCodedTestModel.GetPeopleSet().EntityType, segment.TargetEdmType);
         }
 
         [Fact]

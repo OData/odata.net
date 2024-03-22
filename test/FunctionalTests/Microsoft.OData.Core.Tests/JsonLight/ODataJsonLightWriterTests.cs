@@ -768,6 +768,8 @@ namespace Microsoft.OData.Core.Tests.JsonLight
 
             public IEdmType Type => new EdmEntityType("ns", "products");
 
+            public IEdmEntityType EntityType => this.Type.AsElementType() as IEdmEntityType;
+
             public string Name => "products";
 
             public IEdmNavigationSource ParentNavigationSource => throw new NotImplementedException();

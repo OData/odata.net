@@ -70,12 +70,12 @@ namespace Microsoft.Test.OData.Utils.Metadata
             // Create entity for each set in model.
             foreach (var set in sets)
             {
-                if (!set.EntityType().IsAbstract)
+                if (!set.EntityType.IsAbstract)
                 {
                     //create entity based on ElementType
-                    EntityInstance payload = this.AddIDAndLink(this.CreateEntityInstance(set.EntityType()));
+                    EntityInstance payload = this.AddIDAndLink(this.CreateEntityInstance(set.EntityType));
                     payload.WithDefaultAtomEntryAnnotations();
-                    payload.WithTypeAnnotation(set.EntityType());
+                    payload.WithTypeAnnotation(set.EntityType);
                     payload = (EntityInstance)this.normalizer.Visit(payload);
                     this.Assert.IsTrue(payload.Annotations.Count >= 2, "There should be a minimum of two annotations");
                     yield return payload;
@@ -97,9 +97,9 @@ namespace Microsoft.Test.OData.Utils.Metadata
             // Create entity for each set in model.
             foreach (var set in sets)
             {
-                if (!set.EntityType().IsAbstract)
+                if (!set.EntityType.IsAbstract)
                 {
-                    EntityInstance payload = this.AddIDAndLink(this.CreateEntityInstance(set.EntityType())).WithTypeAnnotation(set.EntityType());
+                    EntityInstance payload = this.AddIDAndLink(this.CreateEntityInstance(set.EntityType)).WithTypeAnnotation(set.EntityType);
                     this.Assert.IsTrue(payload.Annotations.Count == 2, "There should only be two annotations");
                     payload = (EntityInstance)this.normalizer.Visit(payload);
                     payloads.Add(payload);

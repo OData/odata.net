@@ -686,7 +686,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server.Parsing
 
         private SingleResourceNode EntityParameter<T>(string name)
         {
-            var entityRangeVariable = new ResourceRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType(), false), this.entitySet);
+            var entityRangeVariable = new ResourceRangeVariable(name, new EdmEntityTypeReference(this.entitySet.EntityType, false), this.entitySet);
             this.testSubject.ParameterExpressions[entityRangeVariable] = Expression.Parameter(typeof(T), name);
             return new ResourceRangeVariableReferenceNode(name, entityRangeVariable);
         }

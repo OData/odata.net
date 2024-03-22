@@ -134,7 +134,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             if (this.ExpandedChildElement is IEnumerable)
             {
-                var entityInstanceType = EdmClrTypeUtils.GetInstanceType(item.NavigationSource.EntityType().FullName());
+                var entityInstanceType = EdmClrTypeUtils.GetInstanceType(item.NavigationSource.EntityType.FullName());
                 Expression resultExpression = (this.ExpandedChildElement as IEnumerable).AsQueryable().Expression;
 
                 if (item.FilterOption != null)
@@ -179,7 +179,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
             if (this.ExpandedChildElement is IEnumerable)
             {
-                var entityInstanceType = EdmClrTypeUtils.GetInstanceType(item.NavigationSource.EntityType().FullName());
+                var entityInstanceType = EdmClrTypeUtils.GetInstanceType(item.NavigationSource.EntityType.FullName());
                 Expression resultExpression = (this.ExpandedChildElement as IEnumerable).AsQueryable().Expression;
 
                 if (item.FilterOption != null)

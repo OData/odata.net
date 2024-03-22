@@ -1820,7 +1820,7 @@ namespace Microsoft.OData.Edm
         /// <returns>The element type of this references definition.</returns>
         public static IEdmType AsElementType(this IEdmType type)
         {   
-            if(type == null)
+            if (type == null)
             {
                 return type;
             }
@@ -2880,6 +2880,8 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="navigationSource">The navigation source.</param>
         /// <returns>The entity type of the navigation source.</returns>
+        /// <remarks>This extension method is obsolete and will be dropped in the 9.x release. Use <see cref"IEdmNavigationSource.EntityType"> property.</remarks>
+        [Obsolete("This will be dropped in the 9.x release. Use IEdmNavigationSource.EntityType property.")]
         public static IEdmEntityType EntityType(this IEdmNavigationSource navigationSource)
         {
             return navigationSource?.Type.AsElementType() as IEdmEntityType;
@@ -3395,7 +3397,7 @@ namespace Microsoft.OData.Edm
             for (int i = nextIndex; i < pathSegments.Length && navigationSource != null; i++)
             {
                 subPathSegments.Add(pathSegments[i]);
-                IEdmNavigationProperty navProp = navigationSource.EntityType().FindProperty(pathSegments[i]) as IEdmNavigationProperty;
+                IEdmNavigationProperty navProp = navigationSource.EntityType.FindProperty(pathSegments[i]) as IEdmNavigationProperty;
                 if (navProp != null)
                 {
                     navigationSource = navigationSource.FindNavigationTarget(navProp, new EdmPathExpression(subPathSegments));

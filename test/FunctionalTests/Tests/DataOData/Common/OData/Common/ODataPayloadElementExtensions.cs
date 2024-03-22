@@ -231,7 +231,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ExceptionUtilities.CheckArgumentNotNull(entityInstance, "entityInstance");
             ExpectedTypeODataPayloadElementAnnotation annotation = ODataPayloadElementExtensions.AddExpectedTypeAnnotation(entityInstance);
-            entityType = entityType ?? (entitySet == null ? null : entitySet.EntityType().ToTypeReference());
+            entityType = entityType ?? (entitySet == null ? null : entitySet.EntityType.ToTypeReference());
             annotation.EdmExpectedType = entityType;
             annotation.EdmEntitySet = entitySet;
             return entityInstance;
@@ -260,7 +260,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         {
             ExceptionUtilities.CheckArgumentNotNull(entitySetInstance, "entitySetInstance");
             ExpectedTypeODataPayloadElementAnnotation annotation = ODataPayloadElementExtensions.AddExpectedTypeAnnotation(entitySetInstance);
-            var entityType = baseEntityType ?? (entitySet == null ? null : entitySet.EntityType().ToTypeReference());
+            var entityType = baseEntityType ?? (entitySet == null ? null : entitySet.EntityType.ToTypeReference());
             annotation.EdmExpectedType = entityType;
             annotation.EdmEntitySet = entitySet;
             return entitySetInstance;

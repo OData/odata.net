@@ -1436,7 +1436,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     messageReader = new ODataMessageReader(responseMessage, variant.Settings, Model);
             }
 
-            ODataReader reader = messageReader.CreateODataResourceReader(CustomersEntitySet, CustomersEntitySet.EntityType());
+            ODataReader reader = messageReader.CreateODataResourceReader(CustomersEntitySet, CustomersEntitySet.EntityType);
             return reader;
         }
 

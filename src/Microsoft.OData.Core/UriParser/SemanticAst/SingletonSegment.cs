@@ -35,7 +35,7 @@ namespace Microsoft.OData.UriParser
 
             this.Identifier = singleton.Name;
             this.TargetEdmNavigationSource = singleton;
-            this.TargetEdmType = singleton.EntityType();
+            this.TargetEdmType = singleton.EntityType;
             this.TargetKind = RequestTargetKind.Resource;
             this.SingleResult = true;
         }
@@ -54,7 +54,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmType EdmType
         {
-            get { return this.singleton.EntityType(); }
+            get { return this.singleton.EntityType; }
         }
 
         /// <summary>

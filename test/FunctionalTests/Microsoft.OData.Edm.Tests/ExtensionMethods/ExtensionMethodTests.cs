@@ -774,7 +774,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.EntitySet.Name);
             Assert.NotNull(entitySet);
-            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
+            Assert.Same(TestModel.Instance.EntitySet.EntityType, entitySet.EntityType);
         }
 
         [Fact]
@@ -782,7 +782,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Container.Name + "." + TestModel.Instance.EntitySet.Name);
             Assert.NotNull(entitySet);
-            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
+            Assert.Same(TestModel.Instance.EntitySet.EntityType, entitySet.EntityType);
         }
 
         [Fact]
@@ -790,7 +790,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var entitySet = TestModel.Instance.Model.FindDeclaredEntitySet(TestModel.Instance.Container.ShortQualifiedName() + "." + TestModel.Instance.EntitySet.Name);
             Assert.NotNull(entitySet);
-            Assert.Same(TestModel.Instance.EntitySet.EntityType(), entitySet.EntityType());
+            Assert.Same(TestModel.Instance.EntitySet.EntityType, entitySet.EntityType);
         }
 
         [Fact]
@@ -807,7 +807,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             for(int i=1; i <10; i++)
             {
                 Assert.Equal(HasAnyCheap(list), HasAnyExpensive(list));
-                list.Add(new EdmEntityType("NS", "f" + i, TestModel.Instance.EntitySet.EntityType()));
+                list.Add(new EdmEntityType("NS", "f" + i, TestModel.Instance.EntitySet.EntityType));
             }
         }
 
@@ -822,7 +822,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Singleton.Name);
             Assert.NotNull(singleton);
-            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
+            Assert.Same(TestModel.Instance.Singleton.EntityType, singleton.EntityType);
         }
 
         [Fact]
@@ -830,7 +830,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Container.Name + "." + TestModel.Instance.Singleton.Name);
             Assert.NotNull(singleton);
-            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
+            Assert.Same(TestModel.Instance.Singleton.EntityType, singleton.EntityType);
         }
 
         [Fact]
@@ -838,7 +838,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         {
             var singleton = TestModel.Instance.Model.FindDeclaredSingleton(TestModel.Instance.Container.ShortQualifiedName() + "." + TestModel.Instance.Singleton.Name);
             Assert.NotNull(singleton);
-            Assert.Same(TestModel.Instance.Singleton.EntityType(), singleton.EntityType());
+            Assert.Same(TestModel.Instance.Singleton.EntityType, singleton.EntityType);
         }
 
         [Fact]

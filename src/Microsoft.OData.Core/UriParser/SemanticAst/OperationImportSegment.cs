@@ -268,7 +268,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // Ensure that the return type is in the same type hierarchy as the entity set provided
-            if (!this.entitySet.EntityType().IsOrInheritsFrom(unwrappedCollectionType) && !unwrappedCollectionType.IsOrInheritsFrom(this.entitySet.EntityType()))
+            if (!this.entitySet.EntityType.IsOrInheritsFrom(unwrappedCollectionType) && !unwrappedCollectionType.IsOrInheritsFrom(this.entitySet.EntityType))
             {
                 throw new ODataException(ODataErrorStrings.OperationSegment_CannotReturnNull);
             }

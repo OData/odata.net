@@ -472,7 +472,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
             ExceptionUtilities.CheckArgumentNotNull(container, "DefaultContainer");
 
             // create EntitySet
-            foreach (EdmEntityType entityType in model.SchemaElements.OfType<IEdmEntityType>().Where(e => e.BaseType == null && container.EntitySets().All(set => set.EntityType() != e)))
+            foreach (EdmEntityType entityType in model.SchemaElements.OfType<IEdmEntityType>().Where(e => e.BaseType == null && container.EntitySets().All(set => set.EntityType != e)))
             {
                 container.AddEntitySet(entityType.Name, entityType);
             }
@@ -483,7 +483,7 @@ namespace Microsoft.Test.OData.Utils.ODataLibTest
                     var searchType = entityType;
                     while (searchType != null)
                     {
-                        var entitySet = container.EntitySets().FirstOrDefault(s => s.EntityType() == searchType);
+                        var entitySet = container.EntitySets().FirstOrDefault(s => s.EntityType == searchType);
                         if (entitySet != null)
                         {
                             return entitySet;

@@ -66,6 +66,14 @@ namespace Microsoft.OData.Service.Providers
         }
 
         /// <summary>
+        /// Gets the entity type of the navigation source.
+        /// </summary>
+        public IEdmEntityType EntityType
+        {
+            get { return this.Type.AsElementType() as IEdmEntityType; }
+        }
+
+        /// <summary>
         /// The entity container kind of the entity set; returns EdmContainerElementKind.EntitySet.
         /// </summary>
         public EdmContainerElementKind ContainerElementKind

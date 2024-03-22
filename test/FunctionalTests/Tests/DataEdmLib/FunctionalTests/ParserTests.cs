@@ -213,11 +213,11 @@ namespace EdmLibTests.FunctionalTests
             
             IEdmEntitySet entitySet = entityContainer.FindEntitySet("EntityTypeWithoutKey");
             Assert.AreEqual("EntityTypeWithoutKey", entitySet.Name, "Invalid entity set name");
-            Assert.AreEqual("TestModel.EntityTypeWithoutKey", entitySet.EntityType().FullName(), "Invalid entity set element type");
+            Assert.AreEqual("TestModel.EntityTypeWithoutKey", entitySet.EntityType.FullName(), "Invalid entity set element type");
 
             IEdmSingleton singleton = entityContainer.FindSingleton("SingletonWhoseEntityTypeWithoutKey");
             Assert.AreEqual("SingletonWhoseEntityTypeWithoutKey", singleton.Name, "Invalid singleton name");
-            Assert.AreEqual("TestModel.EntityTypeWithoutKey", singleton.EntityType().FullName(), "Invalid singleton element type");
+            Assert.AreEqual("TestModel.EntityTypeWithoutKey", singleton.EntityType.FullName(), "Invalid singleton element type");
             
             var expectedErrors = new EdmLibTestErrors()
             {
@@ -243,11 +243,11 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmEntitySet entitySetElement1 = (IEdmEntitySet)entityContainer.Elements.ElementAt(0);
             Assert.AreEqual("DuplicateEntityType", entitySetElement1.Name, "Invalid entity set name");
-            Assert.AreEqual("TestModel.DuplicateEntityType", entitySetElement1.EntityType().FullName(), "Invalid entity set element type");
+            Assert.AreEqual("TestModel.DuplicateEntityType", entitySetElement1.EntityType.FullName(), "Invalid entity set element type");
 
             IEdmEntitySet entitySetElement2 = (IEdmEntitySet)entityContainer.Elements.ElementAt(1);
             Assert.AreEqual("DuplicateEntityType", entitySetElement2.Name, "Invalid entity set name");
-            Assert.AreEqual("TestModel.DuplicateEntityType", entitySetElement2.EntityType().FullName(), "Invalid entity set element type");
+            Assert.AreEqual("TestModel.DuplicateEntityType", entitySetElement2.EntityType.FullName(), "Invalid entity set element type");
 
             Assert.IsTrue(model.SchemaElements.Count() == 3, "Invalid schema element count");
             Assert.AreEqual(EdmSchemaElementKind.TypeDefinition, model.SchemaElements.ElementAt(0).SchemaElementKind, "Invalid schema element kind");
@@ -362,7 +362,7 @@ namespace EdmLibTests.FunctionalTests
 
             IEdmEntitySet entitySet = (IEdmEntitySet)entityContainer.Elements.Single();
             Assert.AreEqual("DuplicatePropertiesEntityType", entitySet.Name, "Invalid entity set name");
-            Assert.AreEqual("TestModel.DuplicatePropertiesEntityType", entitySet.EntityType().FullName(), "Invalid entity set element type");
+            Assert.AreEqual("TestModel.DuplicatePropertiesEntityType", entitySet.EntityType.FullName(), "Invalid entity set element type");
 
             Assert.IsTrue(model.SchemaElements.Count() == 2, "Invalid schema element count");
 

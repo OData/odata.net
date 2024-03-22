@@ -176,7 +176,7 @@ namespace System.Data.Test.Astoria
                 {
                     foreach (IEdmEntitySet set in container.EntitySets())
                     {
-                        if (IsAssignableFrom(set.EntityType(), edmType))
+                        if (IsAssignableFrom(set.EntityType, edmType))
                             return false;
                     }
                 }
@@ -266,7 +266,7 @@ namespace System.Data.Test.Astoria
 
                 AstoriaTestLog.IsNotNull(dataWebEntitySetBase);
                 AstoriaTestLog.AreEqual(entitySetBase.Name, dataWebEntitySetBase.Name);
-                AstoriaTestLog.AreEqual(entitySetBase.EntityType().FullName(), dataWebEntitySetBase.EntityType().FullName());
+                AstoriaTestLog.AreEqual(entitySetBase.EntityType.FullName(), dataWebEntitySetBase.EntityType.FullName());
 
                 ++numberOfEntitySets;
             }

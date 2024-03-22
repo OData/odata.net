@@ -46,7 +46,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 using (var messageWriter = this.CreateMessageWriter(responseMessage))
                 {
                     var entitySet = this.DataSource.Model.FindDeclaredEntitySet("Customers");
-                    var entityType = entitySet.EntityType();
+                    var entityType = entitySet.EntityType;
                     ODataWriter deltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(entitySet, entityType);
 
                     var deltaFeed = new ODataDeltaResourceSet();
@@ -101,10 +101,10 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 using (var messageWriter = this.CreateMessageWriter(responseMessage))
                 {
                     var accountsSet = this.DataSource.Model.FindDeclaredEntitySet("Accounts");
-                    var accountType = accountsSet.EntityType();
+                    var accountType = accountsSet.EntityType;
                     var myPisNav = accountType.FindProperty("MyPaymentInstruments") as IEdmNavigationProperty;
                     var piSet = accountsSet.FindNavigationTarget(myPisNav);
-                    var piType = piSet.EntityType();
+                    var piType = piSet.EntityType;
                     ODataWriter deltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(piSet as IEdmContainedEntitySet, piType);
 
                     var deltaFeed = new ODataDeltaResourceSet();
@@ -165,7 +165,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 using (var messageWriter = this.CreateMessageWriter(responseMessage))
                 {
                     var peopleSet = this.DataSource.Model.FindDeclaredEntitySet("People");
-                    var personType = peopleSet.EntityType();
+                    var personType = peopleSet.EntityType;
                     ODataWriter deltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(peopleSet, personType);
 
                     var deltaFeed = new ODataDeltaResourceSet();
@@ -229,7 +229,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                     var customerSet = this.DataSource.Model.FindDeclaredEntitySet("Customers");
                     var orderSet = this.DataSource.Model.FindDeclaredEntitySet("Orders");
                     var peopleSet = this.DataSource.Model.FindDeclaredEntitySet("People");
-                    var customerType = customerSet.EntityType();
+                    var customerType = customerSet.EntityType;
                     ODataWriter deltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(customerSet, customerType);
 
                     // Delta feed and entry
@@ -348,7 +348,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                 using (var messageWriter = this.CreateMessageWriter(responseMessage))
                 {
                     var entitySet = this.DataSource.Model.FindDeclaredEntitySet("Customers");
-                    var entityType = entitySet.EntityType();
+                    var entityType = entitySet.EntityType;
                     ODataWriter deltaWriter = messageWriter.CreateODataDeltaResourceSetWriter(entitySet, entityType);
 
                     var deltaFeed = new ODataDeltaResourceSet();

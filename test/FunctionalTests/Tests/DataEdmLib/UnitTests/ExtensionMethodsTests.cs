@@ -18,9 +18,9 @@ namespace EdmLibTests.UnitTests
             var container = new EdmEntityContainer("NS", "C");
             var entityType = new EdmEntityType("NS", "People");
             var entitySet = new EdmEntitySet(container, "Peoples", entityType);
-            Assert.AreEqual(entityType, entitySet.EntityType());
+            Assert.AreEqual(entityType, entitySet.EntityType);
             var singleton = new EdmSingleton(container, "Boss", entityType);
-            Assert.AreEqual(entityType, singleton.EntityType());
+            Assert.AreEqual(entityType, singleton.EntityType);
         }
     }
 }

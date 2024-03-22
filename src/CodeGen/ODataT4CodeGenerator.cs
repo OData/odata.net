@@ -1525,7 +1525,7 @@ public abstract class ODataClientTemplate : TemplateBase
 
         foreach (IEdmEntitySet entitySet in container.EntitySets())
         {
-            IEdmEntityType entitySetElementType = entitySet.EntityType();
+            IEdmEntityType entitySetElementType = entitySet.EntityType;
             string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
 
             string camelCaseEntitySetName = entitySet.Name;
@@ -1536,10 +1536,10 @@ public abstract class ODataClientTemplate : TemplateBase
 
             this.WriteContextEntitySetProperty(camelCaseEntitySetName, GetFixedName(camelCaseEntitySetName), entitySet.Name, GetFixedName(entitySetElementTypeName));
             List<IEdmNavigationSource> edmNavigationSourceList = null;
-            if (!this.context.ElementTypeToNavigationSourceMap.TryGetValue(entitySet.EntityType(), out edmNavigationSourceList))
+            if (!this.context.ElementTypeToNavigationSourceMap.TryGetValue(entitySet.EntityType, out edmNavigationSourceList))
             {
                 edmNavigationSourceList = new List<IEdmNavigationSource>();
-                this.context.ElementTypeToNavigationSourceMap.Add(entitySet.EntityType(), edmNavigationSourceList);
+                this.context.ElementTypeToNavigationSourceMap.Add(entitySet.EntityType, edmNavigationSourceList);
             }
 
             edmNavigationSourceList.Add(entitySet);
@@ -1547,7 +1547,7 @@ public abstract class ODataClientTemplate : TemplateBase
 
         foreach (IEdmEntitySet entitySet in container.EntitySets())
         {
-            IEdmEntityType entitySetElementType = entitySet.EntityType();
+            IEdmEntityType entitySetElementType = entitySet.EntityType;
             
             string entitySetElementTypeName = GetElementTypeName(entitySetElementType, container);
 
@@ -1565,7 +1565,7 @@ public abstract class ODataClientTemplate : TemplateBase
 
         foreach (IEdmSingleton singleton in container.Singletons())
         {
-            IEdmEntityType singletonElementType = singleton.EntityType();
+            IEdmEntityType singletonElementType = singleton.EntityType;
             string singletonElementTypeName = GetElementTypeName(singletonElementType, container);
             string camelCaseSingletonName = singleton.Name;
             if (this.context.EnableNamingAlias)
@@ -1576,7 +1576,7 @@ public abstract class ODataClientTemplate : TemplateBase
             this.WriteContextSingletonProperty(camelCaseSingletonName, GetFixedName(camelCaseSingletonName), singleton.Name, singletonElementTypeName + "Single");
 
             List<IEdmNavigationSource> edmNavigationSourceList = null;
-            if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(singleton.EntityType(), out edmNavigationSourceList))
+            if (this.context.ElementTypeToNavigationSourceMap.TryGetValue(singleton.EntityType, out edmNavigationSourceList))
             {
                 edmNavigationSourceList.Add(singleton);
             }

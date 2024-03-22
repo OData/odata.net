@@ -89,7 +89,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             if (entitySource != null && !(entitySource is IEdmContainedEntitySet))
             {
                 Uri entryUri = BuildEntryUri(element, entitySource, targetVersion);
-                if (element.GetType().BaseType != null && entitySource.EntityType().Name != typeName)
+                if (element.GetType().BaseType != null && entitySource.EntityType.Name != typeName)
                 {
                     var editLink = new Uri(entryUri.AbsoluteUri.TrimEnd('/') + "/" + entry.TypeName);
                     entry.EditLink = editLink;
@@ -656,7 +656,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
             if (navigationSource is IEdmEntitySet)
             {
                 var entitySet = navigationSource as IEdmEntitySet;
-                string keySegment = BuildKeyString(entry, entitySet.EntityType(), targetVersion);
+                string keySegment = BuildKeyString(entry, entitySet.EntityType, targetVersion);
                 return new Uri(ServiceConstants.ServiceBaseUri, entitySet.Name + "(" + keySegment + ")");
             }
             else if (navigationSource is IEdmSingleton)

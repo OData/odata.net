@@ -550,7 +550,7 @@ namespace Microsoft.OData.UriParser
             // Creating a filter clause helps validate the expression and create the expression nodes (including nested parameter aliases).
             FilterClause filterClause = GenerateFilterClause(
                 lastNavigationSource,
-                typeSegment == null ? lastNavigationSource.EntityType() : typeSegment.TargetEdmType,
+                typeSegment == null ? lastNavigationSource.EntityType : typeSegment.TargetEdmType,
                 filterExpression);
 
             // 4) Create filter segment with the validated expression and add it to parsed segments.

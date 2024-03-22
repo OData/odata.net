@@ -346,7 +346,7 @@ namespace Microsoft.OData.Client
             var entitySet = this.serviceModel.FindDeclaredEntitySet(entitySetName);
             if (entitySet != null)
             {
-                serverTypeName = ExtensionMethods.FullName(entitySet.EntityType());
+                serverTypeName = ExtensionMethods.FullName(entitySet.EntityType);
                 return true;
             }
 

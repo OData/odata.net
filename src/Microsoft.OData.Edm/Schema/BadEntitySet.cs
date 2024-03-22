@@ -18,6 +18,7 @@ namespace Microsoft.OData.Edm
     {
         private readonly string name;
         private readonly IEdmEntityContainer container;
+        private IEdmEntityType entityType;
 
         public BadEntitySet(string name, IEdmEntityContainer container, IEnumerable<EdmError> errors)
             : base(errors)
@@ -54,6 +55,20 @@ namespace Microsoft.OData.Edm
         public IEdmType Type
         {
             get { return new EdmCollectionType(new EdmEntityTypeReference(new BadEntityType(String.Empty, this.Errors), false)); }
+        }
+
+        /// <inheritdoc/>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (this.entityType == null)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                }
+
+                return this.entityType;
+            }
         }
 
         public bool IncludeInServiceDocument

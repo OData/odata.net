@@ -101,7 +101,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
         {
             using (var messageReader = new ODataMessageReader(message, this.GetDefaultReaderSettings(), this.Model))
             {
-                var entryReader = messageReader.CreateODataResourceReader(entitySet.EntityType());
+                var entryReader = messageReader.CreateODataResourceReader(entitySet.EntityType);
 
                 while (entryReader.Read())
                 {

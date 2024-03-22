@@ -158,15 +158,15 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
 
             // verify property type in ref1 model
-            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
+            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
             Assert.AreEqual("Edm.String", referencedEntityTypeProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, referencedEntityTypeProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in main model
-            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
+            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
             Assert.AreEqual("NS1.Address", referencedEntityTypeProp2.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Complex, referencedEntityTypeProp2.Type.Definition.TypeKind, "referenced property type is incorrect");
 
@@ -291,20 +291,20 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
 
             // verify property type in ref1 model
-            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
+            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
             Assert.AreEqual("Edm.String", referencedEntityTypeProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, referencedEntityTypeProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in main model
-            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
+            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
             Assert.AreEqual("NS1.Address", referencedEntityTypeProp2.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Complex, referencedEntityTypeProp2.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in ref2 model
-            IEdmProperty referencedEntityTypeProp3 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCards");
+            IEdmProperty referencedEntityTypeProp3 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCards");
             Assert.IsTrue(referencedEntityTypeProp3.Type.IsCollection(), "referenced property type is incorrect");
             IEdmEntityType VipCardEntityType = (IEdmEntityType)referencedEntityTypeProp3.Type.AsCollection().ElementType().Definition;
             Assert.AreEqual("NS.Ref2.VipCard", VipCardEntityType.FullName(), "referenced property type is incorrect");
@@ -312,7 +312,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmTypeKind.Collection, referencedEntityTypeProp3.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify bad property type referencing ref2 model
-            IEdmProperty referencedEntityTypeProp4 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "BadTypeVipCards");
+            IEdmProperty referencedEntityTypeProp4 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "BadTypeVipCards");
             IEdmEntityType badVipCardType = (IEdmEntityType)referencedEntityTypeProp4.Type.AsCollection().ElementType().Definition;
             Assert.AreEqual("VPCD.VipCard", badVipCardType.FullName(), "The alias in VPCD.VipCard shouldn't be resolved, so this bad name is expected to be returned.");
 
@@ -328,7 +328,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntitySet cardEntitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCards");
 
             // verify property type in ref2 model
-            IEdmProperty cardEntitySetProp1 = cardEntitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCardID");
+            IEdmProperty cardEntitySetProp1 = cardEntitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCardID");
             Assert.AreEqual("Edm.Int32", cardEntitySetProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, cardEntitySetProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
         }
@@ -440,20 +440,20 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
 
             // verify property type in ref1 model
-            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
+            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
             Assert.AreEqual("Edm.String", referencedEntityTypeProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, referencedEntityTypeProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in main model (circle reference not resolved)
-            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
+            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
             Assert.AreEqual("NS1.Address", referencedEntityTypeProp2.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.None, referencedEntityTypeProp2.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in ref2 model
-            IEdmProperty referencedEntityTypeProp3 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCards");
+            IEdmProperty referencedEntityTypeProp3 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCards");
             Assert.IsTrue(referencedEntityTypeProp3.Type.IsCollection(), "referenced property type is incorrect");
             IEdmEntityType VipCardEntityType = (IEdmEntityType)referencedEntityTypeProp3.Type.AsCollection().ElementType().Definition;
             Assert.AreEqual("NS.Ref2.VipCard", VipCardEntityType.FullName(), "referenced property type is incorrect");
@@ -461,7 +461,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.AreEqual(EdmTypeKind.Collection, referencedEntityTypeProp3.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify bad property type referencing ref2 model
-            IEdmProperty referencedEntityTypeProp4 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "BadTypeVipCards");
+            IEdmProperty referencedEntityTypeProp4 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "BadTypeVipCards");
             IEdmEntityType badVipCardType = (IEdmEntityType)referencedEntityTypeProp4.Type.AsCollection().ElementType().Definition;
             Assert.AreEqual("VPCD.VipCard", badVipCardType.FullName(), "The alias in VPCD.VipCard shouldn't be resolved, so this bad name is expected to be returned.");
 
@@ -477,7 +477,7 @@ namespace EdmLibTests.FunctionalTests
             IEdmEntitySet cardEntitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCards");
 
             // verify property type in ref2 model
-            IEdmProperty cardEntitySetProp1 = cardEntitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCardID");
+            IEdmProperty cardEntitySetProp1 = cardEntitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCardID");
             Assert.AreEqual("Edm.Int32", cardEntitySetProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, cardEntitySetProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
         }
@@ -549,15 +549,15 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
 
             // verify property type in ref1 model
-            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
+            IEdmProperty referencedEntityTypeProp1 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipCustomerID");
             Assert.AreEqual("Edm.String", referencedEntityTypeProp1.Type.Definition.FullTypeName(), "referenced property type is incorrect");
             Assert.AreEqual(EdmTypeKind.Primitive, referencedEntityTypeProp1.Type.Definition.TypeKind, "referenced property type is incorrect");
 
             // verify property type in main model
-            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType().Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
+            IEdmProperty referencedEntityTypeProp2 = entitySet.EntityType.Properties().First<IEdmProperty>(s => s.Name == "VipAddress");
             Assert.AreEqual("NS1.Address", referencedEntityTypeProp2.Type.Definition.FullTypeName(), "referenced property type is incorrect");
 
             //  Reverse reference does not work using old approach.
@@ -1142,7 +1142,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
         }
 
         [TestMethod]
@@ -1409,7 +1409,7 @@ namespace EdmLibTests.FunctionalTests
             Assert.IsNotNull(model.FindType("NS.Ref1.VipCustomer"), "referenced type should be found");
             IEdmEntitySet entitySet = model.EntityContainer.EntitySets().First<IEdmEntitySet>(s => s.Name == "VipCustomers");
             Assert.IsNotNull(entitySet, "should not be null");
-            Assert.IsNotNull(entitySet.EntityType(), "should not be null");
+            Assert.IsNotNull(entitySet.EntityType, "should not be null");
 
             settings = new CsdlReaderSettings()
             {

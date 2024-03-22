@@ -274,7 +274,7 @@ namespace Microsoft.OData.Tests
 
             IEdmEntitySet customers = Assert.Single(model.EntityContainer.EntitySets());
             Assert.Equal("Customers", customers.Name);
-            Assert.Same(customerType, customers.EntityType());
+            Assert.Same(customerType, customers.EntityType);
 #else
             Action test = () => reader.ReadMetadataDocument();
 

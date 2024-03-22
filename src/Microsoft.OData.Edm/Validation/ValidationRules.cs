@@ -299,18 +299,18 @@ namespace Microsoft.OData.Edm.Validation
                         return;
                     }
 
-                    IEdmEntityType entityType = navigationSource.EntityType();
+                    IEdmEntityType entityType = navigationSource?.EntityType;
 
                     if (entityType == null)
                     {
                         return;
                     }
 
-                    if ((navigationSource.EntityType().Key() == null || !navigationSource.EntityType().Key().Any()) && !context.IsBad(navigationSource.EntityType()))
+                    if ((entityType.Key() == null || !entityType.Key().Any()) && !context.IsBad(entityType))
                     {
                         string errorMessage = Strings.EdmModel_Validator_Semantic_NavigationSourceTypeHasNoKeys(
                             navigationSource.Name,
-                            navigationSource.EntityType().Name);
+                            entityType.Name);
 
                         context.AddError(
                             navigationSource.Location(),
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
-                    IEdmEntityType entityType = navigationSource.EntityType();
+                    IEdmEntityType entityType = navigationSource?.EntityType;
 
                     if (entityType == null)
                     {
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Edm.Validation
             new ValidationRule<IEdmNavigationSource>(
                 (context, navigationSource) =>
                 {
-                    IEdmEntityType entityType = navigationSource.EntityType();
+                    IEdmEntityType entityType = navigationSource?.EntityType;
                     if (entityType != null && !context.IsBad(entityType))
                     {
                         CheckForUnreacheableTypeError(context, entityType, navigationSource.Location());
@@ -397,7 +397,8 @@ namespace Microsoft.OData.Edm.Validation
                             continue;
                         }
 
-                        if (!(mapping.Target.EntityType().IsOrInheritsFrom(mapping.NavigationProperty.ToEntityType()) || mapping.NavigationProperty.ToEntityType().IsOrInheritsFrom(mapping.Target.EntityType())) && !context.IsBad(mapping.Target))
+                        IEdmEntityType navigationPropertyEntityType = mapping.NavigationProperty.ToEntityType();
+                        if (!(mapping.Target.EntityType.IsOrInheritsFrom(navigationPropertyEntityType) || navigationPropertyEntityType.IsOrInheritsFrom(mapping.Target.EntityType)) && !context.IsBad(mapping.Target))
                         {
                             context.AddError(
                                 navigationSource.Location(),
@@ -1705,7 +1706,7 @@ namespace Microsoft.OData.Edm.Validation
                             IEnumerable<EdmError> errors;
                             if (operationImport.TryGetStaticEntitySet(context.Model, out entitySet))
                             {
-                                IEdmEntityType entitySetElementType = entitySet.EntityType();
+                                IEdmEntityType entitySetElementType = entitySet.EntityType;
                                 if (!returnedEntityType.IsOrInheritsFrom(entitySetElementType) && !context.IsBad(returnedEntityType) && !context.IsBad(entitySet) && !context.IsBad(entitySetElementType))
                                 {
                                     string errorMessage = Strings.EdmModel_Validator_Semantic_OperationImportEntityTypeDoesNotMatchEntitySet(
@@ -2759,7 +2760,7 @@ namespace Microsoft.OData.Edm.Validation
         {
             var pathSegments = binding.Path.PathSegments.ToArray();
             IEdmNavigationProperty lastNavProp = null;
-            var definingType = navigationSource.EntityType() as IEdmStructuredType;
+            var definingType = navigationSource?.EntityType as IEdmStructuredType;
 
             for (int index = 0; index < pathSegments.Length; index++)
             {

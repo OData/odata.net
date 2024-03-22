@@ -33,7 +33,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 null /*metadataDocumentUri*/,
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType, true), new IEdmPropertyValue[0]), set.EntityType);
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode(SelectedPropertiesNode.SelectionType.EntireSubtree), NavigationSource = set }, false);
             action.Throws<ODataException>(Strings.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload("odata.context"));
         }
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Tests.Evaluation
                 new Uri("http://myservice.svc/$metadata", UriKind.Absolute),
                 null /*requestUri*/);
             IEdmEntitySet set = this.edmModel.EntityContainer.FindEntitySet("Products");
-            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType(), true), new IEdmPropertyValue[0]), set.EntityType());
+            ODataResource entry = TestUtils.CreateODataEntry(set, new EdmStructuredValue(new EdmEntityTypeReference(set.EntityType, true), new IEdmPropertyValue[0]), set.EntityType);
             Action action = () => context.GetResourceMetadataBuilderForReader(new TestJsonLightReaderEntryState { Resource = entry, SelectedProperties = new SelectedPropertiesNode("*", null, null), NavigationSource = set }, false);
             action.DoesNotThrow();
         }

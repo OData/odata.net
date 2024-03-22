@@ -1751,6 +1751,11 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 set { type = value; }
             }
 
+            public IEdmEntityType EntityType
+            {
+                get { return this.Type.AsElementType() as IEdmEntityType; }
+            }
+
             public bool IncludeInServiceDocument
             {
                 get; set;
@@ -1814,6 +1819,11 @@ namespace Microsoft.OData.Edm.Tests.Validation
             {
                 get { return type; }
                 set { type = value; }
+            }
+
+            public IEdmEntityType EntityType
+            {
+                get { return this.Type.AsElementType() as IEdmEntityType; }
             }
         }
     }

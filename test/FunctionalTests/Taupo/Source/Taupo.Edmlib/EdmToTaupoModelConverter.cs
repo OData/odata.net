@@ -234,7 +234,7 @@ namespace Microsoft.Test.Taupo.Edmlib
         private EntitySet ConvertToTaupoEntitySet(IEdmEntitySet edmEntitySet)
         {
             var taupoEntitySet = new EntitySet(edmEntitySet.Name);
-            taupoEntitySet.EntityType = new EntityTypeReference(edmEntitySet.EntityType().Namespace, edmEntitySet.EntityType().Name);
+            taupoEntitySet.EntityType = new EntityTypeReference(edmEntitySet.EntityType.Namespace, edmEntitySet.EntityType.Name);
 
             this.ConvertAnnotationsIntoTaupo(edmEntitySet, taupoEntitySet);
             return taupoEntitySet;

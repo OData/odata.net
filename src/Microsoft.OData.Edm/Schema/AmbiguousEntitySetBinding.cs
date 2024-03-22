@@ -12,6 +12,8 @@ namespace Microsoft.OData.Edm
 {
     internal class AmbiguousEntitySetBinding : AmbiguousBinding<IEdmEntitySet>, IEdmEntitySet
     {
+        private IEdmEntityType entityType;
+
         public AmbiguousEntitySetBinding(IEdmEntitySet first, IEdmEntitySet second)
             : base(first, second)
         {
@@ -39,6 +41,20 @@ namespace Microsoft.OData.Edm
         public IEdmType Type
         {
             get { return new EdmCollectionType(new EdmEntityTypeReference(new BadEntityType(String.Empty, this.Errors), false)); }
+        }
+
+        /// <inheritdoc/>
+        public IEdmEntityType EntityType
+        {
+            get
+            {
+                if (this.entityType == null)
+                {
+                    this.entityType = this.Type.AsElementType() as IEdmEntityType;
+                }
+
+                return this.entityType;
+            }
         }
 
         public bool IncludeInServiceDocument
