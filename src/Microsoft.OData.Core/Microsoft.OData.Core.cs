@@ -854,6 +854,7 @@ namespace Microsoft.OData
         internal const string JsonReaderExtensions_UnexpectedInstanceAnnotationName = "JsonReaderExtensions_UnexpectedInstanceAnnotationName";
         internal const string BufferUtils_InvalidBufferOrSize = "BufferUtils_InvalidBufferOrSize";
         internal const string ServiceProviderExtensions_NoServiceRegistered = "ServiceProviderExtensions_NoServiceRegistered";
+        internal const string TypeUtils_TypeNameIsNotQualified = "TypeUtils_TypeNameIsNotQualified";
 
         static TextRes loader = null;
         ResourceManager resources;
