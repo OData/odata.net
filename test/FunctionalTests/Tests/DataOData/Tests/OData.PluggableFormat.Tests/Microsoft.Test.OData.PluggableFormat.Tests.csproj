@@ -54,6 +54,7 @@
   </ItemGroup>
  
   <ItemGroup>
+    <Compile Include="ServiceProviderBuilderHelper.cs" />
     <Compile Include="Avro\Test\ODataAvroReaderTests.cs" />
     <Compile Include="Avro\Test\ODataAvroScenarioTests.cs" />
     <Compile Include="Avro\Test\ODataAvroWriterTests.cs" />

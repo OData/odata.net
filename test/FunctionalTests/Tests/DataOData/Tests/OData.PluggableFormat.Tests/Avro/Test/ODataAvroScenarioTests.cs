@@ -17,6 +17,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Test.OData.DependencyInjection;
+    using Microsoft.Test.OData.PluggableFormat.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
