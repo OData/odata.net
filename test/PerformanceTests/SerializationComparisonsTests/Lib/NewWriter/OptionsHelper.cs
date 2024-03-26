@@ -4,7 +4,7 @@ using System.Text.Json;
 
 namespace ExperimentsLib
 {
-    internal static class OptionsHelper
+    public static class OptionsHelper
     {
         public static JsonSerializerOptions CreateJsonSerializerOptions(IEdmModel model, ODataUri uri)
         {

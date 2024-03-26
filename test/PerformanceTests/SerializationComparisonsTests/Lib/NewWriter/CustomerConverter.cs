@@ -8,6 +8,9 @@ using System.Text.Json.Serialization;
 
 namespace ExperimentsLib
 {
+    // conceptually, the converter could be auto-generated using source generation
+    // for user-defined CLR types, or the user could provider a custom "ODataJsonConverter<T">
+    // that has access to the serializer context
     internal class CustomerConverter : JsonConverter<Customer>
     {
         ODataSerializerContext _serializerContext;
@@ -27,20 +30,78 @@ namespace ExperimentsLib
         public override void Write(Utf8JsonWriter writer, Customer value, JsonSerializerOptions options)
         {
             writer.WriteStartObject();
-            writer.WriteNumber("Id", value.Id);
-            writer.WriteString("Name", value.Name);
-            writer.WriteStartArray();
-            foreach (var email in value.Emails)
+            var selectExpandClause = _serializerContext.Uri.SelectAndExpand;
+            IEdmStructuredType structuredType = _serializerContext.Model.FindType("NS.Customer") as IEdmStructuredType;
+            
+
+            // fast path when all fields are selected
+            if (selectExpandClause == null || selectExpandClause.AllSelected)
             {
-                writer.WriteStringValue(email);
+                writer.WriteNumber("Id", value.Id);
+                writer.WriteString("Name", value.Name);
+
+                writer.WritePropertyName("Emails");
+                writer.WriteStartArray();
+                foreach (var email in value.Emails)
+                {
+                    writer.WriteStringValue(email);
+                }
+                writer.WriteEndArray();
+
+                writer.WritePropertyName("HomeAddress");
+                _addressConverter.Write(writer, value.HomeAddress, options);
+
+                writer.WritePropertyName("Addressess");
+                _addressCollectionConverter.Write(writer, value.Addresses, options);
             }
-            writer.WriteEndArray();
+            else
+            {
+                var selectExpandNode = new SelectExpandNode(structuredType, _serializerContext);
+                if (selectExpandNode.SelectedStructuralProperties != null)
+                {
+                    
+                    foreach (var property in selectExpandNode.SelectedStructuralProperties)
+                    {
+                        if (property.Name == "Id")
+                        {
+                            writer.WriteNumber("Id", value.Id);
+                        }
 
-            writer.WritePropertyName("HomeAddress");
-            _addressConverter.Write(writer, value.HomeAddress, options);
+                        else if (property.Name == "Name")
+                        {
+                            writer.WriteString("Name", value.Name);
+                        }
 
-            writer.WritePropertyName("Addressess");
-            _addressCollectionConverter.Write(writer, value.Addresses, options);
+                        else if (property.Name == "Emails")
+                        {
+                            writer.WritePropertyName("Emails");
+                            writer.WriteStartArray();
+                            foreach (var email in value.Emails)
+                            {
+                                writer.WriteStringValue(email);
+                            }
+                            writer.WriteEndArray();
+                        }
+                    }
+                }
+                if (selectExpandNode.SelectedComplexProperties != null)
+                {
+                    foreach (KeyValuePair<IEdmStructuralProperty, PathSelectItem> complex in selectExpandNode.SelectedComplexProperties)
+                    {
+                        if (complex.Key.Name == "HomeAddress")
+                        {
+                            writer.WritePropertyName("HomeAddress");
+                            _addressConverter.Write(writer, value.HomeAddress, options);
+                        }
+
+                        else if (complex.Key.Name == "Addresses")
+                        {
+                            writer.WritePropertyName("Addressess");
+                            _addressCollectionConverter.Write(writer, value.Addresses, options);
+                        }
+                    }
+                }
+            }
 
             writer.WriteEndObject();
         }
@@ -184,6 +245,12 @@ namespace ExperimentsLib
     {
         public IEdmModel Model { get; set; }
         public ODataUri Uri { get; set; }
+
+        public SelectExpandClause SelectExpandClause => Uri.SelectAndExpand;
+
+        public bool ExpandReference { get; set; }
+
+        public ISet<string> ComputedProperties { get; set; }
 
     }
 }
