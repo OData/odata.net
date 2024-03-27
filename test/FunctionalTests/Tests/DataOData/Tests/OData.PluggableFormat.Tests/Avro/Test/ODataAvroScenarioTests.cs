@@ -15,9 +15,8 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
     using Microsoft.Hadoop.Avro;
     using Microsoft.Hadoop.Avro.Container;
     using Microsoft.OData;
+    using Microsoft.OData.Core.Tests.DependencyInjection;
     using Microsoft.OData.Edm;
-    using Microsoft.Test.OData.DependencyInjection;
-    using Microsoft.Test.OData.PluggableFormat.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
@@ -109,7 +108,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             action.AddParameter("Products", new EdmCollectionTypeReference(new EdmCollectionType(new EdmEntityTypeReference(EntryType, false))));
             GetMaxId = action;
 
-            container = ServiceProviderBuilderHelper.BuildServiceProvider(builder =>
+            container = ServiceProviderHelper.BuildServiceProvider(builder =>
                 builder.AddSingleton<ODataMediaTypeResolver, AvroMediaTypeResolver>());
         }
 
