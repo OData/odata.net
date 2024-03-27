@@ -1,6 +1,7 @@
 ﻿using ExperimentsLib;
 using Microsoft.OData;
 using Microsoft.OData.UriParser;
+using System.Net;
 using System.Text.Json;
 
 var model = DataModel.GetEdmModel();
@@ -13,14 +14,11 @@ await CustomersExample("Customers?$select=Id,Name", "Customers entity set with s
 
 await CustomersExample("Customers?$select=Emails,HomeAddress", "Customers entity set with selected Emails and HomeAddress");
 
-
-Task<string> WriteCustomerEntitySet(IEnumerable<Customer> payload, string endpoint)
-{
-    var odataUri = ParseODataUri(endpoint);
-    var options = OptionsHelper.CreateJsonSerializerOptions(model, odataUri);
-
-    return WritePayload(payload, options);
-}
+await WriteExample(
+    data.Select(d => new { Id = d.Id, Name = d.Name }),
+    "Customers?$select=Id,Name",
+    "LINQ-projected customer entities with $select=Id,Nmae"
+    );
 
 ODataUri ParseODataUri(string uriString)
 {
@@ -31,8 +29,10 @@ ODataUri ParseODataUri(string uriString)
     return odataUri;
 }
 
-async Task<string> WritePayload<T>(T payload, JsonSerializerOptions options)
+async Task<string> WritePayload<T>(T payload, string endpoint)
 {
+    var odataUri = ParseODataUri(endpoint);
+    var options = OptionsHelper.CreateJsonSerializerOptions(model, odataUri);
     var stream = new MemoryStream();
     await JsonSerializer.SerializeAsync(stream, payload, options);
     stream.Position = 0;
@@ -43,8 +43,13 @@ async Task<string> WritePayload<T>(T payload, JsonSerializerOptions options)
 
 async Task CustomersExample(string endpoint, string description)
 {
+    await WriteExample(data, endpoint, description);
+}
+
+async Task WriteExample<T>(T payload, string endpoint, string description)
+{
     Console.WriteLine(description);
-    var content = await WriteCustomerEntitySet(data, endpoint);
+    var content = await WritePayload(payload, endpoint);
     Console.WriteLine(content);
     Console.WriteLine();
     Console.WriteLine("Press key to continue...");
