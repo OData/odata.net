@@ -17,7 +17,8 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     using Microsoft.Test.Taupo.Astoria.Contracts.Wrappers;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.Wrappers;
- /// <summary>
+
+    /// <summary>
     /// Creates a wrapped DataServiceContext
     /// </summary>
     [ImplementationName(typeof(IDataServiceContextCreator), "Default")]

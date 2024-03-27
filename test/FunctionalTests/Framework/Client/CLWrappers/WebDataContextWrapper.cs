@@ -54,7 +54,7 @@ namespace System.Data.Test.Astoria
     using TestSL;
     using System.Security.Permissions;
     using System.Security;
-   // using Microsoft.OData.TestCommon;
+    using Microsoft.OData.TestCommon;
 
     public enum ContextAction
     {
@@ -255,10 +255,10 @@ namespace System.Data.Test.Astoria
 
             // Create new data service context to interact with messaging service.
             SLDataService = new DataServiceContext(new Uri(validMQuri, UriKind.Absolute));
-           /* SLDataService.HttpClientFactory = new TestHttpClientFactory(new TestHttpClientFactoryOptions
+            SLDataService.HttpClientFactory = new TestHttpClientFactory(new TestHttpClientFactoryOptions
             {
                 Credentials = CredentialCache.DefaultNetworkCredentials
-            });*/
+            });
 
             HasRemote = true;
         }
