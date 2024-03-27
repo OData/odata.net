@@ -33,7 +33,7 @@ Partial Public Class ClientModule
 
         Private Shared web As TestWebRequest = Nothing
         Private Shared originalHostType As Type = Nothing
-        Private sentRequests As New List(Of HttpWebRequest)()
+        Private sentRequests As New List(Of HttpRequestMessage)()
         Private ctx As NorthwindSimpleModel.NorthwindContext = Nothing
 
 #Region "Initialize DataService and create new context for each text"

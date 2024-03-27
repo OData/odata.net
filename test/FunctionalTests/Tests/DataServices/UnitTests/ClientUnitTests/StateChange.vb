@@ -16,13 +16,14 @@ Imports Microsoft.VisualStudio.TestTools.UnitTesting
 Imports AstoriaUnitTests.Data
 Imports AstoriaUnitTests.Stubs
 Imports Microsoft.Test.ModuleCore
+Imports System.Net.Http
 
 Partial Public Class ClientModule
     ' For comment out test cases, see github: https://github.com/OData/odata.net/issues/887
     <TestClass()> Public Class StateChange
 
         Private Shared web As TestWebRequest = Nothing
-        Private sentRequests As New List(Of HttpWebRequest)()
+        Private sentRequests As New List(Of HttpRequestMessage)()
         Private ctx As NorthwindSimpleModel.NorthwindContext = Nothing
 
 #Region "Initialize DataService and create new context for each text"
