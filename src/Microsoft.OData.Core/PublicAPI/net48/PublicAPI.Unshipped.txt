@@ -63,6 +63,10 @@ Microsoft.OData.ODataMessageWriterSettings.ODataMessageWriterSettings(Microsoft.
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value, Microsoft.OData.ODataVersion version) -> void
 Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseScaleVariable.get -> bool
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseScaleVariable.set -> void
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseSridVariable.get -> bool
+Microsoft.OData.ODataMessageWriterSettings.UseLowercaseSridVariable.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void

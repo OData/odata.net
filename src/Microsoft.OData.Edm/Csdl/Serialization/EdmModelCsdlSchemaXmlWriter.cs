@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
@@ -24,12 +25,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
         protected XmlWriter xmlWriter;
         protected readonly string edmxNamespace;
+        private readonly CsdlXmlWriterSettings settings;
 
-        internal EdmModelCsdlSchemaXmlWriter(IEdmModel model, XmlWriter xmlWriter, Version edmVersion)
+        internal EdmModelCsdlSchemaXmlWriter(IEdmModel model, XmlWriter xmlWriter, Version edmVersion, CsdlXmlWriterSettings csdlXmlWriterSettings)
             : base(model, edmVersion)
         {
             this.xmlWriter = xmlWriter;
             this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmVersion];
+            this.settings = csdlXmlWriterSettings;
         }
 
         internal override void WriteReferenceElementHeader(IEdmReference reference)
@@ -826,14 +829,28 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private static string SridAsXml(int? i)
+        private string SridAsXml(int? i)
         {
-            return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable;
+            if (this.settings?.UseLowercaseSridVariable == true)
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable_Lower;
+            }
+            else 
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable;
+            }
         }
 
-        private static string ScaleAsXml(int? i)
+        private string ScaleAsXml(int? i)
         {
-            return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable;
+            if (this.settings?.UseLowercaseScaleVariable == true)
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable_Lower;
+            }
+            else 
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable;
+            }
         }
 
         private static string GetCsdlNamespace(Version edmVersion)

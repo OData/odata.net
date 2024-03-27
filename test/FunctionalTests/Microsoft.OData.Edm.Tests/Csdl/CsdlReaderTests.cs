@@ -760,6 +760,106 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ReadAnnotationWithoutSpecifiedValueAndUsePrimitiveDefaultValues_WithLowerCase_ScaleVariable()
+        {
+            CsdlXmlWriterSettings csdlXmlWriterSettings = new CsdlXmlWriterSettings
+            {
+                UseLowercaseScaleVariable = true
+            };
+
+            var csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.DefaultBinaryTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultStringTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDurationTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultTODTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultBoolTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultSingleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDoubleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultGuidTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultInt16Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt32Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt64Term\" />" +
+                     "<Annotation Term=\"NS.DefaultDateTerm\" />" +
+                   "</ComplexType>" +
+                 "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"variable\" />" +
+                 "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultTODTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultSingleTerm\" Type=\"Edm.Single\" DefaultValue=\"0.2\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDoubleTerm\" Type=\"Edm.Double\" DefaultValue=\"3.94\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultGuidTerm\" Type=\"Edm.Guid\" DefaultValue=\"21EC2020-3AEA-1069-A2DD-08002B30309D\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt16Term\" Type=\"Edm.Int16\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt32Term\" Type=\"Edm.Int32\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt64Term\" Type=\"Edm.Int64\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>";
+            // Parse into CSDL
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdl).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
+            IEdmVocabularyAnnotation[] annotations = model.VocabularyAnnotations.ToArray();
+            Assert.Equal(13, annotations.Length);
+            for (int i = 0; i < annotations.Length; i++)
+            {
+                IEdmVocabularyAnnotation annotationWithDefaultValue = Assert.IsAssignableFrom<IEdmVocabularyAnnotation>(annotations[i]);
+                Assert.NotNull(annotationWithDefaultValue.Value);
+            }
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            bool validated = model.Validate(out errors);
+            Assert.True(validated);
+
+            // Act & Assert for Reserialized XML
+            CsdlWriterTests.WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+             "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+               "<edmx:DataServices>" +
+                 "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                   "<ComplexType Name=\"Complex\">" +
+                     "<Annotation Term=\"NS.DefaultBinaryTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultStringTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDurationTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultTODTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultBoolTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultSingleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultDoubleTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultGuidTerm\" />" +
+                     "<Annotation Term=\"NS.DefaultInt16Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt32Term\" />" +
+                     "<Annotation Term=\"NS.DefaultInt64Term\" />" +
+                     "<Annotation Term=\"NS.DefaultDateTerm\" />" +
+                   "</ComplexType>" +
+                 "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"variable\" />" +
+                 "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultTODTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultSingleTerm\" Type=\"Edm.Single\" DefaultValue=\"0.2\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDoubleTerm\" Type=\"Edm.Double\" DefaultValue=\"3.94\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultGuidTerm\" Type=\"Edm.Guid\" DefaultValue=\"21EC2020-3AEA-1069-A2DD-08002B30309D\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt16Term\" Type=\"Edm.Int16\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt32Term\" Type=\"Edm.Int32\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultInt64Term\" Type=\"Edm.Int64\" DefaultValue=\"4\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
+                 "</Schema>" +
+               "</edmx:DataServices>" +
+             "</edmx:Edmx>", csdlXmlWriterSettings);
+        }
+
+        [Fact]
         public void ParsingValidXmlWithNoReferencesShouldSucceed()
         {
             this.RunValidTest(CsdlReader.Parse);

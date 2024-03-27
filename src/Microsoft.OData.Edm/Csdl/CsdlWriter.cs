@@ -84,7 +84,6 @@ namespace Microsoft.OData.Edm.Csdl
         }
 #endif
 
-
         /// <summary>
         /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
         /// </summary>
@@ -105,6 +104,33 @@ namespace Microsoft.OData.Edm.Csdl
             }
 
             CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target);
+            csdlWriter.WriteCsdl();
+
+            errors = Enumerable.Empty<EdmError>();
+            return true;
+        }
+
+        /// <summary>
+        /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
+        /// </summary>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="target">Target implementation of the CSDL being generated.</param>
+        /// <param name="csdlXmlWriterSettings">The CSDL xml writer settings.</param>
+        /// <param name="errors">Errors that prevented successful serialization, or no errors if serialization was successful. </param>
+        /// <returns>A value indicating whether serialization was successful.</returns>
+        public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, CsdlXmlWriterSettings csdlXmlWriterSettings, out IEnumerable<EdmError> errors)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(writer, "writer");
+
+            Version edmxVersion;
+            if (!VerifyAndGetVersion(model, out edmxVersion, out errors))
+            {
+                return false;
+            }
+
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target, csdlXmlWriterSettings);
             csdlWriter.WriteCsdl();
 
             errors = Enumerable.Empty<EdmError>();
