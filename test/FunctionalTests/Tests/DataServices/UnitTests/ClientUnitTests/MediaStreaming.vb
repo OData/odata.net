@@ -1320,7 +1320,7 @@ Partial Public Class ClientModule
                     Dim request = CType(e.RequestMessage, HttpClientRequestMessage).HttpRequestMessage
                     If setContentLengthExplicitly Then
                         ' Checks that streaming/non-streaming is OK with different content lengths, including 0 and unset
-                        request.Content.Headers.ContentLength = content.Length
+                        request.ContentLength = content.Length
                     End If
                     request.AllowWriteStreamBuffering = enableBuffering
                 End Sub
