@@ -1584,6 +1584,41 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ParseFilter_InExpand_AppliedOnBoundFunctionResults()
+        {
+            // Arrange & Act
+            Uri uri = new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs?$expand=MyFriendsDogs($filter=ID eq 1)");
+            IEdmStructuredType expectedLeft = (IEdmStructuredType)HardCodedTestModel.GetDogType();
+
+            SelectExpandClause selectExpandClause = ParseSelectExpand(uri);
+
+            // Assert
+            ExpandedNavigationSelectItem expandedSelectItem = (ExpandedNavigationSelectItem)Assert.Single(selectExpandClause.SelectedItems); // $expand=MyFriendsDogs(...)
+            Assert.NotNull(expandedSelectItem.FilterOption); // $filter=ID eq 1
+            BinaryOperatorNode binaryOperatorNode = expandedSelectItem.FilterOption.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
+            IEdmStructuredType left = (binaryOperatorNode.Left as SingleValuePropertyAccessNode).Property.DeclaringType;
+            string right = (binaryOperatorNode.Right as ConstantNode).LiteralText;
+
+            Assert.Equal(expectedLeft, left);
+            Assert.Equal("1", right);
+        }
+
+        [Fact]
+        public void ParseOrderBy_InExpand_AppliedOnBoundFunctionResults()
+        {
+            // Arrange & Act
+            Uri uri = new Uri("http://gobbledygook/People/Fully.Qualified.Namespace.GetPeopleWhoHaveDogs?$expand=MyFriendsDogs($orderby=ID)");
+
+            SelectExpandClause selectExpandClause = ParseSelectExpand(uri);
+            // Assert
+            ExpandedNavigationSelectItem expandedSelectItem = (ExpandedNavigationSelectItem)Assert.Single(selectExpandClause.SelectedItems); // $expand=MyFriendsDogs(...)
+            Assert.NotNull(expandedSelectItem.OrderByOption); // $orderby=ID
+
+            SingleValuePropertyAccessNode singleValuePropertyAccessNode = expandedSelectItem.OrderByOption.Expression.ShouldBeSingleValuePropertyAccessQueryNode(HardCodedTestModel.GetDogIdProp());
+            Assert.Equal(OrderByDirection.Ascending, expandedSelectItem.OrderByOption.Direction);
+        }
+
+        [Fact]
         public void SelectAndExpandShouldFailOnSelectWrongComplexProperties()
         {
             Action parse = () => RunParseSelectExpand("Name,MyAddress/City/Street,MyDog", "MyDog($select=Color)", HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
@@ -2401,6 +2436,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.True(result.AllSelected);
 
             return expandedSelectionItem;
+        }
+
+        private static SelectExpandClause ParseSelectExpand(Uri uri)
+        {
+            List<CustomQueryOptionToken> queries = Microsoft.OData.UriParser.QueryOptionUtils.ParseQueryOptions(uri);
+            ODataUriParser parser = new ODataUriParser(HardCodedTestModel.TestModel, new Uri("http://gobbledygook/"), uri);
+
+            ODataPath path = parser.ParsePath();
+            var dic = queries.ToDictionary(customQueryOptionToken => customQueryOptionToken.Name, customQueryOptionToken => queries.GetQueryOptionValue(customQueryOptionToken.Name));
+
+            ODataQueryOptionParser queryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel, path, dic)
+            {
+                Configuration = { ParameterAliasValueAccessor = parser.ParameterAliasValueAccessor }
+            };
+
+            FilterClause filterClause = queryOptionParser.ParseFilter();
+            SelectExpandClause selectExpandClause = queryOptionParser.ParseSelectAndExpand();
+
+            return selectExpandClause;
         }
         #endregion
 
