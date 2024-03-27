@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> b23a7d091 (update changes)
 ﻿'---------------------------------------------------------------------
 ' <copyright file="UpdateTests.vb" company="Microsoft">
 '      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
@@ -2289,6 +2292,9 @@ Public Class DeleteComplexPropertyContext
         Return clientType.FullName
     End Function
 End Class
+<<<<<<< HEAD
 =======
 ﻿
 >>>>>>> 38ab2b532 (Add e2e tests to pipeline)
+=======
+>>>>>>> b23a7d091 (update changes)
