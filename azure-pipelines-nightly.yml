@@ -71,7 +71,7 @@ extends:
           ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
           NugetArtifactsDir: 'Nuget-Debug'
       steps:
-        - template: nightly.yml
+        - template: /nightly.yml
 
     - job:  Release
       variables:
@@ -94,5 +94,5 @@ extends:
           ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
           NugetArtifactsDir: 'Nuget-Release'
       steps:
-        - template: nightly.yml
+        - template: /nightly.yml
 
