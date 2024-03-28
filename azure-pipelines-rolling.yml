@@ -12,55 +12,84 @@ trigger:
 pr:
 - main
 
-jobs:
+resources:
+  repositories:
+  - repository: self
+    type: git
+    ref: refs/heads/main
+  - repository: 1ESPipelineTemplates
+    type: git
+    name: 1ESPipelineTemplates/1ESPipelineTemplates
+    ref: refs/tags/release
 
-- job:  Debug
-  pool:
-    vmImage: 'windows-2019'
-  variables:
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-    skipComponentGovernanceDetection: true
-    snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-    snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-    gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-    ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
-    mainDll1: 'Microsoft.OData.Edm.dll'
-    ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
-    mainDll2: 'Microsoft.OData.Core.dll'
-    ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
-    mainDll3: 'Microsoft.Spatial.dll'
-    ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
-    mainDll4: 'Microsoft.OData.Client.dll'
-    ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
-    mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
-    ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
-  steps:
-    - template: buildandtest.yml
-    - template: credscan.yml
+variables:
+- name: __NugetSecurityAnalysisWarningLevel__
+  value: none
+- name: BuildConfiguration
+  value: release
+- name: BuildPlatform
+  value: anycpu
+- name: ProductBinPath
+  value: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)
+- name: runCodesignValidationInjection
+  value: false
 
-- job:  Release
-  pool:
-    vmImage: 'windows-2019'
-  variables:
-    buildPlatform: 'Any CPU'
-    buildConfiguration: 'Release'
-    skipComponentGovernanceDetection: true
-    snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
-    snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
-    gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-    ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
-    mainDll1: 'Microsoft.OData.Edm.dll'
-    ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
-    mainDll2: 'Microsoft.OData.Core.dll'
-    ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
-    mainDll3: 'Microsoft.Spatial.dll'
-    ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
-    mainDll4: 'Microsoft.OData.Client.dll'
-    ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
-    mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
-    ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
-  steps:
-    - template: buildandtest.yml
-    - template: credscan.yml
+extends:
+  template: v1/1ES.Official.PipelineTemplate.yml@1ESPipelineTemplates
+  parameters:
+    pool:
+      name: MSSecurity-1ES-Build-Agents-Pool
+      image: MSSecurity-1ES-Windows-2022
+      os: windows
+    customBuildTags:
+    - ES365AIMigrationTooling
+    stages:
+    - stage: stage
+      jobs:
+      - job:  Debug
+        timeoutInMinutes: 120
+        variables:
+          buildPlatform: 'Any CPU'
+          buildConfiguration: 'Release'
+          skipComponentGovernanceDetection: true
+          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+          mainDll1: 'Microsoft.OData.Edm.dll'
+          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+          mainDll2: 'Microsoft.OData.Core.dll'
+          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+          mainDll3: 'Microsoft.Spatial.dll'
+          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+          mainDll4: 'Microsoft.OData.Client.dll'
+          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+          mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
+          ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+        steps:
+          - template: buildandtest.yml
+          - template: credscan.yml
+
+      - job:  Release
+        variables:
+          buildPlatform: 'Any CPU'
+          buildConfiguration: 'Release'
+          skipComponentGovernanceDetection: true
+          snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
+          snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
+          gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
+          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+          mainDll1: 'Microsoft.OData.Edm.dll'
+          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+          mainDll2: 'Microsoft.OData.Core.dll'
+          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+          mainDll3: 'Microsoft.Spatial.dll'
+          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+          mainDll4: 'Microsoft.OData.Client.dll'
+          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+          mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
+          ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+        steps:
+          - template: buildandtest.yml
+          - template: credscan.yml
 
