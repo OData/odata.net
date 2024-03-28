@@ -67,8 +67,8 @@ extends:
           mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
           ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
         steps:
-          - template: /buildandtest.yml
-          - template: /credscan.yml
+          - template: /buildandtest.yml@self
+          - template: /credscan.yml@self
 
       - job:  Release
         variables:
@@ -90,6 +90,6 @@ extends:
           mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
           ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
         steps:
-          - template: /buildandtest.yml
-          - template: /credscan.yml
+          - template: /buildandtest.yml@self
+          - template: /credscan.yml@self
 
