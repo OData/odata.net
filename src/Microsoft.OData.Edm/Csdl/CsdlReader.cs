@@ -312,9 +312,9 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmxVersion;
             CsdlModel astModel;
 
-            TryParseCsdlFileToCsdlModel(out edmxVersion, out astModel);
+            bool parsed = TryParseCsdlFileToCsdlModel(out edmxVersion, out astModel);
 
-            if (!this.HasIntolerableError())
+            if (!this.HasIntolerableError() && parsed)
             {
                 List<CsdlModel> referencedAstModels = this.LoadAndParseReferencedCsdlFiles(edmxVersion);
 
