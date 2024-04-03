@@ -218,7 +218,7 @@ namespace Microsoft.OData.Edm
 
             if (elementEdmType != null)
             {
-                return schemaType.AsElementType().IsOrInheritsFrom(elementEdmType);
+                return schemaType.AsElementType().IsOrInheritsFrom(elementEdmType.AsElementType());
             }
 
             return false;

@@ -236,6 +236,54 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ParsingEntitySetPropertyOnDerivedComplexTypeCollectionOutOfLineAnnotationsWorks()
+        {
+            // Test for MySchema.MyEntityContainer/MyEntitySet/MyComplexCollectionProperty/MySchema.DerivedType/MyProperty
+
+            string types =
+@"<EntityType Name=""City"">
+    <Key>
+        <PropertyRef Name=""Name""/>
+    </Key>
+    <Property Name=""Name"" Nullable=""false"" Type=""Edm.String""/>
+</EntityType>
+<ComplexType Name=""Address"">
+    <Property Name=""Road"" Type=""Edm.String"" Nullable=""false""/>
+</ComplexType>
+<ComplexType Name=""LocalAddress"" BaseType=""NS.Address"">
+    <Property Name=""BuildingInfo"" Type=""Edm.String"" Nullable=""false""/>
+</ComplexType>
+<Term Name=""MyTerm"" Type=""Edm.String""/>
+<Annotations Target=""NS.Default/Customers/AddressInfo/NS.LocalAddress/Road"" >
+  <Annotation Term=""NS.MyTerm"" String=""Name OutOfLine MyTerm Value"" />
+</Annotations>";
+
+            string properties =
+                @"<Property Name=""AddressInfo"" Type=""Collection(NS.Address)"" />";
+
+            IEdmModel model = GetModel(types: types, properties: properties);
+            Assert.NotNull(model);
+
+            IEnumerable<EdmError> errors;
+            Assert.True(model.Validate(out errors), String.Format("Errors in validating model. {0}", String.Concat(errors.Select(e => e.ErrorMessage))));
+
+            var customer = model.SchemaElements.OfType<IEdmEntityType>().FirstOrDefault(c => c.Name == "Customer");
+            Assert.NotNull(customer);
+
+            IEdmTerm myTerm = model.FindDeclaredTerm("NS.MyTerm");
+            Assert.NotNull(myTerm);
+
+            // Name
+            IEdmProperty nameProperty = customer.DeclaredProperties.Where(x => x.Name == "AddressInfo").FirstOrDefault();
+            Assert.NotNull(nameProperty);
+
+            IEdmTargetPath targetPath = model.GetTargetPath("NS.Default/Customers/AddressInfo/NS.LocalAddress/Road");
+
+            string nameAnnotation = GetAnnotation(model, targetPath, myTerm, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
+            Assert.Equal("Name OutOfLine MyTerm Value", nameAnnotation);
+        }
+
+        [Fact]
         public void ParsingEntitySetPropertyOnDerivedTypeOutOfLineAnnotationsWorks()
         {
             // Test for MySchema.MyEntityContainer/MyEntitySet/MySchema.DerivedType/MyProperty
