@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                 {
                     if (args.Method == "MERGE")
                     {
-                        var newArgs = new DataServiceClientRequestMessageArgs("PATCH", args.RequestUri, true, args.UsePostTunneling, args.Headers);
+                        var newArgs = new DataServiceClientRequestMessageArgs("PATCH", args.RequestUri, args.UsePostTunneling, args.Headers);
 
                         // PATCH verb not supported in V1 or V2
                         newArgs.Headers.Remove("DataServiceVersion");
@@ -103,7 +103,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
                     if (args.Method == "PATCH")
                     {
                         // use Merge
-                        var newArgs = new DataServiceClientRequestMessageArgs("MERGE", args.RequestUri, true, args.UsePostTunneling, args.Headers);
+                        var newArgs = new DataServiceClientRequestMessageArgs("MERGE", args.RequestUri, args.UsePostTunneling, args.Headers);
                         // use V4 since Merge is removed only in V4
                         newArgs.Headers["DataServiceVersion"] = "4.0";
 
