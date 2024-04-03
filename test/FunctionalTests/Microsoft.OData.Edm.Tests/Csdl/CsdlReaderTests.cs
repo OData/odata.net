@@ -42,6 +42,36 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ShouldReadEdmReference2()
+        {
+            // Act & Assert for XML
+            string csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+              "<edmx:DataServices>" +
+                            "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"EntityType1\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.String\">" +
+                                        "<Annotation Term=\"Org.OData.Validation.V1.AllowedValues\">" +
+                                            "<Collection>" + 
+                                                "<Record>" + 
+                                                    "<PropertyValue Property=\"Value\" String=\"testing\" />" +
+                                                "</Record>" +
+                                            "</Collection>" +
+                                        "</Annotation>" +
+                                    "</Property>" +
+                                "</EntityType>" +
+                            "</Schema>" +
+                        "</edmx:DataServices>" +
+            "</edmx:Edmx>";
+
+            if (!CsdlReader.TryParse(XElement.Parse(csdl).CreateReader(), out var model, out var errors))
+            {
+                Assert.False(true, string.Join(Environment.NewLine, errors.Select(error => error.ToString())));
+            }
+        }
+
+        [Fact]
         public void ShouldReadEdmReference()
         {
             // Act & Assert for XML
