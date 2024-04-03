@@ -9,13 +9,11 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using System;
     using System.Collections.Generic;
     using Microsoft.OData.Client;
-    using System.Diagnostics;
     using System.IO;
     using System.Linq;
     using System.Net;
     using System.Net.Http;
     using System.Net.Http.Headers;
-    using System.Threading;
     using System.Threading.Tasks;
     using Microsoft.OData;
 
@@ -107,38 +105,11 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
         }
 
         /// <summary>
-        ///  Gets or set the credentials for this request.
-        /// </summary>
-        public override ICredentials Credentials
-        {
-            get
-            {
-                return this.handler.Credentials;
-            }
-            set
-            {
-                this.handler.Credentials = value;
-            }
-        }
-
-        /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
         public override int Timeout 
         { 
-            get
-            {
-                return (int)this.client.Timeout.TotalSeconds;
-            }
-            set
-            {
-                this.client.Timeout = new TimeSpan(0, 0, value);
-            }
-        }
-
-        public override int ReadWriteTimeout
-        {
             get
             {
                 return (int)this.client.Timeout.TotalSeconds;
