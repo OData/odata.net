@@ -8,7 +8,6 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
 {
     using System;
     using System.Collections.Generic;
-    using Microsoft.OData.Client;
     using System.IO;
     using System.Linq;
     using System.Net;
@@ -16,6 +15,7 @@ namespace Microsoft.Test.OData.Tests.Client.TransportLayerTests
     using System.Net.Http.Headers;
     using System.Threading.Tasks;
     using Microsoft.OData;
+    using Microsoft.OData.Client;
 
     /// <summary>
     /// HttpClient based implementation of DataServiceClientRequestMessage.
