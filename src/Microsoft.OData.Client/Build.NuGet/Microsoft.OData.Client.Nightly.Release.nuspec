@@ -6,7 +6,7 @@
     <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
     <version>$VersionFullSemantic$-Nightly$NightlyBuildVersion$</version>
     <authors>Microsoft</authors>
-    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
