@@ -997,3 +997,5 @@ JsonReaderExtensions_UnexpectedInstanceAnnotationName=An unexpected instance ann
 BufferUtils_InvalidBufferOrSize=The buffer from pool cannot be null or less than the required minimal size '{0}'.
 
 ServiceProviderExtensions_NoServiceRegistered=No service for type '{0}' has been registered.
+
+TypeUtils_TypeNameIsNotQualified=The value '{0}' is not a qualified type name. A qualified type name is expected.

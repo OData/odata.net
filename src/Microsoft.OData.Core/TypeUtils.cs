@@ -103,6 +103,11 @@ namespace Microsoft.OData
             }
 
             int separator = qualifiedTypeName.LastIndexOf(".", StringComparison.Ordinal);
+            if (separator == -1)
+            {
+                throw new ODataException(Strings.TypeUtils_TypeNameIsNotQualified(qualifiedTypeName));
+            }
+
             namespaceName = qualifiedTypeName.Substring(0, separator);
             typeName = qualifiedTypeName.Substring(separator == 0 ? 0 : separator + 1);
         }
