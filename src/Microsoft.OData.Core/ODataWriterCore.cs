@@ -2846,11 +2846,13 @@ namespace Microsoft.OData
 
             ODataPath path = odataPath;
 
-            KeyValuePair<string, object>[] keys = GetKeyProperties(throwIfFail);
-            if (keys != null && keys.Length > 0)
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            IList<KeyValuePair<string, object>> keys = GetKeyProperties(currentEntityType, throwIfFail);
+            if (keys != null && keys.Count > 0)
             {
-                IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
-                path = path.AddKeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
+                
+                KeySegment keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource, verifyNavigationSourceType: false);
+                path = path.AddKeySegment(keySegment);
             }
 
             return path;
@@ -2858,21 +2860,21 @@ namespace Microsoft.OData
 
         private bool TryBuildKeySegment(out KeySegment keySegment)
         {
-            KeyValuePair<string, object>[] keys = GetKeyProperties(false /*throwIfFail*/);
-            if (keys == null || keys.Length == 0)
+            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            IList<KeyValuePair<string, object>> keys = GetKeyProperties(currentEntityType, throwIfFail: false);
+            if (keys == null || keys.Count == 0)
             {
                 keySegment = null;
                 return false;
             }
 
-            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
+            
             keySegment = new KeySegment(keys, currentEntityType, this.CurrentScope.NavigationSource);
             return true;
         }
 
-        private KeyValuePair<string, object>[] GetKeyProperties(bool throwIfFail)
+        private IList<KeyValuePair<string, object>> GetKeyProperties(IEdmEntityType currentEntityType, bool throwIfFail)
         {
-            IEdmEntityType currentEntityType = this.CurrentScope.ResourceType as IEdmEntityType;
             ODataResourceBase resource = this.CurrentScope.Item as ODataResourceBase;
             Debug.Assert(resource != null,
                 "If the current state is Resource the current item must be an ODataResource as well (and not null either).");

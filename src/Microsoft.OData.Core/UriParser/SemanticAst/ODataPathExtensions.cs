@@ -8,6 +8,7 @@ using System.Diagnostics;
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Text;
     using System.Collections.Generic;
     using System.Linq;
@@ -108,14 +109,42 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            var typeHandler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            var keyHandler = new SplitEndingSegmentOfTypeHandler<KeySegment>();
-            path.WalkWith(typeHandler);
-            typeHandler.FirstPart.WalkWith(keyHandler);
-            ODataPath newPath = keyHandler.FirstPart;
-            AppendLastSegment(typeHandler, newPath);
+            // if the path ends in type segments
+            // we should remove the key segment before the type segments
 
-            return newPath;
+            if (path.Count == 0)
+            {
+                return path;
+            }
+
+            int typeSplitIndex = path.Count - 1;
+            while (typeSplitIndex > -1 && path[typeSplitIndex] is TypeSegment)
+            {
+                typeSplitIndex--;
+            }
+
+            if (!(path[typeSplitIndex] is KeySegment))
+            {
+                // path does not end with a key segment
+                return path;
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count - 1);
+
+            for (int i = 0; i < typeSplitIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            for (int i = typeSplitIndex + 1; i < path.Count; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            // Since we created the segments list here and we're sure it's not going to be
+            // used anywhere else, it's safe and much more efficient to tell ODataPath
+            // to take it as is without making an internal copy.
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>
@@ -131,10 +160,33 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            path.WalkWith(handler);
+            if (path.Count == 0)
+            {
+                return path;
+            }
 
-            return handler.FirstPart;
+            int typeSplitIndex = path.Count - 1;
+            while (typeSplitIndex > -1 && path[typeSplitIndex] is TypeSegment)
+            {
+                typeSplitIndex--;
+            }
+
+            if (typeSplitIndex == path.Count - 1)
+            {
+                // no ending type segment
+                return path;
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(typeSplitIndex);
+            for (int i = 0; i <= typeSplitIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            // Since we created the segments list here and we're sure it's not going to be
+            // used anywhere else, it's safe and much more efficient to tell ODataPath
+            // to take it as is without making an internal copy.
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>
@@ -150,7 +202,20 @@ namespace Microsoft.OData.UriParser
                 throw Error.ArgumentNull(nameof(path));
             }
 
-            return new ODataPath(path.Segments.Take(path.Segments.FindLastIndex(segment => !(segment is KeySegment || segment is TypeSegment)) + 1));
+            int lastIndex = path.Segments.FindLastIndex(segment => !(segment is KeySegment || segment is TypeSegment));
+            
+            if (lastIndex == path.Count - 1)
+            {
+                return path;
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(lastIndex);
+            for (int i = 0; i <= lastIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>
@@ -161,9 +226,15 @@ namespace Microsoft.OData.UriParser
         /// <returns>A new ODataPath with the segment appended.</returns>
         internal static ODataPath AddSegment(this ODataPath path, ODataPathSegment segment)
         {
-            var newPath = new ODataPath(path);
-            newPath.Add(segment);
-            return newPath;
+            if (segment == null)
+            {
+                throw new ArgumentNullException(nameof(segment));
+            }
+
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count + 1);
+            newSegments.AddRange(path.Segments);
+            newSegments.Add(segment);
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>
@@ -209,18 +280,36 @@ namespace Microsoft.OData.UriParser
 
         internal static ODataPath AddKeySegment(this ODataPath path, KeySegment keySegment)
         {
-            var handler = new SplitEndingSegmentOfTypeHandler<TypeSegment>();
-            path.WalkWith(handler);
-            ODataPath newPath = handler.FirstPart;
-            newPath.Add(keySegment);
-            AppendLastSegment(handler, newPath);
+            if (keySegment == null)
+            {
+                throw new ArgumentNullException(nameof(keySegment));
+            }
 
-            return newPath;
-        }
+            List<ODataPathSegment> newSegments = new List<ODataPathSegment>(path.Count + 1);
+            // if the path ends with one or more consecutive TypeSegments we'll
+            // insert the key segment before that sequence of ending type segments.
+            int splitIndex = path.Count - 1;
+            while (splitIndex > -1 && path[splitIndex] is TypeSegment)
+            {
+                splitIndex--;
+            }
+            
+            for (int i = 0; i <= splitIndex; i++)
+            {
+                newSegments.Add(path[i]);
+            }
 
-        private static void AppendLastSegment(SplitEndingSegmentOfTypeHandler<TypeSegment> handler, ODataPath newPath)
-        {
-            newPath.AddRange(handler.LastPart);
+            newSegments.Add(keySegment);
+
+            for (int i = splitIndex + 1; i < path.Count; i++)
+            {
+                newSegments.Add(path[i]);
+            }
+
+            // Since we created the segments list here and we're sure it's not going to be
+            // used anywhere else, it's safe and much more efficient to tell ODataPath
+            // to take it as is without making an internal copy.
+            return ODataPath.CreateFromListWithoutCopying(newSegments, verifySegmentsNotNull: false);
         }
 
         /// <summary>

@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Collections.Generic;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
@@ -159,12 +160,30 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var testCases = new[]
             {
                 new {
+                    Query = "",
+                    Result = ""
+                },
+                new {
                     Query = "People(1)",
+                    Result = "People"
+                },
+                 new {
+                    Query = "People",
                     Result = "People"
                 },
                 new {
                     Query = "People(1)/Fully.Qualified.Namespace.Person",
                     Result = "People/Fully.Qualified.Namespace.Person"
+                },
+                new {
+                    Query = "People/Fully.Qualified.Namespace.Person",
+                    Result = "People/Fully.Qualified.Namespace.Person"
+                },
+                // Having consecutive type segments is not useful, but ODataPath currently supports it.
+                // The test case helps avoid accidental regressions.
+                new {
+                    Query = "People(1)/Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Person",
+                    Result = "People/Fully.Qualified.Namespace.Person/Fully.Qualified.Namespace.Person"
                 },
                 new
                 {
@@ -238,6 +257,11 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     Query = "People(1)/MyAddress/Fully.Qualified.Namespace.Address/NextHome",
                     TypeCast = "Fully.Qualified.Namespace.Address"
                 },
+                new
+                {
+                    Query = "",
+                    TypeCast = ""
+                }
             };
 
             foreach (var testCase in testCases)
@@ -260,6 +284,10 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             var testCases = new[]
             {
                 new {
+                    Url = "",
+                    Trimmed = ""
+                },
+                new {
                     Url = "People",
                     Trimmed = "People"
                 },
@@ -276,7 +304,15 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                     Trimmed = "People"
                 },
                 new {
+                    Url = "People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Employee",
+                    Trimmed = "People"
+                },
+                new {
                     Url = "People/Fully.Qualified.Namespace.Employee/1",
+                    Trimmed = "People"
+                },
+                new {
+                    Url = "People/Fully.Qualified.Namespace.Employee/1/Fully.Qualified.Namespace.Employee",
                     Trimmed = "People"
                 },
                 new {
@@ -369,6 +405,51 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
                 bool result = path.IsIndividualProperty();
                 Assert.False(result, string.Format("Resource path \"{0}\" should not target at individual property", testCase));
             }
+        }
+
+        [Theory]
+        [InlineData("", 1, "(1)")]
+        [InlineData("People", 1, "People(1)")]
+        [InlineData("People/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Manager")]
+        // Having consecutive type segments is not useful, but ODataPath currently supports it.
+        // The test case helps avoid accidental regressions.
+        [InlineData("People/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager", 1, "People(1)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports/Fully.Qualified.Namespace.Manager", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)/Fully.Qualified.Namespace.Manager")]
+        [InlineData("People(1)/Fully.Qualified.Namespace.Manager/DirectReports/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager", 3, "People(1)/Fully.Qualified.Namespace.Manager/DirectReports(3)/Fully.Qualified.Namespace.Employee/Fully.Qualified.Namespace.Manager")]
+        public void TestAddKeySegment(string initialPath, int id,  string expectedPath)
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, initialPath)).ParsePath();
+            var keySegment = new KeySegment(new[] { new KeyValuePair<string, object>("Id", id) }, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var newODataPath = odataPath.AddKeySegment(keySegment);
+
+            Assert.Equal(odataPath.Count + 1, newODataPath.Count);
+            Assert.Equal(expectedPath, newODataPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
+        }
+
+        [Fact]
+        public void TestAddKeySegmentThrowsIfSegmentNull()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People")).ParsePath();
+            Assert.Throws<ArgumentNullException>(() => odataPath.AddKeySegment(null));
+        }
+
+        [Fact]
+        public void TestAddSegment()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People(1)")).ParsePath();
+            var newSegment = new PropertySegment(HardCodedTestModel.GetPersonAddressProp());
+            var newPath = odataPath.AddSegment(newSegment);
+
+            Assert.Equal(odataPath.Count + 1, newPath.Count);
+            Assert.Equal("People(1)/MyAddress", newPath.ToResourcePathString(ODataUrlKeyDelimiter.Parentheses));
+        }
+
+        [Fact]
+        public void TestAddSegmentThrowsIfSegmentNull()
+        {
+            ODataPath odataPath = new ODataUriParser(HardCodedTestModel.TestModel, this.testBaseUri, new Uri(this.testBaseUri, "People")).ParsePath();
+            Assert.Throws<ArgumentNullException>(() => odataPath.AddSegment(null));
         }
     }
 }
