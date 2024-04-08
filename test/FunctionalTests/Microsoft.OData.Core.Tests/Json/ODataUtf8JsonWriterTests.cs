@@ -8,11 +8,14 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Net.Mime;
 using System.Text;
 using System.Text.Encodings.Web;
+using System.Text.Unicode;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
+using static Microsoft.OData.Json.ODataUtf8JsonWriter;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -618,6 +621,151 @@ namespace Microsoft.OData.Tests.Json
             using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, leaveStreamOpen: true);
             jsonWriter.Flush();
             Assert.Equal(0, stream.Length);
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStrings_WithOnlySpecialCharacters_ToOutput(string contentType)
+        {
+            string input = "\n\n\n\n\"\"\n\n\n\n\"\"";
+            string expectedOutput = "\\n\\n\\n\\n\\u0022\\u0022\\n\\n\\n\\n\\u0022\\u0022";
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteSpecialCharsInChunksOfOddStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreams_NonAsciiCharacters_ToOutput(string contentType)
+        {
+            string input = "😊😊😊😊😊😊😊😊";
+            string expectedOutput = "\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteSpecialCharsInChunksOfOddStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStringsWithSpecialCharactersToOutput(string contentType)
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength) + "U+1F600";
+
+            string expectedOutput = new string('a', inputLength) + "U\\u002B1F600";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteLargeStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStringsToOutput(string contentType)
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength);
+            string expectedOutput = ExpectedOutPutStringWithSpecialCharacters_ODataUtf8Encoding(input);
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteLargeStringsWithSpecialCharactersInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Fact]
+        public void CorrectlyStreams_NonAsciiCharacters_ToOutput_UsingApplicationJson()
+        {
+            string input = "😊😊😊😊😊😊😊😊";
+            string expectedOutput = "😊😊😊😊😊😊😊😊";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+
+                var tw = jsonWriter.StartTextWriterValueScope("application/json");
+
+                WriteSpecialCharsInChunksOfOddStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
         }
 
         /// <summary>

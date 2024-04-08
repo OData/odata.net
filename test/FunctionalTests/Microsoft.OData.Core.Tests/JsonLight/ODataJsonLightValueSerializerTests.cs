@@ -338,7 +338,7 @@ namespace Microsoft.OData.Tests.JsonLight
         }
 
 #if NETCOREAPP
-        [Fact(Skip="ODataUtf8JsonWriter does not currently implement logic for writing stream values")]
+        [Fact]
         public void WriteStreamValue_UsingODataUtf8JsonWriter_WritesStreamValue()
         {
             var stream = new MemoryStream();
