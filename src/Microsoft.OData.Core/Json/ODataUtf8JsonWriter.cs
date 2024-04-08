@@ -25,7 +25,7 @@ namespace Microsoft.OData.Json
     /// Implementation of <see cref="IJsonWriter"/> and <see cref="IJsonWriterAsync"/>that is based on
     /// <see cref="Utf8JsonWriter"/>.
     /// </summary>
-    internal sealed class ODataUtf8JsonWriter : IJsonWriter, IDisposable, IJsonWriterAsync, IAsyncDisposable
+    internal sealed partial class ODataUtf8JsonWriter : IJsonStreamWriter, IDisposable, IJsonStreamWriterAsync, IAsyncDisposable
     {
         private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
@@ -1253,9 +1253,7 @@ namespace Microsoft.OData.Json
                 await this.FlushAsync().ConfigureAwait(false);
             }
         }
-
         #endregion
-
     }
 }
 #endif
