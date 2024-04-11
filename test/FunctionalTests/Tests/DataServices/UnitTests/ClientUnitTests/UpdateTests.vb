@@ -12,6 +12,7 @@ Imports System.Collections.Generic
 Imports System.Data.Test.Astoria
 Imports System.IO
 Imports System.Net
+Imports System.Net.Http
 Imports System.Linq
 Imports System.Threading
 Imports System.Xml.Linq
