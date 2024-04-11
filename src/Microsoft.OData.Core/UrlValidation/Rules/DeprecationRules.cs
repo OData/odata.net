@@ -62,7 +62,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             Date? removalDate;
             if (IsDeprecated(context.Model, edmType, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
+                context.AddMessage(CreateUrlValidationMessage(edmType.FullTypeName(), message, version, date, removalDate));
             }
         },
         /*includeImpliedProperties*/ true);
@@ -116,7 +116,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
             Date? removalDate;
             if (IsDeprecated(context.Model, element, out message, out version, out date, out removalDate))
             {
-                context.Messages.Add(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
+                context.AddMessage(CreateUrlValidationMessage(element.Name, message, version, date, removalDate));
             }
         }
 

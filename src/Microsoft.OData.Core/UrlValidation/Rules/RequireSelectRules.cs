@@ -74,7 +74,7 @@ namespace Microsoft.OData.UriParser.Validation.Rules
 
         private static void AddError(string identifier, ODataUrlValidationContext validationContext)
         {
-            validationContext.Messages.Add(new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.MissingSelect, Strings.ODataUrlValidationError_SelectRequired(identifier), Severity.Warning));
+            validationContext.AddMessage(new ODataUrlValidationMessage(ODataUrlValidationMessageCodes.MissingSelect, Strings.ODataUrlValidationError_SelectRequired(identifier), Severity.Warning));
         }
     }
 }

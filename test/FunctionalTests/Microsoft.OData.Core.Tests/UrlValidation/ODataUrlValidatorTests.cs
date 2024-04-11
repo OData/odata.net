@@ -152,6 +152,44 @@ namespace Microsoft.OData.Tests
             });
         }
 
+        public static IEnumerable<object[]> GetAddMessageTestData()
+        {
+            yield return new object[]
+            {
+                new Action<ODataUrlValidationContext>((odataUrlValidationContext) =>
+                {
+                    odataUrlValidationContext.AddMessage(new ODataUrlValidationMessage("dummyCode", "dummyMessage", OData.UriParser.Validation.Severity.Warning));
+                })
+            };
+
+            yield return new object[]
+            {
+                new Action<ODataUrlValidationContext>((odataUrlValidationContext) =>
+                {
+                    odataUrlValidationContext.AddMessage("dummyCode", "dummyMessage", OData.UriParser.Validation.Severity.Warning);
+                })
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(GetAddMessageTestData))]
+        public void CallingAddMessageAddsODataUrlValidationMessage(Action<ODataUrlValidationContext> addMessageAction)
+        {
+            // Arrange
+            var model = CreateModel();
+            var validator = new ODataUrlValidator(model, dummyRuleset);
+            var odataUrlValidationContext = new ODataUrlValidationContext(model, validator);
+
+            // Act
+            addMessageAction(odataUrlValidationContext);
+
+            // Assert
+            var odataUrlValidationMessage = Assert.Single(odataUrlValidationContext.Messages);
+            Assert.Equal("dummyCode", odataUrlValidationMessage.MessageCode);
+            Assert.Equal("dummyMessage", odataUrlValidationMessage.Message);
+            Assert.Equal(OData.UriParser.Validation.Severity.Warning, odataUrlValidationMessage.Severity);
+        }
+
         private static IEdmModel GetModel()
         {
             if (model == null)
