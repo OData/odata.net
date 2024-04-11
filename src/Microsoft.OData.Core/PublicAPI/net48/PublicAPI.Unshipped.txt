@@ -68,6 +68,8 @@ Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.get -> bool
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.set -> void
+Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.AddMessage(Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage odataUrlValidationMessage) -> void
+Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Messages.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage>
 static Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions.AddDefaultODataServices(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.OData.ODataVersion odataVersion = Microsoft.OData.ODataVersion.V4, System.Action<Microsoft.OData.ODataMessageReaderSettings> configureReaderAction = null, System.Action<Microsoft.OData.ODataMessageWriterSettings> configureWriterAction = null, System.Action<Microsoft.OData.UriParser.ODataUriParserSettings> configureUriParserAction = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection
 static Microsoft.OData.UriParser.ODataPathExtensions.TrimEndingTypeAndKeySegments(this Microsoft.OData.UriParser.ODataPath path) -> Microsoft.OData.UriParser.ODataPath
 override Microsoft.OData.ODataEnumValue.ToString() -> string
@@ -1899,7 +1901,6 @@ Microsoft.OData.UriParser.UriTemplateExpression.LiteralText.get -> string
 Microsoft.OData.UriParser.UriTemplateExpression.UriTemplateExpression() -> void
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.AddMessage(string code, string message, Microsoft.OData.UriParser.Validation.Severity severity) -> void
-Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Messages.get -> System.Collections.Generic.List<Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage>
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Model.get -> Microsoft.OData.Edm.IEdmModel
 Microsoft.OData.UriParser.Validation.ODataUrlValidationExtensions
 Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage
