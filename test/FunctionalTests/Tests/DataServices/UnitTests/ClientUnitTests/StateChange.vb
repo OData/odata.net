@@ -733,7 +733,7 @@ Partial Public Class ClientModule
         End Sub
 
         Private Sub ValidateRequestMethods(ByVal ParamArray methods As String())
-            Dim x = String.Concat((From m In Me.sentRequests Select m.Method).ToArray())
+            Dim x = String.Concat((From m In Me.sentRequests Select m.Method.Method).ToArray())
             Assert.AreEqual(methods.Length, Me.sentRequests.Count, "SendingRequest count {0}", x)
             For i As Int32 = 0 To methods.Length - 1
                 Assert.AreEqual(methods(i), Me.sentRequests.Item(i).Method, "SendingRequest[{0}].Method", i)

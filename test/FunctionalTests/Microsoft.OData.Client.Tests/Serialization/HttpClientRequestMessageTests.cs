@@ -30,21 +30,20 @@ namespace Microsoft.OData.Client.Tests.Serialization
         }
 
         [Fact]
-        public void WhenHttpClientHandlerProviderIsSet_UsesReturnedHttpClientHandler_ToMakeRequest()
+        public void WhenHttpClientFactoryIsSet_UsesReturnedHttpClientHandler_ToMakeRequest()
         {
             // Arrange
             string expectedResponse = "Foo";
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
-
-                var httpClientHandlerProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientHandlerProvider);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {
@@ -61,7 +60,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     Assert.Equal(expectedResponse, contents);
                     Assert.Equal(1, handler.Requests.Count);
                     Assert.Equal("GET http://localhost/", handler.Requests[0]);
-                    Assert.Equal(1, httpClientHandlerProvider.NumCalls);
+                    Assert.Equal(1, httpClientFactory.NumCalls);
                 }
             }
         }
@@ -74,14 +73,14 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockHttpClientHandler(expectedResponse))
             {
 
-                var httpClientProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientProvider);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 //var request = new HttpClientRequestMessage(args);
 
@@ -118,14 +117,14 @@ namespace Microsoft.OData.Client.Tests.Serialization
             using (var handler = new MockUnresponsiveHttpClientHandler())
             {
 
-                var httpClientProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
 
                 var args = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientProvider);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {
@@ -165,15 +164,15 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     "GET",
                     new Uri("http://localhost/request1"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientFactory);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 var args2 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request2"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientFactory);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request1 = new HttpClientRequestMessage(args1))
                 using (var request2 = new HttpClientRequestMessage(args2))
@@ -229,8 +228,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientFactory);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {
@@ -262,20 +261,20 @@ namespace Microsoft.OData.Client.Tests.Serialization
             // Arrange
             using (var handler = new MockDelayedHttpClientHandler("Success", 5000))
             {
-                var httpClientProvider = new MockHttpClientFactory(handler);
+                var httpClientFactory = new MockHttpClientFactory(handler);
                 var args1 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request1"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientProvider);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 var args2 = new DataServiceClientRequestMessageArgs(
                     "GET",
                     new Uri("http://localhost/request2"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientProvider);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request1 = new HttpClientRequestMessage(args1))
                 using (var request2 = new HttpClientRequestMessage(args2))
@@ -327,8 +326,8 @@ namespace Microsoft.OData.Client.Tests.Serialization
                     "GET",
                     new Uri("http://localhost"),
                     usePostTunneling: false,
-                    new Dictionary<string, string>(),
-                    httpClientFactory);
+                    headers: new Dictionary<string, string>(),
+                    httpClientFactory: httpClientFactory);
 
                 using (var request = new HttpClientRequestMessage(args))
                 {

@@ -1322,7 +1322,6 @@ Partial Public Class ClientModule
                         ' Checks that streaming/non-streaming is OK with different content lengths, including 0 and unset
                         request.Content.Headers.ContentLength = content.Length
                     End If
-                    request.AllowWriteStreamBuffering = enableBuffering
                 End Sub
 
             Dim testHook = New HttpTestHookConsumer(ctx, False)
