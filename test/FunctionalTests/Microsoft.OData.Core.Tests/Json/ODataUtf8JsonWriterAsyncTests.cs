@@ -593,6 +593,90 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(0, stream.Length);
         }
 
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public async Task CorrectlyStreamsLargeStrings_WithOnlySpecialCharacters_ToOutput(string contentType)
+        {
+            string input = "\n\n\n\n\"\"\n\n\n\n\"\"";
+            string expectedOutput = "\\n\\n\\n\\n\\u0022\\u0022\\n\\n\\n\\n\\u0022\\u0022";
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8) as IJsonStreamWriterAsync;
+
+                var tw = await jsonWriter.StartTextWriterValueScopeAsync(contentType);
+
+                await WriteSpecialCharsInChunksOfOddStringInChunksAsync(tw, input);
+
+                await jsonWriter.EndTextWriterValueScopeAsync();
+                await jsonWriter.FlushAsync();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public async Task CorrectlyStreams_NonAsciiCharacters_ToOutput(string contentType)
+        {
+            string input = "😊😊😊😊😊😊😊😊";
+            string expectedOutput = "\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A\\uD83D\\uDE0A";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8) as IJsonStreamWriterAsync;
+
+                var tw = await jsonWriter.StartTextWriterValueScopeAsync(contentType);
+
+                await WriteSpecialCharsInChunksOfOddStringInChunksAsync(tw, input);
+
+                await jsonWriter.EndTextWriterValueScopeAsync();
+                await jsonWriter.FlushAsync();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Fact]
+        public async Task CorrectlyStreams_NonAsciiCharacters_ToOutput_UsingApplicationJson()
+        {
+            string input = "😊😊😊😊😊😊😊😊";
+            string expectedOutput = "😊😊😊😊😊😊😊😊";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8) as IJsonStreamWriterAsync;
+
+                var tw = await jsonWriter.StartTextWriterValueScopeAsync("application/json");
+
+                await WriteSpecialCharsInChunksOfOddStringInChunksAsync(tw, input);
+
+                await jsonWriter.EndTextWriterValueScopeAsync();
+                await jsonWriter.FlushAsync();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
+        }
+
         /// <summary>
         /// Reads the test class's default stream with UTF8 encoding.
         /// </summary>
@@ -632,6 +716,21 @@ namespace Microsoft.OData.Tests.Json
         protected override IJsonWriterAsync CreateJsonWriterAsync(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
             return new ODataUtf8JsonWriter(stream, isIeee754Compatible, encoding);
+        }
+
+        internal async Task WriteSpecialCharsInChunksOfOddStringInChunksAsync(TextWriter tw, string input)
+        {
+            // Define chunk size
+            int chunkSize = 3;
+
+            // Stream the string to the output stream in chunks
+            for (int i = 0; i < input.Length; i += chunkSize)
+            {
+                int remainingLength = Math.Min(chunkSize, input.Length - i);
+                string chunk = input.Substring(i, remainingLength);
+                await tw.WriteAsync(chunk.ToCharArray());
+            }
+
         }
     }
 }
