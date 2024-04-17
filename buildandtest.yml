@@ -30,6 +30,14 @@ steps:
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
 - task: DotNetCoreCLI@2
+  displayName: 'Test'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    projects: |      
+     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+
+- task: DotNetCoreCLI@2
   condition: eq(variables.BuildConfiguration, 'Release')
   displayName: 'Test'
   inputs:
