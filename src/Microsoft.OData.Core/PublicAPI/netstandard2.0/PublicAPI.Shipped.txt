@@ -1,3 +1,5 @@
+Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
+Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void

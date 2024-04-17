@@ -1,2 +1,0 @@
-Microsoft.OData.ODataResourceBase.SkipPropertyVerification.get -> bool
-Microsoft.OData.ODataResourceBase.SkipPropertyVerification.set -> void
