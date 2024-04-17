@@ -838,5 +838,11 @@ namespace EdmLibTests.FunctionalUtilities
             get;
             set;
         }
+
+        public bool UsesDefault
+        {
+            get;
+            set;
+        }
     }
 }
