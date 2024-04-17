@@ -3,10 +3,6 @@ steps:
   inputs:
     versionSpec: '6.5.0'
 
-  
-
-
-    
 - task: UseDotNet@2
   inputs:
     version: '8.x'
@@ -21,11 +17,9 @@ steps:
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
 
-
 - task: UseDotNet@2
   inputs:
     version: '8.x'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
@@ -33,26 +27,13 @@ steps:
     command: 'build'
     arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\sln\OData.sln
+     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
-# TODO: the original pipeline tested against OData.Pipeline.sln, which includes e2e tests.
-# e2e tests failed to run after changes to the solution to support and retargetting to .net8.0 and .net48.
-# We should add e2e tests back to the pipeline. See: https://github.com/OData/odata.net/issues/2852
 - task: DotNetCoreCLI@2
+  condition: eq(variables.BuildConfiguration, 'Release')
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
     projects: |      
-     $(Build.SourcesDirectory)\sln\OData.sln
-
-# TODO: e2e tests fail to run. We should fix/rewrite e2e tests to support the new target frameworks.
-# See: https://github.com/OData/odata.net/issues/2852
-# - task: DotNetCoreCLI@2
-#   condition: eq(variables.BuildConfiguration, 'Release')
-#   displayName: 'Test'
-#   inputs:
-#     command: 'test'
-#     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
-#     projects: |      
-#       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
