@@ -52,7 +52,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
             {
                 EnableMessageStreamDisposal = false,
                 Version = ODataVersion.V4,
-                ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
+                IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*")
             };
             this.settings.SetServiceDocumentUri(new Uri(ServiceUri));
         }
@@ -891,7 +891,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
                 {
                     EnableMessageStreamDisposal = false,
                     Version = ODataVersion.V4,
-                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*"),
+                    IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*"),
                     ODataUri = uriParser.ParseUri(),
                 };
                 var messageInfo = new ODataMessageInfo

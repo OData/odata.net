@@ -3063,7 +3063,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
         private static ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, IEdmModel userModel, bool fullMetadata = false, ODataUri uri = null, ODataVersion version = ODataVersion.V4, bool isResponse = true, bool isAsync = false)
         {
-            var settings = new ODataMessageWriterSettings { Version = version, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = version, IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*") };
             settings.SetServiceDocumentUri(new Uri("http://host/service"));
             if (uri != null)
             {

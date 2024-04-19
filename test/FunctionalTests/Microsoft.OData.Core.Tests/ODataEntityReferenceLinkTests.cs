@@ -652,7 +652,7 @@ namespace Microsoft.OData.Tests
             };
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
             return new ODataJsonLightOutputContext(messageInfo, settings);
         }
 

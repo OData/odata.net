@@ -355,7 +355,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(Stream stream, Action<IServiceCollection> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
             settings.SetServiceDocumentUri(new Uri("http://tempuri.org/"));
 
             var messageInfo = new ODataMessageInfo

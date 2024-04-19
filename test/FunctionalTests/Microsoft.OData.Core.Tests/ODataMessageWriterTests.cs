@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests
         public void CreateMessageWriterShouldNotSetAnnotationFilterWhenODataAnnotationsIsNotSetOnPreferenceAppliedHeader()
         {
             ODataMessageWriter writer = new ODataMessageWriter((IODataResponseMessage)new InMemoryMessage(), new ODataMessageWriterSettings());
-            Assert.Null(writer.Settings.ShouldIncludeAnnotation);
+            Assert.Null(writer.Settings.IsAnnotationFiltered);
         }
 
         [Fact]
@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests
             IODataResponseMessage responseMessage = new InMemoryMessage();
             responseMessage.PreferenceAppliedHeader().AnnotationFilter = "*";
             ODataMessageWriter writer = new ODataMessageWriter(responseMessage, new ODataMessageWriterSettings());
-            Assert.NotNull(writer.Settings.ShouldIncludeAnnotation);
+            Assert.NotNull(writer.Settings.IsAnnotationFiltered);
         }
 
         [Fact]

@@ -258,7 +258,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteInstanceAnnotationsAsync_ForDeclaredProperty()
         {
-            this.settings.ShouldIncludeAnnotation = (annotation) => true; // Allow annotations to be written
+            this.settings.IsAnnotationFiltered = (annotation) => true; // Allow annotations to be written
             var instanceAnnotations = new List<ODataInstanceAnnotation>
             {
                 new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
@@ -296,6 +296,117 @@ namespace Microsoft.OData.Tests.Json
                 });
 
             Assert.Equal("{\"FunFacts@favorite.Coffee\":\"Cappuccino\",\"FunFacts@favorite.Day\":\"Monday\"", result);
+        }
+
+
+        [Fact]
+        public async Task WriteInstanceAnnotationsAsync_ForUndeclaredProperty_WriteAnnotationsEvenIfShouldIncludeAnnotationReturnsFalse()
+        {
+            this.settings.ShouldIncludeAnnotation = name => false;
+            var instanceAnnotations = new List<ODataInstanceAnnotation>
+            {
+                new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
+                new ODataInstanceAnnotation("favorite.Day", new ODataEnumValue("Monday", "NS.Day"))
+            };
+
+            var result = await SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
+                (jsonLightInstanceAnnotationWriter) =>
+                {
+                    return jsonLightInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        instanceAnnotations,
+                        propertyName: "FunFacts",
+                        isUndeclaredProperty: true);
+                });
+
+            Assert.Equal("{\"FunFacts@favorite.Coffee\":\"Cappuccino\",\"FunFacts@favorite.Day\":\"Monday\"", result);
+        }
+
+        [Fact]
+        public async Task WriteInstanceAnnotationsAsync_ShouldWriteAnnotationIfShouldIncludeAnnotationReturnsTrue()
+        {
+            this.settings.ShouldIncludeAnnotation = (name) => true;
+            var instanceAnnotations = new List<ODataInstanceAnnotation>
+            {
+                new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
+                new ODataInstanceAnnotation("favorite.Day", new ODataEnumValue("Monday", "NS.Day"))
+            };
+
+            var result = await SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
+                (jsonLightInstanceAnnotationWriter) =>
+                {
+                    return jsonLightInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        instanceAnnotations,
+                        "FunFacts",
+                        /* isUndeclaredProperty */ false);
+                });
+
+            Assert.Equal("{\"FunFacts@favorite.Coffee\":\"Cappuccino\",\"FunFacts@favorite.Day\":\"Monday\"", result);
+        }
+
+        [Fact]
+        public async Task WriteInstanceAnnotationsAsync_ShouldWriteAnnotationThatDoesNotPassTheAnnotationFilterIfShouldIncludeAnnotationReturnsTrue()
+        {
+            this.settings.IsAnnotationFiltered = (name) => false;
+            this.settings.ShouldIncludeAnnotation = (name) => name == "favorite.Day";
+            var instanceAnnotations = new List<ODataInstanceAnnotation>
+            {
+                new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
+                new ODataInstanceAnnotation("favorite.Day", new ODataEnumValue("Monday", "NS.Day"))
+            };
+
+            var result = await SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
+                (jsonLightInstanceAnnotationWriter) =>
+                {
+                    return jsonLightInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        instanceAnnotations,
+                        "FunFacts");
+                });
+
+            Assert.Equal("{\"FunFacts@favorite.Day\":\"Monday\"", result);
+        }
+
+        [Fact]
+        public async Task WriteInstanceAnnotationsAsync_ShouldSkipAnnotationThatDoesNotPassTheAnnotationFilterIfShouldIncludeAnnotationReturnsFalse()
+        {
+            this.settings.IsAnnotationFiltered = (name) => false;
+            this.settings.ShouldIncludeAnnotation = (name) => false;
+            var instanceAnnotations = new List<ODataInstanceAnnotation>
+            {
+                new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
+                new ODataInstanceAnnotation("favorite.Day", new ODataEnumValue("Monday", "NS.Day"))
+            };
+
+            var result = await SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
+                (jsonLightInstanceAnnotationWriter) =>
+                {
+                    return jsonLightInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        instanceAnnotations,
+                        "FunFacts");
+                });
+
+            Assert.Equal("{", result);
+        }
+
+        [Fact]
+        public async Task WriteInstanceAnnotationsAsync_ShouldWriteAnnotationThatPassesTheAnnotationFilterIfShouldIncludeAnnotationReturnsFalse()
+        {
+            this.settings.IsAnnotationFiltered = (name) => name == "favorite.Day";
+            this.settings.ShouldIncludeAnnotation = (name) => false;
+            var instanceAnnotations = new List<ODataInstanceAnnotation>
+            {
+                new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
+                new ODataInstanceAnnotation("favorite.Day", new ODataEnumValue("Monday", "NS.Day"))
+            };
+
+            var result = await SetupJsonLightInstanceAnnotationWriterAndRunTestAsync(
+                (jsonLightInstanceAnnotationWriter) =>
+                {
+                    return jsonLightInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        instanceAnnotations,
+                        "FunFacts");
+                });
+
+            Assert.Equal("{\"FunFacts@favorite.Day\":\"Monday\"", result);
         }
 
         private JsonLightInstanceAnnotationWriter CreateJsonLightInstanceAnnotationWriter(bool writingResponse, IServiceProvider serviceProvider = null, bool isAsync = false)

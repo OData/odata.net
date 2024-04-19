@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AnnotationFilterShouldBeNullByDefault()
         {
-            Assert.Null(this.settings.ShouldIncludeAnnotation);
+            Assert.Null(this.settings.IsAnnotationFiltered);
         }
 
         [Fact]
@@ -35,8 +35,8 @@ namespace Microsoft.OData.Tests
         {
             Func<string, bool> filter = name => true;
 
-            this.settings.ShouldIncludeAnnotation = filter;
-            Assert.Same(this.settings.ShouldIncludeAnnotation, filter);
+            this.settings.IsAnnotationFiltered = filter;
+            Assert.Same(this.settings.IsAnnotationFiltered, filter);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests
         public void ShouldHonorAnnotationFilterForV4()
         {
             this.settings.Version = ODataVersion.V4;
-            this.settings.ShouldIncludeAnnotation = name => name.StartsWith("ns1.");
+            this.settings.IsAnnotationFiltered = name => name.StartsWith("ns1.");
             Assert.True(this.settings.ShouldSkipAnnotation("any.any"));
             Assert.False(this.settings.ShouldSkipAnnotation("ns1.any"));
         }
@@ -296,8 +296,8 @@ namespace Microsoft.OData.Tests
         {
             Func<string, bool> filter = name => true;
 
-            this.settings.ShouldIncludeAnnotation = filter;
-            Assert.Same(this.settings.Clone().ShouldIncludeAnnotation, filter);
+            this.settings.IsAnnotationFiltered = filter;
+            Assert.Same(this.settings.Clone().IsAnnotationFiltered, filter);
         }
 
         [Fact]
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Tests
             this.settings.Version = ODataVersion.V4;
 
             Func<string, bool> filter = name => true;
-            this.settings.ShouldIncludeAnnotation = filter;
+            this.settings.IsAnnotationFiltered = filter;
 
             var newSetting = this.settings.Clone();
 
