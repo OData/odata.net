@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.OData.Edm;
 
 namespace Microsoft.OData.UriParser
@@ -36,12 +37,26 @@ namespace Microsoft.OData.UriParser
 
                 this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
                 this.targetEdmType = lastSegment.EdmType;
+
                 if (this.targetEdmType != null)
                 {
                     IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
                     if (collectionType != null)
                     {
                         this.targetEdmType = collectionType.ElementType.Definition;
+                    }
+                }
+
+                // If the last segment is an OperationSegment for a bound operation and the targetNavigationSource is null,
+                // We use the targetNavigationSource for the previous segment.
+                // e.g People/My.Function.GetPeopleWithDogs()
+                if (this.targetNavigationSource == null && lastSegment is OperationSegment operationSegment)
+                {
+                    IEdmOperation operation = operationSegment.Operations.FirstOrDefault();
+
+                    if (operation.IsBound & previous != null)
+                    {
+                        this.targetNavigationSource = previous.TargetEdmNavigationSource;
                     }
                 }
             }
