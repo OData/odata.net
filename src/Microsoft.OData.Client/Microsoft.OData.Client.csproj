@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <AssemblyName>Microsoft.OData.Client</AssemblyName>
     <RootNamespace>Microsoft.OData.Client</RootNamespace>
     <DocumentationFile>$(AssemblyName).xml</DocumentationFile>
@@ -175,6 +175,9 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Microsoft.OData.Client.cs</LastGenOutput>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>
