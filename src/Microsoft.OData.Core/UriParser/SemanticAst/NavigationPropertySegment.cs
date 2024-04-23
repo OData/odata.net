@@ -15,7 +15,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// A segment representing a navigation property
     /// </summary>
-    public sealed class NavigationPropertySegment : ODataPathSegment
+    public sealed class NavigationPropertySegment : ODataPathSegment, INavigationSourceSegment
     {
         /// <summary>
         /// The navigation property this segment represents.

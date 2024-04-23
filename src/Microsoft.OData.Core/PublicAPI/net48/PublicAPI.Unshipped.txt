@@ -63,11 +63,15 @@ Microsoft.OData.ODataMessageWriterSettings.ODataMessageWriterSettings(Microsoft.
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value) -> void
 Microsoft.OData.ODataMessageWriterSettings.SetOmitODataPrefix(bool value, Microsoft.OData.ODataVersion version) -> void
 Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.UriParser.EntitySetSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
+Microsoft.OData.UriParser.INavigationSourceSegment
+Microsoft.OData.UriParser.INavigationSourceSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.get -> bool
 Microsoft.OData.UriParser.ODataUriParserSettings.EnableParsingKeyAsSegment.set -> void
+Microsoft.OData.UriParser.SingletonSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.AddMessage(Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage odataUrlValidationMessage) -> void
 Microsoft.OData.UriParser.Validation.ODataUrlValidationContext.Messages.get -> System.Collections.Generic.IReadOnlyList<Microsoft.OData.UriParser.Validation.ODataUrlValidationMessage>
 static Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions.AddDefaultODataServices(this Microsoft.Extensions.DependencyInjection.IServiceCollection services, Microsoft.OData.ODataVersion odataVersion = Microsoft.OData.ODataVersion.V4, System.Action<Microsoft.OData.ODataMessageReaderSettings> configureReaderAction = null, System.Action<Microsoft.OData.ODataMessageWriterSettings> configureWriterAction = null, System.Action<Microsoft.OData.UriParser.ODataUriParserSettings> configureUriParserAction = null) -> Microsoft.Extensions.DependencyInjection.IServiceCollection

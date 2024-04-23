@@ -40,5 +40,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             SingletonSegment segment2 = new SingletonSegment(HardCodedTestModel.GetBossSingleton());
             Assert.True(segment1.Equals(segment2));
         }
+
+        [Fact]
+        public void NavigationSourceIsCorrect()
+        {
+            IEdmSingleton singleton = HardCodedTestModel.GetBossSingleton();
+            SingletonSegment segment = new SingletonSegment(singleton);
+            Assert.Same(singleton, segment.NavigationSource);
+        }
     }
 }
