@@ -87,5 +87,13 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             Assert.False(segment1.Equals(segment2));
             Assert.False(segment1.Equals(segment3));
         }
+
+        [Fact]
+        public void NavigationSourceIsCorrect()
+        {
+            IEdmEntitySet peopleEntitySet = HardCodedTestModel.GetPeopleSet();
+            EntitySetSegment segment = new EntitySetSegment(peopleEntitySet);
+            Assert.Same(peopleEntitySet, segment.NavigationSource);
+        }
     }
 }

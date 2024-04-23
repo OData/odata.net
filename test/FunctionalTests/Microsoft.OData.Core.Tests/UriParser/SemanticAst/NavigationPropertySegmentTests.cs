@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using Microsoft.OData.Edm;
 using Microsoft.OData.UriParser;
 using Xunit;
 
@@ -72,6 +73,14 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
             CountSegment segment = CountSegment.Instance;
             Assert.False(navigationPropertySegment1.Equals(navigationPropertySegment2));
             Assert.False(navigationPropertySegment1.Equals(segment));
+        }
+
+        [Fact]
+        public void NavigationSourceIsCorrect()
+        {
+            IEdmEntitySet dogsEntitySet = HardCodedTestModel.GetDogsSet();
+            NavigationPropertySegment navigationPropertySegment = new NavigationPropertySegment(HardCodedTestModel.GetPersonMyDogNavProp(), dogsEntitySet);
+            Assert.Same(dogsEntitySet, navigationPropertySegment.NavigationSource);
         }
     }
 }

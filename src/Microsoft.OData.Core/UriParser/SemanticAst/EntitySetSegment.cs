@@ -12,7 +12,7 @@ namespace Microsoft.OData.UriParser
     /// <summary>
     /// A segment representing an EntitySet in a path.
     /// </summary>
-    public sealed class EntitySetSegment : ODataPathSegment
+    public sealed class EntitySetSegment : ODataPathSegment, INavigationSourceSegment
     {
         /// <summary>
         /// The entity set represented by this segment.
@@ -60,6 +60,14 @@ namespace Microsoft.OData.UriParser
         public override IEdmType EdmType
         {
             get { return this.type; }
+        }
+
+        /// <summary>
+        /// The navigation source targeted by this segment.
+        /// </summary>
+        public IEdmNavigationSource NavigationSource
+        {
+            get { return this.entitySet; }
         }
 
         /// <summary>
