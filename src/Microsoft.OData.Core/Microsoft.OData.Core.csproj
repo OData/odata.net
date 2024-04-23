@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net48</TargetFrameworks>
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <AssemblyName>Microsoft.OData.Core</AssemblyName>
     <RootNamespace>Microsoft.OData.Core</RootNamespace>
 
@@ -31,10 +31,6 @@
     </TextStringResource>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.1' ">
-    <PackageReference Include="System.ComponentModel" Version="4.3.0" />
-  </ItemGroup>
-  
   <ItemGroup>
     <InternalsVisibleTo Include="Microsoft.OData.Core.Tests" />
   </ItemGroup>
@@ -66,6 +62,9 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="System.Buffers" Version="4.5.1" />
+    <PackageReference Include="Microsoft.Extensions.ObjectPool">
+      <Version>6.0.3</Version>
+    </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
@@ -82,12 +81,6 @@
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>Parameterized.Microsoft.OData.Core.cs</LastGenOutput>
     </Content>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net8.0'">
-	<PackageReference Include="Microsoft.Extensions.ObjectPool">
-	  <Version>6.0.3</Version>
-	</PackageReference>
   </ItemGroup>
 
   <ItemGroup>
