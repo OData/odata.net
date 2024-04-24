@@ -116,7 +116,7 @@ namespace Microsoft.OData
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // Always include all annotations when writing request message.
-            Debug.Assert(this.settings.IsAnnotationFiltered == null, "this.settings.ShouldIncludeAnnotation == null");
+            Debug.Assert(this.settings.IsAnnotationFiltered == null, "this.settings.IsAnnotationFiltered == null");
             this.settings.IsAnnotationFiltered = AnnotationFilter.CreateIncludeAllFilter().Matches;
         }
 
