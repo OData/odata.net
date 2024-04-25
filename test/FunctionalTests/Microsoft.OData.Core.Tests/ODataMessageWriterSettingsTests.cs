@@ -376,6 +376,14 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void CopyConstructorShouldCopyShouldIncludeAnnotation()
+        {
+            this.settings.ShouldIncludeAnnotation = name => true;
+            var newSettings = this.settings.Clone();
+            Assert.Equal(this.settings.ShouldIncludeAnnotation, newSettings.ShouldIncludeAnnotation);
+        }
+
+        [Fact]
         public void CopyConstructorShouldCopyAll()
         {
             this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
@@ -385,6 +393,7 @@ namespace Microsoft.OData.Tests
             this.settings.EnableMessageStreamDisposal = false;
             this.settings.EnableCharactersCheck = true;
             this.settings.BufferSize = 4096;
+            this.settings.ShouldIncludeAnnotation = name => true;
 
             var edmModel = new EdmModel();
             var defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");

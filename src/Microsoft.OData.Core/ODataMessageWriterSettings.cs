@@ -551,6 +551,7 @@ namespace Microsoft.OData
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.ODataUri = other.ODataUri.Clone();
             this.ShouldIncludeAnnotationInternal = other.ShouldIncludeAnnotationInternal;
+            this.ShouldIncludeAnnotation = other.ShouldIncludeAnnotation;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;
