@@ -258,7 +258,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteInstanceAnnotationsAsync_ForDeclaredProperty()
         {
-            this.settings.IsAnnotationFiltered = (annotation) => true; // Allow annotations to be written
+            this.settings.ShouldIncludeAnnotationInternal = (annotation) => true; // Allow annotations to be written
             var instanceAnnotations = new List<ODataInstanceAnnotation>
             {
                 new ODataInstanceAnnotation("favorite.Coffee", new ODataPrimitiveValue("Cappuccino")),
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteInstanceAnnotationsAsync_ShouldWriteAnnotationThatDoesNotPassTheAnnotationFilterIfShouldIncludeAnnotationReturnsTrue()
         {
-            this.settings.IsAnnotationFiltered = (name) => false;
+            this.settings.ShouldIncludeAnnotationInternal = (name) => false;
             this.settings.ShouldIncludeAnnotation = (name) => name == "favorite.Day";
             var instanceAnnotations = new List<ODataInstanceAnnotation>
             {
@@ -368,7 +368,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteInstanceAnnotationsAsync_ShouldSkipAnnotationThatDoesNotPassTheAnnotationFilterIfShouldIncludeAnnotationReturnsFalse()
         {
-            this.settings.IsAnnotationFiltered = (name) => false;
+            this.settings.ShouldIncludeAnnotationInternal = (name) => false;
             this.settings.ShouldIncludeAnnotation = (name) => false;
             var instanceAnnotations = new List<ODataInstanceAnnotation>
             {
@@ -390,7 +390,7 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public async Task WriteInstanceAnnotationsAsync_ShouldWriteAnnotationThatPassesTheAnnotationFilterIfShouldIncludeAnnotationReturnsFalse()
         {
-            this.settings.IsAnnotationFiltered = (name) => name == "favorite.Day";
+            this.settings.ShouldIncludeAnnotationInternal = (name) => name == "favorite.Day";
             this.settings.ShouldIncludeAnnotation = (name) => false;
             var instanceAnnotations = new List<ODataInstanceAnnotation>
             {

@@ -41,7 +41,7 @@ namespace Microsoft.OData.Tests.JsonLight
             this.stream = new MemoryStream();
             this.messageWriterSettings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
             this.messageWriterSettings.SetServiceDocumentUri(new Uri(ServiceUri));
-            this.messageWriterSettings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            this.messageWriterSettings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             this.nullReferenceError = new ODataError
             {
                 ErrorCode = "NRE",
@@ -794,7 +794,7 @@ namespace Microsoft.OData.Tests.JsonLight
 
             var settings = new ODataMessageWriterSettings { Version = version };
             settings.SetServiceDocumentUri(new Uri("http://odata.org/test"));
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             
             if (use6x)
             {

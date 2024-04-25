@@ -158,7 +158,7 @@ namespace Microsoft.OData.Tests.JsonLight
             entityType.AddStructuralProperty("Location", new EdmComplexTypeReference(complexType, false));
             model.AddElement(entityType);
 
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var resourceValue = new ODataResourceValue
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Tests.JsonLight
             complexType.AddStructuralProperty("City", EdmPrimitiveTypeKind.String);
             model.AddElement(complexType);
 
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var resourceValue1 = new ODataResourceValue
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Tests.JsonLight
             entityType.AddStructuralProperty("Location", new EdmComplexTypeReference(complexType, false));
             model.AddElement(entityType);
 
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var resourceValue = new ODataResourceValue
@@ -264,7 +264,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var complexType = new EdmComplexType("TestNamespace", "Address");
             model.AddElement(complexType);
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var resourceValue = new ODataResourceValue
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Tests.JsonLight
         {
             var complexType = new EdmComplexType("NS", "Address");
             model.AddElement(complexType);
-            settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter(filter);
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter(filter);
             var result = this.SetupSerializerAndRunTest(serializer =>
             {
                 var resourceValue = new ODataResourceValue

@@ -53,12 +53,6 @@ namespace Microsoft.OData
         private ODataUri odataUri;
 
         /// <summary>
-        /// Func to evaluate whether an annotation should be written by the writer. The func should return true if the annotation should
-        /// be written and false if the annotation should be skipped.
-        /// </summary>
-        private Func<string, bool> isAnnotationFiltered;
-
-        /// <summary>
         /// true if the Format property should be used to compute the media type;
         /// false if AcceptableMediaTypes and AcceptableCharsets should be used.
         /// null if neither the format nor the acceptable media types/charsets have been set.
@@ -382,21 +376,10 @@ namespace Microsoft.OData
         /// be written and false if the annotation should be skipped.
         /// </summary>
         /// <remarks>
-        /// This property is internal and automatically set based on annotation filters. The developer can override this using the <see cref="ShouldIncludeAnnotation"/> property
+        /// This property is internal and automatically set based on annotation filters. The developer can use the <see cref="ShouldIncludeAnnotation"/> property
         /// to tell the writer to write annotations even if they were not included in the annotations filters.
         /// </remarks>
-        internal Func<string, bool> IsAnnotationFiltered
-        {
-            get
-            {
-                return this.isAnnotationFiltered;
-            }
-
-            set
-            {
-                this.isAnnotationFiltered = value;
-            }
-        }
+        internal Func<string, bool> ShouldIncludeAnnotationInternal { get; set; }
 
         /// <summary>
         /// Gets or sets a value that indicates whether the writer should put key values in their own URI segment when automatically building URIs.
@@ -544,7 +527,7 @@ namespace Microsoft.OData
         /// <returns>Returns true to indicate that the annotation with the name <paramref name="annotationName"/> should not be written, false otherwise.</returns>
         internal bool ShouldSkipAnnotation(string annotationName)
         {
-            bool skipAnnotation = this.IsAnnotationFiltered == null || !this.IsAnnotationFiltered(annotationName);
+            bool skipAnnotation = this.ShouldIncludeAnnotationInternal == null || !this.ShouldIncludeAnnotationInternal(annotationName);
             // if annotation is not included by default, the caller ensure it's written using ShouldIncludeAnnotation
             if (skipAnnotation && this.ShouldIncludeAnnotation != null)
             {
@@ -567,7 +550,7 @@ namespace Microsoft.OData
             this.JsonPCallback = other.JsonPCallback;
             this.messageQuotas = new ODataMessageQuotas(other.MessageQuotas);
             this.ODataUri = other.ODataUri.Clone();
-            this.isAnnotationFiltered = other.isAnnotationFiltered;
+            this.ShouldIncludeAnnotationInternal = other.ShouldIncludeAnnotationInternal;
             this.useFormat = other.useFormat;
             this.Version = other.Version;
             this.LibraryCompatibility = other.LibraryCompatibility;

@@ -116,8 +116,8 @@ namespace Microsoft.OData
             this.message = new ODataRequestMessage(requestMessage, /*writing*/ true, this.settings.EnableMessageStreamDisposal, /*maxMessageSize*/ -1);
 
             // Always include all annotations when writing request message.
-            Debug.Assert(this.settings.IsAnnotationFiltered == null, "this.settings.IsAnnotationFiltered == null");
-            this.settings.IsAnnotationFiltered = AnnotationFilter.CreateIncludeAllFilter().Matches;
+            Debug.Assert(this.settings.ShouldIncludeAnnotationInternal == null, "this.settings.ShouldIncludeAnnotationInternal == null");
+            this.settings.ShouldIncludeAnnotationInternal = AnnotationFilter.CreateIncludeAllFilter().Matches;
         }
 
         /// <summary> Creates a new <see cref="Microsoft.OData.ODataMessageWriter" /> for the given response message. </summary>
@@ -159,7 +159,7 @@ namespace Microsoft.OData
             string annotationFilter = responseMessage.PreferenceAppliedHeader().AnnotationFilter;
             if (!string.IsNullOrEmpty(annotationFilter))
             {
-                this.settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter(annotationFilter);
+                this.settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter(annotationFilter);
             }
         }
 

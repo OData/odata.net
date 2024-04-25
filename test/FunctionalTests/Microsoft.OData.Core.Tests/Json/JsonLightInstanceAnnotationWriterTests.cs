@@ -743,7 +743,7 @@ namespace Microsoft.OData.Tests.Json
                 using (var outputContext = new ODataJsonLightOutputContext(
                     stream,
                     new ODataMessageInfo { Model = model, IsResponse = false, IsAsync = false, Encoding = Encoding.UTF8 },
-                    new ODataMessageWriterSettings { Version = ODataVersion.V4, IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*") }))
+                    new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*") }))
                 {
                     var valueSerializer = new ODataJsonLightValueSerializer(outputContext);
 
@@ -772,7 +772,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name == "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             Assert.Equal(2, verifierCalls);
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => verifierCalls++;
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => verifierCalls++;
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name != "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
             Assert.Equal(0, verifierCalls);
@@ -819,7 +819,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => writtenNames.Add(name);
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => writtenValues.Add(value);
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name != "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name != "ns1.name";
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
@@ -838,7 +838,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => writtenNames.Add(name);
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => writtenValues.Add(value);
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name == "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name == "ns1.name";
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name == "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
@@ -857,7 +857,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => writtenNames.Add(name);
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => writtenValues.Add(value);
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name != "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name != "ns1.name";
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
@@ -874,7 +874,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.jsonWriter.WriteNameVerifier = (name) => writtenNames.Add(name);
             this.valueWriter.WritePrimitiveVerifier = (value, reference) => writtenValues.Add(value);
-            this.valueWriter.MessageWriterSettings.IsAnnotationFiltered = name => name == "ns1.name";
+            this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotationInternal = name => name == "ns1.name";
             this.valueWriter.MessageWriterSettings.ShouldIncludeAnnotation = name => name != "ns1.name";
 
             this.jsonLightInstanceAnnotationWriter.WriteInstanceAnnotation(annotation);
@@ -985,7 +985,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
                 settings.SetServiceDocumentUri(new Uri("http://example.com/"));
-                settings.IsAnnotationFiltered = ODataUtils.CreateAnnotationFilter("*");
+                settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             }
 
             var messageInfo = new ODataMessageInfo

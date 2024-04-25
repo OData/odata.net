@@ -26,7 +26,7 @@ namespace Microsoft.Test.OData.TDD.Tests.Reader.JsonLight
 
         private ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings
         {
-            IsAnnotationFiltered = (annotationName) => true,
+            ShouldIncludeAnnotationInternal = (annotationName) => true,
             Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType
         };
 
