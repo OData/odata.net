@@ -66,6 +66,8 @@ Microsoft.OData.Json.IJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream
 Microsoft.OData.UriParser.EntitySetSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
 Microsoft.OData.UriParser.INavigationSourceSegment
 Microsoft.OData.UriParser.INavigationSourceSegment.NavigationSource.get -> Microsoft.OData.Edm.IEdmNavigationSource
+Microsoft.OData.ODataMessageWriterSettings.ShouldIncludeAnnotation.get -> System.Func<string, bool>
+Microsoft.OData.ODataMessageWriterSettings.ShouldIncludeAnnotation.set -> void
 Microsoft.OData.UriParser.ODataPath.this[int index].get -> Microsoft.OData.UriParser.ODataPathSegment
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.get -> int
 Microsoft.OData.ODataMessageWriterSettings.BufferSize.set -> void

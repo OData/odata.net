@@ -654,7 +654,7 @@ namespace Microsoft.OData.Tests.JsonLight
         private ODataJsonLightOutputContext CreateJsonLightOutputContext(MemoryStream stream, Action<IServiceCollection> configureServices = null)
         {
             var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4 };
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             settings.SetServiceDocumentUri(new Uri("http://example.com/"));
 
             var messageInfo = new ODataMessageInfo

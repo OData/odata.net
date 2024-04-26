@@ -253,7 +253,7 @@ namespace Microsoft.OData
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
 
                     // Should write instance annotations for the literal
-                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
+                    ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*")
                 };
 
                 WriteJsonLightLiteral(
@@ -304,7 +304,7 @@ namespace Microsoft.OData
                     Validations = ~ValidationKinds.ThrowOnUndeclaredPropertyForNonOpenType,
 
                     // TBD: Should write instance annotations for the literal???
-                    ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*"),
+                    ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*"),
                     IsIeee754Compatible = isIeee754Compatible
                 };
 

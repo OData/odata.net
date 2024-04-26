@@ -335,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
                 Model = userModel ?? EdmCoreModel.Instance
             };
 
-            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*") };
+            var settings = new ODataMessageWriterSettings { Version = ODataVersion.V4, ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*") };
             if (serviceDocumentUri != null)
             {
                 settings.SetServiceDocumentUri(serviceDocumentUri);

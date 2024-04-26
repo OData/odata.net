@@ -55,7 +55,7 @@ namespace Microsoft.OData.Tests.JsonLight
             {
                 EnableMessageStreamDisposal = false,
                 Version = ODataVersion.V4,
-                ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*")
+                ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*")
             };
 
             this.messageWriterSettings.SetServiceDocumentUri(new Uri(ServiceUri));

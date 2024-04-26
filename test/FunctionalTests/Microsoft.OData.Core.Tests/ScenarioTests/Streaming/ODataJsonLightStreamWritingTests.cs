@@ -797,7 +797,7 @@ namespace Microsoft.OData.Tests.JsonLight
                     RequestUri = new Uri("http://testService/customers")
                 },
             };
-            settings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
+            settings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
 
             ODataMessageWriter messageWriter;
 

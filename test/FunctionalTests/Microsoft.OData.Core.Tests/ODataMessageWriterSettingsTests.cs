@@ -27,7 +27,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void AnnotationFilterShouldBeNullByDefault()
         {
-            Assert.Null(this.settings.ShouldIncludeAnnotation);
+            Assert.Null(this.settings.ShouldIncludeAnnotationInternal);
         }
 
         [Fact]
@@ -35,8 +35,8 @@ namespace Microsoft.OData.Tests
         {
             Func<string, bool> filter = name => true;
 
-            this.settings.ShouldIncludeAnnotation = filter;
-            Assert.Same(this.settings.ShouldIncludeAnnotation, filter);
+            this.settings.ShouldIncludeAnnotationInternal = filter;
+            Assert.Same(this.settings.ShouldIncludeAnnotationInternal, filter);
         }
 
         [Fact]
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Tests
         public void ShouldHonorAnnotationFilterForV4()
         {
             this.settings.Version = ODataVersion.V4;
-            this.settings.ShouldIncludeAnnotation = name => name.StartsWith("ns1.");
+            this.settings.ShouldIncludeAnnotationInternal = name => name.StartsWith("ns1.");
             Assert.True(this.settings.ShouldSkipAnnotation("any.any"));
             Assert.False(this.settings.ShouldSkipAnnotation("ns1.any"));
         }
@@ -296,8 +296,8 @@ namespace Microsoft.OData.Tests
         {
             Func<string, bool> filter = name => true;
 
-            this.settings.ShouldIncludeAnnotation = filter;
-            Assert.Same(this.settings.Clone().ShouldIncludeAnnotation, filter);
+            this.settings.ShouldIncludeAnnotationInternal = filter;
+            Assert.Same(this.settings.Clone().ShouldIncludeAnnotationInternal, filter);
         }
 
         [Fact]
@@ -376,6 +376,14 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public void CopyConstructorShouldCopyShouldIncludeAnnotation()
+        {
+            this.settings.ShouldIncludeAnnotation = name => true;
+            var newSettings = this.settings.Clone();
+            Assert.Equal(this.settings.ShouldIncludeAnnotation, newSettings.ShouldIncludeAnnotation);
+        }
+
+        [Fact]
         public void CopyConstructorShouldCopyAll()
         {
             this.settings.MetadataSelector = new TestMetadataSelector() { PropertyToOmit = "TestProperty" };
@@ -385,6 +393,7 @@ namespace Microsoft.OData.Tests
             this.settings.EnableMessageStreamDisposal = false;
             this.settings.EnableCharactersCheck = true;
             this.settings.BufferSize = 4096;
+            this.settings.ShouldIncludeAnnotation = name => true;
 
             var edmModel = new EdmModel();
             var defaultContainer = new EdmEntityContainer("TestModel", "DefaultContainer");
@@ -410,7 +419,7 @@ namespace Microsoft.OData.Tests
             this.settings.Version = ODataVersion.V4;
 
             Func<string, bool> filter = name => true;
-            this.settings.ShouldIncludeAnnotation = filter;
+            this.settings.ShouldIncludeAnnotationInternal = filter;
 
             var newSetting = this.settings.Clone();
 
