@@ -57,7 +57,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// For JsonLight writer, always prefix the type name with # for payload writing.
+        /// For Json writer, always prefix the type name with # for payload writing.
         /// </summary>
         /// <param name="typeName">The type name to prefix</param>
         /// <returns>The (#) prefixed type name.</returns>

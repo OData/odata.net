@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="NavigationLinkInRequestReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="NavigationLinkInRequestReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -27,7 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests reading of navigation links in requests (entity reference links and expanded) in JSON Light.
     /// </summary>
     [TestClass, TestCase]
-    public class NavigationLinksInRequestReaderJsonLightTests : ODataReaderTestCase
+    public class NavigationLinksInRequestReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -40,42 +40,42 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Just binding link",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - null",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":null",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":null",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - number",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":42",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":42",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - array",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":[]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":[]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_EmptyBindArray", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - array of strings",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation", "PoliceStation", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation", "PoliceStation", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with invalid value - object",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":{}",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":{}",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                 },
@@ -83,8 +83,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Binding link with custom annotation before",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
                 },
@@ -92,8 +92,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Binding link with custom annotation after",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
                 },
@@ -101,29 +101,29 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Just custom annotation - should fail - we need either expanded value or binding",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", "custom.annotation") + "\":\"value\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
+                        "ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
                         "PoliceStation",
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Non-binding OData annotation on nav. prop - should fail",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "http://odata.org/referencelink1"),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "PoliceStation",
-                        JsonLightConstants.ODataTypeAnnotationName,
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataTypeAnnotationName,
+                        JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded entry",
-                    Json = "\"PoliceStation\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
+                    Json = "\"PoliceStation\":{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("PoliceStation", new ExpandedLink() { ExpandedElement = PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1) }, null)),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
                 },
@@ -139,39 +139,39 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Expanded singleton link with array value - invalid",
                     Json = "\"PoliceStation\":[]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource", "StartArray", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_CannotReadSingletonNestedResource", "StartArray", "PoliceStation"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded singleton link with number value - invalid",
                     Json = "\"PoliceStation\":42",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadNestedResource", "PoliceStation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_CannotReadNestedResource", "PoliceStation"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded entry with binding - invalid",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"," +
-                        "\"PoliceStation\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"," +
+                        "\"PoliceStation\":{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("PoliceStation", new ExpandedLink() { ExpandedElement = PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1) }, null)),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue",
+                        "ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue",
                         "PoliceStation",
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded entry with non-binding annotation - invalid",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
-                        "\"PoliceStation\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataTypeAnnotationName) + "\":\"TestModel.OfficeType\"," +
+                        "\"PoliceStation\":{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("PoliceStation", new ExpandedLink() { ExpandedElement = PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1) }, null)),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "PoliceStation",
-                        JsonLightConstants.ODataTypeAnnotationName,
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataTypeAnnotationName,
+                        JsonConstants.ODataBindAnnotationName),
                 },
             };
 
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with relative URI - no odata.context annotation in payload.",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"yyy\"",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"yyy\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "yyy"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
                 },
@@ -199,7 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding link with relative URI - with odata.context annotation in payload.",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("PoliceStation", JsonLightConstants.ODataBindAnnotationName) + "\":\"yyy\"",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("PoliceStation", JsonConstants.ODataBindAnnotationName) + "\":\"yyy\"",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("PoliceStation", "yyy"),
                     ExpectedException = null,
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "PoliceStation", false } },
@@ -217,14 +217,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Just binding links - one",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Just binding links - multiple",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[" +
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[" +
                         "\"http://odata.org/referencelink1\"," +
                         "\"http://odata.org/referencelink2\"," +
                         "\"http://odata.org/referencelink3\"]",
@@ -237,72 +237,72 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Empty binding array - invalid",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_EmptyBindArray", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_EmptyBindArray", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding annotation value - object",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":{}",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":{}",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding annotation value - null",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":null",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":null",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding annotation value - number",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":42",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":42",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding annotation value - string - we need array for collection nav. prop.",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":\"http://odata.org/referencelink1\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - object",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[{}]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[{}]",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartObject"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - array",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[[]]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[[]]",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "PrimitiveValue", "StartArray"),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - null",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[null]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[null]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - number",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[42]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[42]",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonLightConstants.ODataBindAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_CannotReadPropertyValueAsString", "42", JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Binding links with custom annotation before",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
                 },
@@ -310,8 +310,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Binding links with custom annotation after",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", "http://odata.org/referencelink1"),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
                 },
@@ -319,12 +319,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Collection navigation property with just custom annotation - invalid",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
+                        "ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink",
                         "CityHall",
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
@@ -336,7 +336,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded feed - one entry",
-                    Json = "\"CityHall\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
+                    Json = "\"CityHall\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("CityHall", new ExpandedLink() { ExpandedElement = PayloadBuilder.EntitySet()
                         .Append(PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1))})),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
@@ -346,9 +346,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Expanded feed - multiple entries",
                     Json = 
                         "\"CityHall\":[" +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}" +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}" +
                         "]",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("CityHall", new ExpandedLink() { ExpandedElement = PayloadBuilder.EntitySet()
                         .Append(PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1))
@@ -360,8 +360,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Expanded feed with custom annotation",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null," +
-                        "\"CityHall\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", "custom.annotation") + "\":null," +
+                        "\"CityHall\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("CityHall", new ExpandedLink() { ExpandedElement = PayloadBuilder.EntitySet()
                         .Append(PayloadBuilder.Entity("TestModel.OfficeType").PrimitiveProperty("Id", 1))})),
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
@@ -370,29 +370,29 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Expanded feed with next link before - should fail",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink\"," +
-                        "\"CityHall\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink\"," +
+                        "\"CityHall\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]",
                     ExpectedEntity = PayloadBuilder.Entity(),
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
+                        "ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation",
                         "CityHall",
-                        JsonLightConstants.ODataNextLinkAnnotationName,
-                        JsonLightConstants.ODataBindAnnotationName),
+                        JsonConstants.ODataNextLinkAnnotationName,
+                        JsonConstants.ODataBindAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded feed with next link after - should fail",
                     Json = 
-                        "\"CityHall\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]," + 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink\"",
+                        "\"CityHall\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}]," + 
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataNextLinkAnnotationName) + "\":\"http://odata.org/nextlink\"",
                     ExpectedEntity = PayloadBuilder.Entity(),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation", "CityHall", JsonLightConstants.ODataNextLinkAnnotationName),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation", "CityHall", JsonConstants.ODataNextLinkAnnotationName),
                 },
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Expanded empty feed with binding link",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"http://odata.org/referencelink1\"]," +
                         "\"CityHall\":[]",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("CityHall", new LinkCollection(
                         new DeferredLink() { UriString = "http://odata.org/referencelink1" },
@@ -403,7 +403,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Expanded empty feed with binding links",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[" +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[" +
                             "\"http://odata.org/referencelink1\"," +
                             "\"http://odata.org/referencelink2\"," +
                             "\"http://odata.org/referencelink3\"" +
@@ -420,15 +420,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     DebugDescription = "Expanded feed with multiple entries and multiple binding links",
                     Json = 
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[" +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[" +
                             "\"http://odata.org/referencelink1\"," +
                             "\"http://odata.org/referencelink2\"," +
                             "\"http://odata.org/referencelink3\"" +
                             "]," +
                         "\"CityHall\":[" +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
-                            "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}" +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}," +
+                            "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.OfficeType\", \"Id\":1}" +
                         "]",
                     ExpectedEntity = PayloadBuilder.Entity().Property(new NavigationPropertyInstance("CityHall", new LinkCollection(
                         new DeferredLink() { UriString = "http://odata.org/referencelink1" },
@@ -453,7 +453,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - relative uri",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"yyy\"]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"yyy\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", "yyy"),
                     ExpectedException = null,
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
@@ -467,7 +467,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new NavigationLinkTestCase
                 {
                     DebugDescription = "Invalid binding item value - relative uri",
-                    Json = "\"" + JsonLightUtils.GetPropertyAnnotationName("CityHall", JsonLightConstants.ODataBindAnnotationName) + "\":[\"yyy\"]",
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("CityHall", JsonConstants.ODataBindAnnotationName) + "\":[\"yyy\"]",
                     ExpectedEntity = PayloadBuilder.Entity().NavigationProperty("CityHall", "yyy"),
                     ExpectedException = null,
                     ExpectedIsCollectionValues = new Dictionary<string, bool?> { { "CityHall", true } },
@@ -484,7 +484,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.Select(testCase => testCase.ToTestDescriptor(this.Settings, model, withMetadataAnnotation)),
                 // Entity reference links are request only
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest),
                 (testDescriptor, testConfiguration) =>
                 {
                     // These descriptors are already tailored specifically for Json Light and 
@@ -513,8 +513,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     .ExpectedEntityType(cityType, citiesEntitySet)
                     .JsonRepresentation(
                         "{" +
-                        (withMetadataAnnotation ? ("\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\",") : string.Empty) +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
+                        (withMetadataAnnotation ? ("\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\",") : string.Empty) +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
                             this.Json +
                             ",\"Id\":1" +
                         "}");

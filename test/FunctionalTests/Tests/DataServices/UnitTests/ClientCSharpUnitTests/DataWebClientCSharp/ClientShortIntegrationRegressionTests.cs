@@ -42,7 +42,7 @@ namespace AstoriaUnitTests.Tests
             };
         }
 
-        private const string JsonLightExtraPropertyPayload = @"{
+        private const string JsonExtraPropertyPayload = @"{
   ""@odata.context"":""http://localhost:9000/Service.svc/$metadata#Suppliers"",
   ""value"":
   [
@@ -103,10 +103,10 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
-        public void IgnoreMissingPropertiesTestJsonLight()
+        public void IgnoreMissingPropertiesTestJson()
         {
             // Ignore missing properties
-            var context = CreateTransportLayerContext(JsonLightExtraPropertyPayload, "4.0");
+            var context = CreateTransportLayerContext(JsonExtraPropertyPayload, "4.0");
             var supplier = context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             Assert.IsNotNull(supplier);
             supplier.ID.Should().Be(1);
@@ -115,16 +115,16 @@ namespace AstoriaUnitTests.Tests
         }
 
         [TestMethod]
-        public void IgnoreMissingPropertiesTestJsonLightShouldThrow()
+        public void IgnoreMissingPropertiesTestJsonShouldThrow()
         {
             // Ignore missing properties
-            var context = CreateTransportLayerContext(JsonLightExtraPropertyPayload, "4.0");
+            var context = CreateTransportLayerContext(JsonExtraPropertyPayload, "4.0");
             context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.ThrowException;
             Action test = ()=> context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             test.ShouldThrow<InvalidOperationException>().WithMessage("The property 'ExtraProperty' does not exist on type 'ODataDemo.Supplier'. Make sure to only use property names that are defined by the type or mark the type as open type.");
         }
 
-        private const string JsonLightUnknownNavigationLink = @"{
+        private const string JsonUnknownNavigationLink = @"{
   ""@odata.context"":""http://localhost:9000/Service.svc/$metadata#Suppliers"",
   ""value"":
   [
@@ -141,13 +141,13 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void TestUnknownNavigationLink()
         {
-            var context = CreateTransportLayerContext(JsonLightUnknownNavigationLink, "4.0");
+            var context = CreateTransportLayerContext(JsonUnknownNavigationLink, "4.0");
             var supplier = context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             Assert.IsNotNull(supplier);
             supplier.ID.Should().Be(1);
         }
 
-        private const string JsonLightUnknownNavigationProperty = @"{
+        private const string JsonUnknownNavigationProperty = @"{
   ""@odata.context"":""http://localhost:9000/Service.svc/$metadata#Suppliers"",
   ""value"":
   [
@@ -167,13 +167,13 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void TestUnknownNavigationProperty()
         {
-            var context = CreateTransportLayerContext(JsonLightUnknownNavigationProperty, "4.0");
+            var context = CreateTransportLayerContext(JsonUnknownNavigationProperty, "4.0");
             var supplier = context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             Assert.IsNotNull(supplier);
             supplier.ID.Should().Be(1);
         }
 
-        private const string JsonLightWithMetadataEtag = @"{
+        private const string JsonWithMetadataEtag = @"{
   ""@odata.context"":""http://localhost:9000/Service.svc/$metadata#Suppliers"",
   ""@odata.metadataEtag"": ""W/\""A1FF3E230954908F\"""",
   ""value"":
@@ -188,13 +188,13 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void TestMetadataEtag()
         {
-            var context = CreateTransportLayerContext(JsonLightWithMetadataEtag, "4.0");
+            var context = CreateTransportLayerContext(JsonWithMetadataEtag, "4.0");
             var supplier = context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             Assert.IsNotNull(supplier);
             supplier.ID.Should().Be(1);
         }
 
-        private const string JsonLightUnknownODataAnnotation = @"{
+        private const string JsonUnknownODataAnnotation = @"{
   ""@odata.context"":""http://localhost:9000/Service.svc/$metadata#Suppliers"",
   ""@odata.unknown1"": ""abc"",
   ""value"":
@@ -211,7 +211,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void TestUnknownODataAnnotation()
         {
-            var context = CreateTransportLayerContext(JsonLightUnknownODataAnnotation, "4.0");
+            var context = CreateTransportLayerContext(JsonUnknownODataAnnotation, "4.0");
             var supplier = context.Execute<SimpleNorthwind.Supplier>(new Uri("/Suppliers", UriKind.Relative)).SingleOrDefault();
             Assert.IsNotNull(supplier);
             supplier.ID.Should().Be(1);

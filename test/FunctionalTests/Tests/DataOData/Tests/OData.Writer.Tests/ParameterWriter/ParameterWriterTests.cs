@@ -197,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
         public void CreateODataParameterWriterErrorTests()
         {
             // ODataMessageWriter.CreateODataParameterWriter() should fail on a response message.
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest);
 
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig =>
                 {
@@ -226,7 +226,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             // A model has to be provided in the ODataMessageWriterSettings when functionImport is not null.
             IEdmModel model = TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Primitive").First();
-            testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             resultCallback = testConfig =>
                 {
                     if (testConfig.Format == ODataFormat.Json)
@@ -372,7 +372,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 {
                     DebugDescription = "Empty parameter payload",
                     ParameterPayload = new ODataParameters(),
-                    JsonLight = "{}",
+                    Json = "{}",
                 },
                 #endregion Empty parameters
 
@@ -384,7 +384,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", "foo"),
                     },
-                    JsonLight = "{\"p1\":\"foo\"}"
+                    Json = "{\"p1\":\"foo\"}"
                 },
                 new
                 {
@@ -393,7 +393,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", null),
                     },
-                    JsonLight = "{\"p1\":null}"
+                    Json = "{\"p1\":null}"
                 },
                 new
                 {
@@ -402,7 +402,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", string.Empty),
                     },
-                    JsonLight = "{\"p1\":\"\"}"
+                    Json = "{\"p1\":\"\"}"
                 },
                 new
                 {
@@ -411,7 +411,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", 2),
                     },
-                    JsonLight = "{\"p1\":2}"
+                    Json = "{\"p1\":2}"
                 },
                 new
                 {
@@ -420,7 +420,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", new DateTimeOffset(2011, 9, 26, 13, 20, 48, TimeSpan.Zero)),
                     },
-                    JsonLight = "{\"p1\":\"2011-09-26T13:20:48Z\"}"
+                    Json = "{\"p1\":\"2011-09-26T13:20:48Z\"}"
                 },
                 #endregion Single primitive parameter
 
@@ -433,7 +433,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p2", new ODataResource() { TypeName = "TestModel.EmptyComplex" })
                     },
-                    JsonLight = "{\"p2\":{}}",
+                    Json = "{\"p2\":{}}",
                 },
 
                 new
@@ -452,7 +452,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                             })
                     },
-                    JsonLight = "{\"p1\":{\"One\":1}}",
+                    Json = "{\"p1\":{\"One\":1}}",
                 },
                 new
                 {
@@ -472,7 +472,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                             })
                     },
-                    JsonLight = "{\"p1\":{\"One\":1,\"Two\":2,\"Three\":3}}",
+                    Json = "{\"p1\":{\"One\":1,\"Two\":2,\"Three\":3}}",
                 },
                 new
                 {
@@ -499,7 +499,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                             })
                     },
-                    JsonLight = "{\"p1\":{\"One\":1,\"Two\":2.222,\"Three\":-3.333,\"Four\":null,\"Five\":\"\",\"Six\":\"Six\",\"Seven\":\"2011-09-26T13:20:48Z\",\"Eight\":12345678,\"Nine\":0,\"Ten\":-342356}}",
+                    Json = "{\"p1\":{\"One\":1,\"Two\":2.222,\"Three\":-3.333,\"Four\":null,\"Five\":\"\",\"Six\":\"Six\",\"Seven\":\"2011-09-26T13:20:48Z\",\"Eight\":12345678,\"Nine\":0,\"Ten\":-342356}}",
                 },
                 new
                 {
@@ -508,7 +508,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", complexWithNestedComplex)
                     },
-                    JsonLight = "{\"p1\":{\"One\":1,\"Three\":3,\"Two\":{\"TwoPropertyValue\":2}}}",
+                    Json = "{\"p1\":{\"One\":1,\"Three\":3,\"Two\":{\"TwoPropertyValue\":2}}}",
                 },
                 new
                 {
@@ -533,7 +533,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                              })
                     },
-                    JsonLight = "{\"p1\":{\"One\":[\"item1\",\"item2\"]}}",
+                    Json = "{\"p1\":{\"One\":[\"item1\",\"item2\"]}}",
                 },
 
                 #endregion Single complex parameter
@@ -546,7 +546,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p2", new ODataCollectionStart() { Name = "c" })
                     },
-                    JsonLight = "{\"p2\":[]}",
+                    Json = "{\"p2\":[]}",
                 },
                 #endregion
 
@@ -559,7 +559,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", "foo"),
                         new KeyValuePair<string, object>("p2", "bar")
                     },
-                    JsonLight = "{\"p1\":\"foo\",\"p2\":\"bar\"}",
+                    Json = "{\"p1\":\"foo\",\"p2\":\"bar\"}",
                 },
                 new
                 {
@@ -569,7 +569,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", "foo"),
                         new KeyValuePair<string, object>("p2", new ODataResource() { TypeName = "TestModel.EmptyComplex" })
                     },
-                    JsonLight = "{\"p1\":\"foo\",\"p2\":{}}",
+                    Json = "{\"p1\":\"foo\",\"p2\":{}}",
                 },
                 new
                 {
@@ -579,7 +579,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", "foo"),
                         new KeyValuePair<string, object>("p2", new ODataCollectionStart() { Name = "c" })
                     },
-                    JsonLight = "{\"p1\":\"foo\",\"p2\":[]}",
+                    Json = "{\"p1\":\"foo\",\"p2\":[]}",
                 },
                 new
                 {
@@ -589,7 +589,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataCollectionStart() { Name = "c" }),
                         new KeyValuePair<string, object>("p2", "foo"),
                     },
-                    JsonLight = "{\"p1\":[],\"p2\":\"foo\"}",
+                    Json = "{\"p1\":[],\"p2\":\"foo\"}",
                 },
                 new
                 {
@@ -599,7 +599,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p1", new ODataCollectionStart() { Name = "c" }),
                         new KeyValuePair<string, object>("p2", new ODataCollectionStart() { Name = "c" })
                     },
-                    JsonLight = "{\"p1\":[],\"p2\":[]}",
+                    Json = "{\"p1\":[],\"p2\":[]}",
                 },
                 new
                 {
@@ -618,7 +618,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 }
                             })
                     },
-                    JsonLight = "{\"p1\":{\"@odata.context\":\"http://odata.org/test/$metadata#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}},\"p2\":{\"One\":1,\"Two\":2,\"Three\":3}}",
+                    Json = "{\"p1\":{\"@odata.context\":\"http://odata.org/test/$metadata#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}},\"p2\":{\"One\":1,\"Two\":2,\"Three\":3}}",
                 },
 
                 #endregion
@@ -631,7 +631,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", feed1)
                     },
-                    JsonLight = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
+                    Json = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
                 },
                 new
                 {
@@ -640,12 +640,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", feed2)
                     },
-                    JsonLight = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
+                    Json = "{\"p1\":[{\"@odata.type\":\"#TestModel.TestEntityType\",\"ID\":1,\"Name\":\"TestName\",\"ComplexProperty\":{}}]}",
                 },
                 #endregion
             };
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback =
@@ -655,7 +655,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = testCase.JsonLight
+                                Json = testCase.Json
                             };
                         }
                         else
@@ -721,7 +721,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetPrimitiveStringCollection(1))
                     },
-                    JsonLight = "{\"p1\":[\"foo\"]}",
+                    Json = "{\"p1\":[\"foo\"]}",
                 },
                 new
                 {
@@ -730,7 +730,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetPrimitiveStringCollection(3))
                     },
-                    JsonLight = "{\"p1\":[\"foo\",\"bar\",\"collectionElement3\"]}",
+                    Json = "{\"p1\":[\"foo\",\"bar\",\"collectionElement3\"]}",
                 },
                 new
                 {
@@ -739,7 +739,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetPrimitiveStringCollection(-1))
                     },
-                    JsonLight = "{\"p1\":[\"foo\",\"bar\",\"collectionElement3\",\"4\",\"collectionElement---5\",null,\"\",\"-8\",\"This is collectionElement9\",\"-collectionElement10-\"]}",
+                    Json = "{\"p1\":[\"foo\",\"bar\",\"collectionElement3\",\"4\",\"collectionElement---5\",null,\"\",\"-8\",\"This is collectionElement9\",\"-collectionElement10-\"]}",
                 },
                 #endregion Collection of primitives
                 #region Collection of complex values
@@ -750,7 +750,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetComplexCollection(1))
                     },
-                    JsonLight = "{\"p1\":[{\"One\":1}]}",
+                    Json = "{\"p1\":[{\"One\":1}]}",
                 },
                 new
                 {
@@ -759,7 +759,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetComplexCollection(-1))
                     },
-                    JsonLight = "{\"p1\":[{\"One\":1},{\"One\":2},{\"One\":3}]}",
+                    Json = "{\"p1\":[{\"One\":1},{\"One\":2},{\"One\":3}]}",
                 },
                 #endregion Collection of complex values
                 #region Collection of complex containing collection properties
@@ -770,7 +770,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         new KeyValuePair<string, object>("p1", this.GetComplexCollectionContainingCollectionItem())
                     },
-                    JsonLight = "{\"p1\":[{\"OneProperty\":1,\"OneCollectionProperty\":[15,20]},{\"OneProperty\":2,\"OneCollectionProperty\":[25]}]}",
+                    Json = "{\"p1\":[{\"OneProperty\":1,\"OneCollectionProperty\":[15,20]},{\"OneProperty\":2,\"OneCollectionProperty\":[25]}]}",
                 },
                 #endregion Collection of complex containing collection properties
                 #region Combination of primitive, complex and collection parameters
@@ -788,7 +788,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         new KeyValuePair<string, object>("p7", null),
                         new KeyValuePair<string, object>("p8", new ODataCollectionStart() { Name = "c" })
                     },
-                    JsonLight = "{" +
+                    Json = "{" +
                         "\"p1\":\"foo\"," +
                         "\"p2\":12345," + 
                         "\"p3\":\"2011-12-31T00:00:00Z\"," +
@@ -801,7 +801,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 #endregion Combination of primitive, complex and collection parameters
             };
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback =
@@ -811,7 +811,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = testCase.JsonLight
+                                Json = testCase.Json
                             };
                         }
                         else
@@ -845,7 +845,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             var container = new EdmEntityContainer("TestModel", "TestContainer");
             model.AddElement(container);
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig =>
                 new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                 {
@@ -1188,7 +1188,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 },
             };
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException };
@@ -1258,7 +1258,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                     {
                         ParameterPayload = new ODataParameters() {  },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_NullablePrimitive_Bindable" + value).First(),
-                        JsonLight = "{}",
+                        Json = "{}",
                     },
 
                     // funtion import with side-effecting = false.
@@ -1269,7 +1269,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                             new KeyValuePair<string, object>("p1", 5)
                         },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_PrimitiveNoSideEffecting_Bindable_" + value).First(),
-                        JsonLight = "{\"p1\":5}",
+                        Json = "{\"p1\":5}",
                     },
 
                     // primitive with function import
@@ -1280,7 +1280,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                             new KeyValuePair<string, object>("primitive", "foo")
                         },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Primitive_Bindable" + value).First(),
-                        JsonLight = "{\"primitive\":\"foo\"}",
+                        Json = "{\"primitive\":\"foo\"}",
                     },
 
                     // complex with function import 
@@ -1297,7 +1297,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                                 })
                         },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Complex_Bindable" + value).First(),
-                        JsonLight = "{\"complex\":{\"PrimitiveProperty\":\"foo\",\"ComplexProperty\":null}}",
+                        Json = "{\"complex\":{\"PrimitiveProperty\":\"foo\",\"ComplexProperty\":null}}",
                     },
  
                     // primitive collection with function import.
@@ -1308,7 +1308,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                             new KeyValuePair<string, object>("primitiveCollection", this.GetPrimitiveStringCollection(1))
                         },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_PrimitiveCollection_Bindable" + value).First(),
-                        JsonLight = "{\"primitiveCollection\":[\"foo\"]}",
+                        Json = "{\"primitiveCollection\":[\"foo\"]}",
                     },
 
                     // complex collection with function import.
@@ -1319,7 +1319,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                             new KeyValuePair<string, object>("complexCollection", complexItemCollectionStart),
                         },
                         FunctionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_ComplexCollection_Bindable" + value).First(),
-                        JsonLight = "{\"complexCollection\":[{\"PrimitiveProperty\":\"foo\",\"ComplexProperty\":null}]}",
+                        Json = "{\"complexCollection\":[{\"PrimitiveProperty\":\"foo\",\"ComplexProperty\":null}]}",
                     },
                 };
 
@@ -1327,14 +1327,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
 
             });
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, allTestCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig =>
                     {
                         if (testConfig.Format == ODataFormat.Json)
                         {
-                            return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { Json = testCase.JsonLight };
+                            return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { Json = testCase.Json };
                         }
                         else
                         {
@@ -1404,7 +1404,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 }
             };
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException };
@@ -1438,7 +1438,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
             };
 
             this.CombinatorialEngineProvider.RunCombinations(
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest),
+                this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest),
                 (testConfiguration) =>
                 {
                     PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { Json = "{\"primitive\":\"Hi\"}" };

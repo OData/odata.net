@@ -88,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Json
                     strWriter.NewLine = newline;
                 }
 
-                JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(strWriter, writingJsonLight: false);
+                JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(strWriter, writingJson: false);
                 jsonWriter.WriteValue(jsonValue);
             }
 

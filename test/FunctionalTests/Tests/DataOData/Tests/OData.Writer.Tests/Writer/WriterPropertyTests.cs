@@ -26,10 +26,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [MethodImplAttribute(MethodImplOptions.NoOptimization)]
         public void TaupoSinglePropertyTests_Json()
         {
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             IEnumerable<EntityInstance> generator = PayloadGenerator.GenerateJsonPayloads();
             this.TestSinglePropertyGeneration(ODataFormat.Json, generator);
         }
@@ -118,63 +118,63 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             model.Fixup();
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithPrimitiveProperties");
 
-            string[] propertiesJsonLightResults = new string[]
+            string[] propertiesJsonResults = new string[]
             {
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1.0",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"AAEAAQ==\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":true",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10Z\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10+01:00\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10-08:00\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"11111111-2222-3333-4444-555555555555\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPointValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyLineStringValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPolygonValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiPointValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiLineStringValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiPolygonValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPointValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryLineStringValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPolygonValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryCollectionValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiPointValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiLineStringValue),
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiPolygonValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1.0",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"AAEAAQ==\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":true",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10Z\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10+01:00\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10-08:00\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"11111111-2222-3333-4444-555555555555\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPointValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyLineStringValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPolygonValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiPointValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiLineStringValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiPolygonValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPointValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryLineStringValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPolygonValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryCollectionValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiPointValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiLineStringValue),
+                "\"" + JsonConstants.ODataValuePropertyName + "\":" + SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiPolygonValue),
 
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1.0",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":true",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10Z\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10+01:00\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10-08:00\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"11111111-2222-3333-4444-555555555555\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":1",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"1\"",
-                "\"" + JsonLightConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1.0",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":true",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10Z\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10+01:00\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"2010-10-10T10:10:10-08:00\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"11111111-2222-3333-4444-555555555555\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":1",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"1\"",
+                "\"" + JsonConstants.ODataValuePropertyName + "\":\"PT12M20.4S\"",
             };
 
-            string[][] propertiesJsonLightRequestResultLines = new string[propertiesJsonLightResults.Length][];
-            string[][] propertiesJsonLightResponseResultLines = new string[propertiesJsonLightResults.Length][];
-            for (int i = 0; i < propertiesJsonLightResults.Length; ++i)
+            string[][] propertiesJsonRequestResultLines = new string[propertiesJsonResults.Length][];
+            string[][] propertiesJsonResponseResultLines = new string[propertiesJsonResults.Length][];
+            for (int i = 0; i < propertiesJsonResults.Length; ++i)
             {
-                string propertyJsonLightResult = propertiesJsonLightResults[i];
+                string propertyJsonResult = propertiesJsonResults[i];
 
                 var property = owningType.FindProperty(properties[i].Name);
                 var typeName = property.Type.TestFullName();
@@ -183,18 +183,18 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     typeName = "Edm." + properties[i].Value.GetType().BaseType.Name;
                 }
 
-                string contextUri = JsonLightConstants.DefaultMetadataDocumentUri.AbsoluteUri + "#" + typeName;
-                string propertyJsonLightWithMetadataAnnotationResult = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + contextUri + "\"," + propertyJsonLightResult;
+                string contextUri = JsonConstants.DefaultMetadataDocumentUri.AbsoluteUri + "#" + typeName;
+                string propertyJsonWithMetadataAnnotationResult = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + contextUri + "\"," + propertyJsonResult;
 
-                propertiesJsonLightRequestResultLines[i] = JsonUtils.WrapTopLevelObject(JsonUtils.GetJsonLines(propertyJsonLightWithMetadataAnnotationResult));
-                propertiesJsonLightResponseResultLines[i] = JsonUtils.WrapTopLevelObject(JsonUtils.GetJsonLines(propertyJsonLightWithMetadataAnnotationResult));
+                propertiesJsonRequestResultLines[i] = JsonUtils.WrapTopLevelObject(JsonUtils.GetJsonLines(propertyJsonWithMetadataAnnotationResult));
+                propertiesJsonResponseResultLines[i] = JsonUtils.WrapTopLevelObject(JsonUtils.GetJsonLines(propertyJsonWithMetadataAnnotationResult));
             }
 
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string[] jsonLightRequestResult = propertiesJsonLightRequestResultLines[i];
-                string[] jsonLightResponseResult = propertiesJsonLightResponseResultLines[i];
+                string[] JsonRequestResult = propertiesJsonRequestResultLines[i];
+                string[] JsonResponseResult = propertiesJsonResponseResultLines[i];
 
                 yield return new PayloadWriterTestDescriptor<ODataProperty>(
                     this.Settings,
@@ -205,7 +205,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResult : jsonLightResponseResult),
+                                Json = JsonWriterUtils.CombineLines(testConfiguration.IsRequest ? JsonRequestResult : JsonResponseResult),
                                 FragmentExtractor = null,
                             };
                         }
@@ -232,33 +232,33 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithComplexProperties");
 
-            Func<bool, string[][]> propertiesJsonLightResultsFunc = isRequest => new string[][]
+            Func<bool, string[][]> propertiesJsonResultsFunc = isRequest => new string[][]
             {
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#My.AddressType\"," +
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#My.AddressType\"," +
                         "\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
                     "}"
                 ),
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#My.NestedAddressType\"," +
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#My.NestedAddressType\"," +
                         "\"Street\":{",
                     "$(Indent)$(Indent)\"StreetName\":\"One Redmond Way\",\"Number\":1234",
                     "$(Indent)},\"City\":\"Redmond \"",
                     "}"
                 )
             };
-            string[][] propertiesJsonLightRequestResults = propertiesJsonLightResultsFunc(true);
-            string[][] propertiesJsonLightResponseResults = propertiesJsonLightResultsFunc(false);
+            string[][] propertiesJsonRequestResults = propertiesJsonResultsFunc(true);
+            string[][] propertiesJsonResponseResults = propertiesJsonResultsFunc(false);
 
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataItem[] property = properties[i];
-                string[] jsonLightRequestResult = propertiesJsonLightRequestResults[i];
-                string[] jsonLightResponseResult = propertiesJsonLightResponseResults[i];
+                string[] JsonRequestResult = propertiesJsonRequestResults[i];
+                string[] JsonResponseResult = propertiesJsonResponseResults[i];
 
                 yield return new PayloadWriterTestDescriptor<ODataItem[]>(
                     this.Settings,
@@ -269,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResult : jsonLightResponseResult),
+                                Json = JsonWriterUtils.CombineLines(testConfiguration.IsRequest ? JsonRequestResult : JsonResponseResult),
                                 FragmentExtractor = null
                             };
                         }
@@ -296,13 +296,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithCollectionProperties");
 
-            Func<bool, string[][]> propertiesJsonLightResultsFunc = isRequest => new string[][]
+            Func<bool, string[][]> propertiesJsonResultsFunc = isRequest => new string[][]
             {
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
+                        "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)",
                     "$(Indent)]",
                     "}"
@@ -310,8 +310,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
+                        "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)0,1,2,3,4,5,6,7,8,9",
                     "$(Indent)]",
                     "}"
@@ -319,8 +319,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Int32)\"," +
+                        "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)0,1,2",
                     "$(Indent)]",
                     "}"
@@ -328,8 +328,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(Edm.String)\"," +
+                        "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                     "$(Indent)$(Indent)\"One\",\"Two\",\"Three\"",
                     "$(Indent)]",
                     "}"
@@ -337,8 +337,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 StringUtils.Flatten(
                     "{",
                     "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Geography)\"," +
-                        "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(Edm.Geography)\"," +
+                        "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                     JsonUtils.GetJsonLines(
                         "$(Indent)$(Indent)" +
                         SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue) + "," +
@@ -356,14 +356,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new string[0],
             };
 
-            string[][] propertiesJsonLightRequestResults = propertiesJsonLightResultsFunc(true);
-            string[][] propertiesJsonLightResponseResults = propertiesJsonLightResultsFunc(false);
+            string[][] propertiesJsonRequestResults = propertiesJsonResultsFunc(true);
+            string[][] propertiesJsonResponseResults = propertiesJsonResultsFunc(false);
 
             for (int i = 0; i < properties.Length; ++i)
             {
                 ODataProperty property = properties[i];
-                string[] jsonLightRequestResultLines = propertiesJsonLightRequestResults[i];
-                string[] jsonLightResponseResultLines = propertiesJsonLightResponseResults[i];
+                string[] JsonRequestResultLines = propertiesJsonRequestResults[i];
+                string[] JsonResponseResultLines = propertiesJsonResponseResults[i];
 
                 yield return new PayloadWriterTestDescriptor<ODataProperty>(
                     this.Settings,
@@ -383,7 +383,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResultLines : jsonLightResponseResultLines),
+                                Json = JsonWriterUtils.CombineLines(testConfiguration.IsRequest ? JsonRequestResultLines : JsonResponseResultLines),
                                 FragmentExtractor = testConfiguration.IsRequest
                                     ? (Func<JsonValue, JsonValue>)null
                                     : (result) => result
@@ -410,12 +410,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             var owningType = MetadataUtils.EntityTypes(model).Single(et => et.Name == "EntryWithCollectionProperties");
 
-            Func<bool, string[]> propertiesJsonLightResultsFunc = isRequest => new string[]
+            Func<bool, string[]> propertiesJsonResultsFunc = isRequest => new string[]
             {
                 "{",
                 "$(Indent)" +
-                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + JsonLightConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
-                    "\"" + JsonLightConstants.ODataValuePropertyName + "\":[",
+                    "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + JsonConstants.DefaultMetadataDocumentUri + "#Collection(My.AddressType)\"," +
+                    "\"" + JsonConstants.ODataValuePropertyName + "\":[",
                 "$(Indent)$(Indent){",
                 "$(Indent)$(Indent)$(Indent)\"Street\":\"One Redmond Way\",\"City\":\" Redmond\"",
                 "$(Indent)$(Indent)},{",
@@ -425,8 +425,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 "}"
             };
 
-            string[] jsonLightRequestResultLines = propertiesJsonLightResultsFunc(true);
-            string[] jsonLightResponseResultLines = propertiesJsonLightResultsFunc(false);
+            string[] JsonRequestResultLines = propertiesJsonResultsFunc(true);
+            string[] JsonResponseResultLines = propertiesJsonResultsFunc(false);
 
             return new PayloadWriterTestDescriptor<ODataItem[]>(
                 this.Settings,
@@ -437,7 +437,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Json = JsonLightWriterUtils.CombineLines(testConfiguration.IsRequest ? jsonLightRequestResultLines : jsonLightResponseResultLines),
+                            Json = JsonWriterUtils.CombineLines(testConfiguration.IsRequest ? JsonRequestResultLines : JsonResponseResultLines),
                             FragmentExtractor = testConfiguration.IsRequest
                                 ? (Func<JsonValue, JsonValue>)null
                                 : (result) => result
@@ -837,25 +837,25 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         private sealed class NonNullableEdmPrimitiveTypeWithValue
         {
-            public NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind type, object value, string atom, string jsonLight)
-                : this(type, value, atom, jsonLight, null)
+            public NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind type, object value, string atom, string Json)
+                : this(type, value, atom, Json, null)
             {
             }
 
-            public NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind type, object value, string atom, string jsonLight, ODataVersion? version)
+            public NonNullableEdmPrimitiveTypeWithValue(EdmPrimitiveTypeKind type, object value, string atom, string Json, ODataVersion? version)
             {
                 this.Version = version;
                 this.Type = type;
                 this.Value = value;
                 this.AtomRepresentation = atom;
-                this.JsonLightRepresentation = jsonLight;
+                this.JsonRepresentation = Json;
             }
 
             public EdmPrimitiveTypeKind Type { get; private set; }
             public object Value { get; private set; }
             public ODataVersion? Version { get; set; }
             public string AtomRepresentation { get; private set; }
-            public string JsonLightRepresentation { get; private set; }
+            public string JsonRepresentation { get; private set; }
         }
 
         private static NonNullableEdmPrimitiveTypeWithValue[] NonNullableEdmPrimitiveTypesWithValues = new NonNullableEdmPrimitiveTypeWithValue[]
@@ -1124,7 +1124,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void ComplexValueODataTypeAnnotationTest()
         {
             // TODO: Move this string to resources and localize it
-            const string ODataJsonLightValueSerializer_MissingTypeNameOnComplex = "A type name was not provided for an instance of ODataComplexValue.";
+            const string ODataJsonValueSerializer_MissingTypeNameOnComplex = "A type name was not provided for an instance of ODataComplexValue.";
 
             var testCases = new[]
             {
@@ -1133,10 +1133,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = (string)null,
                     ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
-                    JsonLightTypeName = (string)null,
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
+                    JsonTypeName = (string)null,
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnComplex"),
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty")
                 },
                 new
@@ -1144,10 +1144,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestNS.MyType",
                     ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>TestNS.MyType</typeName>",
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
-                    ExpectedExceptionInJsonLight = (object) null,
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
+                    ExpectedExceptionInJson = (object) null,
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object) null,
+                    ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
                 new
@@ -1155,10 +1155,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestNS.MyType",
                     ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
-                    ExpectedExceptionInJsonLight = (object) null,
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
+                    ExpectedExceptionInJson = (object) null,
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object) null,
+                    ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
                 new
@@ -1166,10 +1166,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = (string)null,
                     ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
-                    JsonLightTypeName = (string) null,
-                    ExpectedExceptionInJsonLight = (object) new ODataException(ODataJsonLightValueSerializer_MissingTypeNameOnComplex),
+                    JsonTypeName = (string) null,
+                    ExpectedExceptionInJson = (object) new ODataException(ODataJsonValueSerializer_MissingTypeNameOnComplex),
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object) null,
+                    ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
                 new
@@ -1177,10 +1177,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = (string)null,
                     ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
-                    JsonLightTypeName = (string) null,
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnComplex"),
+                    JsonTypeName = (string) null,
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnComplex"),
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
                 new
@@ -1188,10 +1188,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestNS.MyType",
                     ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
-                    JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
-                    ExpectedExceptionInJsonLight = (object) null,
+                    JsonTypeName = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
+                    ExpectedExceptionInJson = (object) null,
                     ExpectedExceptionInAtom = (object) null,
-                    ExpectedExceptionInJsonLightForResponse = (object) null,
+                    ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
             };
@@ -1226,15 +1226,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            if (tc.ExpectedExceptionInJsonLight is Exception)
+                            if (tc.ExpectedExceptionInJson is Exception)
                             {
                                 return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
-                                    ExpectedException = (Exception)tc.ExpectedExceptionInJsonLight
+                                    ExpectedException = (Exception)tc.ExpectedExceptionInJson
                                 };
                             }
 
-                            var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInJsonLight : tc.ExpectedExceptionInJsonLightForResponse;
+                            var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInJson : tc.ExpectedExceptionInJsonForResponse;
                             if (exception is ExpectedException)
                             {
                                 return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
@@ -1247,16 +1247,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             {
                                 FragmentExtractor = (result) =>
                                 {
-                                    var complexObject = JsonLightWriterUtils.TrimWhitespace(result).Object();
+                                    var complexObject = JsonWriterUtils.TrimWhitespace(result).Object();
                                     JsonProperty typeProperty = null;
                                     if (complexObject != null)
                                     {
-                                        typeProperty = complexObject.Property(JsonLightConstants.ODataTypeAnnotationName);
+                                        typeProperty = complexObject.Property(JsonConstants.ODataTypeAnnotationName);
                                     }
 
                                     return typeProperty == null ? MissingTypeNameSentinelJsonProperty : typeProperty.RemoveAllAnnotations(true);
                                 },
-                                Json = tc.JsonLightTypeName
+                                Json = tc.JsonTypeName
                             };
                         }
                         else
@@ -1295,10 +1295,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
                 new
@@ -1307,10 +1307,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "\"",
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
-                    ExpectedExceptionInJsonLight = new object(),
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
+                    ExpectedExceptionInJson = new object(),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = new object(),
+                    ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
                 new
@@ -1319,10 +1319,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
-                    ExpectedExceptionInJsonLight = new object(),
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
+                    ExpectedExceptionInJson = new object(),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = new object(),
+                    ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
                 new
@@ -1331,10 +1331,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = new ODataTypeAnnotation(EntityModelUtils.GetCollectionTypeName("Edm.String")),
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
-                    JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
+                    JsonTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnCollection"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnCollection"),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
                 new
@@ -1343,10 +1343,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
                     JsonTypeName = "\"type\":\"\"",
-                    JsonLightTypeName = "\"@odata.type\":\"\"",
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
+                    JsonTypeName = "\"@odata.type\":\"\"",
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
                 new
@@ -1355,10 +1355,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = new ODataTypeAnnotation("NonCollectionTypeName"),
                     XmlTypeName = "<typeName>NonCollectionTypeName</typeName>",
                     JsonTypeName = "\"type\":\"NonCollectionTypeName\"",
-                    JsonLightTypeName = "\"@odata.type\":\"#NonCollectionTypeName\"",
-                    ExpectedExceptionInJsonLight = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
+                    JsonTypeName = "\"@odata.type\":\"#NonCollectionTypeName\"",
+                    ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonLightValueSerializer_MissingTypeNameOnCollection"),
+                    ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnCollection"),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
                 new
@@ -1367,10 +1367,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataTypeAnnotation = new ODataTypeAnnotation(EntityModelUtils.GetCollectionTypeName("Edm.String")),
                     XmlTypeName = "<typeName>" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "</typeName>",
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
-                    JsonLightTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
-                    ExpectedExceptionInJsonLight = new object(),
+                    JsonTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
+                    ExpectedExceptionInJson = new object(),
                     ExpectedExceptionInAtom = new object(),
-                    ExpectedExceptionInJsonLightForResponse = new object(),
+                    ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
             };
@@ -1411,15 +1411,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             if (testConfiguration.Format == ODataFormat.Json)
                             {
-                                if (tc.ExpectedExceptionInJsonLight is Exception)
+                                if (tc.ExpectedExceptionInJson is Exception)
                                 {
                                     return new WriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                     {
-                                        ExpectedException = (Exception)tc.ExpectedExceptionInJsonLight
+                                        ExpectedException = (Exception)tc.ExpectedExceptionInJson
                                     };
                                 }
 
-                                var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInJsonLight : tc.ExpectedExceptionInJsonLightForResponse;
+                                var exception = testConfiguration.IsRequest ? tc.ExpectedExceptionInJson : tc.ExpectedExceptionInJsonForResponse;
 
                                 if (exception is ExpectedException)
                                 {
@@ -1434,16 +1434,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             {
                                 FragmentExtractor = (result) =>
                                 {
-                                    var topLevelJsonObject = JsonLightWriterUtils.TrimWhitespace(result).Object();
+                                    var topLevelJsonObject = JsonWriterUtils.TrimWhitespace(result).Object();
                                     JsonProperty typeProperty = null;
                                     if (topLevelJsonObject != null)
                                     {
-                                        typeProperty = topLevelJsonObject.Property(JsonLightConstants.ODataTypeAnnotationName);
+                                        typeProperty = topLevelJsonObject.Property(JsonConstants.ODataTypeAnnotationName);
                                     }
 
                                     return typeProperty == null ? MissingTypeNameSentinelJsonProperty : typeProperty.RemoveAllAnnotations(true);
                                 },
-                                Json = tc.JsonLightTypeName
+                                Json = tc.JsonTypeName
                             };
                         }
 
@@ -1478,28 +1478,28 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     DebugDescription = "A null ODataTypeAnnotation should invoke default primitive type name writing behavior.",
                     ODataTypeAnnotation = (ODataTypeAnnotation)null,
                     XmlTypeName = "<typeName>Edm.Int64</typeName>",
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,   // Since this is a declared property, its type name isn't written by default in JSON light.
+                    JsonTypeName = MissingTypeNameSentinelTextJson,   // Since this is a declared property, its type name isn't written by default in Json.
                 },
                 new
                 {
                     DebugDescription = "A ODataTypeAnnotation with a null TypeName should force primitive type names to not be written, regardless of format.",
                     ODataTypeAnnotation = new ODataTypeAnnotation(),
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
-                    JsonLightTypeName = MissingTypeNameSentinelTextJson,
+                    JsonTypeName = MissingTypeNameSentinelTextJson,
                 },
                 new
                 {
-                    DebugDescription = "A ODataTypeAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    DebugDescription = "A ODataTypeAnnotation with a TypeName of \"DifferentType\" should cause that type name to be written for primitive values.",
                     ODataTypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     XmlTypeName = "<typeName>DifferentType</typeName>",
-                    JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
+                    JsonTypeName = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                 },
                 new
                 {
-                    DebugDescription = "A ODataTypeAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values, except in JSON verbose, where the format doesn't allow explicit type names for primitives.",
+                    DebugDescription = "A ODataTypeAnnotation with an empty string TypeName should cause an empty type name to be written for primitive values.",
                     ODataTypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     XmlTypeName = "<typeName></typeName>",
-                    JsonLightTypeName = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"\"",
+                    JsonTypeName = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"\"",
                 }
             };
             #endregion test cases
@@ -1532,16 +1532,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             {
                                 FragmentExtractor = (result) =>
                                 {
-                                    var jsonObject = JsonLightWriterUtils.TrimWhitespace(result).Object();
+                                    var jsonObject = JsonWriterUtils.TrimWhitespace(result).Object();
                                     JsonProperty typeProperty = null;
                                     if (jsonObject != null)
                                     {
-                                        typeProperty = jsonObject.Property(JsonLightConstants.ODataTypeAnnotationName);
+                                        typeProperty = jsonObject.Property(JsonConstants.ODataTypeAnnotationName);
                                     }
 
                                     return typeProperty == null ? MissingTypeNameSentinelJsonProperty : typeProperty.RemoveAllAnnotations(true);
                                 },
-                                Json = tc.JsonLightTypeName
+                                Json = tc.JsonTypeName
                             };
                         }
 
@@ -1596,7 +1596,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
                                 Json = "\"nullProperty\":null",
-                                FragmentExtractor = (result) => JsonLightWriterUtils.TrimWhitespace(result).Object().Property("nullProperty")
+                                FragmentExtractor = (result) => JsonWriterUtils.TrimWhitespace(result).Object().Property("nullProperty")
                             };
                         }
                         else
@@ -1667,8 +1667,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Json = "\"" + propertyName + "\":" + nonNullablePrimitiveTypeWithValue.JsonLightRepresentation,
-                            FragmentExtractor = (result) => JsonLightWriterUtils.TrimWhitespace(result).Object().Property(propertyName),
+                            Json = "\"" + propertyName + "\":" + nonNullablePrimitiveTypeWithValue.JsonRepresentation,
+                            FragmentExtractor = (result) => JsonWriterUtils.TrimWhitespace(result).Object().Property(propertyName),
                             ExpectedException2 = isInvalidPropertyName
                                     ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertiesMustNotContainReservedChars", propertyName, "':', '.', '@'")
                                     : null,
@@ -1785,8 +1785,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Json = "\"" + JsonLightConstants.ODataValuePropertyName + "\":" + nonNullablePrimitiveTypeWithValue.JsonLightRepresentation,
-                            FragmentExtractor = (result) => JsonLightWriterUtils.TrimWhitespace(result).Object().Property(propertyName),
+                            Json = "\"" + JsonConstants.ODataValuePropertyName + "\":" + nonNullablePrimitiveTypeWithValue.JsonRepresentation,
+                            FragmentExtractor = (result) => JsonWriterUtils.TrimWhitespace(result).Object().Property(propertyName),
                             ExpectedException2 = isInvalidPropertyName
                                     ? ODataExpectedExceptions.ODataException("ValidationUtils_PropertiesMustNotContainReservedChars", propertyName, "':', '.', '@'")
                                     : null,

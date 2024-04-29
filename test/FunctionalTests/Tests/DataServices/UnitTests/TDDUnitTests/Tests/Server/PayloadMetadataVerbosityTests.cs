@@ -55,7 +55,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
         #region initialization/parsing tests
         [TestMethod]
-        public void DefaultBehaviorForJsonLight()
+        public void DefaultBehaviorForJson()
         {
             CompareInterpreters(new PayloadMetadataParameterInterpreter(ODataFormat.Json, null), this.defaultInterpreter);
         }

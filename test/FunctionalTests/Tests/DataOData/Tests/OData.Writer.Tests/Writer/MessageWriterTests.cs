@@ -687,7 +687,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             WriterInvocation = writerAction,
                             TestCase = testCase
                         }));
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.Where(td => false),
                 this.WriterTestConfigurationProvider.AllFormatsConfigurations.Where(tc => false),
@@ -835,7 +835,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         // TODO: add tests that verify the correct writer behavior if the data service version is specified in the headers and ODataUtils.SetHeadersForPayload is used
         // TODO: add tests that verify the correct writer behavior if the content type is specified in the headers and ODataUtils.SetHeadersForPayload is used
 
-        private static readonly ContentTypeMessageHeaderTestCase AppJsonLightTestCase = new ContentTypeMessageHeaderTestCase
+        private static readonly ContentTypeMessageHeaderTestCase AppJsonTestCase = new ContentTypeMessageHeaderTestCase
         {
             ContentTypeHeaderValue = "application/json",
             ExpectedEncoding = TestMediaTypeUtils.EncodingUtf8NoPreamble,
@@ -866,14 +866,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 case ODataPayloadKind.EntityReferenceLinks:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
                 case ODataPayloadKind.Resource:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
@@ -882,7 +882,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         //AppXmlTestCase,
                         //TextXmlTestCase,
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
@@ -891,7 +891,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         //AppXmlTestCase,
                         //TextXmlTestCase,
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
@@ -924,14 +924,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         //AppXmlTestCase,
                         //TextXmlTestCase,
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
                 case ODataPayloadKind.ServiceDocument:
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;
@@ -951,7 +951,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testCases = new ContentTypeMessageHeaderTestCase[]
                     {
                         // AppXmlTestCase,
-                        AppJsonLightTestCase,
+                        AppJsonTestCase,
                     };
 
                     break;

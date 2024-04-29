@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightFormatTests.cs" company="Microsoft">
+// <copyright file="JsonFormatTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,9 +11,9 @@ namespace Microsoft.OData.Tests
     public class ODataFormatTests
     {
         [Fact]
-        public void JsonLightFormatToStringShouldReturnJsonLight()
+        public void JsonFormatToStringShouldReturnJson()
         {
-            Assert.Equal("JsonLight", ODataFormat.Json.ToString());
+            Assert.Equal("Json", ODataFormat.Json.ToString());
         }
     }
 }

@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="MessageReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="MessageReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// JSON Lite specific tests for the ODataMessageReader class.
     /// </summary>
     [TestClass, TestCase]
-    public class MessageReaderJsonLightTests : ODataReaderTestCase
+    public class MessageReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -41,13 +41,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         PayloadElement = PayloadBuilder.EntitySet(),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.EntitySet(),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -60,13 +60,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         PayloadElement = PayloadBuilder.Entity(),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.Entity(),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -79,31 +79,31 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     {
                         PayloadElement = PayloadBuilder.PrimitiveProperty("propertyName", 42),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.Property("propertyName", PayloadBuilder.ComplexValue()),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.Property("propertyName", PayloadBuilder.PrimitiveMultiValue()),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.PrimitiveCollection(),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.PrimitiveCollection(),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
@@ -111,69 +111,69 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         //PayloadModel = model,
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ItemTypeRequiredForCollectionReaderInRequests"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexCollection(),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexCollection(),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexCollection(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ItemTypeRequiredForCollectionReaderInRequests"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ServiceDocument().Workspace(PayloadBuilder.Workspace()),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.DeferredLink("http://odata.org/deferred"),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.DeferredLink("http://odata.org/deferred"),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.LinkCollection(),
                         SkipTestConfiguration = tc => tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexValue(),
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_ModelRequiredForReading"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_ModelRequiredForReading"),
                     },
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexValue(),
                         PayloadEdmModel = model,
                         SkipTestConfiguration = tc => !tc.IsRequest,
-                        ExpectedException = ODataExpectedExceptions.ArgumentNullException("ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader", "operation")
+                        ExpectedException = ODataExpectedExceptions.ArgumentNullException("ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader", "operation")
                     },
                 };
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // These descriptors are already tailored specifically for Json Light and 

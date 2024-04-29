@@ -823,7 +823,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     request.DataServiceType = typeof(OpenTypeContextWithReflection<OpenElement>);
                     request.RequestUriString = "/Values";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     Exception exception = TestUtil.RunCatching(request.SendRequest);
                     String response = request.GetResponseStreamAsText();
                     Assert.AreEqual(exception, null);

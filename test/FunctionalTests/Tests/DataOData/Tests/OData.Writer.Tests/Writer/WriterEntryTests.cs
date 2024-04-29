@@ -27,7 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Atom;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
@@ -69,10 +69,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     this.WriteAndVerifyODataPayloadElement(testCase, newConfiguration);
                 });
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             ////this.CombinatorialEngineProvider.RunCombinations(
             ////    PayloadGenerator.GenerateJsonPayloads(),
-            ////    this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+            ////    this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
             ////    (testCase, testConfiguration) =>
             ////    {
             ////        this.WriteAndVerifyODataPayloadElement(testCase, testConfiguration);
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, entry, expectedCallback)
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.PayloadCases(WriterPayloads.EntryPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -145,7 +145,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, idEntry, expectedCallback)
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.EntryPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -185,7 +185,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new PayloadWriterTestDescriptor<ODataItem>(this.Settings, noIdEntry, noIdExpectedCallback),
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases.PayloadCases(WriterPayloads.EntryPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -293,7 +293,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     TypeName = (string)null,
                     ExpectedXml = "<categoryMissing/>",
-                    ExpectedJsonLight = (string)null,
+                    ExpectedJson = (string)null,
                     Model = (EdmModel)null
                 },
                 // empty string as TypeName is invalid and is covered in input validation tests.
@@ -301,21 +301,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     TypeName = "MyType",
                     ExpectedXml = "<category term='MyType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = (string)null,
+                    ExpectedJson = (string)null,
                     Model = (EdmModel)null
                 },
                 new
                 {
                     TypeName = "TestModel.EntityType",
                     ExpectedXml = "<category term='TestModel.EntityType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"typeMissing\":null",
+                    ExpectedJson = "\"typeMissing\":null",
                     Model = model
                 },
                 new
                 {
                     TypeName = "TestModel.DerivedType",
                     ExpectedXml = "<category term='TestModel.DerivedType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.DerivedType\"",
+                    ExpectedJson = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.DerivedType\"",
                     Model = model
                 },
             };
@@ -331,15 +331,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            return tc.ExpectedJsonLight == null ? null :
+                            return tc.ExpectedJson == null ? null :
                                 new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                 {
                                     FragmentExtractor = (result) =>
                                     {
-                                        var typeProperty = result.Object().Property(JsonLightConstants.ODataTypeAnnotationName);
+                                        var typeProperty = result.Object().Property(JsonConstants.ODataTypeAnnotationName);
                                         return typeProperty == null ? (JsonValue)(new JsonProperty("typeMissing", new JsonPrimitiveValue(null))) : typeProperty.RemoveAllAnnotations(true);
                                     },
-                                    Json = tc.ExpectedJsonLight
+                                    Json = tc.ExpectedJson
                                 };
                         }
                         else
@@ -372,7 +372,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public string TypeName { get; set; }
             public ODataTypeAnnotation TypeAnnotation { get; set; }
             public string ExpectedXml { get; set; }
-            public string ExpectedJsonLight { get; set; }
+            public string ExpectedJson { get; set; }
             public IEdmModel Model { get; set; }
             public EntityType ExpectedEntityType { get; set; }
         }
@@ -415,7 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestModel.MyType",
                     TypeAnnotation = null,
                     ExpectedXml = "<category term='TestModel.MyType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"typeMissing\":null",
+                    ExpectedJson = "\"typeMissing\":null",
                     Model = model
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
@@ -423,7 +423,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestModel.DerivedType",
                     TypeAnnotation = null,
                     ExpectedXml = "<category term='TestModel.DerivedType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.DerivedType\"",
+                    ExpectedJson = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.DerivedType\"",
                     Model = model
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
@@ -445,7 +445,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = null,
                     TypeAnnotation = new ODataTypeAnnotation(string.Empty),
                     ExpectedXml = "<category term='' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"\"",
+                    ExpectedJson = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"\"",
                     Model = null
                 },
                 new EntrySerializationTypeNameAnnotationTestCase
@@ -460,7 +460,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     TypeName = "TestModel.MyType",
                     TypeAnnotation = new ODataTypeAnnotation("DifferentType"),
                     ExpectedXml = "<category term='DifferentType' scheme='" + TestAtomConstants.ODataSchemeNamespace +"' xmlns='" + TestAtomConstants.AtomNamespace + "' />",
-                    ExpectedJsonLight = "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
+                    ExpectedJson = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                     Model = model
                 },
             };
@@ -485,10 +485,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             {
                                 FragmentExtractor = (result) =>
                                 {
-                                    var typeProperty = result.Object().Property(JsonLightConstants.ODataTypeAnnotationName);
+                                    var typeProperty = result.Object().Property(JsonConstants.ODataTypeAnnotationName);
                                     return typeProperty == null ? (JsonValue)(new JsonProperty("typeMissing", new JsonPrimitiveValue(null))) : typeProperty.RemoveAllAnnotations(true);
                                 },
-                                Json = tc.ExpectedJsonLight
+                                Json = tc.ExpectedJson
                             };
                         }
                         else
@@ -679,7 +679,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -756,7 +756,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 ));
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.EntryPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -1565,7 +1565,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 return descriptor;
             });
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -1874,10 +1874,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
             }
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             ////this.CombinatorialEngineProvider.RunCombinations(
             ////   testDescriptors,
-            ////   this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+            ////   this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
             ////   (testDescriptor, testConfiguration) =>
             ////   {
             ////       testDescriptor.RunTest(testConfiguration, this.Logger);
@@ -2089,7 +2089,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+                this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration, this.Logger);
@@ -2178,7 +2178,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 }
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                testDescriptors,
                this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -2618,7 +2618,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [TestMethod, Variation(Description = "Test writing payload asynchronously. Disposes before flush.")]
         public void EnsureSynchronousFlushWhenDisposingOnAsync()
         {
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
             this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
             (testConfiguration) =>

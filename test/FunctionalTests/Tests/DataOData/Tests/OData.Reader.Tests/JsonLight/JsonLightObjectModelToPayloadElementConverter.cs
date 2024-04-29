@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightObjectModelToPayloadElementConverter.cs" company="Microsoft">
+// <copyright file="JsonObjectModelToPayloadElementConverter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System;
@@ -16,12 +16,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// <summary>
     /// Converts OData object model to ODataPayloadElement model.
     /// </summary>
-    public class JsonLightObjectModelToPayloadElementConverter : ObjectModelToPayloadElementConverter
+    public class JsonObjectModelToPayloadElementConverter : ObjectModelToPayloadElementConverter
     {
         /// <summary>
         /// Constructor.
         /// </summary>
-        public JsonLightObjectModelToPayloadElementConverter()
+        public JsonObjectModelToPayloadElementConverter()
         {
         }
 
@@ -34,20 +34,20 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// <returns>The newly created visitor.</returns>
         protected override ObjectModelToPayloadElementConverterVisitor CreateVisitor(bool response, bool payloadContainsId, Func<string, bool> payloadContainsEtagForType)
         {
-            return new JsonLightObjectModelToPayloadElementConverterVisitor(response, this.RequestManager);
+            return new JsonObjectModelToPayloadElementConverterVisitor(response, this.RequestManager);
         }
 
         /// <summary>
         /// The inner visitor which performs the conversion.
         /// </summary>
-        protected class JsonLightObjectModelToPayloadElementConverterVisitor : ObjectModelToPayloadElementConverterVisitor
+        protected class JsonObjectModelToPayloadElementConverterVisitor : ObjectModelToPayloadElementConverterVisitor
         {
             /// <summary>
             /// Constructor
             /// </summary>
             /// <param name="response">true if payload represents a response payload, false if it's a request payload.</param>
             /// <param name="requestManager">The request manager used to convert batch payloads.</param>
-            public JsonLightObjectModelToPayloadElementConverterVisitor(bool response, IODataRequestManager requestManager)
+            public JsonObjectModelToPayloadElementConverterVisitor(bool response, IODataRequestManager requestManager)
                 : base(response, requestManager, true, (t) => true)
             {
             }

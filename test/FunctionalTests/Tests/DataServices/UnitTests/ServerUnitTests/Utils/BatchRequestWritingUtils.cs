@@ -144,8 +144,8 @@ namespace AstoriaUnitTests.Tests.Server
             builder.Append(actionName);
             builder.AppendLine(" HTTP/1.1");
             builder.AppendLine("Host: host");
-            builder.AppendLine("Accept: " + UnitTestsUtil.JsonLightMimeType);
-            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonLightMimeType);
+            builder.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
+            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonMimeType);
 
             // Write other headers that exist
             foreach (var headerValuePair in headers)
@@ -199,8 +199,8 @@ namespace AstoriaUnitTests.Tests.Server
             builder.Append(url);
             builder.AppendLine(" HTTP/1.1");
             builder.AppendLine("Host: host");
-            builder.AppendLine("Accept: " + UnitTestsUtil.JsonLightMimeType);
-            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonLightMimeType);
+            builder.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
+            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonMimeType);
             builder.Append("Content-Length: ");
             builder.AppendLine(jsonBody.Length.ToString());
             builder.AppendLine();
@@ -217,8 +217,8 @@ namespace AstoriaUnitTests.Tests.Server
             builder.Append(url);
             builder.AppendLine(" HTTP/1.1");
             builder.AppendLine("Host: host");
-            builder.AppendLine("Accept: " + UnitTestsUtil.JsonLightMimeType);
-            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonLightMimeType);
+            builder.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
+            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonMimeType);
             builder.Append("Content-Length: ");
             builder.AppendLine(jsonBody.Length.ToString());
             builder.Append("Content-ID: ");
@@ -237,8 +237,8 @@ namespace AstoriaUnitTests.Tests.Server
             builder.Append(url);
             builder.AppendLine(" HTTP/1.1");
             builder.AppendLine("Host: host");
-            builder.AppendLine("Accept: " + UnitTestsUtil.JsonLightMimeType);
-            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonLightMimeType);
+            builder.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
+            builder.AppendLine("Content-Type: " + UnitTestsUtil.JsonMimeType);
             builder.AppendLine("If-Match: *");
             builder.Append("Content-Length: ");
             builder.AppendLine(jsonBody.Length.ToString());
@@ -256,7 +256,7 @@ namespace AstoriaUnitTests.Tests.Server
             builder.Append(url);
             builder.AppendLine(" HTTP/1.1");
             builder.AppendLine("Host: host");
-            builder.AppendLine("Accept: " + UnitTestsUtil.JsonLightMimeType);
+            builder.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
             builder.AppendLine("Content-Type: text/plain");
             builder.Append("Content-Length: ");
             builder.AppendLine(jsonBody.Length.ToString());

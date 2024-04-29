@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ParameterReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="ParameterReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Linq;
@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Reader;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +26,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests reading of parameter values in JSON Light.
     /// </summary>
     [TestClass, TestCase]
-    public class ParameterReaderJsonLightTests : ODataReaderTestCase
+    public class ParameterReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -35,13 +35,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public EntityModelSchemaToEdmModelConverter EntityModelSchemaToEdmModelConverter { get; set; }
 
         [TestMethod, TestCategory("Reader.Operations"), Variation(Description = "Verifies JSON Light specific error cases.")]
-        public void ParameterJsonLightErrorTests()
+        public void ParameterJsonErrorTests()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Primitive").First();
 
             this.CombinatorialEngineProvider.RunCombinations(
-            this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest),
+            this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest),
             (testConfiguration) =>
             {
                 // Reading a Json parameter payload with an empty name should fail.
@@ -66,7 +66,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Operations"), Variation(Description = "Verifies correct parsing of parameter payloads with annotations.")]
-        public void ParameterReaderJsonLightTest()
+        public void ParameterReaderJsonTest()
         {
             EdmModel model = new EdmModel();
             model.Fixup();
@@ -87,32 +87,32 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new
                 {
                     DebugDescription = "Custom property annotation for a valid parameter property (before property) - should work.",
-                    Json = "{\"" + JsonLightUtils.GetPropertyAnnotationName("p1", "my.custom") + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("p1", "my.custom") + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
                     ExpectedException = (ExpectedException)null,
                 },
                 new
                 {
                     DebugDescription = "Custom property annotation for a valid parameter property (after property) - should fail.",
-                    Json = "{\"p1\":42, \"" + JsonLightUtils.GetPropertyAnnotationName("p1", "my.custom") + "\":42, \"p2\":\"Vienna\"}",
+                    Json = "{\"p1\":42, \"" + JsonUtils.GetPropertyAnnotationName("p1", "my.custom") + "\":42, \"p2\":\"Vienna\"}",
                     ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "my.custom", "p1"),
                 },
                 new
                 {
                     DebugDescription = "OData property annotation for a valid parameter property (before property) - should work.",
-                    Json = "{\"" + JsonLightUtils.GetPropertyAnnotationName("p1", JsonLightConstants.ODataTypeAnnotationName) + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_PropertyAnnotationForParameters"),
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("p1", JsonConstants.ODataTypeAnnotationName) + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_PropertyAnnotationForParameters"),
                 },
                 new
                 {
                     DebugDescription = "OData property annotation for a valid parameter property (after property) - should fail.",
-                    Json = "{\"p1\":42, \"" + JsonLightUtils.GetPropertyAnnotationName("p1", JsonLightConstants.ODataTypeAnnotationName) + "\":42, \"p2\":\"Vienna\"}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_PropertyAnnotationForParameters"),
+                    Json = "{\"p1\":42, \"" + JsonUtils.GetPropertyAnnotationName("p1", JsonConstants.ODataTypeAnnotationName) + "\":42, \"p2\":\"Vienna\"}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_PropertyAnnotationForParameters"),
                 },
                 new
                 {
                     DebugDescription = "Custom property annotation for an invalid parameter property - should fail.",
-                    Json = "{\"" + JsonLightUtils.GetPropertyAnnotationName("p0", "my.custom") + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters", "p0"),
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("p0", "my.custom") + "\":42, \"p1\":42, \"p2\":\"Vienna\"}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters", "p0"),
                 },
                 new
                 {
@@ -123,8 +123,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 new
                 {
                     DebugDescription = "OData instance annotation - should fail.",
-                    Json = "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"Edm.Int32\", \"p1\":42, \"p2\":\"Vienna\"}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataTypeAnnotationName),
+                    Json = "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"Edm.Int32\", \"p1\":42, \"p2\":\"Vienna\"}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonConstants.ODataTypeAnnotationName),
                 },
             };
 
@@ -140,7 +140,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest),
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.ExpectedResultNormalizers.Add(tc => ParameterReaderTests.FixupExpectedCollectionParameterPayloadElement);

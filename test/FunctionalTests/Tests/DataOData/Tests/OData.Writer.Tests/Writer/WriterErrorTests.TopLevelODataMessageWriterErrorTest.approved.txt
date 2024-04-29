@@ -1,4 +1,4 @@
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -6,7 +6,7 @@ Model Present: false
   }
 }
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -30,7 +30,7 @@ Model Present: false
   <m:message />
 </m:error>
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -38,7 +38,7 @@ Model Present: false
   }
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -62,7 +62,7 @@ Model Present: false
   <m:message />
 </m:error>
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -70,7 +70,7 @@ Model Present: false
   }
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -94,7 +94,7 @@ Model Present: false
   <m:message>message text</m:message>
 </m:error>
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -102,7 +102,7 @@ Model Present: false
   }
 }
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -126,7 +126,7 @@ Model Present: false
   <m:message />
 </m:error>
 
-Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 34; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -136,7 +136,7 @@ Model Present: false
   }
 }
 
-Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 36; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -172,7 +172,7 @@ Model Present: false
   </m:innererror>
 </m:error>
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -180,7 +180,7 @@ Model Present: false
   }
 }
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -204,7 +204,7 @@ Model Present: false
   <m:message>message text</m:message>
 </m:error>
 
-Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 50; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -214,7 +214,7 @@ Model Present: false
   }
 }
 
-Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 52; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -250,7 +250,7 @@ Model Present: false
   </m:innererror>
 </m:error>
 
-Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 58; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -260,7 +260,7 @@ Model Present: false
   }
 }
 
-Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 60; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -296,7 +296,7 @@ Model Present: false
   </m:innererror>
 </m:error>
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 66; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -310,7 +310,7 @@ Model Present: false
   }
 }
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 68; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -370,7 +370,7 @@ Model Present: false
   </m:innererror>
 </m:error>
 
-Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -380,7 +380,7 @@ Model Present: false
   }
 }
 
-Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{
@@ -416,7 +416,7 @@ Model Present: false
   </m:innererror>
 </m:error>
 
-Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 82; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "error":{
@@ -430,7 +430,7 @@ Model Present: false
   }
 }
 
-Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 84; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "error":{

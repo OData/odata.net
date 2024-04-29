@@ -9,7 +9,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Text;
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Evaluation
 {
@@ -188,9 +188,9 @@ namespace Microsoft.OData.Evaluation
 
             if (!string.IsNullOrEmpty(parameterNames))
             {
-                operationName += JsonLightConstants.FunctionParameterStart;
-                operationName += string.Join(JsonLightConstants.FunctionParameterSeparator, parameterNames.Split(JsonLightConstants.FunctionParameterSeparatorChar).Select(p => p + JsonLightConstants.FunctionParameterAssignment + p).ToArray());
-                operationName += JsonLightConstants.FunctionParameterEnd;
+                operationName += ODataJsonConstants.FunctionParameterStart;
+                operationName += string.Join(ODataJsonConstants.FunctionParameterSeparator, parameterNames.Split(ODataJsonConstants.FunctionParameterSeparatorChar).Select(p => p + ODataJsonConstants.FunctionParameterAssignment + p).ToArray());
+                operationName += ODataJsonConstants.FunctionParameterEnd;
             }
 
             return AppendSegment(targetUri, operationName, false /*escapeSegment*/);

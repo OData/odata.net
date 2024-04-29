@@ -49,14 +49,14 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders/$ref", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPaths, false/*verifyETag*/);
-                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders/$ref", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPaths, false/*verifyETag*/);
+                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders/$ref", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPaths, false/*verifyETag*/);
             }
 
             [TestCategory("Partition2"), TestMethod, Variation]
             public void UpdateBindToCollection()
             {
-                // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                // Convert the below payload to json light and uncomment the combinations running
+                // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                // Convert the below payload to Json and uncomment the combinations running
 
                 /*string[] jsonPayloads = new string[]
                 {
@@ -97,7 +97,7 @@ namespace AstoriaUnitTests.Tests
                 };
                 TestUtil.RunCombinations(jsonPayloads, jsonPayload =>
                 {
-                    UpdateTests.DoInsertsForVariousProviders("/Customers(1)/$ref/Orders", UnitTestsUtil.JsonLightMimeType, jsonPayload, jsonUriAndXPaths, false/*verifyETag#1#);
+                    UpdateTests.DoInsertsForVariousProviders("/Customers(1)/$ref/Orders", UnitTestsUtil.JsonMimeType, jsonPayload, jsonUriAndXPaths, false/*verifyETag#1#);
                 });*/
 
                 string[] atomPayloads = new string[]
@@ -171,7 +171,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPaths, false, verifyResponsePreference: false);
-                UpdateTests.DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPaths, false, verifyResponsePreference: false);
+                UpdateTests.DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPaths, false, verifyResponsePreference: false);
             }
 
             [TestCategory("Partition2"), TestMethod, Variation]
@@ -179,8 +179,8 @@ namespace AstoriaUnitTests.Tests
             {
                 const string uri = "/Customers(2)/BestFriend/$ref";
 
-                // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                // Convert the payloads to json light then uncomment the test running
+                // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                // Convert the payloads to Json then uncomment the test running
                /* string[] jsonPayloads = new string[]
                 {
                     // Additional properties are ignored
@@ -207,7 +207,7 @@ namespace AstoriaUnitTests.Tests
                 };
                 TestUtil.RunCombinations(jsonPayloads, jsonPayload =>
                 {
-                    UpdateTests.DoUpdatesForVariousProviders("MERGE", uri, UnitTestsUtil.JsonLightMimeType, jsonPayload, jsonUriAndXPaths, false, verifyResponsePreference: false);
+                    UpdateTests.DoUpdatesForVariousProviders("MERGE", uri, UnitTestsUtil.JsonMimeType, jsonPayload, jsonUriAndXPaths, false, verifyResponsePreference: false);
                 });*/
 
                 string[] atomPayloads = new string[]
@@ -258,7 +258,7 @@ namespace AstoriaUnitTests.Tests
                 string uri = "/Customers(1)/BestFriend/$ref";
                 string[] xPath = new string[] { "404" };
                 UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.AtomFormat, null, xPath, false, verifyResponsePreference: false);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.JsonLightMimeType, null, xPath, false, verifyResponsePreference: false);
+                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.JsonMimeType, null, xPath, false, verifyResponsePreference: false);
             }
 
             [TestCategory("Partition2"), TestMethod, Variation]
@@ -267,7 +267,7 @@ namespace AstoriaUnitTests.Tests
                 string uri = "/Customers(1)/Orders(1)/$ref";
                 string[] xPath = new string[] { "404" };
                 UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.AtomFormat, null, xPath, false, verifyResponsePreference: false);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.JsonLightMimeType, null, xPath, false, verifyResponsePreference: false);
+                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("DELETE", uri, UnitTestsUtil.JsonMimeType, null, xPath, false, verifyResponsePreference: false);
             }
 
             [TestCategory("Partition2"), TestMethod, Variation]
@@ -288,25 +288,25 @@ namespace AstoriaUnitTests.Tests
                 foreach (string uri in invalidPostUris)
                 {
                     UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.AtomFormat, "POST", 405);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonLightMimeType, "POST", 405);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonMimeType, "POST", 405);
                 }
 
                 foreach (string uri in invalidUpdateUris)
                 {
                     UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.AtomFormat, "PUT", 405);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonLightMimeType, "PUT", 405);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonMimeType, "PUT", 405);
                     UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.AtomFormat, "PATCH", 405);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonLightMimeType, "PATCH", 405);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonMimeType, "PATCH", 405);
                 }
 
                 foreach (string uri in invalidDeleteUris)
                 {
                     UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.AtomFormat, "DELETE", 400);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonLightMimeType, "DELETE", 400);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(null, uri, UnitTestsUtil.JsonMimeType, "DELETE", 400);
                 }
 
-                // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                // Convert the payloads to json light then uncomment the test running
+                // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                // Convert the payloads to Json then uncomment the test running
                 /*string[] invalidJsonPayloads = new[]
                     {
                         // Missing '
@@ -334,9 +334,9 @@ namespace AstoriaUnitTests.Tests
                     };
                TestUtil.RunCombinations(invalidJsonPayloads, invalidJsonPayload =>
                 {
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/BestFriend/$ref", UnitTestsUtil.JsonLightMimeType, "MERGE", 400);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/BestFriend/$ref", UnitTestsUtil.JsonLightMimeType, "PATCH", 400);
-                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/Orders/$ref", UnitTestsUtil.JsonLightMimeType, "POST", 400);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/BestFriend/$ref", UnitTestsUtil.JsonMimeType, "MERGE", 400);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/BestFriend/$ref", UnitTestsUtil.JsonMimeType, "PATCH", 400);
+                    UpdateTests.VerifyInvalidRequestForVariousProviders(invalidJsonPayload, "/Customers(2)/Orders/$ref", UnitTestsUtil.JsonMimeType, "POST", 400);
                 });*/
 
                 string[] invalidXmlPayloads = new[]
@@ -373,9 +373,9 @@ namespace AstoriaUnitTests.Tests
 
                 string validJsonPayload = "{ @odata.id: '/Customers(0)' }";
                 string validXmlPayload = "<ref xmlns='http://docs.oasis-open.org/odata/ns/metadata' id='/Customers(0)' />";
-                UpdateTests.VerifyInvalidRequestForVariousProviders(validJsonPayload, "/Customers(-1)/BestFriend/$ref", UnitTestsUtil.JsonLightMimeType, "PATCH", 404);
+                UpdateTests.VerifyInvalidRequestForVariousProviders(validJsonPayload, "/Customers(-1)/BestFriend/$ref", UnitTestsUtil.JsonMimeType, "PATCH", 404);
                 UpdateTests.VerifyInvalidRequestForVariousProviders(validXmlPayload, "/Customers(-1)/BestFriend/$ref", UnitTestsUtil.MimeApplicationXml, "PATCH", 404);
-                UpdateTests.VerifyInvalidRequestForVariousProviders(validJsonPayload, "/Customers(-1)/Orders/$ref", UnitTestsUtil.JsonLightMimeType, "POST", 404);
+                UpdateTests.VerifyInvalidRequestForVariousProviders(validJsonPayload, "/Customers(-1)/Orders/$ref", UnitTestsUtil.JsonMimeType, "POST", 404);
                 UpdateTests.VerifyInvalidRequestForVariousProviders(validXmlPayload, "/Customers(-1)/Orders/$ref", UnitTestsUtil.MimeApplicationXml, "POST", 404);
             }
 
@@ -406,7 +406,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[0]
                     },
                     // Single ref in JSON
@@ -414,7 +414,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders(0)' } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 0 }
                     },
                     // Single ref in JSON pointing to a collection
@@ -422,7 +422,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders' } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Multiple refs in JSON
@@ -430,7 +430,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders(0)' } }, { __metadata: { uri: '/Orders(1)' } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 0, 1 }
                     },
                     // Single expanded entry in JSON
@@ -438,7 +438,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201 } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4201 },
                         HasExpandedEntry = true
                     },
@@ -447,7 +447,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201 }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4202 } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4201, 4202 },
                         HasExpandedEntry = true
                     },
@@ -457,7 +457,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ null ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         HasExpandedEntry = true
                     },
@@ -466,7 +466,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         HasExpandedEntry = true
                     },
@@ -475,7 +475,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201 }, { __metadata: { uri: '/Orders(1)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4202 }, { __metadata: { uri: '/Orders(0)' } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4201, 1, 4202, 0 },
                         HasExpandedEntry = true
                     },
@@ -484,7 +484,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders(1)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201 }, { __metadata: { uri: '/Orders(0)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4202 } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 1, 4201, 0, 4202 },
                         HasExpandedEntry = true
                     },
@@ -494,7 +494,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders(0)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4211 }, { __metadata: { uri: '/Orders(1)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4212 } ]," +
                             "Orders: [ { __metadata: { uri: '/Orders(1)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201 }, { __metadata: { uri: '/Orders(0)' } }, { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4202 } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 1, 4201, 0, 4202 },
                         HasExpandedEntry = true
                     },
@@ -505,7 +505,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __metadata: { uri: 'http://test:some:other' }, ID: 42 } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method != "POST" && method != "PUT",
                     },
@@ -516,7 +516,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __metadata: { uri: 'http://test:some:other' }, ID: 42 } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method == "POST",
                     },
@@ -525,7 +525,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __metadata: { uri: 'http://test:some:other' } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method == "POST",
                     },
@@ -533,7 +533,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __metadata: { } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method != "POST" && method != "PUT",
                     },
@@ -541,7 +541,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __metadata: { uri: '/Orders(0)' } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "POST" && method != "PUT",
                         ExpectedOrderIds = new int[] { 0 }
                     },
@@ -550,7 +550,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: { __metadata: { uri: 'http://test:some:other' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                     },
                     #endregion
@@ -561,7 +561,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = null
                     },
                     // ref in JSON
@@ -569,7 +569,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: { __metadata: { uri: '/Customers(0)' } } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 0
                     },
                     // expanded in JSON
@@ -577,7 +577,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4201 } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 4201,
                         HasExpandedEntry = true
                     },
@@ -587,7 +587,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: { __metadata: { uri: '/Customers(1)' } }, " +
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4201 } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 4201,
                         HasExpandedEntry = true
                     },
@@ -595,7 +595,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, BestFriend: { __metadata: { uri: null } } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                     },
                     // Invalid uri in a binding fails with 500
@@ -603,7 +603,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, BestFriend: { __metadata: { uri: 'http://test:some:other' } } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                     },
                     // Bind in a PUT is not allowed in JSON in V2
@@ -611,7 +611,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, BestFriend: { __metadata: { uri: '/Customers(0)' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 0,
                     },
                     // Bind to singleton with a collection fails
@@ -619,14 +619,14 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, BestFriend: [ { __metadata: { uri: 'http://test:some:other' } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                     },
                     // Bind to a singleton with feed URI fails
                     new UpdateBindResultTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, BestFriend: { __metadata: { uri: '/Customers' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     #endregion
@@ -638,7 +638,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [], " +
                             "BestFriend: null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[0],
                         ExpectedBestFriendId = null
                     },
@@ -648,7 +648,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { uri: '/Orders(0)' } } ], " +
                             "BestFriend: { __metadata: { uri: '/Customers(0)' } } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 0 },
                         ExpectedBestFriendId = 0
                     },
@@ -660,7 +660,7 @@ namespace AstoriaUnitTests.Tests
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4201 }, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4203 } ], " +
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4204 } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4203 },
                         ExpectedBestFriendId = 4204,
                         HasExpandedEntry = true
@@ -674,7 +674,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4201, " +
                             "Orders: [ { __metadata: { uri: 'Orders(0)' } } ] } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 4201,
                         HasExpandedEntry = true,
                         Verification = customer => Assert.AreEqual(0, customer.BestFriend.Orders.First().ID, "The bind should have been applied.")
@@ -685,7 +685,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201, " +
                             "Customer: { __metadata: { uri: 'Customers(0)' } } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4201 },
                         HasExpandedEntry = true,
                         Verification = customer => Assert.AreEqual(0, customer.Orders.First().Customer.ID, "The bind should have been applied.")
@@ -699,7 +699,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "BestFriend: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4201, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 1043 } ] } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedBestFriendId = 4201,
                         HasExpandedEntry = true,
                         Verification = customer => Assert.AreEqual(1043, customer.BestFriend.Orders.First().ID, "The bind should have been applied.")
@@ -710,7 +710,7 @@ namespace AstoriaUnitTests.Tests
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 42, " +
                             "Orders: [ { __metadata: { type: '" + typeof(Order).FullName + "' }, ID: 4201, " +
                             "Customer: { __metadata: { type: '" + typeof(Customer).FullName + "' }, ID: 4202 } } ] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedOrderIds = new int[] { 4201 },
                         HasExpandedEntry = true,
                         Verification = customer => Assert.AreEqual(4202, customer.Orders.First().Customer.ID, "The bind should have been applied.")
@@ -1555,14 +1555,14 @@ namespace AstoriaUnitTests.Tests
                     new string[] { "POST", "PUT", "PATCH" },
                     (testCase, method) =>
                     {
-                        // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                        // Convert the previous json verbose payloads to json light then remove this condition
-                        if (testCase.ContentType == UnitTestsUtil.JsonLightMimeType)
+                        // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                        // Convert the previous json verbose payloads to Json then remove this condition
+                        if (testCase.ContentType == UnitTestsUtil.JsonMimeType)
                         {
                             return;
                         }
 
-                        if (method == "PUT" && testCase.ContentType == UnitTestsUtil.JsonLightMimeType && testCase.OnlyForMethod == null)
+                        if (method == "PUT" && testCase.ContentType == UnitTestsUtil.JsonMimeType && testCase.OnlyForMethod == null)
                         {
                             // Binding in PUT in JSON fails always.
                             return;

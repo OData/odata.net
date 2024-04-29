@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="PayloadKindDetectionJsonLightTests.cs" company="Microsoft">
+// <copyright file="PayloadKindDetectionJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System;
@@ -15,7 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests for detecting payload kinds of JSON Lite payloads.
     /// </summary>
     [TestClass, TestCase] 
-    public class PayloadKindDetectionJsonLightTests : ODataReaderTestCase
+    public class PayloadKindDetectionJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadKindDetectionTestDescriptor.Settings Settings { get; set; }
@@ -35,47 +35,47 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
         /// <summary>Reusable constant of an entry detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entryDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Delta);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Delta);
 
         /// <summary>Reusable constant of a feed detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> feedDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ResourceSet);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.ResourceSet);
 
         /// <summary>Reusable constant of a service doc detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> serviceDocDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ServiceDocument);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.ServiceDocument);
 
         /// <summary>Reusable constant of an entity reference link detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entityReferenceLinkDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.EntityReferenceLink);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.EntityReferenceLink);
 
         /// <summary>Reusable constant of an entity reference links detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> entityReferenceLinksDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.EntityReferenceLinks);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.EntityReferenceLinks);
 
         /// <summary>Reusable constant of a property detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> propertyDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Property);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.Property);
 
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> complexPropertyDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Property);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.Resource, ODataPayloadKind.Property);
 
         /// <summary>Reusable constant of a collection (and property) detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> collectionDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Property, ODataPayloadKind.Collection);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.Property, ODataPayloadKind.Collection);
 
         /// <summary>Reusable constant of a collection (and property) detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> complexCollectionDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.ResourceSet, ODataPayloadKind.Property, ODataPayloadKind.Collection);
 
         /// <summary>Reusable constant of an error detection result.</summary>
         private static readonly Func<ReaderTestConfiguration, IEnumerable<PayloadKindDetectionResult>> errorDetectionResult =
-            testConfig => CreateJsonLightFormatResult(ODataPayloadKind.Error);
+            testConfig => CreateJsonFormatResult(ODataPayloadKind.Error);
 
         private const string metadataDocumentUri = "http://odata.org/test/$metadata";
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the payload kind detection of JSON Lite responses.")]
-        public void PayloadKindDetectionResponseJsonLightTest()
+        public void PayloadKindDetectionResponseJsonTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
             
@@ -245,7 +245,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = testCase.Description,
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = string.Format("{{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\": \"{0}\" }}", testCase.ContextUri),
+                    PayloadString = string.Format("{{ \"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\": \"{0}\" }}", testCase.ContextUri),
                     ExpectedDetectionResults = testCase.ExpectedDetectionResults,
                 });
 
@@ -257,7 +257,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Error payload",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
+                    PayloadString = "{\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
                     ExpectedDetectionResults = errorDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -265,7 +265,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Error payload with custom annotations before and after",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"@my.custom\":42,\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"@my.custom2\":43}",
+                    PayloadString = "{\"@my.custom\":42,\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"@my.custom2\":43}",
                     ExpectedDetectionResults = errorDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -273,7 +273,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "error property with invalid value",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"a\":\"b\"}}",
+                    PayloadString = "{\"" + JsonConstants.ODataErrorPropertyName + "\":{\"a\":\"b\"}}",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -281,7 +281,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Other property before error property ",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"other\":42,\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
+                    PayloadString = "{\"other\":42,\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -289,7 +289,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Other property after error property ",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"other\":42}",
+                    PayloadString = "{\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"other\":42}",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -297,7 +297,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Other odata.annotation before error property ",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataAnnotationNamespacePrefix + "other\":42,\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
+                    PayloadString = "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataAnnotationNamespacePrefix + "other\":42,\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"}}",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -305,7 +305,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Other odata.annotation after error property ",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = "{\"" + JsonLightConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataAnnotationNamespacePrefix + "other\":42}",
+                    PayloadString = "{\"" + JsonConstants.ODataErrorPropertyName + "\":{\"code\":\"error-code\",\"message\":\"error-message\"},\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataAnnotationNamespacePrefix + "other\":42}",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
             });
@@ -351,7 +351,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Invalid content type",
                     ContentType = "application/invalid",
                     PayloadEdmModel = model,
-                    PayloadString = "{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\" }",
+                    PayloadString = "{ \"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\" }",
                     ExpectedDetectionResults = emptyDetectionResult,
                 },
                 new PayloadKindDetectionTestDescriptor(this.Settings)
@@ -368,12 +368,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // We do not support payload kind detection in requests
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the payload kind detection of JSON Lite requests.")]
-        public void PayloadKindDetectionRequestJsonLightTest()
+        public void PayloadKindDetectionRequestJsonTest()
         {
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
 
@@ -384,15 +384,15 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Simple entry; but since in request it will fail.",
                     ContentType = "application/json;odata.metadata=minimal",
                     PayloadEdmModel = model,
-                    PayloadString = string.Format("{{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\": \"{0}\" }}", metadataDocumentUri + "#TestModel.DefaultContainer.Persons/$entity"),
+                    PayloadString = string.Format("{{ \"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\": \"{0}\" }}", metadataDocumentUri + "#TestModel.DefaultContainer.Persons/$entity"),
                     ExpectedDetectionResults = emptyDetectionResult,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightInputContext_PayloadKindDetectionForRequest")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonInputContext_PayloadKindDetectionForRequest")
                 },
             };
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest),
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
             
@@ -401,7 +401,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// </summary>
         /// <param name="payloadKinds">The detected payload kinds.</param>
         /// <returns>The detection result for the specified payload kinds in the JSON format.</returns>
-        private static IEnumerable<PayloadKindDetectionResult> CreateJsonLightFormatResult(params ODataPayloadKind[] payloadKinds)
+        private static IEnumerable<PayloadKindDetectionResult> CreateJsonFormatResult(params ODataPayloadKind[] payloadKinds)
         {
             return payloadKinds.Select(pk => new PayloadKindDetectionResult(pk, ODataFormat.Json));
         }

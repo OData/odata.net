@@ -12,9 +12,8 @@ namespace Microsoft.OData
     using System.Linq;
     using System.Text;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     using Microsoft.OData.Metadata;
-    using Microsoft.OData.UriParser;
     #endregion Namespaces
 
     /// <summary>
@@ -571,7 +570,7 @@ namespace Microsoft.OData
         /// <param name="contextUriParseResult">The parse result of the context URI from the payload.</param>
         /// <param name="scope">The top-level scope representing the reader state.</param>
         /// <param name="updateScope">Whether to update scope when validating.</param>
-        internal static void ValidateResourceSetOrResourceContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        internal static void ValidateResourceSetOrResourceContextUri(ODataJsonContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
             if (contextUriParseResult.EdmType is IEdmCollectionType)
             {
@@ -637,7 +636,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemTypeReference">The expected item type of the collection items.</param>
         /// <returns>The actual item type of the collection items.</returns>
         internal static IEdmTypeReference ValidateCollectionContextUriAndGetPayloadItemTypeReference(
-            ODataJsonLightContextUriParseResult contextUriParseResult,
+            ODataJsonContextUriParseResult contextUriParseResult,
             IEdmTypeReference expectedItemTypeReference)
         {
             if (contextUriParseResult == null || contextUriParseResult.EdmType == null)
@@ -1191,7 +1190,7 @@ namespace Microsoft.OData
         /// <param name="updateScope">
         /// The update scope.
         /// </param>
-        private static void ValidateResourceSetContextUri(ODataJsonLightContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
+        private static void ValidateResourceSetContextUri(ODataJsonContextUriParseResult contextUriParseResult, ODataReaderCore.Scope scope, bool updateScope)
         {
             // TODO: add validation logic for a resource set context uri
         }

@@ -616,7 +616,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestUriLinksReferenceTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(1)/BestFriend/$ref", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, null,
+            UnitTestsUtil.VerifyPayload("/Customers(1)/BestFriend/$ref", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, null,
                 new string[] {
                     String.Format("/{0}/odata.id[text()='http://host/Customers(0)']", JsonValidator.ObjectString),
                     String.Format("count(//{0}/odata.id)=1", JsonValidator.ObjectString)});
@@ -625,7 +625,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void RequestUriLinksCollectionTest()
         {
-            UnitTestsUtil.VerifyPayload("/Customers(2)/Orders/$ref", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, null,
+            UnitTestsUtil.VerifyPayload("/Customers(2)/Orders/$ref", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, null,
                 new string[] { String.Format("/{1}/value/{0}/{1}/odata.id[text()='http://host/Orders(2)']", JsonValidator.ArrayString, JsonValidator.ObjectString),
                                String.Format("/{1}/value/{0}/{1}/odata.id[text()='http://host/Orders(102)']", JsonValidator.ArrayString, JsonValidator.ObjectString),
                                String.Format("count(/{1}/value/{0}/{1}//odata.id)=2", JsonValidator.ArrayString, JsonValidator.ObjectString) });

@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Common.Annotations;
     using Microsoft.Test.Taupo.OData.Common.Batch;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using ODataUri = Microsoft.Test.Taupo.Astoria.Contracts.OData.ODataUri;
@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // We have to register JSON converter for this test case explicitely since we're using the batch infrastructure
             // which doesn't inherit the JSON converter from the PayloadReaderTestDescriptor.Settings.
             container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
-            container.Register<IPayloadElementToJsonLightConverter, AnnotatedPayloadElementToJsonLightConverter>();
+            container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
         }
 
         /// <summary>

@@ -40,10 +40,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             public ODataOrderIgnoringPayloadElementComparer IgnorePropertyOrderODataPayloadElementComparer { get; set; }
 
             [InjectDependency(IsRequired = true)]
-            public ODataJsonLightResponsePayloadElementComparer ODataJsonLightResponsePayloadElementComparer { get; set; }
+            public ODataJsonResponsePayloadElementComparer ODataJsonResponsePayloadElementComparer { get; set; }
 
             [InjectDependency(IsRequired = true)]
-            public ODataJsonLightResponseOrderIgnoringPayloadElementComparer JsonLightResponseIgnorePropertyOrderODataPayloadElementComparer { get; set; }
+            public ODataJsonResponseOrderIgnoringPayloadElementComparer JsonResponseIgnorePropertyOrderODataPayloadElementComparer { get; set; }
 
             [InjectDependency(IsRequired = true)]
             public IODataObjectModelValidator DefaultODataObjectModelValidator { get; set; }
@@ -119,7 +119,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     if (testConfiguration.Format == ODataFormat.Json && !testConfiguration.IsRequest)
                     {
-                        this.settings.JsonLightResponseIgnorePropertyOrderODataPayloadElementComparer.Compare(this.ExpectedPayloadElement, actualPayloadElement);
+                        this.settings.JsonResponseIgnorePropertyOrderODataPayloadElementComparer.Compare(this.ExpectedPayloadElement, actualPayloadElement);
                     }
                     else
                     {
@@ -130,7 +130,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 {
                     if (testConfiguration.Format == ODataFormat.Json && !testConfiguration.IsRequest)
                     {
-                        this.settings.ODataJsonLightResponsePayloadElementComparer.Compare(this.ExpectedPayloadElement, actualPayloadElement);
+                        this.settings.ODataJsonResponsePayloadElementComparer.Compare(this.ExpectedPayloadElement, actualPayloadElement);
                     }
                     else
                     {

@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightConstants.cs" company="Microsoft">
+// <copyright file="JsonConstants.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.JsonLight
+namespace Microsoft.Test.Taupo.OData.Json
 {
     #region Namespaces
     using System;
@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
     /// <summary>
     /// Constants for the JSON Lite format.
     /// </summary>
-    public static class JsonLightConstants
+    public static class JsonConstants
     {
         /// <summary>The prefix for OData annotation names.</summary>
         public const string ODataAnnotationNamespacePrefix = "odata.";

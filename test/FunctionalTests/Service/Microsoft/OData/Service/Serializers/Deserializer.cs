@@ -111,9 +111,9 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is json light
+        /// Gets a value indicating whether the request is Json
         /// </summary>
-        protected abstract bool IsJsonLightRequest { get; }
+        protected abstract bool IsJsonRequest { get; }
 
         /// <summary>Request description for the top level target entity.</summary>
         protected RequestDescription RequestDescription

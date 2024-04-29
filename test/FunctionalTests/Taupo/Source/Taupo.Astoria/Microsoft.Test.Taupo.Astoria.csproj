@@ -70,7 +70,7 @@
     <Compile Include="Client\EntityDescriptorValueCalculator.cs" />
     <Compile Include="Client\EntityDescriptorVersionCalculator.cs" />
     <Compile Include="Client\HttpDrivenSaveChangesVerifier.cs" />
-    <Compile Include="Client\JsonLightDataContextFormatApplier.cs" />
+    <Compile Include="Client\JsonDataContextFormatApplier.cs" />
     <Compile Include="Client\LinqResultComparerDataServiceContextAdapter.cs" />
     <Compile Include="Client\PocoClientCodeLayerGenerator.cs" />
     <Compile Include="Client\PocoDataBindingClientCodeLayerGenerator.cs" />
@@ -383,7 +383,7 @@
     <Compile Include="Contracts\OData\IODataUriToStringConverter.cs" />
     <Compile Include="Contracts\OData\IPayloadDeserializer.cs" />
     <Compile Include="Contracts\OData\IPayloadElementToJsonConverter.cs" />
-    <Compile Include="Contracts\OData\IPayloadElementToJsonLightConverter.cs" />
+    <Compile Include="Contracts\OData\IPayloadElementToJsonConverter.cs" />
     <Compile Include="Contracts\OData\IPayloadElementToNamedValuesConverter.cs" />
     <Compile Include="Contracts\OData\IPayloadElementToQueryValueConverter.cs" />
     <Compile Include="Contracts\OData\IPayloadElementToXmlConverter.cs" />
@@ -616,8 +616,8 @@
     <Compile Include="OData\JsonToPayloadElementConverter.cs" />
     <Compile Include="OData\KeyExpressionParser.cs" />
     <Compile Include="OData\ODataConventionBasedLinkGenerator.cs" />
-    <Compile Include="OData\ODataJsonLightResponseOrderIgnoringPayloadElementComparer.cs" />
-    <Compile Include="OData\ODataJsonLightResponsePayloadElementComparer.cs" />
+    <Compile Include="OData\ODataJsonResponseOrderIgnoringPayloadElementComparer.cs" />
+    <Compile Include="OData\ODataJsonResponsePayloadElementComparer.cs" />
     <Compile Include="OData\ODataLiteralConverter.cs" />
     <Compile Include="OData\ODataOrderIgnoringPayloadElementComparer.cs" />
     <Compile Include="OData\ODataPayloadBuilder.cs" />

@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     SkipTestConfiguration = tc => tc.IsRequest,
                 },
 
-                // relative URI without a base URI should fail in Atom and JSON Light, but is allowed in Verbose JSON.
+                // relative URI without a base URI should fail in Atom and Json, but is allowed in Verbose JSON.
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadElement = PayloadBuilder.ServiceDocument().Workspace(
@@ -111,13 +111,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         testDescriptor = new PayloadReaderTestDescriptor(testDescriptor);
 
-                        // Json light requires a model
+                        // Json requires a model
                         testDescriptor.PayloadEdmModel = new EdmModel();
 
                         // Add an empty expected type annotation to cause metadata link to be generated in test serializer.
                         testDescriptor.PayloadElement.AddExpectedTypeAnnotation();
 
-                        // Json light resource collections require the "Name" property, but it won't round-trip for verbose json, so add Name here.
+                        // Json resource collections require the "Name" property, but it won't round-trip for verbose json, so add Name here.
                         foreach (var workspace in ((ServiceDocumentInstance)testDescriptor.PayloadElement).Workspaces)
                         {
                             int count = 0;

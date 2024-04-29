@@ -1,0 +1,112 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyAttributeClsCompliant>false</AssemblyAttributeClsCompliant>
+     <AssemblyName>AstoriaUnitTests.ClientCSharp</AssemblyName>
+     <SignAssemblyAttribute>false</SignAssemblyAttribute>
+    <AssemblyAttributeSuppressSecurityRules>true</AssemblyAttributeSuppressSecurityRules>
+    <AllowPartialTrustedCalls>true</AllowPartialTrustedCalls>
+    <TargetFrameworks>net48</TargetFrameworks>
+    <RestorePackages>true</RestorePackages>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <ShouldGenerateAssemblyAttributeFile>false</ShouldGenerateAssemblyAttributeFile>
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+  <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), Build.props))\Build.props" />
+  <ItemGroup>
+    <PackageReference Include="EntityFramework" Version="5.0.0" />
+    <PackageReference Include="FluentAssertions" Version="4.1.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.0.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="CustomMarshalers" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.VisualBasic" />
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.DirectoryServices" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.Linq" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Service\Microsoft.OData.Service.csproj" /> 
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Core\Microsoft.OData.Core.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.OData.Edm\Microsoft.OData.Edm.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\test\FunctionalTests\Framework\AstoriaTestFramework.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\tools\KoKoMo\KoKoMo.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\tools\ModuleCore\src\ModuleCore.csproj" />      
+    <ProjectReference Include="$(EnlistmentRoot)\src\Microsoft.Spatial\Microsoft.Spatial.csproj" />    
+    <ProjectReference Include="..\..\Models\EFFK\Astoria.EFFKModel.csproj" /> 
+    <ProjectReference Include="..\ClientExtensions\Microsoft.Data.ClientExtensions.UnitTests.csproj" />     
+    <ProjectReference Include="..\ServerUnitTests\Microsoft.Data.Web.UnitTests.csproj" />     
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\..\..\Microsoft.OData.Core.Tests\InMemoryMessage.cs">
+      <Link>DataWebClientCSharp\InMemoryMessage.cs</Link>
+    </Compile>
+    <Compile Include="..\ServerUnitTests1\Tests\SpatialTestUtil.cs">
+      <Link>DataWebClientCSharp\SpatialTestUtil.cs</Link>
+    </Compile>
+    <Compile Include="DataWebClientCSharp\ActionTestsWithLargePayload.cs" />
+    <Compile Include="DataWebClientCSharp\ClientSpatialTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientShortIntegrationRegressionTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientAndServerTypeMismatchTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientErrorHandlingShortIntegrationTests.cs" />
+    <Compile Include="DataWebClientCSharp\JsonTypeResolverTests.cs" />
+    <Compile Include="DataWebClientCSharp\ODataTestMessage.cs" />
+    <Compile Include="DataWebClientCSharp\ReadingAtomWithUseJsonTests.cs" />
+    <Compile Include="DataWebClientCSharp\JsonIntegrationTests.cs" />
+    <Compile Include="DataWebClientCSharp\JsonTestUtil.cs" />
+    <Compile Include="DataWebClientCSharp\OperationDescriptorTests.cs" />
+    <Compile Include="DataWebClientCSharp\ActionParametersTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientActionTests.cs" />
+    <Compile Include="DataWebClientCSharp\AlternativeContext.cs" />
+    <Compile Include="DataWebClientCSharp\AssemblyCleanup.cs" />
+    <Compile Include="DataWebClientCSharp\DerivedPropertyTests.cs" />
+    <Compile Include="DataWebClientCSharp\LinqAnyAllTests.cs" />
+    <Compile Include="DataWebClientCSharp\CollectionBinding.cs" />
+    <Compile Include="DataWebClientCSharp\CollectionTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientCSharpRegressionTests.cs" />
+    <Compile Include="DataWebClientCSharp\ClientPartialTrustTests.cs" />
+    <Compile Include="DataWebClientCSharp\DataServiceContextTests.cs" />
+    <Compile Include="DataWebClientCSharp\Dev10EF4FKTests.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="DataWebClientCSharp\Dev10TypeTestsClient.cs" />
+    <Compile Include="DataWebClientCSharp\InternalTestHookTests.cs" />
+    <Compile Include="DataWebClientCSharp\LinqTests.cs" />
+    <Compile Include="DataWebClientCSharp\NamedStream_ProjectionTests.cs" />
+    <Compile Include="DataWebClientCSharp\ReceivingResponseFunctionalTests.cs" />
+    <Compile Include="DataWebClientCSharp\BuildingRequestEventFunctionalTests.cs" />
+    <Compile Include="DataWebClientCSharp\SpatialLinqTests.cs" />
+    <Compile Include="DataWebClientCSharp\TestURIWriter.cs" />
+    <Compile Include="DataWebClientCSharp\TestHookConsumer.cs" />
+    <Compile Include="DataWebClientCSharp\UriOperationParameterGenerator.cs" />
+    <Compile Include="Models\CustomDataBinding.cs" />
+    <Compile Include="Models\SimpleNorthwind.cs" />
+    <Compile Include="Services\NamedStreamService.cs" />
+    <Compile Include="Utils\AssertUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <!---->
+</Project>

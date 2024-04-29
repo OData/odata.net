@@ -94,9 +94,9 @@ namespace Microsoft.OData.Service
 
                 Version effectiveMaxResponseVersion = VersionUtil.GetEffectiveMaxResponseVersion(service.Configuration.DataServiceBehavior.MaxProtocolVersion.ToVersion(), requestMessage.RequestMaxVersion);
                 bool isEntityOrFeed = this.PayloadKind == ODataPayloadKind.Resource || this.PayloadKind == ODataPayloadKind.ResourceSet;
-                if (ContentTypeUtil.IsResponseMediaTypeJsonLight(requestMessage.GetAcceptableContentTypes(), isEntityOrFeed, effectiveMaxResponseVersion))
+                if (ContentTypeUtil.IsResponseMediaTypeJson(requestMessage.GetAcceptableContentTypes(), isEntityOrFeed, effectiveMaxResponseVersion))
                 {
-                    // If JSON light 'wins', then bump the version to V3.
+                    // If Json 'wins', then bump the version to V3.
                     requestDescription.VerifyAndRaiseResponseVersion(VersionUtil.Version4Dot0, service);
                     responseMessageOnOperationContext.SetHeader(XmlConstants.HttpODataVersion, XmlConstants.ODataVersion4Dot0 + ";");
                 }
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Service
             {
                 Debug.Assert(this.requestDescription != null, "this.requestDescription != null");
                 bool isEntryOrFeed = this.requestDescription.TargetKind == RequestTargetKind.Resource;
-                if (!ContentTypeUtil.IsResponseMediaTypeJsonLight(this.service, isEntryOrFeed))
+                if (!ContentTypeUtil.IsResponseMediaTypeJson(this.service, isEntryOrFeed))
                 {
                     Debug.Assert(this.service.Provider != null, "this.service.Provider != null");
                     MetadataProviderEdmModel metadataProviderEdmModel = this.service.Provider.GetMetadataProviderEdmModel();

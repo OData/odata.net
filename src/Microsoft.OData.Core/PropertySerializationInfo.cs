@@ -5,7 +5,7 @@
 //---------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 
 namespace Microsoft.OData
 {
@@ -54,7 +54,7 @@ namespace Microsoft.OData
             set
             {
                 isTopLevel = value;
-                this.WireName = isTopLevel ? JsonLightConstants.ODataValuePropertyName : this.PropertyName;
+                this.WireName = isTopLevel ? ODataJsonConstants.ODataValuePropertyName : this.PropertyName;
             }
         }
     }

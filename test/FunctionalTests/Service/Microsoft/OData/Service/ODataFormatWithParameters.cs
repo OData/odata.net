@@ -42,7 +42,7 @@ namespace Microsoft.OData.Service
         {
             Debug.Assert(format != null, "format != null");
             this.Format = format;
-            this.IsJsonLight = this.Format == ODataFormat.Json;
+            this.IsJson = this.Format == ODataFormat.Json;
         }
 
         /// <summary>
@@ -51,9 +51,9 @@ namespace Microsoft.OData.Service
         internal ODataFormat Format { get; private set; }
 
         /// <summary>
-        /// Gets a value indicating whether this instance is the JsonLight format.
+        /// Gets a value indicating whether this instance is the Json format.
         /// </summary>
-        internal bool IsJsonLight { get; private set; }
+        internal bool IsJson { get; private set; }
 
         /// <summary>
         /// Gets the value for the parameter of the specified name, or null if it is not found.

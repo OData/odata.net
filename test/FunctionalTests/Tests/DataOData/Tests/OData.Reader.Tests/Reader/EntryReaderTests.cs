@@ -22,10 +22,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
     using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
-    using Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
 
@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     [TestClass, TestCase]
     public class EntryReaderTests : ODataReaderTestCase
     {
-        private PayloadReaderTestDescriptor.Settings jsonLightSettings;
+        private PayloadReaderTestDescriptor.Settings JsonSettings;
 
         [InjectDependency]
         public IPayloadGenerator PayloadGenerator { get; set; }
@@ -44,10 +44,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [InjectDependency]
-        public PayloadReaderTestDescriptor.Settings JsonLightSettings
+        public PayloadReaderTestDescriptor.Settings JsonSettings
         {
-            get { return this.jsonLightSettings; }
-            set { this.jsonLightSettings = value; this.jsonLightSettings.ExpectedResultSettings.ObjectModelToPayloadElementConverter = new JsonLightObjectModelToPayloadElementConverter(); }
+            get { return this.JsonSettings; }
+            set { this.JsonSettings = value; this.JsonSettings.ExpectedResultSettings.ObjectModelToPayloadElementConverter = new JsonObjectModelToPayloadElementConverter(); }
         }
 
         // TODO: Add ETag format independent tests
@@ -147,18 +147,18 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Test the reading of various kinds of properties on a single entry in JSON Light.")]
-        public void VariousPropertyKindsOnEntryJsonLightTest()
+        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Test the reading of various kinds of properties on a single entry in Json.")]
+        public void VariousPropertyKindsOnEntryJsonTest()
         {
             EdmModel model = new EdmModel();
 
             // Generate interesting payloads around the entry
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateEntityInstanceDescriptors(this.JsonLightSettings, model, true)
+            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateEntityInstanceDescriptors(this.JsonSettings, model, true)
                 .SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
@@ -195,7 +195,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     new PayloadReaderTestDescriptor(this.Settings)
                     {
                         PayloadElement = PayloadBuilder.ComplexValue("TestModel.NonEmptyComplexType", true),
-                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", "odata.type"),
+                        ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation", "odata.type"),
                     },
                 });
 
@@ -279,7 +279,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             .PrimitiveProperty("DateTimeProperty", new DateTimeOffset(DateTime.Now.AddDays(1.0))),
                         PayloadEdmModel = model,
                         ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "DateTimeProperty"),
-                        // In JSON Light this fails for different reasons, related to missing/multiple type annotations (depending on how it is serialised)
+                        // In Json this fails for different reasons, related to missing/multiple type annotations (depending on how it is serialised)
                         SkipTestConfiguration = tc => tc.Format == ODataFormat.Json,
                     },
                 });
@@ -435,7 +435,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                             {
                                 testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException(
                                     "DuplicateAnnotationForPropertyNotAllowed",
-                                    JsonLightConstants.ODataAssociationLinkUrlAnnotationName,
+                                    JsonConstants.ODataAssociationLinkUrlAnnotationName,
                                     "DuplicateProperty");
                             }
                         }
@@ -455,7 +455,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         if (testConfiguration.Format == ODataFormat.Json)
                         {
-                            testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataMediaEditLinkAnnotationName, "DuplicateProperty");
+                            testDescriptor.ExpectedException = ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataMediaEditLinkAnnotationName, "DuplicateProperty");
                         }
                     }
 
@@ -549,7 +549,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
@@ -571,7 +571,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue", "PoliceStation", JsonConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? ODataExpectedExceptions.ODataException("MultipleLinksForSingleton", "PoliceStation")
@@ -638,7 +638,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         (tc) => new PayloadReaderTestExpectedResult(this.Settings.ExpectedResultSettings)
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonConstants.ODataBindAnnotationName)
                                             : null,
                                 },
                 },
@@ -658,7 +658,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? tc.IsRequest
-                                            ? ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonLightConstants.ODataBindAnnotationName)
+                                            ? ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation", "CityHall", JsonConstants.ODataBindAnnotationName)
                                             : null
                                         : tc.IsRequest
                                             ? null
@@ -683,7 +683,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 {
                                     ExpectedException = (tc.Format == ODataFormat.Json)
                                         ? (tc.IsRequest)
-                                            ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
+                                            ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataBindAnnotationName, "CityHall")
                                             : null
                                         : (tc.IsRequest)
                                             ? null
@@ -706,8 +706,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
@@ -732,8 +732,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
@@ -761,8 +761,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                     ExpectedException =
                                         (tc.Format == ODataFormat.Json)
                                             ? (tc.IsRequest)
-                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataBindAnnotationName, "CityHall")
-                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonLightConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
+                                                ? ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataBindAnnotationName, "CityHall")
+                                                : ODataExpectedExceptions.ODataException("DuplicateAnnotationForPropertyNotAllowed", JsonConstants.ODataNavigationLinkUrlAnnotationName, "CityHall")
                                             : (tc.IsRequest)
                                                 ? null
                                                 : ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", "CityHall"),
@@ -1010,13 +1010,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verify correct reading of MLEs in Json Light")]
-        public void MediaLinkEntryTestJsonLight()
+        [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verify correct reading of MLEs in Json")]
+        public void MediaLinkEntryTestJson()
         {
-            var testDescriptors = CreateMediaLinkEntry(this.JsonLightSettings);
+            var testDescriptors = CreateMediaLinkEntry(this.JsonSettings);
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
@@ -1348,7 +1348,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     {
                         var testEntityInstance = descriptor.PayloadElement.DeepCopy() as EntityInstance;
                         PropertyInstance testProperty = testEntityInstance.Properties.Single(p => p.Name == "Collection");
-                        testProperty.WithPropertyAnnotation(JsonLightConstants.ODataTypeAnnotationName, "Collection(Edm.String)");
+                        testProperty.WithPropertyAnnotation(JsonConstants.ODataTypeAnnotationName, "Collection(Edm.String)");
                         descriptor.PayloadElement = testEntityInstance;
                     }
 
@@ -1384,7 +1384,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         }
 
         [TestMethod, TestCategory("Reader.Entries"), Variation(Description = "Verifies that UndeclaredPropertyBehavior setting behaves correctly when combined with open type.")]
-        public void UndeclaredExpandedLinkOnOpenTypeTestInJsonLight()
+        public void UndeclaredExpandedLinkOnOpenTypeTestInJson()
         {
             var testCases = new[]
                             {

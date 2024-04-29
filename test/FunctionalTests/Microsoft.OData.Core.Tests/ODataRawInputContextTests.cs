@@ -12,7 +12,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 using Xunit;
 using ErrorStrings = Microsoft.OData.Strings;
 
@@ -163,10 +163,10 @@ OData-Version: 4.0
 
                     using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.model))
                     {
-                        var jsonLightReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
+                        var JsonReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
 
                         await DoReadAsync(
-                            jsonLightReader as ODataJsonLightReader,
+                            JsonReader as ODataJsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotNull(resource);
@@ -205,10 +205,10 @@ OData-Version: 4.0
 
                     using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.model))
                     {
-                        var jsonLightReader = await messageReader.CreateODataResourceSetReaderAsync(this.customerEntitySet, this.customerEntityType);
+                        var JsonReader = await messageReader.CreateODataResourceSetReaderAsync(this.customerEntitySet, this.customerEntityType);
 
                         await DoReadAsync(
-                            jsonLightReader as ODataJsonLightReader,
+                            JsonReader as ODataJsonReader,
                             verifyResourceSetAction: (resourceSet) =>
                             {
                                 Assert.NotNull(resourceSet);
@@ -314,20 +314,20 @@ Content-Type: application/json
         }
 
         private async Task DoReadAsync(
-           ODataJsonLightReader jsonLightReader,
+           ODataJsonReader JsonReader,
            Action<ODataResourceSet> verifyResourceSetAction = null,
            Action<ODataResource> verifyResourceAction = null)
         {
-            while (await jsonLightReader.ReadAsync())
+            while (await JsonReader.ReadAsync())
             {
-                switch (jsonLightReader.State)
+                switch (JsonReader.State)
                 {
                     case ODataReaderState.ResourceSetStart:
                         break;
                     case ODataReaderState.ResourceSetEnd:
                         if (verifyResourceSetAction != null)
                         {
-                            verifyResourceSetAction(jsonLightReader.Item as ODataResourceSet);
+                            verifyResourceSetAction(JsonReader.Item as ODataResourceSet);
                         }
 
                         break;
@@ -336,7 +336,7 @@ Content-Type: application/json
                     case ODataReaderState.ResourceEnd:
                         if (verifyResourceAction != null)
                         {
-                            verifyResourceAction(jsonLightReader.Item as ODataResource);
+                            verifyResourceAction(JsonReader.Item as ODataResource);
                         }
 
                         break;

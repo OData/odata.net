@@ -1,22 +1,22 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightPayloadElementNormalizer.cs" company="Microsoft">
+// <copyright file="JsonPayloadElementNormalizer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Linq;
     using Microsoft.Test.Taupo.Astoria.Common;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
     #endregion Namespaces
 
     /// <summary>
     /// Normalizer for JSON Light payloads.
     /// </summary>
-    public class JsonLightPayloadElementNormalizer : ODataPayloadElementVisitorBase
+    public class JsonPayloadElementNormalizer : ODataPayloadElementVisitorBase
     {
         /// <summary>The payload element this normalizer was created for; 
         /// used to detect whether we are visiting the top-level element or not.</summary>
@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// <param name="rootPayloadElement">The payload element this normalizer was created for; 
         /// used to detect whether we are visiting the top-level element or not.</param>
         /// <param name="testConfig"></param>
-        private JsonLightPayloadElementNormalizer(ODataPayloadElement rootPayloadElement, ReaderTestConfiguration testConfiguration)
+        private JsonPayloadElementNormalizer(ODataPayloadElement rootPayloadElement, ReaderTestConfiguration testConfiguration)
         {
             this.rootPayloadElement = rootPayloadElement;
             this.testConfiguration = testConfiguration;
@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// <returns>The normalized payload element.</returns>
         public static ODataPayloadElement Normalize(ODataPayloadElement payloadElement, ReaderTestConfiguration testConfiguration)
         {
-            new JsonLightPayloadElementNormalizer(payloadElement, testConfiguration).Recurse(payloadElement);
+            new JsonPayloadElementNormalizer(payloadElement, testConfiguration).Recurse(payloadElement);
             return payloadElement;
         }
 
@@ -99,11 +99,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         {
             if (!this.testConfiguration.IsRequest && this.IsRootElement(payloadElement))
             {
-                JsonLightContextUriProjectionAnnotation projectionAnnotation = 
-                    payloadElement.Annotations.OfType<JsonLightContextUriProjectionAnnotation>().SingleOrDefault();
+                JsonContextUriProjectionAnnotation projectionAnnotation = 
+                    payloadElement.Annotations.OfType<JsonContextUriProjectionAnnotation>().SingleOrDefault();
                 if (projectionAnnotation == null)
                 {
-                    payloadElement.Annotations.Add(JsonLightContextUriProjectionAnnotation.EmptyProjectionAnnotation);
+                    payloadElement.Annotations.Add(JsonContextUriProjectionAnnotation.EmptyProjectionAnnotation);
                 }
             }
         }

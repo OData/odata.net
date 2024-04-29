@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightUtils.cs" company="Microsoft">
+// <copyright file="JsonUtils.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.JsonLight
+namespace Microsoft.Test.Taupo.OData.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
     /// <summary>
     /// Utility methods for dealing with the JSON Lite format.
     /// </summary>
-    public static class JsonLightUtils
+    public static class JsonUtils
     {
         /// <summary>
         /// Returns all property annotations for a given property name. It doesn't return the property itself.
@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             ExceptionUtilities.CheckObjectNotNull(jsonProperty, "jsonProperty can't be null.");
             ExceptionUtilities.CheckStringNotNullOrEmpty(propertyName, "Property name must be a valid EDM name.");
 
-            return jsonProperty.Name.StartsWith(propertyName + JsonLightConstants.ODataPropertyAnnotationSeparator);
+            return jsonProperty.Name.StartsWith(propertyName + JsonConstants.ODataPropertyAnnotationSeparator);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 return true;
             }
 
-            int propertyAnnotationNameIndex = propertyName.IndexOf(JsonLightConstants.ODataPropertyAnnotationSeparator);
+            int propertyAnnotationNameIndex = propertyName.IndexOf(JsonConstants.ODataPropertyAnnotationSeparator);
             if (propertyAnnotationNameIndex >= 0)
             {
                 string propertyAnnotationName = propertyName.Substring(propertyAnnotationNameIndex + 1);
@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         /// <returns>The property name for the annotation property.</returns>
         public static string GetPropertyAnnotationName(string propertyName, string annotationName)
         {
-            return propertyName + JsonLightConstants.ODataPropertyAnnotationSeparator + annotationName;
+            return propertyName + JsonConstants.ODataPropertyAnnotationSeparator + annotationName;
         }
 
         /// <summary>

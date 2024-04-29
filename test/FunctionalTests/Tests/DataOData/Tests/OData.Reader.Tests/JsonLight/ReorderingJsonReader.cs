@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System;
@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     {
         /// <summary>
         /// The type of the ReorderingJsonReader from the product.
-        private static Type ReorderingJsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.JsonLight.ReorderingJsonReader");
+        private static Type ReorderingJsonReaderType = typeof(Microsoft.OData.ODataAnnotatable).Assembly.GetType("Microsoft.OData.Json.ReorderingJsonReader");
 
         /// <summary>
         /// Creates new instance of the reordering Json reader.

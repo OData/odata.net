@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -116,26 +116,26 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// List of all interesting configurations with formats for JSON Lite.
+        /// List of all interesting configurations with formats for JSON.
         /// </summary>
-        public virtual IEnumerable<WriterTestConfiguration> JsonLightFormatConfigurationsWithIndent
+        public virtual IEnumerable<WriterTestConfiguration> JsonFormatConfigurationsWithIndent
         {
             get
             {
                 RunKindTestConfigurations configurations = this.InitializeConfigurations();
-                return configurations.ConfigurationsWithIndent.JsonLightConfigurations;
+                return configurations.ConfigurationsWithIndent.JsonConfigurations;
             }
         }
 
         /// <summary>
-        /// List of all interesting configurations with default settings for JSON Lite.
+        /// List of all interesting configurations with default settings for JSON.
         /// </summary>
-        public virtual IEnumerable<WriterTestConfiguration> JsonLightFormatConfigurations
+        public virtual IEnumerable<WriterTestConfiguration> JsonFormatConfigurations
         {
             get
             {
                 RunKindTestConfigurations configurations = this.InitializeConfigurations();
-                return configurations.DefaultConfigurations.JsonLightConfigurations;
+                return configurations.DefaultConfigurations.JsonConfigurations;
             }
         }
 
@@ -220,7 +220,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             return new CachedConfigurations
             {
                 //AtomConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Atom),
-                JsonLightConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Json),
+                JsonConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, ODataFormat.Json),
                 DefaultFormatConfigurations = CreateConfigurationsWithDefaultSettings(runKind, combinatorialEngine, /*format*/ null),
             };
         }
@@ -238,7 +238,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             return new CachedConfigurations
             {
                 // AtomConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Atom, defaultConfigurations.AtomConfigurations),
-                JsonLightConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Json, defaultConfigurations.JsonLightConfigurations),
+                JsonConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, ODataFormat.Json, defaultConfigurations.JsonConfigurations),
                 DefaultFormatConfigurations = CreateConfigurationsWithIndent(runKind, combinatorialEngine, /*format*/ null, defaultConfigurations.DefaultFormatConfigurations),
             };
         }
@@ -391,9 +391,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             public List<WriterTestConfiguration> AtomConfigurations { get; set; }
 
             /// <summary>
-            /// List of all JSON Lite configurations with default settings.
+            /// List of all JSON configurations with default settings.
             /// </summary>
-            public List<WriterTestConfiguration> JsonLightConfigurations { get; set; }
+            public List<WriterTestConfiguration> JsonConfigurations { get; set; }
 
             /// <summary>
             /// List of all default configurations with default settings.
@@ -407,7 +407,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             {
                 get
                 {
-                    return this.JsonLightConfigurations;
+                    return this.JsonConfigurations;
                 }
             }
 
@@ -419,7 +419,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
                 get
                 {
                     return this.AtomConfigurations
-                        .Concat(this.JsonLightConfigurations)
+                        .Concat(this.JsonConfigurations)
                         .Concat(this.DefaultFormatConfigurations);
                 }
             }

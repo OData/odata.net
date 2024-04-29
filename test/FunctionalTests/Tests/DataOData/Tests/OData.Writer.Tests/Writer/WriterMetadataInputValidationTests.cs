@@ -515,7 +515,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 return descriptor;
             });
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -648,7 +648,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 return descriptor;
             });
 
-            //TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),

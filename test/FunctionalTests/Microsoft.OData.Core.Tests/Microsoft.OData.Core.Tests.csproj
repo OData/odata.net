@@ -44,8 +44,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Remove="JsonLight\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
-    <None Remove="JsonLight\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
+    <None Remove="Json\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
+    <None Remove="Json\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
   </ItemGroup>
 
   <ItemGroup>
@@ -59,8 +59,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <EmbeddedResource Include="JsonLight\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
-    <EmbeddedResource Include="JsonLight\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
+    <EmbeddedResource Include="Json\GenerateContextUrlFromSlimUriWithDerivedTypeCastAndKeySegment.xml" />
+    <EmbeddedResource Include="Json\WriteContextWithDerivedTypeCastAndKeySegmentAsync.xml" />
   </ItemGroup>
 
   <ItemGroup>

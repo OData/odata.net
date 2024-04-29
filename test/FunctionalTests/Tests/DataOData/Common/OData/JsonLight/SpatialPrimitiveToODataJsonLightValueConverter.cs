@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="SpatialPrimitiveToODataJsonLightValueConverter.cs" company="Microsoft">
+// <copyright file="SpatialPrimitiveToODataJsonValueConverter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.JsonLight
+namespace Microsoft.Test.Taupo.OData.Json
 {
     using System.Collections.Generic;
     using System.Linq;
@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
     /// <summary>
     /// Implementation to convert a spatial primitive to and OData-specific json value
     /// </summary>
-    public class SpatialPrimitiveToODataJsonLightValueConverter
+    public class SpatialPrimitiveToODataJsonValueConverter
     {
         /// <summary>
         /// Gets or sets the converter from dictionary to json object.
@@ -101,7 +101,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         internal static bool TryExtractMetadataTypeName(JsonObject jsonObject, out string metadataTypeName)
         {
             metadataTypeName = null;
-            var typeProperty = jsonObject.Properties.SingleOrDefault(p => p.Name == (JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName));
+            var typeProperty = jsonObject.Properties.SingleOrDefault(p => p.Name == (JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName));
             if (typeProperty == null)
             {
                 return false;

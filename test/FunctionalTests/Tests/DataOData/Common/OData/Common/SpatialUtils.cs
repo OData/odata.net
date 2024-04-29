@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Common
     using Microsoft.Test.Taupo.Astoria.Json;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -29,7 +29,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="spatial">The spatial value.</param>
         /// <param name="typeName">The (optional) type name to inject into a JSON string representation.</param>
         /// <returns>The string representation of the spatial value in the specified format.</returns>
-        /// <remarks>When using a type name with the JSON Light format, the resulting string representation will be invalid 
+        /// <remarks>When using a type name with the Json format, the resulting string representation will be invalid 
         /// (since the odata.type annotation is not supported inside of spatial values); only used for error tests.</remarks>
         public static string GetSpatialStringValue(ODataFormat format, ISpatial spatial, string typeName = null)
         {
@@ -41,9 +41,9 @@ namespace Microsoft.Test.Taupo.OData.Common
             var jsonObject = converter.Convert(dictionary);
             if (typeName != null)
             {
-                // NOTE: using a type name with the JSON Light format will produce invalid payloads and is only used
+                // NOTE: using a type name with the Json format will produce invalid payloads and is only used
                 //       for error tests.
-                jsonObject.Insert(0, new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(typeName)));
+                jsonObject.Insert(0, new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(typeName)));
             }
 
             return jsonObject.ToText(format == ODataFormat.Json);

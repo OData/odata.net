@@ -596,7 +596,7 @@ namespace AstoriaUnitTests.Tests
                             // JSON deserializer survives 1000 nested objects but not 2000 on Vista Ultimate x86 chk under debugger. We hard-code to 100.
                             int jsonDeserializerDepth = 200;
                             request.HttpMethod = "POST";
-                            request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                            request.RequestContentType = UnitTestsUtil.JsonMimeType;
                             builder = new StringBuilder();
                             for (int i = 0; i < jsonDeserializerDepth; i++)
                             {
@@ -611,7 +611,7 @@ namespace AstoriaUnitTests.Tests
                             // JSON reader is not recursive in ODL, so we pick a large depth here to verify that it doesn't break.
                             int jsonReaderDepth = 3000;
                             request.HttpMethod = "POST";
-                            request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                            request.RequestContentType = UnitTestsUtil.JsonMimeType;
                             request.SetRequestStreamAsText(new string('[', jsonReaderDepth) + " abc ");
                             break;
                         case StackConsumingFeature.RequestQueryParser:
@@ -633,7 +633,7 @@ namespace AstoriaUnitTests.Tests
                             break;
                         case StackConsumingFeature.JsonSerializer:
                             request.DataServiceType = useCollections ? typeof(StackOverflowCollectionCustomDataContext) : typeof(StackOverflowCustomDataContext);
-                            request.Accept = AstoriaUnitTests.Data.SerializationFormatData.JsonLight.MimeTypes[0];
+                            request.Accept = AstoriaUnitTests.Data.SerializationFormatData.Json.MimeTypes[0];
                             break;
                         case StackConsumingFeature.AtomSerializer:
                             request.DataServiceType = useCollections ? typeof(StackOverflowCollectionCustomDataContext) : typeof(StackOverflowCustomDataContext);

@@ -29,7 +29,7 @@ namespace Microsoft.OData.Tests
             };
 
             var converter = new GeographyTypeConverter();
-            ValidateSerializationResultShouldBeSame(OriginalWriteJsonLight, (instance, writer) => converter.WriteJsonLight(instance, writer), geographys);
+            ValidateSerializationResultShouldBeSame(OriginalWriteJson, (instance, writer) => converter.WriteJson(instance, writer), geographys);
         }
 
         [Fact]
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests
             };
 
             var converter = new GeometryTypeConverter();
-            ValidateSerializationResultShouldBeSame(OriginalWriteJsonLight, (instance, writer) => converter.WriteJsonLight(instance, writer), geometrys);
+            ValidateSerializationResultShouldBeSame(OriginalWriteJson, (instance, writer) => converter.WriteJson(instance, writer), geometrys);
         }
 
         /// <summary>
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Tests
         /// </summary>
         /// <param name="instance">The spatial instance to write.</param>
         /// <param name="jsonWriter">The Json writer.</param>
-        private static void OriginalWriteJsonLight(object instance, IJsonWriter jsonWriter)
+        private static void OriginalWriteJson(object instance, IJsonWriter jsonWriter)
         {
             IDictionary<string, object> jsonObject = GeoJsonObjectFormatter.Create().Write((ISpatial)instance);
             jsonWriter.WriteJsonObjectValue(jsonObject, /*injectPropertyAction*/ null);

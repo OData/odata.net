@@ -10,7 +10,7 @@ namespace Microsoft.OData
     using System;
     using System.Diagnostics;
     using Microsoft.OData.Evaluation;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     #endregion
 
     /// <summary>
@@ -100,9 +100,9 @@ namespace Microsoft.OData
             Debug.Assert(metadataDocumentUri != null, "metadataDocumentUri != null");
             Debug.Assert(metadataDocumentUri.IsAbsoluteUri, "metadataDocumentUri.IsAbsoluteUri");
 
-            ODataJsonLightValidationUtils.ValidateOperation(metadataDocumentUri, this);
+            ODataJsonValidationUtils.ValidateOperation(metadataDocumentUri, this);
             this.metadataBuilder = builder;
-            this.operationFullName = ODataJsonLightUtils.GetFullyQualifiedOperationName(metadataDocumentUri, UriUtils.UriToString(this.Metadata), out this.parameterNames);
+            this.operationFullName = ODataJsonUtils.GetFullyQualifiedOperationName(metadataDocumentUri, UriUtils.UriToString(this.Metadata), out this.parameterNames);
             this.computedTitle = null;
             this.computedTarget = null;
         }

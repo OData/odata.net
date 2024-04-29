@@ -283,7 +283,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                         tc => (Func<ODataPayloadElement, ODataPayloadElement>)null);
                 }
 
-                // Do not run the test descriptor if we do not have an expected type in JSON Light because it would fail.
+                // Do not run the test descriptor if we do not have an expected type in Json because it would fail.
                 testDescriptor.SkipTestConfiguration = tc => tc.Format == ODataFormat.Json && !withExpectedType;
 
                 return testDescriptor;

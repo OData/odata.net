@@ -8,7 +8,7 @@ namespace Microsoft.OData
 {
     using System;
     using System.Xml;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
 
     /// <summary>
     /// Represents an instance annotation.
@@ -37,7 +37,7 @@ namespace Microsoft.OData
             if (!isCustomAnnotation && ODataAnnotationNames.IsODataAnnotationName(annotationName))
             {
                 // isCustomAnnotation==true includes '@odata.<unknown name>', which won't cause the below exception.
-                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, JsonLightConstants.ODataAnnotationNamespacePrefix));
+                throw new ArgumentException(Strings.ODataInstanceAnnotation_ReservedNamesNotAllowed(annotationName, ODataJsonConstants.ODataAnnotationNamespacePrefix));
             }
 
             ValidateName(annotationName);

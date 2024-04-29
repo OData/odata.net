@@ -465,7 +465,7 @@ namespace AstoriaUnitTests.Tests
                     request.HttpMethod = method;
                     if (xmethod == "PATCH")
                     {
-                        request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                        request.RequestContentType = UnitTestsUtil.JsonMimeType;
                         request.SetRequestStreamAsText(
                             "{ @odata.type:\"#AstoriaUnitTests.Stubs.Order\"" +
                             " , DollarAmount: 10 }");
@@ -517,13 +517,13 @@ namespace AstoriaUnitTests.Tests
         {
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("Test", TestUtil.CreateDictionary<string, Encoding>(
-                    new string[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.JsonLightMimeType + ";charset=utf-16", UnitTestsUtil.JsonLightMimeType + ";charset=GB18030" },
+                    new string[] { UnitTestsUtil.JsonMimeType, UnitTestsUtil.JsonMimeType + ";charset=utf-16", UnitTestsUtil.JsonMimeType + ";charset=GB18030" },
                     new Encoding[] { Encoding.UTF8, Encoding.Unicode, Encoding.GetEncoding("GB18030") })));
             using (CustomDataContext.CreateChangeScope())
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())
             {
                 request.DataServiceType = typeof(CustomDataContext);
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.HttpMethod = "POST";
 
                 int index = 100;
@@ -607,7 +607,7 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(CustomDataContext);
                     request.HttpMethod = "POST";
                     request.RequestUriString = "/Customers";
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
                     request.SetRequestStreamAsText("{ " +
                         "@odata.type : \"AstoriaUnitTests.Stubs.Customer\" ," +
                         "ID: 100," +

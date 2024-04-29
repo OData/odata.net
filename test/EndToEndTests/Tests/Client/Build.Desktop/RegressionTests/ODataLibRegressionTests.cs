@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.Tests.Client.RegressionTests
         [Fact]
         public void WriterShouldNotIncludeTypeNameForCollectionOfDerivedType()
         {
-            // JSON Light: writer doesn't include type name for collection of derived type
+            // Json: writer doesn't include type name for collection of derived type
             // If I have a collection property declared in metadata as Collection(Edm.Geography), 
             // and at serialization type, it's clearly a Collection(Edm.GeographyPoint), 
             // we won't write the type name for that property by default (i.e., minimal metadata mode).

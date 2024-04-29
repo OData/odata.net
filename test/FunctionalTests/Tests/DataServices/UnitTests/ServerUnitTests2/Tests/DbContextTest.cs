@@ -109,7 +109,7 @@ namespace AstoriaUnitTests.Tests
                 request.Accept = "application/atom+xml,application/xml";
                 request.ForceVerboseErrors = true;
                 
-                request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0] + ";charset=iso-8859-1";
+                request.RequestContentType = SerializationFormatData.Json.MimeTypes[0] + ";charset=iso-8859-1";
 
                 TestUtil.RunCombinations<Tuple<string, string, string, string>>(payloadsAndVerifications, (testcase) =>
                 {

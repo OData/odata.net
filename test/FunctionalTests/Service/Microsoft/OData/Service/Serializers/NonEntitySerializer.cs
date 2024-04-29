@@ -156,8 +156,8 @@ namespace Microsoft.OData.Service.Serializers
                 Debug.Assert(edmOperation != null, "edmOperation != null");
 
                 IEdmCollectionTypeReference collectionType = (IEdmCollectionTypeReference)edmOperation.ReturnType;
-                bool isJsonLightResponse = ContentTypeUtil.IsResponseMediaTypeJsonLight(this.Service, /*isEntryOrFeed*/ false);
-                this.collectionWriter = this.writer.CreateODataCollectionWriter(isJsonLightResponse ? null : collectionType.ElementType());
+                bool isJsonResponse = ContentTypeUtil.IsResponseMediaTypeJson(this.Service, /*isEntryOrFeed*/ false);
+                this.collectionWriter = this.writer.CreateODataCollectionWriter(isJsonResponse ? null : collectionType.ElementType());
 
                 ODataCollectionStart collectionStart = new ODataCollectionStart { Name = this.ComputeContainerName() };
                 collectionStart.SetSerializationInfo(new ODataCollectionStartSerializationInfo { CollectionTypeName = collectionType.FullName() });

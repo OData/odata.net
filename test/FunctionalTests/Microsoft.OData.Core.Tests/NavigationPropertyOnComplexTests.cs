@@ -325,7 +325,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false };
             ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 111 } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
                 writer.WriteStart(nestedComplexInfo);
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false };
             ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 111 } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
                 writer.WriteStart(nestedComplexInfo);
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(peopleInfo);
                 writer.WriteStart(res);
@@ -456,7 +456,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "City2", IsCollection = false };
             ODataResource nestednav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
                 {
                     writer.WriteStart(peopleInfo);
                     writer.WriteStart(res);
@@ -620,7 +620,7 @@ namespace Microsoft.OData.Tests
             ODataResource nestednav1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "aaa" } } };
             ODataResource nestednav2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "bbb" } } };
 
-            string output = WriteJsonLightEntry(CollectionModel, entitySet, entityType, odataUri, (writer) =>
+            string output = WriteJsonEntry(CollectionModel, entitySet, entityType, odataUri, (writer) =>
                 {
                     writer.WriteStart(res);
                     writer.WriteStart(nestedComplexInfo);
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Tests
             ODataResource nestednav1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "aaa" } } };
             ODataResource nestednav2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "bbb" } } };
 
-            string output = WriteJsonLightEntry(CollectionModel, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(CollectionModel, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(nestedComplex);
                 writer.WriteStart(nestedResInfo);
@@ -711,7 +711,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "SingleOfNav", IsCollection = false };
             ODataResource nestednav1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "aaa" } } };
 
-            string output = WriteJsonLightEntry(CollectionModel, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(CollectionModel, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(nestedResourceSet);
                 writer.WriteStart(nestedComplex);
@@ -751,7 +751,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
             ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
-            string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(Model, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(workAddress);
                 writer.WriteStart(nestedCityInfo);
@@ -817,7 +817,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
             ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "China" } } };
 
-            string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(Model, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(workAddress);
                 writer.WriteStart(nestedCityInfo);
@@ -891,7 +891,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
             ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
-            string output = WriteJsonLightEntry(Model, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(Model, null, complexType, odataUri, (writer) =>
                 {
                     writer.WriteStart(address);
                     writer.WriteStart(workAddressInfo);
@@ -971,7 +971,7 @@ namespace Microsoft.OData.Tests
             ODataResource nestedComplex = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Prop1", Value = 123 } } };
             ODataNestedResourceInfo nestedResInfo = new ODataNestedResourceInfo() { Name = "CollectionOfNav", IsCollection = true };
 
-            string output = WriteJsonLightEntry(CollectionModel, entitySet, entityType, odataUri, (writer) =>
+            string output = WriteJsonEntry(CollectionModel, entitySet, entityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
                 writer.WriteStart(nestedComplexInfo);
@@ -1033,7 +1033,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedInfo = new ODataNestedResourceInfo() { Name = "Region", IsCollection = false };
             ODataResource region = new ODataResource() { Properties = new[] { new ODataProperty { Name = "Name", Value = "Land" } } };
 
-            string output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            string output = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
                 writer.WriteStart(addressInfo);
@@ -1107,7 +1107,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo nestedCityInfo = new ODataNestedResourceInfo() { Name = "City", IsCollection = false };
             ODataResource city = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ZipCode", Value = 222 } } };
 
-            var output = WriteJsonLightEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
+            var output = WriteJsonEntry(Model, EntitySet, EntityType, odataUri, (writer) =>
             {
                 writer.WriteStart(res);
                 writer.WriteStart(addressInfo);
@@ -1227,7 +1227,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo navInfo = new ODataNestedResourceInfo() { Name = "NavUnderContained", IsCollection = true };
             ODataResource nav = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "efg" } } };
 
-            string output = WriteJsonLightEntry(model, entitySet, entityType, odataUri, (writer) =>
+            string output = WriteJsonEntry(model, entitySet, entityType, odataUri, (writer) =>
             {
                 writer.WriteStart(topEntity);
                 writer.WriteStart(complexInfo);
@@ -1284,7 +1284,7 @@ namespace Microsoft.OData.Tests
             ODataNestedResourceInfo containedInfo = new ODataNestedResourceInfo() { Name = "ContainedUnderDerivedComplex", IsCollection = false };
             ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
 
-            string output = WriteJsonLightEntry(model, entitySet, entityType, odataUri, (writer) =>
+            string output = WriteJsonEntry(model, entitySet, entityType, odataUri, (writer) =>
             {
                 writer.WriteStart(topEntity);
                 writer.WriteStart(complexInfo);
@@ -1316,7 +1316,7 @@ namespace Microsoft.OData.Tests
             ODataResourceSet set = new ODataResourceSet();
             ODataResource contained = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "def" } } };
 
-            string output = WriteJsonLightEntry(model, null, complexType, odataUri, (writer) =>
+            string output = WriteJsonEntry(model, null, complexType, odataUri, (writer) =>
             {
                 writer.WriteStart(complex);
                 writer.WriteStart(containedInfo);
@@ -1401,7 +1401,7 @@ namespace Microsoft.OData.Tests
             return itemsList;
         }
 
-        private static string WriteJsonLightEntry(IEdmModel model, IEdmEntitySet entitySet, IEdmStructuredType resourceType, ODataUri odataUri, Action<ODataWriter> writeAction, bool isResourceSet = false, bool isFullMetadata = false, ODataVersion version = ODataVersion.V4)
+        private static string WriteJsonEntry(IEdmModel model, IEdmEntitySet entitySet, IEdmStructuredType resourceType, ODataUri odataUri, Action<ODataWriter> writeAction, bool isResourceSet = false, bool isFullMetadata = false, ODataVersion version = ODataVersion.V4)
         {
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };

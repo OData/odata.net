@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -84,7 +84,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         //// TODO: Add in-stream error tests
 
         /// <summary>
-        /// Creates an empty model so that the JSON lite serializer won't complain.
+        /// Creates an empty model so that the JSON serializer won't complain.
         /// </summary>
         /// <param name="entitySet">An entity set in the generated model.</param>
         private EdmModel CreateErrorTestModel(out EdmEntitySet entitySet)
@@ -315,14 +315,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                            {
                                return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                                {
-                                   Json = ExpectedJsonLightErrorPayload(tc.Code, tc.Message, tc.InnerError),
+                                   Json = ExpectedJsonErrorPayload(tc.Code, tc.Message, tc.InnerError),
                                    FragmentExtractor = (result) => { JsonUtils.TrimSurroundingWhitespaces(result); return result; },
                                };
                            }
                        }
                        else
                        {
-                           throw new ODataTestException("Expected results are only implemented for ATOM and JSON lite.");
+                           throw new ODataTestException("Expected results are only implemented for ATOM and JSON.");
                        }
                    });
            });
@@ -395,32 +395,32 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
 
         /// <summary>
-        /// Returns the expected JSON Lite payload for an error.
+        /// Returns the expected JSON payload for an error.
         /// </summary>
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The error message.</param>
         /// <param name="innerError">The inner error (if null, don't write anything).</param>
-        /// <returns>The expected JSON Lite payload for an error.</returns>
-        private static string ExpectedJsonLightErrorPayload(string code, string message, InnerError innerError)
+        /// <returns>The expected JSON payload for an error.</returns>
+        private static string ExpectedJsonErrorPayload(string code, string message, InnerError innerError)
         {
             return string.Join(
                 "$(NL)",
                 "{",
-                "$(Indent)\"" + JsonLightConstants.ODataErrorPropertyName + "\":{",
+                "$(Indent)\"" + JsonConstants.ODataErrorPropertyName + "\":{",
                 "$(Indent)$(Indent)\"" + JsonConstants.ODataErrorCodeName + "\":\"" + code + "\",\"",
                 JsonConstants.ODataErrorMessageName + "\":\"" + message + "\"",
-                ExpectedJsonLightInnerErrorPayload(innerError, 0),
+                ExpectedJsonInnerErrorPayload(innerError, 0),
                 "$(Indent)}",
                 "}");
         }
 
         /// <summary>
-        /// Returns the expected JSON Lite payload for an inner error payload.
+        /// Returns the expected JSON payload for an inner error payload.
         /// </summary>
-        /// <param name="innerError">The inner error to create the JSON Lite payload for.</param>
+        /// <param name="innerError">The inner error to create the JSON payload for.</param>
         /// <param name="depth">The depth of the inner error (starting with 0).</param>
-        /// <returns>The expected JSON Lite payload for the <paramref name="innerError"/> payload.</returns>
-        private static string ExpectedJsonLightInnerErrorPayload(InnerError innerError, int depth)
+        /// <returns>The expected JSON payload for the <paramref name="innerError"/> payload.</returns>
+        private static string ExpectedJsonInnerErrorPayload(InnerError innerError, int depth)
         {
             if (innerError == null)
             {
@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonConstants.ODataErrorInnerErrorMessageName + "\":\"" + (innerError.Message ?? string.Empty) + "\",\"" +
                     JsonConstants.ODataErrorInnerErrorTypeNameName + "\":\"" + (innerError.TypeName ?? string.Empty) + "\",\"" +
                     JsonConstants.ODataErrorInnerErrorStackTraceName + "\":\"" + (innerError.StackTrace ?? string.Empty) + "\"" +
-                    ExpectedJsonLightInnerErrorPayload(innerError.NestedError, depth + 1),
+                    ExpectedJsonInnerErrorPayload(innerError.NestedError, depth + 1),
                 "$(Indent)$(Indent)" + prefix + "}");
             return innerErrorString;
         }

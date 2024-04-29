@@ -70,14 +70,13 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         }
 
         /// <summary>
-        /// Verify actions in entry payload format atom, json verbose, and json fullmetadata.
+        /// Verify actions in entry payload json fullmetadata.
         /// </summary>
         [Fact]
         public void QueryEntryTest()
         {
             List<string> mimeTypes = new List<string>()
             {
-                //MimeTypes.ApplicationAtomXml,
                 MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
             };
 
@@ -136,7 +135,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         /// Verify actions in entry payload format json minimalmetadata, and json nometadata.
         /// </summary>
         [Fact]
-        public void QueryEntryJsonLightTest()
+        public void QueryEntryJsonTest()
         {
             List<string> mimeTypes = new List<string>()
             {
@@ -175,12 +174,12 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
                     "\"" + ContainerPrefix + retrieveProduct,
                 };
 
-                this.VerifyActionInJsonLightPayload("Person(-1)", expectedActionsOnPerson, mimeType);
-                this.VerifyActionInJsonLightPayload("Person(0)", expectedActionsOnEmployee, mimeType);
-                this.VerifyActionInJsonLightPayload("Person(-7)", expectedActionsOnSpecialEmployee, mimeType);
-                this.VerifyActionInJsonLightPayload("Person(1)", expectedActionsOnContractor, mimeType);
-                this.VerifyActionInJsonLightPayload("Product(-10)", expectedRetrieveProductAction, mimeType);
-                this.VerifyActionInJsonLightPayload("OrderLine(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
+                this.VerifyActionInJsonPayload("Person(-1)", expectedActionsOnPerson, mimeType);
+                this.VerifyActionInJsonPayload("Person(0)", expectedActionsOnEmployee, mimeType);
+                this.VerifyActionInJsonPayload("Person(-7)", expectedActionsOnSpecialEmployee, mimeType);
+                this.VerifyActionInJsonPayload("Person(1)", expectedActionsOnContractor, mimeType);
+                this.VerifyActionInJsonPayload("Product(-10)", expectedRetrieveProductAction, mimeType);
+                this.VerifyActionInJsonPayload("OrderLine(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
             }
         }
 #endif
@@ -254,7 +253,7 @@ namespace Microsoft.Test.OData.Tests.Client.ActionOverloadingTests
         }
 
 #if !(NETCOREAPP1_0 || NETCOREAPP2_0)
-        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
+        private void VerifyActionInJsonPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
         {
             var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);
             HttpWebRequest request = (HttpWebRequest)WebRequest.Create(this.ServiceUri.AbsoluteUri + queryUri);

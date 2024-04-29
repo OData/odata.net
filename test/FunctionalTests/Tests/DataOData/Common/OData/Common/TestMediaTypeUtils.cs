@@ -273,9 +273,9 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// </summary>
         /// <param name="kind">The <see cref="ODataPayloadKind"/> to get the supported media types for.</param>
         /// <param name="includeApplicationJson">true if application/json should be included as supported media type (for reading versions &lt; V3).</param>
-        /// <param name="includeApplicationJsonLight">true if JsonLight media types should be included.</param>
+        /// <param name="includeApplicationJson">true if Json media types should be included.</param>
         /// <returns>The string concatenating all supported media types for <paramref name="kind"/>.</returns>
-        public static string GetSupportedMediaTypes(ODataPayloadKind kind, bool includeApplicationJson = true, bool includeApplicationJsonLight = true)
+        public static string GetSupportedMediaTypes(ODataPayloadKind kind, bool includeApplicationJson = true, bool includeApplicationJson = true)
         {
             StringBuilder builder = new StringBuilder();
             bool hasTailingComma = false;
@@ -292,7 +292,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 case ODataPayloadKind.Error:
                 case ODataPayloadKind.ServiceDocument:
                 case ODataPayloadKind.Parameter:
-                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJsonLight, builder);
+                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJson, builder);
                     break;
                 default:
                     break;
@@ -323,7 +323,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                     break;
                 case ODataPayloadKind.Batch:
                     builder.Append("multipart/mixed, ");
-                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJsonLight, builder);
+                    AddJsonMediaTypes(includeApplicationJson, includeApplicationJson, builder);
                     hasTailingComma = true;
                     break;
                 case ODataPayloadKind.MetadataDocument:
@@ -345,13 +345,13 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Populate the names of all possible application/json media types to the string builder passed in.
         /// </summary>
         /// <param name="includeApplicationJson">true if application/json should be included as supported media type (for reading versions &lt; V3).</param>
-        /// <param name="includeApplicationJsonLight">true if JsonLight media types should be included (for OData V4 and beyond).</param>
+        /// <param name="includeApplicationJson">true if Json media types should be included (for OData V4 and beyond).</param>
         /// <param name="builder">string builder object to accept the eligible media type names.</param>
         /// <returns>The string concatenating all supported media types for <paramref name="kind"/>.</returns>
-        private static void AddJsonMediaTypes(bool includeApplicationJson, bool includeApplicationJsonLight,
+        private static void AddJsonMediaTypes(bool includeApplicationJson, bool includeApplicationJson,
             StringBuilder builder)
         {
-            if (includeApplicationJsonLight)
+            if (includeApplicationJson)
             {
                 builder.Append("application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false");
                 builder.Append(", application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=true");

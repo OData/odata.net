@@ -135,7 +135,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             return actionName;
         }
 
-        private static bool IsJsonLightResponse(string acceptHeaderValue)
+        private static bool IsJsonResponse(string acceptHeaderValue)
         {
             return acceptHeaderValue.Contains(MimeTypes.ApplicationJson) && !acceptHeaderValue.Contains("verbose");
         }
@@ -221,7 +221,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
 
                                 ExceptionUtilities.Assert(expectActionDescriptor, "Unexpected service operation descriptor for " + function.Name);
 
-                                // JSONLight will always add the type segment if its a derived type now
+                                // Json will always add the type segment if its a derived type now
                                 string derivedTypeFullName = string.Empty;
                                 var acceptHeaderValue = response.Headers[HttpHeaders.ContentType];
                                 if (bindingEntityDataType.Definition.BaseType != null)
@@ -238,8 +238,8 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
                                 string containerName = this.BuildExpectedContainerName(function, bindingEntityDataType, instanceEntityType);
                                 string expectedMetadataContainerName = string.Concat(function.Model.GetDefaultEntityContainer().Name, ".");
 
-                                // When running in JSONLight descriptor returns full name, not partial
-                                if (IsJsonLightResponse(acceptHeaderValue))
+                                // When running in Json descriptor returns full name, not partial
+                                if (IsJsonResponse(acceptHeaderValue))
                                 {
                                     containerName = string.Concat(function.Model.GetDefaultEntityContainer().Name, ".");
 

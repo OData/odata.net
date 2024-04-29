@@ -39,13 +39,13 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         }
 
         [TestMethod]
-        public void WhenMpvIsAtLeast30AndFormatIsNotJsonLightResponseVersionShouldBe30()
+        public void WhenMpvIsAtLeast30AndFormatIsNotJsonResponseVersionShouldBe30()
         {
             VersionUtil.GetResponseVersionForError( /*acceptableContentType*/ MimeApplicationXml, /*maxDSV*/ VersionUtil.Version4Dot0, /*MPV*/ VersionUtil.Version4Dot0).Should().Be(VersionUtil.Version4Dot0);
         }
 
         [TestMethod]
-        public void WhenMpvAndMaxDsvAreAtLeast30AndFormatIsJsonLightResponseVersionShouldBe30()
+        public void WhenMpvAndMaxDsvAreAtLeast30AndFormatIsJsonResponseVersionShouldBe30()
         {
             VersionUtil.GetResponseVersionForError( /*acceptableContentType*/ MimeApplicationJsonODataFullMetadata, /*maxDSV*/ VersionUtil.Version4Dot0, /*MPV*/ VersionUtil.Version4Dot0).Should().Be(VersionUtil.Version4Dot0);
             VersionUtil.GetResponseVersionForError( /*acceptableContentType*/ MimeApplicationJsonODataMinimalMetadata, /*maxDSV*/ Version100Dot1, /*MPV*/ Version100Dot1).Should().Be(VersionUtil.Version4Dot0);

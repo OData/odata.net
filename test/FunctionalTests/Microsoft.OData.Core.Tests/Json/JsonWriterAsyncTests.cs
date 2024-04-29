@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.OData.Core.Tests.Json;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;

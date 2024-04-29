@@ -178,7 +178,7 @@ namespace AstoriaUnitTests.Stubs
                 contentType = contentType.Split(';')[0];
                 string[] textPayloadTypes = new string[] {
                         UnitTestsUtil.AtomFormat,
-                        UnitTestsUtil.JsonLightMimeType,
+                        UnitTestsUtil.JsonMimeType,
                         UnitTestsUtil.MimeApplicationXml,
                         UnitTestsUtil.MimeTextXml,
                         UnitTestsUtil.MimeTextPlain,

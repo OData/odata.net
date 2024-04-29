@@ -919,7 +919,7 @@ namespace AstoriaUnitTests.Tests
                         InterceptorChecker.ValidateQueryInterceptor(2);
                         InterceptorChecker.ValidateChangeInterceptor(2);
                     };
-                    Assert.IsNull(SendRequest(typeof(PhotoDataService), request, "POST", "/Items(500)/RelatedFolders", null, null, accept, UnitTestsUtil.JsonLightMimeType, null, payload, 201));
+                    Assert.IsNull(SendRequest(typeof(PhotoDataService), request, "POST", "/Items(500)/RelatedFolders", null, null, accept, UnitTestsUtil.JsonMimeType, null, payload, 201));
                     Assert.AreEqual(photoCount, PhotoDataServiceContext._items.Count);
                     Assert.AreEqual(++folderCount, PhotoDataServiceContext._folders.Count);
                     Assert.IsNotNull(PhotoDataServiceContext._items.Single(i => i.ID == 500).RelatedFolders.SingleOrDefault(f => f.ID == 333));
@@ -2087,7 +2087,7 @@ namespace AstoriaUnitTests.Tests
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(InterceptorChecker)))
                     using (TestWebRequest request = TestWebRequest.CreateForLocation(WebServerLocation.InProcessWcf))
                     {
-                        string format = UnitTestsUtil.JsonLightMimeType;
+                        string format = UnitTestsUtil.JsonMimeType;
                         string slug = "C" + TestUtil.Random.Next(1000, 9999).ToString();
                         string requestBodyString = "some string";
                         byte[] buffer = Encoding.ASCII.GetBytes(requestBodyString);
@@ -2101,7 +2101,7 @@ namespace AstoriaUnitTests.Tests
                         string payload = request.GetResponseStreamAsText();
 
                         // PATCH the same response payload back to the MLE.
-                        // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        // TODO: Fix places where we've lost JsonVerbose coverage to add Json
                         // This Assert passes but hits a debug assert and it needs to be fixed.
                         // Assert.IsNull(SendRequest(typeof(NorthwindDefaultStreamService), request, "MERGE", "/Customers('" + expectedID + "')", null, null, format, format, slug, payload, 200, true));
 

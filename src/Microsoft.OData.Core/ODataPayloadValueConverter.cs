@@ -174,7 +174,7 @@ namespace Microsoft.OData
                 return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
             }
 
-            // DateTimeOffset needs to be read using the XML rules (as per the JSON Light spec).
+            // DateTimeOffset needs to be read using the XML rules (as per the Json spec).
             if (targetType == typeof(DateTimeOffset))
             {
                 return PlatformHelper.ConvertStringToDateTimeOffset(stringValue);

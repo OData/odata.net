@@ -37,7 +37,7 @@ namespace AstoriaUnitTests.Tests
     [TestClass]
     public class Web3SSerializerTest
     {
-        private static readonly string JsonFormat = UnitTestsUtil.JsonLightMimeType;
+        private static readonly string JsonFormat = UnitTestsUtil.JsonMimeType;
         private static readonly string AtomFormat = UnitTestsUtil.AtomFormat;
         private static readonly string MimeAny = UnitTestsUtil.MimeAny;
         private static readonly string MimeApplicationOctetStream = UnitTestsUtil.MimeApplicationOctetStream;
@@ -354,7 +354,7 @@ namespace AstoriaUnitTests.Tests
                         dateText = element.InnerText;
                         serializedDate = XmlConvert.ToDateTime(dateText, XmlDateTimeSerializationMode.RoundtripKind);
                     }
-                    else if (format == SerializationFormatData.JsonLight)
+                    else if (format == SerializationFormatData.Json)
                     {
                         XmlElement element = TestUtil.AssertSelectSingleElement(document, "/Object/Birthday");
                         dateText = element.InnerText;
@@ -371,7 +371,7 @@ namespace AstoriaUnitTests.Tests
                     TestUtil.TraceXml(document);
 
                     // For JSON, DateTime should be accurate to the millisecond.
-                    if (format == SerializationFormatData.JsonLight)
+                    if (format == SerializationFormatData.Json)
                     {
                         Trace.WriteLine("For JSON, DateTime should be accurate to the millisecond only.");
                         const string ComparisonFormat = "yyyy-MM-dd HH:mm:ss:fff";
@@ -424,7 +424,7 @@ namespace AstoriaUnitTests.Tests
             {
                 string instanceName = MakeXmlName(typeof(TypedEntity<int, CircularReferenceType>));
                 string fullInstanceName = MakeXmlName(typeof(TypedEntity<int, CircularReferenceType>), true /*requiresNamespace*/);
-                UnitTestsUtil.VerifyInvalidRequest(null, "/Values", typeof(TypedCustomDataContext<TypedEntity<int, CircularReferenceType>>), UnitTestsUtil.JsonLightMimeType, "GET", 500);
+                UnitTestsUtil.VerifyInvalidRequest(null, "/Values", typeof(TypedCustomDataContext<TypedEntity<int, CircularReferenceType>>), UnitTestsUtil.JsonMimeType, "GET", 500);
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Values", typeof(TypedCustomDataContext<TypedEntity<int, CircularReferenceType>>), UnitTestsUtil.AtomFormat, "GET", 500);
             }
             finally
@@ -507,7 +507,7 @@ namespace AstoriaUnitTests.Tests
                         XmlDocument document = VerifyXPaths(resultStream, responseFormat, web3sXPaths, jsonXPaths, atomXPaths);
                         string memberXPath = null;
 
-                        if (String.Equals(responseFormat, UnitTestsUtil.JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+                        if (String.Equals(responseFormat, UnitTestsUtil.JsonMimeType, StringComparison.OrdinalIgnoreCase))
                         {
                             // Make sure that static properties are not serialized.
                             VerifySingleNodePresent(document, String.Format("/Object/value/{0}/{1}/StaticProperty", JsonValidator.ArrayString, JsonValidator.ObjectString), false);

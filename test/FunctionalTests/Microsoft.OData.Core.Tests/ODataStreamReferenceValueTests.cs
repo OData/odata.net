@@ -7,7 +7,7 @@
 using System;
 using Microsoft.OData.Evaluation;
 using Microsoft.OData.Tests.Evaluation;
-using Microsoft.OData.Tests.JsonLight;
+using Microsoft.OData.Tests.Json;
 using Xunit;
 
 namespace Microsoft.OData.Tests

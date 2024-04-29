@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightContextUriProjectionAnnotation.cs" company="Microsoft">
+// <copyright file="JsonContextUriProjectionAnnotation.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
+namespace Microsoft.Test.Taupo.OData.Contracts.Json
 {
     #region Namespaces
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -13,13 +13,13 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
     /// <summary>
     /// An annotation which stores the context URI projection for a top-level payload element in JSON Light.
     /// </summary>
-    public class JsonLightContextUriProjectionAnnotation : ODataPayloadElementAnnotation
+    public class JsonContextUriProjectionAnnotation : ODataPayloadElementAnnotation
     {
         /// <summary>
         /// A projection annotation for the case where no projection is desired ($select=)
         /// </summary>
-        public static readonly JsonLightContextUriProjectionAnnotation EmptyProjectionAnnotation =
-            new JsonLightContextUriProjectionAnnotation { ContextUriProjection = string.Empty };
+        public static readonly JsonContextUriProjectionAnnotation EmptyProjectionAnnotation =
+            new JsonContextUriProjectionAnnotation { ContextUriProjection = string.Empty };
 
         /// <summary>
         /// The string representation of the context URI projection.
@@ -43,7 +43,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         /// <returns>a clone of the annotation</returns>
         public override ODataPayloadElementAnnotation Clone()
         {
-            return new JsonLightContextUriProjectionAnnotation { ContextUriProjection = this.ContextUriProjection };
+            return new JsonContextUriProjectionAnnotation { ContextUriProjection = this.ContextUriProjection };
         }
     }
 }

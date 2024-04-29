@@ -262,7 +262,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         {
             internal object Item { get; set; }
             internal string ExpectedXml { get; set; }
-            internal string[] ExpectedJsonLightLines { get; set; }
+            internal string[] ExpectedJsonLines { get; set; }
         }
 
         public enum WriterInvocations

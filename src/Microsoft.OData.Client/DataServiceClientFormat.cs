@@ -24,14 +24,14 @@ namespace Microsoft.OData.Client
     /// </summary>
     public sealed class DataServiceClientFormat
     {
-        /// <summary>MIME type for JSON bodies in light mode (http://www.iana.org/assignments/media-types/application/).</summary>
-        private const string MimeApplicationJsonODataLight = "application/json;odata.metadata=minimal";
+        /// <summary>MIME type for JSON bodies.(http://www.iana.org/assignments/media-types/application/).</summary>
+        private const string MimeApplicationJsonOData = "application/json;odata.metadata=minimal";
 
         /// <summary>MIME type for JSON (https://www.ietf.org/rfc/rfc4627.txt).</summary>
         private const string MimeApplicationJson = "application/json";
 
-        /// <summary>MIME type for JSON bodies in light mode with all metadata.</summary>
-        private const string MimeApplicationJsonODataLightWithAllMetadata = "application/json;odata.metadata=full";
+        /// <summary>MIME type for JSON bodies with all metadata.</summary>
+        private const string MimeApplicationJsonODataWithAllMetadata = "application/json;odata.metadata=full";
 
         /// <summary>MIME type for changeset multipart/mixed</summary>
         private const string MimeMultiPartMixed = "multipart/mixed";
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Client
         internal void SetRequestContentTypeForOperationParameters(HeaderCollection headers)
         {
             // Note: There has never been an atom or xml format for parameters.
-            this.SetRequestContentTypeHeader(headers, MimeApplicationJsonODataLight);
+            this.SetRequestContentTypeHeader(headers, MimeApplicationJsonOData);
         }
 
         /// <summary>
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Client
             }
 
             // Ideally ODataLib should have a public API to get the ODataFormat from the content-type header.
-            // Unfortunately since that's not available, we will process the content-type value to determine if the format is JSON Light.
+            // Unfortunately since that's not available, we will process the content-type value to determine if the format is JSON.
             string mime;
             ContentTypeUtil.ReadContentType(contentType, out mime);
         }
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Client
         /// <param name="mediaType">content type</param>
         private void SetRequestContentTypeHeader(HeaderCollection headers, string mediaType)
         {
-            if (mediaType == MimeApplicationJsonODataLight)
+            if (mediaType == MimeApplicationJsonOData)
             {
                 // set the request version to 4.0
                 headers.SetRequestVersion(Util.ODataVersion4, this.context.MaxProtocolVersionAsVersion);
@@ -350,21 +350,21 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Chooses between using JSON-Light and the context-dependent media type for when Atom is selected based on the user-selected format.
+        /// Chooses between using JSON and the context-dependent media type for when Atom is selected based on the user-selected format.
         /// </summary>
         /// <param name="hasSelectQueryOption">
         ///   Whether or not the select query option is present in the request URI.
-        ///   If true, indicates that the client should ask the server to include all metadata in a JSON-Light response.
+        ///   If true, indicates that the client should ask the server to include all metadata in a JSON response.
         /// </param>
-        /// <returns>The media type to use (either JSON-Light or the provided value)</returns>
+        /// <returns>The media type to use (either JSON or the provided value)</returns>
         private static string ChooseMediaType(bool hasSelectQueryOption)
         {
             if (hasSelectQueryOption)
             {
-                return MimeApplicationJsonODataLightWithAllMetadata;
+                return MimeApplicationJsonODataWithAllMetadata;
             }
 
-            return MimeApplicationJsonODataLight;
+            return MimeApplicationJsonOData;
         }
 
         /// <summary>

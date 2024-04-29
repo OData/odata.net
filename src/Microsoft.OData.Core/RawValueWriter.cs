@@ -153,7 +153,7 @@ namespace Microsoft.OData
             }
             else if (value is Geometry || value is Geography)
             {
-                PrimitiveConverter.Instance.WriteJsonLight(value, jsonWriter);
+                PrimitiveConverter.Instance.WriteJson(value, jsonWriter);
             }
             else if (ODataRawValueUtils.TryConvertPrimitiveToString(value, out string valueAsString))
             {
@@ -237,7 +237,7 @@ namespace Microsoft.OData
             {
                 return TaskUtils.GetTaskForSynchronousOperation((
                     valueParam,
-                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJsonLight(
+                    jsonWriterParam) => PrimitiveConverter.Instance.WriteJson(
                         valueParam,
                         jsonWriterParam),
                     value,

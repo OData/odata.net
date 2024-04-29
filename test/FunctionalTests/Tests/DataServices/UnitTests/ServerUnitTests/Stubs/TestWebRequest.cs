@@ -151,9 +151,9 @@ namespace AstoriaUnitTests.Stubs
                 throw new InvalidOperationException("GetResponseStream() returned null - ensure SendRequest was called before.");
             }
 
-            if (TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonLightMimeType) ||
-                TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonLightMimeTypeFullMetadata) ||
-                TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonLightMimeTypeNoMetadata))
+            if (TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonMimeType) ||
+                TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonMimeTypeFullMetadata) ||
+                TestUtil.CompareMimeType(responseFormat, UnitTestsUtil.JsonMimeTypeNoMetadata))
             {
                 return JsonValidator.ConvertToXmlDocument(stream);
             }

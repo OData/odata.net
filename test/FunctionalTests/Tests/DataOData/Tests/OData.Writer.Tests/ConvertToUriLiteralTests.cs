@@ -40,7 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         /// Tests that ODataUtils.ConvertToUriLiteral produces correct complex values.
         /// </summary>
         /* This case is not finished and originally disabled, so just delete it
-        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
         [Ignore]
         [TestMethod, Variation]
         public void ConvertToUriLiteralComplexTest()

@@ -54,17 +54,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         private const string ApplicationAtomXmlEntry = "application/atom+xml;type=entry";
         private const string ApplicationAtomXmlFeed = "application/atom+xml;type=feed";
         private const string ApplicationJson = "application/json";
-        private const string ApplicationJsonODataLight = "application/json;odata.metadata=minimal";
-        private const string ApplicationJsonODataLightStreaming = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
-        private const string ApplicationJsonODataLightStreamingAndDefaultMetadata = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
-        private const string ApplicationJsonODataLightNonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false";
-        private const string ApplicationJsonODataLightNonStreamingAndDefaultMetadata = "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false";
+        private const string ApplicationJsonOData = "application/json;odata.metadata=minimal";
+        private const string ApplicationJsonODataStreaming = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
+        private const string ApplicationJsonODataStreamingAndDefaultMetadata = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
+        private const string ApplicationJsonODataNonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false";
+        private const string ApplicationJsonODataNonStreamingAndDefaultMetadata = "application/json;odata.metadata=minimal;odata.streaming=false;IEEE754Compatible=false";
         private const string ApplicationJsonAndAtomXml = "application/json,application/atom+xml";
-        private const string ApplicationJsonAndJsonLightStreaming = "application/json,application/json;odata.metadata=minimal;odata.streaming=true";
+        private const string ApplicationJsonAndJsonStreaming = "application/json,application/json;odata.metadata=minimal;odata.streaming=true";
         private const string ApplicationJsonAndJsonStreaming = "application/json,application/json;odata.streaming=true";
         private const string ApplicationJsonStreamingAndJsonNonStreaming = "application/json;odata.streaming=true,application/json;odata.streaming=false";
-        private const string ApplicationJsonLightNonStreamingAndJsonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.streaming=true";
-        private const string ApplicationJsonLightNonStreamingAndJsonLightStreaming = "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.metadata=minimal;odata.streaming=true";
+        private const string ApplicationJsonNonStreamingAndJsonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.streaming=true";
+        private const string ApplicationJsonNonStreamingAndJsonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.metadata=minimal;odata.streaming=true";
         private const string ApplicationJsonAndAtomXmlWithQuality = "application/json,application/atom+xml;q=0.8";
         private const string ApplicationJsonWithQualityAndAtomXml = "application/json;q=0.8,application/atom+xml";
         private const string ApplicationOctetStream = "application/octet-stream";
@@ -94,7 +94,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
         // TODO: add (in a separate file?) encoding tests (different encodings, different q-values, etc.)
 
-        // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+        // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
         // ToDo: For this file, take a look at history to find out exactly what to translate.
 
         [Ignore] // Remove Atom
@@ -117,12 +117,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Resource, ApplicationAtomXml, tc.Version) },
@@ -170,15 +170,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonODataLight, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonODataLightStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonODataLightNonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightNonStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonOData, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonODataStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonODataNonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataNonStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.ResourceSet, ApplicationAtomXml, tc.Version) },
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomXmlFeed, ExpectedException = tc => GetExpectedException(ODataPayloadKind.ResourceSet, ApplicationAtomXmlFeed, tc.Version) },
@@ -211,12 +211,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Property, ApplicationXml, tc.Version) },
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextStar, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Property, TextStar, tc.Version) },
@@ -317,11 +317,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 // success cases
                 new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJson },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType =  ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType =  ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = TextStar, ExpectedException = tc => GetExpectedException(ODataPayloadKind.EntityReferenceLink, TextStar, tc.Version) },
                 new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = TextXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.EntityReferenceLink, TextXml, tc.Version) },
@@ -359,11 +359,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 // success cases
                 new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJson },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // error cases
                 new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationAtomXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.EntityReferenceLinks, ApplicationAtomXml, tc.Version) },
@@ -394,12 +394,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8  },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8  },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Collection, ApplicationXml, tc.Version) },
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextStar, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Collection, TextStar, tc.Version) },
@@ -446,12 +446,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Collection, ApplicationXml, tc.Version) },
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = TextStar, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Collection, TextStar, tc.Version) },
@@ -479,12 +479,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata  + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml,ExpectedException = tc => GetExpectedException(ODataPayloadKind.ServiceDocument, ApplicationXml, tc.Version)},
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationAtomSvcXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.ServiceDocument, ApplicationAtomSvcXml, tc.Version)},
@@ -517,12 +517,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";"  + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataLightStreamingAndDefaultMetadata + ";"  + CharsetUtf8 },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { UseFormat = true, Format = null, ExpectedFormat = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Json, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";" + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = null, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";"  + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = Default, ExpectedContentType = ApplicationJsonODataStreamingAndDefaultMetadata + ";"  + CharsetUtf8 },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
                 // error cases
                 //new ContentTypeTestCase { Format = ODataFormat.Atom, AcceptHeaders = ApplicationXml, ExpectedException = tc => GetExpectedException(ODataPayloadKind.Error, ApplicationXml, tc.Version) },
                 new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Batch, ExpectedException = tc => GetExpectedException(ODataFormat.Batch) },
@@ -607,10 +607,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = null, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = Default, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // error cases
                 new ContentTypeTestCase { UseFormat = true, Format = ODataFormat.Batch, ExpectedException = tc => GetExpectedException(ODataFormat.Batch) },
@@ -642,10 +642,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             var testCases = new ContentTypeTestCase[]
             {
                 // success cases
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, Encoding=Utf8, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding=Utf16, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf16) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding="utF-16", ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf16) },
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding="iSo-8859-1", ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharSetIso88591) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = StarStar, Encoding=Utf8, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding=Utf16, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf16) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding="utF-16", ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf16) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationStar, Encoding="iSo-8859-1", ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharSetIso88591) },
             };
 
             this.RunContentTypeTest(entry, ODataPayloadKind.Resource, model, entitySet, entityType, testCases);
@@ -876,9 +876,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         case ODataPayloadKind.ResourceSet:
                         case ODataPayloadKind.EntityReferenceLinks:
-                            return BuildContentType(ApplicationJsonODataLightStreaming, CharsetUtf8);
+                            return BuildContentType(ApplicationJsonODataStreaming, CharsetUtf8);
                         case ODataPayloadKind.Resource:
-                            return BuildContentType(ApplicationJsonODataLightStreaming, CharsetUtf8);
+                            return BuildContentType(ApplicationJsonODataStreaming, CharsetUtf8);
                         default:
                             return null;
                     }
@@ -887,28 +887,28 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             return new ContentTypeTestCase[]
             {
                 // "application/json,application/atom+xml;q=0.8" should use  "application/json;odata.metadata=minimal"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndAtomXmlWithQuality, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndAtomXmlWithQuality, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json;q=0.8,application/atom+xml" should use  "application/json;odata.metadata=minimal" (for the payload kinds applicable)
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonWithQualityAndAtomXml, ExpectedContentType = applicationAtomXmlContentType() ?? BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonWithQualityAndAtomXml, ExpectedContentType = applicationAtomXmlContentType() ?? BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
-                // "application/json,application/atom+xml" should use "application/atom+xml" for all applicable payload kinds, otherwise JSON Light
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndAtomXml, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                // "application/json,application/atom+xml" should use "application/atom+xml" for all applicable payload kinds, otherwise Json
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndAtomXml, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json,application/json;odata.metadata=minimal;odata.streaming=true" should use "application/json;odata.metadata=minimal;odata.streaming=true"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndJsonLightStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json,application/json;odata.streaming=true" should use "application/json;odata.metadata=minimal;odata.streaming=true"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json;odata.streaming=true,application/json;odata.streaming=false" "application/json;odata.metadata=minimal;odata.streaming=true"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonStreamingAndJsonNonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonStreamingAndJsonNonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.streaming=true" "application/json;odata.metadata=minimal;odata.streaming=true"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonLightNonStreamingAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonNonStreamingAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
 
                 // "application/json;odata.metadata=minimal;odata.streaming=false,application/json;odata.metadata=minimal;odata.streaming=true" "application/json;odata.metadata=minimal;odata.streaming=true"
-                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonLightNonStreamingAndJsonLightStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataLightStreamingAndDefaultMetadata, CharsetUtf8) },
+                new ContentTypeTestCase { Format = ODataFormat.Json, AcceptHeaders = ApplicationJsonNonStreamingAndJsonStreaming, ExpectedContentType = BuildContentType(ApplicationJsonODataStreamingAndDefaultMetadata, CharsetUtf8) },
             };
         }
 

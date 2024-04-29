@@ -25,9 +25,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         private Lazy<string> writerOutput;
         private static readonly Uri ServiceDocumentUri = new Uri("http://odata.org/");
 
-        private const string jsonLightNoMetadata = "application/json;odata.metadata=none";
-        private const string jsonLightMinimalMetadata = "application/json;odata.metadata=minimal";
-        private const string jsonLightFullMetadata = "application/json;odata.metadata=full";
+        private const string JsonNoMetadata = "application/json;odata.metadata=none";
+        private const string JsonMinimalMetadata = "application/json;odata.metadata=minimal";
+        private const string JsonFullMetadata = "application/json;odata.metadata=full";
         private const string atom = "application/atom+xml";
 
         public WriterTypeNameEndToEndTests()
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
-            this.settings.SetContentType(jsonLightMinimalMetadata, null);
+            this.settings.SetContentType(JsonMinimalMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
-            this.settings.SetContentType(jsonLightFullMetadata, null);
+            this.settings.SetContentType(JsonFullMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
 
             Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsOff()
         {
-            this.settings.SetContentType(jsonLightNoMetadata, null);
+            this.settings.SetContentType(JsonNoMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = false;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInMinimalMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
-            this.settings.SetContentType(jsonLightMinimalMetadata, null);
+            this.settings.SetContentType(JsonMinimalMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
@@ -150,7 +150,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
-            this.settings.SetContentType(jsonLightNoMetadata, null);
+            this.settings.SetContentType(JsonNoMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.DoesNotContain("DeclaredInt16@odata.type", this.writerOutput.Value);
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInNoMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSetWithJsonP()
         {
-            this.settings.SetContentType(jsonLightNoMetadata, null);
+            this.settings.SetContentType(JsonNoMetadata, null);
             this.settings.JsonPCallback = "callback";
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         [Fact]
         public void TypeNameShouldBeWrittenCorrectlyInFullMetadataWhenAlwaysAddTypeAnnotationsForDerivedTypesIsSet()
         {
-            this.settings.SetContentType(jsonLightFullMetadata, null);
+            this.settings.SetContentType(JsonFullMetadata, null);
             this.settings.AlwaysAddTypeAnnotationsForDerivedTypes = true;
 
             Assert.Contains("DeclaredInt16@odata.type", this.writerOutput.Value);

@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <param name="payloadElement">The root of the payload to annotate.</param>
         /// <param name="version">The format version to annotate with.</param>
         /// <param name="requestPayload">true if the payload should represent a request payload, false if it's a response payload.</param>
-        public static void AnnotateJsonLight(ODataPayloadElement payloadElement, DataServiceProtocolVersion version, bool requestPayload)
+        public static void AnnotateJson(ODataPayloadElement payloadElement, DataServiceProtocolVersion version, bool requestPayload)
         {
             PayloadFormatVersionAnnotatingVisitor visitor = new PayloadFormatVersionAnnotatingVisitor(version, requestPayload);
             visitor.Recurse(payloadElement);

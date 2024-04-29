@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightDataContextFormatApplier.cs" company="Microsoft">
+// <copyright file="JsonDataContextFormatApplier.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -16,17 +16,17 @@ namespace Microsoft.Test.Taupo.Astoria.Client
     /// <summary>
     /// Contract for generating client code layers.
     /// </summary>
-    [ImplementationName(typeof(IClientDataContextFormatApplier), "JsonLight")]
-    public class JsonLightDataContextFormatApplier : IClientDataContextFormatApplier
+    [ImplementationName(typeof(IClientDataContextFormatApplier), "Json")]
+    public class JsonDataContextFormatApplier : IClientDataContextFormatApplier
     {
         private readonly AstoriaWorkspace workspace;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="JsonLightDataContextFormatApplier"/> class.
+        /// Initializes a new instance of the <see cref="JsonDataContextFormatApplier"/> class.
         /// </summary>
         /// <param name="workspace">The workspace.</param>
         /// <param name="clientCodeLayerGenerator">The ClientCodeLayerGenerator</param>
-        public JsonLightDataContextFormatApplier(AstoriaWorkspace workspace, IClientCodeLayerGenerator clientCodeLayerGenerator)
+        public JsonDataContextFormatApplier(AstoriaWorkspace workspace, IClientCodeLayerGenerator clientCodeLayerGenerator)
         {
             ExceptionUtilities.CheckArgumentNotNull(workspace, "workspace");
             ExceptionUtilities.CheckArgumentNotNull(clientCodeLayerGenerator, "clientCodeLayerGenerator");
@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         public bool IsUsingContentType(string contentType)
         {
             // May want to make this smarter at some point
-            if (contentType == MimeTypes.ApplicationJsonLight)
+            if (contentType == MimeTypes.ApplicationJson)
             {
                 return true;
             }

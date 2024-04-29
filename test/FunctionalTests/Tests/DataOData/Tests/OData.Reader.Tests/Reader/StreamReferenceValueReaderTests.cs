@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
-    using Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
@@ -27,7 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     [TestClass, TestCase]
     public class StreamReferenceValueReaderTests : ODataReaderTestCase
     {
-        private PayloadReaderTestDescriptor.Settings jsonLightSettings;
+        private PayloadReaderTestDescriptor.Settings JsonSettings;
 
         [InjectDependency]
         public IPayloadGenerator PayloadGenerator { get; set; }
@@ -36,10 +36,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [InjectDependency]
-        public PayloadReaderTestDescriptor.Settings JsonLightSettings
+        public PayloadReaderTestDescriptor.Settings JsonSettings
         {
-            get { return this.jsonLightSettings; }
-            set { this.jsonLightSettings = value; this.jsonLightSettings.ExpectedResultSettings.ObjectModelToPayloadElementConverter = new JsonLightObjectModelToPayloadElementConverter(); }
+            get { return this.JsonSettings; }
+            set { this.JsonSettings = value; this.JsonSettings.ExpectedResultSettings.ObjectModelToPayloadElementConverter = new JsonObjectModelToPayloadElementConverter(); }
         }
 
         public static IEnumerable<PayloadReaderTestDescriptor> CreateStreamPropertyMetadataTestDescriptors(PayloadReaderTestDescriptor.Settings settings)
@@ -105,35 +105,35 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             return streamPropertyTestDescriptors;
         }
 
-        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata in JSON Light.")]
-        public void StreamPropertyWithMetadataJsonLightTest()
+        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with fully specified metadata in Json.")]
+        public void StreamPropertyWithMetadataJsonTest()
         {
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors
-                = CreateStreamPropertyMetadataTestDescriptors(this.JsonLightSettings).SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
+                = CreateStreamPropertyMetadataTestDescriptors(this.JsonSettings).SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
 
             // NOTE: manual JSON tests and error tests are part of the JSON specific StreamPropertyWithMetadataJsonTests test case
             // NOTE: manual ATOM tests and error tests are part of the ATOM specific StreamPropertyWithMetadataAtomTests test case
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // No stream properties in requests or <V3 payloads
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 (testDescriptor, testConfiguration) =>
                 {
                     testDescriptor.RunTest(testConfiguration);
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with regard to UndeclaredPropertyBehaviorKinds in JSON Light.")]
-        public void UndeclaredPropertyBehaviorKindStreamPropertyJsonLightTest()
+        [TestMethod, TestCategory("Reader.Streams"), Variation(Description = "Verifies correct reading of stream properties (stream reference values) with regard to UndeclaredPropertyBehaviorKinds in Json.")]
+        public void UndeclaredPropertyBehaviorKindStreamPropertyJsonTest()
         {
             this.CombinatorialEngineProvider.RunCombinations(
                 new[] { false, true },
                 throwOnUndeclaredPropertyForNonOpenType =>
                 {
-                    var testDescriptors = CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(throwOnUndeclaredPropertyForNonOpenType, this.JsonLightSettings);
+                    var testDescriptors = CreateUndeclaredPropertyBehaviorKindStreamPropertyTestDescriptors(throwOnUndeclaredPropertyForNonOpenType, this.JsonSettings);
                     this.CombinatorialEngineProvider.RunCombinations(
                         testDescriptors,
-                        this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                        this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                         (testDescriptor, testConfiguration) =>
                         {
                             testConfiguration = new ReaderTestConfiguration(testConfiguration);

@@ -67,7 +67,7 @@
     <Compile Include="ObjectModelTests\ODataNavigationLinkTests.cs" />
     <Compile Include="ObjectModelTests\ODataPropertyTests.cs" />
     <Compile Include="InfrastructureTests\AsyncBufferedStreamTests.cs" />
-    <Compile Include="TestCodeTests\AnnotatedPayloadElementToJsonLightConverterTests.cs" />
+    <Compile Include="TestCodeTests\AnnotatedPayloadElementToJsonConverterTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ODataCommonTests.suite">

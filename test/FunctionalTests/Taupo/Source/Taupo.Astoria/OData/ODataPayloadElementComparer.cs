@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         /// <remarks>When using this flag we assume that no duplicate properties exist (and fail otherwise).</remarks>
         private readonly bool ignoreOrder;
 
-        /// <summary>true if we are comparing a Json Light payload, false otherwise.</summary>
+        /// <summary>true if we are comparing a Json payload, false otherwise.</summary>
         private readonly bool expectMetadataToBeComputedByConvention;
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         /// Initializes a new instance of the ODataPayloadElementComparer class.
         /// </summary>
         /// <param name="ignoreOrder">true to ignore the order of properties; otherwise false.</param>
-        /// <param name="expectMetadataToBeComputedByConvention">true if we are expecting metadata to be computed by convention, e.g. comparing a JSON Light reponse payload; otherwise false.</param>
+        /// <param name="expectMetadataToBeComputedByConvention">true if we are expecting metadata to be computed by convention, e.g. comparing a Json reponse payload; otherwise false.</param>
         /// <remarks>When using the <paramref name="ignoreOrder"/> flag we assume that no duplicate properties exist (and fail otherwise).</remarks>
         protected ODataPayloadElementComparer(bool ignoreOrder, bool expectMetadataToBeComputedByConvention)
         {
@@ -79,8 +79,8 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             /// <summary>true to ignore the order of properties; otherwise false.</summary>
             private readonly bool ignoreOrder;
 
-            /// <summary>true if we are comparing a JSON Light reponse payload; otherwise false.</summary>
-            private readonly bool comparingJsonLightResponse;
+            /// <summary>true if we are comparing a Json reponse payload; otherwise false.</summary>
+            private readonly bool comparingJsonResponse;
 
             private Stack<ODataPayloadElement> observedElementStack = new Stack<ODataPayloadElement>();
             private IBatchPayloadComparer batchComparer = null;
@@ -90,12 +90,12 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             /// </summary>
             /// <param name="comparer">Specifies a batch comparer if needed</param>
             /// <param name="ignoreOrder">true to ignore the order of properties; otherwise false.</param>
-            /// <param name="comparingJsonLightResponse">true if we are comparing a JSON Light reponse payload; otherwise false.</param>
-            public PayloadComparingVisitor(IBatchPayloadComparer comparer = null, bool ignoreOrder = false, bool comparingJsonLightResponse = false)
+            /// <param name="comparingJsonResponse">true if we are comparing a Json reponse payload; otherwise false.</param>
+            public PayloadComparingVisitor(IBatchPayloadComparer comparer = null, bool ignoreOrder = false, bool comparingJsonResponse = false)
             {
                 this.batchComparer = comparer;
                 this.ignoreOrder = ignoreOrder;
-                this.comparingJsonLightResponse = comparingJsonLightResponse;
+                this.comparingJsonResponse = comparingJsonResponse;
             }
 
             /// <summary>
@@ -304,7 +304,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                 using (this.Assert.WithMessage("Deferred link did not match expectation"))
                 {
-                    if (this.comparingJsonLightResponse && expected.UriString == null)
+                    if (this.comparingJsonResponse && expected.UriString == null)
                     {
                         this.Assert.IsNotNull(observed.UriString, "Conventional template evaluation should compute the Uri string of the deferred link.");
                     }
@@ -382,7 +382,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                     this.Assert.AreEqual(expected.ETag, observed.ETag, "ETag did not match expectation");
 
-                    if (this.comparingJsonLightResponse && expected.Id == null && !expected.IsComplex)
+                    if (this.comparingJsonResponse && expected.Id == null && !expected.IsComplex)
                     {
                         this.Assert.IsNotNull(observed.Id, "Conventional template evaluation should compute the Id.");
                     }
@@ -391,7 +391,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.Assert.AreEqual(expected.Id, observed.Id, "ID did not match expectation");
                     }
 
-                    if (this.comparingJsonLightResponse && expected.EditLink == null && !expected.IsComplex)
+                    if (this.comparingJsonResponse && expected.EditLink == null && !expected.IsComplex)
                     {
                         this.Assert.IsNotNull(observed.EditLink, "Conventional template evaluation should compute the EditLink.");
                     }
@@ -406,7 +406,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.Assert.AreEqual(expected.StreamContentType, observed.StreamContentType, "Stream content type did not match expectation");
 
                         var isMle = expected.Annotations.OfType<IsMediaLinkEntryAnnotation>().FirstOrDefault();
-                        if (this.comparingJsonLightResponse && isMle != null)
+                        if (this.comparingJsonResponse && isMle != null)
                         {
                             this.Assert.IsNotNull(observed.StreamSourceLink, "Conventional template evaluation should compute the StreamSourceLink.");
                             this.Assert.IsNotNull(observed.StreamEditLink, "Conventional template evaluation should compute the StreamEditLink.");
@@ -464,7 +464,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.WrapAccept(expected.ExpandedElement, observed.ExpandedElement);
                     }
 
-                    if (this.comparingJsonLightResponse && expected.UriString == null)
+                    if (this.comparingJsonResponse && expected.UriString == null)
                     {
                         this.Assert.IsNotNull(observed.UriString, "Conventional template evaluation should compute the Uri string of the expanded link.");
                     }
@@ -505,7 +505,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 {
                     this.Assert.AreEqual(expected.Name, observed.Name, "Stream name did not match expectation");
 
-                    if (this.comparingJsonLightResponse && expected.EditLink == null)
+                    if (this.comparingJsonResponse && expected.EditLink == null)
                     {
                         this.Assert.IsNotNull(observed.EditLink, "Conventional template evaluation should compute the EditLink.");
                     }
@@ -514,7 +514,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                         this.Assert.AreEqual(expected.EditLink, observed.EditLink, "Edit link did not match expectation");
                     }
 
-                    if (this.comparingJsonLightResponse && (expected.EditLinkContentType != null || expected.SourceLinkContentType != null))
+                    if (this.comparingJsonResponse && (expected.EditLinkContentType != null || expected.SourceLinkContentType != null))
                     {
                         this.Assert.IsNotNull(observed.EditLinkContentType, "Conventional template evaluation should compute the edit link content type.");
                         this.Assert.IsNotNull(observed.SourceLinkContentType, "Conventional template evaluation should compute the source link content type.");
@@ -527,7 +527,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                     this.Assert.AreEqual(expected.ETag, observed.ETag, "ETag did not match expectation");
 
-                    if (this.comparingJsonLightResponse && expected.SourceLink == null)
+                    if (this.comparingJsonResponse && expected.SourceLink == null)
                     {
                         this.Assert.IsNotNull(observed.SourceLink, "Conventional template evaluation should compute the SourceLink.");
                     }
@@ -979,7 +979,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     observedFiltered.Remove(match);
                 }
 
-                if (this.comparingJsonLightResponse)
+                if (this.comparingJsonResponse)
                 {
                     match = observedFiltered.OfType<SelfLinkAnnotation>().FirstOrDefault();
                     if (match != null)

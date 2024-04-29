@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ServiceDocumentReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="ServiceDocumentReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System;
@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using Microsoft.OData.Edm;
@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests reading of various JSON Light service document payloads.
     /// </summary>
     [TestClass, TestCase]
-    public class ServiceDocumentReaderJsonLightTests : ODataReaderTestCase
+    public class ServiceDocumentReaderJsonTests : ODataReaderTestCase
     {
         private const string baseUri = "http://odata.org/test/";
 
@@ -32,131 +32,131 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the the reading of JSON Light service document payloads.")]
-        public void ServiceDocumentReaderJsonLightTest()
+        public void ServiceDocumentReaderJsonTest()
         {
             var errorTestCases = new[]
             {
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "unrecognized property in the workspace object.",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"unrecognized\": 42, \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument", "unrecognized", "value")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"unrecognized\": 42, \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument", "unrecognized", "value")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "unrecognized property in a service document element.",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\", \"url\":\"EntitySetLink\", \"unrecognized\": 42} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement", "unrecognized", "name", "url")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\", \"url\":\"EntitySetLink\", \"unrecognized\": 42} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement", "unrecognized", "name", "url")
                 },
 
                 #region missing required properties
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "service document element without a 'name' (required in JSON light, but doesn't exist in the other formats)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"url\":\"EntitySetLink\"} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "name")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"url\":\"EntitySetLink\"} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "name")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "service document element without a 'url'",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\"} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "url")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\"} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "url")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "null value for 'name'",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":null, \"url\":\"EntitySetLink\"} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "name")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":null, \"url\":\"EntitySetLink\"} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement", "name")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "null value for 'url'",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\", \"url\":null} ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\":\"EntitySetName\", \"url\":null} ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("ValidationUtils_ServiceDocumentElementUrlMustNotBeNull")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "no 'value' property",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\" }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_MissingValuePropertyInServiceDocument", "value")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\" }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument", "value")
                 },
                 #endregion missing required properties
 
                 #region duplicate properties
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "multiple 'value' properties",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ], \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ] }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument", "value")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ], \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\"} ] }",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument", "value")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "multiple 'name' properties in an entity set.",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\", \"name\": \"Second name\"}]}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement", "name")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\", \"name\": \"Second name\"}]}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement", "name")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "multiple 'url' properties in an entity set.",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\", \"url\": \"SecondLink\"}]}",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement", "url")
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ {\"name\": \"EntitySetName\", \"url\":\"EntitySetLink\", \"url\": \"SecondLink\"}]}",
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement", "url")
                 },
 
                 #endregion duplicate properties/annotations
 
                 #region incorrect json structure
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid top-level JSON node (an array)",
                     Json = "[]",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid top-level JSON node (a primitive value)",
                     Json = "42",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value of 'value' property (a primitive value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": 42 }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": 42 }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "PrimitiveValue")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value of 'value' property (an object value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": { } }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": { } }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartArray", "StartObject")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (a nested array value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ [] ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ [] ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "StartArray")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (integer value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ 42 ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ 42 ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (boolean value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ true ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ true ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (string value)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ \"string\" ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ \"string\" ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "invalid value inside the array value of the 'value' property (null)",
-                    Json = "{ \"@" + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ null ] }",
+                    Json = "{ \"@" + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata\", \"value\": [ null ] }",
                     ExpectedException = ODataExpectedExceptions.ODataException("JsonReaderExtensions_UnexpectedNodeDetected", "StartObject", "PrimitiveValue")
                 },
                 #endregion incorrect json structure
@@ -176,7 +176,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // clone the ReaderTestConfiguration and set the base URI.
@@ -191,17 +191,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the reading of custom annotations in JSON Lite service document payloads.")]
-        public void ServiceDocumentReaderJsonLightCustomAnnotationsTest()
+        public void ServiceDocumentReaderJsonCustomAnnotationsTest()
         {
             var testCases = new[]
             {
                 #region success test cases
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Custom property annotation on \"name\" should be ignored.",
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name@cn.foo"":""ignored"",
@@ -211,12 +211,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ]
                             }",
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Custom instance annotation inside a resource collection should be ignored.",
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""@cn.foo"":""ignored"",
@@ -226,13 +226,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ]
                             }",
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Custom property annotation on \"value\" should be ignored.",
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""value@cn.foo"": ""ignored"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -241,13 +241,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ]
                             }",
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Custom instance annotation on the top level should be ignored.",
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""@cn.foo"": ""ignored"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -256,14 +256,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                 ]
                             }",
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Annotations at different scopes with the same name should be ignored and should not throw.",
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""@cn.foo"": ""ignored"",
                                 ""value@cn.foo"": ""ignored"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""@cn.foo"": ""ignored"",
@@ -277,11 +277,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 #endregion success test cases
 
                 #region error test cases
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name@cn.foo"":""out of order"",
@@ -290,13 +290,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                     },
                                 ]
                             }",
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationWithoutProperty", "name")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty", "name")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""url"":""EntitySetLink"",
@@ -307,11 +307,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             }",
                     ExpectedException = ODataExpectedExceptions.ODataException("PropertyAnnotationAfterTheProperty", "cn.foo", "value")
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name@cn.foo"":""ignored"",
@@ -323,11 +323,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                              }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""@cn.foo"":""ignored"",
@@ -339,13 +339,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                              }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""value@cn.foo"":""ignored"",
                                 ""value@cn.foo"":""ignored"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -355,13 +355,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                              }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     Json = @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""@cn.foo"":""ignored"",
                                 ""@cn.foo"":""ignored"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // clone the ReaderTestConfiguration and set the base URI.
@@ -403,16 +403,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Test the reading of unrecognized odata annotations in JSON Lite service document payloads.")]
-        public void ServiceDocumentReaderJsonLightUnrecognizedODataAnnotationsTest()
+        public void ServiceDocumentReaderJsonUnrecognizedODataAnnotationsTest()
         {
             var testCases = new[]
             {
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Unrecognized odata property annotation in a resource collection should be ignored.",
                     Json =  @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name@odata.foo"":""fail"",
@@ -423,12 +423,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Unrecognized odata instance annotation in a resource collection should be ignored.",
                     Json =  @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""@odata.foo"":""fail"",
@@ -439,13 +439,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Unrecognized odata property annotation on 'value' should be ignored. ",
                     Json =  @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""value@odata.foo"": ""fail"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -455,13 +455,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                             }",
                     ExpectedException = null
                 },
-                new JsonLightServiceDocumentReaderTestCase
+                new JsonServiceDocumentReaderTestCase
                 {
                     DebugDescription = "Unrecognized odata instance annotation on the top level should be ignored.",
                     Json =  @"{
-                                ""@" + JsonLightConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
+                                ""@" + JsonConstants.ODataContextAnnotationName + @""": ""http://odata.org/test/$metadata"",
                                 ""@odata.foo"": ""fail"",
-                                """ + JsonLightConstants.ODataValuePropertyName + @""":
+                                """ + JsonConstants.ODataValuePropertyName + @""":
                                 [
                                     {
                                         ""name"":""EntitySetName"",
@@ -487,7 +487,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // clone the ReaderTestConfiguration and set the base URI.
@@ -501,7 +501,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        private class JsonLightServiceDocumentReaderTestCase
+        private class JsonServiceDocumentReaderTestCase
         {
             public string DebugDescription { get; set; }
             public string Json { get; set; }

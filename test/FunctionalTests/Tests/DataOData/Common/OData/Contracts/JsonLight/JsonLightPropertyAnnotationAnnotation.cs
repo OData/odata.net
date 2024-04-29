@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightPropertyAnnotationAnnotation.cs" company="Microsoft">
+// <copyright file="JsonPropertyAnnotationAnnotation.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
+namespace Microsoft.Test.Taupo.OData.Contracts.Json
 {
     #region Namespaces
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
     /// <summary>
     /// An annotation which represents a Json Lite Property Annotation.
     /// </summary>
-    public class JsonLightPropertyAnnotationAnnotation : ODataPayloadElementAnnotation
+    public class JsonPropertyAnnotationAnnotation : ODataPayloadElementAnnotation
     {
         /// <summary>
         /// Gets or sets the annotation name.
@@ -42,7 +42,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         /// <returns>A clone of the annotation.</returns>
         public override ODataPayloadElementAnnotation Clone()
         {
-            return new JsonLightPropertyAnnotationAnnotation { AnnotationName = this.AnnotationName, AnnotationValue = this.AnnotationValue };
+            return new JsonPropertyAnnotationAnnotation { AnnotationName = this.AnnotationName, AnnotationValue = this.AnnotationValue };
         }
     }
 }

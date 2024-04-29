@@ -9,23 +9,23 @@ Model Present: true
   <d:TestProperty>TestValue</d:TestProperty>
 </m:value>
 
-Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 9; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestNS.MyType","@odata.type":"#TestNS.MyType","TestProperty":"TestValue"}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"
 }
 
-Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 11; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","@odata.type":"#TestNS.MyType","TestProperty":"TestValue"
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"
@@ -56,23 +56,23 @@ Model Present: true
   <d:TestProperty>TestValue</d:TestProperty>
 </m:value>
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"
 }
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestNS.MyType","TestProperty":"TestValue"
@@ -139,23 +139,23 @@ Model Present: true
   <d:TestProperty>TestValue</d:TestProperty>
 </m:value>
 
-Combination: 41; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 41; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","TestProperty":"TestValue"}
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","TestProperty":"TestValue"
 }
 
-Combination: 43; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 43; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","TestProperty":"TestValue"
 }
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","TestProperty":"TestValue"

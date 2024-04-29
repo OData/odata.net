@@ -187,7 +187,7 @@ namespace AstoriaUnitTests
                 set;
             }
 
-            public string JsonLightErrorMsg
+            public string JsonErrorMsg
             {
                 get;
                 set;
@@ -1662,7 +1662,7 @@ namespace AstoriaUnitTests
                 new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_Primitive",
                     AtomErrorMsg = "",
-                    JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Edm.String", "Edm.String", "Collection(Edm.String)"),
+                    JsonErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Edm.String", "Edm.String", "Collection(Edm.String)"),
                     StatusCode = 200,
                     ExecuteMethod = (ctx, uri, isAsync) => { return MyExecute<string>(ctx, uri, false, isAsync); },
                 },
@@ -1670,7 +1670,7 @@ namespace AstoriaUnitTests
                 new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_Complex",
                     AtomErrorMsg = "",
-                    JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#AstoriaUnitTests.Tests.Actions.ComplexType", "AstoriaUnitTests.Tests.Actions.ComplexType", "Collection(AstoriaUnitTests.Tests.Actions.ComplexType)"),
+                    JsonErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#AstoriaUnitTests.Tests.Actions.ComplexType", "AstoriaUnitTests.Tests.Actions.ComplexType", "Collection(AstoriaUnitTests.Tests.Actions.ComplexType)"),
                     StatusCode = 200,
                     ExecuteMethod = (ctx, uri, isAsync) => { return MyExecute<ComplexType>(ctx, uri, false, isAsync); },
                 },
@@ -1678,7 +1678,7 @@ namespace AstoriaUnitTests
                 new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_PrimitiveCollection",
                     AtomErrorMsg = "An XML node of type 'Element' was found in a string value.",
-                    JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Collection(Edm.String)", "Collection(Edm.String)", "Edm.String"),
+                    JsonErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Collection(Edm.String)", "Collection(Edm.String)", "Edm.String"),
                     StatusCode = 200,
                     ExecuteMethod = (ctx, uri, isAsync) => { return MyExecute<string>(ctx, uri, true, isAsync); },
                 },
@@ -1686,7 +1686,7 @@ namespace AstoriaUnitTests
                 new ClientErrorTestCase() {
                     RequestUri = "/TopLevelAction_ComplexCollection",
                     AtomErrorMsg = "The property 'element' does not exist on type 'AstoriaUnitTests.ClientActionTests_ComplexType'.",
-                    JsonLightErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Collection(AstoriaUnitTests.Tests.Actions.ComplexType)", "Collection(AstoriaUnitTests.Tests.Actions.ComplexType)", "AstoriaUnitTests.Tests.Actions.ComplexType"),
+                    JsonErrorMsg = string.Format(CultureInfo.InvariantCulture, ODataLibResourceUtil.GetString("ReaderValidationUtils_TypeInContextUriDoesNotMatchExpectedType"), "<serviceRoot>/$metadata#Collection(AstoriaUnitTests.Tests.Actions.ComplexType)", "Collection(AstoriaUnitTests.Tests.Actions.ComplexType)", "AstoriaUnitTests.Tests.Actions.ComplexType"),
                     StatusCode = 200,
                     ExecuteMethod = (ctx, uri, isAsync) => { return MyExecute<ComplexType>(ctx, uri, true, isAsync); },
                 },
@@ -1887,13 +1887,13 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJson) =>
                     {
                         try
                         {
                             ResetUpdateFlags(service);
                             DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                            if (useJsonLight)
+                            if (useJson)
                             {
                                 ctx.Format.UseJson(serverModel);
                                 ctx.ResolveType = this.ResolveClientTypeFromServerName;
@@ -1990,11 +1990,11 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJson) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        if (useJsonLight)
+                        if (useJson)
                         {
                             ctx.Format.UseJson(serverModel);
                             ctx.ResolveType = this.ResolveClientTypeFromServerName;
@@ -2034,11 +2034,11 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(positiveTestCases, new[] { true }, (testCase, useJson) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        if (useJsonLight)
+                        if (useJson)
                         {
                             ctx.Format.UseJson(serverModel);
                             ctx.ResolveType = this.ResolveClientTypeFromServerName;
@@ -2133,13 +2133,13 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(serverErrorTestCases, new[] { true }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(serverErrorTestCases, new[] { true }, (testCase, useJson) =>
                       {
                           try
                           {
                               ResetUpdateFlags(service);
                               DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                              if (useJsonLight)
+                              if (useJson)
                               {
                                   ctx.Format.UseJson(serverModel);
                                   ctx.ResolveType = this.ResolveClientTypeFromServerName;
@@ -2177,12 +2177,12 @@ namespace AstoriaUnitTests
 
                 foreach (bool isAsync in this.AsyncOptions)
                 {
-                    t.TestUtil.RunCombinations(clientErrorTestCases, new[] { true }, (testCase, useJsonLight) =>
+                    t.TestUtil.RunCombinations(clientErrorTestCases, new[] { true }, (testCase, useJson) =>
                     {
                         ResetUpdateFlags(service);
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
 
-                        string testCaseErrorMsg = testCase.JsonLightErrorMsg.Replace("<serviceRoot>", request.BaseUri);
+                        string testCaseErrorMsg = testCase.JsonErrorMsg.Replace("<serviceRoot>", request.BaseUri);
                         ctx.Format.UseJson(serverModel);
                         ctx.ResolveType = this.ResolveClientTypeFromServerName;
                         ctx.ResolveName = this.ResolveServerNameFromClientType;

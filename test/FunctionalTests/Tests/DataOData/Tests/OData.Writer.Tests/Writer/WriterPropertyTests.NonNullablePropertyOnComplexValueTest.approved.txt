@@ -1,20 +1,20 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
@@ -45,23 +45,23 @@ Model Present: true
   <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
 </m:value>
 
-Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 9; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 11; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
@@ -92,23 +92,23 @@ Model Present: true
   <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
 </m:value>
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -139,23 +139,23 @@ Model Present: true
   <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 25; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"}
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 27; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
@@ -186,23 +186,23 @@ Model Present: true
   <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
 </m:value>
 
-Combination: 33; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 33; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 34; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 35; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 35; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 36; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -233,23 +233,23 @@ Model Present: true
   <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
 </m:value>
 
-Combination: 41; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 41; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0}
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 43; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 43; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
@@ -280,23 +280,23 @@ Model Present: true
   <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
 </m:value>
 
-Combination: 49; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 49; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 50; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 51; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 51; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 52; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
@@ -327,23 +327,23 @@ Model Present: true
   <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
 </m:value>
 
-Combination: 57; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 57; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 58; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 59; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 59; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 60; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -374,23 +374,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
 </m:value>
 
-Combination: 65; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 65; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 66; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 67; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 67; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 68; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -421,23 +421,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
 </m:value>
 
-Combination: 73; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 73; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 75; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 75; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -468,23 +468,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
 </m:value>
 
-Combination: 81; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 81; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 82; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 83; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 83; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 84; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -515,23 +515,23 @@ Model Present: true
   <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 89; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 89; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 90; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 91; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 91; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 92; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -562,23 +562,23 @@ Model Present: true
   <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
 </m:value>
 
-Combination: 97; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 97; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"}
 
-Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 98; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 99; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 99; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 100; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
@@ -609,23 +609,23 @@ Model Present: true
   <d:nonNullProperty>1</d:nonNullProperty>
 </m:value>
 
-Combination: 105; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 105; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"}
 
-Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 106; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 107; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 107; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 108; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
@@ -656,23 +656,23 @@ Model Present: true
   <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
 </m:value>
 
-Combination: 113; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 113; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="}
 
-Combination: 114; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 114; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 115; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 115; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 116; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 116; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
@@ -703,23 +703,23 @@ Model Present: true
   <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
 </m:value>
 
-Combination: 121; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 121; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true}
 
-Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 122; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 123; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 123; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 124; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
@@ -750,23 +750,23 @@ Model Present: true
   <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
 </m:value>
 
-Combination: 129; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 129; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 130; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 130; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 131; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 131; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 132; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 132; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -797,23 +797,23 @@ Model Present: true
   <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 137; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 137; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"}
 
-Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 138; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 139; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 139; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 140; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
@@ -844,23 +844,23 @@ Model Present: true
   <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
 </m:value>
 
-Combination: 145; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 145; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 146; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 147; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 147; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 148; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -891,23 +891,23 @@ Model Present: true
   <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
 </m:value>
 
-Combination: 153; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 153; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0}
 
-Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 154; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 155; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 155; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 156; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
@@ -938,23 +938,23 @@ Model Present: true
   <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
 </m:value>
 
-Combination: 161; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 161; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 162; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 162; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 163; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 163; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 164; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 164; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
@@ -985,23 +985,23 @@ Model Present: true
   <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
 </m:value>
 
-Combination: 169; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 169; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 170; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 171; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 171; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 172; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1032,23 +1032,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
 </m:value>
 
-Combination: 177; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 177; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 178; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 178; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 179; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 179; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 180; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 180; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1079,23 +1079,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
 </m:value>
 
-Combination: 185; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 185; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 186; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 187; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 187; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 188; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1126,23 +1126,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
 </m:value>
 
-Combination: 193; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 193; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 194; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 195; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 195; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 196; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1173,23 +1173,23 @@ Model Present: true
   <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 201; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 201; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 202; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 203; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 203; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 204; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1220,23 +1220,23 @@ Model Present: true
   <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
 </m:value>
 
-Combination: 209; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 209; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"}
 
-Combination: 210; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 210; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 211; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 211; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 212; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 212; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
@@ -1267,23 +1267,23 @@ Model Present: true
   <d:nonNullProperty>1</d:nonNullProperty>
 </m:value>
 
-Combination: 217; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 217; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"}
 
-Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 218; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 219; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 219; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 220; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
@@ -1314,23 +1314,23 @@ Model Present: true
   <d:nonNullProperty m:type="Duration">PT12M20.4S</d:nonNullProperty>
 </m:value>
 
-Combination: 225; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 225; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="}
 
-Combination: 226; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 226; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 227; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 227; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
 }
 
-Combination: 228; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 228; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"AAEAAQ=="
@@ -1361,23 +1361,23 @@ Model Present: true
   <d:nonNullProperty m:type="Binary">AAEAAQ==</d:nonNullProperty>
 </m:value>
 
-Combination: 233; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 233; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true}
 
-Combination: 234; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 234; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 235; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 235; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":true
 }
 
-Combination: 236; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 236; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":true
@@ -1408,23 +1408,23 @@ Model Present: true
   <d:nonNullProperty m:type="Boolean">true</d:nonNullProperty>
 </m:value>
 
-Combination: 241; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 241; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 242; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 242; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 243; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 243; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 244; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 244; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1455,23 +1455,23 @@ Model Present: true
   <d:nonNullProperty m:type="Byte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 249; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 249; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"}
 
-Combination: 250; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 250; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 251; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 251; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
 }
 
-Combination: 252; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 252; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"2010-10-10T10:10:10Z"
@@ -1502,23 +1502,23 @@ Model Present: true
   <d:nonNullProperty m:type="DateTimeOffset">2010-10-10T10:10:10Z</d:nonNullProperty>
 </m:value>
 
-Combination: 257; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 257; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 258; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 258; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 259; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 259; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 260; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 260; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1549,23 +1549,23 @@ Model Present: true
   <d:nonNullProperty m:type="Decimal">1</d:nonNullProperty>
 </m:value>
 
-Combination: 265; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 265; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0}
 
-Combination: 266; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 266; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 267; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 267; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1.0
 }
 
-Combination: 268; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 268; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1.0
@@ -1596,23 +1596,23 @@ Model Present: true
   <d:nonNullProperty m:type="Double">1</d:nonNullProperty>
 </m:value>
 
-Combination: 273; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 273; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 274; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 274; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 275; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 275; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
 }
 
-Combination: 276; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 276; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"11111111-2222-3333-4444-555555555555"
@@ -1643,23 +1643,23 @@ Model Present: true
   <d:nonNullProperty m:type="Guid">11111111-2222-3333-4444-555555555555</d:nonNullProperty>
 </m:value>
 
-Combination: 281; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 281; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 282; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 282; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 283; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 283; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 284; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 284; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1690,23 +1690,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int16">1</d:nonNullProperty>
 </m:value>
 
-Combination: 289; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 289; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 290; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 290; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 291; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 291; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 292; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 292; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1737,23 +1737,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int32">1</d:nonNullProperty>
 </m:value>
 
-Combination: 297; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 297; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 298; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 298; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 299; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 299; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 300; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 300; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1784,23 +1784,23 @@ Model Present: true
   <d:nonNullProperty m:type="Int64">1</d:nonNullProperty>
 </m:value>
 
-Combination: 305; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 305; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 306; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 306; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 307; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 307; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 308; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 308; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1831,23 +1831,23 @@ Model Present: true
   <d:nonNullProperty m:type="SByte">1</d:nonNullProperty>
 </m:value>
 
-Combination: 313; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 313; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1}
 
-Combination: 314; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 314; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 315; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 315; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":1
 }
 
-Combination: 316; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 316; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":1
@@ -1878,23 +1878,23 @@ Model Present: true
   <d:nonNullProperty m:type="Single">1</d:nonNullProperty>
 </m:value>
 
-Combination: 321; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 321; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"}
 
-Combination: 322; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 322; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 323; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 323; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"1"
 }
 
-Combination: 324; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 324; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"1"
@@ -1925,23 +1925,23 @@ Model Present: true
   <d:nonNullProperty>1</d:nonNullProperty>
 </m:value>
 
-Combination: 329; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 329; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"}
 
-Combination: 330; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 330; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 331; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 331; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","@odata.type":"#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"
 }
 
-Combination: 332; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 332; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#TestModel.ComplexType","nonNullProperty":"PT12M20.4S"

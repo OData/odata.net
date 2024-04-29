@@ -1,17 +1,17 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ContextUriParserJsonLightTests.cs" company="Microsoft">
+// <copyright file="ContextUriParserJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     // We currently only support InternalsVisibleTo on the desktop.
     #region Namespaces
     using System;
     using Microsoft.OData.Edm;
     using Microsoft.OData;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     using Microsoft.OData.UriParser;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Contracts.EntityModel;
@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// JSON Lite specific tests for the ODataContextUriParser class.
     /// </summary>
     [TestClass, TestCase]
-    public class ContextUriParserJsonLightTests : ODataReaderTestCase
+    public class ContextUriParserJsonTests : ODataReaderTestCase
     {
         #region private fields and init
         private const string MetadataDocumentUri = "http://odata.org/odata.svc/$metadata";
@@ -74,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         #endregion private and init
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser.Parse methods with invalid inputs.")]
-        public void JsonLightContextUriParserErrorTest()
+        public void JsonContextUriParserErrorTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -84,21 +84,21 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "null context URI is not allowed",
                     ContextUri = null,
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_NullMetadataDocumentUri")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_NullMetadataDocumentUri")
                 },
                 new ContextUriParserTestCase
                 {
                     DebugDescription = "empty string is a relative URI; relative context URLs should not be null.",
                     ContextUri = string.Empty,
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidContextUrl")
                 },
                 new ContextUriParserTestCase
                 {
                     DebugDescription = "another relative URI; context URIs should have null baseUri",
                     ContextUri = "relativeUri",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidContextUrl")
                 },
                 new ContextUriParserTestCase
                 {
@@ -106,7 +106,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.EntityReferenceLink,
                     ContextUri = MetadataDocumentUri + "#IncorrectModel.CityType",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName", MetadataDocumentUri + "#IncorrectModel.CityType", "IncorrectModel.CityType")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName", MetadataDocumentUri + "#IncorrectModel.CityType", "IncorrectModel.CityType")
                 },
                 new ContextUriParserTestCase
                 {
@@ -114,7 +114,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.EntityReferenceLink,
                     ContextUri = MetadataDocumentUri + "#TestModel.NonExistingType",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName", MetadataDocumentUri + "#TestModel.NonExistingType", "TestModel.NonExistingType")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName", MetadataDocumentUri + "#TestModel.NonExistingType", "TestModel.NonExistingType")
                 },
                 new ContextUriParserTestCase
                 {
@@ -122,7 +122,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ServiceDocument,
                     ContextUri = MetadataDocumentUri,
                     Model = EdmCoreModel.Instance,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_NoModel")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_NoModel")
                 },
                 new ContextUriParserTestCase
                 {
@@ -130,7 +130,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ServiceDocument,
                     ContextUri = MetadataDocumentUri + "#Cities(3)/Name/$value",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl" , MetadataDocumentUri + "#Cities(3)/Name/$value")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidContextUrl" , MetadataDocumentUri + "#Cities(3)/Name/$value")
                 },
                 new ContextUriParserTestCase
                 {
@@ -138,7 +138,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#Cities(3)/$entity",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_LastSegmentIsKeySegment", MetadataDocumentUri + "#Cities(3)/$entity")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_LastSegmentIsKeySegment", MetadataDocumentUri + "#Cities(3)/$entity")
                 },
                 new ContextUriParserTestCase
                 {
@@ -146,7 +146,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = "outlookfeeds://host/$metadata#%23/?://localhost:50672/$metadata%23Cities(3)/Name",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl", "outlookfeeds://host/$metadata#%23/?://localhost:50672/$metadata%23Cities(3)/Name")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidContextUrl", "outlookfeeds://host/$metadata#%23/?://localhost:50672/$metadata%23Cities(3)/Name")
                 },
                 new ContextUriParserTestCase
                 {
@@ -154,7 +154,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = "outlookfeeds://host/$metadata#Cities(3)%23/?://localhost:50673/$metadata%23Cities(3)/Name",
                     Model = this.testModel,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightContextUriParser_InvalidContextUrl", "outlookfeeds://host/$metadata#Cities(3)%23/?://localhost:50673/$metadata%23Cities(3)/Name")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonContextUriParser_InvalidContextUrl", "outlookfeeds://host/$metadata#Cities(3)%23/?://localhost:50673/$metadata%23Cities(3)/Name")
                 },
                 #endregion cases
             };
@@ -163,7 +163,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for service documents.")]
-        public void JsonLightContextUriParserServiceDocumentTest()
+        public void JsonContextUriParserServiceDocumentTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -173,7 +173,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Metadata document URI without fragment",
                     PayloadKind = ODataPayloadKind.ServiceDocument,
                     ContextUri = MetadataDocumentUri,
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri)
                     }
@@ -183,7 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Metadata document URI with empty fragment",
                     PayloadKind = ODataPayloadKind.ServiceDocument,
                     ContextUri = MetadataDocumentUri + "#",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri)
                     }
@@ -194,7 +194,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ServiceDocument,
                     ContextUri = MetadataDocumentUri + "#SomeValue",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
+                        "ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName",
                         MetadataDocumentUri + "#SomeValue",
                         "SomeValue")
                 },
@@ -205,7 +205,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for properties.")]
-        public void JsonLightContextUriParserPropertyTest()
+        public void JsonContextUriParserPropertyTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -215,7 +215,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#TestModel.Address",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#TestModel.Address"),
                         EdmType = this.addressType
@@ -226,7 +226,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Collection(TestModel.Address)",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#Collection(TestModel.Address)"),
                         EdmType = this.addressType
@@ -237,7 +237,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Edm.Int32",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#Edm.Int32"),
                         EdmType = EdmCoreModel.Instance.GetInt32(false).Definition
@@ -248,7 +248,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Collection(Edm.Int32)",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#Collection(Edm.Int32)"),
                         EdmType = new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))
@@ -259,7 +259,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     ContextUri = MetadataDocumentUri + "#TestModel.CityTypeA",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
+                        "ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName",
                         MetadataDocumentUri + "#TestModel.CityTypeA",
                         "TestModel.CityTypeA"),
                 },
@@ -268,7 +268,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     ContextUri = MetadataDocumentUri + "#Collection(TestModel.CityTypeA)",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
+                        "ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName",
                         MetadataDocumentUri + "#Collection(TestModel.CityTypeA)",
                         "Collection(TestModel.CityTypeA)"),
                 },
@@ -278,7 +278,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#TestModel.CityType/Name",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl",
+                        "ODataJsonContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#TestModel.CityType/Name"),
                 },
                 // Metadata document URI with type name
@@ -287,7 +287,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#TestModel.UnknownType",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
+                        "ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName",
                         MetadataDocumentUri + "#TestModel.UnknownType",
                         "TestModel.UnknownType")
                 },
@@ -299,7 +299,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for properties.")]
-        public void JsonLightContextUriParserIndividualPropertyTest()
+        public void JsonContextUriParserIndividualPropertyTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -309,7 +309,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Cities(932)/Name",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = EdmCoreModel.Instance.GetString(false).Definition
@@ -319,7 +319,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Offices(932)/TestModel.OfficeType/Address",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = addressType,
@@ -330,7 +330,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Offices(932)/Address/TestModel.Address",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = addressType,
@@ -341,7 +341,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Offices(932)/Address/Zip",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = EdmCoreModel.Instance.GetInt32(false).Definition
@@ -351,7 +351,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Offices(932)/Address/TestModel.Address/SubAddress/SubAddress/SubAddress/Zip",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = EdmCoreModel.Instance.GetInt32(false).Definition
@@ -364,7 +364,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for top-level collections.")]
-        public void JsonLightContextUriParserCollectionTest()
+        public void JsonContextUriParserCollectionTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -374,7 +374,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Collection,
                     ContextUri = MetadataDocumentUri + "#Collection(TestModel.Address)",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#Collection(TestModel.Address)"),
                         EdmType = this.addressType
@@ -385,7 +385,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Collection,
                     ContextUri = MetadataDocumentUri + "#Collection(Edm.Int32)",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "#Collection(Edm.Int32)"),
                         EdmType = new EdmCollectionType(EdmCoreModel.Instance.GetInt32(false))
@@ -398,7 +398,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for entries.")]
-        public void JsonLightContextUriParserEntryTest()
+        public void JsonContextUriParserEntryTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -408,7 +408,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/$entity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -420,7 +420,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.Employee/$entity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -432,7 +432,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/TestModel.Person/$entity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#MetropolitanCities(932)/ContainedOffice/$entity",
                     ResourcePath = "MetropolitanCities(932)/ContainedOffice",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = containedOfficeSet,
@@ -456,7 +456,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#MetropolitanCities(932)/ContainedOffice(232)/ContainedCity/$entity",
                     ResourcePath = "MetropolitanCities(932)/ContainedOffice(232)/ContainedCity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.containedMetropolitanCitySet,
@@ -469,7 +469,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#NonExistingContainer.Persons/TestModel.Employee/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonContextUriParser_InvalidContextUrl", 
                         MetadataDocumentUri + "#NonExistingContainer.Persons/TestModel.Employee/$entity")
                 },
                 // Metadata document URI for an entry with a type cast to a non-existing entity type
@@ -478,7 +478,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/TestModel.NonExistingType/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonContextUriParser_InvalidContextUrl", 
                         MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/TestModel.NonExistingType/$entity")
                 },
                 // Metadata document URI for an entry of a type incompatible with the base type of the entity set
@@ -487,7 +487,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.OfficeType/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl",
+                        "ODataJsonContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.OfficeType/$entity")
                 },
                 // Metadata document URI for an entry with an incorrect $entity suffix
@@ -496,7 +496,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/@WrongElement",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl",
+                        "ODataJsonContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#TestModel.DefaultContainer.Persons/@WrongElement")
                 },
                 // Metadata document URI for an entry with a type cast and an incorrect $entity suffix
@@ -505,7 +505,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.Employee/@WrongElement",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl",
+                        "ODataJsonContextUriParser_InvalidContextUrl",
                         MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.Employee/@WrongElement")
                 },
                 // Metadata document URI for an entry (invalid entity set)
@@ -514,7 +514,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonContextUriParser_InvalidContextUrl", 
                         MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet/$entity")
                 },
                 // Metadata document URI for an entry with type cast (invalid entity set)
@@ -523,7 +523,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee/$entity",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonContextUriParser_InvalidContextUrl", 
                         MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee/$entity")
                 },
                 #endregion Cases
@@ -534,7 +534,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for singleton.")]
-        public void JsonLightContextUriParserSingletonTest()
+        public void JsonContextUriParserSingletonTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -544,7 +544,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Boss",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.boss,
@@ -556,7 +556,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#Boss",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.boss,
@@ -568,7 +568,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Resource,
                     ContextUri = MetadataDocumentUri + "#Boss/TestModel.Employee",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.boss,
@@ -580,7 +580,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Boss/Id",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = EdmCoreModel.Instance.GetInt32(false).Definition,
@@ -591,7 +591,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Property,
                     ContextUri = MetadataDocumentUri + "#Boss/TestModel.Employee/CompanyName",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         EdmType = EdmCoreModel.Instance.GetString(false).Definition,
@@ -604,7 +604,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for feeds.")]
-        public void JsonLightContextUriParserFeedTest()
+        public void JsonContextUriParserFeedTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -614,7 +614,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.Persons",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -626,7 +626,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.Persons/TestModel.Employee",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -638,7 +638,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#MetropolitanCities(932)/ContainedOffice",
                     ResourcePath = "MetropolitanCities(932)/ContainedOffice",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = containedOfficeSet,
@@ -651,7 +651,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName",
+                        "ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName",
                         MetadataDocumentUri + "#TestModel.DefaultContainer.WrongSet", 
                         "TestModel.DefaultContainer.WrongSet")
                 },
@@ -661,7 +661,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee",
                     ExpectedException = ODataExpectedExceptions.ODataException(
-                        "ODataJsonLightContextUriParser_InvalidContextUrl", 
+                        "ODataJsonContextUriParser_InvalidContextUrl", 
                         MetadataDocumentUri + "#DefaultContainer.WrongSet/TestModel.Employee")
                 },
                 #endregion Cases
@@ -672,7 +672,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for delta respnses.")]
-        public void JsonLightContextUriParserDeltaTest()
+        public void JsonContextUriParserDeltaTest()
         {
             var testCases = new ContextUriParserTestCase[]
             {
@@ -682,7 +682,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Delta,
                     ContextUri = MetadataDocumentUri + "#Persons/$delta",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -695,7 +695,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Delta,
                     ContextUri = MetadataDocumentUri + "#Persons/$entity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -708,7 +708,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Delta,
                     ContextUri = MetadataDocumentUri + "#Persons/$deletedEntity",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -721,7 +721,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Delta,
                     ContextUri = MetadataDocumentUri + "#Persons/$link",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -734,7 +734,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.Delta,
                     ContextUri = MetadataDocumentUri + "#Persons/$deletedLink",
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -749,7 +749,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         }
 
         [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Tests correct behavior of the ODataContextUriParser for $select query options.")]
-        public void JsonLightContextUriParserSelectQueryOptionTest()
+        public void JsonContextUriParserSelectQueryOptionTest()
         {
             const string contextUriSuffix = "#TestModel.DefaultContainer.Persons";
             // NOTE: testing of the parsing of the $select query option itself is already done 
@@ -762,7 +762,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = BuildExpectedContextUri(contextUriSuffix, "Id,*"),
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -775,7 +775,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = BuildExpectedContextUri(contextUriSuffix, "Id,%20*"),
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri),
                         NavigationSource = this.personSet,
@@ -788,7 +788,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = BuildExpectedContextUri(MetadataDocumentUri + "?$other=value", contextUriSuffix, "Id,*"),
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "?$other=value"),
                         NavigationSource = this.personSet,
@@ -801,7 +801,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = BuildExpectedContextUri(MetadataDocumentUri + "?$other=value", contextUriSuffix, null),
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "?$other=value"),
                         NavigationSource = this.personSet,
@@ -814,7 +814,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 {
                     PayloadKind = ODataPayloadKind.ResourceSet,
                     ContextUri = BuildExpectedContextUri(MetadataDocumentUri + "somethingElse", contextUriSuffix, "Id,*"),
-                    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                    ExpectedResult = new ODataJsonContextUriParseResult(null)
                     {
                         MetadataDocumentUri = new Uri(MetadataDocumentUri + "somethingElse"),
                         NavigationSource = this.personSet,
@@ -828,7 +828,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 //{
                 //    PayloadKind = ODataPayloadKind.Property,
                 //    ContextUri = BuildExpectedContextUri(MetadataDocumentUri + "#Offices(932)/Address", contextUriSuffix, "Id,*"),
-                //    ExpectedResult = new ODataJsonLightContextUriParseResult(null)
+                //    ExpectedResult = new ODataJsonContextUriParseResult(null)
                 //    {
                 //        MetadataDocumentUri = new Uri(MetadataDocumentUri + "somethingElse"),
                 //        NavigationSource = this.personSet,
@@ -836,7 +836,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 //        SelectQueryOption = "Id,*",
                 //    },
                 //    ExpectedException = ODataExpectedExceptions.ODataException(
-                //        "ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption", 
+                //        "ODataJsonContextUriParser_InvalidPayloadKindWithSelectQueryOption", 
                 //        "Property")
                 //},
                 #endregion Cases
@@ -865,7 +865,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             this.Assert.ExpectedException(
                 () =>
                 {
-                    ODataJsonLightContextUriParseResult parseResult = ODataJsonLightContextUriParser.Parse(
+                    ODataJsonContextUriParseResult parseResult = ODataJsonContextUriParser.Parse(
                         testCase.Model ?? this.testModel,
                         testCase.ContextUri,
                         testCase.PayloadKind,
@@ -878,7 +878,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 this.ExceptionVerifier);
         }
 
-        private void CompareContextUriParseResults(ODataJsonLightContextUriParseResult expected, ODataJsonLightContextUriParseResult actual, string expectedPathStr)
+        private void CompareContextUriParseResults(ODataJsonContextUriParseResult expected, ODataJsonContextUriParseResult actual, string expectedPathStr)
         {
             this.Assert.AreEqual(expected.MetadataDocumentUri, actual.MetadataDocumentUri, "Metadata document URIs don't match.");
             this.Assert.AreEqual(expected.NavigationSource, actual.NavigationSource, "Entity sets don't match.");
@@ -906,7 +906,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             public string DebugDescription { get; set; }
             public string ContextUri { get; set; }
             public ODataPayloadKind PayloadKind { get; set; }
-            public ODataJsonLightContextUriParseResult ExpectedResult { get; set; }
+            public ODataJsonContextUriParseResult ExpectedResult { get; set; }
             public ExpectedException ExpectedException { get; set; }
             public IEdmModel Model { get; set; }
             public string ResourcePath { get; set; }

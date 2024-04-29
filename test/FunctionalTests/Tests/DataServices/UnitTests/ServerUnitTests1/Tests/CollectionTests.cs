@@ -476,50 +476,50 @@ namespace AstoriaUnitTests.Tests
                         ItemType = (object)typeof(string),
                         Values = new object[] { "some", 42, 1.25, DateTime.Now },
                         ExpectedExceptionMessageId = "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName",
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     },
                     new {
                         ItemType = (object)typeof(string),
                         Values = new object[] { "some", "ComplexTypeA" },
                         ExpectedExceptionMessageId = "ValidationUtils_UnsupportedPrimitiveType",
-                        JsonLightExpectedExceptionMessageId = "ODataJsonWriter_UnsupportedValueType",
+                        JsonExpectedExceptionMessageId = "ODataJsonWriter_UnsupportedValueType",
                     },
                     new {
                         ItemType = (object)typeof(int),
                         Values = new object[] { "some", 42, 1.25, DateTime.Now },
                         ExpectedExceptionMessageId = "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName",
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     },
                     new {
                         ItemType = (object)typeof(int),
                         Values = new object[] { 42, "ComplexTypeA" },
                         ExpectedExceptionMessageId = "ValidationUtils_UnsupportedPrimitiveType",
-                        JsonLightExpectedExceptionMessageId = "ODataJsonWriter_UnsupportedValueType",
+                        JsonExpectedExceptionMessageId = "ODataJsonWriter_UnsupportedValueType",
                     },
                     new {
                         ItemType = (object)typeof(int?),
                         Values = new object[] { 42, (int?)42 },
                         ExpectedExceptionMessageId = (string)null,
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     },
                     new {
                         ItemType = (object)"ComplexTypeA",
                         Values = new object[] { "ComplexTypeA", "ComplexTypeB" },
                         ExpectedExceptionMessageId = "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName",
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     },
                     // Inheritance of complex types is not supported in a collection
                     new {
                         ItemType = (object)"ComplexTypeA",
                         Values = new object[] { "ComplexTypeA", "ComplexTypeADerived" },
                         ExpectedExceptionMessageId = "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName",
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     },
                     new {
                         ItemType = (object)"ComplexTypeA",
                         Values = new object[] { "ComplexTypeA", "some" },
                         ExpectedExceptionMessageId = "BadProvider_InvalidTypeSpecified",
-                        JsonLightExpectedExceptionMessageId = "BadProvider_InvalidTypeSpecified",
+                        JsonExpectedExceptionMessageId = "BadProvider_InvalidTypeSpecified",
                     },
                     // Wrong errors and asserts when complex property value is in fact an entity value
                     // With ODataLib the errors are now consistent and reasonable (we still fail).
@@ -527,15 +527,15 @@ namespace AstoriaUnitTests.Tests
                         ItemType = (object)"ComplexTypeA",
                         Values = new object[] { "ComplexTypeA", "EntityType" },
                         ExpectedExceptionMessageId = "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName",
-                        JsonLightExpectedExceptionMessageId = (string)null,
+                        JsonExpectedExceptionMessageId = (string)null,
                     }
                 };
 
                 var formats = new[] {
                     new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false },
                     new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = true },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = false }
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = true },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = false }
                 };
 
                 TestUtil.RunCombinations(testCases, formats, (testCase, format) =>
@@ -641,40 +641,40 @@ namespace AstoriaUnitTests.Tests
                             {
                                 Assert.IsNull(exception, "Unexpected exception.");
                             }
-                            else if (IsJsonLight(format.Format))
+                            else if (IsJson(format.Format))
                             {
                                 string expectedMessage = null;
                                 string actualMessage = exception == null ? null : exception.InnerException.Message;
 
-                                if (testCase.JsonLightExpectedExceptionMessageId == "ValidationUtils_IncompatiblePrimitiveItemType")
+                                if (testCase.JsonExpectedExceptionMessageId == "ValidationUtils_IncompatiblePrimitiveItemType")
                                 {
                                     // Note: this isn't testing the nullability of the expected vs actual (we use collectionItemTypeIsNullable for both).
                                     actualMessage = actualMessage.Replace("[Nullable=True]", "[Nullable=False]");
-                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonLightExpectedExceptionMessageId, invalidTypeNames[index], false, collectionItemType.FullName, false);
+                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonExpectedExceptionMessageId, invalidTypeNames[index], false, collectionItemType.FullName, false);
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId == "ValidationUtils_IncompatibleType")
+                                else if (testCase.JsonExpectedExceptionMessageId == "ValidationUtils_IncompatibleType")
                                 {
-                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonLightExpectedExceptionMessageId, invalidTypeNames[index], collectionItemType.FullName);
+                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonExpectedExceptionMessageId, invalidTypeNames[index], collectionItemType.FullName);
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId == "ValidationUtils_UnsupportedPrimitiveType")
+                                else if (testCase.JsonExpectedExceptionMessageId == "ValidationUtils_UnsupportedPrimitiveType")
                                 {
-                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonLightExpectedExceptionMessageId, invalidTypeNames[index]);
+                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonExpectedExceptionMessageId, invalidTypeNames[index]);
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId == "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName")
+                                else if (testCase.JsonExpectedExceptionMessageId == "CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeName")
                                 {
-                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonLightExpectedExceptionMessageId, invalidTypeNames[index], collectionItemType.FullName);
+                                    expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString(testCase.JsonExpectedExceptionMessageId, invalidTypeNames[index], collectionItemType.FullName);
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId == "ValidationUtils_IncorrectTypeKind")
+                                else if (testCase.JsonExpectedExceptionMessageId == "ValidationUtils_IncorrectTypeKind")
                                 {
                                     expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", invalidTypeNames[index], "Complex", "Entity");
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId == "ODataJsonWriter_UnsupportedValueType")
+                                else if (testCase.JsonExpectedExceptionMessageId == "ODataJsonWriter_UnsupportedValueType")
                                 {
                                     expectedMessage = AstoriaUnitTests.ODataLibResourceUtil.GetString("ODataJsonWriter_UnsupportedValueType", invalidTypeNames[index]);
                                 }
-                                else if (testCase.JsonLightExpectedExceptionMessageId != null)
+                                else if (testCase.JsonExpectedExceptionMessageId != null)
                                 {
-                                    expectedMessage = AstoriaUnitTests.DataServicesResourceUtil.GetString(testCase.JsonLightExpectedExceptionMessageId, invalidTypeNames[index]);
+                                    expectedMessage = AstoriaUnitTests.DataServicesResourceUtil.GetString(testCase.JsonExpectedExceptionMessageId, invalidTypeNames[index]);
                                 }
 
                                 Assert.AreEqual(expectedMessage, actualMessage, "Unexpected exception message -" + index);
@@ -714,7 +714,7 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            private static bool IsJsonLight(string format)
+            private static bool IsJson(string format)
             {
                 var lowercaseFormat = format.ToLowerInvariant();
                 if (!(lowercaseFormat.Contains("atom") || lowercaseFormat.Contains("application/xml")))
@@ -766,8 +766,8 @@ namespace AstoriaUnitTests.Tests
                 var formats = new[] {
                     new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false },
                     new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = false },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = true }
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = false },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = true }
                 };
 
                 TestUtil.RunCombinations(testCases, formats, (testCase, format) =>
@@ -887,8 +887,8 @@ namespace AstoriaUnitTests.Tests
                 });
             }
 
-            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that in json light, we write the collection type name in full metadata")]
-            public void Collection_VerificationOfCollectionTypeNamesInJsonLightFullMetadata()
+            // [TestCategory("Partition1"), TestMethod(), Variation("Verify that in Json, we write the collection type name in full metadata")]
+            public void Collection_VerificationOfCollectionTypeNamesInJsonFullMetadata()
             {
                 var testCases = new[] {
                     new { Uri = "/Entities(0)" , XPaths = new string [] {
@@ -903,7 +903,7 @@ namespace AstoriaUnitTests.Tests
                     using (TestWebRequest request = (new OpenWebDataServiceDefinition { DataServiceType = typeof(OpenWebDataService<ReflectionContext>) }).CreateForInProcess())
                     {
                         request.RequestUriString = testCase.Uri;
-                        request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                        request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                         request.SendRequest();
 
                         XmlDocument response = request.GetResponseStreamAsXmlDocument(request.ResponseContentType);
@@ -1296,7 +1296,7 @@ namespace AstoriaUnitTests.Tests
                         ItemType = (object)typeof(int),
                         CollectionPropertyPayload = "<ads:CollectionProperty adsm:type='Collection(Edm.Int32)' " + TestUtil.CommonPayloadNamespaces + "><adsm:element adsm:type='TestNamespace.SimpleComplexType'><ads:Name>Bart</ads:Name></adsm:element></ads:CollectionProperty>",
                         ExpectedExceptionMessageCallback = (format, enableTypeConversion, directPropertyRequest, metadataShape) => {
-                            if (format == UnitTestsUtil.JsonLightMimeType)
+                            if (format == UnitTestsUtil.JsonMimeType)
                             {
                                 if (enableTypeConversion) return ODataLibResourceUtil.GetString("ODataJsonPropertyAndValueDeserializer_InvalidPrimitiveTypeName", "TestNamespace.SimpleComplexType");
                                 return ODataLibResourceUtil.GetString("ValidationUtils_IncorrectTypeKind", "TestNamespace.SimpleComplexType", "Primitive", "Complex");
@@ -1339,13 +1339,13 @@ namespace AstoriaUnitTests.Tests
                     new DeserializationInvalidTestCase {
                         ItemType = typeof(int),
                         JsonCollectionPropertyPayload = "{ \"@odata.type\": 42, \"value\": [] }",
-                        JsonExpectedExceptionMessage = ODataLibResourceUtil.GetString("ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName", "42")
+                        JsonExpectedExceptionMessage = ODataLibResourceUtil.GetString("ODataJsonPropertyAndValueDeserializer_InvalidTypeName", "42")
                     },
                     // JSON collection missing results element
                     new DeserializationInvalidTestCase {
                         ItemType = typeof(int),
                         JsonCollectionPropertyPayload = "{ \"@odata.type\": \"Collection(Edm.Int32)\" }",
-                        JsonExpectedExceptionMessage = ODataLibResourceUtil.GetString("ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue")
+                        JsonExpectedExceptionMessage = ODataLibResourceUtil.GetString("ODataJsonPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue")
                     },
                     // JSON collection with complex item which is not an object record
                     new DeserializationInvalidTestCase {
@@ -1388,19 +1388,19 @@ namespace AstoriaUnitTests.Tests
                     "OnComplexType",
                 };
 
-                // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                // To Add json verbose, make sure that the json light test cases are correct and then uncomment it below.
+                // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                // To Add json verbose, make sure that the Json test cases are correct and then uncomment it below.
                 var requestTypes = new[] {
                     new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "PUT" },
                     new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "PATCH" },
                     new { Format = UnitTestsUtil.AtomFormat, DirectPropertyRequest = false, Method = "POST" },
                     new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true, Method = "PUT" },
                     new { Format = UnitTestsUtil.MimeApplicationXml, DirectPropertyRequest = true, Method = "PATCH" },
-                   /* new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = false, Method = "PUT" },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = false, Method = "MERGE" },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = false, Method = "POST" },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = true, Method = "PUT" },
-                    new { Format = UnitTestsUtil.JsonLightMimeType, DirectPropertyRequest = true, Method = "MERGE" } */
+                   /* new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = false, Method = "PUT" },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = false, Method = "MERGE" },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = false, Method = "POST" },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = true, Method = "PUT" },
+                    new { Format = UnitTestsUtil.JsonMimeType, DirectPropertyRequest = true, Method = "MERGE" } */
                 };
 
                 TestUtil.RunCombinations(testCases, new bool[] { true, false }, requestTypes, metadataShapes, (testCase, enableTypeConversion, requestType, metadataShape) =>
@@ -1464,8 +1464,8 @@ namespace AstoriaUnitTests.Tests
                     {
                         XDocument xmlCollectionPropertyPayload = null;
                         if (testCase.CollectionPropertyPayload != null) xmlCollectionPropertyPayload = XDocument.Parse(testCase.CollectionPropertyPayload);
-                        if (testCase.XmlCollectionPropertyPayload != null && requestType.Format != UnitTestsUtil.JsonLightMimeType) xmlCollectionPropertyPayload = XDocument.Parse(testCase.XmlCollectionPropertyPayload);
-                        if (testCase.JsonCollectionPropertyPayload != null && requestType.Format == UnitTestsUtil.JsonLightMimeType)
+                        if (testCase.XmlCollectionPropertyPayload != null && requestType.Format != UnitTestsUtil.JsonMimeType) xmlCollectionPropertyPayload = XDocument.Parse(testCase.XmlCollectionPropertyPayload);
+                        if (testCase.JsonCollectionPropertyPayload != null && requestType.Format == UnitTestsUtil.JsonMimeType)
                         {
                             xmlCollectionPropertyPayload = new XDocument(
                                 new XElement(UnitTestsUtil.DataNamespace + "CollectionProperty",
@@ -1510,7 +1510,7 @@ namespace AstoriaUnitTests.Tests
                                             dataProperty))));
                         }
 
-                        request.SetRequestStreamAsText(requestType.Format == UnitTestsUtil.JsonLightMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
+                        request.SetRequestStreamAsText(requestType.Format == UnitTestsUtil.JsonMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
                         string requestUri = "/Entities";
                         if (requestType.Method != "POST")
                         {
@@ -1529,7 +1529,7 @@ namespace AstoriaUnitTests.Tests
                         Exception exception = TestUtil.RunCatching(request.SendRequest);
 
                         string expectedExceptionMessage = testCase.ExpectedExceptionMessage;
-                        if (testCase.XmlExpectedExceptionMessage != null && requestType.Format != UnitTestsUtil.JsonLightMimeType)
+                        if (testCase.XmlExpectedExceptionMessage != null && requestType.Format != UnitTestsUtil.JsonMimeType)
                         {
                             if (!requestType.DirectPropertyRequest && testCase.ExpectedTopLevelExceptionMessage != null)
                             {
@@ -1540,7 +1540,7 @@ namespace AstoriaUnitTests.Tests
                                 expectedExceptionMessage = testCase.XmlExpectedExceptionMessage;
                             }
                         }
-                        if (testCase.JsonExpectedExceptionMessage != null && requestType.Format == UnitTestsUtil.JsonLightMimeType)
+                        if (testCase.JsonExpectedExceptionMessage != null && requestType.Format == UnitTestsUtil.JsonMimeType)
                         {
                             if (!requestType.DirectPropertyRequest && testCase.ExpectedTopLevelExceptionMessage != null)
                             {
@@ -1665,7 +1665,7 @@ namespace AstoriaUnitTests.Tests
                     // If the type conversion was disable, the actual type of the value should exactly match the payload type
                     // Unless this was JSON payload in which case our test framework (conversion from ATOM to JSON) can't tell
                     //   if the test wanted the item type be a string (as in XML) or for example int (as in JSON) in the case where no type was specified.
-                    if (format == UnitTestsUtil.JsonLightMimeType && typeName == null)
+                    if (format == UnitTestsUtil.JsonMimeType && typeName == null)
                     {
                         CompareCollectionItemTypes(expectedResourceType.InstanceType, value.GetType());
                     }
@@ -2243,7 +2243,7 @@ namespace AstoriaUnitTests.Tests
 
                             request.HttpMethod = "POST";
                             request.RequestContentType = format;
-                            request.SetRequestStreamAsText(format == UnitTestsUtil.JsonLightMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
+                            request.SetRequestStreamAsText(format == UnitTestsUtil.JsonMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
                             request.RequestUriString = "/EntityTypeSet";
                             request.SendRequest();
                             Assert.IsNotNull(request.ResponseETag, "ETag of the POST response must not be empty.");
@@ -2261,7 +2261,7 @@ namespace AstoriaUnitTests.Tests
                             if (httpMethod != "DELETE")
                             {
                                 request.RequestContentType = format;
-                                request.SetRequestStreamAsText(format == UnitTestsUtil.JsonLightMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
+                                request.SetRequestStreamAsText(format == UnitTestsUtil.JsonMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
                             }
                             Exception e = TestUtil.RunCatching(request.SendRequest);
                             Assert.IsNotNull(e, "Request should have failed.");
@@ -2272,7 +2272,7 @@ namespace AstoriaUnitTests.Tests
                             if (httpMethod != "DELETE")
                             {
                                 request.RequestContentType = format;
-                                request.SetRequestStreamAsText(format == UnitTestsUtil.JsonLightMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
+                                request.SetRequestStreamAsText(format == UnitTestsUtil.JsonMimeType ? UnitTestsUtil.Atom2JsonXLinq(payload) : payload.ToString());
                             }
                             request.SendRequest();
                             if (httpMethod != "DELETE")

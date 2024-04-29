@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -224,11 +224,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
         /// invalid property value types, etc.) - no duplicate properties.
         /// </summary>
         /// <param name="settings">The test descriptor settings to use for the generated <see cref="PayloadReaderTestDescriptor"/>.</param>
-        /// <param name="isJsonLight">true if the payloads should be in Json lite format; false if they should be in verbose Json.</param>
+        /// <param name="isJson">true if the payloads should be in Json format; false if they should be in verbose Json.</param>
         /// <returns>An enumerable of <see cref="PayloadReaderTestDescriptor"/> representing the invalid error payloads.</returns>
-        public static IEnumerable<PayloadReaderTestDescriptor> CreateInvalidErrorDescriptors(PayloadReaderTestDescriptor.Settings settings, bool isJsonLight)
+        public static IEnumerable<PayloadReaderTestDescriptor> CreateInvalidErrorDescriptors(PayloadReaderTestDescriptor.Settings settings, bool isJson)
         {
-            string errorPropertyName = JsonLightConstants.ODataErrorPropertyName;
+            string errorPropertyName = JsonConstants.ODataErrorPropertyName;
 
             return new PayloadReaderTestDescriptor[]
                    {
@@ -257,19 +257,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error().JsonRepresentation("{ \"" + errorPropertyName + "\": { \"foo\": \"bar\" } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
+                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error("foo").Message("msg1")
                                .JsonRepresentation("{ \"" + errorPropertyName + "\": { \"message\": \"msg1\", \"foo\": \"bar\" } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
+                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
                        },
                        new PayloadReaderTestDescriptor(settings)
                        {
                            PayloadElement = PayloadBuilder.Error("foo").Message("msg1")
                                .JsonRepresentation("{ \"" + errorPropertyName + "\": { \"foo\": \"bar\", \"message\": \"msg1\" , \"foo2\": \"bar2\" } } }"),
-                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
+                           ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty", "foo"),
                        },
                        #endregion Extra properties at the top-level
 

@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ErrorReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="ErrorReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -18,7 +18,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
@@ -27,7 +27,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests for correct handling of top-level and in-stream error payloads in Json Light.
     /// </summary>
     [TestClass, TestCase]
-    public class ErrorReaderJsonLightTests : ODataReaderTestCase
+    public class ErrorReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         [InjectDependency]
         public IPayloadGenerator PayloadGenerator { get; set; }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonLightReader for top-level errors.")]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonReader for top-level errors.")]
         public void TopLevelErrorTest()
         {
             // we don't allow extra properties at the top-level, so the only thing to test is extra properties on inner errors
@@ -102,7 +102,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             };
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 TestReaderUtils.ODataBehaviorKinds,
                 (testDescriptor, testConfiguration, behavior) =>
                 {
@@ -113,7 +113,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonLightReader for top-level errors with annotations.")]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonReader for top-level errors with annotations.")]
         public void TopLevelErrorAnnotationsTest()
         {
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = new PayloadReaderTestDescriptor[]
@@ -172,7 +172,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     ""code@cn.foo"": ""fail""
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError", "code")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError", "code")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -333,7 +333,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                                                     }
                                                 }
                                             }"),
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError", "message")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError", "message")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 TestReaderUtils.ODataBehaviorKinds,
                 (testDescriptor, testConfiguration, behavior) =>
                 {
@@ -399,13 +399,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonLightReader for invalid top-level errors without duplicate properties.")]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonReader for invalid top-level errors without duplicate properties.")]
         public void TopLevelInvalidErrorTestWithoutDuplicateDataProperties()
         {
-            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = JsonReaderPayloads.CreateInvalidErrorDescriptors(this.Settings, /*isJsonLight*/ true);
+            IEnumerable<PayloadReaderTestDescriptor> testDescriptors = JsonReaderPayloads.CreateInvalidErrorDescriptors(this.Settings, /*isJson*/ true);
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 TestReaderUtils.ODataBehaviorKinds,
                 (testDescriptor, testConfiguration, behavior) =>
                 {
@@ -416,7 +416,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonLightReader for invalid top-level errors with duplicate properties.")]
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonReader for invalid top-level errors with duplicate properties.")]
         public void TopLevelInvalidErrorTestWithDuplicateDataProperties()
         {
             PayloadReaderTestDescriptor.Settings settings = this.Settings;
@@ -482,7 +482,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
             };
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 // Disable WCF DS Server behavior since in that case duplicate properties are eliminated and the code will not see them.
                 TestReaderUtils.ODataBehaviorKinds.Where(behavior => behavior != TestODataBehaviorKind.WcfDataServicesServer),
                 (testDescriptor, testConfiguration, behavior) =>
@@ -494,16 +494,16 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                 });
         }
 
-        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonLightReader for in-stream errors.")]
-        public void InStreamJsonLightErrorTest()
+        [TestMethod, TestCategory("Reader.Json"), Variation(Description = "Validates correct behavior of the ODataJsonReader for in-stream errors.")]
+        public void InStreamJsonErrorTest()
         {
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateErrorReaderTestDescriptors(this.Settings);
 
             // convert the payload element to a JSON representation usable for in-stream error testing
             testDescriptors = testDescriptors.Select(td =>
             {
-                AnnotatedPayloadElementToJsonLightConverter payloadElementToJsonConverter = new AnnotatedPayloadElementToJsonLightConverter();
-                JsonObject jsonObject = (JsonObject)payloadElementToJsonConverter.ConvertToJsonLightValue(td.PayloadElement);
+                AnnotatedPayloadElementToJsonConverter payloadElementToJsonConverter = new AnnotatedPayloadElementToJsonConverter();
+                JsonObject jsonObject = (JsonObject)payloadElementToJsonConverter.ConvertToJsonValue(td.PayloadElement);
                 Debug.Assert(td.ExpectedException == null, "Don't expect errors for regular payloads (without annotation).");
 
                 return new PayloadReaderTestDescriptor(td)
@@ -516,7 +516,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => !tc.IsRequest),
                 (testDescriptor, testConfiguration) =>
                 {
                     // These descriptors are already tailored specifically for Json Light and 

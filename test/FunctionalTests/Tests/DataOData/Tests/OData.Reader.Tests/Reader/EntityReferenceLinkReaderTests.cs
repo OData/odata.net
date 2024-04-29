@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     ExpectedResultCallback = tc =>
                             new PayloadReaderTestExpectedResult (this.Settings.ExpectedResultSettings)
                             {
-                                ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
+                                ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull")
                             },
                 },
 
@@ -100,7 +100,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     if (testConfiguration.Format == ODataFormat.Json && testDescriptor.PayloadEdmModel == null)
                     {
-                        // Ignore test cases without model in JSON Light
+                        // Ignore test cases without model in Json
                         return;
                     }
 

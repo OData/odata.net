@@ -15,7 +15,7 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     #endregion
 
     /// <summary>
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <returns>Returns the next unprocessed nested resource info or null if there's no more navigation links to process.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal virtual ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
+        internal virtual ODataJsonReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
         {
             return null;
         }

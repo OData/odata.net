@@ -11,9 +11,7 @@ namespace Microsoft.OData
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Text;
     using Microsoft.OData.Json;
-    using Microsoft.OData.JsonLight;
     #endregion Namespaces
 
     using Annotation = System.Collections.Generic.KeyValuePair<string, object>;
@@ -234,7 +232,7 @@ namespace Microsoft.OData
         internal void AddODataScopeAnnotation(string annotationName, object annotationValue)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName));
-            Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+            Debug.Assert(ODataJsonReaderUtils.IsODataAnnotationName(annotationName));
 
             if (annotationValue == null)
             {
@@ -264,7 +262,7 @@ namespace Microsoft.OData
         internal void AddCustomScopeAnnotation(string annotationName, object annotationValue)
         {
             Debug.Assert(!string.IsNullOrEmpty(annotationName));
-            Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+            Debug.Assert(!ODataJsonReaderUtils.IsODataAnnotationName(annotationName));
 
             if (annotationValue == null)
             {
@@ -308,7 +306,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName));
             Debug.Assert(!string.IsNullOrEmpty(annotationName));
-            Debug.Assert(JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+            Debug.Assert(ODataJsonReaderUtils.IsODataAnnotationName(annotationName));
 
             if (annotationValue == null)
             {
@@ -337,7 +335,7 @@ namespace Microsoft.OData
             catch (ArgumentException)
             {
                 throw new ODataException(
-                    ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
+                    ODataJsonReaderUtils.IsAnnotationProperty(propertyName)
                     ? Strings.DuplicateAnnotationForInstanceAnnotationNotAllowed(annotationName, propertyName)
                     : Strings.DuplicateAnnotationForPropertyNotAllowed(annotationName, propertyName));
             }
@@ -353,7 +351,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName));
             Debug.Assert(!string.IsNullOrEmpty(annotationName));
-            Debug.Assert(!JsonLight.ODataJsonLightReaderUtils.IsODataAnnotationName(annotationName));
+            Debug.Assert(!ODataJsonReaderUtils.IsODataAnnotationName(annotationName));
 
             if (annotationValue == null)
             {
@@ -466,8 +464,8 @@ namespace Microsoft.OData
             if (data.Processed)
             {
                 throw new ODataException(
-                    ODataJsonLightReaderUtils.IsAnnotationProperty(propertyName)
-                    && !ODataJsonLightUtils.IsMetadataReferenceProperty(propertyName)
+                    ODataJsonReaderUtils.IsAnnotationProperty(propertyName)
+                    && !ODataJsonUtils.IsMetadataReferenceProperty(propertyName)
                     ? Strings.DuplicateAnnotationNotAllowed(propertyName)
                     : Strings.DuplicatePropertyNamesNotAllowed(propertyName));
             }

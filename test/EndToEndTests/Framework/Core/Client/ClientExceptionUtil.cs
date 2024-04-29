@@ -62,7 +62,7 @@ namespace Microsoft.Test.OData.Framework.Client
                     errorMessage = xelement.Element(xelement.Name.Namespace.GetName("message")).Value;
                 }
             }
-            else if (contentType.StartsWith(MimeTypes.ApplicationJsonLight, StringComparison.OrdinalIgnoreCase))
+            else if (contentType.StartsWith(MimeTypes.ApplicationJson, StringComparison.OrdinalIgnoreCase))
             {
                 JObject jsonObject = JObject.Parse(exception.Message);
                 var innerError = jsonObject["error"]["innererror"];

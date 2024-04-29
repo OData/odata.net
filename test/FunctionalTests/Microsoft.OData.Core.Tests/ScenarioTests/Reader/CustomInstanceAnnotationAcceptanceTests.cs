@@ -54,7 +54,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
         #region Feed and entry with custom instance annotations.
 
-        const string JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations =
+        const string JsonFeedAndEntryPayloadWithCustomInstanceAnnotations =
         "{" +
             "\"@odata.context\":\"http://www.example.com/service.svc/$metadata#TestEntitySet\"," +
             "\"@Custom.ResourceSetStartAnnotation\":1," +
@@ -90,9 +90,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         "}";
 
         [Fact]
-        public void CustomInstanceAnnotationFromFeedAndEntryInJsonLightShouldBeSkippedByTheReaderByDefault()
+        public void CustomInstanceAnnotationFromFeedAndEntryInJsonShouldBeSkippedByTheReaderByDefault()
         {
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations));
+            var stream = new MemoryStream(Encoding.UTF8.GetBytes(JsonFeedAndEntryPayloadWithCustomInstanceAnnotations));
             var readerSettings = new ODataMessageReaderSettings { EnableMessageStreamDisposal = true };
             IODataResponseMessage messageToRead = new InMemoryMessage { StatusCode = 200, Stream = stream };
             messageToRead.SetHeader("Content-Type", "application/json;odata.streaming=true");
@@ -122,9 +122,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         }
 
         [Fact]
-        public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntryInJsonLight()
+        public void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntryInJson()
         {
-            ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(JsonLightFeedAndEntryPayloadWithCustomInstanceAnnotations, "application/json;odata.streaming=true");
+            ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(JsonFeedAndEntryPayloadWithCustomInstanceAnnotations, "application/json;odata.streaming=true");
         }
 
         private static void ShouldBeAbleToReadCustomInstanceAnnotationFromFeedAndEntry(string payload, string contentType)
@@ -224,9 +224,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         }
 
         [Fact]
-        public void ShouldBeAbleToWriteCustomInstanceAnnotationToFeedAndEntryInJsonLight()
+        public void ShouldBeAbleToWriteCustomInstanceAnnotationToFeedAndEntryInJson()
         {
-            const string FeedWithCustomInstanceAnnotationInJsonLight =
+            const string FeedWithCustomInstanceAnnotationInJson =
             "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#TestEntitySet\"," +
                 "\"@Custom.Int32Annotation\":123," +
@@ -244,7 +244,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
                 "\"@Custom.ComplexCollectionAnnotation\":[{\"StringProperty\":\"StringValue1\"},{\"StringProperty\":\"StringValue2\"}]" +
             "}";
 
-            WriteCustomInstanceAnnotationToFeedAndEntry(FeedWithCustomInstanceAnnotationInJsonLight, ODataFormat.Json);
+            WriteCustomInstanceAnnotationToFeedAndEntry(FeedWithCustomInstanceAnnotationInJson, ODataFormat.Json);
         }
 
         private static void WriteCustomInstanceAnnotationToFeedAndEntry(string expectedPayload, ODataFormat format)
@@ -308,7 +308,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         #region Error with custom instance annotations
 
         [Fact]
-        public void ShouldBeAbleToReadCustomInstanceAnnotationFromErrorInJsonLight()
+        public void ShouldBeAbleToReadCustomInstanceAnnotationFromErrorInJson()
         {
             const string payload =
             "{" +
@@ -335,7 +335,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         }
 
         [Fact]
-        public void ShouldBeAbleToWriteCustomInstanceAnnotationToErrorInJsonLight()
+        public void ShouldBeAbleToWriteCustomInstanceAnnotationToErrorInJson()
         {
             const string expectedPayload =
             "{" +

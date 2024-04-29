@@ -28,7 +28,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Batch;
-    using Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
     using Microsoft.OData.Edm.Csdl;
 
     #endregion Namespaces
@@ -71,7 +71,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             public IPayloadElementToJsonConverter PayloadElementToJsonConverter { get; set; }
 
             [InjectDependency(IsRequired = true)]
-            public IPayloadElementToJsonLightConverter PayloadElementToJsonLightConverter { get; set; }
+            public IPayloadElementToJsonConverter PayloadElementToJsonConverter { get; set; }
 
             [InjectDependency(IsRequired = true)]
             public IPayloadTransformFactory PayloadTransformFactory { get; set; }
@@ -413,21 +413,21 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             var nullFunction = (Func<ODataPayloadElement, ODataPayloadElement>)null;
             this.PayloadNormalizers = new List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>>
             {
-                (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonLightPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
+                (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
 
             };
 
             var nullAction = (Action<PayloadReaderTestDescriptor>)null;
             this.TestDescriptorNormalizers = new List<Func<ReaderTestConfiguration, Action<PayloadReaderTestDescriptor>>>
              {
-                 (tc) => tc.Format == ODataFormat.Json ? (descriptor) => JsonLightPayloadElementFixup.Fixup(descriptor) : nullAction,
+                 (tc) => tc.Format == ODataFormat.Json ? (descriptor) => JsonPayloadElementFixup.Fixup(descriptor) : nullAction,
              };
 
             this.ExpectedResultNormalizers = new List<Func<ReaderTestConfiguration, Func<ODataPayloadElement, ODataPayloadElement>>>
             {
                 (tc) => nullFunction,
                 (tc) => tc.Format == ODataFormat.Json ? RemoveCollectionNameAnnotationForCollectionPayloadElementVisitor.Visit : nullFunction,
-                (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonLightExpectedPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
+                (tc) => tc.Format == ODataFormat.Json ? (payloadElement) => JsonExpectedPayloadElementNormalizer.Normalize(payloadElement, tc) : nullFunction,
             };
         }
 

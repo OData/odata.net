@@ -77,7 +77,7 @@ namespace AstoriaUnitTests.Tests
                 new Dimension(CustomDataContext.ExceptionTypeArgument, new object[] { typeof(FormatException) }),
                 new Dimension(CustomDataContext.ExceptionAtEndArgument, new object[] { true }),
                 new Dimension("verbose", new bool[] { true, false }),
-                new Dimension("Accept", new string[] { "application/atom", UnitTestsUtil.JsonLightMimeType }),
+                new Dimension("Accept", new string[] { "application/atom", UnitTestsUtil.JsonMimeType }),
                 new Dimension("Charset", new string[] { null, Encoding.UTF8.WebName, "iso-8859-1" }));
             TestUtil.RunCombinatorialEngineFail(engine, delegate(Hashtable values)
             {
@@ -105,7 +105,7 @@ namespace AstoriaUnitTests.Tests
                     request.RequestUriString = "/NonExistantSet";
                     Exception exception = TestUtil.RunCatching(request.SendRequest);
 
-                    string responseType = string.Equals(accept, "application/atom") ? "application/xml" : UnitTestsUtil.JsonLightMimeType + ";odata.streaming=true;IEEE754Compatible=false";
+                    string responseType = string.Equals(accept, "application/atom") ? "application/xml" : UnitTestsUtil.JsonMimeType + ";odata.streaming=true;IEEE754Compatible=false";
                     string expectedContentType = string.Format("{0};charset={1}", responseType, charset.ToString());
                     
                     Assert.IsNotNull(exception, "Expecting an exception, but no exception was thrown");
@@ -252,7 +252,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void VerifyODataLibIsUsedForWritingTopLevelErrors()
         {
-            // Only ODL knows about json lite serialization, so we know ODL is being used if the json lite error was serialized correctly.
+            // Only ODL knows about json serialization, so we know ODL is being used if the json lite error was serialized correctly.
             const string expectedJsonLitePayload = @"{""error"":{""code"":"""",""message"":""Resource not found for the segment 'Customers'.""}}";
 
             using (TestWebRequest r = TestWebRequest.CreateForInProcessWcf())

@@ -23,7 +23,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -228,7 +228,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 JsonObject jsonObject = (JsonObject)jsonRepresentation.Json;
 
                 // wrap the existing payload in an entity of type 'CityType'; the existing payload is used as value of the 'PoliceStation' property
-                JsonObject wrapperObject = (JsonObject)JsonTextPreservingParser.ParseValue(new StringReader("{ \"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\" }"));
+                JsonObject wrapperObject = (JsonObject)JsonTextPreservingParser.ParseValue(new StringReader("{ \"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\" }"));
                 wrapperObject.Add(new JsonProperty("PoliceStation", jsonObject));
 
                 // replace the payload and Json representation of the test descriptor and set the expected error message

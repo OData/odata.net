@@ -4,11 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Diagnostics;
 using System.IO;
 using System.Xml;
 using Microsoft.OData.Json;
-using Microsoft.OData.Metadata;
 using Microsoft.Spatial;
 
 namespace Microsoft.OData
@@ -39,11 +37,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Write the Json Lite representation of an instance of a primitive type to a json writer.
+        /// Write the Json representation of an instance of a primitive type to a json writer.
         /// </summary>
         /// <param name="instance">The instance to write.</param>
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        public void WriteJsonLight(object instance, IJsonWriter jsonWriter)
+        public void WriteJson(object instance, IJsonWriter jsonWriter)
         {
             IGeoJsonWriter adapter = new GeoJsonWriterAdapter(jsonWriter);
             ((Geography)instance).SendTo(GeoJsonObjectFormatter.Create().CreateWriter(adapter));

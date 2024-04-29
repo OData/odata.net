@@ -180,7 +180,7 @@ namespace AstoriaUnitTests.Tests
         public static string Generate(PayloadBuilder payloadBuilder, string format)
         {
             ODataFormat oDataFormat = null;
-            if (format.StartsWith(UnitTestsUtil.JsonLightMimeType))
+            if (format.StartsWith(UnitTestsUtil.JsonMimeType))
             {
                 oDataFormat = ODataFormat.Json;
             }
@@ -217,7 +217,7 @@ namespace AstoriaUnitTests.Tests
             PayloadGenerator payloadGenerator = null;
             if (format == ODataFormat.Json)
             {
-                payloadGenerator = new JsonLightPayloadGenerator(settings);
+                payloadGenerator = new JsonPayloadGenerator(settings);
             }
             //else if (format == ODataFormat.Atom)
             //{
@@ -380,7 +380,7 @@ namespace AstoriaUnitTests.Tests
             var collectionItems = (ICollection)propertyBuilder.Value;
 
             // In some cases we don't want to write the type name even if it's specified. E.g. we do write it with JSON Verbose even for collections inside of other objects
-            // but with JSON Light we don't. So in that case the test case would specify the type name but the JSON Light generator would explicitly request it not to be written.
+            // but with Json we don't. So in that case the test case would specify the type name but the Json generator would explicitly request it not to be written.
             bool wrapInComplexType = !String.IsNullOrEmpty(collectionItemEdmTypeName) && writeCollectionTypeName;
             if (wrapInComplexType)
             {
@@ -500,9 +500,9 @@ namespace AstoriaUnitTests.Tests
         }
     }
 
-    public class JsonLightPayloadGenerator : JsonPayloadGenerator
+    public class JsonPayloadGenerator : JsonPayloadGenerator
     {
-        public JsonLightPayloadGenerator(PayloadGeneratorSettings settings)
+        public JsonPayloadGenerator(PayloadGeneratorSettings settings)
             : base(settings)
         {
         }

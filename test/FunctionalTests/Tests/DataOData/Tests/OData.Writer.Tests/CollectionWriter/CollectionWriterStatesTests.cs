@@ -140,7 +140,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 },
             };
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 EnumExtensionMethods.GetValues<CollectionWriterAction>().Cast<CollectionWriterAction>(),

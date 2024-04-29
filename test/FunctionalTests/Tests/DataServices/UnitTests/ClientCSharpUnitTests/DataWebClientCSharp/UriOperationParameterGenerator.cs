@@ -48,7 +48,7 @@ namespace AstoriaUnitTests
             JsonPayloadGenerator generator;
             if (format == ODataFormat.Json)
             {
-                generator = new JsonLightPayloadGenerator(settings);
+                generator = new JsonPayloadGenerator(settings);
             }
             else
             {

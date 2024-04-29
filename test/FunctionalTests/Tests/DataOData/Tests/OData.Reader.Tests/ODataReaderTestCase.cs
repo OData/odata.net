@@ -22,7 +22,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.Spatial.EntityModel;
     #endregion Namespaces
 
@@ -70,7 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             container.Register<IBatchPayloadSerializer, BatchPayloadSerializer>();
             container.Register<StackBasedAssertionHandler, DefaultStackBasedAssertionHandler>();
             container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
-            container.Register<IPayloadElementToJsonLightConverter, AnnotatedPayloadElementToJsonLightConverter>();
+            container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
             container.Register<IPayloadGenerator, PayloadGenerator>();
         }
     }

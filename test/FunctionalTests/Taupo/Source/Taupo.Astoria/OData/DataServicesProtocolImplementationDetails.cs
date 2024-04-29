@@ -30,7 +30,6 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             | ODataPayloadOptions.OmitTypeNamesForStrings
             | ODataPayloadOptions.OmitTypeNamesWithinMultiValues
             | ODataPayloadOptions.IncludeETags
-            | ODataPayloadOptions.IncludeSelfOrEditLink;
 
         /// <summary>
         /// Gets or sets the uri to string converter
@@ -52,8 +51,8 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             
             var expected = expectedPayloadOptions;
             
-            if (contentType.StartsWith(MimeTypes.ApplicationJsonODataLightNonStreaming, System.StringComparison.Ordinal) ||
-                     contentType.StartsWith(MimeTypes.ApplicationJsonODataLightStreaming, System.StringComparison.Ordinal))
+            if (contentType.StartsWith(MimeTypes.ApplicationJsonODataNonStreaming, System.StringComparison.Ordinal) ||
+                     contentType.StartsWith(MimeTypes.ApplicationJsonODataStreaming, System.StringComparison.Ordinal))
             {
                 expected = ODataPayloadOptions.IncludeTypeNames
                            | ODataPayloadOptions.IncludeMediaResourceSourceLinks
@@ -71,7 +70,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     if (payloadUri.TryGetExpectedEntitySetAndType(out payloadEntitySet, out payloadEntityType) &&
                         !ODataUtilities.ContainsAllIdentityPropertyNames(selectedPropertyNames, payloadEntityType))
                     {
-                        // JSON Light projections without identity do not contain enough metadata to deduce 
+                        // Json projections without identity do not contain enough metadata to deduce 
                         // id and link values.
                         expected = ODataPayloadOptions.IncludeTypeNames;
                     }

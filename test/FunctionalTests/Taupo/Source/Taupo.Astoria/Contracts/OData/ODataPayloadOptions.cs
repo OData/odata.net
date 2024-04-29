@@ -86,14 +86,9 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         IncludeTypeNamesForNullValues = 1 << 12,
 
         /// <summary>
-        /// Indicates that payloads should include ETags (JSON-Light does not include ETags in payload, while ATOM and JSON-Verbose do)
+        /// Indicates that payloads should include ETags (JSON does not include ETags in payload, while ATOM and JSON-Verbose do)
         /// </summary>
         IncludeETags = 1 << 13,
-
-        /// <summary>
-        /// Indicates whether payloads should include at least one of Self and Edit links (JSON-Light allows for bot fo them to be missing, but ATOM and JSON Verbose don't)
-        /// </summary>
-        IncludeSelfOrEditLink = 1 << 14,
 
         /// <summary>
         /// Indicates whether payloads will have a self link that may be wrong but is constructed

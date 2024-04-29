@@ -9,11 +9,10 @@ namespace Microsoft.OData.Evaluation
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
 
     /// <summary>
     /// Generates operations which were omitted by the service because they fully match conventions/templates and are always available.
@@ -88,13 +87,13 @@ namespace Microsoft.OData.Evaluation
                     Debug.Assert(operation.Metadata != null, "operation.Metadata != null");
                     string operationMetadataString = UriUtils.UriToString(operation.Metadata);
                     Debug.Assert(
-                        ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString),
-                        "ODataJsonLightUtils.IsMetadataReferenceProperty(operationMetadataString)");
+                        ODataJsonUtils.IsMetadataReferenceProperty(operationMetadataString),
+                        "ODataJsonUtils.IsMetadataReferenceProperty(operationMetadataString)");
                     Debug.Assert(
                         operationMetadataString[0] == ODataConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata),
-                        "operationMetadataString[0] == JsonLightConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata)");
+                        "operationMetadataString[0] == ODataJsonConstants.ContextUriFragmentIndicator || metadataDocumentUri.IsBaseOf(operation.Metadata)");
 
-                    string fullyQualifiedOperationName = ODataJsonLightUtils.GetUriFragmentFromMetadataReferencePropertyName(metadataDocumentUri, operationMetadataString);
+                    string fullyQualifiedOperationName = ODataJsonUtils.GetUriFragmentFromMetadataReferencePropertyName(metadataDocumentUri, operationMetadataString);
                     IEnumerable<IEdmOperation> edmOperations = model.ResolveOperations(fullyQualifiedOperationName);
                     if (edmOperations != null)
                     {
@@ -132,10 +131,10 @@ namespace Microsoft.OData.Evaluation
                         continue;
                     }
 
-                    string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonLightUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
+                    string metadataReferencePropertyName = ODataConstants.ContextUriFragmentIndicator + ODataJsonUtils.GetMetadataReferenceName(this.metadataContext.Model, bindableOperation);
 
                     bool isAction;
-                    ODataOperation operation = ODataJsonLightUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
+                    ODataOperation operation = ODataJsonUtils.CreateODataOperation(this.metadataContext.MetadataDocumentUri, metadataReferencePropertyName, bindableOperation, out isAction);
                     if (bindableOperation.Parameters.Any() && this.resourceMetadataContext.ActualResourceTypeName != bindableOperation.Parameters.First().Type.FullName())
                     {
                         operation.BindingParameterTypeName = bindableOperation.Parameters.First().Type.FullName();

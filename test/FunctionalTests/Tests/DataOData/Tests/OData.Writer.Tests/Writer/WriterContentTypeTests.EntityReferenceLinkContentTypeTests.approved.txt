@@ -1,96 +1,96 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 5; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 6; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 6; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 7; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 7; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 8; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 9; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 11; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 11; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 13; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 14; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 14; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 15; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 15; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 16; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 21; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 21; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 22; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 22; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 23; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 23; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 
-Combination: 24; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 24; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata#$ref","@odata.id":"http://www.odata.org/"}
 

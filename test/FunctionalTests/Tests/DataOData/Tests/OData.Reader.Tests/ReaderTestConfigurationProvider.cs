@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
@@ -70,12 +70,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// <summary>
         /// List of all interesting configuration for JSON format payloads.
         /// </summary>
-        public virtual IEnumerable<ReaderTestConfiguration> JsonLightFormatConfigurations
+        public virtual IEnumerable<ReaderTestConfiguration> JsonFormatConfigurations
         {
             get
             {
                 CachedConfigurations configurations = this.InitializeConfigurations();
-                return configurations.JsonLightConfigurations;
+                return configurations.JsonConfigurations;
             }
         }
 
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             return new CachedConfigurations
             {
                 // AtomConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Atom),
-                JsonLightConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Json),
+                JsonConfigurations = CreateConfigurations(runKind, combinatorialEngine, ODataFormat.Json),
                 DefaultFormatConfigurations = CreateConfigurations(runKind, combinatorialEngine, /*format*/ null),
             };
         }
@@ -228,9 +228,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             // public List<ReaderTestConfiguration> AtomConfigurations { get; set; }
 
             /// <summary>
-            /// List of all JSON Lite configurations with default settings.
+            /// List of all JSON configurations with default settings.
             /// </summary>
-            public List<ReaderTestConfiguration> JsonLightConfigurations { get; set; }
+            public List<ReaderTestConfiguration> JsonConfigurations { get; set; }
 
             /// <summary>
             /// List of all default configurations with default settings.
@@ -244,7 +244,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 get
                 {
-                    return this.JsonLightConfigurations;
+                    return this.JsonConfigurations;
                 }
             }
 
@@ -255,7 +255,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             {
                 get
                 {
-                    return this.JsonLightConfigurations.Concat(this.DefaultFormatConfigurations);
+                    return this.JsonConfigurations.Concat(this.DefaultFormatConfigurations);
                 }
             }
         }

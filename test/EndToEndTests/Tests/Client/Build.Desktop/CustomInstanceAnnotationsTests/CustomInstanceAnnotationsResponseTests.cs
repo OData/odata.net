@@ -36,8 +36,8 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
 
         private string[] testMimeTypes = 
         { 
-            MimeTypes.ApplicationJsonODataLightNonStreaming, 
-            MimeTypes.ApplicationJsonODataLightStreaming,
+            MimeTypes.ApplicationJsonODataNonStreaming, 
+            MimeTypes.ApplicationJsonODataStreaming,
         };
 
         private string[] feedQueries = 

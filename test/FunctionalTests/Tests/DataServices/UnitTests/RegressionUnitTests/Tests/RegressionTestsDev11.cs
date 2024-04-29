@@ -478,9 +478,9 @@ Content-ID: 1
                         using (TestWebRequest request = service.CreateForInProcess())
                         {
                             request.RequestUriString = "/ParentSet";
-                            request.Accept = UnitTestsUtil.JsonLightMimeType;
+                            request.Accept = UnitTestsUtil.JsonMimeType;
                             request.HttpMethod = "POST";
-                            request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                            request.RequestContentType = UnitTestsUtil.JsonMimeType;
                             request.RequestStream = new MemoryStream();
 
                             StreamWriter writer = new StreamWriter(request.RequestStream);
@@ -680,7 +680,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         new string[] { "/atom:entry[atom:category/@term='#AstoriaUnitTests.Stubs.Order' and atom:id='http://host/Orders(1)' and atom:content/adsm:properties/ads:ID='1']" });
                     #endregion
 
-                    //TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                    //TODO: Fix places where we've lost JsonVerbose coverage to add Json
                     UnitTestsUtil.CustomProviderRequest(providerType, "/OrderDetails", UnitTestsUtil.AtomFormat, atomPayload, new KeyValuePair<string, string[]>[] { atomXPaths1, atomXPaths2 }, "POST", false /*verifyETagReturned*/);
                 }
             }
@@ -706,7 +706,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                 UnitTestsUtil.ConvertUri(contextType, "/Offices"),
                                 null,
                                 contextType,
-                                UnitTestsUtil.JsonLightMimeType,
+                                UnitTestsUtil.JsonMimeType,
                                 "POST");
 
                             // Insert a worker now (do not set the FK, but set the reference property only)
@@ -715,7 +715,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                 UnitTestsUtil.ConvertUri(contextType, "/Workers"),
                                 null,
                                 contextType,
-                                UnitTestsUtil.JsonLightMimeType,
+                                UnitTestsUtil.JsonMimeType,
                                 "POST");
                         }
                     });
@@ -736,7 +736,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                             request.RequestUriString = "/CustomObjectContext.Orders(0)";
                             request.HttpMethod = "PUT";
                             request.SetRequestStreamAsText("{ DollarAmount: 1111.11 }");
-                            request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                            request.RequestContentType = UnitTestsUtil.JsonMimeType;
 
                             request.SendRequest();
                         }
@@ -764,7 +764,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                 r.RequestUriString = "/CustomObjectContext.Orders(0)";
                                 r.HttpMethod = "PUT";
                                 r.SetRequestStreamAsText("{ DollarAmount: 1111.11 }");
-                                r.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                                r.RequestContentType = UnitTestsUtil.JsonMimeType;
 
                                 var changeSet = new BatchWebRequest.Changeset();
                                 changeSet.Parts.Add(r);
@@ -776,15 +776,15 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                 postRequest.RequestUriString = "/CustomObjectContext.Orders";
                                 postRequest.HttpMethod = "POST";
                                 postRequest.SetRequestStreamAsText("{ ID: 1111,  DollarAmount: 9999.99 }");
-                                postRequest.RequestContentType = UnitTestsUtil.JsonLightMimeType;
-                                postRequest.Accept = UnitTestsUtil.JsonLightMimeType;
+                                postRequest.RequestContentType = UnitTestsUtil.JsonMimeType;
+                                postRequest.Accept = UnitTestsUtil.JsonMimeType;
                                 postRequest.RequestHeaders.Add("Content-ID", "1");
 
                                 InMemoryWebRequest putRequest = new InMemoryWebRequest();
                                 putRequest.RequestUriString = "/$1";
                                 putRequest.HttpMethod = "PUT";
                                 putRequest.SetRequestStreamAsText("{ DollarAmount: 1111.11 }");
-                                putRequest.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                                putRequest.RequestContentType = UnitTestsUtil.JsonMimeType;
 
                                 var changeSet = new BatchWebRequest.Changeset();
                                 changeSet.Parts.Add(postRequest);
@@ -882,7 +882,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                 InMemoryWebRequest mergeRequest = new InMemoryWebRequest();
                                 mergeRequest.HttpMethod = "PATCH";
                                 mergeRequest.RequestUriString = "Orders(1)";
-                                mergeRequest.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                                mergeRequest.RequestContentType = UnitTestsUtil.JsonMimeType;
                                 mergeRequest.SetRequestStreamAsText("{ DollarAmount: \"1111\" }");
                                 changeSet.Parts.Add(mergeRequest);
                                 batchRequest.Changesets.Add(changeSet);
@@ -896,7 +896,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                             {
                                 request.HttpMethod = "PATCH";
                                 request.RequestUriString = "/Orders(1)";
-                                request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                                request.RequestContentType = UnitTestsUtil.JsonMimeType;
                                 request.SetRequestStreamAsText("{ DollarAmount: \"1111\" }");
 
                                 try
@@ -1074,11 +1074,11 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 using (TestWebRequest request = service.CreateForInProcess())
                 {
                     request.RequestUriString = "/Customers?$expand=Orders";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.HttpMethod = "GET";
                     request.SendRequest();
 
-                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonLightMimeType, jsonXPaths);
+                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonMimeType, jsonXPaths);
                 }
             }
 
@@ -1269,14 +1269,14 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 {
                     request.RequestUriString = "/Entities";
                     request.HttpMethod = "POST";
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
                     request.SetRequestStreamAsText(payload);
 
                     WebException e = (WebException)TestUtil.RunCatching(request.SendRequest);
 
                     HttpStatusCode statusCode = ((HttpWebResponse)e.Response).StatusCode;
                     string errorPayload = new StreamReader(e.Response.GetResponseStream()).ReadToEnd();
-                    string expectedErrorMsg = ODataLibResourceUtil.GetString("ODataJsonLightResourceDeserializer_StreamPropertyWithValue", "Stream1");
+                    string expectedErrorMsg = ODataLibResourceUtil.GetString("ODataJsonResourceDeserializer_StreamPropertyWithValue", "Stream1");
                     Assert.AreEqual(HttpStatusCode.BadRequest, statusCode, "Should generate a 400 error since stream properties are not allowed in requests.");
                     Assert.IsTrue(errorPayload.Contains(expectedErrorMsg), "Error messages don't match.");
                 }
@@ -1381,7 +1381,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     request.DataServiceType = typeof(TypedCustomDataContext<TestEntity2>);
                     request.RequestUriString = "/Values";
                     request.HttpMethod = "GET";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();
 
                     Assert.AreEqual("4.0;", request.ResponseVersion, "Response version should be 4.0");
@@ -1469,7 +1469,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                         request.ServiceType = typeof(TestDataService);
                         request.RequestUriString = "/" + test.ServiceOpName + "/City";
                         request.HttpMethod = test.Operation;
-                        request.Accept = UnitTestsUtil.JsonLightMimeType;
+                        request.Accept = UnitTestsUtil.JsonMimeType;
                         Exception e = TestUtil.RunCatching(request.SendRequest);
 
                         int expectedStatusCode = 404;
@@ -1951,11 +1951,11 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 using (TestWebRequest request = service.CreateForInProcess())
                 {
                     request.RequestUriString = "/Orders?$expand=Customer";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.HttpMethod = "GET";
                     request.SendRequest();
 
-                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonLightMimeType, jsonXPaths);
+                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonMimeType, jsonXPaths);
                 }
             }
             #endregion
@@ -2033,7 +2033,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     request.DataServiceType = typeof(TestDataService3);
                     request.HttpMethod = "POST";
                     request.RequestUriString = "/Customers('ALFKI')/ClearAddress";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.RequestContentLength = 0;
 
                     try
@@ -2104,8 +2104,8 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                     TestUtil.RunCombinations(testCases, new string[] { "PUT", "PATCH", "PATCH" }, UnitTestsUtil.BooleanValues, (testCase, verb, uriProp) =>
                     {
                         request.RequestUriString = "/Customers(1)" + (uriProp ? testCase.UriString : "");
-                        request.Accept = UnitTestsUtil.JsonLightMimeType;
-                        request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                        request.Accept = UnitTestsUtil.JsonMimeType;
+                        request.RequestContentType = UnitTestsUtil.JsonMimeType;
                         request.RequestHeaders["Prefer"] = "return=representation";
                         request.SetRequestStreamAsText(testCase.Content);
                         request.RequestContentLength = testCase.Content.Length;
@@ -2454,11 +2454,11 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                 using (TestWebRequest request = service.CreateForInProcess())
                 {
                     request.RequestUriString = "/People?$expand=namespaceName.Employee/Photo";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.HttpMethod = "GET";
                     request.SendRequest();
 
-                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonLightMimeType, jsonXPaths);
+                    UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonMimeType, jsonXPaths);
                 }
             }
 
@@ -2546,7 +2546,7 @@ Content-Type: APPLicATiON/json;odata.metadata=minimal
                                     UnitTestsUtil.ConvertUri(contextType, requestUri),
                                     null,
                                     contextType,
-                                    UnitTestsUtil.JsonLightMimeType,
+                                    UnitTestsUtil.JsonMimeType,
                                     "POST",
                                     verifyETag: contextType == typeof(AstoriaUnitTests.ObjectContextStubs.CustomObjectContext));
                     }
@@ -2758,25 +2758,25 @@ Accept: application/atom+xml
             }
             #endregion
 
-            #region ServerShouldGenerateAbsoluteNextLinkForJsonLightNoMetadata
+            #region ServerShouldGenerateAbsoluteNextLinkForJsonNoMetadata
             [TestMethod]
-            public void ServerShouldGenerateAbsoluteNextLinkForJsonLightNoMetadata()
+            public void ServerShouldGenerateAbsoluteNextLinkForJsonNoMetadata()
             {
                 using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                 {
                     request.ServiceType = typeof(SkipTokenEscapeService);
                     request.RequestUriString = "/GetCustomers()?parameter='p'";
-                    request.Accept = UnitTestsUtil.JsonLightMimeTypeNoMetadata;
+                    request.Accept = UnitTestsUtil.JsonMimeTypeNoMetadata;
                     request.SendRequest();
                     string response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"@odata.nextLink\":\"http://host/GetCustomers?parameter='p'&$skiptoken=0\"");
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();
                     response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"@odata.nextLink\":\"GetCustomers?parameter='p'&$skiptoken=0\"");
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                    request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                     request.SendRequest();
                     response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"@odata.nextLink\":\"GetCustomers?parameter='p'&$skiptoken=0\"");
@@ -2919,17 +2919,17 @@ Accept: application/atom+xml
                 {
                     request.ServiceType = typeof(SkipTokenEscapeService);
                     request.RequestUriString = "/";
-                    request.Accept = UnitTestsUtil.JsonLightMimeTypeNoMetadata;
+                    request.Accept = UnitTestsUtil.JsonMimeTypeNoMetadata;
                     request.SendRequest();
                     string response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"http://host/Customers\"");
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();
                     response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"Customers\"");
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                    request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                     request.SendRequest();
                     response = request.GetResponseStreamAsText();
                     TestUtil.AssertContains(response, "\"name\":\"Customers\",\"kind\":\"EntitySet\",\"url\":\"Customers\"");
@@ -2973,8 +2973,8 @@ Accept: application/atom+xml
                     request.DataServiceType = typeof(CustomDataContext);
                     request.RequestUriString = "/Products(1)";
                     request.HttpMethod = httpVerb;
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
                     request.SetRequestStreamAsText(Content);
                     request.RequestContentLength = Content.Length;
 

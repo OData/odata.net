@@ -790,7 +790,7 @@ namespace Microsoft.OData.Client
                         #endregion
 
                         default:
-                            // In ODataJsonLightBatchReader, readerState remains Initial after calling Read() the first time
+                            // In ODataJsonBatchReader, readerState remains Initial after calling Read() the first time
                             if (!this.useJsonBatch)
                             {
                                 Error.ThrowBatchExpectedResponse(InternalError.UnexpectedBatchState);

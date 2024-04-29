@@ -571,7 +571,7 @@ namespace Microsoft.OData
                 {
                     if (mediaType.Parameters == null || !mediaType.Parameters.Any(p => HttpUtils.IsMetadataParameter(p.Key)))
                     {
-                        // application/json detected; convert it to Json Light
+                        // application/json detected; convert it to Json
                         IList<KeyValuePair<string, string>> existingParams = mediaType.Parameters != null ? mediaType.Parameters.ToList() : null;
                         int newCount = existingParams == null ? 1 : existingParams.Count + 1;
                         List<KeyValuePair<string, string>> newParams = new List<KeyValuePair<string, string>>(newCount);

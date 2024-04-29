@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmOperationImport functionImport_Entry = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Entry").First();
             IEdmOperationImport functionImport_Feed = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Feed").First();
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 (testConfiguration) =>
@@ -139,7 +139,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     // Reading a parameter of stream primitive type should fail.
                     reader = this.CreateParameterReaderForRequestOrResponse(model, functionImport_Stream, testConfiguration, "{ stream : \"foo\" }");
                     this.RunParameterReaderErrorTest(reader,
-                        ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_UnsupportedPrimitiveParameterType", "stream", "Stream"));
+                        ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType", "stream", "Stream"));
                 });
         }
 
@@ -159,7 +159,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 CreateReaderMethods.CreateCollectionReader,
             };
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 createReaderMethods,
@@ -290,7 +290,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmOperationImport functionImport = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_NullablePrimitive").First();
 
             this.CombinatorialEngineProvider.RunCombinations(
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest == true),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest == true),
                 (testConfiguration) =>
                 {
                     // Reading an empty payload should not fail
@@ -335,7 +335,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.CombinatorialEngineProvider.RunCombinations(
                 multipleParameterTestCases,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest == true),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest == true),
                 (testCase, testConfiguration) =>
                 {
                     string payload = "{" + string.Join(",", testCase) + "}";
@@ -370,7 +370,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmOperationImport functionImport_PrimitiveCollection = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_PrimitiveCollection").First();
             IEdmOperationImport functionImport_ComplexCollection = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_ComplexCollection").First();
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 (testConfiguration) =>
@@ -384,7 +384,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     reader = this.CreateParameterReaderForRequestOrResponse(model, functionImport_PrimitiveCollection, testConfiguration, "{\"primitiveCollection\":123}");
                     this.Assert.ExpectedException(
                         () => reader.Read(),
-                        ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_NullCollectionExpected", "PrimitiveValue", "123"),
+                        ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_NullCollectionExpected", "PrimitiveValue", "123"),
                         this.ExceptionVerifier);
                     this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Unexpected first parameter state.");
 
@@ -397,7 +397,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     reader = this.CreateParameterReaderForRequestOrResponse(model, functionImport_ComplexCollection, testConfiguration, "{\"complexCollection\":123}");
                     this.Assert.ExpectedException(
                         () => reader.Read(),
-                        ODataExpectedExceptions.ODataException("ODataJsonLightParameterDeserializer_NullCollectionExpected", "PrimitiveValue", "123"),
+                        ODataExpectedExceptions.ODataException("ODataJsonParameterDeserializer_NullCollectionExpected", "PrimitiveValue", "123"),
                         this.ExceptionVerifier);
                     this.Assert.AreEqual(ODataParameterReaderState.Exception, reader.State, "Unexpected first parameter state.");
 
@@ -415,7 +415,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport_Complex = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Complex").First();
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 (testConfiguration) =>
@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = TestModels.BuildModelWithFunctionImport();
             IEdmOperationImport functionImport_Complex = model.FindEntityContainer("TestContainer").FindOperationImports("FunctionImport_Complex").First();
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 (testConfiguration) =>
@@ -462,7 +462,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                                 }
                             }
                         },
-                        ODataExpectedExceptions.ODataException("ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource"),
+                        ODataExpectedExceptions.ODataException("ODataJsonReader_UnexpectedPrimitiveValueForODataResource"),
                         this.ExceptionVerifier);
                 });
         }

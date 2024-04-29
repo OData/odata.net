@@ -11,7 +11,6 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
-using Microsoft.OData.JsonLight;
 using Microsoft.Spatial;
 using Xunit;
 
@@ -42,7 +41,7 @@ namespace Microsoft.OData.Tests.Json
                 ServiceProvider = null
             };
 
-            this.inputContext = new ODataJsonLightInputContext(messageInfo, messageReaderSettings);
+            this.inputContext = new ODataJsonInputContext(messageInfo, messageReaderSettings);
         }
 
         public static IEnumerable<object[]> GetReadSpatialPropertyData()

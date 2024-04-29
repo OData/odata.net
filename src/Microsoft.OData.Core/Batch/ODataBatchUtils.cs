@@ -13,7 +13,6 @@ namespace Microsoft.OData
     using System.Globalization;
     using System.IO;
     using System.Linq;
-    using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
 

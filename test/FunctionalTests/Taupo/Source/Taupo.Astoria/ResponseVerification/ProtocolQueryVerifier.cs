@@ -312,7 +312,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         /// <returns>Action Content Type</returns>
         protected virtual string GetActionContentType()
         {
-            return MimeTypes.ApplicationJsonODataLightStreaming;
+            return MimeTypes.ApplicationJsonODataStreaming;
         }
     }
 }

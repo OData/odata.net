@@ -108,7 +108,7 @@ namespace Microsoft.OData
                     this.expectedItemTypeReference = value;
 
                     // If we set an expected item type reference (e.g., from the
-                    // Json Light context URI), we need to reset the collection validator.
+                    // Json context URI), we need to reset the collection validator.
                     this.collectionValidator = null;
                 }
             }

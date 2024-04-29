@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests
             ODataResource navEntity1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity1" } } };
             ODataResource navEntity2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity2" } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, (writer) =>
             {
                 writer.WriteStart(topEntity);
 
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Tests
             ODataResource navEntity2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity2" } } };
 
             // Writer
-            string actual = WriteJsonLightEntry(Model, EntitySet, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, (writer) =>
             {
                 writer.WriteStart(topEntity);
 
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Tests
             ODataResource navEntity1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity1" } } };
             ODataResource navEntity2 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity2" } } };
 
-            string actual = WriteJsonLightEntry(Model, EntitySet, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, (writer) =>
             {
                 writer.WriteStart(topEntity);
 
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Tests
             ODataResource navEntity1 = new ODataResource() { Properties = new[] { new ODataProperty { Name = "ID", Value = "NavEntity1" } } };
 
             // Writer
-            string actual = WriteJsonLightEntry(Model, EntitySet, (writer) =>
+            string actual = WriteJsonEntry(Model, EntitySet, (writer) =>
             {
                 writer.WriteStart(topEntity);
 
@@ -450,7 +450,7 @@ namespace Microsoft.OData.Tests
         #endregion
 
         #region Help Method
-        private static string WriteJsonLightEntry(IEdmModel model, IEdmEntitySet entitySet, Action<ODataWriter> writeAction, bool isFullMetadata = false)
+        private static string WriteJsonEntry(IEdmModel model, IEdmEntitySet entitySet, Action<ODataWriter> writeAction, bool isFullMetadata = false)
         {
             var stream = new MemoryStream();
             var message = new InMemoryMessage { Stream = stream };

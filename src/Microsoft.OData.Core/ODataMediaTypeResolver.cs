@@ -75,7 +75,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Array of supported media types and formats for JSON related payload kind.
         /// </summary>
-        private static IEnumerable<ODataMediaTypeFormat> JsonMediaTypeFormats = SetJsonLightMediaTypes();
+        private static IEnumerable<ODataMediaTypeFormat> JsonMediaTypeFormats = SetJsonMediaTypes();
 
         /// <summary>
         /// Gets the supported media types and formats for the given payload kind.
@@ -108,7 +108,7 @@ namespace Microsoft.OData
             return container.GetRequiredService<ODataMediaTypeResolver>();
         }
 
-        private static IEnumerable<ODataMediaTypeFormat> SetJsonLightMediaTypes()
+        private static IEnumerable<ODataMediaTypeFormat> SetJsonMediaTypes()
         {
             var minimal = new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueMinimal);
             var full = new KeyValuePair<string, string>(MimeConstants.MimeMetadataParameterName, MimeConstants.MimeMetadataParameterValueFull);

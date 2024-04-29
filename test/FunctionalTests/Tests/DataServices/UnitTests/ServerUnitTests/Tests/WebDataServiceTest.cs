@@ -284,9 +284,9 @@ namespace AstoriaUnitTests.Tests
         }
         [Ignore] // Remove Atom
         // [TestMethod]
-        public void WebDataServiceDocumentJsonLightTest()
+        public void WebDataServiceDocumentJsonTest()
         {
-            // Smoke test to verify that JSON Light service document can be written through the server. Detailed format-specific tests are in ODL.
+            // Smoke test to verify that Json service document can be written through the server. Detailed format-specific tests are in ODL.
             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                 new Dimension("Location", new object[] { WebServerLocation.InProcess, WebServerLocation.InProcessWcf }),
                 new Dimension("Accept", new string[]
@@ -317,7 +317,7 @@ namespace AstoriaUnitTests.Tests
 
                     // Customers is defined in ServiceModelData.
                     // Smoke test: Confirm that it's written out as the name of a resource collection somewhere in the service document.
-                    Assert.IsTrue(response.Contains("{\"name\":\"Customers\""), "Expected to find \"Customers\" resource collection formatted as JSON Light");
+                    Assert.IsTrue(response.Contains("{\"name\":\"Customers\""), "Expected to find \"Customers\" resource collection formatted as Json");
                 }
             });
         }
@@ -506,25 +506,25 @@ namespace AstoriaUnitTests.Tests
             const string AtomXml = "application/atom+xml";
             const string AtomXmlFeed = "application/atom+xml;type=feed";
             const string charsetUtf8 = ";charset=utf-8";
-            const string JsonLight = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
+            const string Json = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false";
 
             var testCases = new[]
                 {
                     // Success cases for all versions
-                    new { AcceptHeaderString = "application/atom+xml, application/json", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/atom+xml, application/json;odata.metadata=minimal", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/json, application/atom+xml", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = (string) null, Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = " ", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "*/*", Expectation = JsonLight + charsetUtf8 },
+                    new { AcceptHeaderString = "application/atom+xml, application/json", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/atom+xml, application/json;odata.metadata=minimal", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json, application/atom+xml", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = (string) null, Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = " ", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "*/*", Expectation = Json + charsetUtf8 },
                     new { AcceptHeaderString = AtomXml, Expectation = AtomXmlFeed + charsetUtf8 },
-                    new { AcceptHeaderString = "application/json", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/xml,application/json;q=0.8", Expectation = JsonLight + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/xml,application/json;q=0.8", Expectation = Json + charsetUtf8 },
                     new { AcceptHeaderString = AtomXml + ",application/json;q=0.8", Expectation = AtomXmlFeed + charsetUtf8 },
-                    new { AcceptHeaderString = "application/json," + AtomXml + ";q=0.8", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "text/xml,*/*", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/xml,*/*", Expectation = JsonLight + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json," + AtomXml + ";q=0.8", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "text/xml,*/*", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/xml,*/*", Expectation = Json + charsetUtf8 },
 
                     // Error cases for all versions
                     new { AcceptHeaderString = "text/xml", Expectation = (string) null },
@@ -534,9 +534,9 @@ namespace AstoriaUnitTests.Tests
                     new { AcceptHeaderString = "application/json;foo=bar", Expectation = (string) null },
                     
                     // Cases where V2 and V3 expected behaviors differ
-                    new { AcceptHeaderString = "application/json", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/json;odata.metadata=minimal", Expectation = JsonLight + charsetUtf8 },
-                    new { AcceptHeaderString = "application/json, application/json;odata.metadata=minimal", Expectation = JsonLight + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json;odata.metadata=minimal", Expectation = Json + charsetUtf8 },
+                    new { AcceptHeaderString = "application/json, application/json;odata.metadata=minimal", Expectation = Json + charsetUtf8 },
                 };
 
             TestUtil.RunCombinations(

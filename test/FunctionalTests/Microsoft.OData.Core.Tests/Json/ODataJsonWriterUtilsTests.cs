@@ -16,13 +16,13 @@ namespace Microsoft.OData.Tests.Json
     /// TODO: Create an interface and make a JsonWriter simulator so we don't have to double test its writing functionality.
     //  TODO: Write unit tests the remaining methods on ODataJsonWriterUtils.
     /// </summary>
-    public class ODataJsonWriterUtilsTests
+    public class ODataJsonWriterCoreUtilsTests
     {
         private StringWriter stringWriter;
         private IJsonWriter jsonWriter;
         private ODataMessageWriterSettings settings;
 
-        public ODataJsonWriterUtilsTests()
+        public ODataJsonWriterCoreUtilsTests()
         {
             this.stringWriter = new StringWriter();
             this.jsonWriter = new JsonWriter(this.stringWriter, isIeee754Compatible: true);
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: false,
                 maxInnerErrorDepth: 0,
-                writingJsonLight: false);
+                writingJson: false);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
                 @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}", result);
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                writingJson: false);
              var result = stringWriter.GetStringBuilder().ToString();
              Assert.Equal("{\"error\":" +
                                 "{\"code\":\"\"," +
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                writingJson: false);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                writingJson: false);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Tests.Json
                 error,
                 includeDebugInformation: true,
                 maxInnerErrorDepth: 5,
-                writingJsonLight: false);
+                writingJson: false);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +

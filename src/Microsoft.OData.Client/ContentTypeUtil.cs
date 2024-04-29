@@ -348,13 +348,13 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Determines whether the response media type would be JSON light for the given accept-header text.
+        /// Determines whether the response media type would be JSON for the given accept-header text.
         /// </summary>
         /// <param name="acceptTypesText">The text from the request's accept header.</param>
         /// <param name="entityTarget">Whether the target is an entity.</param>
         /// <param name="effectiveMaxResponseVersion">The effective max response version.</param>
-        /// <returns>True if the response type is Json Light.</returns>
-        internal static bool IsResponseMediaTypeJsonLight(string acceptTypesText, bool entityTarget, Version effectiveMaxResponseVersion)
+        /// <returns>True if the response type is Json.</returns>
+        internal static bool IsResponseMediaTypeJson(string acceptTypesText, bool entityTarget, Version effectiveMaxResponseVersion)
         {
             string selectedMediaType;
             try
@@ -373,16 +373,16 @@ namespace Microsoft.OData.Service
         }
 
         /// <summary>
-        /// Determines whether the response media type would be JSON light for the request.
+        /// Determines whether the response media type would be JSON for the request.
         /// </summary>
         /// <param name="dataService">The data service instance to determine the response media type.</param>
         /// <param name="isEntryOrFeed">true if the target of the request is an entry or a feed, false otherwise.</param>
-        /// <returns>true if the response type is Json Light; false otherwise</returns>
-        internal static bool IsResponseMediaTypeJsonLight(IDataService dataService, bool isEntryOrFeed)
+        /// <returns>true if the response type is Json; false otherwise</returns>
+        internal static bool IsResponseMediaTypeJson(IDataService dataService, bool isEntryOrFeed)
         {
             AstoriaRequestMessage requestMessage = dataService.OperationContext.RequestMessage;
             Version effectiveMaxResponseVersion = VersionUtil.GetEffectiveMaxResponseVersion(dataService.Configuration.DataServiceBehavior.MaxProtocolVersion.ToVersion(), requestMessage.RequestMaxVersion);
-            return IsResponseMediaTypeJsonLight(requestMessage.GetAcceptableContentTypes(), isEntryOrFeed, effectiveMaxResponseVersion);
+            return IsResponseMediaTypeJson(requestMessage.GetAcceptableContentTypes(), isEntryOrFeed, effectiveMaxResponseVersion);
         }
 
         /// <summary>

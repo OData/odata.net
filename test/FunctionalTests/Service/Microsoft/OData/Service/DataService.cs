@@ -1361,7 +1361,7 @@ namespace Microsoft.OData.Service
                         {
                             ResourceType openTypeParentResourceType = WebUtil.GetResourceType(dataService.Provider, resource);
 
-                            // For JSON lite, we need to pass ODataLib the declaring resource type for the property. Hence as we walk the segment
+                            // For JSON, we need to pass ODataLib the declaring resource type for the property. Hence as we walk the segment
                             // and determine what the resource type of the open properties are, we also need to update the targetResourceType
                             // of the segment, so that during serialization, we can find the declaring type of the property.
                             if (parentSegment.TargetResourceType != null)

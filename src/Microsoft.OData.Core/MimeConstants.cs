@@ -59,37 +59,37 @@ namespace Microsoft.OData
         /// <summary>Parameter value for type 'feed'.</summary>
         internal const string MimeTypeParameterValueFeed = "feed";
 
-        /// <summary>JSON Light 4.01 short parameter name for 'metadata' parameter.</summary>
+        /// <summary>Json 4.01 short parameter name for 'metadata' parameter.</summary>
         internal const string MimeShortMetadataParameterName = "metadata";
 
-        /// <summary>JSON Light parameter name for 'odata.metadata' parameter.</summary>
+        /// <summary>Json parameter name for 'odata.metadata' parameter.</summary>
         internal const string MimeMetadataParameterName = "odata.metadata";
 
         /// <summary>Parameter value for 'verbose' JSON.</summary>
         internal const string MimeMetadataParameterValueVerbose = "verbose";
 
-        /// <summary>JSON Light parameter value 'full'.</summary>
+        /// <summary>Json parameter value 'full'.</summary>
         internal const string MimeMetadataParameterValueFull = "full";
 
-        /// <summary>JSON Light parameter value 'minimal'.</summary>
+        /// <summary>Json parameter value 'minimal'.</summary>
         internal const string MimeMetadataParameterValueMinimal = "minimal";
 
-        /// <summary>JSON Light parameter value 'none'.</summary>
+        /// <summary>Json parameter value 'none'.</summary>
         internal const string MimeMetadataParameterValueNone = "none";
 
-        /// <summary>JSON Light 4.01 short parameter name for 'streaming' parameter.</summary>
+        /// <summary>Json 4.01 short parameter name for 'streaming' parameter.</summary>
         internal const string MimeShortStreamingParameterName = "streaming";
 
-        /// <summary>JSON Light Parameter name for 'odata.streaming' parameter.</summary>
+        /// <summary>Json Parameter name for 'odata.streaming' parameter.</summary>
         internal const string MimeStreamingParameterName = "odata.streaming";
 
-        /// <summary>JSON Light parameter name for 'IEEE754Compatible' parameter.</summary>
+        /// <summary>Json parameter name for 'IEEE754Compatible' parameter.</summary>
         internal const string MimeIeee754CompatibleParameterName = "IEEE754Compatible";
 
-        /// <summary>JSON Light parameter value 'true'.</summary>
+        /// <summary>Json parameter value 'true'.</summary>
         internal const string MimeParameterValueTrue = "true";
 
-        /// <summary>JSON Light parameter value 'false'.</summary>
+        /// <summary>Json parameter value 'false'.</summary>
         internal const string MimeParameterValueFalse = "false";
 
         /// <summary>Media type for XML bodies.</summary>

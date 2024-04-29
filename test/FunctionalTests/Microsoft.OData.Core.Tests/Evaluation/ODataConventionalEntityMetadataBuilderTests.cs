@@ -597,10 +597,10 @@ namespace Microsoft.OData.Tests.Evaluation
         [Fact]
         public void EtagShouldBeUriEscaped()
         {
-            // if this fails System.Uri has changed its behavior and we may need to adjust how we encode our strings for JsonLight
+            // if this fails System.Uri has changed its behavior and we may need to adjust how we encode our strings for Json
             // .net 45 changed this behavior initially to escape ' to a value, but was changed. below test
             // validates that important uri literal values that OData uses don't change, and that we escape characters when
-            // producing the etag for JsonLight
+            // producing the etag for Json
             var escapedStrings = Uri.EscapeUriString(@".:''-");
             Assert.Equal(@".:''-", escapedStrings);
 

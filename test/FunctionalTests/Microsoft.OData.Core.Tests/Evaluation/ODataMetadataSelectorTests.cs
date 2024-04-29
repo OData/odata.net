@@ -9,12 +9,12 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 using Microsoft.OData.Tests.Evaluation;
 using Xunit;
 using Microsoft.OData.Tests.UriParser;
 
-namespace Microsoft.OData.Tests.JsonLight
+namespace Microsoft.OData.Tests.Json
 {
     public class ODataMetadataSelectorTests
     {

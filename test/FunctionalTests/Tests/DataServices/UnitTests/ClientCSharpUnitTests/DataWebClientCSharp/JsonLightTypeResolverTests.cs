@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightTypeResolverTests.cs" company="Microsoft">
+// <copyright file="JsonTypeResolverTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -23,11 +23,11 @@ namespace AstoriaUnitTests.Tests
     #endregion Namespaces
 
     [TestClass]
-    public class JsonLightTypeResolverTests
+    public class JsonTypeResolverTests
     {
         private readonly EdmModel serverModel;
 
-        public JsonLightTypeResolverTests()
+        public JsonTypeResolverTests()
         {
             this.serverModel = new EdmModel();
             var serverEntityType = new EdmEntityType("Server.Name.Space", "EntityType");

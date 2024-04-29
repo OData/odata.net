@@ -22,8 +22,8 @@ namespace AstoriaUnitTests.Data
         /// <summary>Binary format.</summary>
         private static SerializationFormatData binary;
 
-        /// <summary>JSON light format.</summary>
-        private static SerializationFormatData jsonlight;
+        /// <summary>Json format.</summary>
+        private static SerializationFormatData Json;
 
         /// <summary>Test values.</summary>
         private static SerializationFormatData[] values;
@@ -58,9 +58,9 @@ namespace AstoriaUnitTests.Data
         }
 
         /// <summary>JSON format.</summary>
-        public static SerializationFormatData JsonLight
+        public static SerializationFormatData Json
         {
-            get { CreateValues(); return jsonlight; }
+            get { CreateValues(); return Json; }
         }
 
         /// <summary>Interesting values for testing structions (non-primitive) serialization formats.</summary>
@@ -69,7 +69,7 @@ namespace AstoriaUnitTests.Data
             get
             {
                 return new SerializationFormatData[] {
-                    Atom, JsonLight
+                    Atom, Json
                 };
             }
         }
@@ -122,7 +122,7 @@ namespace AstoriaUnitTests.Data
             {
                 XmlDocument result;
                 stream = TestUtil.EnsureStreamWithSeek(stream);
-                if (this == JsonLight)
+                if (this == Json)
                 {
                     result = JsonValidator.ConvertToXmlDocument(stream);
                 }
@@ -166,11 +166,11 @@ namespace AstoriaUnitTests.Data
             if (values == null)
             {
                 atom = ForData("Atom", UnitTestsUtil.AtomFormat, "text/xml", "application/xml");
-                jsonlight = ForData("JsonLight", UnitTestsUtil.JsonLightMimeType);
+                Json = ForData("Json", UnitTestsUtil.JsonMimeType);
                 binary = ForData("Binary", "application/octet-stream");
                 values = new SerializationFormatData[] {
                         atom,
-                        jsonlight,
+                        Json,
                         binary,
                         ForData("Text", "text/plain"),
                     };

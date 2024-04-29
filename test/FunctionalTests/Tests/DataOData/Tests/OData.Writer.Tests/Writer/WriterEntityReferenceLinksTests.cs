@@ -18,7 +18,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -34,7 +34,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
-        [Ignore] // Remove Atom
+        //[Ignore] // Remove Atom
         [TestMethod, Variation(Description = "Test $ref payloads that return a single link.")]
         public void EntityReferenceLinkTest()
         {
@@ -65,8 +65,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             resultLink,
                             CreateExpectedCallback(resultLink, expectMetadataNamespace, "http://odata.org/test/$metadata#$ref"));
 
-                    // When writing JSON lite, always provide a model and a non-null nav prop.
-                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonLightEntityReferenceLinkWriterTests
+                    // When writing JSON, always provide a model and a non-null nav prop.
+                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonEntityReferenceLinkWriterTests
                     if (testConfiguration.Format == ODataFormat.Json)
                     {
                         testDescriptor.Model = CreateModelWithNavProps();
@@ -185,8 +185,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         testConfiguration.MessageWriterSettings.ShouldIncludeAnnotation = ODataUtils.CreateAnnotationFilter("*");
                     }
 
-                    // When writing JSON lite, always provide a model and a non-null nav prop.
-                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonLightEntityReferenceLinkWriterTests
+                    // When writing JSON, always provide a model and a non-null nav prop.
+                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonEntityReferenceLinkWriterTests
                     if (testConfiguration.Format == ODataFormat.Json)
                     {
                         testDescriptor.Model = CreateModelWithNavProps();
@@ -294,7 +294,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ODataEntityReferenceLinks testReferenceLink = new ODataEntityReferenceLinks
                     {
                         Count = correctCountValue,
-                        // In JSON lite, we will write the next link first if one is available.  Otherwise, we'll write it at the end.
+                        // In JSON, we will write the next link first if one is available.  Otherwise, we'll write it at the end.
                         NextPageLink = testConfiguration.Format == ODataFormat.Json ? null : incorrectNextPageLink
                     };
                     testReferenceLink.Links = new CheckingEntityReferenceLinkEnumerable(
@@ -310,8 +310,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     IEdmNavigationProperty navProp = null;
                     IEdmEntitySet entitySet = null;
-                    // When writing JSON lite, always provide a model and a non-null nav prop.
-                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonLightEntityReferenceLinkWriterTests
+                    // When writing JSON, always provide a model and a non-null nav prop.
+                    // The error cases when a model isn't provided or the nav prop is null are tested in JsonEntityReferenceLinkWriterTests
                     if (testConfiguration.Format == ODataFormat.Json)
                     {
                         testDescriptor.Model = CreateModelWithNavProps();
@@ -401,7 +401,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// Creates the expected result callback for the provided <paramref name="entityReferenceLinks"/>.
         /// </summary>
         /// <param name="entityReferenceLinks">The entity reference links to create the expected result for.</param>
-        /// <param name="forceNextLinkAndCountAtEnd">Whether the next link and count should be expected at the end of the payload for JSON lite.</param>
+        /// <param name="forceNextLinkAndCountAtEnd">Whether the next link and count should be expected at the end of the payload for JSON.</param>
         /// <returns>The expected result callback for the <paramref name="entityReferenceLinks"/>.</returns>
         private WriterTestDescriptor.WriterTestExpectedResultCallback CreateExpectedCallback(ODataEntityReferenceLinks entityReferenceLinks, bool forceNextLinkAndCountAtEnd = false)
         {
@@ -423,7 +423,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     bool nextPageLinkRelative = entityReferenceLinks.NextPageLink == null ? false : !entityReferenceLinks.NextPageLink.IsAbsoluteUri;
                     if ((relativeLink != null || nextPageLinkRelative) && testConfiguration.MessageWriterSettings.BaseUri == null)
                     {
-                        // We allow relative Uri strings in JSON Light.
+                        // We allow relative Uri strings in Json.
                         if (testConfiguration.Format != ODataFormat.Json)
                         {
                             string relativeUriString = relativeLink == null ? entityReferenceLinks.NextPageLink.OriginalString : relativeLink.Url.OriginalString;
@@ -443,11 +443,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 string[] resultUriStrings = entityReferenceLinks.Links == null ? null : entityReferenceLinks.Links.Select(l => GetResultUri(l.Url, testConfiguration)).ToArray();
 
                 List<string> atomStrings = new List<string>();
-                List<string> jsonLightStrings = new List<string>();
+                List<string> JsonStrings = new List<string>();
                 string nextLinkString = null;
 
-                jsonLightStrings.Add("{");
-                var jsonLightFirstLine = "$(Indent)\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection($ref)\",";
+                JsonStrings.Add("{");
+                var JsonFirstLine = "$(Indent)\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection($ref)\",";
 
                 if ((resultUriStrings == null || resultUriStrings.Length == 0) && !count.HasValue && nextPageLinkString == null && testConfiguration.Format != ODataFormat.Json)
                 {
@@ -462,24 +462,23 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                         if (!forceNextLinkAndCountAtEnd)
                         {
-                            jsonLightFirstLine += "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":\"" + count.Value + "\",";
+                            JsonFirstLine += "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":\"" + count.Value + "\",";
                         }
                     }
 
                     if (nextPageLinkString != null && !forceNextLinkAndCountAtEnd)
                     {
-                        // In JSON lite, the next link comes at the beginning of the payload if available, but in JSON verbose and ATOM it comes at the end.
-                        jsonLightFirstLine += "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"" + nextPageLinkString + "\",";
+                        JsonFirstLine += "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"" + nextPageLinkString + "\",";
                     }
 
-                    jsonLightFirstLine += "\"value\":[";
+                    JsonFirstLine += "\"value\":[";
 
-                    jsonLightStrings.Add(jsonLightFirstLine);
+                    JsonStrings.Add(JsonFirstLine);
 
                     int length = resultUriStrings == null ? 0 : resultUriStrings.Length;
                     if (length == 0)
                     {
-                        jsonLightStrings.Add("$(Indent)$(Indent)");
+                        JsonStrings.Add("$(Indent)$(Indent)");
                     }
                     else
                     {
@@ -488,27 +487,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             atomStrings.Add(@"<uri>" + resultUriStrings[i] + @"</uri>");
                             if (i == 0)
                             {
-                                jsonLightStrings.Add("$(Indent)$(Indent){");
+                                JsonStrings.Add("$(Indent)$(Indent){");
                             }
                             else
                             {
-                                jsonLightStrings.Add("$(Indent)$(Indent)},{");
+                                JsonStrings.Add("$(Indent)$(Indent)},{");
                             }
 
-                            jsonLightStrings.Add("$(Indent)$(Indent)$(Indent)" + "\"url\":\"" + resultUriStrings[i] + "\"");
+                            JsonStrings.Add("$(Indent)$(Indent)$(Indent)" + "\"url\":\"" + resultUriStrings[i] + "\"");
 
                             if (i == resultUriStrings.Length - 1)
                             {
-                                jsonLightStrings.Add("$(Indent)$(Indent)}");
+                                JsonStrings.Add("$(Indent)$(Indent)}");
                             }
                         }
                     }
 
-                    var jsonLightLastLine = "$(Indent)]";
+                    var JsonLastLine = "$(Indent)]";
 
                     if (count.HasValue && forceNextLinkAndCountAtEnd)
                     {
-                        jsonLightLastLine += ",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":" + count.Value;
+                        JsonLastLine += ",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":" + count.Value;
                     }
 
                     if (nextPageLinkString != null)
@@ -518,13 +517,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                         if (forceNextLinkAndCountAtEnd)
                         {
-                            jsonLightLastLine += ",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"" + nextPageLinkString + "\"";
+                            JsonLastLine += ",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"" + nextPageLinkString + "\"";
                         }
                     }
 
 
-                    jsonLightStrings.Add(jsonLightLastLine);
-                    jsonLightStrings.Add("}");
+                    JsonStrings.Add(JsonLastLine);
+                    JsonStrings.Add("}");
 
                     atomStrings.Add(@"</links>");
                 }
@@ -533,13 +532,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        Json = string.Join("$(NL)", jsonLightStrings),
+                        Json = string.Join("$(NL)", JsonStrings),
                         FragmentExtractor = (result) => result
                     };
                 }
                 else
                 {
-                    throw new TestInfrastructureException("Expected ATOM or JSON Lite.");
+                    throw new TestInfrastructureException("Expected ATOM or JSON.");
                 }
             };
         }
@@ -554,7 +553,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             Uri baseUri = testConfig.MessageWriterSettings.BaseUri;
 
-            Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON lite are supported.");
+            Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON are supported.");
             if (uri.IsAbsoluteUri)
             {
                 return uri.AbsoluteUri;
@@ -577,7 +576,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// <param name="entityReferenceLink">The entity reference link to create the expected result for.</param>
         /// <param name="expectMetadataNamespace">true if the XML representation is expected to use the OData metadata namespace,
         /// false if it's expected to use the default OData namespace.</param>
-        /// <param name="expectedContextUrl">The expected value of the odata.context url when writing JSON lite responses.</param>
+        /// <param name="expectedContextUrl">The expected value of the odata.context url when writing JSON responses.</param>
         /// <returns>The expected result callback for the <paramref name="entityReferenceLink"/>.</returns>
         private PayloadWriterTestDescriptor.WriterTestExpectedResultCallback CreateExpectedCallback(ODataEntityReferenceLink entityReferenceLink, bool expectMetadataNamespace, string expectedContextUrl)
         {
@@ -597,24 +596,24 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 if (testConfiguration.Format == ODataFormat.Json)
                 {
-                    string jsonLightResult =
+                    string JsonResult =
                         "{" +
                         "$(NL)" +
                         "$(Indent)" +
-                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"" + expectedContextUrl + "\"," +
+                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"" + expectedContextUrl + "\"," +
                         "\"url\":\"" + uriResultString + "\"" +
                         "$(NL)" +
                         "}";
 
                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        Json = string.Join("$(NL)", jsonLightResult),
+                        Json = string.Join("$(NL)", JsonResult),
                         FragmentExtractor = (result) => result
                     };
                 }
                 else
                 {
-                    throw new TestInfrastructureException("Expected ATOM or JSON Lite.");
+                    throw new TestInfrastructureException("Expected ATOM or JSON.");
                 }
             };
         }

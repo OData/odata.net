@@ -45,7 +45,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         /// </returns>
         public bool Applies(ODataResponse response)
         {
-            return response.GetHeaderValueIfExists(HttpHeaders.ContentType).IfValid(false, c => c.StartsWith(MimeTypes.ApplicationJsonLight, StringComparison.OrdinalIgnoreCase));
+            return response.GetHeaderValueIfExists(HttpHeaders.ContentType).IfValid(false, c => c.StartsWith(MimeTypes.ApplicationJson, StringComparison.OrdinalIgnoreCase));
         }
 
         /// <summary>

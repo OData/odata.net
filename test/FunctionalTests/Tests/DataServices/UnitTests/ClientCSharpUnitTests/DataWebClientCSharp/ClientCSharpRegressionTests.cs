@@ -2028,9 +2028,9 @@ namespace AstoriaUnitTests.Tests
 
         [Ignore] // Remove Atom
         // [TestMethod]
-        public void ShouldThrowIfUsingJsonLightWithoutModel()
+        public void ShouldThrowIfUsingJsonWithoutModel()
         {
-            // InvalidOperationException if client user try to use jsonlight but doesn't provide IEdmModel and the model is used by odatalib
+            // InvalidOperationException if client user try to use Json but doesn't provide IEdmModel and the model is used by odatalib
             // Specifying $format in the url causes client to throw InvalidOperationException
             using (OpenWebDataServiceHelper.MaxProtocolVersion.Restore())
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())

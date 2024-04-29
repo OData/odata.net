@@ -20,51 +20,51 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         private Version V4 = new Version(4, 0);
 
         [TestMethod]
-        public void UnqualifiedJsonShouldBeConsideredJsonLightIfMaxVersionIs3()
+        public void UnqualifiedJsonShouldBeConsideredJsonIfMaxVersionIs3()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json", true, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json", true, V4).Should().BeTrue();
         }
 
         [TestMethod]
-        public void UnqualifiedJsonShouldBeConsideredJsonLightIfMaxVersionIsGreaterThan3()
+        public void UnqualifiedJsonShouldBeConsideredJsonIfMaxVersionIsGreaterThan3()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json", true, new Version(5, 0)).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json", true, new Version(5, 0)).Should().BeTrue();
         }
 
         [TestMethod]
-        public void UnqualifiedJsonShouldBeConsideredJsonLightForNonEntityPayloadsIfMaxVersionIs3()
+        public void UnqualifiedJsonShouldBeConsideredJsonForNonEntityPayloadsIfMaxVersionIs3()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json", false, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json", false, V4).Should().BeTrue();
         }
 
         [TestMethod]
-        public void JsonWithFullMetadataShouldBeConsideredJsonLight()
+        public void JsonWithFullMetadataShouldBeConsideredJson()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json;odata.metadata=full", true, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json;odata.metadata=full", true, V4).Should().BeTrue();
         }
 
         [TestMethod]
-        public void JsonWithMinimalMetadataShouldBeConsideredJsonLight()
+        public void JsonWithMinimalMetadataShouldBeConsideredJson()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json;odata.metadata=minimal", true, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json;odata.metadata=minimal", true, V4).Should().BeTrue();
         }
 
         [TestMethod]
-        public void JsonWithNoMetadataShouldBeConsideredJsonLight()
+        public void JsonWithNoMetadataShouldBeConsideredJson()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/json;odata.metadata=none", true, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/json;odata.metadata=none", true, V4).Should().BeTrue();
         }
 
         [TestMethod]
-        public void AtomShouldNotBeConsideredJsonLight()
+        public void AtomShouldNotBeConsideredJson()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("application/atom+xml", true, V4).Should().BeFalse();
+            ContentTypeUtil.IsResponseMediaTypeJson("application/atom+xml", true, V4).Should().BeFalse();
         }
 
         [TestMethod]
-        public void CheckForBeingJsonLightShouldBeCaseInsensitive()
+        public void CheckForBeingJsonShouldBeCaseInsensitive()
         {
-            ContentTypeUtil.IsResponseMediaTypeJsonLight("AppLICation/JSoN;ODatA.MeTaDAtA=FulL", true, V4).Should().BeTrue();
+            ContentTypeUtil.IsResponseMediaTypeJson("AppLICation/JSoN;ODatA.MeTaDAtA=FulL", true, V4).Should().BeTrue();
         }
 
         [TestMethod]

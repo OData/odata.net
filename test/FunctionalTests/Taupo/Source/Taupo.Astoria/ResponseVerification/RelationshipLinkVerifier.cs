@@ -70,8 +70,8 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             base.Verify(request, response);
 
             // Do not need to verify relationship links in metadata response. Skip it to avoid NullReferenceException in GetExpectedEntitySet call
-            // TODO: Make the Json Light decision based on the request URI. Skip for now, since the links are not serialized by default.
-            if (request.Uri.IsMetadata() || this.IsJsonLightResponse(response))
+            // TODO: Make the Json decision based on the request URI. Skip for now, since the links are not serialized by default.
+            if (request.Uri.IsMetadata() || this.IsJsonResponse(response))
             {
                 return;
             }
@@ -285,15 +285,15 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         }    
 
         /// <summary>
-        /// Returns true if response content is Json Light format.
+        /// Returns true if response content is Json format.
         /// </summary>
         /// <param name="response">The response to check the content type.</param>
-        /// <returns>True if the content type is Json Light, otherwise False.</returns>
-        private bool IsJsonLightResponse(ODataResponse response)
+        /// <returns>True if the content type is Json, otherwise False.</returns>
+        private bool IsJsonResponse(ODataResponse response)
         {
             string contentType = response.Headers[HttpHeaders.ContentType];
-            return contentType.StartsWith(MimeTypes.ApplicationJsonODataLightNonStreaming, StringComparison.CurrentCulture) ||
-                   contentType.StartsWith(MimeTypes.ApplicationJsonODataLightStreaming, StringComparison.CurrentCulture);
+            return contentType.StartsWith(MimeTypes.ApplicationJsonODataNonStreaming, StringComparison.CurrentCulture) ||
+                   contentType.StartsWith(MimeTypes.ApplicationJsonODataStreaming, StringComparison.CurrentCulture);
         }    
         
         /// <summary>

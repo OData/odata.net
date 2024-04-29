@@ -40,9 +40,9 @@ namespace Microsoft.OData.Service.Serializers
         private readonly MetadataParameterValue metadataParameterValueForTypeNames;
 
         /// <summary>
-        /// true if the odata format is JSON Light, false otherwise.
+        /// true if the odata format is Json, false otherwise.
         /// </summary>
-        private readonly bool isJsonLight;
+        private readonly bool isJson;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="PayloadMetadataParameterInterpreter"/> class.
@@ -52,18 +52,18 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="rawParameterValue">The parameter value.</param>
         internal PayloadMetadataParameterInterpreter(ODataFormat format, string rawParameterValue)
         {
-            this.isJsonLight = format == ODataFormat.Json;
+            this.isJson = format == ODataFormat.Json;
 
             // NOTE: we explicitly allow the format passed in to be null, because it implies that no response payload
-            // can possibly be written. In this case, it is treated exactly the same as any other non-json-light format.
-            if (this.isJsonLight)
+            // can possibly be written. In this case, it is treated exactly the same as any other non-json format.
+            if (this.isJson)
             {
-                this.metadataParameterValue = ParseMetadataParameterForJsonLight(rawParameterValue);
+                this.metadataParameterValue = ParseMetadataParameterForJson(rawParameterValue);
                 this.metadataParameterValueForTypeNames = this.metadataParameterValue;
             }
             else
             {
-                Debug.Assert(rawParameterValue == null || rawParameterValue == "verbose", "Only JSON-Light allows the the amount of metadata to be controlled.");
+                Debug.Assert(rawParameterValue == null || rawParameterValue == "verbose", "Only JSON allows the the amount of metadata to be controlled.");
                 this.metadataParameterValue = MetadataParameterValue.Full;
                 this.metadataParameterValueForTypeNames = MetadataParameterValue.Minimal;
             }
@@ -382,15 +382,13 @@ namespace Microsoft.OData.Service.Serializers
         /// <returns>true if the next link Uri should be absolute; false if the next link Uri should be relative.</returns>
         internal bool ShouldNextPageLinkBeAbsolute()
         {
-            if (this.isJsonLight && this.metadataParameterValue != MetadataParameterValue.None)
+            if (this.isJson && this.metadataParameterValue != MetadataParameterValue.None)
             {
-                // In JsonLight, we need to write relative links for next link except for nometadata since ODL will only
+                // In Json, we need to write relative links for next link except for nometadata since ODL will only
                 // allow relative Uris when odata.metadata is on the payload.
                 return false;
             }
 
-            // In V2, Astoria used to write absoluteUri in the next link instead of the relative uri.
-            // For backward compatible, we need to write the absolute uri for Atom and JSON Verbose.
             return true;
         }
 
@@ -404,17 +402,17 @@ namespace Microsoft.OData.Service.Serializers
         internal bool IsEquivalentTo(PayloadMetadataParameterInterpreter other)
         {
             return other != null
-                && other.isJsonLight == this.isJsonLight
+                && other.isJson == this.isJson
                 && other.metadataParameterValue == this.metadataParameterValue
                 && other.metadataParameterValueForTypeNames == this.metadataParameterValueForTypeNames;
         }
 
         /// <summary>
-        /// Parses the raw parameter value provided in the media type and returns a simplified representation, assuming the format is Json Light.
+        /// Parses the raw parameter value provided in the media type and returns a simplified representation, assuming the format is Json.
         /// </summary>
         /// <param name="rawParameterValue">The raw parameter value.</param>
         /// <returns>A representation of what option was specified.</returns>
-        private static MetadataParameterValue ParseMetadataParameterForJsonLight(string rawParameterValue)
+        private static MetadataParameterValue ParseMetadataParameterForJson(string rawParameterValue)
         {
             // If the parameter is not specified, it is equivalent to 'minimal'.
             if (rawParameterValue == null)

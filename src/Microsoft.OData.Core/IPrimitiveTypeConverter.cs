@@ -33,10 +33,10 @@ namespace Microsoft.OData
         void WriteAtom(object instance, TextWriter writer);
 
         /// <summary>
-        /// Write the Json Lite representation of an instance of a primitive type to a json writer.
+        /// Write the Json representation of an instance of a primitive type to a json writer.
         /// </summary>
         /// <param name="instance">The instance to write.</param>
         /// <param name="jsonWriter">Instance of JsonWriter.</param>
-        void WriteJsonLight(object instance, IJsonWriter jsonWriter);
+        void WriteJson(object instance, IJsonWriter jsonWriter);
     }
 }

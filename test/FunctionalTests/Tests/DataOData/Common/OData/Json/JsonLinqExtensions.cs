@@ -22,10 +22,10 @@ namespace Microsoft.Test.Taupo.OData.Json
         /// Saves the JSON value as a text into a writer.
         /// </summary>
         /// <param name="writer">The writer to write to.</param>
-        /// <param name="writingJsonLight">true if we are writing JSON Light, false if we're writing Verbose JSON.</param>
-        public static void SaveAsText(this JsonValue value, TextWriter writer, bool writingJsonLight)
+        /// <param name="writingJson">true if we are writing Json, false if we're writing Verbose JSON.</param>
+        public static void SaveAsText(this JsonValue value, TextWriter writer, bool writingJson)
         {
-            JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(writer, writingJsonLight);
+            JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(writer, writingJson);
             jsonWriter.WriteValue(value);
         }
 
@@ -33,14 +33,14 @@ namespace Microsoft.Test.Taupo.OData.Json
         /// Returns the JSON value as a text.
         /// </summary>
         /// <param name="value">The value to return as a text.</param>
-        /// <param name="writingJsonLight">true if we are writing JSON Light, false if we're writing Verbose JSON.</param>
+        /// <param name="writingJson">true if we are writing Json, false if we're writing Verbose JSON.</param>
         /// <returns>The text representation of the JSON value, the serialized JSON.</returns>
-        public static string ToText(this JsonValue value, bool writingJsonLight)
+        public static string ToText(this JsonValue value, bool writingJson)
         {
             using (StringWriter writer = new StringWriter())
             {
                 writer.NewLine = string.Empty;
-                value.SaveAsText(writer, writingJsonLight);
+                value.SaveAsText(writer, writingJson);
                 return writer.ToString();
             }
         }

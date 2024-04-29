@@ -87,7 +87,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
             this.CombinatorialEngineProvider.RunCombinations(
                 errorDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.Synchronous && !tc.IsRequest),
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.Synchronous && !tc.IsRequest),
                 (testDescriptor, testConfiguration) => testDescriptor.RunTest(testConfiguration));
         }
 

@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="OperationReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="OperationReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
 
@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Common;
     using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
@@ -32,7 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests reading of actions and functions in JSON Light.
     /// </summary>
     [TestClass, TestCase]
-    public class OperationReaderJsonLightTests : ODataReaderTestCase
+    public class OperationReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -53,7 +53,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#operationMetadata\":{}",
                     SkipForRequest = false,
                     SkipForResponse = true,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_MetadataReferencePropertyInRequest"),
                 },
                 new
                 {
@@ -77,7 +77,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":{\"title\":\"PrimitiveResultOperation\",\"title\":\"PrimitiveResultOperation\"}",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation", "title", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation", "title", "#TestModel.PrimitiveResultOperation"),
                 },
                 new
                 {
@@ -85,7 +85,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":{\"target\":\"http://www.example.com/foo\",\"target\":\"http://www.example.com/foo\"}",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation", "target", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation", "target", "#TestModel.PrimitiveResultOperation"),
                 },
                 new
                 {
@@ -93,7 +93,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     Json = "\"#TestModel.PrimitiveResultOperation\":[{},{}]",
                     SkipForRequest = true,
                     SkipForResponse = false,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_OperationMissingTargetProperty", "#TestModel.PrimitiveResultOperation"),
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_OperationMissingTargetProperty", "#TestModel.PrimitiveResultOperation"),
                 },
             };
 
@@ -106,8 +106,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .JsonRepresentation(
                             "{" +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
                                 "\"Id\":1," +
                                 t.Json +
                             "}")
@@ -118,7 +118,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     if (testConfiguration.IsRequest)
@@ -292,8 +292,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .JsonRepresentation(
                             "{" +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
                                 "\"Id\":1," +
                                 "\"Name\":\"cityTypeName\"," +
                                 t.Json +
@@ -319,7 +319,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     if (testConfiguration.IsRequest)
@@ -454,8 +454,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     PayloadElement = PayloadBuilder.Entity("TestModel.CityType")
                         .JsonRepresentation(
                             "{" +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#DefaultContainer.Cities/$entity\"," +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"TestModel.CityType\"," +
                                 "\"Id\":1," +
                                 "\"Name\":\"New York\"," +
                                 t.Json +
@@ -481,7 +481,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     if (testConfiguration.IsRequest)

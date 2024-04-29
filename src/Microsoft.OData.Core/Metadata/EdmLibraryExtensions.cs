@@ -25,7 +25,7 @@ namespace Microsoft.OData.Metadata
     using ErrorStrings = Microsoft.OData.Client.Strings;
 #endif
 #if !ODATA_SERVICE && !ODATA_CLIENT
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     using Microsoft.OData.UriParser;
     using ErrorStrings = Microsoft.OData.Strings;
     using PlatformHelper = Microsoft.OData.PlatformHelper;
@@ -483,7 +483,7 @@ namespace Microsoft.OData.Metadata
                 return Enumerable.Empty<IEdmOperation>();
             }
 
-            int indexOfParameterStart = operationName.IndexOf(JsonLightConstants.FunctionParameterStart);
+            int indexOfParameterStart = operationName.IndexOf(ODataJsonConstants.FunctionParameterStart);
             string operationNameWithoutParameterTypes;
             if (indexOfParameterStart > 0)
             {
@@ -1674,7 +1674,7 @@ namespace Microsoft.OData.Metadata
             }
 
 #if !ODATA_SERVICE && !ODATA_CLIENT
-            int indexOfParameterStart = operationImportName.IndexOf(JsonLightConstants.FunctionParameterStart);
+            int indexOfParameterStart = operationImportName.IndexOf(ODataJsonConstants.FunctionParameterStart);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
             {
@@ -1845,9 +1845,9 @@ namespace Microsoft.OData.Metadata
         private static string ParameterTypesToString(this IEdmOperation operation)
         {
             // TODO: Resolve duplication of operationImport and operation
-            return JsonLightConstants.FunctionParameterStart +
-                string.Join(JsonLightConstants.FunctionParameterSeparator, operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
-                JsonLightConstants.FunctionParameterEnd;
+            return ODataJsonConstants.FunctionParameterStart +
+                string.Join(ODataJsonConstants.FunctionParameterSeparator, operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
+                ODataJsonConstants.FunctionParameterEnd;
         }
 
         /// <summary>
@@ -1858,7 +1858,7 @@ namespace Microsoft.OData.Metadata
         private static string NonBindingParameterNamesToString(this IEdmOperation operation)
         {
             IEnumerable<IEdmOperationParameter> nonBindingParameters = operation.IsBound ? operation.Parameters.Skip(1) : operation.Parameters;
-            return JsonLightConstants.FunctionParameterStart + string.Join(JsonLightConstants.FunctionParameterSeparator, nonBindingParameters.Select(p => p.Name).ToArray()) + JsonLightConstants.FunctionParameterEnd;
+            return ODataJsonConstants.FunctionParameterStart + string.Join(ODataJsonConstants.FunctionParameterSeparator, nonBindingParameters.Select(p => p.Name).ToArray()) + ODataJsonConstants.FunctionParameterEnd;
         }
 
         /// <summary>
@@ -1913,9 +1913,9 @@ namespace Microsoft.OData.Metadata
         private static string ParameterTypesToString(this IEdmOperationImport operationImport)
         {
             // TODO: Resolve duplication of operationImport and operation
-            return JsonLightConstants.FunctionParameterStart +
-                string.Join(JsonLightConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
-                JsonLightConstants.FunctionParameterEnd;
+            return ODataJsonConstants.FunctionParameterStart +
+                string.Join(ODataJsonConstants.FunctionParameterSeparator, operationImport.Operation.Parameters.Select(p => p.Type.FullName()).ToArray()) +
+                ODataJsonConstants.FunctionParameterEnd;
         }
 
         /// <summary>

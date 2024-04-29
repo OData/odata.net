@@ -69,8 +69,8 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
                 if (responseContentType.StartsWith(MimeTypes.ApplicationJson, StringComparison.OrdinalIgnoreCase)) 
                 {
                     this.Assert(
-                        responseContentType.StartsWith(MimeTypes.ApplicationJsonODataLightNonStreaming, StringComparison.Ordinal) ||
-                        responseContentType.StartsWith(MimeTypes.ApplicationJsonODataLightStreaming, StringComparison.Ordinal),
+                        responseContentType.StartsWith(MimeTypes.ApplicationJsonODataNonStreaming, StringComparison.Ordinal) ||
+                        responseContentType.StartsWith(MimeTypes.ApplicationJsonODataStreaming, StringComparison.Ordinal),
                         "JSON responses should be fully qualified",
                         request,
                         response);

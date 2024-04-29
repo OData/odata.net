@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -74,12 +74,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new {
                     NavigationLink = ObjectModelUtils.CreateDefaultNavigationLink(associationLinkName1, linkUrlUri1),
                     Atom = BuildXmlAssociationLink(associationLinkName1, "application/xml", linkUrl1),
-                    JsonLight = (string)null,
+                    Json = (string)null,
                 },
                 new {
                     NavigationLink = ObjectModelUtils.CreateDefaultNavigationLink(associationLinkName2, linkUrlUri2),
                     Atom = BuildXmlAssociationLink(associationLinkName2, "application/xml", linkUrl2),
-                    JsonLight = (string)null
+                    Json = (string)null
                 },
             };
 
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     NavigationLinks = tcs.Select(tc => tc.NavigationLink),
                     Atom = string.Concat(tcs.Select(tc => tc.Atom)),
-                    JsonLight = string.Join(",", tcs.Where(tc => tc.JsonLight != null).Select(tc => tc.JsonLight))
+                    Json = string.Join(",", tcs.Where(tc => tc.Json != null).Select(tc => tc.Json))
                 });
 
             var testDescriptors = testCasesWithMultipleLinks.Select(testCase =>
@@ -116,11 +116,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 Json = string.Join(
                                     "$(NL)",
                                     "{",
-                                    testCase.JsonLight,
+                                    testCase.Json,
                                     "}"),
                                 FragmentExtractor = (result) =>
                                 {
-                                    var associationLinks = result.Object().GetAnnotationsWithName("@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName).ToList();
+                                    var associationLinks = result.Object().GetAnnotationsWithName("@" + JsonConstants.ODataAssociationLinkUrlAnnotationName).ToList();
                                     var jsonResult = new JsonObject();
                                     associationLinks.ForEach(l =>
                                     {
@@ -210,30 +210,30 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
                     Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
-                    JsonLight =
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\"," +
-                        "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
+                    Json =
+                        "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\"," +
+                        "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
                 },
                 // Just nav link URL
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
                     Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
-                    JsonLight = "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\""
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\""
                 },
                 // Just association link URL
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
                     Atom = (string)null,
-                    JsonLight = "\"" + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
+                    Json = "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
                 },
                 // Navigation link with both URLs null
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
                     Atom = (string)null,
-                    JsonLight = string.Empty
+                    Json = string.Empty
                 }
             };
 
@@ -253,7 +253,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                     Json = string.Join(
                                         "$(NL)",
                                         "{",
-                                        testCase.JsonLight,
+                                        testCase.Json,
                                         "}"),
                                     FragmentExtractor = (result) =>
                                     {

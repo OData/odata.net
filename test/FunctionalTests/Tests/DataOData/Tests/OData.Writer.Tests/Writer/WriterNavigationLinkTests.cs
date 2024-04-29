@@ -21,11 +21,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Atom;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />",
-                    JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}"
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("Orders", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}"
                 },
                 // Singleton deferred link
                 new NavigationLinkTestCase
@@ -84,22 +84,22 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = false, Name = "BestFriend", Url = new Uri("http://odata.org/singleton") } },
                     PropertyName = "BestFriend",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("BestFriend", "application/atom+xml;type=entry", "BestFriend", "http://odata.org/singleton") + " />",
-                    JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("BestFriend", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/singleton\"}"
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("BestFriend", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/singleton\"}"
                 },
                 // Deferred link with IsCollection set to null - should fail in ATOM only
                 new NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") } },
                     PropertyName = "Orders",
-                    JsonLight = "{\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}",
+                    Json = "{\"" + JsonUtils.GetPropertyAnnotationName("Orders", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/collection\"}",
                     EdmExpectedExceptionCallback = (tc, m) => null
                 },
-                // Deferred link with Url set to null - should work only in JSON Light
+                // Deferred link with Url set to null - should work only in Json
                 new NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = true, Name = "Orders", Url = null } },
                     PropertyName = "Orders",
-                    JsonLight = "{}",
+                    Json = "{}",
                     EdmExpectedExceptionCallback = (tc, m) => tc.Format != ODataFormat.Json ? ODataExpectedExceptions.ODataException("WriterValidationUtils_NavigationLinkMustSpecifyUrl", "Orders") : null
                 },
                 // Entity reference link in response should fail
@@ -127,11 +127,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 GetDefaultEntryXmlAsString("TestModel.Customer") +
                             "</inline>" +
                         "</link>",
-                    JsonLight = "{" + JsonLightWriterUtils.CombineProperties(
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("BestFriend", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
-                            "\"BestFriend\":{" + JsonLightWriterUtils.CombineProperties(
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"")
+                    Json = "{" + JsonWriterUtils.CombineProperties(
+                            "\"" + JsonUtils.GetPropertyAnnotationName("BestFriend", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
+                            "\"BestFriend\":{" + JsonWriterUtils.CombineProperties(
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"")
                             + "}")
                         + "}"
                 },
@@ -174,8 +174,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 GetDefaultFeedXmlAsString() +
                             "</inline>" +
                         "</link>",
-                    JsonLight = "{" + JsonLightWriterUtils.CombineProperties(
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
+                    Json = "{" + JsonWriterUtils.CombineProperties(
+                            "\"" + JsonUtils.GetPropertyAnnotationName("Orders", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
                             "\"Orders\":[]")
                         + "}"
                 },
@@ -300,7 +300,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     PropertyName = "BestFriend",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("BestFriend", "application/atom+xml;type=entry", "BestFriend", "http://odata.org/singleton") + " />",
-                    JsonLight =  "{\"BestFriend@" + JsonLightConstants.ODataBindAnnotationName + "\":\"http://odata.org/singleton\"}",
+                    Json =  "{\"BestFriend@" + JsonConstants.ODataBindAnnotationName + "\":\"http://odata.org/singleton\"}",
                 },
                 // Single expanded entry in a singleton
                 new NavigationLinkTestCase
@@ -317,7 +317,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 GetDefaultEntryXmlAsString("TestModel.Customer") +
                             "</inline>" +
                         "</link>",
-                    JsonLight =  "{\"BestFriend\":{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}}",
+                    Json =  "{\"BestFriend\":{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}}",
                 },
                 // Single expanded feed in a singleton
                 new NavigationLinkTestCase
@@ -392,7 +392,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />",
-                    JsonLight =  "{\"Orders@" + JsonLightConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]}",
+                    Json =  "{\"Orders@" + JsonConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]}",
                 },
                 // Two entity reference links in a collection
                 new NavigationLinkTestCase
@@ -406,7 +406,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     PropertyName = "Orders",
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection2") + " />",
-                    JsonLight =  "{\"Orders@" + JsonLightConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\",\"http://odata.org/collection2\"]}",
+                    Json =  "{\"Orders@" + JsonConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\",\"http://odata.org/collection2\"]}",
                 },
                 // Single expanded feed with no entries in a collection
                 new NavigationLinkTestCase
@@ -423,7 +423,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 GetDefaultFeedXmlAsString() +
                             "</inline>" +
                         "</link>",
-                    JsonLight = "{\"Orders\":[]}",
+                    Json = "{\"Orders\":[]}",
                 },
                 // Single expanded feed with one entry in a collection
                 new NavigationLinkTestCase
@@ -444,7 +444,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                    JsonLight =  "{\"Orders\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}]}",
+                    Json =  "{\"Orders\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}]}",
                 },
                 // Single expanded feed with two entries in a collection
                 new NavigationLinkTestCase
@@ -468,9 +468,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                   JsonLight =  "{\"Orders\":[" +
-                        "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
-                        "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
+                   Json =  "{\"Orders\":[" +
+                        "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
+                        "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
                         "]}",
                 },
                 // Single expanded feed with no entries and with entity reference link in a collection
@@ -490,7 +490,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             "</inline>" +
                         "</link>" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />",
-                    // JSON Light requires the entity reference links to come before the feed(s)
+                    // Json requires the entity reference links to come before the feed(s)
                     SkipTestConfiguration = tc => tc.Format == ODataFormat.Json,
                 },
                 // Single expanded feed with one entry and with entity reference link in a collection
@@ -515,9 +515,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                    JsonLight =  "{" +
-                        "\"Orders@" + JsonLightConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]," +
-                        "\"Orders\":[{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}]" +
+                    Json =  "{" +
+                        "\"Orders@" + JsonConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]," +
+                        "\"Orders\":[{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}]" +
                         "}",
                 },
                 // Two expanded feeds with one entry and with entity reference link in a collection
@@ -553,7 +553,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                   // NOTE: JSON Light does not support mix and match of feeds and entity reference links.
+                   // NOTE: Json does not support mix and match of feeds and entity reference links.
                     SkipTestConfiguration = tc => tc.Format == ODataFormat.Json
                 },
                 // An entity reference link and two expanded feeds with one entry and in a collection
@@ -589,11 +589,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                   JsonLight =  "{" +
-                        "\"Orders@" + JsonLightConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]," +
+                   Json =  "{" +
+                        "\"Orders@" + JsonConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\"]," +
                         "\"Orders\":[" +
-                                "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
-                                "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
+                                "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
+                                "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
                             "]" +
                         "}",
                 },
@@ -624,7 +624,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             "</inline>" +
                         "</link>" +
                         "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("Orders", "application/atom+xml;type=feed", "Orders", "http://odata.org/collection") + " />",
-                   // NOTE: JSON Light does not support mix and match of feeds and entity reference links.
+                   // NOTE: Json does not support mix and match of feeds and entity reference links.
                     SkipTestConfiguration = tc => tc.Format == ODataFormat.Json
                 },
                 // Single expanded feed with two entries surrounded preceeded by two entity reference links in a collection
@@ -654,11 +654,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                   JsonLight =  "{" +
-                        "\"Orders@" + JsonLightConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\",\"http://odata.org/collection\"]," +
+                   Json =  "{" +
+                        "\"Orders@" + JsonConstants.ODataBindAnnotationName + "\":[\"http://odata.org/collection\",\"http://odata.org/collection\"]," +
                         "\"Orders\":[" +
-                                "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
-                                "{\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
+                                "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}," +
+                                "{\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\",\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"}" +
                             "]" +
                         "}",
                 },
@@ -792,16 +792,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 "</feed>" +
                             "</inline>" +
                         "</link>",
-                    JsonLight = "{" + JsonLightWriterUtils.CombineProperties(
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("Orders", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
+                    Json = "{" + JsonWriterUtils.CombineProperties(
+                            "\"" + JsonUtils.GetPropertyAnnotationName("Orders", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
                             "\"Orders\":[" +
-                                "{" + JsonLightWriterUtils.CombineProperties(
-                                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
-                                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"",
-                                    "\"" + JsonLightUtils.GetPropertyAnnotationName("SingletonOrder", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
-                                    "\"SingletonOrder\":{" + JsonLightWriterUtils.CombineProperties(
-                                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
-                                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"") +
+                                "{" + JsonWriterUtils.CombineProperties(
+                                    "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
+                                    "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"",
+                                    "\"" + JsonUtils.GetPropertyAnnotationName("SingletonOrder", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/nav\"",
+                                    "\"SingletonOrder\":{" + JsonWriterUtils.CombineProperties(
+                                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryId + "\"",
+                                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + "\":\"" + ObjectModelUtils.DefaultEntryReadLink.OriginalString + "\"") +
                                     "}" +
                                 "}" +
                             "]")) +
@@ -914,15 +914,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration = testConfiguration.Clone();
                     testConfiguration.MessageWriterSettings.SetServiceDocumentUri(ServiceDocumentUri);
 
-                    bool isJsonLight = testConfiguration.Format == ODataFormat.Json;
-                    if (testCase.Model == null && isJsonLight) return;
+                    bool isJson = testConfiguration.Format == ODataFormat.Json;
+                    if (testCase.Model == null && isJson) return;
                     using (var memoryStream = new TestStream())
                     using (var messageWriter = TestWriterUtils.CreateMessageWriter(memoryStream, testConfiguration, this.Assert, null, testCase.Model))
                     {
                         ODataWriter writer = messageWriter.CreateODataWriter(
                             /*isFeed*/ false,
-                            isJsonLight ? citySet : null,
-                            isJsonLight ? cityType : null);
+                            isJson ? citySet : null,
+                            isJson ? cityType : null);
                         TestExceptionUtils.ExpectedException(
                             this.Assert,
                             () => TestWriterUtils.WritePayload(messageWriter, writer, true, testCase.Items),
@@ -937,7 +937,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             public ODataItem[] Items { get; set; }
             public string PropertyName { get; set; }
             public string Xml { get; set; }
-            public string JsonLight { get; set; }
+            public string Json { get; set; }
             public ExpectedException ExpectedException { get; set; }
             public Func<WriterTestConfiguration, EdmModel, ExpectedException> EdmExpectedExceptionCallback { get; set; }
             public Func<Microsoft.Test.Taupo.OData.Common.TestConfiguration, bool> SkipTestConfiguration { get; set; }
@@ -963,7 +963,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return new JsonWriterTestExpectedResults(settings.ExpectedResultSettings)
                             {
                                 FragmentExtractor = result => new JsonObject().AddProperties(result.RemoveAllAnnotations(true).Object().GetPropertyAnnotationsAndProperty(this.PropertyName)),
-                                Json = this.JsonLight,
+                                Json = this.Json,
                                 ExpectedException2 = expectedException
                             };
                         }

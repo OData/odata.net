@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     RunHeaderTest(() => requestMessage.Headers, writing, requestMessage.GetHeader, requestMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
 
-            // ODataJsonLightBatchWriter as listener
+            // ODataJsonBatchWriter as listener
             this.CombinatorialEngineProvider.RunCombinations(
                 new bool[] { true, false },
                 requestMessageFuncs,
@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                     RunHeaderTest(() => responseMessage.Headers, writing, responseMessage.GetHeader, responseMessage.SetHeader, this.Assert, this.ExceptionVerifier);
                 });
 
-            // ODataJsonLightBatchWriter as listener
+            // ODataJsonBatchWriter as listener
             this.CombinatorialEngineProvider.RunCombinations(
                 new bool[] { true, false },
                 responseMessageFuncs,
@@ -194,7 +194,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*headers*/ null,
                 mimeWriterAsListener
                 ? CreateODataMultipartMixedBatchWriterListener(stream, false, writing)
-                : CreateODataJsonLightBatchWriterListener(stream, false, writing),
+                : CreateODataJsonBatchWriterListener(stream, false, writing),
                 "1",
                 ReflectionUtils.CreateInstance(urlResolverType, new Type[] { typeof(IODataPayloadUriConverter) }, new object[] { null }),
                 writing,
@@ -224,7 +224,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 /*headers*/null,
                 mimeWriterAsListener
                 ? CreateODataMultipartMixedBatchWriterListener(stream, true, writing)
-                : CreateODataJsonLightBatchWriterListener(stream, false, writing),
+                : CreateODataJsonBatchWriterListener(stream, false, writing),
                 "1",
                 /*urlResolver*/null,
                 writing,
@@ -272,7 +272,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
             return listener;
         }
 
-        private static object CreateODataJsonLightBatchWriterListener(Stream stream, bool response, bool writing)
+        private static object CreateODataJsonBatchWriterListener(Stream stream, bool response, bool writing)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
             object message = response
@@ -286,8 +286,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
                 IsResponse = response,
                 IsAsync = false
             };
-            Type odataJsonLightOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.JsonLight.ODataJsonLightOutputContext");
-            object jsonOutputContext = ReflectionUtils.CreateInstance(odataJsonLightOutputContextType,
+            Type odataJsonOutputContextType = typeof(ODataBatchWriter).Assembly.GetType("Microsoft.OData.Json.ODataJsonOutputContext");
+            object jsonOutputContext = ReflectionUtils.CreateInstance(odataJsonOutputContextType,
                 new Type[]
                 {
                     typeof(ODataMessageInfo),
@@ -298,7 +298,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.ObjectModelTests
 
             Assembly assembly = Assembly.LoadFrom("Microsoft.OData.Core.dll");
             object listener = assembly.CreateInstance(
-                "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter",
+                "Microsoft.OData.Json.ODataJsonBatchWriter",
                 false, /*ignoreCase*/
                 BindingFlags.Instance | BindingFlags.NonPublic,
                 null, /*binder*/
