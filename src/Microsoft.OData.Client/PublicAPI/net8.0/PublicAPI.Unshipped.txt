@@ -4,6 +4,8 @@ Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequ
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
 Microsoft.OData.Client.DataServiceContext.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
 Microsoft.OData.Client.DataServiceContext.HttpClientFactory.set -> void
+Microsoft.OData.Client.IBaseEntityType.DataServiceContext.get -> Microsoft.OData.Client.DataServiceContext
+Microsoft.OData.Client.IBaseEntityType.DataServiceContext.set -> void
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
@@ -518,8 +520,6 @@ Microsoft.OData.Client.HttpWebResponseMessage
 Microsoft.OData.Client.HttpWebResponseMessage.Dispose() -> void
 Microsoft.OData.Client.HttpWebResponseMessage.HttpWebResponseMessage(System.Collections.Generic.IDictionary<string, string> headers, int statusCode, System.Func<System.IO.Stream> getResponseStream) -> void
 Microsoft.OData.Client.IBaseEntityType
-Microsoft.OData.Client.IBaseEntityType.Context.get -> Microsoft.OData.Client.DataServiceContext
-Microsoft.OData.Client.IBaseEntityType.Context.set -> void
 Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.get -> Microsoft.OData.Client.EntityDescriptor
 Microsoft.OData.Client.IBaseEntityType.EntityDescriptor.set -> void
 Microsoft.OData.Client.IgnoreClientPropertyAttribute
