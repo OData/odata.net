@@ -861,28 +861,28 @@ namespace Microsoft.OData.Json
 
         #region "Asynchronous API"
 
-        public async Task StartPaddingFunctionScopeAsync()
+        public async ValueTask StartPaddingFunctionScopeAsync()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[..1].Span);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WritePaddingFunctionNameAsync(string functionName)
+        public async ValueTask WritePaddingFunctionNameAsync(string functionName)
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task EndPaddingFunctionScopeAsync()
+        public async ValueTask EndPaddingFunctionScopeAsync()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[1..2].Span);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task StartObjectScopeAsync()
+        public async ValueTask StartObjectScopeAsync()
         {
             this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
@@ -890,14 +890,14 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task EndObjectScopeAsync()
+        public async ValueTask EndObjectScopeAsync()
         {
             this.utf8JsonWriter.WriteEndObject();
             this.ExitScope();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task StartArrayScopeAsync()
+        public async ValueTask StartArrayScopeAsync()
         {
             this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
@@ -905,49 +905,49 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task EndArrayScopeAsync()
+        public async ValueTask EndArrayScopeAsync()
         {
             this.utf8JsonWriter.WriteEndArray();
             this.ExitScope();
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteNameAsync(string name)
+        public async ValueTask WriteNameAsync(string name)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WritePropertyName(name);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(bool value)
+        public async ValueTask WriteValueAsync(bool value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteBooleanValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(int value)
+        public async ValueTask WriteValueAsync(int value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(float value)
+        public async ValueTask WriteValueAsync(float value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(short value)
+        public async ValueTask WriteValueAsync(short value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(long value)
+        public async ValueTask WriteValueAsync(long value)
         {
             this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
@@ -962,7 +962,7 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(double value)
+        public async ValueTask WriteValueAsync(double value)
         {
             this.WriteSeparatorIfNecessary();
             if (double.IsNaN(value))
@@ -985,14 +985,14 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(Guid value)
+        public async ValueTask WriteValueAsync(Guid value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(decimal value)
+        public async ValueTask WriteValueAsync(decimal value)
         {
             this.WriteSeparatorIfNecessary();
             if (this.isIeee754Compatible)
@@ -1007,7 +1007,7 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(DateTimeOffset value)
+        public async ValueTask WriteValueAsync(DateTimeOffset value)
         {
             this.WriteSeparatorIfNecessary();
             if (value.Offset == TimeSpan.Zero)
@@ -1029,7 +1029,7 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(TimeSpan value)
+        public async ValueTask WriteValueAsync(TimeSpan value)
         {
             this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
@@ -1037,35 +1037,35 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(Date value)
+        public async ValueTask WriteValueAsync(Date value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(TimeOfDay value)
+        public async ValueTask WriteValueAsync(TimeOfDay value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(byte value)
+        public async ValueTask WriteValueAsync(byte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(sbyte value)
+        public async ValueTask WriteValueAsync(sbyte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteValueAsync(string value)
+        public async ValueTask WriteValueAsync(string value)
         {
             if (value == null)
             {
@@ -1138,7 +1138,7 @@ namespace Microsoft.OData.Json
             CheckIfManualValueAtArrayStart();
         }
 
-        public async Task WriteValueAsync(byte[] value)
+        public async ValueTask WriteValueAsync(byte[] value)
         {
             if (value == null)
             {
@@ -1195,20 +1195,20 @@ namespace Microsoft.OData.Json
             CheckIfManualValueAtArrayStart();
         }
 
-        public async Task WriteValueAsync(JsonElement value)
+        public async ValueTask WriteValueAsync(JsonElement value)
         {
             this.WriteSeparatorIfNecessary();
             value.WriteTo(utf8JsonWriter);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task WriteRawValueAsync(string rawValue)
+        public async ValueTask WriteRawValueAsync(string rawValue)
         {
             this.WriteRawValueCore(rawValue);
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async Task FlushAsync()
+        public async ValueTask FlushAsync()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             await this.writeStream.WriteAsync(this.bufferWriter.WrittenMemory).ConfigureAwait(false);

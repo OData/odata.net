@@ -521,7 +521,7 @@ namespace Microsoft.OData.Json
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
         /// </remarks>
-        public virtual async Task<object> GetValueAsync()
+        public virtual async ValueTask<object> GetValueAsync()
         {
             if (this.readingStream)
             {
@@ -559,15 +559,15 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// true if the current value can be streamed; otherwise false.</returns>
-        public Task<bool> CanStreamAsync()
+        public ValueTask<bool> CanStreamAsync()
         {
             if (this.canStream)
             {
-                return Task.FromResult(true);
+                return ValueTask.FromResult(true);
             }
             else
             {
-                return Task.FromResult(false);
+                return ValueTask.FromResult(false);
             }
         }
 
@@ -578,7 +578,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a new node was found,
         /// or false if end of input was reached.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
-        public virtual async Task<bool> ReadAsync()
+        public virtual async ValueTask<bool> ReadAsync()
         {
             if (this.readingStream)
             {
@@ -755,7 +755,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading a base64 URL encoded binary value.</returns>
-        public async Task<Stream> CreateReadStreamAsync()
+        public async ValueTask<Stream> CreateReadStreamAsync()
         {
             if (!this.canStream)
             {
@@ -770,7 +770,7 @@ namespace Microsoft.OData.Json
                 this.scopes.Peek().ValueCount++;
                 await this.ReadAsync()
                     .ConfigureAwait(false);
-                return new ODataBinaryStreamReader((a, b, c) => { return Task.FromResult(0); });
+                return new ODataBinaryStreamReader((a, b, c) => { return ValueTask.FromResult(0); });
             }
 
             this.tokenStartIndex++;
@@ -783,7 +783,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading a text value.</returns>
-        public async Task<TextReader> CreateTextReaderAsync()
+        public async ValueTask<TextReader> CreateTextReaderAsync()
         {
             if (!this.canStream)
             {
@@ -802,7 +802,7 @@ namespace Microsoft.OData.Json
                 this.scopes.Peek().ValueCount++;
                 await this.ReadAsync()
                     .ConfigureAwait(false);
-                return new ODataTextStreamReader((a, b, c) => { return Task.FromResult(0); });
+                return new ODataTextStreamReader((a, b, c) => { return ValueTask.FromResult(0); });
             }
 
             // skip over the opening quote character for a string value
@@ -1597,7 +1597,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the node type to report to the user.</returns>
-        private async Task<JsonNodeType> ParseValueAsync()
+        private async ValueTask<JsonNodeType> ParseValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && !IsWhitespaceCharacter(this.characterBuffer[this.tokenStartIndex]),
@@ -1866,7 +1866,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains null if successful; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 'n' character.</remarks>
-        private async Task<object> ParseNullPrimitiveValueAsync()
+        private async ValueTask<object> ParseNullPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && this.characterBuffer[this.tokenStartIndex] == 'n',
@@ -1889,7 +1889,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true or false if successful; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the 't' or 'f' character.</remarks>
-        private async Task<object> ParseBooleanPrimitiveValueAsync()
+        private async ValueTask<object> ParseBooleanPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == 't' || this.characterBuffer[this.tokenStartIndex] == 'f'),
@@ -1917,7 +1917,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an Int32, Decimal or Double value; otherwise throws.</returns>
         /// <remarks>Assumes that the current token position points to the first character of the number, so either digit, dot or dash.</remarks>
-        private async Task<object> ParseNumberPrimitiveValueAsync()
+        private async ValueTask<object> ParseNumberPrimitiveValueAsync()
         {
             Debug.Assert(
                 this.tokenStartIndex < this.storedCharacterCount && (this.characterBuffer[this.tokenStartIndex] == '.' || this.characterBuffer[this.tokenStartIndex] == '-' || Char.IsDigit(this.characterBuffer[this.tokenStartIndex])),
@@ -1981,7 +1981,7 @@ namespace Microsoft.OData.Json
         /// - string value quoted with double quotes.
         /// - string value quoted with single quotes.
         /// - sequence of letters, digits, underscores and dollar signs (without quoted and in any order).</remarks>
-        private async Task<string> ParseNameAsync()
+        private async ValueTask<string> ParseNameAsync()
         {
             Debug.Assert(this.tokenStartIndex < this.storedCharacterCount, "Must have at least one character available.");
 
@@ -2028,7 +2028,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private async Task<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
+        private async ValueTask<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
         {
             if (!readingStream)
             {
@@ -2148,11 +2148,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a non-whitespace character was found,
         /// in which case the <see cref="tokenStartIndex"/> is pointing at that character;
         /// otherwise false if there are no non-whitespace characters left in the input.</returns>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> SkipWhitespacesAsync()
-#else
-        private async Task<bool> SkipWhitespacesAsync()
-#endif
         {
             do
             {
@@ -2176,11 +2172,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if at least the required number of characters is available; 
         /// otherwise false if end of input was reached.</returns>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
-#else
-        private async Task<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
-#endif
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -2201,11 +2193,7 @@ namespace Microsoft.OData.Json
         /// otherwise false if end of input was reached.</returns>
         /// <remarks>This may move characters in the <see cref="characterBuffer"/>, so after this is called
         /// all indices to the <see cref="characterBuffer"/> are invalid except for <see cref="tokenStartIndex"/>.</remarks>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> ReadInputAsync()
-#else
-        private async Task<bool> ReadInputAsync()
-#endif
         {
             Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
 

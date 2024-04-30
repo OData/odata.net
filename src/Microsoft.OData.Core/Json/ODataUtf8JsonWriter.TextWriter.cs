@@ -83,7 +83,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="contentType">The content type of the TextWriter value scope.</param>
         /// <returns>A task representing the asynchronous operation. The task result is a TextWriter for writing JSON data.</returns>
-        public async Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
+        public async ValueTask<TextWriter> StartTextWriterValueScopeAsync(string contentType)
         {
             await this.FlushAsync().ConfigureAwait(false);
 
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends a TextWriter value scope.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task EndTextWriterValueScopeAsync()
+        public async ValueTask EndTextWriterValueScopeAsync()
         {
             if (!this.isWritingJson)
             {

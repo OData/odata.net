@@ -7,6 +7,8 @@
 #if NETCOREAPP
 namespace Microsoft.OData.Json
 {
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.Metadata;
     using System;
     using System.Buffers;
     using System.Diagnostics;
@@ -58,7 +60,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously starts a scope for writing a stream value.
         /// </summary>
         /// <returns>A task representing the asynchronous operation. The task result contains a stream for writing the stream value.</returns>
-        public async Task<Stream> StartStreamValueScopeAsync()
+        public async ValueTask<Stream> StartStreamValueScopeAsync()
         {
             this.WriteSeparatorIfNecessary();
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -73,7 +75,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends a scope for writing a stream value.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task EndStreamValueScopeAsync()
+        public async ValueTask EndStreamValueScopeAsync()
         {
             if (this.binaryValueStream != null)
             {
@@ -235,6 +237,19 @@ namespace Microsoft.OData.Json
             public override async Task WriteAsync(byte[] buffer, int offset, int count, CancellationToken token)
             {
                 ReadOnlyMemory<byte> value = buffer.AsMemory().Slice(offset, count);
+                await this.WriteByteValueInChunksAsync(value).ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// Asynchronously writes a portion of a byte array to the underlying stream in chunks.
+            /// </summary>
+            /// <param name="buffer">The byte array from which data will be written.</param>
+            /// <param name="offset">The zero-based byte offset in the buffer at which to begin copying bytes to the stream.</param>
+            /// <param name="count">The maximum number of bytes to write.</param>
+            /// <param name="token">A CancellationToken to observe while waiting for the task to complete.</param>
+            /// <returns>A task representing the asynchronous write operation.</returns>
+            public override async ValueTask WriteAsync(ReadOnlyMemory<byte> value, CancellationToken token)
+            {
                 await this.WriteByteValueInChunksAsync(value).ConfigureAwait(false);
             }
 
