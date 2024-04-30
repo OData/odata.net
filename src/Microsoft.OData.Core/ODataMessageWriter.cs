@@ -218,7 +218,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataAsynchronousWriter" /> to write an async response. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        public ValueTask<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
             this.VerifyCanCreateODataAsyncWriter();
             return this.WriteToOutputAsync(
@@ -228,7 +228,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceSetWriterAsync()
+        public ValueTask<ODataWriter> CreateODataResourceSetWriterAsync()
         {
             return CreateODataResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
         }
@@ -238,7 +238,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet)
+        public ValueTask<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet)
         {
             return CreateODataResourceSetWriterAsync(entitySet, /*entityType*/null);
         }
@@ -249,7 +249,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="structuredType">The structured type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType structuredType)
+        public ValueTask<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType structuredType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
@@ -290,7 +290,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a delta resource set. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
+        public ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync()
         {
             return CreateODataDeltaResourceSetWriterAsync(/*entitySet*/null, /*entityType*/null);
         }
@@ -300,7 +300,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet)
+        public ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet)
         {
             return CreateODataDeltaResourceSetWriterAsync(entitySet, /*entityType*/null);
         }
@@ -311,7 +311,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to write entities for.</param>
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        public ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
@@ -353,7 +353,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceWriterAsync()
+        public ValueTask<ODataWriter> CreateODataResourceWriterAsync()
         {
             return CreateODataResourceWriterAsync(/*entitySet*/null, /*resourceType*/null);
         }
@@ -363,7 +363,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="navigationSource">The navigation source we are going to write entities for.</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource)
+        public ValueTask<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource)
         {
             return CreateODataResourceWriterAsync(navigationSource, /*resourceType*/null);
         }
@@ -374,7 +374,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to write resource set for.</param>
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
-        public Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public ValueTask<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
@@ -402,7 +402,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to write resource for.</param>
         /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
         /// <returns>A running task for the created uri parameter writer.</returns>
-        public Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public ValueTask<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceWriter();
             return this.WriteToOutputAsync(
@@ -430,7 +430,7 @@ namespace Microsoft.OData
         /// <param name="entitySetBase">The resource set we are going to write resources for.</param>
         /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
         /// <returns>A running task for the created uri parameter writer.</returns>
-        public Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
+        public ValueTask<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySetBase, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceSetWriter();
             return this.WriteToOutputAsync(
@@ -460,7 +460,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write a collection of primitive or complex values (as result of a service operation invocation). </summary>
         /// <returns>A running task for the created collection writer.</returns>
-        public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync()
+        public ValueTask<ODataCollectionWriter> CreateODataCollectionWriterAsync()
         {
             return this.CreateODataCollectionWriterAsync(null);
         }
@@ -470,7 +470,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
         /// <returns>A running task for the created collection writer.</returns>
-        public Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
+        public ValueTask<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
             this.VerifyCanCreateODataCollectionWriter(itemTypeReference);
             return this.WriteToOutputAsync(
@@ -490,7 +490,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously creates an <see cref="Microsoft.OData.ODataBatchWriter" /> to write a batch of requests or responses. </summary>
         /// <returns>A running task for the created batch writer.</returns>
-        public Task<ODataBatchWriter> CreateODataBatchWriterAsync()
+        public ValueTask<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             this.VerifyCanCreateODataBatchWriter();
             return this.WriteToOutputAsync(
@@ -516,7 +516,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="operation">The operation whose parameters will be written.</param>
         /// <returns>A running task for the created parameter writer.</returns>
-        public Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
+        public ValueTask<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
         {
             this.VerifyCanCreateODataParameterWriter(operation);
             return this.WriteToOutputAsync(
@@ -537,7 +537,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously writes a service document with the specified <paramref name="serviceDocument" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <param name="serviceDocument">The service document to write.</param>
-        public Task WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
+        public ValueTask WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
         {
             this.VerifyCanWriteServiceDocument(serviceDocument);
             return this.WriteToOutputAsync(
@@ -558,7 +558,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously writes an <see cref="Microsoft.OData.ODataProperty" /> as the message payload. </summary>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <param name="property">The property to write</param>
-        public Task WritePropertyAsync(ODataProperty property)
+        public ValueTask WritePropertyAsync(ODataProperty property)
         {
             this.VerifyCanWriteProperty(property);
             return this.WriteToOutputAsync(
@@ -594,7 +594,7 @@ namespace Microsoft.OData
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <param name="error">The error to write.</param>
         /// <param name="includeDebugInformation"> A flag indicating whether debug information (for example, the inner error from the <paramref name="error" />) should be included in the payload. This should only be used in debug scenarios. </param>
-        public Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
+        public ValueTask WriteErrorAsync(ODataError error, bool includeDebugInformation)
         {
             // We currently assume that the error is top-level if no create/write method has been called on this message writer.
             // It is possible that the user would create a Json writer, but writes nothing to it before writes the first error.
@@ -627,7 +627,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously writes the result of a $ref query as the message payload. </summary>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <param name="links">The entity reference links to write as message payload.</param>
-        public Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
+        public ValueTask WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
         {
             this.VerifyCanWriteEntityReferenceLinks(links);
             return this.WriteToOutputAsync(
@@ -648,7 +648,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously writes a singleton result of a $ref query as the message payload. </summary>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <param name="link">The link result to write as the message payload.</param>
-        public Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
+        public ValueTask WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
         {
             this.VerifyCanWriteEntityReferenceLink(link);
             return this.WriteToOutputAsync(
@@ -669,7 +669,7 @@ namespace Microsoft.OData
         /// <summary> Asynchronously writes a single value as the message body. </summary>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <param name="value">The value to write.</param>
-        public Task WriteValueAsync(object value)
+        public ValueTask WriteValueAsync(object value)
         {
             ODataPayloadKind payloadKind = this.VerifyCanWriteValue(value);
             return this.WriteToOutputAsync(
@@ -690,7 +690,7 @@ namespace Microsoft.OData
         /// Asynchronously writes a metadata document as the message payload.
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
-        public Task WriteMetadataDocumentAsync()
+        public ValueTask WriteMetadataDocumentAsync()
         {
             this.VerifyCanWriteMetadataDocument();
             return this.WriteToOutputAsync(
@@ -1291,7 +1291,7 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeAsyncAction">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        private async Task WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task> writeAsyncAction)
+        private async ValueTask WriteToOutputAsync(ODataPayloadKind payloadKind, Func<ODataOutputContext, ValueTask> writeAsyncAction)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);
@@ -1311,7 +1311,7 @@ namespace Microsoft.OData
         /// <param name="payloadKind">The payload kind to write.</param>
         /// <param name="writeFunc">The write operation to invoke on the output.</param>
         /// <returns>Task which represents the pending write operation.</returns>
-        private async Task<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, Task<TResult>> writeFunc)
+        private async ValueTask<TResult> WriteToOutputAsync<TResult>(ODataPayloadKind payloadKind, Func<ODataOutputContext, ValueTask<TResult>> writeFunc)
         {
             // Set the content type header here since all headers have to be set before getting the stream
             this.SetOrVerifyHeaders(payloadKind);

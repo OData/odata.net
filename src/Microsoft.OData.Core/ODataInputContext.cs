@@ -193,7 +193,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public virtual ValueTask<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -215,7 +215,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public virtual ValueTask<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -237,7 +237,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        public virtual ValueTask<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
@@ -257,7 +257,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
-        public virtual Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
+        public virtual ValueTask<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
@@ -281,7 +281,7 @@ namespace Microsoft.OData
         /// <param name="edmStructuralProperty">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        public virtual Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
+        public virtual ValueTask<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty edmStructuralProperty, IEdmTypeReference expectedPropertyTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -299,7 +299,7 @@ namespace Microsoft.OData
         /// Asynchronously read a top-level error.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
-        public virtual Task<ODataError> ReadErrorAsync()
+        public virtual ValueTask<ODataError> ReadErrorAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -321,7 +321,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        public virtual ValueTask<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
@@ -343,7 +343,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public virtual Task<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public virtual ValueTask<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -363,7 +363,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataParameterReader"/>.</returns>
-        public virtual Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
+        public virtual ValueTask<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Parameter);
         }
@@ -381,7 +381,7 @@ namespace Microsoft.OData
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
         /// <returns>Task which when completed returns the newly created <see cref="ODataAsynchronousReader"/>.</returns>
-        internal virtual Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
+        internal virtual ValueTask<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
@@ -403,7 +403,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
-        internal virtual Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        internal virtual ValueTask<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -427,7 +427,7 @@ namespace Microsoft.OData
         /// <remarks>
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchReader> CreateBatchReaderAsync()
+        internal virtual ValueTask<ODataBatchReader> CreateBatchReaderAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -449,7 +449,7 @@ namespace Microsoft.OData
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
-        internal virtual Task<ODataServiceDocument> ReadServiceDocumentAsync()
+        internal virtual ValueTask<ODataServiceDocument> ReadServiceDocumentAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
@@ -502,7 +502,7 @@ namespace Microsoft.OData
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal virtual Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
+        internal virtual ValueTask<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
@@ -520,7 +520,7 @@ namespace Microsoft.OData
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal virtual Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
+        internal virtual ValueTask<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
@@ -540,7 +540,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPrimitiveTypeReference">The expected type reference for the value to be read; null if no expected type is available.</param>
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
-        internal virtual Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        internal virtual ValueTask<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
