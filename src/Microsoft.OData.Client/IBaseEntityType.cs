@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// DataServiceContext for query provider.
         /// </summary>
-        DataServiceContext DataServiceContext { get; set; }
+        DataServiceContext EntityTrackingContext { get; set; }
 
         /// <summary>
         /// Entity descriptor containing entity stream links.

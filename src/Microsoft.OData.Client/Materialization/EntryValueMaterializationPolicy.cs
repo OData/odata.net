@@ -682,7 +682,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.ResolvedObject is IBaseEntityType entity)
             {
-                entity.DataServiceContext = this.EntityTrackingAdapter.Context;
+                entity.EntityTrackingContext = this.EntityTrackingAdapter.Context;
 
                 if (!entry.IsTracking)
                 {

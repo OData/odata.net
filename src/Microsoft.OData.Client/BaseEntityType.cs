@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         protected internal DataServiceContext Context { get; set; }
 
-        DataServiceContext IBaseEntityType.DataServiceContext
+        DataServiceContext IBaseEntityType.EntityTrackingContext
         {
             get => Context;
             set => Context = value;
