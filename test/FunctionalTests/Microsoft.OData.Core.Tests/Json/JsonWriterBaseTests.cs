@@ -259,7 +259,6 @@ namespace Microsoft.OData.Tests.Json
             {
                 Console.WriteLine("Failed to parse source text:");
                 Console.WriteLine(MixedObjectJson);
-                Console.WriteLine($"Line num {ex.LineNumber} Line Pos {ex.LinePosition}");
                 Console.Error.WriteLine(ex.Message);
                 throw;
             }
