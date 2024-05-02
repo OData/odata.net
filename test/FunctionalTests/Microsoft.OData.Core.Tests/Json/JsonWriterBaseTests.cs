@@ -4,7 +4,6 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
-using Newtonsoft.Json;
 
 
 #if NETCOREAPP3_1_OR_GREATER
@@ -256,7 +255,7 @@ namespace Microsoft.OData.Tests.Json
                     }
                 }
             }
-            catch (JsonReaderException ex)
+            catch (Exception ex)
             {
                 Console.WriteLine("Failed to parse source text:");
                 Console.WriteLine(MixedObjectJson);
