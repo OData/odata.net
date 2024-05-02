@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
+using Newtonsoft.Json;
+
 
 #if NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
@@ -235,22 +237,34 @@ namespace Microsoft.OData.Tests.Json
         [Fact]
         public void WritesJsonElementCorrectly()
         {
-            using (JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson))
-            using (MemoryStream stream = new MemoryStream())
+            try
             {
-                IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
-                jsonWriter.WriteValue(jsonDoc.RootElement);
-
-                jsonWriter.Flush();
-                stream.Seek(0, SeekOrigin.Begin);
-                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                using (JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson))
+                using (MemoryStream stream = new MemoryStream())
                 {
-                    string rawOutput = reader.ReadToEnd();
-                    string normalizedOutput = NormalizeJsonText(rawOutput);
-                    string normalizedExpectedOutput = NormalizeJsonText(MixedObjectJson);
-                    Assert.Equal(normalizedExpectedOutput, normalizedOutput);
+                    IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
+                    jsonWriter.WriteValue(jsonDoc.RootElement);
+
+                    jsonWriter.Flush();
+                    stream.Seek(0, SeekOrigin.Begin);
+                    using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                    {
+                        string rawOutput = reader.ReadToEnd();
+                        string normalizedOutput = NormalizeJsonText(rawOutput);
+                        string normalizedExpectedOutput = NormalizeJsonText(MixedObjectJson);
+                        Assert.Equal(normalizedExpectedOutput, normalizedOutput);
+                    }
                 }
             }
+            catch (JsonReaderException ex)
+            {
+                Console.WriteLine("Failed to parse source text:");
+                Console.WriteLine(MixedObjectJson);
+                Console.WriteLine($"Line num {ex.LineNumber} Line Pos {ex.LinePosition}");
+                Console.Error.WriteLine(ex.Message);
+                throw;
+            }
+            
         }
 
         [Fact]
