@@ -4,8 +4,8 @@ Microsoft.OData.Client.DataServiceClientRequestMessageArgs.DataServiceClientRequ
 Microsoft.OData.Client.DataServiceClientRequestMessageArgs.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
 Microsoft.OData.Client.DataServiceContext.HttpClientFactory.get -> System.Net.Http.IHttpClientFactory
 Microsoft.OData.Client.DataServiceContext.HttpClientFactory.set -> void
-Microsoft.OData.Client.IBaseEntityType.EntityTrackingContext.get -> Microsoft.OData.Client.DataServiceContext
-Microsoft.OData.Client.IBaseEntityType.EntityTrackingContext.set -> void
+Microsoft.OData.Client.IBaseEntityType.DataServiceContext.get -> Microsoft.OData.Client.DataServiceContext
+Microsoft.OData.Client.IBaseEntityType.DataServiceContext.set -> void
 Microsoft.OData.Client.UriFunctionAttribute
 Microsoft.OData.Client.UriFunctionAttribute.AllowClientSideEvaluation.get -> bool
 Microsoft.OData.Client.UriFunctionAttribute.UriFunctionAttribute(bool allowClientSideEvaluation = false) -> void
