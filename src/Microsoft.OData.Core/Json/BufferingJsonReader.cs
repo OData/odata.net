@@ -901,7 +901,7 @@ namespace Microsoft.OData.Json
                         string errorCode;
                         if (this.TryReadErrorStringPropertyValue(out errorCode))
                         {
-                            error.ErrorCode = errorCode;
+                            error.Code = errorCode;
                         }
                         else
                         {
@@ -1073,7 +1073,7 @@ namespace Microsoft.OData.Json
                         string code;
                         if (this.TryReadErrorStringPropertyValue(out code))
                         {
-                            detail.ErrorCode = code;
+                            detail.Code = code;
                         }
                         else
                         {
@@ -1445,7 +1445,7 @@ namespace Microsoft.OData.Json
                             return Tuple.Create(false, error);
                         }
 
-                        error.ErrorCode = readErrorCodePropertyResult.Item2;
+                        error.Code = readErrorCodePropertyResult.Item2;
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
@@ -1645,7 +1645,7 @@ namespace Microsoft.OData.Json
                             return Tuple.Create(false, detail);
                         }
 
-                        detail.ErrorCode = readErrorCodePropertyResult.Item2;
+                        detail.Code = readErrorCodePropertyResult.Item2;
                         break;
 
                     case JsonConstants.ODataErrorTargetName:

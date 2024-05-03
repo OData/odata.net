@@ -10,7 +10,6 @@ namespace Microsoft.OData
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using System.Globalization;
     using System.Text;
     using Microsoft.OData.Json;
     #endregion Namespaces
@@ -21,19 +20,20 @@ namespace Microsoft.OData
     [DebuggerDisplay("{Message}")]
     public sealed class ODataInnerError
     {
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with default values.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ODataInnerError" /> class with default values.</summary>
         public ODataInnerError()
         {
-            Properties = new Dictionary<string, ODataValue>();
-
-            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-            ////       to stay compatible with Astoria.
-            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, new ODataNullValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataNullValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataNullValue());
+            Properties = new Dictionary<string, ODataValue>
+            {
+                //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
+                ////       to stay compatible with Astoria.
+                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataNullValue() },
+                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataNullValue() },
+                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataNullValue() }
+            };
         }
 
-        /// <summary>Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with exception object.</summary>
+        /// <summary>Initializes a new instance of the <see cref="ODataInnerError" /> class with exception object.</summary>
         /// <param name="exception">The <see cref="System.Exception" /> used to create the inner error.</param>
         public ODataInnerError(Exception exception)
         {
@@ -44,17 +44,18 @@ namespace Microsoft.OData
                 this.InnerError = new ODataInnerError(exception.InnerException);
             }
 
-            Properties = new Dictionary<string, ODataValue>();
-
-            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-            ////       to stay compatible with Astoria.
-            Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, exception.Message.ToODataValue() ?? new ODataNullValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, exception.GetType().FullName.ToODataValue() ?? new ODataNullValue());
-            Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? new ODataNullValue());
+            Properties = new Dictionary<string, ODataValue>
+            {
+                //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
+                ////       to stay compatible with Astoria.
+                { JsonConstants.ODataErrorInnerErrorMessageName, exception.Message.ToODataValue() ?? new ODataNullValue() },
+                { JsonConstants.ODataErrorInnerErrorTypeNameName, exception.GetType().FullName.ToODataValue() ?? new ODataNullValue() },
+                { JsonConstants.ODataErrorInnerErrorStackTraceName, exception.StackTrace.ToODataValue() ?? new ODataNullValue() }
+            };
         }
 
         /// <summary>
-        ///  Initializes a new instance of the <see cref="Microsoft.OData.ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
+        ///  Initializes a new instance of the <see cref="ODataInnerError" /> class with a dictionary of property names and corresponding ODataValues.
         /// </summary>
         /// <param name="properties">Dictionary of string keys with ODataValue as value. Key string indicates the property name where as the value of the property is encapsulated in ODataValue.</param>
         public ODataInnerError(IDictionary<string, ODataValue> properties)
@@ -75,6 +76,7 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the error message.</summary>
         /// <returns>The error message.</returns>
+        [Obsolete("This will be dropped in the 9.x release. The contents of inner error object should be service-defined. There are no required properties.")]
         public string Message
         {
             get { return GetStringValue(JsonConstants.ODataErrorInnerErrorMessageName); }
@@ -83,6 +85,7 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the type name of this error, for example, the type name of an exception.</summary>
         /// <returns>The type name of this error.</returns>
+        [Obsolete("This will be dropped in the 9.x release. The contents of inner error object should be service-defined. There are no required properties.")]
         public string TypeName
         {
             get { return GetStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName); }
@@ -91,6 +94,7 @@ namespace Microsoft.OData
 
         /// <summary>Gets or sets the stack trace for this error.</summary>
         /// <returns>The stack trace for this error.</returns>
+        [Obsolete("This will be dropped in the 9.x release. The contents of inner error object should be service-defined. There are no required properties.")]
         public string StackTrace
         {
             get { return GetStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName); }
@@ -109,9 +113,12 @@ namespace Microsoft.OData
         /// Serialization to Json format string.
         /// </summary>
         /// <returns>The string in Json format</returns>
-        internal string ToJson()
+        internal string ToJsonString()
         {
-            StringBuilder sb = new StringBuilder();
+            StringBuilder builder = new StringBuilder();
+            bool firstProperty = true;
+
+            builder.Append('{');
 
             // Write some properties to enforce an order. 
             foreach (KeyValuePair<string, ODataValue> keyValuePair in Properties)
@@ -124,23 +131,47 @@ namespace Microsoft.OData
                     continue;
                 }
 
-                sb.Append(",");
-                sb.Append("\"").Append(keyValuePair.Key).Append("\"").Append(":");
-                ODataJsonWriterUtils.ODataValueToString(sb, keyValuePair.Value);
+                if (!firstProperty)
+                {
+                    builder.Append(',');
+                }
+                else
+                {
+                    firstProperty = false;
+                }
+
+                builder.Append('"').Append(keyValuePair.Key).Append('"').Append(':');
+                ODataJsonWriterUtils.ODataValueToString(builder, keyValuePair.Value);
             }
 
-            return string.Format(CultureInfo.InvariantCulture,
-                "{{" +
-                "\"message\":\"{0}\"," +
-                "\"type\":\"{1}\"," +
-                "\"stacktrace\":\"{2}\"," +
-                "\"innererror\":{3}{4}" +
-                "}}",
-                this.Message == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Message),
-                this.TypeName == null ? "" : JsonValueUtils.GetEscapedJsonString(this.TypeName),
-                this.StackTrace == null ? "" : JsonValueUtils.GetEscapedJsonString(this.StackTrace),
-                this.InnerError == null ? "{}" : this.InnerError.ToJson(),
-                sb.ToString());
+            if (!firstProperty)
+            {
+                builder.Append(',');
+            }
+
+            string message = this.Message == null ? string.Empty : JsonValueUtils.GetEscapedJsonString(this.Message);
+            string typeName = this.TypeName == null ? string.Empty : JsonValueUtils.GetEscapedJsonString(this.TypeName);
+            string stackTrace = this.StackTrace == null ? string.Empty : JsonValueUtils.GetEscapedJsonString(this.StackTrace);
+
+            builder.Append('"').Append(JsonConstants.ODataErrorInnerErrorMessageName).Append("\":");
+            builder.Append('"').Append(message).Append('"');
+
+            builder.Append(",\"").Append(JsonConstants.ODataErrorInnerErrorTypeNameName).Append("\":");
+            builder.Append('"').Append(typeName).Append('"');
+
+            builder.Append(",\"").Append(JsonConstants.ODataErrorInnerErrorStackTraceName).Append("\":");
+            builder.Append('"').Append(stackTrace).Append('"');
+
+            if (this.InnerError != null)
+            {
+                string innerErrorJsonString = this.InnerError.ToJsonString();
+                builder.Append(",\"").Append(JsonConstants.ODataErrorInnerErrorName).Append("\":");
+                builder.Append(innerErrorJsonString);
+            }
+
+            builder.Append('}');
+
+            return builder.ToString();
         }
 
         private string GetStringValue(string propertyKey)

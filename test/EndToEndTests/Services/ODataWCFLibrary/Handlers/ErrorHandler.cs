@@ -82,9 +82,9 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
             {
                 error = this.BuildODataError(statusCode, this.HandledException);
 
-                if (!string.IsNullOrEmpty(oee.Error.ErrorCode))
+                if (!string.IsNullOrEmpty(oee.Error.Code))
                 {
-                    error.ErrorCode = oee.Error.ErrorCode;
+                    error.Code = oee.Error.Code;
                 }
 
                 if (!string.IsNullOrEmpty(oee.Error.Message))
@@ -108,7 +108,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
         {
             return new ODataError()
             {
-                ErrorCode = statusCode.ToString(),
+                Code = statusCode.ToString(),
                 Message = exception.Message,
                 InnerError = this.BuildODataInnerError(exception),
             };

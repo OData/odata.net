@@ -5349,7 +5349,7 @@ public sealed class Microsoft.OData.ODataError : Microsoft.OData.ODataAnnotatabl
 	public ODataError ()
 
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataErrorDetail]] Details  { public get; public set; }
-	string ErrorCode  { public get; public set; }
+	string Code  { public get; public set; }
 	Microsoft.OData.ODataInnerError InnerError  { public get; public set; }
 	System.Collections.Generic.ICollection`1[[Microsoft.OData.ODataInstanceAnnotation]] InstanceAnnotations  { public get; public set; }
 	string Message  { public get; public set; }
@@ -5361,7 +5361,7 @@ public sealed class Microsoft.OData.ODataError : Microsoft.OData.ODataAnnotatabl
 public sealed class Microsoft.OData.ODataErrorDetail {
 	public ODataErrorDetail ()
 
-	string ErrorCode  { public get; public set; }
+	string Code  { public get; public set; }
 	string Message  { public get; public set; }
 	string Target  { public get; public set; }
 }

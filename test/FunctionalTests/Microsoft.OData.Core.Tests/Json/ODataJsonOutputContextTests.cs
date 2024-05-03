@@ -43,7 +43,7 @@ namespace Microsoft.OData.Tests.Json
             this.messageWriterSettings.ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*");
             this.nullReferenceError = new ODataError
             {
-                ErrorCode = "NRE",
+                Code = "NRE",
                 Message = "Object reference not set to an instance of an object",
                 InstanceAnnotations = new List<ODataInstanceAnnotation>
                 {

@@ -36,7 +36,7 @@ namespace Microsoft.OData.Tests
             this.settings.SetServiceDocumentUri(new Uri(ServiceUri));
             this.nullReferenceError = new ODataError
             {
-                ErrorCode = "NRE",
+                Code = "NRE",
                 Message = "Object reference not set to an instance of an object"
             };
         }

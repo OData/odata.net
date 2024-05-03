@@ -479,7 +479,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             protected override ODataPayloadElement VisitError(ODataError error)
             {
                 ExceptionUtilities.CheckArgumentNotNull(error, "error");
-                return PayloadBuilder.Error(error.ErrorCode)
+                return PayloadBuilder.Error(error.Code)
                     .Message(error.Message)
                     .InnerError(error.InnerError == null ? null : (ODataInternalExceptionPayload)this.Visit(error.InnerError));
             }

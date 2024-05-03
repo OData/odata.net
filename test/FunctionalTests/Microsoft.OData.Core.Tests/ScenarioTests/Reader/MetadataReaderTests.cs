@@ -112,7 +112,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             ODataErrorException exception = Assert.Throws<ODataErrorException>(test);
             Assert.Equal("An error was read from the payload. See the 'Error' property for more details.", exception.Message);
-            Assert.Equal("code42", exception.Error.ErrorCode);
+            Assert.Equal("code42", exception.Error.Code);
             Assert.Equal("message text", exception.Error.Message);
         }
 
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             ODataErrorException exception = Assert.Throws<ODataErrorException>(test);
             Assert.Equal("An error was read from the payload. See the 'Error' property for more details.", exception.Message);
-            Assert.Equal("code42", exception.Error.ErrorCode);
+            Assert.Equal("code42", exception.Error.Code);
             Assert.Equal("message text", exception.Error.Message);
             Assert.Equal("some inner error", exception.Error.InnerError.Message);
         }

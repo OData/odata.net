@@ -136,7 +136,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                     writer.WriteError(
                          new ODataError
                          {
-                             ErrorCode = errorCode.ToString(CultureInfo.InvariantCulture),
+                             Code = errorCode.ToString(CultureInfo.InvariantCulture),
                              Message = error.Message,
                              InnerError = new ODataInnerError
                              {

@@ -347,7 +347,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             ODataError error = new ODataError()
             {
-                ErrorCode = "32",
+                Code = "32",
                 Message = "msg1",
             };
 
@@ -367,7 +367,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
             var records = results.Cast<AvroRecord>().ToList();
             Assert.AreEqual(1, records.Count());
             dynamic err = records[0];
-            Assert.AreEqual("32", err.ErrorCode);
+            Assert.AreEqual("32", err.Code);
             Assert.AreEqual("msg1", err.Message);
         }
 

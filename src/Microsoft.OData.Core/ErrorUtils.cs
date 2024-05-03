@@ -33,7 +33,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(error != null, "error != null");
 
-            code = error.ErrorCode ?? string.Empty;
+            code = error.Code ?? string.Empty;
             message = error.Message ?? string.Empty;
         }
 

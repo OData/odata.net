@@ -352,7 +352,7 @@ namespace Microsoft.Test.OData.Tests.Client.DisableAtomTests
             {
                 var error = messageReader.ReadError();
                 Assert.Equal(typeof(Microsoft.OData.ODataError), error.GetType());
-                Assert.Equal("UnsupportedMediaType", error.ErrorCode);
+                Assert.Equal("UnsupportedMediaType", error.Code);
             }
         }
 

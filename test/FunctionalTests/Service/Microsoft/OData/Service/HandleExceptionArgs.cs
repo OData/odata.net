@@ -126,7 +126,7 @@ namespace Microsoft.OData.Service
             DataServiceException dataException = this.Exception as DataServiceException;
             if (dataException == null)
             {
-                error.ErrorCode = String.Empty;
+                error.Code = String.Empty;
                 error.Message = Strings.DataServiceException_GeneralError;
 
                 if (this.UseVerboseErrors)
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Service
             }
             else
             {
-                error.ErrorCode = dataException.ErrorCode ?? String.Empty;
+                error.Code = dataException.ErrorCode ?? String.Empty;
                 error.Message = dataException.Message ?? String.Empty;
 
                 if (this.UseVerboseErrors && dataException.InnerException != null)

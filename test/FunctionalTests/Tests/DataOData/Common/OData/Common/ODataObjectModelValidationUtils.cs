@@ -26,7 +26,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             if (first == null && second == null) return true;
             if (first == null || second == null) return false;
 
-            if (string.CompareOrdinal(first.ErrorCode, second.ErrorCode) != 0) return false;
+            if (string.CompareOrdinal(first.Code, second.Code) != 0) return false;
             if (string.CompareOrdinal(first.Message, second.Message) != 0) return false;
             if (!AreEqual(first.InnerError, second.InnerError)) return false;
 

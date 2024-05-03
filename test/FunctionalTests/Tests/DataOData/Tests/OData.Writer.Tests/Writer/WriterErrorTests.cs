@@ -110,7 +110,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Code = string.Empty, Message = string.Empty, InnerError = (InnerError)null, ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError { Error = new ODataError() { ErrorCode = "code1" } },
+                    Error = new ODataAnnotatedError { Error = new ODataError() { Code = "code1" } },
                     Code = "code1", Message = string.Empty, InnerError = (InnerError)null, ExpectedException = (ExpectedException) null
                 },
                 new {
@@ -126,11 +126,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Code = string.Empty, Message = string.Empty, InnerError = new InnerError { Message = "some inner error" }, ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError { Error = new ODataError() { ErrorCode = "code42", Message = "message text", InnerError = new ODataInnerError { Message = "some inner error" } } },
+                    Error = new ODataAnnotatedError { Error = new ODataError() { Code = "code42", Message = "message text", InnerError = new ODataInnerError { Message = "some inner error" } } },
                     Code = "code42", Message = "message text", InnerError = (InnerError)null, ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError { Error = new ODataError() { ErrorCode = "code42", Message = "message text", InnerError = new ODataInnerError { Message = "some inner error" } }, IncludeDebugInformation = true },
+                    Error = new ODataAnnotatedError { Error = new ODataError() { Code = "code42", Message = "message text", InnerError = new ODataInnerError { Message = "some inner error" } }, IncludeDebugInformation = true },
                     Code = "code42", Message = "message text", InnerError = new InnerError { Message = "some inner error" }, ExpectedException = (ExpectedException) null
                 },
                 new {
@@ -138,7 +138,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         Error = new ODataError()
                         {
-                            ErrorCode = "code42",
+                            Code = "code42",
                             Message = "message text",
                             InnerError = new ODataInnerError
                             {
@@ -164,7 +164,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         Error = new ODataError()
                         {
-                            ErrorCode = "code42",
+                            Code = "code42",
                             Message = "message text",
                             InnerError = new ODataInnerError
                             {
@@ -210,7 +210,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     ExpectedException = (ExpectedException) null
                 },
                 new {
-                    Error = new ODataAnnotatedError { Error = new ODataError() { ErrorCode = "code42", Message = "message text", InnerError = new ODataInnerError(new Exception("some inner error")) }, IncludeDebugInformation = true },
+                    Error = new ODataAnnotatedError { Error = new ODataError() { Code = "code42", Message = "message text", InnerError = new ODataInnerError(new Exception("some inner error")) }, IncludeDebugInformation = true },
                     Code = "code42", Message = "message text", InnerError = new InnerError { Message = "some inner error", TypeName = "System.Exception" }, ExpectedException = (ExpectedException) null
                 },
                 new {
@@ -218,7 +218,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         Error = new ODataError()
                         {
-                            ErrorCode = "code42",
+                            Code = "code42",
                             Message = "message text",
                             InnerError = new ODataInnerError(
                                 new Exception("some inner error", new Exception("nested inner error", new Exception("nested nested inner error"))))
@@ -250,7 +250,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         Error = new ODataError()
                         {
-                            ErrorCode = "code42",
+                            Code = "code42",
                             Message = "message text",
                             InnerError = new ODataInnerError
                             {

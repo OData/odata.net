@@ -354,7 +354,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    error.ErrorCode = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
+                    error.Code = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
                     break;
 
                 case JsonConstants.ODataErrorMessageName:
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    detail.ErrorCode = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
+                    detail.Code = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
                     break;
 
                 case JsonConstants.ODataErrorMessageName:
@@ -739,7 +739,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    error.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                    error.Code = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
                         .ConfigureAwait(false);
                     break;
 
@@ -835,7 +835,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    errorDetail.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                    errorDetail.Code = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
                         .ConfigureAwait(false);
                     break;
 

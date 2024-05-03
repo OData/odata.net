@@ -282,7 +282,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         {
             ODataError error = new ODataError();
 
-            error.ErrorCode = errorPayload.Code;
+            error.Code = errorPayload.Code;
             error.Message = errorPayload.Message; ;
 
             ODataInternalExceptionPayload innerErrorPayload = errorPayload.InnerError;

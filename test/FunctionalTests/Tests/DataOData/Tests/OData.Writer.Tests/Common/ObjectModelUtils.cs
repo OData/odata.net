@@ -583,7 +583,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Creates an <see cref="ODataError"/> instance with the default value for 'ErrorCode' and 'Message'
+        /// Creates an <see cref="ODataError"/> instance with the default value for 'Code' and 'Message'
         /// that can be used and modified in tests.
         /// </summary>
         /// <returns>The newly created <see cref="ODataError"/> instance.</returns>
@@ -591,7 +591,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         {
             ODataError error = new ODataError()
             {
-                ErrorCode = DefaultErrorCode,
+                Code = DefaultErrorCode,
                 Message = DefaultErrorMessage,
                 InnerError = includeDetails ? DefaultInnerError : null,
             };

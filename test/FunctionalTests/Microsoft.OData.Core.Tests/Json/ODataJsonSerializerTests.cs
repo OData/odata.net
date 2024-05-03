@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = SetupSerializerAndRunTest(null, serializer =>
             {
-                ODataError error = new ODataError { ErrorCode = "Error Code" };
+                ODataError error = new ODataError { Code = "Error Code" };
                 serializer.WriteTopLevelError(error, false);
             });
 
@@ -386,12 +386,12 @@ namespace Microsoft.OData.Tests.Json
                 {
                     ODataError error = new ODataError
                     {
-                        ErrorCode = "forbidden",
+                        Code = "forbidden",
                         Message = "Access to the resource is forbidden",
                         Target = "Resource",
                         Details = new Collection<ODataErrorDetail>
                         {
-                            new ODataErrorDetail { ErrorCode = "insufficientPrivileges", Message = "You don't have the required privileges"}
+                            new ODataErrorDetail { Code = "insufficientPrivileges", Message = "You don't have the required privileges"}
                         },
                         InnerError = new ODataInnerError
                         {

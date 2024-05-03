@@ -514,8 +514,8 @@ Microsoft.OData.ODataEnumValue.Value.get -> string
 Microsoft.OData.ODataError
 Microsoft.OData.ODataError.Details.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataErrorDetail>
 Microsoft.OData.ODataError.Details.set -> void
-Microsoft.OData.ODataError.ErrorCode.get -> string
-Microsoft.OData.ODataError.ErrorCode.set -> void
+Microsoft.OData.ODataError.Code.get -> string
+Microsoft.OData.ODataError.Code.set -> void
 Microsoft.OData.ODataError.InnerError.get -> Microsoft.OData.ODataInnerError
 Microsoft.OData.ODataError.InnerError.set -> void
 Microsoft.OData.ODataError.InstanceAnnotations.get -> System.Collections.Generic.ICollection<Microsoft.OData.ODataInstanceAnnotation>
@@ -526,8 +526,8 @@ Microsoft.OData.ODataError.ODataError() -> void
 Microsoft.OData.ODataError.Target.get -> string
 Microsoft.OData.ODataError.Target.set -> void
 Microsoft.OData.ODataErrorDetail
-Microsoft.OData.ODataErrorDetail.ErrorCode.get -> string
-Microsoft.OData.ODataErrorDetail.ErrorCode.set -> void
+Microsoft.OData.ODataErrorDetail.Code.get -> string
+Microsoft.OData.ODataErrorDetail.Code.set -> void
 Microsoft.OData.ODataErrorDetail.Message.get -> string
 Microsoft.OData.ODataErrorDetail.Message.set -> void
 Microsoft.OData.ODataErrorDetail.ODataErrorDetail() -> void

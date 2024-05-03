@@ -427,7 +427,7 @@ namespace Microsoft.OData.Service
                     var newErrorWriter = messageWriterBuilder.CreateWriter();
                     ODataError errorWhileWritingOtherError = new ODataError()
                     {
-                        ErrorCode = "500",
+                        Code = "500",
                         InnerError = new ODataInnerError(e),
                         Message = Strings.ErrorHandler_ErrorWhileWritingError
                     };

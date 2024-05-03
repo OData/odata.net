@@ -606,7 +606,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 {
                     Error = new ODataError()
                     {
-                        ErrorCode = "5555",
+                        Code = "5555",
                         Message = "Dummy error message",
                     }
                 },

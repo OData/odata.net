@@ -356,7 +356,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             // Write payload
             using (var messageWriter = new ODataMessageWriter(messageToWrite, writerSettings, Model))
             {
-                ODataError error = new ODataError { ErrorCode = "400", Message = "Resource not found for the segment 'Address'." };
+                ODataError error = new ODataError { Code = "400", Message = "Resource not found for the segment 'Address'." };
                 error.InstanceAnnotations.Add(new ODataInstanceAnnotation("instance.annotation", new ODataPrimitiveValue("stringValue")));
                 messageWriter.WriteError(error, includeDebugInformation: true);
             }

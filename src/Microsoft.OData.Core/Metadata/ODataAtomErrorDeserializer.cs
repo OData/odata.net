@@ -104,7 +104,7 @@ namespace Microsoft.OData.Metadata
                                             ref elementsReadBitmask,
                                             DuplicateErrorElementPropertyBitMask.Code,
                                             ODataMetadataConstants.ODataErrorCodeElementName);
-                                        error.ErrorCode = xmlReader.ReadElementValue();
+                                        error.Code = xmlReader.ReadElementValue();
                                         continue;
 
                                     // <m:message >

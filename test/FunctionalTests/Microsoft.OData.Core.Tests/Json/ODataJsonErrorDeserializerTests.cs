@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
             var detail = error.Details.Single();
-            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("500", detail.Code);
             Assert.Equal("another target", detail.Target);
             Assert.Equal("any msg", detail.Message);
         }
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
             var detail = error.Details.Single();
-            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("500", detail.Code);
             Assert.Equal("any target", detail.Target);
             Assert.Equal("any msg", detail.Message);
 
@@ -218,7 +218,7 @@ namespace Microsoft.OData.Tests.Json
                     var error = await jsonErrorDeserializer.ReadTopLevelErrorAsync();
 
                     Assert.NotNull(error);
-                    Assert.Equal("forbidden", error.ErrorCode);
+                    Assert.Equal("forbidden", error.Code);
                     Assert.Equal("Access to the resource is forbidden", error.Message);
                     Assert.Equal("Resource", error.Target);
                     Assert.NotNull(error.InnerError);
@@ -231,7 +231,7 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal("4784efae-d1c4-4f1f-baba-e811b3b0826c", correlationId.Value);
                     Assert.NotNull(error.Details);
                     var errorDetail = Assert.Single(error.Details);
-                    Assert.Equal("insufficientPrivileges", errorDetail.ErrorCode);
+                    Assert.Equal("insufficientPrivileges", errorDetail.Code);
                     Assert.Equal("You don't have the required privileges", errorDetail.Message);
                     Assert.Equal("", errorDetail.Target);
                     var nsWorkloadIdAnnotation = Assert.Single(error.GetInstanceAnnotations());
