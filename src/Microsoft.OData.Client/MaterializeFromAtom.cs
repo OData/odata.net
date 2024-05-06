@@ -351,7 +351,7 @@ namespace Microsoft.OData.Client
                     {
                         if (this.materializer.CurrentValue is IBaseEntityType entity)
                         {
-                            entity.Context = this.responseInfo.Context;
+                            entity.DataServiceContext = this.responseInfo.Context;
                         }
 
                         this.current = this.materializer.CurrentValue;
