@@ -10,10 +10,10 @@
       inputs:
           BuildDropPath: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish SBOM'
-      inputs:
-        path: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
+    # - task: 1ES.PublishPipelineArtifact@1
+    #   displayName: 'Publish SBOM'
+    #   inputs:
+    #     path: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\sbom'
 
     - template: credscan.yml
  
@@ -175,17 +175,9 @@
          ]
         VerboseLogin: true
 
-    - task: 1ES.PublishPipelineArtifact@1
-      displayName: 'Publish Artifact - Nuget Packages'
-      inputs:
-        path: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)'
-        artifact: $(NugetArtifactsDir)
+    # - task: 1ES.PublishPipelineArtifact@1
+    #   displayName: 'Publish Artifact - Nuget Packages'
+    #   inputs:
+    #     path: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)'
+    #     artifact: $(NugetArtifactsDir)
 
-    - task: NuGetCommand@2
-      displayName: 'NuGet push - Nightly packages to MyGet'
-      inputs:
-        command: push
-        packagesToPush: '$(Build.ArtifactStagingDirectory)\$(NugetArtifactsDir)\*Nightly*.nupkg'
-        nuGetFeedType: external
-        publishFeedCredentials: 'MyGet.org - OData.net Nightly Feed'
-      enabled: true
