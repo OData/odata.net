@@ -77,17 +77,6 @@ extends:
         steps:
           - template: /nightly.yml@self
       - job:  Release
-        outputs:
-          - output: pipelineArtifact
-            displayName: 'Publish Artifact - NuGet Release Packages'
-            targetPath: '$(Build.ArtifactsStagingDirectory)\NuGet-Release'
-            artifactName: NuGetRelease
-          - output: nuget
-            displayName: 'MyGet push - Nightly packages to MyGet'
-            packageParentPath: '$(Build.ArtifactStagingDirectory)'
-            packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
-            nuGetFeedType: external
-            publishFeedCredentials: 'MyGet.org - ODL Feed'
         variables:
             buildPlatform: 'Any CPU'
             buildConfiguration: 'Release'
@@ -107,6 +96,18 @@ extends:
             mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
             ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
             NugetArtifactsDir: 'Nuget-Release'
+        templateContext:
+          outputs:
+            - output: pipelineArtifact
+              displayName: 'Publish Artifact - NuGet Release Packages'
+              targetPath: '$(Build.ArtifactsStagingDirectory)\NuGet-Release'
+              artifactName: NuGetRelease
+            - output: nuget
+              displayName: 'MyGet push - Nightly packages to MyGet'
+              packageParentPath: '$(Build.ArtifactStagingDirectory)'
+              packagesToPush: $(Build.ArtifactStagingDirectory)\Nuget-Release\*Nightly*.nupkg
+              nuGetFeedType: external
+              publishFeedCredentials: 'MyGet.org - ODL Feed'
         steps:
           - template: /nightly.yml@self
 
