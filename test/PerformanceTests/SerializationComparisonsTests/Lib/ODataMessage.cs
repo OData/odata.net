@@ -16,7 +16,7 @@ namespace ExperimentsLib
     /// Implementation of <see cref="IODataResponseMessageAsync"/> used to pass
     /// the response message to the <see cref="ODataMessageWriter"/>.
     /// </summary>
-    public class ODataMessage : IODataResponseMessageAsync, IContainerProvider, IDisposable
+    public class ODataMessage : IODataResponseMessageAsync, IServiceCollectionProvider, IDisposable
     {
         private readonly Dictionary<string, string> headers;
 
@@ -38,7 +38,7 @@ namespace ExperimentsLib
 
         public Stream Stream { get; set; }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         public string GetHeader(string headerName)
         {

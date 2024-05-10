@@ -15,7 +15,7 @@ namespace Microsoft.OData.Performance
     /// Based on file with same name in test\FunctionalTests\Microsoft.OData.Core.Tests directory, which
     /// is not part of the ComponentTests project.
     /// </summary>
-    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IContainerProvider, IDisposable
+    public class InMemoryMessage : IODataRequestMessage, IODataResponseMessage, IServiceCollectionProvider, IDisposable
     {
         private readonly Dictionary<string, string> headers;
 
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Performance
 
         public Stream Stream { get; set; }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
 
         public string GetHeader(string headerName)
         {
