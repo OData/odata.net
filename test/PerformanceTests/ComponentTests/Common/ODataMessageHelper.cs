@@ -8,9 +8,9 @@ namespace Microsoft.OData.Performance
 {
     using System;
     using System.IO;
+    using Microsoft.Extensions.DependencyInjection;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Performance.Common;
 
     /// <summary>
     /// Helper class to create ODataMessageReader and ODataMessageWriter
@@ -34,18 +34,18 @@ namespace Microsoft.OData.Performance
         /// </summary>
         /// <param name="configureServices">Action callback to configure DI services.</param>
         /// <returns>Instance of the DI container</returns>
-        private static IServiceProvider GetSharedContainer(Action<IContainerBuilder> configureServices = null)
+        private static IServiceProvider GetSharedContainer(Action<IServiceCollection> configureServices = null)
         {
             if (container == null)
             {
-                var builder = new TestContainerBuilder();
-                builder.AddDefaultODataServices();
+                var serviceCollection = new ServiceCollection();
+                serviceCollection.AddDefaultODataServices();
                 if (configureServices != null)
                 {
-                    configureServices(builder);
+                    configureServices(serviceCollection);
                 }
 
-                container = builder.BuildContainer();
+                container = serviceCollection.BuildServiceProvider();
             }
 
             return container;
@@ -95,14 +95,14 @@ namespace Microsoft.OData.Performance
             if (messageKind == ODataMessageKind.Request)
             {
                 var message = new StreamBasedRequestMessage(messageStream);
-                message.Container = GetSharedContainer();
+                message.ServiceProvider = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
             else
             {
                 var message = new StreamBasedResponseMessage(messageStream);
-                message.Container = GetSharedContainer();
+                message.ServiceProvider = GetSharedContainer();
                 message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
                 return new ODataMessageReader(message, settings, model);
             }
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Performance
         {
             var settings = CreateMessageReaderSettings(true);
             var message = new StreamBasedRequestMessage(messageStream);
-            message.Container = GetSharedContainer();
+            message.ServiceProvider = GetSharedContainer();
             message.SetHeader(ODataConstants.ContentTypeHeader, ContentType);
             return new ODataMessageReader(message, settings, model);
         }
@@ -162,16 +162,16 @@ namespace Microsoft.OData.Performance
         /// <param name="isFullValidation">Whether turn on FullValidation</param>
         /// <param name="configureServices">Action callback to configure DI services.</param>
         /// <returns>Instance of ODataMessageWriter</returns>
-        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation, Action<IContainerBuilder> configureServices = null)
+        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, ODataMessageKind messageKind, bool isFullValidation, Action<IServiceCollection> configureServices = null)
         {
             var settings = CreateMessageWriterSettings(isFullValidation);
 
             if (messageKind == ODataMessageKind.Request)
             {
-                return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer(configureServices) }, settings, model);
+                return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { ServiceProvider = GetSharedContainer(configureServices) }, settings, model);
             }
 
-            return new ODataMessageWriter(new StreamBasedResponseMessage(stream) { Container = GetSharedContainer(configureServices) }, settings, model);
+            return new ODataMessageWriter(new StreamBasedResponseMessage(stream) { ServiceProvider = GetSharedContainer(configureServices) }, settings, model);
         }
 
         /// <summary>
@@ -181,10 +181,10 @@ namespace Microsoft.OData.Performance
         /// <param name="model">Edm model</param>
         /// <param name="configureServices">Action callback to configure DI services.</param>
         /// <returns>Instance of ODataMessageWriter</returns>
-        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, Action<IContainerBuilder> configureServices = null)
+        public static ODataMessageWriter CreateMessageWriter(Stream stream, IEdmModel model, Action<IServiceCollection> configureServices = null)
         {
             var settings = CreateMessageWriterSettings(true);
-            return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { Container = GetSharedContainer(configureServices) }, settings, model);
+            return new ODataMessageWriter(new StreamBasedRequestMessage(stream) { ServiceProvider = GetSharedContainer(configureServices) }, settings, model);
         }
         #endregion
     }
