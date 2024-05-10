@@ -479,9 +479,10 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
         /// </returns>
-        protected override Task<Stream> CreateReadStreamImplementationAsync()
+        protected async override Task<Stream> CreateReadStreamImplementationAsync()
         {
-            return this.jsonLightInputContext.JsonReader.CreateReadStreamAsync();
+            Stream stream = await this.jsonLightInputContext.JsonReader.CreateReadStreamAsync();
+            return stream;
         }
 
         /// <summary>
@@ -491,9 +492,10 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property.
         /// </returns>
-        protected override Task<TextReader> CreateTextReaderImplementationAsync()
+        protected async override Task<TextReader> CreateTextReaderImplementationAsync()
         {
-            return this.jsonLightInputContext.JsonReader.CreateTextReaderAsync();
+            TextReader reader = await this.jsonLightInputContext.JsonReader.CreateTextReaderAsync();
+            return reader;
         }
 
         #endregion

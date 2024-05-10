@@ -63,10 +63,11 @@ namespace Microsoft.OData.MultipartMixed
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
         /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override Task<ODataBatchReader> CreateBatchReaderAsync()
+        internal async override ValueTask<ODataBatchReader> CreateBatchReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            ODataBatchReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            return reader;
         }
 
         /// <summary>

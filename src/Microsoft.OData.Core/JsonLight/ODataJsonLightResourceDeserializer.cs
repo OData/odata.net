@@ -3681,14 +3681,12 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously reads over the current property name if positioned on a property
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private Task ReadOverPropertyNameAsync()
+        private async ValueTask ReadOverPropertyNameAsync()
         {
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
-                return this.JsonReader.ReadAsync();
+                await this.JsonReader.ReadAsync();
             }
-
-            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

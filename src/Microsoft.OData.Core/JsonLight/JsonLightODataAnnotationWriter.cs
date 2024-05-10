@@ -173,7 +173,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="propertyName">The name of the property to annotate.</param>
         /// <param name="annotationName">The name of the annotation to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public Task WritePropertyAnnotationNameAsync(string propertyName, string annotationName)
+        public async Task WritePropertyAnnotationNameAsync(string propertyName, string annotationName)
         {
             Debug.Assert(this.jsonWriter != null, "this.jsonWriter != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -181,7 +181,7 @@ namespace Microsoft.OData.JsonLight
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
-            return this.jsonWriter.WritePropertyAnnotationNameAsync(propertyName, SimplifyODataAnnotationName(annotationName));
+            await this.jsonWriter.WritePropertyAnnotationNameAsync(propertyName, SimplifyODataAnnotationName(annotationName));
         }
 
         /// <summary>
@@ -189,14 +189,14 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="annotationName">The name of the instance annotation to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public Task WriteInstanceAnnotationNameAsync(string annotationName)
+        public async Task WriteInstanceAnnotationNameAsync(string annotationName)
         {
             Debug.Assert(this.jsonWriter != null, "this.jsonWriter != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
             Debug.Assert(annotationName.StartsWith(JsonLightConstants.ODataAnnotationNamespacePrefix,
                 StringComparison.Ordinal), "annotationName.StartsWith(\"odata.\")");
 
-            return this.jsonWriter.WriteInstanceAnnotationNameAsync(SimplifyODataAnnotationName(annotationName));
+            await this.jsonWriter.WriteInstanceAnnotationNameAsync(SimplifyODataAnnotationName(annotationName));
         }
 
         /// <summary>

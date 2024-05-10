@@ -391,14 +391,14 @@ namespace Microsoft.OData.Tests.Json
             // Note: CharArrayPool is used if string has special chars
             // This test is mostly theoretical since special characters are not allowed in names
             return SetupJsonWriterRunTestAndVerifyRentAsync(
-                (jsonWriter) => jsonWriter.WriteNameAsync("foo\tbar"));
+                async (jsonWriter) => await jsonWriter.WriteNameAsync("foo\tbar"));
         }
 
         [Fact]
         public Task WriteStringValueUsesProvidedCharArrayPool()
         {
             return SetupJsonWriterRunTestAndVerifyRentAsync(
-                (jsonWriter) => jsonWriter.WriteValueAsync("foo\tbar"));
+                async (jsonWriter) => await jsonWriter.WriteValueAsync("foo\tbar"));
         }
 
         private async Task SetupJsonWriterRunTestAndVerifyRentAsync(Func<JsonWriter, Task> func)

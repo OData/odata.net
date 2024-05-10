@@ -1265,9 +1265,9 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously ends writing a payload (called exactly once after everything else in case of success)
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndPayloadAsync()
+        protected async override Task EndPayloadAsync()
         {
-            return this.jsonLightResourceSerializer.WritePayloadEndAsync();
+            await this.jsonLightResourceSerializer.WritePayloadEndAsync();
         }
 
         /// <summary>
@@ -1739,13 +1739,13 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="deltaResourceSet">The resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        protected async override Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
         {
             Debug.Assert(deltaResourceSet != null, "deltaResourceSet != null");
 
             if (this.ParentNestedResourceInfo == null)
             {
-                return EndDeltaResourceSetInnerAsync(deltaResourceSet);
+                await EndDeltaResourceSetInnerAsync(deltaResourceSet);
 
                 async Task EndDeltaResourceSetInnerAsync(ODataDeltaResourceSet innerDeltaResourceSet)
                 {
@@ -1774,7 +1774,7 @@ namespace Microsoft.OData.JsonLight
             else
             {
                 // End the array which holds the entries in the resource set.
-                return this.jsonWriter.EndArrayScopeAsync();
+                await this.jsonWriter.EndArrayScopeAsync();
             }
         }
 
@@ -1857,15 +1857,15 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="deletedResource">The resource to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndDeletedResourceAsync(ODataDeletedResource deletedResource)
+        protected async override Task EndDeletedResourceAsync(ODataDeletedResource deletedResource)
         {
             if (deletedResource == null)
             {
-                return TaskUtils.CompletedTask;
+                return;
             }
 
             // Close the object scope
-            return this.jsonWriter.EndObjectScopeAsync();
+            await this.jsonWriter.EndObjectScopeAsync();
         }
 
         /// <summary>
@@ -1935,11 +1935,11 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously finish writing a stream value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override Task EndBinaryStreamAsync()
+        protected async sealed override Task EndBinaryStreamAsync()
         {
             if (this.jsonWriter == null)
             {
-                return EndBinaryStreamInnerAsync();
+                await EndBinaryStreamInnerAsync();
 
                 async Task EndBinaryStreamInnerAsync()
                 {
@@ -1953,7 +1953,7 @@ namespace Microsoft.OData.JsonLight
             }
             else
             {
-                return this.jsonWriter.EndStreamValueScopeAsync();
+                await this.jsonWriter.EndStreamValueScopeAsync();
             }
         }
 
@@ -1989,9 +1989,9 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously finish writing a text value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override Task EndTextWriterAsync()
+        protected async sealed override Task EndTextWriterAsync()
         {
-            return this.jsonWriter.EndTextWriterValueScopeAsync();
+            await this.jsonWriter.EndTextWriterValueScopeAsync();
         }
 
         /// <summary>

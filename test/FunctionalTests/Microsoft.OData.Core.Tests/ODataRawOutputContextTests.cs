@@ -45,7 +45,7 @@ namespace Microsoft.OData.Tests
         public async Task WriteValueAsync()
         {
             var result = await SetupRawOutputContextAndRunTestAsync(
-                (rawOutputContext) => rawOutputContext.WriteValueAsync("foobar"));
+                async (rawOutputContext) => await rawOutputContext.WriteValueAsync("foobar"));
 
             Assert.Equal("foobar", result);
         }

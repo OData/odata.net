@@ -235,7 +235,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
+        public virtual ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }

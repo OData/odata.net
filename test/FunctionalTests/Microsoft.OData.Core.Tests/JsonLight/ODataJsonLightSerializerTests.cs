@@ -368,9 +368,9 @@ namespace Microsoft.OData.Tests.JsonLight
                 (jsonLightSerializer) =>
                 {
                     return jsonLightSerializer.WriteTopLevelPayloadAsync(
-                        () =>
+                        async () =>
                         {
-                            return jsonLightSerializer.JsonWriter.WriteValueAsync(13);
+                            await jsonLightSerializer.JsonWriter.WriteValueAsync(13);
                         });
                 });
 

@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests
             return bytesRead;
         }
 
-        private async Task<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
+        private async ValueTask<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
         {
             var buffer = new byte[maxLength];
             int bytesRead = await this.stream.ReadAsync(buffer, offset, maxLength);

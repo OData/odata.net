@@ -480,7 +480,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WritePropertyAsync(property));
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WritePropertyAsync(property));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"@Is.LuckyNumber\":true,\"value\":13}",
@@ -499,7 +499,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WritePropertyAsync(geographyProperty));
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WritePropertyAsync(geographyProperty));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.GeographyPoint\"," +
@@ -533,7 +533,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WritePropertyAsync(geographyCollectionProperty));
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WritePropertyAsync(geographyCollectionProperty));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geography)\"," +
@@ -604,7 +604,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WriteEntityReferenceLinkAsync(entityReferenceLink),
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WriteEntityReferenceLinkAsync(entityReferenceLink),
                 writingResponse);
 
             Assert.Equal(
@@ -627,7 +627,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WriteEntityReferenceLinksAsync(entityReferenceLinks),
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WriteEntityReferenceLinksAsync(entityReferenceLinks),
                 writingResponse);
 
             Assert.Equal(
@@ -649,7 +649,7 @@ namespace Microsoft.OData.Tests.JsonLight
             };
 
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WriteServiceDocumentAsync(serviceDocument));
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WriteServiceDocumentAsync(serviceDocument));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
@@ -663,7 +663,7 @@ namespace Microsoft.OData.Tests.JsonLight
         public async Task WriteErrorAsync()
         {
             var result = await SetupJsonLightOutputContextAndRunTestAsync(
-                (jsonLightOutputContext) => jsonLightOutputContext.WriteErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false));
+                async (jsonLightOutputContext) => await jsonLightOutputContext.WriteErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false));
 
             Assert.Equal(
                 "{\"error\":{\"code\":\"NRE\",\"message\":\"Object reference not set to an instance of an object\",\"@Is.Error\":true}}",
@@ -817,6 +817,20 @@ namespace Microsoft.OData.Tests.JsonLight
             this.stream.Position = 0;
             return await new StreamReader(this.stream).ReadToEndAsync();
         }
+
+        //private async ValueTask<string> SetupJsonLightOutputContextAndRunTestAsync(
+        //    Func<ODataJsonLightOutputContext, ValueTask> func,
+        //    bool writingResponse = true)
+        //{
+        //    this.stream = new AsyncStream(this.stream);
+        //    var messageInfo = CreateMessageInfo(this.model, asynchronous: true, writingResponse: writingResponse);
+        //    var jsonLightOutputContext = new ODataJsonLightOutputContext(messageInfo, this.messageWriterSettings);
+
+        //    await func(jsonLightOutputContext);
+
+        //    this.stream.Position = 0;
+        //    return await new StreamReader(this.stream).ReadToEndAsync();
+        //}
 
         private ODataMessageInfo CreateMessageInfo(IEdmModel model, bool asynchronous = true, bool writingResponse = true)
         {

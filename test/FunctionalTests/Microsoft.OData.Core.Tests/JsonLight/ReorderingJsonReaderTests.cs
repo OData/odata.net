@@ -502,7 +502,7 @@ namespace Microsoft.OData.Tests.JsonLight
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupReorderingJsonReaderAndRunTestAsync(
                     payload,
-                    (reorderingReader) => reorderingReader.CreateTextReaderAsync()));
+                    async (reorderingReader) => await reorderingReader.CreateTextReaderAsync()));
 
             Assert.Equal(
                 ErrorStrings.JsonReader_CannotCreateTextReader,

@@ -473,25 +473,25 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 this.textWriter.Flush();
             }
 
-            public Task StartPaddingFunctionScopeAsync() => throw new NotImplementedException();
+            public ValueTask StartPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-            public Task EndPaddingFunctionScopeAsync() => throw new NotImplementedException();
+            public ValueTask EndPaddingFunctionScopeAsync() => throw new NotImplementedException();
 
-            public Task StartObjectScopeAsync()
+            public async ValueTask StartObjectScopeAsync()
             {
-                return this.textWriter.WriteAsync('<');
+                await this.textWriter.WriteAsync('<');
             }
 
-            public Task EndObjectScopeAsync()
+            public async ValueTask EndObjectScopeAsync()
             {
-                return this.textWriter.WriteAsync('>');
+                await this.textWriter.WriteAsync('>');
             }
 
-            public Task StartArrayScopeAsync() => throw new NotImplementedException();
+            public ValueTask StartArrayScopeAsync() => throw new NotImplementedException();
 
-            public Task EndArrayScopeAsync() => throw new NotImplementedException();
+            public ValueTask EndArrayScopeAsync() => throw new NotImplementedException();
 
-            public async Task WriteNameAsync(string name)
+            public async ValueTask WriteNameAsync(string name)
             {
                 if (name.StartsWith("@odata."))
                 {
@@ -501,47 +501,47 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 await this.textWriter.WriteAsync(string.Format("\"{0}\":", name));
             }
 
-            public Task WritePaddingFunctionNameAsync(string functionName) => throw new NotImplementedException();
+            public ValueTask WritePaddingFunctionNameAsync(string functionName) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(bool value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(bool value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(int value)
+            public async ValueTask WriteValueAsync(int value)
             {
-                return this.textWriter.WriteAsync(string.Format("{0},", value));
+                await this.textWriter.WriteAsync(string.Format("{0},", value));
             }
 
-            public Task WriteValueAsync(float value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(float value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(short value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(short value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(long value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(long value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(double value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(double value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(Guid value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(Guid value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(decimal value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(decimal value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(DateTimeOffset value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(DateTimeOffset value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(TimeSpan value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(TimeSpan value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(byte value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(byte value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(sbyte value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(sbyte value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(string value)
+            public async ValueTask WriteValueAsync(string value)
             {
-                return this.textWriter.WriteAsync(string.Format("\"{0}\",", value));
+                await this.textWriter.WriteAsync(string.Format("\"{0}\",", value));
             }
 
-            public Task WriteValueAsync(byte[] value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(byte[] value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(Date value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(Date value) => throw new NotImplementedException();
 
-            public Task WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(TimeOfDay value) => throw new NotImplementedException();
 
-            public Task WriteRawValueAsync(string rawValue) => throw new NotImplementedException();
+            public ValueTask WriteRawValueAsync(string rawValue) => throw new NotImplementedException();
 
             public Task FlushAsync()
             {
@@ -549,7 +549,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             }
 
 #if NETCOREAPP
-            public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
+            public ValueTask WriteValueAsync(JsonElement value) => throw new NotImplementedException();
 #endif
 
             public Stream StartStreamValueScope() => throw new NotImplementedException();
@@ -560,13 +560,13 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void EndTextWriterValueScope() => throw new NotImplementedException();
 
-            public Task<Stream> StartStreamValueScopeAsync() => throw new NotImplementedException();
+            public ValueTask<Stream> StartStreamValueScopeAsync() => throw new NotImplementedException();
 
-            public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType) => throw new NotImplementedException();
+            public ValueTask<TextWriter> StartTextWriterValueScopeAsync(string contentType) => throw new NotImplementedException();
 
-            public Task EndStreamValueScopeAsync() => throw new NotImplementedException();
+            public ValueTask EndStreamValueScopeAsync() => throw new NotImplementedException();
 
-            public Task EndTextWriterValueScopeAsync() => throw new NotImplementedException();
+            public ValueTask EndTextWriterValueScopeAsync() => throw new NotImplementedException();
         }
 
         private class TestJsonReader : IJsonReader
@@ -638,21 +638,21 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 return true;
             }
 
-            public Task<bool> ReadAsync() => throw new NotImplementedException();
+            public ValueTask<bool> ReadAsync() => throw new NotImplementedException();
 
             public bool CanStream() => throw new NotImplementedException();
 
-            public Task<bool> CanStreamAsync() => throw new NotImplementedException();
+            public ValueTask<bool> CanStreamAsync() => throw new NotImplementedException();
 
             public Stream CreateReadStream() => throw new NotImplementedException();
 
-            public Task<Stream> CreateReadStreamAsync() => throw new NotImplementedException();
+            public ValueTask<Stream> CreateReadStreamAsync() => throw new NotImplementedException();
 
             public TextReader CreateTextReader() => throw new NotImplementedException();
 
-            public Task<TextReader> CreateTextReaderAsync() => throw new NotImplementedException();
+            public ValueTask<TextReader> CreateTextReaderAsync() => throw new NotImplementedException();
 
-            public Task<object> GetValueAsync() => throw new NotImplementedException();
+            public ValueTask<object> GetValueAsync() => throw new NotImplementedException();
         }
     }
 }

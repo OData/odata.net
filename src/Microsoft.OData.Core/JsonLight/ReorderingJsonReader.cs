@@ -92,7 +92,7 @@ namespace Microsoft.OData.JsonLight
         /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.
         /// </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        public override async Task<Stream> CreateReadStreamAsync()
+        public override async ValueTask<Stream> CreateReadStreamAsync()
         {
             Stream result;
             object value = null;
@@ -129,7 +129,7 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the text value.
         /// </returns>
-        public override async Task<TextReader> CreateTextReaderAsync()
+        public override async ValueTask<TextReader> CreateTextReaderAsync()
         {
             if (this.NodeType == JsonNodeType.Property)
             {
@@ -155,7 +155,7 @@ namespace Microsoft.OData.JsonLight
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if the current value can be streamed; otherwise false.
         /// </returns>
-        public override async Task<bool> CanStreamAsync()
+        public override async ValueTask<bool> CanStreamAsync()
         {
             object value = await this.GetValueAsync()
                 .ConfigureAwait(false);

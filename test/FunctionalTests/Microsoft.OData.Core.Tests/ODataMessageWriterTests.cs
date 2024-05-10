@@ -300,7 +300,7 @@ namespace Microsoft.OData.Tests
             string output = await WriteAndGetPayloadAsync(
                 model,
                 "application/json",
-                (writer) => writer.WritePropertyAsync(new ODataProperty()
+                async (writer) => await writer.WritePropertyAsync(new ODataProperty()
                 {
                     Name = "Name",
                     Value = "This is a test ия"
@@ -326,7 +326,7 @@ namespace Microsoft.OData.Tests
             EdmModel model = new EdmModel();
 
             // Act
-            Func<ODataMessageWriter, Task> writePropertyAsync = (writer) => writer.WritePropertyAsync(new ODataProperty()
+            Func<ODataMessageWriter, Task> writePropertyAsync = async (writer) => await writer.WritePropertyAsync(new ODataProperty()
             {
                 Name = "Name",
                 Value = "This is a test ия"

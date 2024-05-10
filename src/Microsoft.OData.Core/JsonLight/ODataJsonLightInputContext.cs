@@ -188,13 +188,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public async override ValueTask<ODataReader> CreateResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false));
+            ODataReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ false));
+            return reader;
         }
 
         /// <summary>
@@ -217,13 +218,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public async override ValueTask<ODataReader> CreateDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true));
+            ODataReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ false, /*readingDelta*/ true));
+            return reader;
         }
 
         /// <summary>
@@ -246,13 +248,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        public async override ValueTask<ODataReader> CreateResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(navigationSource, expectedResourceType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
+            ODataReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceReaderImplementation(navigationSource, expectedResourceType));
+            return reader;
         }
 
         /// <summary>
@@ -273,13 +276,14 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         /// <returns>Task which when completed returns the newly create <see cref="ODataCollectionReader"/>.</returns>
-        public override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
+        public async override ValueTask<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateCollectionReader(expectedItemTypeReference);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
+            ODataCollectionReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateCollectionReaderImplementation(expectedItemTypeReference));
+            return reader;
         }
 
         /// <summary>
@@ -305,13 +309,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The <see cref="IEdmProperty"/> producing the property to be read.</param>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>Task which when completed returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        public override Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
+        public async override ValueTask<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property, IEdmTypeReference expectedPropertyTypeReference)
         {
             this.AssertAsynchronous();
             this.VerifyCanReadProperty();
 
             ODataJsonLightPropertyAndValueDeserializer jsonLightPropertyAndValueDeserializer = new ODataJsonLightPropertyAndValueDeserializer(this);
-            return jsonLightPropertyAndValueDeserializer.ReadTopLevelPropertyAsync(expectedPropertyTypeReference);
+            ODataProperty oDataProperty = await jsonLightPropertyAndValueDeserializer.ReadTopLevelPropertyAsync(expectedPropertyTypeReference);
+            return oDataProperty;
         }
 
 
@@ -331,12 +336,13 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously read a top-level error.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataError"/> representing the read error.</returns>
-        public override Task<ODataError> ReadErrorAsync()
+        public async override ValueTask<ODataError> ReadErrorAsync()
         {
             this.AssertAsynchronous();
 
             ODataJsonLightErrorDeserializer jsonLightErrorDeserializer = new ODataJsonLightErrorDeserializer(this);
-            return jsonLightErrorDeserializer.ReadTopLevelErrorAsync();
+            ODataError error = await jsonLightErrorDeserializer.ReadTopLevelErrorAsync();
+            return error;
         }
 
         /// <summary>
@@ -359,12 +365,13 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the items in the resource set.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public async override ValueTask<ODataReader> CreateUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedResourceType);
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false));
+            ODataReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateResourceSetReaderImplementation(entitySet, expectedResourceType, /*readingParameter*/ true, /*readingDelta*/ false));
+            return reader;
         }
 
         /// <summary>
@@ -384,9 +391,10 @@ namespace Microsoft.OData.JsonLight
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataReader"/>.</returns>
-        public override Task<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        public async override ValueTask<ODataReader> CreateUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
-            return this.CreateResourceReaderAsync(navigationSource, expectedResourceType);
+            ODataReader reader = await this.CreateResourceReaderAsync(navigationSource, expectedResourceType);
+            return reader;
         }
 
         /// <summary>
@@ -407,13 +415,14 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataParameterReader"/>.</returns>
-        public override Task<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
+        public async override ValueTask<ODataParameterReader> CreateParameterReaderAsync(IEdmOperation operation)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateParameterReader(operation);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operation));
+            ODataParameterReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateParameterReaderImplementation(operation));
+            return reader;
         }
 
         /// <summary>
@@ -464,13 +473,14 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedBaseEntityType">The expected base entity type for the entries in the delta response.</param>
         /// <returns>Task which when completed returns the newly created <see cref="ODataDeltaReader"/>.</returns>
-        internal override Task<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
+        internal async override ValueTask<ODataDeltaReader> CreateDeltaReaderAsync(IEdmEntitySetBase entitySet, IEdmEntityType expectedBaseEntityType)
         {
             this.AssertAsynchronous();
             this.VerifyCanCreateODataReader(entitySet, expectedBaseEntityType);
 
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
+            ODataDeltaReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateDeltaReaderImplementation(entitySet, expectedBaseEntityType));
+            return reader;
         }
 
         /// <summary>
@@ -486,10 +496,11 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously create a <see cref="ODataBatchReader"/>.
         /// </summary>
         /// <returns>Task which when completed returns the newly created <see cref="ODataCollectionReader"/>.</returns>
-        internal override Task<ODataBatchReader> CreateBatchReaderAsync()
+        internal async override ValueTask<ODataBatchReader> CreateBatchReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            ODataBatchReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateBatchReaderImplementation(/*synchronous*/ false));
+            return reader;
         }
 
         /// <summary>
@@ -512,12 +523,13 @@ namespace Microsoft.OData.JsonLight
         /// an <see cref="ODataServiceDocument"/> that represents the read service document.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataServiceDocument"/> representing the read service document.</returns>
-        internal override Task<ODataServiceDocument> ReadServiceDocumentAsync()
+        internal async override ValueTask<ODataServiceDocument> ReadServiceDocumentAsync()
         {
             this.AssertAsynchronous();
 
             ODataJsonLightServiceDocumentDeserializer jsonLightServiceDocumentDeserializer = new ODataJsonLightServiceDocumentDeserializer(this);
-            return jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+            ODataServiceDocument document = await jsonLightServiceDocumentDeserializer.ReadServiceDocumentAsync();
+            return document;
         }
 
         /// <summary>
@@ -536,12 +548,13 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously read a set of top-level entity reference links.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal override Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
+        internal async override ValueTask<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
             this.AssertAsynchronous();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+            ODataEntityReferenceLinks links = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+            return links;
         }
 
         /// <summary>
@@ -561,13 +574,14 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously read a top-level entity reference link.
         /// </summary>
         /// <returns>Task which when completed returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal override Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
+        internal async override ValueTask<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
             this.AssertAsynchronous();
             this.VerifyCanReadEntityReferenceLink();
 
             ODataJsonLightEntityReferenceLinkDeserializer jsonLightEntityReferenceLinkDeserializer = new ODataJsonLightEntityReferenceLinkDeserializer(this);
-            return jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+            ODataEntityReferenceLink link = await jsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+            return link;
         }
 
         /// <summary>

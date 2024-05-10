@@ -614,7 +614,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="propertyName">The name of the property this instance annotation applied to.</param>
         /// <param name="annotationName">The name of the instance annotation.</param>
-        private Task WriteInstanceAnnotationNameAsync(string propertyName, string annotationName)
+        private ValueTask WriteInstanceAnnotationNameAsync(string propertyName, string annotationName)
         {
             if (propertyName != null)
             {

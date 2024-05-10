@@ -402,9 +402,9 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes a null value to the writer.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteNullValueAsync()
+        public async virtual Task WriteNullValueAsync()
         {
-            return this.JsonWriter.WriteValueAsync((string)null);
+            await this.JsonWriter.WriteValueAsync((string)null);
         }
 
         /// <summary>
@@ -413,17 +413,17 @@ namespace Microsoft.OData.JsonLight
         /// <param name="value">enum value</param>
         /// <param name="expectedTypeReference">expected type reference</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteEnumValueAsync(
+        public async virtual Task WriteEnumValueAsync(
             ODataEnumValue value,
             IEdmTypeReference expectedTypeReference)
         {
             if (value.Value == null)
             {
-                return this.WriteNullValueAsync();
+                await this.WriteNullValueAsync();
             }
             else
             {
-                return this.JsonWriter.WritePrimitiveValueAsync(value.Value);
+                await this.JsonWriter.WritePrimitiveValueAsync(value.Value);
             }
         }
 
@@ -713,7 +713,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="value">The untyped value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteUntypedValueAsync(
+        public async virtual Task WriteUntypedValueAsync(
             ODataUntypedValue value)
         {
             Debug.Assert(value != null, "value != null");
@@ -723,7 +723,7 @@ namespace Microsoft.OData.JsonLight
                 throw new ODataException(ODataErrorStrings.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
             }
 
-            return this.JsonWriter.WriteRawValueAsync(value.RawValue);
+            await this.JsonWriter.WriteRawValueAsync(value.RawValue);
         }
 
         /// <summary>

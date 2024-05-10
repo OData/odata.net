@@ -1208,7 +1208,7 @@ namespace Microsoft.OData.Json
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
-        public async ValueTask FlushAsync()
+        public async Task FlushAsync()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             await this.writeStream.WriteAsync(this.bufferWriter.WrittenMemory).ConfigureAwait(false);

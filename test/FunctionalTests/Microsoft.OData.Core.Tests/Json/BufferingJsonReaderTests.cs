@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.Json
 
                 // Act
                 var exception = await Assert.ThrowsAsync<ODataErrorException>(
-                    () => bufferingReader.ReadAsync());
+                    async () => await bufferingReader.ReadAsync());
 
                 // Assert
                 var error = exception.Error;
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Tests.Json
 
                 // Act
                 var exception = await Assert.ThrowsAsync<ODataErrorException>(
-                    () => bufferingReader.ReadAsync());
+                    async () => await bufferingReader.ReadAsync());
 
                 // Assert
                 var error = exception.Error;
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Tests.Json
 
                 // Act
                 var exception = await Assert.ThrowsAsync<ODataErrorException>(
-                    () => bufferingReader.ReadAsync());
+                    async () => await bufferingReader.ReadAsync());
 
                 // Assert
                 var error = exception.Error;

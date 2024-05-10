@@ -406,23 +406,6 @@ namespace Microsoft.OData.Json
 
         public override void WriteByte(byte value)
             => Write(new ReadOnlySpan<byte>(new byte[] { value }));
-
-        private static void ValidateBufferArguments(byte[] buffer, int offset, int size)
-        {
-            if (buffer == null)
-            {
-                throw new ArgumentNullException(nameof(buffer));
-            }
-
-            if ((uint)offset > (uint)buffer.Length)
-            {
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            }
-            if ((uint)size > (uint)(buffer.Length - offset))
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
-        }
     }
 }
  

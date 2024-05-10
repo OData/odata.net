@@ -179,9 +179,9 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously finish writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndPayloadAsync()
+        protected async override Task EndPayloadAsync()
         {
-            return this.jsonLightCollectionSerializer.WritePayloadEndAsync();
+            await this.jsonLightCollectionSerializer.WritePayloadEndAsync();
         }
 
         /// <summary>

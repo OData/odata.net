@@ -67,12 +67,14 @@ Microsoft.OData.ODataMessageReader.CreateODataResourceSetReaderAsync(Microsoft.O
 Microsoft.OData.ODataMessageReader.CreateODataResourceSetReaderAsync(Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataReader>
 Microsoft.OData.ODataMessageReader.CreateODataUriParameterResourceReaderAsync(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataReader>
 Microsoft.OData.ODataMessageReader.CreateODataUriParameterResourceSetReaderAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataReader>
+Microsoft.OData.ODataMessageReader.DetectPayloadKindAsync() -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKindDetectionResult>>
 Microsoft.OData.ODataMessageReader.ReadEntityReferenceLinkAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataEntityReferenceLink>
 Microsoft.OData.ODataMessageReader.ReadEntityReferenceLinksAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataEntityReferenceLinks>
 Microsoft.OData.ODataMessageReader.ReadErrorAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataError>
 Microsoft.OData.ODataMessageReader.ReadPropertyAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataProperty>
 Microsoft.OData.ODataMessageReader.ReadPropertyAsync(Microsoft.OData.Edm.IEdmStructuralProperty property) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataProperty>
 Microsoft.OData.ODataMessageReader.ReadPropertyAsync(Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataProperty>
+Microsoft.OData.ODataMessageReader.ReadServiceDocumentAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataServiceDocument>
 Microsoft.OData.ODataMessageReader.ReadValueAsync(Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference) -> System.Threading.Tasks.ValueTask<object>
 Microsoft.OData.ODataMessageReaderSettings.EnableReadingKeyAsSegment.get -> bool
 Microsoft.OData.ODataMessageReaderSettings.EnableReadingKeyAsSegment.set -> void
@@ -688,7 +690,6 @@ Microsoft.OData.ODataMessageReader.CreateODataResourceSetReader(Microsoft.OData.
 Microsoft.OData.ODataMessageReader.CreateODataUriParameterResourceReader(Microsoft.OData.Edm.IEdmNavigationSource navigationSource, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> Microsoft.OData.ODataReader
 Microsoft.OData.ODataMessageReader.CreateODataUriParameterResourceSetReader(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType expectedResourceType) -> Microsoft.OData.ODataReader
 Microsoft.OData.ODataMessageReader.DetectPayloadKind() -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKindDetectionResult>
-Microsoft.OData.ODataMessageReader.DetectPayloadKindAsync() -> System.Threading.Tasks.Task<System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKindDetectionResult>>
 Microsoft.OData.ODataMessageReader.Dispose() -> void
 Microsoft.OData.ODataMessageReader.ODataMessageReader(Microsoft.OData.IODataRequestMessage requestMessage) -> void
 Microsoft.OData.ODataMessageReader.ODataMessageReader(Microsoft.OData.IODataRequestMessage requestMessage, Microsoft.OData.ODataMessageReaderSettings settings) -> void
@@ -706,7 +707,6 @@ Microsoft.OData.ODataMessageReader.ReadProperty() -> Microsoft.OData.ODataProper
 Microsoft.OData.ODataMessageReader.ReadProperty(Microsoft.OData.Edm.IEdmStructuralProperty property) -> Microsoft.OData.ODataProperty
 Microsoft.OData.ODataMessageReader.ReadProperty(Microsoft.OData.Edm.IEdmTypeReference expectedPropertyTypeReference) -> Microsoft.OData.ODataProperty
 Microsoft.OData.ODataMessageReader.ReadServiceDocument() -> Microsoft.OData.ODataServiceDocument
-Microsoft.OData.ODataMessageReader.ReadServiceDocumentAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataServiceDocument>
 Microsoft.OData.ODataMessageReader.ReadValue(Microsoft.OData.Edm.IEdmTypeReference expectedTypeReference) -> object
 Microsoft.OData.ODataMessageReaderSettings
 Microsoft.OData.ODataMessageReaderSettings.ArrayPool.get -> Microsoft.OData.Buffers.ICharArrayPool
@@ -2328,7 +2328,7 @@ virtual Microsoft.OData.ODataMediaTypeResolver.GetMediaTypeFormats(Microsoft.ODa
 virtual Microsoft.OData.ODataOutputContext.CreateODataCollectionWriter(Microsoft.OData.Edm.IEdmTypeReference itemTypeReference) -> Microsoft.OData.ODataCollectionWriter
 virtual Microsoft.OData.ODataOutputContext.CreateODataCollectionWriterAsync(Microsoft.OData.Edm.IEdmTypeReference itemTypeReference) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataCollectionWriter>
 virtual Microsoft.OData.ODataOutputContext.CreateODataDeltaResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter
-virtual Microsoft.OData.ODataOutputContext.CreateODataDeltaResourceSetWriterAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType entityType) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
+virtual Microsoft.OData.ODataOutputContext.CreateODataDeltaResourceSetWriterAsync(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType entityType) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataWriter>
 virtual Microsoft.OData.ODataOutputContext.CreateODataParameterWriter(Microsoft.OData.Edm.IEdmOperation operation) -> Microsoft.OData.ODataParameterWriter
 virtual Microsoft.OData.ODataOutputContext.CreateODataParameterWriterAsync(Microsoft.OData.Edm.IEdmOperation operation) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataParameterWriter>
 virtual Microsoft.OData.ODataOutputContext.CreateODataResourceSetWriter(Microsoft.OData.Edm.IEdmEntitySetBase entitySet, Microsoft.OData.Edm.IEdmStructuredType resourceType) -> Microsoft.OData.ODataWriter

@@ -243,14 +243,14 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the end of the entire JSON payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WritePayloadEndAsync()
+        internal ValueTask WritePayloadEndAsync()
         {
             if (this.MessageWriterSettings.HasJsonPaddingFunction())
             {
                 return this.JsonWriter.EndPaddingFunctionScopeAsync();
             }
 
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>

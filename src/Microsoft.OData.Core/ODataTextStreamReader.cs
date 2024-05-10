@@ -52,11 +52,12 @@ namespace Microsoft.OData
             return this.reader(buffer, offset, count);
         }
 
-        public override Task<int> ReadAsync(char[] buffer, int index, int count)
+        public async override Task<int> ReadAsync(char[] buffer, int index, int count)
         {
             this.AssertAsynchronous();
 
-            return this.asyncReader(buffer, index, count);
+            int value = await this.asyncReader(buffer, index, count);
+            return value;
         }
 
         /// <summary>

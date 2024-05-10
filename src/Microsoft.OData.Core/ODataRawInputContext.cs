@@ -94,10 +94,11 @@ namespace Microsoft.OData
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
         /// <returns>Task which when completed returns the newly created <see cref="ODataAsynchronousReader"/>.</returns>
-        internal override Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
+        internal async override ValueTask<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
+            ODataAsynchronousReader reader = await TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
+            return reader;
         }
 
         /// <summary>
@@ -115,9 +116,10 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPrimitiveTypeReference">The expected type reference for the value to be read; null if no expected type is available.</param>
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
-        internal override Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        internal async override ValueTask<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
-            return this.ReadValueImplementationAsync(expectedPrimitiveTypeReference);
+            object value = await this.ReadValueImplementationAsync(expectedPrimitiveTypeReference);
+            return value;
         }
 
         /// <summary>

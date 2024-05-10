@@ -909,7 +909,7 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously writes the start boundary for an operation. This is Json start object.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteStartBoundaryForOperationAsync()
+        private ValueTask WriteStartBoundaryForOperationAsync()
         {
             // Start the individual message object
             return this.jsonWriter.StartObjectScopeAsync();
@@ -981,7 +981,7 @@ namespace Microsoft.OData.JsonLight
         /// Asynchronously closes preceding message Json object if any.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task EnsurePrecedingMessageIsClosedAsync()
+        private ValueTask EnsurePrecedingMessageIsClosedAsync()
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");

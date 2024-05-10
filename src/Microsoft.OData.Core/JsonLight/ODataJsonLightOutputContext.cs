@@ -221,11 +221,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        public async override ValueTask<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 entitySetParam,
                 resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
@@ -236,6 +236,8 @@ namespace Microsoft.OData.JsonLight
                 this,
                 entitySet,
                 resourceType);
+
+            return writer;
         }
 
         /// <summary>
@@ -259,11 +261,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        public async override ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 entitySetParam,
                 resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
@@ -274,6 +276,8 @@ namespace Microsoft.OData.JsonLight
                 this,
                 entitySet,
                 resourceType);
+
+            return writer;
         }
 
         /// <summary>
@@ -297,11 +301,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The structured type for the resources in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public async override ValueTask<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 navigationSourceParam,
                 resourceTypeParam) => thisParam.CreateODataResourceWriterImplementation(
@@ -310,6 +314,8 @@ namespace Microsoft.OData.JsonLight
                 this,
                 navigationSource,
                 resourceType);
+
+            return writer;
         }
 
         /// <summary>
@@ -331,16 +337,18 @@ namespace Microsoft.OData.JsonLight
         /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
         /// <returns>A running task for the created collection writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
+        public async override ValueTask<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataCollectionWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 itemTypeReferenceParam) => thisParam.CreateODataCollectionWriterImplementation(
                     itemTypeReferenceParam),
                 this,
                 itemTypeReference);
+
+            return writer;
         }
 
         /// <summary>
@@ -362,9 +370,10 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The structured type for the resources in the resource set to be written.</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public async override ValueTask<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
-            return this.CreateODataResourceWriterAsync(navigationSource, resourceType);
+            ODataWriter writer = await this.CreateODataResourceWriterAsync(navigationSource, resourceType);
+            return writer;
         }
 
         /// <summary>
@@ -388,11 +397,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        public async override ValueTask<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 entitySetParam,
                 resourceTypeParam) => thisParam.CreateODataResourceSetWriterImplementation(
@@ -403,6 +412,8 @@ namespace Microsoft.OData.JsonLight
                 this,
                 entitySet,
                 resourceType);
+
+            return writer;
         }
 
         /// <summary>
@@ -424,16 +435,18 @@ namespace Microsoft.OData.JsonLight
         /// <param name="operation">The operation import whose parameters will be written.</param>
         /// <returns>A running task for the created parameter writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public override Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
+        public async override ValueTask<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataParameterWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 operationParam) => thisParam.CreateODataParameterWriterImplementation(
                     operationParam),
                 this,
                 operation);
+
+            return writer;
         }
 
         /// <summary>
@@ -455,7 +468,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="property">The property to write</param>
         /// <returns>A task representing the asynchronous operation of writing the property.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public override async Task WritePropertyAsync(ODataProperty property)
+        public override async ValueTask WritePropertyAsync(ODataProperty property)
         {
             this.AssertAsynchronous();
 
@@ -492,7 +505,7 @@ namespace Microsoft.OData.JsonLight
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public override async Task WriteErrorAsync(ODataError error, bool includeDebugInformation)
+        public override async ValueTask WriteErrorAsync(ODataError error, bool includeDebugInformation)
         {
             this.AssertAsynchronous();
 
@@ -604,13 +617,15 @@ namespace Microsoft.OData.JsonLight
         /// <returns>A running task for the created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync()
+        internal async override ValueTask<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(
+            ODataBatchWriter writer = await TaskUtils.GetTaskForSynchronousOperation(
                 thisParam => thisParam.CreateODataBatchWriterImplementation(),
                 this);
+
+            return writer;
         }
 
         /// <summary>
@@ -654,7 +669,7 @@ namespace Microsoft.OData.JsonLight
         /// the in-stream error is written.
         /// It is the responsibility of this method to flush the output before the task finishes.
         /// </remarks>
-        internal override async Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal override async ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             this.AssertAsynchronous();
 
@@ -684,11 +699,11 @@ namespace Microsoft.OData.JsonLight
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        internal async override ValueTask<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation((
+            ODataDeltaWriter writer = await TaskUtils.GetTaskForSynchronousOperation((
                 thisParam,
                 entitySetParam,
                 entityTypeParam) => thisParam.CreateODataDeltaWriterImplementation(
@@ -697,6 +712,8 @@ namespace Microsoft.OData.JsonLight
                 this,
                 entitySet,
                 entityType);
+
+            return writer;
         }
 
         /// <summary>
@@ -720,7 +737,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="serviceDocument">The service document to write.</param>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override async Task WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
+        internal override async ValueTask WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
         {
             this.AssertAsynchronous();
 
@@ -749,7 +766,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="links">The entity reference links to write as message payload.</param>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override async Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
+        internal override async ValueTask WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
         {
             this.AssertAsynchronous();
 
@@ -778,7 +795,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="link">The link result to write as message payload.</param>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override async Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
+        internal override async ValueTask WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
         {
             this.AssertAsynchronous();
 

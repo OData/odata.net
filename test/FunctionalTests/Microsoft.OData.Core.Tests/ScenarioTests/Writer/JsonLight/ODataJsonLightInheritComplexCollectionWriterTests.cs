@@ -11,6 +11,7 @@ using System.Text;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
 {
@@ -223,21 +224,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.JsonLight
             ValidateWrittenPayload(stream, expectedPayload);
         }
 
-        private static void WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
+        private static async Task WriteAndValidateAsync(IEdmTypeReference itemTypeReference, ODataResourceSet collectionStart, IEnumerable<ODataResource> items, string expectedPayload, bool writingResponse)
         {
             MemoryStream stream = new MemoryStream();
             var outputContext = CreateJsonLightOutputContext(stream, writingResponse, synchronous: false);
-            var createODataWriterTask = outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
-            createODataWriterTask.Wait();
-            var odataWriter = createODataWriterTask.Result;
-            odataWriter.WriteStartAsync(collectionStart).Wait();
+
+            var odataWriter = await outputContext.CreateODataResourceSetWriterAsync(null, itemTypeReference == null ? null : itemTypeReference.ToStructuredType());
+            await odataWriter.WriteStartAsync(collectionStart);
             foreach (ODataResource item in items)
             {
-                odataWriter.WriteStartAsync(item).Wait();
-                odataWriter.WriteEndAsync().Wait();
+                await odataWriter.WriteStartAsync(item);
+                await odataWriter.WriteEndAsync();
             }
 
-            odataWriter.WriteEndAsync().Wait();
+            await odataWriter.WriteEndAsync();
             ValidateWrittenPayload(stream, expectedPayload);
         }
 

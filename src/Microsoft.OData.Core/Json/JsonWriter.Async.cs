@@ -368,9 +368,9 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async ValueTask FlushAsync()
+        public Task FlushAsync()
         {
-            await this.writer.FlushAsync().ConfigureAwait(false);
+            return this.writer.FlushAsync();
         }
 
 #if NETCOREAPP
