@@ -20,6 +20,7 @@ namespace Microsoft.OData.Edm.Csdl
         private readonly XmlWriter writer;
         private readonly string edmxNamespace;
         private readonly CsdlTarget target;
+        private readonly CsdlXmlWriterSettings writerSettings;
 
         /// <summary>
         /// Initializes a new instance of <see cref="CsdlXmlWriter"/> class.
@@ -29,12 +30,26 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="edmxVersion">The Edmx version.</param>
         /// <param name="target">The CSDL target.</param>
         public CsdlXmlWriter(IEdmModel model, XmlWriter writer, Version edmxVersion, CsdlTarget target)
+            : this(model, writer, edmxVersion, target, new CsdlXmlWriterSettings())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of <see cref="CsdlXmlWriter"/> class.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="writer">The XML writer.</param>
+        /// <param name="edmxVersion">The Edmx version.</param>
+        /// <param name="target">The CSDL target.</param>
+        /// <param name="writerSettings">The CSDL xml writer settings.</param>
+        public CsdlXmlWriter(IEdmModel model, XmlWriter writer, Version edmxVersion, CsdlTarget target, CsdlXmlWriterSettings writerSettings)
             : base(model, edmxVersion)
         {
             EdmUtil.CheckArgumentNull(writer, "writer");
 
             this.writer = writer;
             this.target = target;
+            this.writerSettings = writerSettings;
 
             Debug.Assert(CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion), "CsdlConstants.SupportedEdmxVersions.ContainsKey(edmxVersion)");
             this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmxVersion];
@@ -120,7 +135,7 @@ namespace Microsoft.OData.Edm.Csdl
 
                 foreach (IEdmReference edmReference in references)
                 {
-                    visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion);
+                    visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion, this.writerSettings);
                     visitor.VisitEdmReferences(this.model, edmReference);
                 }
             }
@@ -138,7 +153,7 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)
             {
-                var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion);
+                var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion, this.writerSettings);
                 visitor = new EdmModelCsdlSerializationVisitor(this.model, schemaWriter);
                 visitor.VisitEdmSchema(schema, this.model.GetNamespacePrefixMappings());
             }

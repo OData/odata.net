@@ -14,6 +14,7 @@ using System.Xml;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm;
 
 namespace Microsoft.OData
 {
@@ -267,7 +268,15 @@ namespace Microsoft.OData
         private void WriteMetadataDocumentImplementation()
         {
             IEnumerable<EdmError> errors;
-            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
+
+            CsdlXmlWriterSettings writerSettings = new CsdlXmlWriterSettings();
+
+            if (this.MessageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.UseLegacyVariableCasing))
+            {
+                writerSettings.LibraryCompatibility |= EdmLibraryCompatibility.UseLegacyVariableCasing;
+            }
+
+            if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, writerSettings, out errors))
             {
                 Debug.Assert(errors != null, "errors != null");
 

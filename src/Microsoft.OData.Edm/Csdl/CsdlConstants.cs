@@ -180,6 +180,8 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Value_Ref = "Ref";
         internal const string Value_SridVariable = EdmConstants.Value_SridVariable;
         internal const string Value_ScaleVariable = EdmConstants.Value_ScaleVariable;
+        internal const string Value_SridVariable_Legacy = EdmConstants.Value_SridVariable_Legacy;
+        internal const string Value_ScaleVariable_Legacy = EdmConstants.Value_ScaleVariable_Legacy;
 
         internal const string TypeName_Untyped = "Edm.Untyped";
         internal const string TypeName_Untyped_Short = "Untyped";

@@ -12,6 +12,7 @@ using System.Text;
 using Microsoft.OData.JsonLight;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
 {
@@ -699,6 +700,135 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.JsonLight
                 },
                 expectedPayload: "{\"@odata.context\":\"http://odata.org/test/$metadata#NS.EnumUndefinedTypename\",\"@odata.type\":\"#NS.EnumUndefinedTypename\",\"value\":\"Red\"}"
             );
+        }
+
+        [Fact]
+        public void WritingNullTopLevelPropertyInLatestVersion_ThrowsException()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                Version = ODataVersion.V4,
+                EnableMessageStreamDisposal = false
+            };
+
+            settings.SetContentType("application/json", "utf-8");
+            settings.SetServiceDocumentUri(new Uri("http://example.com/odata"));
+
+            Action<ODataMessageWriter> writeTopLevelProperty = (writer) =>
+            {
+                ODataProperty myProperty = new ODataProperty
+                {
+                    Name = "MyTopLevelProperty",
+                    Value = null
+                };
+
+                writer.WriteProperty(myProperty);
+            };
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                ODataException exception = Assert.Throws<ODataException>(() => writeTopLevelProperty(new ODataMessageWriter(responseMessage, settings)));
+
+                Assert.Equal("Cannot write the value \'null\' in top level property; return 204 instead.", exception.Message);
+            }
+        }
+
+        [Fact]
+        public void WritingNullTopLevelPropertyInV6_DoesNotThrowException()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                Version = ODataVersion.V4,
+                EnableMessageStreamDisposal = false,
+                LibraryCompatibility = ODataLibraryCompatibility.Version6
+            };
+
+            settings.SetContentType("application/json", "utf-8");
+            settings.SetServiceDocumentUri(new Uri("http://example.com/odata"));
+
+            Action<ODataMessageWriter> writeTopLevelProperty = (writer) =>
+            {
+                ODataProperty myProperty = new ODataProperty
+                {
+                    Name = "MyTopLevelProperty",
+                    Value = null
+                };
+
+                writer.WriteProperty(myProperty);
+            };
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                writeTopLevelProperty(new ODataMessageWriter(responseMessage, settings));
+            }
+        }
+
+        [Fact]
+        public async Task WritingNullTopLevelPropertyAsyncInV6_DoesNotThrowException()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                Version = ODataVersion.V4,
+                EnableMessageStreamDisposal = false,
+                LibraryCompatibility = ODataLibraryCompatibility.Version6
+            };
+
+            settings.SetContentType("application/json", "utf-8");
+            settings.SetServiceDocumentUri(new Uri("http://example.com/odata"));
+
+            static async Task WriteTopLevelProperty(ODataMessageWriter writer)
+            {
+                ODataProperty myProperty = new ODataProperty
+                {
+                    Name = "MyTopLevelProperty",
+                    Value = null
+                };
+
+                await writer.WritePropertyAsync(myProperty);
+            }
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                await WriteTopLevelProperty(new ODataMessageWriter(responseMessage, settings));
+            }
+        }
+
+        [Fact]
+        public async Task WritingNullTopLevelPropertyAsyncInLatestVersion_ThrowsException()
+        {
+            ODataMessageWriterSettings settings = new ODataMessageWriterSettings
+            {
+                Version = ODataVersion.V4,
+                EnableMessageStreamDisposal = false
+            };
+            settings.SetContentType("application/json", "utf-8");
+            settings.SetServiceDocumentUri(new Uri("http://example.com/odata"));
+
+            static async Task WriteTopLevelProperty(ODataMessageWriter writer)
+            {
+                ODataProperty myProperty = new ODataProperty
+                {
+                    Name = "MyTopLevelProperty",
+                    Value = null
+                };
+
+                await writer.WritePropertyAsync(myProperty);
+            }
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IODataResponseMessage responseMessage = new InMemoryMessage { Stream = stream };
+                async Task Execute()
+                {
+                    await WriteTopLevelProperty(new ODataMessageWriter(responseMessage, settings));
+                }
+
+                ODataException exception = await Assert.ThrowsAsync<ODataException>(Execute);
+                Assert.Equal("Cannot write the value \'null\' in top level property; return 204 instead.", exception.Message);
+            }
         }
 
         [Fact]

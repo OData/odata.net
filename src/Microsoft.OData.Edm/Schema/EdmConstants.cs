@@ -62,8 +62,10 @@ namespace Microsoft.OData.Edm
         internal const string Value_UnknownType = "UnknownType";
         internal const string Value_UnnamedType = "UnnamedType";
         internal const string Value_Max = "max";
-        internal const string Value_SridVariable = "Variable";
-        internal const string Value_ScaleVariable = "Variable";
+        internal const string Value_SridVariable = "variable";
+        internal const string Value_ScaleVariable = "variable";
+        internal const string Value_SridVariable_Legacy = "Variable";
+        internal const string Value_ScaleVariable_Legacy = "Variable";
 
         internal const string Type_Collection = "Collection";
         internal const string Type_Complex = "Complex";

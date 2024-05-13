@@ -667,6 +667,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         [Fact]
         public void ReadAnnotationWithoutSpecifiedValueAndUsePrimitiveDefaultValues()
         {
+            CsdlXmlWriterSettings writerSettings = new CsdlXmlWriterSettings
+            {
+                LibraryCompatibility = EdmLibraryCompatibility.UseLegacyVariableCasing
+            };
+
             var csdl = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                "<edmx:DataServices>" +
@@ -756,7 +761,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                  "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>", writerSettings);
         }
 
         [Fact]
@@ -2159,6 +2164,47 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             // this is not imported because the Other.Types namespace is not referenced by the permissionsCsdl model
             var personType = model.FindType("Other.Types.Person");
             Assert.Null(personType);
+        }
+
+        // We currently do not initialize the Scale and SpatialReferenceIdentifier of the respective Edm type references when reading the scale and srid values if the value is variable or Variable 
+        // The IEdmDecimalTypeReference'Scale value should have the value `variable` or `Variable` depending on what is in the CSDL.
+        // Also, the IEdmSpatialTypeReference's SpatialReferenceIdentifier should have the value `variable` or `Variable` depending on what is in the Csdl. 
+        [Theory]
+        [InlineData("Variable")]
+        [InlineData("variable")]
+        public void ReadingScaleAndSridValue_VaribaleValue_NotInitializedOnRespectiveEdms(string variableValue)
+        {
+            // Build the CSDL template with the provided variable value
+            string csdlTemplate = $"<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"Complex\">" +
+                $"<Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"{variableValue}\" />" +
+                $"<Property Name=\"DecimalProperty\" Type=\"Edm.Decimal\" Nullable=\"false\" Scale=\"{variableValue}\" />" +
+                "</ComplexType>" +
+                "</Schema>" +
+                "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            // Parse the CSDL template
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdlTemplate).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
+
+            IEnumerable<EdmError> errors;
+            bool validated = model.Validate(out errors);
+            Assert.True(validated);
+
+            IEdmComplexType complexType = model.FindDeclaredType("NS.Complex") as IEdmComplexType;
+            IEdmDecimalTypeReference decimalPropertyReference = complexType.FindProperty("DecimalProperty").Type as IEdmDecimalTypeReference;
+
+            Assert.Null(decimalPropertyReference.Scale);
+
+            IEdmSpatialTypeReference geographyPointProperty = complexType.FindProperty("GeographyPoint").Type as IEdmSpatialTypeReference;
+            Assert.Null(geographyPointProperty.SpatialReferenceIdentifier);
         }
 
         static void VerifyXmlModel(IEdmModel model, string csdl)

@@ -24,12 +24,17 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
         protected XmlWriter xmlWriter;
         protected readonly string edmxNamespace;
+        private readonly CsdlXmlWriterSettings writerSettings;
 
-        internal EdmModelCsdlSchemaXmlWriter(IEdmModel model, XmlWriter xmlWriter, Version edmVersion)
+        internal EdmModelCsdlSchemaXmlWriter(IEdmModel model, XmlWriter xmlWriter, Version edmVersion, CsdlXmlWriterSettings csdlXmlWriterSettings)
             : base(model, edmVersion)
         {
             this.xmlWriter = xmlWriter;
             this.edmxNamespace = CsdlConstants.SupportedEdmxVersions[edmVersion];
+
+            Debug.Assert(csdlXmlWriterSettings != null, "Writer settings must be initialized.");
+
+            this.writerSettings = csdlXmlWriterSettings;
         }
 
         internal override void WriteReferenceElementHeader(IEdmReference reference)
@@ -826,14 +831,28 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private static string SridAsXml(int? i)
+        private string SridAsXml(int? i)
         {
-            return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable;
+            if (this.writerSettings.LibraryCompatibility.HasFlag(EdmLibraryCompatibility.UseLegacyVariableCasing))
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable_Legacy;
+            }
+            else 
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_SridVariable;
+            }
         }
 
-        private static string ScaleAsXml(int? i)
+        private string ScaleAsXml(int? i)
         {
-            return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable;
+            if (this.writerSettings.LibraryCompatibility.HasFlag(EdmLibraryCompatibility.UseLegacyVariableCasing))
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable_Legacy;
+            }
+            else 
+            {
+                return i.HasValue ? Convert.ToString(i.Value, CultureInfo.InvariantCulture) : CsdlConstants.Value_ScaleVariable;
+            }
         }
 
         private static string GetCsdlNamespace(Version edmVersion)

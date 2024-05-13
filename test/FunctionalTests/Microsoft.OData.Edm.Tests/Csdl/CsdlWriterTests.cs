@@ -15,6 +15,7 @@ using System.Text.Encodings.Web;
 using System.Text.Json;
 #endif
 using System.Xml;
+using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
@@ -2353,7 +2354,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                      "<Annotation Term=\"NS.DefaultDateTerm\" />" +
                    "</ComplexType>" +
                  "<Term Name=\"DefaultBinaryTerm\" Type=\"Edm.Binary\" DefaultValue=\"01\" Nullable=\"false\" />" +
-                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" Scale=\"Variable\" />" +
+                 "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" Nullable=\"false\" Scale=\"variable\" />" +
                  "<Term Name=\"DefaultStringTerm\" Type=\"Edm.String\" DefaultValue=\"This is a test\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultDurationTerm\" Type=\"Edm.Duration\" DefaultValue=\"P11DT23H59M59.999999999999S\" Nullable=\"false\" />" +
                  "<Term Name=\"DefaultTimeOfDayTerm\" Type=\"Edm.TimeOfDay\" DefaultValue=\"21:45:00\" Nullable=\"false\" />" +
@@ -2457,6 +2458,75 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     }
   }
 }");
+        }
+
+        [Fact]
+        public void CanWriteScaleAndSridVariable_UsingLegacyVariable()
+        {
+            CsdlXmlWriterSettings writerSettings = new CsdlXmlWriterSettings
+            {
+                LibraryCompatibility = EdmLibraryCompatibility.UseLegacyVariableCasing
+            };
+
+            string csdlTemplate = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"Complex\">" +
+                "<Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"Variable\" />" +
+                "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                "</ComplexType>" +
+                "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"Variable\" />" +
+                "</Schema>" +
+                "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            // Parse into CSDL
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdlTemplate).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            bool validated = model.Validate(out errors);
+            Assert.True(validated);
+
+            // Act & Assert for Reserialized XML
+            WriteAndVerifyXml(model, csdlTemplate, writerSettings);
+        }
+
+        [Fact]
+        public void CanWriteScaleAndSridVariable_UsingLowerCase_Variable()
+        {
+            string csdlTemplate = "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                "<edmx:DataServices>" +
+                "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                "<ComplexType Name=\"Complex\">" +
+                "<Property Name=\"GeographyPoint\" Type=\"Edm.GeographyPoint\" SRID=\"variable\" />" +
+                "<Annotation Term=\"NS.DefaultDecimalTerm\" />" +
+                "</ComplexType>" +
+                "<Term Name=\"DefaultDecimalTerm\" Type=\"Edm.Decimal\" DefaultValue=\"0.34\" AppliesTo=\"Property Term\" Nullable=\"false\" Scale=\"variable\" />" +
+                "</Schema>" +
+                "</edmx:DataServices>" +
+                "</edmx:Edmx>";
+
+            // Parse into CSDL
+            IEdmModel model;
+            using (XmlReader xr = XElement.Parse(csdlTemplate).CreateReader())
+            {
+                model = CsdlReader.Parse(xr);
+            }
+
+            // Validate model
+            IEnumerable<EdmError> errors;
+            bool validated = model.Validate(out errors);
+            Assert.True(validated);
+
+            // Act & Assert for Reserialized XML
+            WriteAndVerifyXml(model, csdlTemplate);
         }
 
         [Fact]
@@ -2843,6 +2913,25 @@ var v40Json =
                 {
                     IEnumerable<EdmError> errors;
                     CsdlWriter.TryWriteCsdl(model, xw, target, out errors);
+                    xw.Flush();
+                }
+
+                string actual = sw.ToString();
+                Assert.Equal(expected, actual);
+            }
+        }
+
+        internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlXmlWriterSettings csdlXmlWriterSettings, CsdlTarget target = CsdlTarget.OData)
+        {
+            using (StringWriter sw = new StringWriter())
+            {
+                XmlWriterSettings settings = new XmlWriterSettings();
+                settings.Encoding = System.Text.Encoding.UTF8;
+
+                using (XmlWriter xw = XmlWriter.Create(sw, settings))
+                {
+                    IEnumerable<EdmError> errors;
+                    CsdlWriter.TryWriteCsdl(model, xw, target, csdlXmlWriterSettings, out errors);
                     xw.Flush();
                 }
 

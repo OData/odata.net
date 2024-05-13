@@ -986,7 +986,7 @@ namespace Microsoft.OData.Tests.JsonLight
         [Theory]
         [InlineData(ODataLibraryCompatibility.Version6, "\"Items@odata.context\":\"http://tempuri.org/$metadata#Orders(1)/Items\",")]
         [InlineData(ODataLibraryCompatibility.Version7, "")]
-        [InlineData(ODataLibraryCompatibility.Latest, "")]
+        [InlineData(ODataLibraryCompatibility.None, "")]
         public async Task WriteContainment_APIsShouldYieldSameResult(ODataLibraryCompatibility libraryCompatilibity, string containmentContextUrl)
         {
             this.writerSettings.ODataUri.Path = new ODataUriParser(this.model, new Uri(ServiceUri), new Uri(ServiceUri + "/Orders(1)")).ParsePath();

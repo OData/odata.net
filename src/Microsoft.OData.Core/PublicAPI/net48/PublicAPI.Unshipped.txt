@@ -49,6 +49,13 @@ Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool
 Microsoft.OData.ODataAsynchronousResponseMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationRequestMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationResponseMessage.ServiceProvider.get -> System.IServiceProvider
+Microsoft.OData.ODataLibraryCompatibility.None = 0 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.DoNotThrowExceptionForTopLevelNullProperty = 8 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing = 1 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version6 = Microsoft.OData.ODataLibraryCompatibility.UseLegacyVariableCasing | Microsoft.OData.ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation | Microsoft.OData.ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty | Microsoft.OData.ODataLibraryCompatibility.DoNotThrowExceptionForTopLevelNullProperty -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.Version7 = 1 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.WriteODataContextAnnotationForNavProperty = 4 -> Microsoft.OData.ODataLibraryCompatibility
+Microsoft.OData.ODataLibraryCompatibility.WriteTopLevelODataNullAnnotation = 2 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataMessageInfo.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataMessageInfo.ServiceProvider.set -> void
 Microsoft.OData.ODataMessageReaderSettings.EnableReadingKeyAsSegment.get -> bool
@@ -572,9 +579,6 @@ Microsoft.OData.ODataInstanceAnnotation.Value.get -> Microsoft.OData.ODataValue
 Microsoft.OData.ODataItem
 Microsoft.OData.ODataItem.ODataItem() -> void
 Microsoft.OData.ODataLibraryCompatibility
-Microsoft.OData.ODataLibraryCompatibility.Latest = 2147483647 -> Microsoft.OData.ODataLibraryCompatibility
-Microsoft.OData.ODataLibraryCompatibility.Version6 = 60000 -> Microsoft.OData.ODataLibraryCompatibility
-Microsoft.OData.ODataLibraryCompatibility.Version7 = 70000 -> Microsoft.OData.ODataLibraryCompatibility
 Microsoft.OData.ODataMediaType
 Microsoft.OData.ODataMediaType.ODataMediaType(string type, string subType) -> void
 Microsoft.OData.ODataMediaType.ODataMediaType(string type, string subType, System.Collections.Generic.IEnumerable<System.Collections.Generic.KeyValuePair<string, string>> parameters) -> void

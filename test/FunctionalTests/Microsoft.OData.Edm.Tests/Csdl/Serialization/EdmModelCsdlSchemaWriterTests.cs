@@ -177,7 +177,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var namespaceAliasMappings = model.GetNamespaceAliases();
             Version edmxVersion = model.GetEdmxVersion();
             xmlWriter = XmlWriter.Create(memoryStream);
-            return new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
+            return new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, new CsdlXmlWriterSettings());
         }
     }
 }

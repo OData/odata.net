@@ -244,8 +244,8 @@ namespace Microsoft.OData
             }
 
             if (isTopLevel
-                && (this.settings.LibraryCompatibility >= ODataLibraryCompatibility.Version7
-                || this.settings.Version >= ODataVersion.V401))
+                && (!(this.settings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.DoNotThrowExceptionForTopLevelNullProperty)
+                || this.settings.Version >= ODataVersion.V401)))
             {
                 // From the spec:
                 // 11.2.3 Requesting Individual Properties

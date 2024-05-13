@@ -122,9 +122,9 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void LibraryCompatibilityShouldBeLatestByDefault()
+        public void LibraryCompatibilityShouldBeNoneByDefault()
         {
-            Assert.Equal(ODataLibraryCompatibility.Latest, this.settings.LibraryCompatibility);
+            Assert.Equal(ODataLibraryCompatibility.None, this.settings.LibraryCompatibility);
         }
 
         [Fact]

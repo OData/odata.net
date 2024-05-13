@@ -5,7 +5,6 @@
 //---------------------------------------------------------------------
 
 using System;
-using System.Collections.Generic;
 using System.Xml;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -18,9 +17,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
         private readonly EdmModelCsdlSchemaXmlWriter schemaWriter;
 
-        internal EdmModelReferenceElementsXmlVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion)
+        internal EdmModelReferenceElementsXmlVisitor(IEdmModel model, XmlWriter xmlWriter, Version edmxVersion, CsdlXmlWriterSettings writerSettings)
         {
-            this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
+            this.schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, writerSettings);
         }
 
         #region write IEdmModel.References for referenced models.
