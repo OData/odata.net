@@ -85,8 +85,7 @@ namespace Microsoft.OData.Tests.Json
                 enumerable => { },
                 error,
                 includeDebugInformation: false,
-                maxInnerErrorDepth: 0,
-                writingJson: false);
+                maxInnerErrorDepth: 0);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal(@"{""error"":{""code"":"""",""message"":"""",""target"":""any target""," +
                 @"""details"":[{""code"":""500"",""target"":""any target"",""message"":""any msg""}]}}", result);
@@ -135,8 +134,7 @@ namespace Microsoft.OData.Tests.Json
                 enumerable => { },
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJson: false);
+                maxInnerErrorDepth: 5);
              var result = stringWriter.GetStringBuilder().ToString();
              Assert.Equal("{\"error\":" +
                                 "{\"code\":\"\"," +
@@ -178,8 +176,7 @@ namespace Microsoft.OData.Tests.Json
                 enumerable => { },
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJson: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +
@@ -218,8 +215,7 @@ namespace Microsoft.OData.Tests.Json
                 enumerable => { },
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJson: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +
@@ -256,8 +252,7 @@ namespace Microsoft.OData.Tests.Json
                 enumerable => { },
                 error,
                 includeDebugInformation: true,
-                maxInnerErrorDepth: 5,
-                writingJson: false);
+                maxInnerErrorDepth: 5);
             var result = stringWriter.GetStringBuilder().ToString();
             Assert.Equal("{\"error\":" +
                                "{\"code\":\"\"," +
