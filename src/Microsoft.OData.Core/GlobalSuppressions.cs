@@ -18,10 +18,10 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.FunctionCallBinder.#BindAsUriFunction(Microsoft.OData.UriParser.FunctionCallToken,System.Collections.Generic.List`1<Microsoft.OData.UriParser.QueryNode>)")]
 [assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.UriParser.SelectExpandOptionParser.#BuildStarExpandTermToken(Microsoft.OData.UriParser.PathSegmentToken)")]
 [module: SuppressMessage("Microsoft.Naming", "CA1701:ResourceStringCompoundWordsShouldBeCasedCorrectly", MessageId = "NonEntity", Scope = "resource", Target = "Microsoft.OData.Core.resources")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingRequestMessageData")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingResponseMessageData")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingRequestMessageDataAsync")]
-[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightBatchWriter.#WritePendingResponseMessageDataAsync")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonBatchWriter.#WritePendingRequestMessageData")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonBatchWriter.#WritePendingResponseMessageData")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonBatchWriter.#WritePendingRequestMessageDataAsync")]
+[assembly: SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonBatchWriter.#WritePendingResponseMessageDataAsync")]
 
 // By design.
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1823:AvoidUnusedPrivateFields", Scope = "member", Target = "Microsoft.OData.Evaluation.ODataResourceMetadataContext+ODataResourceMetadataContextWithoutModel.#serializationInfo")]
@@ -44,9 +44,9 @@ using System.Diagnostics.CodeAnalysis;
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.UriParser.SelectPropertyVisitor.#ProcessTokenAsPath(Microsoft.OData.UriParser.NonSystemToken)")]
 
 // By design.
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter.#StartDeltaLink(Microsoft.OData.ODataDeltaLinkBase)")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaReader.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.JsonLight.ODataJsonLightDeltaWriter.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1800:DoNotCastUnnecessarily", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonDeltaWriter.#StartDeltaLink(Microsoft.OData.ODataDeltaLinkBase)")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonDeltaReader.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
+[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Scope = "member", Target = "Microsoft.OData.Json.ODataJsonDeltaWriter.#IsTopLevel", Justification = "Used in debug builds in assertions.")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1819:PropertiesShouldNotReturnArrays", Scope = "member", Target = "Microsoft.OData.UriParser.FunctionSignatureWithReturnType.#ArgumentTypes")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Scope = "member", Target = "Microsoft.OData.UriParser.UriPrimitiveTypeParser.#TryUriStringToPrimitive(System.String,Microsoft.OData.Edm.IEdmTypeReference,System.Object&,Microsoft.OData.UriParser.UriLiteralParsingException&)")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter", Scope = "member", Target = "Microsoft.OData.ContainerBuilderExtensions.#AddService`2(Microsoft.OData.IContainerBuilder,Microsoft.OData.ServiceLifetime)")]

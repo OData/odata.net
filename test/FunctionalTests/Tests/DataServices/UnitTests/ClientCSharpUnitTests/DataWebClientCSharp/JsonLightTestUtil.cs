@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightTestUtil.cs" company="Microsoft">
+// <copyright file="JsonTestUtil.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,14 +14,14 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Csdl;
 
-    internal static class JsonLightTestUtil
+    internal static class JsonTestUtil
     {
         /// <summary>
         /// Configures a DataServiceContext for JSON Light.
         /// </summary>
         /// <param name="context">Context to be configured.</param>
         /// <param name="edmx">EDMX that contains the service model. If null, the EDMX from the service's $metadata endpoint is used.</param>
-        internal static void ConfigureContextForJsonLight(DataServiceContext context, string edmx = null)
+        internal static void ConfigureContextForJson(DataServiceContext context, string edmx = null)
         {
             IEdmModel serviceModel;
             if (edmx == null)

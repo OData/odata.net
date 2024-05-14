@@ -30,19 +30,19 @@ Combination: 16; TestConfiguration = Format: Atom, Request: False, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.MyType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.MyType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.MyType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.MyType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.MyType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
@@ -62,19 +62,19 @@ Combination: 24; TestConfiguration = Format: Atom, Request: False, Synchronous: 
 Model Present: true
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#TestModel.MyType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 25; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.DerivedType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.DerivedType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 27; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.DerivedType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.DerivedType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
@@ -158,19 +158,19 @@ Combination: 64; TestConfiguration = Format: Atom, Request: False, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://www.odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><category term="#DifferentType" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 65; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 65; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#DifferentType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 66; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#DifferentType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 67; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 67; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#DifferentType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 68; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://www.odata.org/$metadata#MySet/$entity","@odata.type":"#DifferentType","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}
 

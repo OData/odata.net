@@ -51,10 +51,10 @@ namespace AstoriaUnitTests.Tests
         public static readonly XNamespace SchemeNamespace = "http://docs.oasis-open.org/odata/ns/scheme";
         public static readonly XNamespace GmlNamespace = "http://www.opengis.net/gml";
 
-        public static readonly string JsonLightMimeType = "applicatIon/jsOn;oDaTa.MeTaData=MinIMal";
-        public static readonly string JsonLightMimeTypeFullMetadata = "applicatIon/jsOn;oDaTa.MeTaDaTa=FuLl";
-        public static readonly string JsonLightMimeTypeNoMetadata = "applicatIon/jsOn;oDaTa.MeTaDaTa=nOnE";
-        public static readonly string JsonLightMimeTypeIeee754Compatible = "applicatIon/json;odata.metadata=minimal;IEEE754Compatible=true";
+        public static readonly string JsonMimeType = "applicatIon/jsOn;oDaTa.MeTaData=MinIMal";
+        public static readonly string JsonMimeTypeFullMetadata = "applicatIon/jsOn;oDaTa.MeTaDaTa=FuLl";
+        public static readonly string JsonMimeTypeNoMetadata = "applicatIon/jsOn;oDaTa.MeTaDaTa=nOnE";
+        public static readonly string JsonMimeTypeIeee754Compatible = "applicatIon/json;odata.metadata=minimal;IEEE754Compatible=true";
         public static readonly string AtomFormat = "applicaTion/atom+xMl";
         public static readonly string MimeAny = "*/*";
         public static readonly string JsonMimeType = "application/JSON";
@@ -63,7 +63,7 @@ namespace AstoriaUnitTests.Tests
         public static readonly string MimeTextPlain = "tExt/plaIn";
         public static readonly string MimeMultipartMixed = "multIpart/mixEd";
         public static readonly string MimeTextXml = "texT/xMl"; // deprecated
-        public static string[] ResponseFormats = new string[] { JsonLightMimeType };
+        public static string[] ResponseFormats = new string[] { JsonMimeType };
         public static bool[] BooleanValues = new bool[] { false, true };
 
         public static string CustomerTypeName = "AstoriaUnitTests.ObjectContextStubs.Types.Customer";
@@ -150,8 +150,8 @@ namespace AstoriaUnitTests.Tests
         {
             XmlDocument document = null;
             string traceDocument = null;
-            if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase)  ||
-                String.Equals(responseFormat, JsonLightMimeTypeFullMetadata, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(responseFormat, JsonMimeType, StringComparison.OrdinalIgnoreCase)  ||
+                String.Equals(responseFormat, JsonMimeTypeFullMetadata, StringComparison.OrdinalIgnoreCase))
             {
                 Stream stream = TestUtil.EnsureStreamWithSeek(resultStream);
                 string originalText = new StreamReader(stream).ReadToEnd();
@@ -262,8 +262,8 @@ namespace AstoriaUnitTests.Tests
             {
                 return VerifyXPaths(resultStream, responseFormat, atomXPaths);
             }
-            else if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase) ||
-                String.Equals(responseFormat, JsonLightMimeTypeFullMetadata, StringComparison.OrdinalIgnoreCase))
+            else if (String.Equals(responseFormat, JsonMimeType, StringComparison.OrdinalIgnoreCase) ||
+                String.Equals(responseFormat, JsonMimeTypeFullMetadata, StringComparison.OrdinalIgnoreCase))
             {
                 return VerifyXPaths(resultStream, responseFormat, jsonXPaths);
             }
@@ -418,9 +418,9 @@ namespace AstoriaUnitTests.Tests
         /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XDocument GetResponseAsAtomXLinq(TestWebRequest request)
         {
-            string format = (!string.IsNullOrEmpty(request.Accept) && request.Accept == UnitTestsUtil.JsonLightMimeType) ? UnitTestsUtil.JsonLightMimeType : UnitTestsUtil.AtomFormat;
+            string format = (!string.IsNullOrEmpty(request.Accept) && request.Accept == UnitTestsUtil.JsonMimeType) ? UnitTestsUtil.JsonMimeType : UnitTestsUtil.AtomFormat;
 
-            if (format == UnitTestsUtil.JsonLightMimeType)
+            if (format == UnitTestsUtil.JsonMimeType)
             {
                 return null;
             }
@@ -476,7 +476,7 @@ namespace AstoriaUnitTests.Tests
             string format = TestUtil.GetMediaType(request.ResponseContentType);
 
             XmlDocument xml = request.GetResponseStreamAsXmlDocument(format);
-            if (TestUtil.CompareMimeType(format, UnitTestsUtil.JsonLightMimeType))
+            if (TestUtil.CompareMimeType(format, UnitTestsUtil.JsonMimeType))
             {
                 return UnitTestsUtil.Json2Atom(xml, new Uri(request.ServiceRoot, request.RequestUriString).AbsoluteUri, jsonToAtomUtil);
             }
@@ -743,7 +743,7 @@ namespace AstoriaUnitTests.Tests
 
         public static bool HasElementNullValue(XmlElement element, string responseFormat)
         {
-            if (String.Equals(responseFormat, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+            if (String.Equals(responseFormat, JsonMimeType, StringComparison.OrdinalIgnoreCase))
             {
                 return (element.GetAttributeNode("IsNull") != null);
             }
@@ -1142,7 +1142,7 @@ namespace AstoriaUnitTests.Tests
 
         public static string GetPayload(object entity, IEdmEntityType entityType, string responseFormat)
         {
-            if (responseFormat == JsonLightMimeType)
+            if (responseFormat == JsonMimeType)
             {
                 return JsonValidator.GetJsonPayload(entityType, entity);
             }
@@ -1222,7 +1222,7 @@ namespace AstoriaUnitTests.Tests
         public static void ComparePropertyValue(XmlDocument document, PropertyInfo property, string responseFormat, object expectedValue)
         {
             object actualValue;
-            if (responseFormat == UnitTestsUtil.JsonLightMimeType)
+            if (responseFormat == UnitTestsUtil.JsonMimeType)
             {
                 XmlNode node = document.SelectSingleNode(String.Format("/{0}/{1}", JsonValidator.ObjectString, property.Name));
 
@@ -1927,7 +1927,7 @@ namespace AstoriaUnitTests.Tests
         {
             List<PayloadBuilder> payloadBuilderToReset = new List<PayloadBuilder>();
 
-            if (providerType == typeof(CustomRowBasedOpenTypesContext) && String.Equals(format, JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+            if (providerType == typeof(CustomRowBasedOpenTypesContext) && String.Equals(format, JsonMimeType, StringComparison.OrdinalIgnoreCase))
             {
                 UpdateOpenPropertiesProperty(payloadBuilder, payloadBuilderToReset);
             }

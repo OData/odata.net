@@ -176,35 +176,35 @@ namespace Microsoft.OData
         /// <summary>An unsupported method or property has been called on the IDictionary implementation of the ODataModelFunctions.</summary>
         ODataModelFunctions_UnsupportedMethodOrProperty,
 
-        /// <summary>Unreachable codepath in ODataJsonLightPropertyAndValueDeserializer.ReadPropertyValue.</summary>
-        ODataJsonLightPropertyAndValueDeserializer_ReadPropertyValue,
+        /// <summary>Unreachable codepath in ODataJsonPropertyAndValueDeserializer.ReadPropertyValue.</summary>
+        ODataJsonPropertyAndValueDeserializer_ReadPropertyValue,
 
-        /// <summary>Unreachable codepath in ODataJsonLightPropertyAndValueDeserializer.GetNonEntityValueKind.</summary>
-        ODataJsonLightPropertyAndValueDeserializer_GetNonEntityValueKind,
+        /// <summary>Unreachable codepath in ODataJsonPropertyAndValueDeserializer.GetNonEntityValueKind.</summary>
+        ODataJsonPropertyAndValueDeserializer_GetNonEntityValueKind,
 
-        /// <summary>Unreachable codepath in ODataJsonLightReader.ReadResourceStart.</summary>
-        ODataJsonLightReader_ReadResourceStart,
+        /// <summary>Unreachable codepath in ODataJsonReader.ReadResourceStart.</summary>
+        ODataJsonReader_ReadResourceStart,
 
-        /// <summary>Unreachable codepath in ODataJsonLightResourceDeserializer.ReadTopLevelResourceSetAnnotations.</summary>
-        ODataJsonLightResourceDeserializer_ReadTopLevelResourceSetAnnotations,
+        /// <summary>Unreachable codepath in ODataJsonResourceDeserializer.ReadTopLevelResourceSetAnnotations.</summary>
+        ODataJsonResourceDeserializer_ReadTopLevelResourceSetAnnotations,
 
-        /// <summary>Unreachable codepath in ODataJsonLightCollectionDeserializer.ReadCollectionStart.</summary>
-        ODataJsonLightCollectionDeserializer_ReadCollectionStart,
+        /// <summary>Unreachable codepath in ODataJsonCollectionDeserializer.ReadCollectionStart.</summary>
+        ODataJsonCollectionDeserializer_ReadCollectionStart,
 
-        /// <summary>Unreachable codepath in ODataJsonLightCollectionDeserializer.ReadCollectionStart.TypeKindFromPayloadFunc.</summary>
-        ODataJsonLightCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc,
+        /// <summary>Unreachable codepath in ODataJsonCollectionDeserializer.ReadCollectionStart.TypeKindFromPayloadFunc.</summary>
+        ODataJsonCollectionDeserializer_ReadCollectionStart_TypeKindFromPayloadFunc,
 
-        /// <summary>Unreachable codepath in ODataJsonLightCollectionDeserializer.ReadCollectionEnd.</summary>
-        ODataJsonLightCollectionDeserializer_ReadCollectionEnd,
+        /// <summary>Unreachable codepath in ODataJsonCollectionDeserializer.ReadCollectionEnd.</summary>
+        ODataJsonCollectionDeserializer_ReadCollectionEnd,
 
-        /// <summary>Unreachable codepath in ODataJsonLightEntityReferenceLinkDeserializer.ReadSingleEntityReferenceLink.</summary>
-        ODataJsonLightEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink,
+        /// <summary>Unreachable codepath in ODataJsonEntityReferenceLinkDeserializer.ReadSingleEntityReferenceLink.</summary>
+        ODataJsonEntityReferenceLinkDeserializer_ReadSingleEntityReferenceLink,
 
-        /// <summary>Unreachable codepath in ODataJsonLightEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAnnotations.</summary>
-        ODataJsonLightEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations,
+        /// <summary>Unreachable codepath in ODataJsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAnnotations.</summary>
+        ODataJsonEntityReferenceLinkDeserializer_ReadEntityReferenceLinksAnnotations,
 
-        /// <summary>Unreachable codepath in ODataJsonLightParameterDeserializer.ReadNextParameter.</summary>
-        ODataJsonLightParameterDeserializer_ReadNextParameter,
+        /// <summary>Unreachable codepath in ODataJsonParameterDeserializer.ReadNextParameter.</summary>
+        ODataJsonParameterDeserializer_ReadNextParameter,
 
         /// <summary>Unreachable codepath in EdmTypeWriterResolver.GetReturnType for operation import group.</summary>
         EdmTypeWriterResolver_GetReturnTypeForOperationImportGroup,

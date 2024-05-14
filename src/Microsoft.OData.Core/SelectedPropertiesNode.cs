@@ -22,7 +22,7 @@ namespace Microsoft.OData
     /// Represents a tree of selected properties based on the $select query option.
     /// </summary>
     /// <remarks>
-    /// When reading, it controls the template expansion in JSON Light.
+    /// When reading, it controls the template expansion in Json.
     /// </remarks>
     internal sealed class SelectedPropertiesNode
     {

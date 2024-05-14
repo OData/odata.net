@@ -40,10 +40,10 @@ namespace AstoriaUnitTests.Tests
             {
                 request.RequestUriString = "/Customers(1)/Address";
                 request.Accept = UnitTestsUtil.MimeApplicationXml;
-                request.RequestHeaders["Override-Accept"] = UnitTestsUtil.JsonLightMimeType;
+                request.RequestHeaders["Override-Accept"] = UnitTestsUtil.JsonMimeType;
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
-                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
             RunTest(configureRequest, validateResponse);
         }
@@ -57,11 +57,11 @@ namespace AstoriaUnitTests.Tests
         {
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
-                request.RequestUriString = "/Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonLightMimeType;
+                request.RequestUriString = "/Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonMimeType;
                 request.Accept = UnitTestsUtil.MimeApplicationXml;
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) => 
-                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
             RunTest(configureRequest, validateResponse);
         }
@@ -76,12 +76,12 @@ namespace AstoriaUnitTests.Tests
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
                 request.RequestUriString = "/Customers(1)/Address";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestMaxVersion = "4.0";
                 request.RequestHeaders["Override-MaxDataServiceVersion"] = "4.0";
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
-                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
             RunTest(configureRequest, validateResponse);
         }
@@ -96,11 +96,11 @@ namespace AstoriaUnitTests.Tests
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
                 request.RequestUriString = "/Customers(1)/Address?Override-MaxDataServiceVersion=4.0";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestMaxVersion = "4.0";
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
-                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
             RunTest(configureRequest, validateResponse);
         }
@@ -116,7 +116,7 @@ namespace AstoriaUnitTests.Tests
             {
                 request.RequestUriString = "/Customers(1)";
                 request.HttpMethod = "POST";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestContentLength = 0;
                 request.IfMatch = "*";
                 request.RequestHeaders["Custom-Post-Tunneling"] = "DELETE";
@@ -138,7 +138,7 @@ namespace AstoriaUnitTests.Tests
             {
                 request.RequestUriString = "/Customers(1)?Custom-Post-Tunneling=DELETE";
                 request.HttpMethod = "POST";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestContentLength = 0;
                 request.IfMatch = "*";
             };
@@ -179,7 +179,7 @@ namespace AstoriaUnitTests.Tests
         {
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestUriString = "/Customers(1)/Address";
                 request.RequestHeaders["Force-Error"] = "yes";
                 request.RequestMaxVersion = "4.0";
@@ -205,7 +205,7 @@ namespace AstoriaUnitTests.Tests
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
                 request.RequestUriString = "/Customers(1)?Override-Accept=" + Uri.EscapeDataString("application/*,application/atom+xml;") + "&Override-Date=" + Uri.EscapeDataString("Wed, 01 Aug 2012 23:23:21 GMT") + "&Override-MyHeader=200";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
             {
@@ -231,8 +231,8 @@ namespace AstoriaUnitTests.Tests
         {
             List<string> uriStrings = new List<string>()
             {
-                "/GetCustomer?Override-Accept="+ UnitTestsUtil.JsonLightMimeType + "&param1='blahblah'&param2=200" + "&Override-MyHeader=myheadervalue",
-                "/GetCustomer?param1='blahblah'&Override-Accept="+ UnitTestsUtil.JsonLightMimeType + "&Override-MyHeader=myheadervalue" + "&param2=200",
+                "/GetCustomer?Override-Accept="+ UnitTestsUtil.JsonMimeType + "&param1='blahblah'&param2=200" + "&Override-MyHeader=myheadervalue",
+                "/GetCustomer?param1='blahblah'&Override-Accept="+ UnitTestsUtil.JsonMimeType + "&Override-MyHeader=myheadervalue" + "&param2=200",
             };
 
             foreach (string uriString in uriStrings)
@@ -245,7 +245,7 @@ namespace AstoriaUnitTests.Tests
                 Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
                 {
                     Assert.AreEqual(200, request.ResponseStatusCode);
-                    Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                    Assert.IsTrue(request.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
                     // The following response header is written in ProcessingRequest/OnStartProcessingRequest
                     Assert.AreEqual("myheadervalue", request.ResponseHeaders["MyHeader"]);
@@ -308,7 +308,7 @@ namespace AstoriaUnitTests.Tests
             Action<TestWebRequest> configureRequest = (TestWebRequest request) =>
             {
                 request.RequestUriString = "/Customers(1)/Address?Override-MaxDataServiceVersion=4.a;";
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestMaxVersion = "4.0";
             };
             Action<TestWebRequest> validateResponse = (TestWebRequest request) =>
@@ -338,13 +338,13 @@ namespace AstoriaUnitTests.Tests
                         webRequest.HttpMethod = "GET";
                         webRequest.ServiceType = serviceType;
                         webRequest.RequestUriString = "/Customers(1)";
-                        webRequest.Accept = UnitTestsUtil.JsonLightMimeType;
+                        webRequest.Accept = UnitTestsUtil.JsonMimeType;
                         TestUtil.RunCatching(webRequest.SendRequest);
-                        Assert.IsTrue(webRequest.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                        Assert.IsTrue(webRequest.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
                         // all the subsequent requests are PUT requests with specified Accept and Content-Type headers
                         webRequest.HttpMethod = "PUT";
-                        webRequest.Accept = UnitTestsUtil.JsonLightMimeType;
+                        webRequest.Accept = UnitTestsUtil.JsonMimeType;
                         webRequest.RequestContentType = "application/json";
 
                         // update the customer and send the correct ETag in query string header - should succeed
@@ -392,13 +392,13 @@ namespace AstoriaUnitTests.Tests
                     webRequest.HttpMethod = "GET";
                     webRequest.ServiceType = typeof(ModifyHeaderOnStartProcessingRequestTestService);
                     webRequest.RequestUriString = "/Customers(1)";
-                    webRequest.Accept = UnitTestsUtil.JsonLightMimeType;
+                    webRequest.Accept = UnitTestsUtil.JsonMimeType;
                     TestUtil.RunCatching(webRequest.SendRequest);
-                    Assert.IsTrue(webRequest.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonLightMimeType.ToLower()));
+                    Assert.IsTrue(webRequest.ResponseContentType.ToLower().Contains(UnitTestsUtil.JsonMimeType.ToLower()));
 
                     // all the subsequent requests are PUT requests with specified Accept If-Match, and Content-Type headers
                     webRequest.HttpMethod = "PUT";
-                    webRequest.Accept = UnitTestsUtil.JsonLightMimeType;
+                    webRequest.Accept = UnitTestsUtil.JsonMimeType;
                     webRequest.IfMatch = "*";
                     webRequest.RequestContentType = "application/json";
 
@@ -425,7 +425,7 @@ namespace AstoriaUnitTests.Tests
         /// Verify that the OnStartProcessingRequest Method can overwrite the accept header in a batch operation by 
         /// using a custom header.
         /// 
-        /// The also is a regression test: Batch Operations with Json Light as the Content-Type do not bump the response DSV to 4.0.
+        /// The also is a regression test: Batch Operations with Json as the Content-Type do not bump the response DSV to 4.0.
         /// </summary>
         [TestMethod, TestCategory("Partition1")]
         public void OnStartProcessingRequestCanOverrideAcceptHeaderInBatchOperationWithHeader()
@@ -434,7 +434,7 @@ namespace AstoriaUnitTests.Tests
             batchQueryOperation.AppendLine("GET Customers(1)/Address HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + UnitTestsUtil.MimeApplicationXml);
-            batchQueryOperation.AppendLine("Override-Accept: " + UnitTestsUtil.JsonLightMimeType);
+            batchQueryOperation.AppendLine("Override-Accept: " + UnitTestsUtil.JsonMimeType);
 
             var test = new SimpleBatchTestCase
             {
@@ -458,7 +458,7 @@ namespace AstoriaUnitTests.Tests
         public void OnStartProcessingRequestCanOverrideAcceptHeaderInBatchOperationWithQueryItem()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
-            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonLightMimeType + " HTTP/1.1");
+            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonMimeType + " HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + UnitTestsUtil.MimeApplicationXml);
 
@@ -484,7 +484,7 @@ namespace AstoriaUnitTests.Tests
         public void CanOverrideAcceptHeaderToBatchRequestWithQueryItem()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
-            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonLightMimeType + " HTTP/1.1");
+            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonMimeType + " HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + UnitTestsUtil.MimeApplicationXml);
 
@@ -502,7 +502,7 @@ namespace AstoriaUnitTests.Tests
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
                     request.HttpMethod = "POST";
-                    request.RequestUriString = "/$batch?Override-Batch-Accept=" + UnitTestsUtil.JsonLightMimeType;
+                    request.RequestUriString = "/$batch?Override-Batch-Accept=" + UnitTestsUtil.JsonMimeType;
                     request.DataServiceType = serviceType;
                     request.Accept = UnitTestsUtil.MimeMultipartMixed;
                     request.RequestVersion = test.RequestDataServiceVersion.ToString();
@@ -524,7 +524,7 @@ namespace AstoriaUnitTests.Tests
                     // expect 202 as $batch request does not honor query string Accept header
                     Assert.AreEqual(test.ResponseStatusCode, request.ResponseStatusCode);
                     // The following response header is written in ProcessingRequest/OnStartProcessingRequest
-                    Assert.AreEqual(UnitTestsUtil.JsonLightMimeType, request.ResponseHeaders["Override-Batch-Accept"]);
+                    Assert.AreEqual(UnitTestsUtil.JsonMimeType, request.ResponseHeaders["Override-Batch-Accept"]);
 
                     string response = request.GetResponseStreamAsText();
                     if (serviceType == typeof(ModifyHeaderOnStartProcessingRequestTestService))

@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -41,7 +41,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = (object)null,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[] { "null" },
+                ExpectedJsonLines = new string[] { "null" },
             };
 
         private static readonly Func<int, CollectionWriterTestDescriptor.ItemDescription> intItem =
@@ -49,7 +49,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = (object)i,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[] { i.ToString() },
+                ExpectedJsonLines = new string[] { i.ToString() },
             };
 
         private static readonly CollectionWriterTestDescriptor.ItemDescription intTwoItem =
@@ -57,7 +57,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = (object)2,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[] { "2" },
+                ExpectedJsonLines = new string[] { "2" },
             };
 
         private static readonly Func<string, CollectionWriterTestDescriptor.ItemDescription> stringItem =
@@ -65,7 +65,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = (object)s,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[] { "\"" + s.ToString() + "\"" },
+                ExpectedJsonLines = new string[] { "\"" + s.ToString() + "\"" },
             };
 
         private static readonly Func<string, CollectionWriterTestDescriptor.ItemDescription> complexItem =
@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                         }
                 },
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines =
+                ExpectedJsonLines =
                     new string[]
                     {
                         "{",
@@ -221,7 +221,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                     tc.ExpectedException,
                     model));
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -394,7 +394,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
             const string collectionName = "TestCollection";
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),
@@ -596,7 +596,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = (object)1,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[] { "1" },
+                ExpectedJsonLines = new string[] { "1" },
             };
 
             // TODO: add inner error handling
@@ -611,10 +611,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                     }
                 },
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = new string[]
+                ExpectedJsonLines = new string[]
                 {
                     "{",
-                    "$(Indent)\"" + JsonLightConstants.ODataErrorPropertyName + "\":{",
+                    "$(Indent)\"" + JsonConstants.ODataErrorPropertyName + "\":{",
                     "$(Indent)$(Indent)\"code\":\"5555\",\"message\":\"Dummy error message\"",
                     "$(Indent)}",
                     "}"
@@ -715,7 +715,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             };
 
             // TODO: add in-stream error tests
-            // TODO: Enable JSON lite test configuration
+            // TODO: Enable JSON test configuration
 
             const string collectionName = "TestCollection";
 
@@ -839,7 +839,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeometryPointValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPointValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPointValue)),
             };
         }
 
@@ -849,7 +849,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeometryPolygonValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPolygonValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryPolygonValue)),
             };
         }
 
@@ -859,7 +859,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeometryCollectionValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryCollectionValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryCollectionValue)),
             };
         }
 
@@ -869,7 +869,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeometryMultiLineStringValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiLineStringValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeometryMultiLineStringValue)),
             };
         }
 
@@ -879,7 +879,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeographyPointValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPointValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPointValue)),
             };
         }
 
@@ -889,7 +889,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeographyPolygonValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPolygonValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyPolygonValue)),
             };
         }
 
@@ -899,7 +899,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeographyCollectionValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyCollectionValue)),
             };
         }
 
@@ -909,7 +909,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 Item = ObjectModelUtils.GeographyMultiLineStringValue,
                 ExpectedXml = string.Empty,
-                ExpectedJsonLightLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiLineStringValue)),
+                ExpectedJsonLines = JsonUtils.GetJsonLines(SpatialUtils.GetSpatialStringValue(ODataFormat.Json, ObjectModelUtils.GeographyMultiLineStringValue)),
             };
         }
 

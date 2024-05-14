@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
             {
                 if (linkInfo.NavigationLink != null)
                 {
-                    // In Jsonlight, navigation link is calculated using edit link after the reading delegates
+                    // In Json, navigation link is calculated using edit link after the reading delegates
                     Assert.True(linkInfo.NavigationLink.AbsoluteUri.StartsWith("http://myeditlink/ModifyEntryEditLink"), "Wrong navigation link");
                     //AssociationLink not updated
                     Assert.Equal("http://modifyassociationlinkurl/", linkInfo.AssociationLink.AbsoluteUri);

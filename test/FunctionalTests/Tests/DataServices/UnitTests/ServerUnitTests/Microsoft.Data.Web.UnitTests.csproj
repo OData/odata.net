@@ -177,7 +177,7 @@
     <Compile Include="Tests\RequestUriCustomizationIntegrationTests.cs" />
     <Compile Include="Tests\MultipleTypeSegmentsIntegrationTests.cs" />
     <Compile Include="Tests\KeyAsSegmentLongSpanIntegrationTests.cs" />
-    <Compile Include="Tests\JsonLightIntegrationTests.cs" />
+    <Compile Include="Tests\JsonIntegrationTests.cs" />
     <Compile Include="Tests\CreateODataWriterTests.cs" />
     <Compile Include="Tests\Dev10TypeTests.cs" />
     <Compile Include="Tests\ErrorHandlerTest.cs" />

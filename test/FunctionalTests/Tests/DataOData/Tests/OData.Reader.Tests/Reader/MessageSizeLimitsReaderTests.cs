@@ -59,14 +59,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     MaxMessageSize = 1,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 337 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 216 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 216 },
                 },
                 // Small number should fail
                 new MessageSizeLimitTestCase
                 {
                     MaxMessageSize = 20,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 337 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 216 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 216 },
                 },
                 // Large number should work
                 new MessageSizeLimitTestCase
@@ -99,14 +99,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     MaxMessageSize = 1,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 248 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 185 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 185 },
                 },
                 // Small number should fail
                 new MessageSizeLimitTestCase
                 {
                     MaxMessageSize = 20,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 248 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 185 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 185 },
                 },
                 // Large number should work
                 new MessageSizeLimitTestCase
@@ -172,14 +172,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     MaxMessageSize = 1,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 259 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 47 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 47 },
                 },
                 // Small number should fail
                 new MessageSizeLimitTestCase
                 {
                     MaxMessageSize = 20,
                     AtomSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 259 },
-                    JsonLightSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 47 },
+                    JsonSizes = new RequestResponseSizes { RequestSize = -1, ResponseSize = 47 },
                 },
                 // Large number should work
                 new MessageSizeLimitTestCase
@@ -395,9 +395,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     (testCase, testConfiguration) =>
                     {
                         int size = -1;
-                        if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                        if (testConfiguration.Format == ODataFormat.Json && testCase.JsonSizes != null)
                         {
-                            size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
+                            size = testConfiguration.IsRequest ? testCase.JsonSizes.RequestSize : testCase.JsonSizes.ResponseSize;
                         }
                         else if (testCase.RawSizes != null)
                         {
@@ -440,9 +440,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 (testCase, testConfiguration) =>
                 {
                     int size = -1;
-                    if (testConfiguration.Format == ODataFormat.Json && testCase.JsonLightSizes != null)
+                    if (testConfiguration.Format == ODataFormat.Json && testCase.JsonSizes != null)
                     {
-                        size = testConfiguration.IsRequest ? testCase.JsonLightSizes.RequestSize : testCase.JsonLightSizes.ResponseSize;
+                        size = testConfiguration.IsRequest ? testCase.JsonSizes.RequestSize : testCase.JsonSizes.ResponseSize;
                     }
                     else if (testCase.RawSizes != null)
                     {
@@ -473,7 +473,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         {
             public int MaxMessageSize { get; set; }
             public RequestResponseSizes AtomSizes { get; set; }
-            public RequestResponseSizes JsonLightSizes { get; set; }
+            public RequestResponseSizes JsonSizes { get; set; }
             public RequestResponseSizes RawSizes { get; set; }
         }
 

@@ -409,9 +409,9 @@ namespace AstoriaUnitTests.Tests
 
                         request.Accept = d.MimeTypes[0];
 
-                        if (d.Name == "JsonLight")
+                        if (d.Name == "Json")
                         {
-                            request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                            request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                         }
 
                         request.Accept += ",*/*";
@@ -546,9 +546,9 @@ namespace AstoriaUnitTests.Tests
 
                         request.Accept = d.MimeTypes[0];
 
-                        if (d.Name == "JsonLight")
+                        if (d.Name == "Json")
                         {
-                            request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                            request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                         }
                         else
                         {
@@ -566,9 +566,9 @@ namespace AstoriaUnitTests.Tests
 
                         request.Accept = d.MimeTypes[0];
 
-                        if (d.Name == "JsonLight")
+                        if (d.Name == "Json")
                         {
-                            request.Accept = UnitTestsUtil.JsonLightMimeTypeFullMetadata;
+                            request.Accept = UnitTestsUtil.JsonMimeTypeFullMetadata;
                         }
                         else
                         {
@@ -630,7 +630,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         bool allowed = (bool)values["AllowBuchanan"];
                         bool atom = (bool)values["Atom"];
-                        request.Accept = (atom) ? "*/*" : UnitTestsUtil.JsonLightMimeType;
+                        request.Accept = (atom) ? "*/*" : UnitTestsUtil.JsonMimeType;
 
                         NorthwindServiceWithFilters.AllowBuchanan = allowed;
                         request.RequestUriString = "/Employees(5)";
@@ -1297,7 +1297,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
-                   new Dimension("ResponseFormat", new string[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.AtomFormat }),
+                   new Dimension("ResponseFormat", new string[] { UnitTestsUtil.JsonMimeType, UnitTestsUtil.AtomFormat }),
                    new Dimension("ContextType", new Type[]
                     {
                         typeof(CustomDataContext),
@@ -1316,7 +1316,7 @@ namespace AstoriaUnitTests.Tests
 
                         foreach (KeyValuePair<string, string[]> uriAndXPaths in urisToVerify)
                         {
-                            string xPath = (responseFormat == UnitTestsUtil.JsonLightMimeType) ?
+                            string xPath = (responseFormat == UnitTestsUtil.JsonMimeType) ?
                                 uriAndXPaths.Value[0] : uriAndXPaths.Value[1];
 
                             string uri = uriAndXPaths.Key;
@@ -1381,7 +1381,7 @@ namespace AstoriaUnitTests.Tests
                             "/Customers('ALFKI')/Orders/$count"}),
                     new Dimension("Accept", new string[] {
                             UnitTestsUtil.AtomFormat,
-                            UnitTestsUtil.JsonLightMimeType,
+                            UnitTestsUtil.JsonMimeType,
                             UnitTestsUtil.MimeApplicationXml,
                             UnitTestsUtil.MimeTextPlain,
                             "*/*",
@@ -1537,7 +1537,7 @@ namespace AstoriaUnitTests.Tests
                 CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                     new Dimension("Accept", new string[] {
                             UnitTestsUtil.AtomFormat,
-                            UnitTestsUtil.JsonLightMimeType,
+                            UnitTestsUtil.JsonMimeType,
                             UnitTestsUtil.MimeTextPlain,
                             ""
                     }));
@@ -1567,7 +1567,7 @@ namespace AstoriaUnitTests.Tests
                     new Dimension("Format", new string[]
                     {
                         UnitTestsUtil.AtomFormat,
-                        UnitTestsUtil.JsonLightMimeType
+                        UnitTestsUtil.JsonMimeType
                     }));
 
                 TestUtil.RunCombinatorialEngineFail(engine, values =>
@@ -1581,7 +1581,7 @@ namespace AstoriaUnitTests.Tests
                         request.Accept = format;
                         request.SendRequest();
 
-                        if (format == UnitTestsUtil.JsonLightMimeType)
+                        if (format == UnitTestsUtil.JsonMimeType)
                         {
                             XmlDocument xdoc = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                             UnitTestsUtil.VerifyXPaths(xdoc, "Object/odata.count[text() = '6']");
@@ -1643,7 +1643,7 @@ namespace AstoriaUnitTests.Tests
                         request.DataServiceType = typeof(CustomDataContext);
                         request.RequestUriString = (String)values["RequestUri"];
                         request.HttpMethod = "POST";
-                        request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0];
+                        request.RequestContentType = SerializationFormatData.Json.MimeTypes[0];
                         request.SetRequestStreamAsText("{ \"ID\" : 3 }");
                         Exception ex = TestUtil.RunCatching(request.SendRequest);
                         Assert.IsNotNull(ex);
@@ -1668,7 +1668,7 @@ namespace AstoriaUnitTests.Tests
                         "/Orders?$filter=ShipCity%20eq%20'Berlin'&$count=true&$top=5&$expand=Shippers,Customers",
                         "/Orders?$filter=ShipCity%20eq%20'Berlin'&$top=1"
                     }),
-                new Dimension("ResponseFormat", new string[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType }));
+                new Dimension("ResponseFormat", new string[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonMimeType }));
 
                 TestUtil.RunCombinatorialEngineFail(engine, (values) =>
                 {
@@ -1684,7 +1684,7 @@ namespace AstoriaUnitTests.Tests
 
                         if (requestUri.Contains("$count=true"))
                         {
-                            if (responseFormat == UnitTestsUtil.JsonLightMimeType)
+                            if (responseFormat == UnitTestsUtil.JsonMimeType)
                             {
                                 TestUtil.AssertContains(responseText, "\"@odata.count\":6");
                             }
@@ -1740,11 +1740,11 @@ namespace AstoriaUnitTests.Tests
                         request.DataServiceType = typeof(CustomDataContext);
                         request.RequestUriString = (string)values["RequestUri"];
 
-                        // verify that in json light, the count element comes 2nd after odata.metadata
-                        request.Accept = UnitTestsUtil.JsonLightMimeType;
+                        // verify that in Json, the count element comes 2nd after odata.metadata
+                        request.Accept = UnitTestsUtil.JsonMimeType;
                         request.SendRequest();
 
-                        var response = request.GetResponseStreamAsXmlDocument(UnitTestsUtil.JsonLightMimeType);
+                        var response = request.GetResponseStreamAsXmlDocument(UnitTestsUtil.JsonMimeType);
                         UnitTestsUtil.VerifyXPaths(response, "/Object/odata.count[count(preceding-sibling::*)=1]");
                     }
                 });
@@ -2073,9 +2073,9 @@ OData-Version: 4.0
 
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2161,9 +2161,9 @@ OData-Version: 4.0
 
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2254,9 +2254,9 @@ OData-Version: 4.0
                                     Assert.IsTrue(e == null, "Not expecting exception.");
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2320,9 +2320,9 @@ OData-Version: 4.0
 
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2388,9 +2388,9 @@ OData-Version: 4.0
 
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2489,9 +2489,9 @@ OData-Version: 4.0
 
                                 XmlDocument document;
                                 string xpath;
-                                if (format == SerializationFormatData.JsonLight)
+                                if (format == SerializationFormatData.Json)
                                 {
-                                    // No validation for JSON light
+                                    // No validation for Json
                                     return;
                                 }
                                 else
@@ -2549,9 +2549,9 @@ OData-Version: 4.0
 
                                     XmlDocument document;
                                     string xpath;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
-                                        // No validation for JSON light
+                                        // No validation for Json
                                         return;
                                     }
                                     else
@@ -2632,7 +2632,7 @@ OData-Version: 4.0
                                         XmlDocument document;
                                         string xpathForNextLink;
                                         string xpathForNodeCount;
-                                        if (format == SerializationFormatData.JsonLight)
+                                        if (format == SerializationFormatData.Json)
                                         {
                                             document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                             xpathForNextLink = "Object/odata.nextLink";
@@ -2701,7 +2701,7 @@ OData-Version: 4.0
                                     XmlDocument document;
                                     string xpathForNextLink;
                                     string xpathForNodeCount;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
                                         document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                         xpathForNextLink = "Object/odata.nextLink";
@@ -2778,7 +2778,7 @@ OData-Version: 4.0
                                         XmlDocument document;
                                         string xpathForNextLink;
                                         string xpathForNodeCount;
-                                        if (format == SerializationFormatData.JsonLight)
+                                        if (format == SerializationFormatData.Json)
                                         {
                                             document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                             xpathForNextLink = "Object/odata.nextLink";
@@ -2858,7 +2858,7 @@ OData-Version: 4.0
                                         string xpathForNextLink;
                                         string xpathForNodeCount;
 
-                                        if (format == SerializationFormatData.JsonLight)
+                                        if (format == SerializationFormatData.Json)
                                         {
                                             document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                             xpathForNextLink = "Object/odata.nextLink";
@@ -2983,7 +2983,7 @@ OData-Version: 4.0
 
                     Assert.AreEqual(expectedResponse, actualResponse, "The atom service  document format is not as expected");
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();
 
                     string jsonEntitySetNames = null;
@@ -3272,7 +3272,7 @@ OData-Version: 4.0
                                         XmlDocument document;
                                         string xpathForTotalEntries;
                                         string xpathForNextLink;
-                                        if (format == SerializationFormatData.JsonLight)
+                                        if (format == SerializationFormatData.Json)
                                         {
                                             document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                             xpathForTotalEntries = "//Object/ID";
@@ -3377,7 +3377,7 @@ OData-Version: 4.0
                                         XmlDocument document;
                                         string xpathForNextLink;
                                         string xpathForNodeCount;
-                                        if (format == SerializationFormatData.JsonLight)
+                                        if (format == SerializationFormatData.Json)
                                         {
                                             document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                             xpathForNextLink = "/Object/odata.nextLink";
@@ -3482,7 +3482,7 @@ OData-Version: 4.0
                                     XmlDocument document;
                                     string xpathForTotalEntries;
                                     string xpathForNextLink;
-                                    if (format == SerializationFormatData.JsonLight)
+                                    if (format == SerializationFormatData.Json)
                                     {
                                         document = JsonValidator.ConvertToXmlDocument(request.GetResponseStream());
                                         xpathForTotalEntries = "//Object/Name";
@@ -3962,8 +3962,8 @@ OData-Version: 4.0
 
             private string GetNextLink(XmlNode node, SerializationFormatData format, Uri baseUri)
             {
-                string nextLink = format == SerializationFormatData.JsonLight ? node.ChildNodes[0].Value : node.Attributes["href"].Value;
-                if (format == SerializationFormatData.JsonLight)
+                string nextLink = format == SerializationFormatData.Json ? node.ChildNodes[0].Value : node.Attributes["href"].Value;
+                if (format == SerializationFormatData.Json)
                 {
                     nextLink = new Uri(baseUri, nextLink).AbsoluteUri;
                 }

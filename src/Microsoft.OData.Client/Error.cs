@@ -175,6 +175,6 @@ namespace Microsoft.OData.Client
         InvalidGetResponse = 71,
         InvalidHandleCompleted = 72,
 
-        InvalidMethodCallWhenNotReadingJsonLight = 73,
+        InvalidMethodCallWhenNotReadingJson = 73,
     }
 }

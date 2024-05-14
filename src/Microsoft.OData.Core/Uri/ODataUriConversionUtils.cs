@@ -13,7 +13,7 @@ using System.IO;
 using System.Text;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Evaluation;
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 using Microsoft.OData.Metadata;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
@@ -78,7 +78,6 @@ namespace Microsoft.OData
 
         /// <summary>
         /// Converts the given string <paramref name="value"/> to an ODataCollectionValue and returns it.
-        /// Tries in both JSON light and Verbose JSON.
         /// </summary>
         /// <remarks>Does not handle primitive values.</remarks>
         /// <param name="value">Value to be deserialized.</param>
@@ -166,7 +165,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(resource, "resource");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConvertToJsonLightLiteral(
+            return ConvertToJsonLiteral(
                 model,
                 context =>
             {
@@ -187,7 +186,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(entries, "entries");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConvertToJsonLightLiteral(
+            return ConvertToJsonLiteral(
                 model,
                 context =>
             {
@@ -216,7 +215,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(link, "link");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConvertToJsonLightLiteral(model, context => context.WriteEntityReferenceLink(link));
+            return ConvertToJsonLiteral(model, context => context.WriteEntityReferenceLink(link));
         }
 
         /// <summary>
@@ -230,7 +229,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentNotNull(links, "links");
             ExceptionUtils.CheckArgumentNotNull(model, "model");
 
-            return ConvertToJsonLightLiteral(model, context => context.WriteEntityReferenceLinks(links));
+            return ConvertToJsonLiteral(model, context => context.WriteEntityReferenceLinks(links));
         }
 
         /// <summary>
@@ -256,7 +255,7 @@ namespace Microsoft.OData
                     ShouldIncludeAnnotationInternal = ODataUtils.CreateAnnotationFilter("*")
                 };
 
-                WriteJsonLightLiteral(
+                WriteJsonLiteral(
                     model,
                     messageWriterSettings,
                     memoryStream,
@@ -308,7 +307,7 @@ namespace Microsoft.OData
                     IsIeee754Compatible = isIeee754Compatible
                 };
 
-                WriteJsonLightLiteral(
+                WriteJsonLiteral(
                     model,
                     messageWriterSettings,
                     memoryStream,
@@ -549,18 +548,18 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Write a literal value in JSON Light format.
+        /// Write a literal value in Json format.
         /// </summary>
         /// <param name="model">EDM Model to use for validation and type lookups.</param>
         /// <param name="messageWriterSettings">Settings to use when writing.</param>
         /// <param name="stream">The stream to write to.</param>
         /// <param name="writeValue">Delegate to use to actually write the value.</param>
         /// <param name="isResourceValue">We want to pass the <see cref="IDuplicatePropertyNameChecker"/> instance to the Action delegate when writing Resource value but not Collection value.</param>
-        private static void WriteJsonLightLiteral(
+        private static void WriteJsonLiteral(
             IEdmModel model,
             ODataMessageWriterSettings messageWriterSettings,
             Stream stream,
-            Action<ODataJsonLightValueSerializer, IDuplicatePropertyNameChecker> writeValue,
+            Action<ODataJsonValueSerializer, IDuplicatePropertyNameChecker> writeValue,
             bool isResourceValue = true)
         {
             IEnumerable<KeyValuePair<string, string>> parameters = new Dictionary<string, string>
@@ -582,34 +581,34 @@ namespace Microsoft.OData
                 Encoding = Encoding.UTF8,
             };
 
-            using (ODataJsonLightOutputContext jsonOutputContext =
-                new ODataJsonLightOutputContext(stream, messageInfo, messageWriterSettings))
+            using (ODataJsonOutputContext jsonOutputContext =
+                new ODataJsonOutputContext(stream, messageInfo, messageWriterSettings))
             {
-                ODataJsonLightValueSerializer jsonLightValueSerializer = new ODataJsonLightValueSerializer(jsonOutputContext);
+                ODataJsonValueSerializer JsonValueSerializer = new ODataJsonValueSerializer(jsonOutputContext);
 
                 if (!isResourceValue)
                 {
-                    writeValue(jsonLightValueSerializer, null);
+                    writeValue(JsonValueSerializer, null);
                 }
                 else
                 {
-                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonLightValueSerializer.GetDuplicatePropertyNameChecker();
-                    writeValue(jsonLightValueSerializer, duplicatePropertyNameChecker);
-                    jsonLightValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = JsonValueSerializer.GetDuplicatePropertyNameChecker();
+                    writeValue(JsonValueSerializer, duplicatePropertyNameChecker);
+                    JsonValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 }
 
-                jsonLightValueSerializer.AssertRecursionDepthIsZero();
+                JsonValueSerializer.AssertRecursionDepthIsZero();
                 jsonOutputContext.JsonWriter.Flush();
             }
         }
 
         /// <summary>
-        /// Convert to a literal value in JSON Light format.
+        /// Convert to a literal value in Json format.
         /// </summary>
         /// <param name="model">EDM Model to use for validation and type lookups.</param>
         /// <param name="writeAction">Delegate to use to actually write the value.</param>
         /// <returns>The literal value string.</returns>
-        private static string ConvertToJsonLightLiteral(IEdmModel model, Action<ODataOutputContext> writeAction)
+        private static string ConvertToJsonLiteral(IEdmModel model, Action<ODataOutputContext> writeAction)
         {
             using (MemoryStream stream = new MemoryStream())
             {
@@ -632,8 +631,8 @@ namespace Microsoft.OData
                 };
 
                 // TODO: URI parser will also support DI container in the future but set the container to null at this moment.
-                using (ODataJsonLightOutputContext jsonOutputContext =
-                    new ODataJsonLightOutputContext(messageInfo, messageWriterSettings))
+                using (ODataJsonOutputContext jsonOutputContext =
+                    new ODataJsonOutputContext(messageInfo, messageWriterSettings))
                 {
                     writeAction(jsonOutputContext);
 
@@ -662,9 +661,9 @@ namespace Microsoft.OData
                     Encoding = Encoding.UTF8,
                 };
 
-                using (ODataJsonLightInputContext context = new ODataJsonLightInputContext(reader, messageInfo, settings))
+                using (ODataJsonInputContext context = new ODataJsonInputContext(reader, messageInfo, settings))
                 {
-                    ODataJsonLightPropertyAndValueDeserializer deserializer = new ODataJsonLightPropertyAndValueDeserializer(context);
+                    ODataJsonPropertyAndValueDeserializer deserializer = new ODataJsonPropertyAndValueDeserializer(context);
 
                     // TODO: The way JSON array literals look in the URI is different that response payload with an array in it.
                     // The fact that we have to manually setup the underlying reader shows this different in the protocol.

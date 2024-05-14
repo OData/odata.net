@@ -78,7 +78,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
             {
                 return DSPResourceSerializerFormat.Atom;
             }
-            else if (string.Equals(mimeType, UnitTestsUtil.JsonLightMimeType, StringComparison.OrdinalIgnoreCase))
+            else if (string.Equals(mimeType, UnitTestsUtil.JsonMimeType, StringComparison.OrdinalIgnoreCase))
             {
                 return DSPResourceSerializerFormat.Json;
             }

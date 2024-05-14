@@ -41,7 +41,7 @@ namespace AstoriaUnitTests.Tests
                     "count(/atom:feed/atom:entry/@adsm:etag)=3"
                 };
 
-                GetResponseFromReflectionBasedProvider("/Customers", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths);
+                GetResponseFromReflectionBasedProvider("/Customers", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths);
                 GetResponseFromReflectionBasedProvider("/Customers", UnitTestsUtil.AtomFormat, atomXPaths);
             }
 
@@ -71,7 +71,7 @@ namespace AstoriaUnitTests.Tests
                     "/atom:entry[atom:category/@term='#" + typeof(CustomerWithBirthday).FullName + "' and atom:id='http://host/Customers(1)']"
                 };
 
-                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
+                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)", UnitTestsUtil.AtomFormat, atomXPaths, true/*verifyETagScenarios*/);
             }
 
@@ -87,7 +87,7 @@ namespace AstoriaUnitTests.Tests
                     "/adsm:value[@adsm:type='#" + typeof(Address).FullName + "']"
                 };
 
-                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/Address", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
+                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/Address", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/Address", UnitTestsUtil.MimeApplicationXml, atomXPaths, true/*verifyETagScenarios*/);
             }
 
@@ -103,7 +103,7 @@ namespace AstoriaUnitTests.Tests
                     "/adsm:value[text()='Customer 1']"
                 };
 
-                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/Name", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
+                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/Name", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/Name", UnitTestsUtil.MimeApplicationXml, atomXPaths, true/*verifyETagScenarios*/);
             }
 
@@ -119,7 +119,7 @@ namespace AstoriaUnitTests.Tests
                     "/atom:entry[atom:category/@term='#" + typeof(Customer).FullName + "' and atom:id='http://host/Customers(0)']"
                 };
 
-                GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/BestFriend", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
+                GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/BestFriend", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths, true/*verifyETagScenarios*/);
                 GetResponseWithETagFromReflectionBasedProvider("/Customers(1)/BestFriend", UnitTestsUtil.AtomFormat, atomXPaths, true/*verifyETagScenarios*/);
             }
 
@@ -127,7 +127,7 @@ namespace AstoriaUnitTests.Tests
             // [TestMethod, Variation]
             public void GetNullValuedResourceFromReferenceNavigationProperty()
             {
-                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Customers(0)/BestFriend", typeof(CustomDataContext), null, "GET");
+                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonMimeType, "/Customers(0)/BestFriend", typeof(CustomDataContext), null, "GET");
                 Assert.IsTrue(request.ResponseStatusCode == 204);
                 VerifyEmptyStream(request.GetResponseStream());
                 request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.AtomFormat, "/Customers(0)/BestFriend", typeof(CustomDataContext), null, "GET");
@@ -147,14 +147,14 @@ namespace AstoriaUnitTests.Tests
                     "/atom:entry[atom:category/@term='#" + typeof(Order).FullName + "' and atom:id='http://host/Orders(0)']"
                 };
 
-                GetResponseWithETagFromReflectionBasedProvider("/Orders(0)", UnitTestsUtil.JsonLightMimeTypeFullMetadata, jsonXPaths, false/*verifyETagScenarios*/);
+                GetResponseWithETagFromReflectionBasedProvider("/Orders(0)", UnitTestsUtil.JsonMimeTypeFullMetadata, jsonXPaths, false/*verifyETagScenarios*/);
                 GetResponseWithETagFromReflectionBasedProvider("/Orders(0)", UnitTestsUtil.AtomFormat, atomXPaths, false/*verifyETagScenarios*/);
             }
 
             [TestMethod, Variation]
             public void GetNullEntityWithAnyValueForETag()
             {
-                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/BestFriend", UnitTestsUtil.JsonLightMimeType, new string[0], false, true);
+                GetResponseWithETagFromReflectionBasedProvider("/Customers(0)/BestFriend", UnitTestsUtil.JsonMimeType, new string[0], false, true);
             }
 
             public class NotModifiedHeadersBug : DataService<CustomDataContext>
@@ -226,11 +226,11 @@ namespace AstoriaUnitTests.Tests
                     var ifMatchHeader = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", "*") };
 
                     // Set the name property to null
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Name/$value", null, contextType, UnitTestsUtil.JsonLightMimeType, "DELETE", ifMatchHeader, false);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Name/$value", null, contextType, UnitTestsUtil.JsonMimeType, "DELETE", ifMatchHeader, false);
 
                     // Both should work fine since the etag is of Customers(1)
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Name", null, contextType, UnitTestsUtil.JsonLightMimeType, "GET", ifMatchHeader, true);
-                    VerifyStatusCode("/Customers(1)/Name", UnitTestsUtil.JsonLightMimeType, "*", contextType, (int)HttpStatusCode.NotModified);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Name", null, contextType, UnitTestsUtil.JsonMimeType, "GET", ifMatchHeader, true);
+                    VerifyStatusCode("/Customers(1)/Name", UnitTestsUtil.JsonMimeType, "*", contextType, (int)HttpStatusCode.NotModified);
 
                     // This should return 404
                     UnitTestsUtil.VerifyInvalidRequest(null, "/Customers(1)/Name/$value", contextType, null, "GET", (int)HttpStatusCode.NotFound, ifMatchHeader);
@@ -262,7 +262,7 @@ namespace AstoriaUnitTests.Tests
             {
                 var headerValues = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", "W/\"sdhdfksdjsdf\"") };
                 string jsonPayload = " { ID: 112 }";
-                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "/Orders", 400, headerValues, "POST", jsonPayload);
+                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "/Orders", 400, headerValues, "POST", jsonPayload);
             }
 
             [TestMethod, Variation]
@@ -270,7 +270,7 @@ namespace AstoriaUnitTests.Tests
             {
                 var headerValues = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-None-Match", "W/\"sdhdfksdjsdf\"") };
                 string jsonPayload = " { ID: 112 }";
-                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "/Orders", 400, headerValues, "POST", jsonPayload);
+                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "/Orders", 400, headerValues, "POST", jsonPayload);
             }
 
             [Ignore] // Remove Atom
@@ -299,7 +299,7 @@ namespace AstoriaUnitTests.Tests
                 string[] atomXPaths = new string[] { "count(/atom:entry/@adsm:etag)=1" };
                 using (CustomDataContext.CreateChangeScope())
                 {
-                    GetResponse("/Customers", UnitTestsUtil.JsonLightMimeType, typeof(CustomDataContext), jsonXPath, null, "POST", jsonPayload);
+                    GetResponse("/Customers", UnitTestsUtil.JsonMimeType, typeof(CustomDataContext), jsonXPath, null, "POST", jsonPayload);
                 }
 
                 using (CustomDataContext.CreateChangeScope())
@@ -316,9 +316,9 @@ namespace AstoriaUnitTests.Tests
             public void ETag_ErrorOnDeleteWithIfNoneMatchHeader()
             {
                 var headerValues = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-None-Match", "W/\"sdhdfksdjsdf\"") };
-                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "/Customers(1)", 400, headerValues, "DELETE", null);
+                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "/Customers(1)", 400, headerValues, "DELETE", null);
                 VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "/Customers(1)/BestFriend", 400, headerValues, "DELETE", null);
-                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "/Customers(1)/Orders(1)", 400, headerValues, "DELETE", null);
+                VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "/Customers(1)/Orders(1)", 400, headerValues, "DELETE", null);
                 VerifyInvalidRequest(typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "/Customers(1)/Name/$value", 400, headerValues, "DELETE", null);
             }
 

@@ -18,7 +18,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     using Xunit.Abstractions;
 
     /// <summary>
-    /// Write various payload with/without EDM model in Atom/VerboseJosn/JsonLight formats.
+    /// Write various payload with/without EDM model in Atom/VerboseJosn/Json formats.
     /// </summary>
     public class WritePayloadTests : EndToEndTestBase
     {
@@ -235,9 +235,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     Assert.True(outputWithoutModel.Contains(this.ServiceUri + "$metadata#Person\""));
                 }
 
-                if (mimeType.Contains(MimeTypes.ApplicationJsonLight))
+                if (mimeType.Contains(MimeTypes.ApplicationJson))
                 {
-                    // odata.type is included in json light payload only if entry typename is different than serialization info
+                    // odata.type is included in Json payload only if entry typename is different than serialization info
                     Assert.False(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Person\","), "odata.type Person");
                     Assert.True(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "Employee\","), "odata.type Employee");
                     Assert.True(outputWithoutModel.Contains("{\"@odata.type\":\"" + "#" + NameSpace + "SpecialEmployee\","), "odata.type SpecialEmployee");
@@ -287,7 +287,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                                                     "Employee/$entity"));
                 }
 
-                if (mimeType.Contains(MimeTypes.ApplicationJsonLight))
+                if (mimeType.Contains(MimeTypes.ApplicationJson))
                 {
                     // write odata.type if entry TypeName != ExpectedTypeName
                     Assert.True(outputWithoutTypeCast.Contains("odata.type"));

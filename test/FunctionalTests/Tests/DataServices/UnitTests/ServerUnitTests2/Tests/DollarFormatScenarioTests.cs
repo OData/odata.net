@@ -27,15 +27,15 @@ namespace AstoriaUnitTests.Tests
     {
         private const string applicationXml = "application/xml;charset=utf-8";
         private const string applicationAtomXml = "application/atom+xml;type=feed;charset=utf-8";
-        private const string applicationJsonLight = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
+        private const string applicationJson = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
 
         [Ignore]
         // [TestCategory("Partition2"), TestMethod]
         public void DollarFormatSmokeTest()
         {
-            const string expectedJsonLight = @"{""@odata.context"":""BASE_URI$metadata#Customers(1)/Address"",""StreetAddress"":""Line1"",""City"":""Redmond"",""State"":""WA"",""PostalCode"":""98052""}";
+            const string expectedJson = @"{""@odata.context"":""BASE_URI$metadata#Customers(1)/Address"",""StreetAddress"":""Line1"",""City"":""Redmond"",""State"":""WA"",""PostalCode"":""98052""}";
 
-            // $format should override accept header and give us json light since MDSV is 3
+            // $format should override accept header and give us Json since MDSV is 3
             using (TestWebRequest request = TestWebRequest.CreateForInProcess())
             {
                 request.DataServiceType = typeof(CustomDataContext);
@@ -48,7 +48,7 @@ namespace AstoriaUnitTests.Tests
                 var actualText = request.GetResponseStreamAsText();
 
                 Assert.AreEqual(200, request.ResponseStatusCode);
-                Assert.AreEqual(expectedJsonLight.Replace("BASE_URI", request.BaseUri), actualText);
+                Assert.AreEqual(expectedJson.Replace("BASE_URI", request.BaseUri), actualText);
             }
         }
         [Ignore] // Remove Atom
@@ -67,7 +67,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/$metadata?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
@@ -87,13 +87,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$expand=Orders&$select=ID,Name,Orders&$top=3&$skip=1&$orderby=ID&$filter=Orders/any(p:p/ID%20ne%200)&$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$expand=Orders&$select=ID,Name,Orders&$top=3&$skip=1&$orderby=ID&$filter=Orders/any(p:p/ID%20ne%200)&$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                new DollarFormatTestCase()
@@ -113,13 +113,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=json&$filter=Orders/all(p:p/ID%20ge%200)&inlinecount=allpages",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=json&$filter=Orders/all(p:p/ID%20ge%200)&inlinecount=allpages",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
@@ -139,13 +139,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Orders/$ref?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Orders/$ref?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
@@ -165,13 +165,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/ID?$format=application/json;IEEE754Compatible=false",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/ID?$format=application/json;IEEE754Compatible=unrecognized",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
             };
@@ -194,13 +194,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/$count?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/$count?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
@@ -220,13 +220,13 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Name/$value?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Name/$value?$format=json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
@@ -249,7 +249,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=&$expand=Orders&$select=ID,Name,Orders",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
 
@@ -257,7 +257,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/ID?$format=",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
             };
@@ -300,25 +300,25 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$filter=Orders/all(p:p/ID%20ge%200)&inlinecount=allpages&$format=application/json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=application/json;odata.metadata=minimal;&$expand=Orders&$select=ID,Name,Orders&$top=3&$skip=1&$orderby=ID&$filter=Orders/any(p:p/ID%20ne%200)",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=application/json;odata.metadata=minimal;&$filter=Orders/all(p:p/ID%20ge%200)&inlinecount=allpages",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/?$format=*/*;&$filter=Orders/all(p:p/ID%20ge%200)&inlinecount=allpages",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
 
@@ -332,7 +332,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Orders/$ref?$format=application/json;charset=utf-8",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 200
                 },
                 new DollarFormatTestCase()
@@ -344,7 +344,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers/$count?$format=application/json",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
                 new DollarFormatTestCase()
@@ -356,7 +356,7 @@ namespace AstoriaUnitTests.Tests
                 new DollarFormatTestCase()
                 {
                     UriString = "/Customers(1)/Name/$value?$format=application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8",
-                    ExpectedContentType = applicationJsonLight,
+                    ExpectedContentType = applicationJson,
                     ExpectedStatusCode = 415
                 },
             };
@@ -370,10 +370,10 @@ namespace AstoriaUnitTests.Tests
             // Get 415 responses for invalid requests with $format
             var testCases = new List<DollarFormatTestCase>()
             {
-                // jsonlight was removed as a special value, so we want to make sure it fails.
+                // Json was removed as a special value, so we want to make sure it fails.
                 new DollarFormatTestCase()
                 {
-                    UriString = "/Customers/?$format=jsonlight",
+                    UriString = "/Customers/?$format=Json",
                     ExpectedContentType = applicationXml,
                     ExpectedStatusCode = 415
                 },
@@ -503,7 +503,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     "atom",
                     "json",
-                    "jsonlight",
+                    "Json",
                     "xml",
                 };
 

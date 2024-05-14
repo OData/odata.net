@@ -86,8 +86,8 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             var responseContentType = response.GetHeaderValueIfExists(HttpHeaders.ContentType);
             if (responseContentType != null)
             {
-                if (responseContentType.StartsWith(MimeTypes.ApplicationJsonODataLightNonStreaming, StringComparison.OrdinalIgnoreCase) ||
-                    responseContentType.StartsWith(MimeTypes.ApplicationJsonODataLightStreaming, StringComparison.OrdinalIgnoreCase))
+                if (responseContentType.StartsWith(MimeTypes.ApplicationJsonODataNonStreaming, StringComparison.OrdinalIgnoreCase) ||
+                    responseContentType.StartsWith(MimeTypes.ApplicationJsonODataStreaming, StringComparison.OrdinalIgnoreCase))
                 {
                     return DataServiceProtocolVersion.V4;
                 }

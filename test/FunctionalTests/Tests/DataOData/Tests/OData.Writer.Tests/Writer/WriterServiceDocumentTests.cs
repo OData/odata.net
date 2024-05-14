@@ -18,7 +18,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -67,7 +67,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         public void ResourceCollectionNamePropertyTests()
         {
             // The behavior of the Name property depends on the format.
-            // JSON Light: The Name property is required and written to the "name" property in the format.
+            // Json: The Name property is required and written to the "name" property in the format.
 
             IList<CollectionInfo> interestingCollections =
                 new[]
@@ -602,8 +602,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<SingletonInfo> singletons = null)
         {
             string xmlResultTemplate;
-            string[] jsonLightResultTemplate;
-            CreateResultTemplates(baseUri, workspaceName, collections, singletons, out xmlResultTemplate, out jsonLightResultTemplate);
+            string[] JsonResultTemplate;
+            CreateResultTemplates(baseUri, workspaceName, collections, singletons, out xmlResultTemplate, out JsonResultTemplate);
 
             return testConfiguration =>
                 {
@@ -643,7 +643,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Json = string.Join("$(NL)", jsonLightResultTemplate),
+                            Json = string.Join("$(NL)", JsonResultTemplate),
                             FragmentExtractor = (result) => result
                         };
                     }
@@ -683,17 +683,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             IEnumerable<CollectionInfo> collections,
             IEnumerable<SingletonInfo> singletons,
             out string xmlResultTemplate,
-            out string[] jsonLightResultTemplate)
+            out string[] JsonResultTemplate)
         {
             Debug.Assert(baseUri != null, "baseUri != null");
 
             List<string> xmlLines = new List<string>();
-            List<string> jsonLightLines = new List<string>();
+            List<string> JsonLines = new List<string>();
 
             xmlLines.Add(@"<service xml:base=""" + baseUri + @""" xmlns=""http://www.w3.org/2007/app"" xmlns:atom=""http://www.w3.org/2005/Atom"">");
             xmlLines.Add(@"$(Indent)<serviceDocument>");
-            jsonLightLines.Add("{");
-            jsonLightLines.Add(@"$(Indent)""" + JsonLightConstants.ODataContextAnnotationName + @""":""" + TestUriUtils.ToEscapedUriString(JsonLightConstants.DefaultMetadataDocumentUri) + @""",""value"":[");
+            JsonLines.Add("{");
+            JsonLines.Add(@"$(Indent)""" + JsonConstants.ODataContextAnnotationName + @""":""" + TestUriUtils.ToEscapedUriString(JsonConstants.DefaultMetadataDocumentUri) + @""",""value"":[");
 
             if (workspaceName == null)
             {
@@ -701,7 +701,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             }
             xmlLines.Add(@"$(Indent)$(Indent)<atom:title type='text'>" + workspaceName + "</atom:title>");
 
-            StringBuilder jsonLightBuilder = new StringBuilder();
+            StringBuilder JsonBuilder = new StringBuilder();
 
             if (collections != null)
             {
@@ -722,24 +722,24 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     xmlLines.Add(@"$(Indent)$(Indent)</collection>");
 
-                    if (jsonLightBuilder.Length > 0)
+                    if (JsonBuilder.Length > 0)
                     {
-                        jsonLightBuilder.Append(",");
+                        JsonBuilder.Append(",");
                     }
 
-                    jsonLightBuilder.Append("{");
-                    jsonLightBuilder.Append("$(NL)");
-                    jsonLightBuilder.Append(@"$(Indent)$(Indent)$(Indent)""name"":""" + collection.Name + "\",");
-                    jsonLightBuilder.Append(@"""url"":""" + collection.Url + "\"");
-                    jsonLightBuilder.Append(@"$(NL)");
-                    jsonLightBuilder.Append("$(Indent)$(Indent)}");
+                    JsonBuilder.Append("{");
+                    JsonBuilder.Append("$(NL)");
+                    JsonBuilder.Append(@"$(Indent)$(Indent)$(Indent)""name"":""" + collection.Name + "\",");
+                    JsonBuilder.Append(@"""url"":""" + collection.Url + "\"");
+                    JsonBuilder.Append(@"$(NL)");
+                    JsonBuilder.Append("$(Indent)$(Indent)}");
                 }
 
-                jsonLightLines.Add("$(Indent)$(Indent)" + jsonLightBuilder.ToString());
+                JsonLines.Add("$(Indent)$(Indent)" + JsonBuilder.ToString());
             }
             else
             {
-                jsonLightLines.Add("$(Indent)$(Indent)");
+                JsonLines.Add("$(Indent)$(Indent)");
             }
 
             if (singletons != null)
@@ -761,33 +761,33 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     xmlLines.Add(@"$(Indent)$(Indent)</collection>");
 
-                    if (jsonLightBuilder.Length > 0)
+                    if (JsonBuilder.Length > 0)
                     {
-                        jsonLightBuilder.Append(",");
+                        JsonBuilder.Append(",");
                     }
 
-                    jsonLightBuilder.Append("{");
-                    jsonLightBuilder.Append("$(NL)");
-                    jsonLightBuilder.Append(@"$(Indent)$(Indent)$(Indent)""name"":""" + singleton.Name + "\",");
-                    jsonLightBuilder.Append(@"""url"":""" + singleton.Url + "\"");
-                    jsonLightBuilder.Append(@"$(NL)");
-                    jsonLightBuilder.Append("$(Indent)$(Indent)}");
+                    JsonBuilder.Append("{");
+                    JsonBuilder.Append("$(NL)");
+                    JsonBuilder.Append(@"$(Indent)$(Indent)$(Indent)""name"":""" + singleton.Name + "\",");
+                    JsonBuilder.Append(@"""url"":""" + singleton.Url + "\"");
+                    JsonBuilder.Append(@"$(NL)");
+                    JsonBuilder.Append("$(Indent)$(Indent)}");
                 }
 
-                jsonLightLines.Add("$(Indent)$(Indent)" + jsonLightBuilder.ToString());
+                JsonLines.Add("$(Indent)$(Indent)" + JsonBuilder.ToString());
             }
             else
             {
-                jsonLightLines.Add("$(Indent)$(Indent)");
+                JsonLines.Add("$(Indent)$(Indent)");
             }
 
             xmlLines.Add(@"$(Indent)</serviceDocument>");
             xmlLines.Add(@"</service>");
-            jsonLightLines.Add("$(Indent)]");
-            jsonLightLines.Add("}");
+            JsonLines.Add("$(Indent)]");
+            JsonLines.Add("}");
 
             xmlResultTemplate = string.Join("$(NL)", xmlLines);
-            jsonLightResultTemplate = jsonLightLines.ToArray();
+            JsonResultTemplate = JsonLines.ToArray();
         }
 
         private sealed class WorkspaceWithSettings

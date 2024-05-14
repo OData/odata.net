@@ -38,7 +38,7 @@ namespace AstoriaUnitTests.Tests
 
         [TestMethod]
         [TestCategory("Partition2")]
-        public void PrimitiveCustomAnnotationOnErrorShouldGetWrittenInJsonLight()
+        public void PrimitiveCustomAnnotationOnErrorShouldGetWrittenInJson()
         {
             using (TestWebRequest webRequest = this.SetupRequest())
             {
@@ -55,7 +55,7 @@ namespace AstoriaUnitTests.Tests
 
         [TestMethod]
         [TestCategory("Partition2")]
-        public void MultipleCustomAnnotationOnErrorShouldGetWrittenInJsonLight()
+        public void MultipleCustomAnnotationOnErrorShouldGetWrittenInJson()
         {
             using (TestWebRequest webRequest = this.SetupRequest())
             {
@@ -73,7 +73,7 @@ namespace AstoriaUnitTests.Tests
         /*
         [TestMethod]
         [TestCategory("Partition2")]
-        public void ComplexCustomAnnotationOnErrorShouldGetWrittenInJsonLight()
+        public void ComplexCustomAnnotationOnErrorShouldGetWrittenInJson()
         {
             using (TestWebRequest webRequest = this.SetupRequest())
             {
@@ -97,7 +97,7 @@ namespace AstoriaUnitTests.Tests
 
         [TestMethod]
         [TestCategory("Partition2")]
-        public void ComplexCollectionAnnotationOnErrorShouldGetWrittenInJsonLight()
+        public void ComplexCollectionAnnotationOnErrorShouldGetWrittenInJson()
         {
             using (TestWebRequest webRequest = this.SetupRequest())
             {
@@ -116,7 +116,7 @@ namespace AstoriaUnitTests.Tests
 
         [TestMethod]
         [TestCategory("Partition2")]
-        public void EmptyCollectionAnnotationOnErrorShouldGetWrittenInJsonLight()
+        public void EmptyCollectionAnnotationOnErrorShouldGetWrittenInJson()
         {
             using (TestWebRequest webRequest = this.SetupRequest())
             {
@@ -135,10 +135,10 @@ namespace AstoriaUnitTests.Tests
 
         [TestMethod]
         [TestCategory("Partition2")]
-        public void BatchCustomAnnotationOnInnerRequestErrorShouldGetWrittenInJsonLight()
+        public void BatchCustomAnnotationOnInnerRequestErrorShouldGetWrittenInJson()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
-            batchQueryOperation.AppendLine("GET Customers(1)/Addresssss?Override-Accept=" + UnitTestsUtil.JsonLightMimeType + " HTTP/1.1");
+            batchQueryOperation.AppendLine("GET Customers(1)/Addresssss?Override-Accept=" + UnitTestsUtil.JsonMimeType + " HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + "application/json;odata.metadata=minimal");
 
@@ -188,7 +188,7 @@ namespace AstoriaUnitTests.Tests
         public void FailedTopLevelBatchRequestShouldBeXmlRegardlessOfCustomAnnotation()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
-            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonLightMimeType + " HTTP/1.1");
+            batchQueryOperation.AppendLine("GET Customers(1)/Address?Override-Accept=" + UnitTestsUtil.JsonMimeType + " HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + "application/json;odata.metadata=minimal");
 
@@ -265,7 +265,7 @@ namespace AstoriaUnitTests.Tests
         public void BadCustomAnnotationOnErrorWithBatchRequestCausesInStreamErrorInErrorPayload()
         {
             StringBuilder batchQueryOperation = new StringBuilder();
-            batchQueryOperation.AppendLine("GET Customers(1)/Addresssss?Override-Accept=" + UnitTestsUtil.JsonLightMimeType + " HTTP/1.1");
+            batchQueryOperation.AppendLine("GET Customers(1)/Addresssss?Override-Accept=" + UnitTestsUtil.JsonMimeType + " HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + "application/json;odata.metadata=minimal");
 

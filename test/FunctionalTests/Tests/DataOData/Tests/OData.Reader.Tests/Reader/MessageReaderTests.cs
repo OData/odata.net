@@ -270,7 +270,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmOperationImport functionImport;
             IEdmModel model = this.CreateTestMetadata(out functionImport);
 
-            var testConfigurations = this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations.Where(c => c.IsRequest);
+            var testConfigurations = this.ReaderTestConfigurationProvider.JsonFormatConfigurations.Where(c => c.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(
                 testConfigurations,
                 (testConfiguration) =>
@@ -291,7 +291,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     messageReader = TestReaderUtils.CreateMessageReader(message, model, testConfiguration);
                     this.Assert.ExpectedException(
                         () => messageReader.CreateODataParameterReader(null),
-                            ODataExpectedExceptions.ArgumentNullException("ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader", "operation"),
+                            ODataExpectedExceptions.ArgumentNullException("ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader", "operation"),
                         this.ExceptionVerifier);
 
                     message = TestReaderUtils.CreateInputMessageFromStream(new TestStream(), testConfiguration, ODataPayloadKind.Parameter, /*customContentTypeHeader*/null, /*urlResolver*/null);

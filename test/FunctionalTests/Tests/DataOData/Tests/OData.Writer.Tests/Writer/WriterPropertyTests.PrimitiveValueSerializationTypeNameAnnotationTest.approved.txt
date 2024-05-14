@@ -1,20 +1,20 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":42}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42
 }
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":42
 }
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42
@@ -39,23 +39,23 @@ Model Present: true
 <?xml version="1.0" encoding="utf-8"?>
 <m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.Int64" m:type="Int64" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">42</m:value>
 
-Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 9; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42
 }
 
-Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 11; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","value":42
@@ -80,23 +80,23 @@ Model Present: true
 <?xml version="1.0" encoding="utf-8"?>
 <m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#Edm.Int64" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">42</m:value>
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","value":42}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","value":42
 }
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","value":42
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#DifferentType","@odata.type":"#DifferentType","value":42
@@ -121,23 +121,23 @@ Model Present: true
 <?xml version="1.0" encoding="utf-8"?>
 <m:value xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#DifferentType" m:type="#DifferentType" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">42</m:value>
 
-Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 25; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"","value":42}
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"","value":42
 }
 
-Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 27; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"","value":42
 }
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"","value":42

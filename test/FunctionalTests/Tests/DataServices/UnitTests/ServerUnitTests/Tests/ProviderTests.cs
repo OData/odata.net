@@ -393,7 +393,7 @@ namespace AstoriaUnitTests.Tests
 
                 using (CustomRowBasedContext.CreateChangeScope())
                 {
-                    MakeRequestForIDSPIntercepterTest("Customers", uri, "POST", jsonPayLoad, UnitTestsUtil.JsonLightMimeType, null);
+                    MakeRequestForIDSPIntercepterTest("Customers", uri, "POST", jsonPayLoad, UnitTestsUtil.JsonMimeType, null);
                 }
             }
 
@@ -431,7 +431,7 @@ namespace AstoriaUnitTests.Tests
                     using (CustomRowBasedContext.CreateChangeScope())
                     {
                         string etag = GetEtag(typeof(IDSPServiceWithIntercepters), null, entityUri);
-                        MakeRequestForIDSPIntercepterTest("Customers", entityUri, method, jsonPayLoad, UnitTestsUtil.JsonLightMimeType, etag);
+                        MakeRequestForIDSPIntercepterTest("Customers", entityUri, method, jsonPayLoad, UnitTestsUtil.JsonMimeType, etag);
                     }
                 });
             }

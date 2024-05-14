@@ -105,7 +105,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
 
             this.FormatApplier.Apply(context);
 
-            if (this.FormatApplier.IsUsingContentType(MimeTypes.ApplicationJsonLight))
+            if (this.FormatApplier.IsUsingContentType(MimeTypes.ApplicationJson))
             {
                 // Setup the resolver.
                 context.ResolveType = (name) => dataServiceContextType.Assembly.GetType(name);

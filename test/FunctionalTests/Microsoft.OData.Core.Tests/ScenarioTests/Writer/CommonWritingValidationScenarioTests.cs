@@ -37,7 +37,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         }
 
         [Fact]
-        public void WriteEntryWithoutTypeNameWithMetadataOnWriterShouldWriteOnJsonLightFailOnOtherFormats()
+        public void WriteEntryWithoutTypeNameWithMetadataOnWriterShouldWriteOnJsonFailOnOtherFormats()
         {
             IEdmEntitySet entitySet = null;
             var model = CreatePersonModel(out entitySet);

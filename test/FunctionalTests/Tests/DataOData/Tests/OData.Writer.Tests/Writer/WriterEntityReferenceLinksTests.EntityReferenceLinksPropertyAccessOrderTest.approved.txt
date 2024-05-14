@@ -1,4 +1,4 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 1; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -12,7 +12,7 @@ Model Present: true
   ],"@odata.nextLink":"http://odata.org/nextpage"
 }
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[

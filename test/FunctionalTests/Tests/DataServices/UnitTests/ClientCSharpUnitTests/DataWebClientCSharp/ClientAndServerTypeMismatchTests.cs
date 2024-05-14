@@ -162,7 +162,7 @@ namespace AstoriaUnitTests
         // [TestMethod]
         public void NullServerPropertyShouldMaterializeIntoAnyType()
         {
-            foreach (var format in new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType })
+            foreach (var format in new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonMimeType })
             {
                 // the server type doesn't actually matter here.
                 this.ValidatePrimitiveConversion<string, bool?>(null, null, format);
@@ -188,19 +188,19 @@ namespace AstoriaUnitTests
         // [TestMethod]
         public void StringValueShouldMaterializeIntoAnyTypeIfValueCanBeConverted()
         {
-            this.InvokeForAll(this.conversionsFromString, UnitTestsUtil.JsonLightMimeType);
+            this.InvokeForAll(this.conversionsFromString, UnitTestsUtil.JsonMimeType);
         }
 
         [TestMethod]
         public void AllNumericConversionsShouldWorkForJsonIfValuesWouldNotBeQuoted()
         {
-            this.InvokeForAll(this.numericConversions.Where(kvp => !(kvp.Value is long || kvp.Value is decimal)), UnitTestsUtil.JsonLightMimeTypeIeee754Compatible);
+            this.InvokeForAll(this.numericConversions.Where(kvp => !(kvp.Value is long || kvp.Value is decimal)), UnitTestsUtil.JsonMimeTypeIeee754Compatible);
         }
 
         [TestMethod]
         public void SpatialConversionsShouldWorkForBothFormats()
         {
-            this.InvokeForAll(this.spatialConversions, UnitTestsUtil.JsonLightMimeType);
+            this.InvokeForAll(this.spatialConversions, UnitTestsUtil.JsonMimeType);
         }
 
         private void ValidateAllConversions<TServer, TClient>(TServer serverPropertyValue, TClient expectedClientValue, string contentType)
@@ -413,7 +413,7 @@ namespace AstoriaUnitTests
             var ctx = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
             //ctx.EnableAtom = true;
 
-            if (contentType == UnitTestsUtil.JsonLightMimeType || contentType == UnitTestsUtil.JsonLightMimeTypeIeee754Compatible)
+            if (contentType == UnitTestsUtil.JsonMimeType || contentType == UnitTestsUtil.JsonMimeTypeIeee754Compatible)
             {
                 var model = new EdmModel();
                 var edmEntityType = new EdmEntityType("Fake", "ServerType");

@@ -1,832 +1,832 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 5; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Binary","@odata.type":"#Binary","value":"AAEAAQ=="}
 
-Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 6; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Binary","value":"AAEAAQ=="}
 
-Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 7; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Binary","@odata.type":"#Binary","value":"AAEAAQ=="}
 
-Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 8; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Binary","value":"AAEAAQ=="}
 
-Combination: 9; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 9; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","@odata.type":"#Single","value":1}
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","value":1}
 
-Combination: 11; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 11; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","@odata.type":"#Single","value":1}
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","value":1}
 
-Combination: 13; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 13; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 14; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 14; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 15; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 15; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 16; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 17; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 17; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","@odata.type":"#Byte","value":1}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","value":1}
 
-Combination: 19; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 19; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","@odata.type":"#Byte","value":1}
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","value":1}
 
-Combination: 21; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 21; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 22; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 22; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 23; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 23; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 24; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 24; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 25; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 25; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 27; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 27; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 29; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 29; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 30; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 30; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 31; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 31; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 32; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 32; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 33; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 33; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","@odata.type":"#Decimal","value":1}
 
-Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 34; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","value":1}
 
-Combination: 35; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 35; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","@odata.type":"#Decimal","value":1}
 
-Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 36; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","value":1}
 
-Combination: 37; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 37; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","@odata.type":"#Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 38; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 38; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 39; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 39; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","@odata.type":"#Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 40; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 40; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 41; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 41; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","@odata.type":"#SByte","value":1}
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","value":1}
 
-Combination: 43; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 43; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","@odata.type":"#SByte","value":1}
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","value":1}
 
-Combination: 45; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 45; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","@odata.type":"#Int16","value":1}
 
-Combination: 46; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 46; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","value":1}
 
-Combination: 47; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 47; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","@odata.type":"#Int16","value":1}
 
-Combination: 48; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 48; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","value":1}
 
-Combination: 49; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 49; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 50; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 51; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 51; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 52; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 53; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 53; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":1}
 
-Combination: 54; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 54; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","value":1}
 
-Combination: 55; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 55; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":1}
 
-Combination: 56; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 56; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","value":1}
 
-Combination: 57; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 57; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 58; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 59; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 59; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 60; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 61; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 61; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","@odata.type":"#Duration","value":"PT12M20.4S"}
 
-Combination: 62; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 62; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","value":"PT12M20.4S"}
 
-Combination: 63; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 63; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","@odata.type":"#Duration","value":"PT12M20.4S"}
 
-Combination: 64; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 64; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","value":"PT12M20.4S"}
 
-Combination: 65; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 65; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 66; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 67; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 67; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 68; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 69; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 69; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 70; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 70; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 71; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 71; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 72; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 72; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 73; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 73; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyLineString","@odata.type":"#GeographyLineString","value":{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyLineString","value":{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 75; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 75; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyLineString","@odata.type":"#GeographyLineString","value":{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyLineString","value":{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 77; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 77; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPolygon","@odata.type":"#GeographyPolygon","value":{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 78; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 78; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPolygon","value":{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 79; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 79; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPolygon","@odata.type":"#GeographyPolygon","value":{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 80; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 80; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyPolygon","value":{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 81; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 81; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyCollection","@odata.type":"#GeographyCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 82; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 83; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 83; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyCollection","@odata.type":"#GeographyCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 84; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 85; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 85; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPoint","@odata.type":"#GeographyMultiPoint","value":{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 86; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 86; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPoint","value":{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 87; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 87; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPoint","@odata.type":"#GeographyMultiPoint","value":{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 88; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 88; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPoint","value":{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 89; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 89; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiLineString","@odata.type":"#GeographyMultiLineString","value":{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 90; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiLineString","value":{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 91; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 91; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiLineString","@odata.type":"#GeographyMultiLineString","value":{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 92; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiLineString","value":{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 93; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 93; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPolygon","@odata.type":"#GeographyMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 94; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 94; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 95; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 95; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPolygon","@odata.type":"#GeographyMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 96; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 96; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeographyMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
 
-Combination: 97; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 97; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","@odata.type":"#GeometryPoint","value":{"type":"Point","coordinates":[32.0,-10.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 98; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","value":{"type":"Point","coordinates":[32.0,-10.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 99; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 99; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","@odata.type":"#GeometryPoint","value":{"type":"Point","coordinates":[32.0,-10.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 100; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","value":{"type":"Point","coordinates":[32.0,-10.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 101; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 101; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","@odata.type":"#GeometryPoint","value":{"type":"Point","coordinates":[33.1,-11.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 102; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 102; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","value":{"type":"Point","coordinates":[33.1,-11.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 103; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 103; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","@odata.type":"#GeometryPoint","value":{"type":"Point","coordinates":[33.1,-11.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 104; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 104; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPoint","value":{"type":"Point","coordinates":[33.1,-11.0],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 105; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 105; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryLineString","@odata.type":"#GeometryLineString","value":{"type":"LineString","coordinates":[[33.1,-11.5],[35.97,-11.0]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 106; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryLineString","value":{"type":"LineString","coordinates":[[33.1,-11.5],[35.97,-11.0]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 107; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 107; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryLineString","@odata.type":"#GeometryLineString","value":{"type":"LineString","coordinates":[[33.1,-11.5],[35.97,-11.0]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 108; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryLineString","value":{"type":"LineString","coordinates":[[33.1,-11.5],[35.97,-11.0]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 109; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 109; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPolygon","@odata.type":"#GeometryPolygon","value":{"type":"Polygon","coordinates":[[[33.1,-13.6],[35.97,-11.15],[11.45,87.75],[33.1,-13.6]],[[35.97,-11.0],[36.97,-11.15],[45.23,23.18],[35.97,-11.0]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 110; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 110; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPolygon","value":{"type":"Polygon","coordinates":[[[33.1,-13.6],[35.97,-11.15],[11.45,87.75],[33.1,-13.6]],[[35.97,-11.0],[36.97,-11.15],[45.23,23.18],[35.97,-11.0]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 111; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 111; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPolygon","@odata.type":"#GeometryPolygon","value":{"type":"Polygon","coordinates":[[[33.1,-13.6],[35.97,-11.15],[11.45,87.75],[33.1,-13.6]],[[35.97,-11.0],[36.97,-11.15],[45.23,23.18],[35.97,-11.0]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 112; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 112; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryPolygon","value":{"type":"Polygon","coordinates":[[[33.1,-13.6],[35.97,-11.15],[11.45,87.75],[33.1,-13.6]],[[35.97,-11.0],[36.97,-11.15],[45.23,23.18],[35.97,-11.0]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 113; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 113; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryCollection","@odata.type":"#GeometryCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-19.99,-12.0]}],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 114; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 114; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-19.99,-12.0]}],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 115; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 115; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryCollection","@odata.type":"#GeometryCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-19.99,-12.0]}],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 116; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 116; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryCollection","value":{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-19.99,-12.0]}],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 117; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 117; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPoint","@odata.type":"#GeometryMultiPoint","value":{"type":"MultiPoint","coordinates":[[10.2,11.2],[11.9,11.6]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 118; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 118; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPoint","value":{"type":"MultiPoint","coordinates":[[10.2,11.2],[11.9,11.6]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 119; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 119; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPoint","@odata.type":"#GeometryMultiPoint","value":{"type":"MultiPoint","coordinates":[[10.2,11.2],[11.9,11.6]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 120; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 120; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPoint","value":{"type":"MultiPoint","coordinates":[[10.2,11.2],[11.9,11.6]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 121; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 121; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiLineString","@odata.type":"#GeometryMultiLineString","value":{"type":"MultiLineString","coordinates":[[[10.2,11.2],[11.9,11.6]],[[16.2,17.2],[18.9,19.6]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 122; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiLineString","value":{"type":"MultiLineString","coordinates":[[[10.2,11.2],[11.9,11.6]],[[16.2,17.2],[18.9,19.6]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 123; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 123; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiLineString","@odata.type":"#GeometryMultiLineString","value":{"type":"MultiLineString","coordinates":[[[10.2,11.2],[11.9,11.6]],[[16.2,17.2],[18.9,19.6]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 124; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiLineString","value":{"type":"MultiLineString","coordinates":[[[10.2,11.2],[11.9,11.6]],[[16.2,17.2],[18.9,19.6]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 125; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 125; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPolygon","@odata.type":"#GeometryMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[10.2,11.2],[11.9,11.6],[11.45,87.75],[10.2,11.2]],[[16.2,17.2],[18.9,19.6],[11.45,87.75],[16.2,17.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 126; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 126; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[10.2,11.2],[11.9,11.6],[11.45,87.75],[10.2,11.2]],[[16.2,17.2],[18.9,19.6],[11.45,87.75],[16.2,17.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 127; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 127; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPolygon","@odata.type":"#GeometryMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[10.2,11.2],[11.9,11.6],[11.45,87.75],[10.2,11.2]],[[16.2,17.2],[18.9,19.6],[11.45,87.75],[16.2,17.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 128; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 128; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.GeometryMultiPolygon","value":{"type":"MultiPolygon","coordinates":[[[[10.2,11.2],[11.9,11.6],[11.45,87.75],[10.2,11.2]],[[16.2,17.2],[18.9,19.6],[11.45,87.75],[16.2,17.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:0"}}}}
 
-Combination: 129; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 129; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 130; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 130; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 131; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 131; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 132; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 132; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Double","value":1.0}
 
-Combination: 133; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 133; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","@odata.type":"#Single","value":1}
 
-Combination: 134; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 134; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","value":1}
 
-Combination: 135; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 135; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","@odata.type":"#Single","value":1}
 
-Combination: 136; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 136; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Single","value":1}
 
-Combination: 137; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 137; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 138; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 139; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 139; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 140; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Boolean","value":true}
 
-Combination: 141; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 141; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","@odata.type":"#Byte","value":1}
 
-Combination: 142; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 142; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","value":1}
 
-Combination: 143; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 143; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","@odata.type":"#Byte","value":1}
 
-Combination: 144; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 144; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Byte","value":1}
 
-Combination: 145; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 145; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 146; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 147; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 147; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 148; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10Z"}
 
-Combination: 149; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 149; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 150; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 150; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 151; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 151; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 152; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 152; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10+01:00"}
 
-Combination: 153; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 153; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 154; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 155; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 155; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","@odata.type":"#DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 156; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.DateTimeOffset","value":"2010-10-10T10:10:10-08:00"}
 
-Combination: 157; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 157; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","@odata.type":"#Decimal","value":1}
 
-Combination: 158; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 158; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","value":1}
 
-Combination: 159; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 159; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","@odata.type":"#Decimal","value":1}
 
-Combination: 160; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 160; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Decimal","value":1}
 
-Combination: 161; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 161; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","@odata.type":"#Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 162; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 162; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 163; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 163; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","@odata.type":"#Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 164; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 164; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Guid","value":"11111111-2222-3333-4444-555555555555"}
 
-Combination: 165; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 165; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","@odata.type":"#SByte","value":1}
 
-Combination: 166; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 166; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","value":1}
 
-Combination: 167; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 167; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","@odata.type":"#SByte","value":1}
 
-Combination: 168; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 168; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.SByte","value":1}
 
-Combination: 169; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 169; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","@odata.type":"#Int16","value":1}
 
-Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 170; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","value":1}
 
-Combination: 171; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 171; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","@odata.type":"#Int16","value":1}
 
-Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 172; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int16","value":1}
 
-Combination: 173; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 173; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 174; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 174; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 175; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 175; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 176; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 176; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int32","value":1}
 
-Combination: 177; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 177; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":1}
 
-Combination: 178; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 178; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","value":1}
 
-Combination: 179; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 179; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","@odata.type":"#Int64","value":1}
 
-Combination: 180; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 180; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Int64","value":1}
 
-Combination: 181; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 181; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 182; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 182; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 183; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 183; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 184; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 184; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.String","value":"1"}
 
-Combination: 185; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 185; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","@odata.type":"#Duration","value":"PT12M20.4S"}
 
-Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 186; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","value":"PT12M20.4S"}
 
-Combination: 187; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 187; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","@odata.type":"#Duration","value":"PT12M20.4S"}
 
-Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 188; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Edm.Duration","value":"PT12M20.4S"}
 
-Combination: 189; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 189; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
 
-Combination: 190; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 190; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
 
-Combination: 191; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 191; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":[]}
 
-Combination: 192; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 192; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":[]}
 
-Combination: 193; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 193; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
-Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 194; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
-Combination: 195; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 195; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
-Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 196; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2,3,4,5,6,7,8,9]}
 
-Combination: 197; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 197; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
 
-Combination: 198; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 198; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
 
-Combination: 199; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 199; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","@odata.type":"#Collection(Int32)","value":[0,1,2]}
 
-Combination: 200; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 200; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Int32)","value":[0,1,2]}
 
-Combination: 201; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 201; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
 
-Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 202; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
 
-Combination: 203; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 203; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","@odata.type":"#Collection(String)","value":["One","Two","Three"]}
 
-Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 204; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.String)","value":["One","Two","Three"]}
 
-Combination: 205; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 205; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
-Combination: 206; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 206; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
-Combination: 207; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 207; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","@odata.type":"#Collection(Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 
-Combination: 208; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 208; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#Collection(Edm.Geography)","value":[{"type":"GeometryCollection","geometries":[{"type":"Point","coordinates":[-12.0,-19.99]}],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"LineString","coordinates":[[-110.0,33.1],[-110.0,35.97]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiLineString","coordinates":[[[11.2,10.2],[11.6,11.9]],[[17.2,16.2],[19.6,18.9]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPoint","coordinates":[[11.2,10.2],[11.6,11.9]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"MultiPolygon","coordinates":[[[[11.2,10.2],[11.6,11.9],[87.75,11.45],[11.2,10.2]],[[17.2,16.2],[19.6,18.9],[87.75,11.45],[17.2,16.2]]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-110.0,33.1],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Polygon","coordinates":[[[-110.0,33.1],[-110.15,35.97],[87.75,11.45],[-110.0,33.1]],[[-110.0,35.97],[-110.15,36.97],[23.18,45.23],[-110.0,35.97]]],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}},{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}]}
 

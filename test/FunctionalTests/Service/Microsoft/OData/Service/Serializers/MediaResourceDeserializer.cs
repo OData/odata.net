@@ -27,9 +27,9 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is json light
+        /// Gets a value indicating whether the request is Json
         /// </summary>
-        protected override bool IsJsonLightRequest
+        protected override bool IsJsonRequest
         {
             get { return false; }
         }

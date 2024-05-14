@@ -149,7 +149,7 @@ namespace AstoriaUnitTests.Tests
             batchQueryOperation.AppendLine("GET Customers(1)/Address?$callback=foo HTTP/1.1");
             batchQueryOperation.AppendLine("Host: host");
             batchQueryOperation.AppendLine("Accept: " + UnitTestsUtil.JsonMimeType);
-            batchQueryOperation.AppendLine("Override-Accept: " + UnitTestsUtil.JsonLightMimeType);
+            batchQueryOperation.AppendLine("Override-Accept: " + UnitTestsUtil.JsonMimeType);
 
             var testCase = new SimpleBatchTestCase
             {

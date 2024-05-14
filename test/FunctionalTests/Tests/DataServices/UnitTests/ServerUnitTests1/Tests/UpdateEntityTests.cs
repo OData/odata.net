@@ -114,7 +114,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { uri : '" + invalidUri +"' }}, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                     },
                     // invalid entity reference link in navigation property
@@ -129,7 +129,7 @@ namespace AstoriaUnitTests.Tests
                             Customer: {{ __metadata : {{ @odata.id : '{1}' }} }},
                             ID: 42
                         }}", typeof(Order).FullName, invalidUri),
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = method => method == "POST",
                         ExpectedErrorStatusCode = 500
                     },
@@ -145,7 +145,7 @@ namespace AstoriaUnitTests.Tests
                             Orders : [ {{ __metadata : {{ @odata.id : '{1}' }} }} ],
                             ID: 42
                         }}", typeof(Customer).FullName, invalidUri),
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers",
                         OnlyForMethod = method => method == "POST",
                         ExpectedErrorStatusCode = 500
@@ -154,7 +154,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ @odata.id : '" + invalidUri + "' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         RequestUri = "/Customers(0)/Orders/$ref",
                         OnlyForMethod = (method) => method == "POST"
@@ -174,7 +174,7 @@ namespace AstoriaUnitTests.Tests
                             ID: 42
                         }}", typeof(Order).FullName, invalidUri),
                         OnlyForMethod = (method) => method == "POST",
-                        ContentType = UnitTestsUtil.JsonLightMimeType
+                        ContentType = UnitTestsUtil.JsonMimeType
                     },
 
                     #endregion
@@ -184,28 +184,28 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{}",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = method => method != "POST", // POST requires an ID since 0 is already taken
                     },
                     // Invalid payload for JSON entity
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "42",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid payload for JSON entity
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "null",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid payload for JSON entity
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "[]",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     #endregion
@@ -215,83 +215,83 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid __metadata property value
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: [] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid __metadata type property value
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: null } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid __metadata type property value
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '' }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // Invalid __metadata type property value
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: {} } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: 'TestModel.NonExistant' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: 'Edm.String' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Address).FullName + "' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: 'Collection(Edm.Int32)' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // uri has to be a string
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: 42 } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // uri has to be a string
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: {} } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     // Invalid uri for top-level entity
@@ -299,14 +299,14 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: 'http://foo:some:other' }, ID: 12345 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                     },
                     // For inheritance the type name must be specified
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method != "POST",
                         RequestUri = "/Customers(1)"
@@ -316,7 +316,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method == "POST",
                         RequestUri = "/Customers"
@@ -325,7 +325,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method != "POST",
                         RequestUri = "/Customers(1)"
@@ -334,7 +334,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '' } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method == "POST",
                         RequestUri = "/Customers"
@@ -343,25 +343,25 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: 'http://odata.org/edit1', uri: 'http://odata.org/edit2' }, ID: 4001 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // Multiple edit links (first one is null)
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: null, uri: 'http://odata.org/edit2' }, ID: 4002 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // Multiple edit links (second one is null)
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: 'http://odata.org/edit1', uri: null }, ID: 4003 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // Multiple edit links (first one is invalid)
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { @odata.id: 'http://this:is:invalid', uri: 'http://odata.org/edit1' }, ID: 4004 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     #endregion
 
@@ -371,7 +371,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __deferred: { @odata.id: 'http://foo:some:other' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     // Bind with the deferred syntax will be ignored
@@ -379,7 +379,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __deferred: { @odata.id: 'http://foo:some:other', foo: 'bar' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     // Bind with the deferred syntax will be ignored
@@ -387,7 +387,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __deferred: { } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     // Bind with the deferred syntax to an open property will be ignored (it doesn't fail!)
@@ -395,7 +395,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, CustomerOpen: { __deferred: { } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ContextType = typeof(CustomRowBasedOpenTypesContext),
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -403,7 +403,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, CustomerOpen: { __deferred: { } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                         ExpectedErrorStatusCode = 400
                     },
@@ -411,7 +411,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { foo: null, __deferred: { @odata.id: 'http://foo:some:other' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -419,7 +419,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __deferred: { @odata.id: 'http://foo:some:other' } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers",
                         OnlyForMethod = (method) => method == "POST",
                         ExpectedErrorStatusCode = 400
@@ -428,7 +428,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Customer).FullName + "' }, Orders: [ { __deferred: { @odata.id: 'http://foo:some:other' } } ], ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers(0)",
                         ValidateETag = true,
                         OnlyForMethod = (method) => method != "POST" && method != "PUT",
@@ -441,7 +441,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { } } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400,
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -452,7 +452,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: 'http://foo:some:other', type: 'Edm.String' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -462,7 +462,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: '/Customers(0)', type: 'Edm.String' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     // This is recognized as a bind, but the type name is still verified, fails due to invalid URI
@@ -471,7 +471,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: 'http://foo:some:other', type: '" + typeof(Customer).FullName + "' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -480,7 +480,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: '/Customers(0)', type: '" + typeof(Customer).FullName + "' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     // The following is actually recognized as a bind later on (not in the __metadata parsing), and it fail resolving the uri - so 500
@@ -488,7 +488,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: 'http://foo:some:other', foo: 'some' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method != "PUT",
                     },
@@ -497,7 +497,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ __metadata: { type: '" + typeof(Order).FullName + "' }, Customer: { __metadata: { @odata.id: '/Customers(0)', foo: 'some' } }, ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "PUT",
                     },
                     #endregion
@@ -507,7 +507,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "POST",
                     },
                     // Try to update a key property with null value (even though the actual underlying type is non-nullable), should work (the value is ignored).
@@ -516,7 +516,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ ID: null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "POST",
                     },
                     // Try to update a key property with wrong value, should work (the value is ignored).
@@ -525,7 +525,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ ID: \"string\" }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "POST",
                         ExpectedErrorStatusCode = 400
                     },
@@ -535,7 +535,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ ID: true }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = (method) => method != "POST",
                     },
 
@@ -543,7 +543,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ ID: 42, OpenProperty: { __metadata: { type:'Collection(Edm.String)' }, results: [] } }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ContextType = typeof(CustomRowBasedOpenTypesContext),
                         ExpectedErrorStatusCode = 400
                     },
@@ -552,7 +552,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase{
                         Payload = "{ __metadata: { type:'AstoriaUnitTests.ObjectContextStubs.Types.Customer' }, ID: 42, Address: null }",
                         RequestUri = "/Customers",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ContextType = typeof(ocs.CustomObjectContext),
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method == "POST"
@@ -561,7 +561,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase{
                         Payload = "{ __metadata: { type:'AstoriaUnitTests.ObjectContextStubs.Types.Customer' }, Address: null }",
                         RequestUri = "/Customers(0)",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ContextType = typeof(ocs.CustomObjectContext),
                         ExpectedErrorStatusCode = 500,
                         OnlyForMethod = (method) => method != "POST",
@@ -970,9 +970,9 @@ namespace AstoriaUnitTests.Tests
                     new string[] { "POST", "PUT", "PATCH" },
                     (testCase, method) =>
                     {
-                        // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                        // Convert the previous json verbose payloads to json light then remove this condition
-                        if (testCase.ContentType == UnitTestsUtil.JsonLightMimeType)
+                        // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                        // Convert the previous json verbose payloads to Json then remove this condition
+                        if (testCase.ContentType == UnitTestsUtil.JsonMimeType)
                         {
                             return;
                         }
@@ -997,13 +997,13 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Order).FullName + "', ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // Update to Orders in JSON which includes a bind to Customers should fail since we are touching the Customers set which is not visible to us.
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Order).FullName + "', Customer: { @odata.type: '" + typeof(Customer).FullName + "', ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 400
                     },
                     #endregion
@@ -1093,7 +1093,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers(0)",
                         ValidateETag = true,
                         ETagHeaderValue = "W/\"wrongETag\"",
@@ -1216,7 +1216,7 @@ namespace AstoriaUnitTests.Tests
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "', ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = m => m == "POST",
                         ExpectedUpdateOperation = UpdateOperations.Add
                     },
@@ -1224,7 +1224,7 @@ namespace AstoriaUnitTests.Tests
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = m => m == "PUT",
                         ExpectedUpdateOperation = UpdateOperations.Change
                     },
@@ -1233,7 +1233,7 @@ namespace AstoriaUnitTests.Tests
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = m => m != "PUT" && m != "POST",
                         ExpectedUpdateOperation = UpdateOperations.Change
                     },
@@ -1241,7 +1241,7 @@ namespace AstoriaUnitTests.Tests
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "', ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = m => m != "POST",
                         ExpectedUpdateOperation = UpdateOperations.Change
                     },
@@ -1249,7 +1249,7 @@ namespace AstoriaUnitTests.Tests
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "', Orders: [] }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         OnlyForMethod = m => m != "POST" && m != "PUT",
                         ExpectedUpdateOperation = UpdateOperations.Change
                     },
@@ -1347,7 +1347,7 @@ namespace AstoriaUnitTests.Tests
                     new
                     {
                         Payload = "{@odata.type: '" + typeof(Customer).FullName + "', ID: 42, Name: 'Bart' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedPropertyNames = new string[] { "ID", "Name" },
                         ExpectedPropertyValues = new string[] { "42", "Bart" },
                     },
@@ -1355,7 +1355,7 @@ namespace AstoriaUnitTests.Tests
                     new
                     {
                         Payload = "{ @odata.type: '" + typeof(Customer).FullName + "', Name: 'Bart', ID: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedPropertyNames = new string[] { "Name", "ID" },
                         ExpectedPropertyValues = new string[] { "Bart", "42" },
                     },
@@ -1464,7 +1464,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "{}",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCode = 415,
                     },
                     // Previously in the JSON and XML formats cause asserts and eventually 500 (NRE or something like that).

@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
@@ -35,7 +35,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public IODataPayloadElementComparer payloadComparer { get; set; }
 
         [InjectDependency(IsRequired = true)]
-        public AnnotatedPayloadElementToJsonLightConverter payloadToJsonLightConverter { get; set; }
+        public AnnotatedPayloadElementToJsonConverter payloadToJsonConverter { get; set; }
 
         [InjectDependency(IsRequired = true)]
         public IODataPayloadElementComparer oDataPayloadElementComparer { get; set; }
@@ -941,10 +941,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
         #endregion
 
-        #region JSON Light
+        #region Json
 
         [TestMethod, TestCategory("Reader.UriHandling"), Variation]
-        public void ConvertFromUriShouldParseJsonLightEvenNoModelIsProvided()
+        public void ConvertFromUriShouldParseJsonEvenNoModelIsProvided()
         {
             var text = "[1,2,3]";
             object restulTmp = ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, null /*edmModel*/, null /*expectedType*/);
@@ -1068,7 +1068,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
 
             Action parse = () => ODataUriUtils.ConvertFromUriLiteral(text, ODataVersion.V4, edmModel, expectedType);
             parse.ShouldThrow<ODataException>();
-            // JSON light fails because of the nested collections, verbose JSON will fail for other reasons, so we are not baselining error message
+            // Json fails because of the nested collections, verbose JSON will fail for other reasons, so we are not baselining error message
         }
 
         #endregion

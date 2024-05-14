@@ -78,11 +78,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Try to write the JSON Lite representation of <paramref name="instance"/> using a registered primitive type converter
+        /// Try to write the JSON representation of <paramref name="instance"/> using a registered primitive type converter
         /// </summary>
         /// <param name="instance">Object to convert to JSON representation.</param>
         /// <param name="jsonWriter">JsonWriter instance to write to.</param>
-        internal void WriteJsonLight(object instance, IJsonWriter jsonWriter)
+        internal void WriteJson(object instance, IJsonWriter jsonWriter)
         {
             Debug.Assert(instance != null, "Expected a non-null instance to write.");
 
@@ -91,7 +91,7 @@ namespace Microsoft.OData
             IPrimitiveTypeConverter primitiveTypeConverter;
             this.TryGetConverter(instanceType, out primitiveTypeConverter);
             Debug.Assert(primitiveTypeConverter != null, "primitiveTypeConverter != null");
-            primitiveTypeConverter.WriteJsonLight(instance, jsonWriter);
+            primitiveTypeConverter.WriteJson(instance, jsonWriter);
         }
 
         /// <summary>

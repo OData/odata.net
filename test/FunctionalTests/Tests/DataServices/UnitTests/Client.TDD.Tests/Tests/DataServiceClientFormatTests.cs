@@ -97,7 +97,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [Fact]
-        public void SetRequestAcceptHeaderShouldSetAcceptHeaderToJsonLightWhenUsingJson()
+        public void SetRequestAcceptHeaderShouldSetAcceptHeaderToJsonWhenUsingJson()
         {
             this.TestSetRequestAcceptHeader(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
@@ -178,19 +178,19 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [Fact]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJson()
+        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonWhenUsingJson()
         {
             this.TestSetRequestContentTypeHeaderForEntry(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
         [Fact]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJsonForLinks()
+        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonWhenUsingJsonForLinks()
         {
             this.TestSetRequestContentTypeHeaderForLinks(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
 
         [Fact]
-        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonLightWhenUsingJsonForActions()
+        public void SetRequestContentTypeHeaderShouldSetContentTypeHeaderToJsonWhenUsingJsonForActions()
         {
             this.TestSetRequestContentTypeHeaderForAction(f => f.UseJson(this.serviceModel), null, TestConstants.MimeApplicationJsonODataMinimalMetadata);
         }
@@ -229,14 +229,14 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [Fact]
-        public void ValidateCanWriteRequestMessageShouldNotThrowForV3AndJsonLightWithModel()
+        public void ValidateCanWriteRequestMessageShouldNotThrowForV3AndJsonWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
             DataServiceClientFormat.ValidateCanWriteRequestFormat(RequestWithApplicationJson);
         }
 
         [Fact]
-        public void ValidateCanReadResponseMessageShouldNotThrowForV3AndJsonLightWithModel()
+        public void ValidateCanReadResponseMessageShouldNotThrowForV3AndJsonWithModel()
         {
             this.v3TestSubject.UseJson(this.serviceModel);
             DataServiceClientFormat.ValidateCanReadResponseFormat(ResponseWithApplicationJson);

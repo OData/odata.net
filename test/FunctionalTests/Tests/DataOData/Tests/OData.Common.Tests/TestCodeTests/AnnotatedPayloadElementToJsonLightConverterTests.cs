@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AnnotatedPayloadElementToJsonLightConverterTests.cs" company="Microsoft">
+// <copyright file="AnnotatedPayloadElementToJsonConverterTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -14,44 +14,44 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Execution;
     using Microsoft.Test.Taupo.OData.Contracts;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces
 
     /// <summary>
-    /// Tests for using the AnnotatedPayloadElementToJsonLightConverter to serialize JSON Light payloads.
+    /// Tests for using the AnnotatedPayloadElementToJsonConverter to serialize JSON Light payloads.
     /// </summary>
     [TestClass, TestCase]
-    public class AnnotatedPayloadElementToJsonLightConverterTests : ODataTestCase
+    public class AnnotatedPayloadElementToJsonConverterTests : ODataTestCase
     {
         [InjectDependency]
         public ICombinatorialEngineProvider CombinatorialEngineProvider { get; set; }
 
         [InjectDependency]
-        public AnnotatedPayloadElementToJsonLightConverter JsonLightSerializer { get; set; }
+        public AnnotatedPayloadElementToJsonConverter JsonSerializer { get; set; }
 
         [InjectDependency]
         public JsonValueComparer JsonValueComparer { get; set; }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize feeds.")]
-        public void JsonLightTaupoSerializerFeedTest()
+        public void JsonTaupoSerializerFeedTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Empty feed
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.EntitySet().WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[]
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[]
                         }"
                 },
                 // Empty feed with count and next link
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.EntitySet()
                         .InlineCount(42)
@@ -59,22 +59,22 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + @""":42,
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[],
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + @""":""http://odata.org/next""
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + @""":42,
+                          """ + JsonConstants.ODataValuePropertyName + @""":[],
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + @""":""http://odata.org/next""
                         }"
                 },
                 // Feed with single entry
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.EntitySet()
                         .Append(PayloadBuilder.Entity().PrimitiveProperty("ID", (long)42))
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[
                             { ""ID"":42 }
                           ]
                         }"
@@ -85,7 +85,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -93,37 +93,37 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize entries.")]
-        public void JsonLightTaupoSerializerEntryTest()
+        public void JsonTaupoSerializerEntryTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Entry with only ID
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity()
                         .PrimitiveProperty("ID", (long)42)
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
                           ""ID"":42
                         }"
                 },
                 // Entry with ID and typename
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.Customer")
                         .PrimitiveProperty("ID", (long)42)
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
                           ""ID"":42
                         }"
                 },
                 // Entry with all metadata expanded
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.CustomerWithImage")
                         .Id("CustomerId")
@@ -142,23 +142,23 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.CustomerWithImage"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""CustomerId"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataETagAnnotationName + @""":""etag"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName + @""":""http://odata.org/editlink"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName + @""":""http://odata.org/readlink"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaEditLinkAnnotationName + @""":""http://odata.org/streameditlink"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaReadLinkAnnotationName + @""":""http://odata.org/streamreadlink"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaContentTypeAnnotationName + @""":""image/jpg"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaETagAnnotationName + @""":""stream-etag"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataActionsAnnotationName + @""":{ ""./metadata"":[{ ""title"":""ActionTitle"", ""target"":""http://odata.org/target""}], ""./metadata2"":[{ ""title"":""ActionTitle2"", ""target"":""http://odata.org/target2""}]},
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataFunctionsAnnotationName + @""":{ ""./metadata"":[{ ""title"":""ActionTitle"", ""target"":""http://odata.org/target""}, { ""title"":""ActionTitle2"", ""target"":""http://odata.org/target2""}]},
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.CustomerWithImage"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""CustomerId"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataETagAnnotationName + @""":""etag"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataEditLinkAnnotationName + @""":""http://odata.org/editlink"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName + @""":""http://odata.org/readlink"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaEditLinkAnnotationName + @""":""http://odata.org/streameditlink"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaReadLinkAnnotationName + @""":""http://odata.org/streamreadlink"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaContentTypeAnnotationName + @""":""image/jpg"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaETagAnnotationName + @""":""stream-etag"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataActionsAnnotationName + @""":{ ""./metadata"":[{ ""title"":""ActionTitle"", ""target"":""http://odata.org/target""}], ""./metadata2"":[{ ""title"":""ActionTitle2"", ""target"":""http://odata.org/target2""}]},
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataFunctionsAnnotationName + @""":{ ""./metadata"":[{ ""title"":""ActionTitle"", ""target"":""http://odata.org/target""}, { ""title"":""ActionTitle2"", ""target"":""http://odata.org/target2""}]},
                           ""ID"":42
                         }"
                 },
                 // Entry with deferred navigation and association properties
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.Customer")
                         .PrimitiveProperty("ID", (long)42)
@@ -168,17 +168,17 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
                           ""ID"":42,
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp1"",
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp1", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp1"",
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp2", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp3", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3""
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp1"",
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp1"",
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp2", JsonConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp3", JsonConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3""
                         }"
                 },
                 // Entry with navigation link with expanded entry
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.Customer")
                         .PrimitiveProperty("ID", (long)42)
@@ -188,18 +188,18 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
                           ""ID"":42,
-                          ""NavProp1"":{ """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 },
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp2", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
-                          ""NavProp2"":{ """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 },
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp3", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3"",
-                          ""NavProp3"":{ """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 }
+                          ""NavProp1"":{ """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 },
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp2", JsonConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
+                          ""NavProp2"":{ """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 },
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp3", JsonConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3"",
+                          ""NavProp3"":{ """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Order"",""ID"":43 }
                         }"
                 },
                 // Entry with navigation link with expanded feed
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Entity("TestModel.Customer")
                         .PrimitiveProperty("ID", (long)42)
@@ -209,13 +209,13 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.Customer"",
                           ""ID"":42,
                           ""NavProp1"":[],
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp2", JsonLightConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp2", JsonConstants.ODataNavigationLinkUrlAnnotationName) + @""":""http://odata.org/NavProp2"",
                           ""NavProp2"":[],
-                          """ + JsonLightUtils.GetPropertyAnnotationName("NavProp3", JsonLightConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3"",
+                          """ + JsonUtils.GetPropertyAnnotationName("NavProp3", JsonConstants.ODataAssociationLinkUrlAnnotationName) + @""":""http://odata.org/AssocProp3"",
                           ""NavProp3"":[]
                         }"
                 },
@@ -225,8 +225,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    PayloadFormatVersionAnnotatingVisitor.AnnotateJsonLight(testCase.PayloadElement, DataServiceProtocolVersion.Unspecified, false);
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    PayloadFormatVersionAnnotatingVisitor.AnnotateJson(testCase.PayloadElement, DataServiceProtocolVersion.Unspecified, false);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -234,32 +234,32 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize top-level properties.")]
-        public void JsonLightTaupoSerializerPropertyTest()
+        public void JsonTaupoSerializerPropertyTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Null property
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.PrimitiveProperty("Prop", null).WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
                           ""value"":null
                         }"
                 },
                 // Primitive property
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
-                    PayloadElement = PayloadBuilder.PrimitiveProperty("Prop", "" + JsonLightConstants.ODataValuePropertyName + @"").WithContextUri("http://odata.org/metadatauri"),
+                    PayloadElement = PayloadBuilder.PrimitiveProperty("Prop", "" + JsonConstants.ODataValuePropertyName + @"").WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":""" + JsonLightConstants.ODataValuePropertyName + @"""
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":""" + JsonConstants.ODataValuePropertyName + @"""
                         }"
                 },
                 // Complex property
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Property("Prop", 
                         PayloadBuilder.ComplexValue("TestModel.City")
@@ -267,8 +267,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna""
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna""
                         }"
                 },
             };
@@ -277,7 +277,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -285,22 +285,22 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize top-level collection properties.")]
-        public void JsonLightTaupoSerializerCollectionPropertyTest()
+        public void JsonTaupoSerializerCollectionPropertyTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Primitive collection property
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = new PrimitiveMultiValueProperty("Prop", PayloadBuilder.PrimitiveMultiValue().Item((long)1).Item((long)2)).WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[1,2]
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[1,2]
                         }"
                 },
                 // Complex collection property
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = new ComplexMultiValueProperty("Prop", 
                         PayloadBuilder.ComplexMultiValue()
@@ -309,8 +309,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[{ """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna"" }]
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[{ """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna"" }]
                         }"
                 },
             };
@@ -319,7 +319,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -327,22 +327,22 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize top-level (streamable) collections.")]
-        public void JsonLightTaupoSerializerCollectionTest()
+        public void JsonTaupoSerializerCollectionTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Primitive collection
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = new PrimitiveCollection(PayloadBuilder.PrimitiveValue((long)1), PayloadBuilder.PrimitiveValue((long)2)).WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[1,2]
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[1,2]
                         }"
                 },
                 // Complex collection
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = new ComplexInstanceCollection(
                         PayloadBuilder.ComplexValue("TestModel.City")
@@ -350,8 +350,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[{ """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna"" }]
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[{ """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.City"", ""City"":""Vienna"" }]
                         }"
                 },
             };
@@ -360,7 +360,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -368,21 +368,21 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize top-level errors.")]
-        public void JsonLightTaupoSerializerErrorTest()
+        public void JsonTaupoSerializerErrorTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Top-level error
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Error("error-code").Message("error-message"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataErrorPropertyName + @""":{""code"":""error-code"",""message"": ""error-message""}}
+                          """ + JsonConstants.ODataErrorPropertyName + @""":{""code"":""error-code"",""message"": ""error-message""}}
                         }"
                 },
                 // Top-level error with inner error
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.Error("error-code").Message("error-message").InnerError(
                         new ODataInternalExceptionPayload { 
@@ -396,7 +396,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                             }}),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataErrorPropertyName + @""":{
+                          """ + JsonConstants.ODataErrorPropertyName + @""":{
                             ""code"":""error-code"",
                             ""message"":""error-message"", 
                             ""innererror"":{
@@ -418,7 +418,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -426,12 +426,12 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize service documents.")]
-        public void JsonLightTaupoSerializerServiceDocumentTest()
+        public void JsonTaupoSerializerServiceDocumentTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Service document
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.ServiceDocument().Workspace(
                         PayloadBuilder.Workspace()
@@ -441,8 +441,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[
                             { ""name"":""Coll1Title"", ""url"":""Coll1Href"" },
                             { ""name"":""Coll2Title"", ""url"":""Coll2Href"" }
                           ]
@@ -454,7 +454,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -462,23 +462,23 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize entity reference links.")]
-        public void JsonLightTaupoSerializerEntityReferenceLinkTest()
+        public void JsonTaupoSerializerEntityReferenceLinkTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Single entity reference link
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.DeferredLink("http://odata.org/erl")
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""http://odata.org/erl""
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""http://odata.org/erl""
                         }"
                 },
                 // Collection of entity reference links 
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.LinkCollection()
                         .Item(PayloadBuilder.DeferredLink("http://odata.org/erl1"))
@@ -486,15 +486,15 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[
-                            { """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""http://odata.org/erl1"" },
-                            { """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""http://odata.org/erl2"" }
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataValuePropertyName + @""":[
+                            { """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""http://odata.org/erl1"" },
+                            { """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""http://odata.org/erl2"" }
                           ]
                         }"
                 },
                 // Collection of entity reference links with inline count and next link
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.LinkCollection()
                         .Item(PayloadBuilder.DeferredLink("http://odata.org/erl1"))
@@ -504,13 +504,13 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         .WithContextUri("http://odata.org/metadatauri"),
                     ExpectedJson = @"
                         {
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + @""": 42,
-                          """ + JsonLightConstants.ODataValuePropertyName + @""":[
-                            { """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""http://odata.org/erl1"" },
-                            { """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName + @""":""http://odata.org/erl2"" }
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + @""":""http://odata.org/metadatauri"",
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + @""": 42,
+                          """ + JsonConstants.ODataValuePropertyName + @""":[
+                            { """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""http://odata.org/erl1"" },
+                            { """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName + @""":""http://odata.org/erl2"" }
                           ],
-                          """ + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + @""":""http://odata.org/nextlink""
+                          """ + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + @""":""http://odata.org/nextlink""
                         }"
                 },
             };
@@ -519,8 +519,8 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    PayloadFormatVersionAnnotatingVisitor.AnnotateJsonLight(testCase.PayloadElement, DataServiceProtocolVersion.Unspecified, false);
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    PayloadFormatVersionAnnotatingVisitor.AnnotateJson(testCase.PayloadElement, DataServiceProtocolVersion.Unspecified, false);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
@@ -528,12 +528,12 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
         }
 
         [TestMethod, Variation(Description = "Verifies that we can properly serialize parameters.")]
-        public void JsonLightTaupoSerializerParameterTest()
+        public void JsonTaupoSerializerParameterTest()
         {
-            var testCases = new JsonLightSerializerTestCase[]
+            var testCases = new JsonSerializerTestCase[]
             {
                 // Parameter payload with null, primitive, complex and collection parameters
-                new JsonLightSerializerTestCase
+                new JsonSerializerTestCase
                 {
                     PayloadElement = PayloadBuilder.ComplexValue()
                         .PrimitiveProperty("NullProp", null)
@@ -547,7 +547,7 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                         {
                           ""NullProp"":null,
                           ""LongProp"":42,
-                          ""ComplexProp"":{""" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName + @""":""TestModel.CityType"", ""Name"":""Vienna""},
+                          ""ComplexProp"":{""" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + @""":""TestModel.CityType"", ""Name"":""Vienna""},
                           ""PrimitiveColl"":[1,2],
                           ""ComplexColl"":[{""Name"":""Vienna""}, {""Name"":""Prague""}]
                         }"
@@ -558,14 +558,14 @@ namespace Microsoft.Test.Taupo.OData.Common.Tests.TestCodeTests
                 testCases,
                 (testCase) =>
                 {
-                    JsonValue actualValue = this.JsonLightSerializer.ConvertToJsonLightValue(testCase.PayloadElement);
+                    JsonValue actualValue = this.JsonSerializer.ConvertToJsonValue(testCase.PayloadElement);
                     JsonValue expectedValue = JsonTextPreservingParser.ParseValue(new StringReader(testCase.ExpectedJson));
 
                     this.JsonValueComparer.Compare(expectedValue, actualValue);
                 });
         }
 
-        private sealed class JsonLightSerializerTestCase
+        private sealed class JsonSerializerTestCase
         {
             public ODataPayloadElement PayloadElement { get; set; }
             public string ExpectedJson { get; set; }

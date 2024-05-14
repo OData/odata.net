@@ -380,8 +380,8 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        // [TestCategory("Partition1"), TestMethod, Description("JsonLight should return relative uris for a default action, for atom and json verbose output is always absolute")]
-        public void ValidateJsonLightRelativeOtherFormatsNot()
+        // [TestCategory("Partition1"), TestMethod, Description("Json should return relative uris for a default action.")]
+        public void ValidateJsonRelativeOtherFormatsNot()
         {
             DSPMetadata metadata = this.CreateMetadata();
 

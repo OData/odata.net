@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
@@ -32,7 +32,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     /// </summary>
     [UseReporter(typeof(LoggingReporter))]
     [DeploymentItem("CollectionWriter")]
-    [DeploymentItem("JsonLight")]
+    [DeploymentItem("Json")]
     [DeploymentItem("ParameterWriter")]
     [DeploymentItem("Writer")]
     public class ODataWriterTestCase : ODataTestCaseBase
@@ -103,7 +103,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             base.ConfigureDependencies(container);
             container.Register<IProtocolFormatNormalizerSelector, DefaultProtocolFormatNormalizerSelector>();
             container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
-            container.Register<IPayloadElementToJsonLightConverter, AnnotatedPayloadElementToJsonLightConverter>();
+            container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
             container.Register<Taupo.Contracts.IEntityModelSchemaComparer, ODataEntityModelSchemaComparer>();
             container.Register<IPayloadGenerator, PayloadGenerator>();
         }
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             if (format == ODataFormat.Json)
             {
                 payload.Accept(new ODataPayloadJsonNormalizer());
-                contentType = MimeTypes.ApplicationJsonLight;
+                contentType = MimeTypes.ApplicationJson;
             }
             else
             {

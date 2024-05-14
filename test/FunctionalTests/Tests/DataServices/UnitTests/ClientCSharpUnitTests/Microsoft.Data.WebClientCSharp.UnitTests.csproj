@@ -69,11 +69,11 @@
     <Compile Include="DataWebClientCSharp\ClientShortIntegrationRegressionTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientAndServerTypeMismatchTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientErrorHandlingShortIntegrationTests.cs" />
-    <Compile Include="DataWebClientCSharp\JsonLightTypeResolverTests.cs" />
+    <Compile Include="DataWebClientCSharp\JsonTypeResolverTests.cs" />
     <Compile Include="DataWebClientCSharp\ODataTestMessage.cs" />
     <Compile Include="DataWebClientCSharp\ReadingAtomWithUseJsonTests.cs" />
-    <Compile Include="DataWebClientCSharp\JsonLightIntegrationTests.cs" />
-    <Compile Include="DataWebClientCSharp\JsonLightTestUtil.cs" />
+    <Compile Include="DataWebClientCSharp\JsonIntegrationTests.cs" />
+    <Compile Include="DataWebClientCSharp\JsonTestUtil.cs" />
     <Compile Include="DataWebClientCSharp\OperationDescriptorTests.cs" />
     <Compile Include="DataWebClientCSharp\ActionParametersTests.cs" />
     <Compile Include="DataWebClientCSharp\ClientActionTests.cs" />

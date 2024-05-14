@@ -171,7 +171,7 @@ namespace Microsoft.Test.OData.Services.ODataWCFService
 
                 // For Atom, we always manually write out the links for the navigation properties off of the entity type
                 // Or if the navigation is expanded, we manually write out the links for the navigation properties along with the expanded entries
-                if (writer.GetType().Name != "ODataJsonLightWriter" || expandedItem != null)
+                if (writer.GetType().Name != "ODataJsonWriter" || expandedItem != null)
                 {
                     bool isCollection = navigationProperty.Type.IsCollection();
 

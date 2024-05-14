@@ -740,7 +740,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 null
             };
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCaseFuncs,
                 new Uri[] { baseUri, null },
@@ -1086,7 +1086,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                     },
             };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             // Write everything to the batch (ATOM + JSON)
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
@@ -1341,7 +1341,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         // [TestMethod, Variation(Description = "Tests a variety of batch payload shapes.")]
-        // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+        // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
         public void ODataBatchWithPayloadTests()
         {
             EdmModel model = Test.OData.Utils.Metadata.TestModels.BuildTestModel() as EdmModel;

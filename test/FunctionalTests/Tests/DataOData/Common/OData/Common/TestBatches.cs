@@ -112,7 +112,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             var queryOperation2 = emptyPayload.InRequestOperation(HttpVerb.Get, new ODataUri(new ODataUriSegment[] { root }), requestManager);
 
             // Post operation containing a complex property
-            var postOperation = carPropertyPayload.InRequestOperation(HttpVerb.Post, new ODataUri(new ODataUriSegment[] {root, entityset}) , requestManager, MimeTypes.ApplicationJsonLight);
+            var postOperation = carPropertyPayload.InRequestOperation(HttpVerb.Post, new ODataUri(new ODataUriSegment[] {root, entityset}) , requestManager, MimeTypes.ApplicationJson);
             // Delete operation with no payload
             var deleteOperation = emptyPayload.InRequestOperation(HttpVerb.Delete, new ODataUri(new ODataUriSegment[] { root, entityset }), requestManager);
             // Put operation where the payload is an EntityInstance
@@ -311,7 +311,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             // response operation with no payload and a status code of 200
             var emptyPayloadOperation = emptyPayload.InResponseOperation(200, requestManager);
             // response operation with a status code of 418 containing an entity instance
-            var personPayloadOperation = personPayload.InResponseOperation(418, requestManager, MimeTypes.ApplicationJsonLight);
+            var personPayloadOperation = personPayload.InResponseOperation(418, requestManager, MimeTypes.ApplicationJson);
             // response operation with a status code of 404 containing an error instance
             var errorPayloadOperation = errorPayload.InResponseOperation(404, requestManager);
             

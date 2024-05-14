@@ -1,80 +1,80 @@
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[]}
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[]}
 
-Combination: 6; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 6; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 8; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 8; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 14; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 14; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 16; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 16; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 34; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 36; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 86; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 86; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 88; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 88; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 98; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 100; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 110; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 110; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 
-Combination: 112; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 112; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata","value":[{"name":"CollectionName","title":"CollectionTitle","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"},{"name":"CollectionName","kind":"EntitySet","url":"CollectionRelativeUrl"}]}
 

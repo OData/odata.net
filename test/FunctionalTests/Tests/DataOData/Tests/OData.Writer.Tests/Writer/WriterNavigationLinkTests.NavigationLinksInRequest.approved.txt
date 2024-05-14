@@ -6,11 +6,11 @@ Combination: 28; TestConfiguration = Format: Atom, Request: True, Synchronous: F
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/BestFriend" type="application/atom+xml;type=entry" title="BestFriend" href="http://odata.org/singleton" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 29; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 29; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","BestFriend@odata.bind":"http://odata.org/singleton"}
 
-Combination: 30; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 30; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","BestFriend@odata.bind":"http://odata.org/singleton"}
 
@@ -30,11 +30,11 @@ Combination: 36; TestConfiguration = Format: Atom, Request: True, Synchronous: F
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/BestFriend" type="application/atom+xml;type=entry" title="BestFriend" href="http://odata.org/nav"><m:inline><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Customer" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 37; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 37; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","BestFriend":{"@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}}
 
-Combination: 38; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 38; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","BestFriend":{"@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}}
 
@@ -54,11 +54,11 @@ Combination: 84; TestConfiguration = Format: Atom, Request: True, Synchronous: F
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 85; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 85; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"]}
 
-Combination: 86; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 86; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"]}
 
@@ -78,11 +78,11 @@ Combination: 92; TestConfiguration = Format: Atom, Request: True, Synchronous: F
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection2" /><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 93; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 93; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection","http://odata.org/collection2"]}
 
-Combination: 94; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 94; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection","http://odata.org/collection2"]}
 
@@ -102,11 +102,11 @@ Combination: 100; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><author><name /></author></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 101; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 101; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[]}
 
-Combination: 102; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 102; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[]}
 
@@ -126,11 +126,11 @@ Combination: 108; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 109; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 109; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
-Combination: 110; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 110; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
@@ -150,11 +150,11 @@ Combination: 116; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 117; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 117; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
-Combination: 118; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 118; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
@@ -190,11 +190,11 @@ Combination: 132; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 133; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 133; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
-Combination: 134; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 134; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
@@ -230,11 +230,11 @@ Combination: 148; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 149; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 149; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
-Combination: 150; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 150; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
@@ -270,11 +270,11 @@ Combination: 164; TestConfiguration = Format: Atom, Request: True, Synchronous: 
 Model Present: false
 <?xml version="1.0" encoding="utf-8"?><entry xmlns="http://www.w3.org/2005/Atom" xmlns:d="http://docs.oasis-open.org/odata/ns/data" xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" xmlns:georss="http://www.georss.org/georss" xmlns:gml="http://www.opengis.net/gml" m:context="http://odata.org/$metadata#MySet/$entity"><id>http://www.odata.org/entryid</id><link rel="self" href="http://www.odata.org/entry/readlink" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/collection" /><link rel="http://docs.oasis-open.org/odata/ns/related/Orders" type="application/atom+xml;type=feed" title="Orders" href="http://odata.org/nav"><m:inline><feed><id>http://www.odata.org/feedid</id><title /><updated>2010-10-10T10:10:10Z</updated><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry><entry><id>http://www.odata.org/entryid</id><category term="#TestModel.Order" scheme="http://docs.oasis-open.org/odata/ns/scheme" /><link rel="self" href="http://www.odata.org/entry/readlink" /><title /><updated>2010-10-12T17:13:00Z</updated><author><name /></author><content type="application/xml" /></entry></feed></m:inline></link><title /><updated>9999-12-31T23:59:59Z</updated><author><name /></author><content type="application/xml" /></entry>
 
-Combination: 165; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 165; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection","http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 
-Combination: 166; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 166; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"@odata.context":"http://odata.org/$metadata#MySet/$entity","@odata.type":"#TestModel.Customer","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink","Orders@odata.bind":["http://odata.org/collection","http://odata.org/collection"],"Orders":[{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"},{"@odata.type":"#TestModel.Order","@odata.id":"http://www.odata.org/entryid","@odata.readLink":"http://www.odata.org/entry/readlink"}]}
 

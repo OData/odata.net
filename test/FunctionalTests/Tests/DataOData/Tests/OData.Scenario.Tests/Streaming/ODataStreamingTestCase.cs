@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
 
@@ -57,7 +57,7 @@ namespace Microsoft.Test.Taupo.OData.Scenario.Tests.Streaming
             base.ConfigureDependencies(container);
             container.Register<IProtocolFormatNormalizerSelector, DefaultProtocolFormatNormalizerSelector>();
             container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
-            container.Register<IPayloadElementToJsonLightConverter, AnnotatedPayloadElementToJsonLightConverter>();
+            container.Register<IPayloadElementToJsonConverter, AnnotatedPayloadElementToJsonConverter>();
             container.Register<IEntityModelSchemaComparer, ODataEntityModelSchemaComparer>();
         }
     }

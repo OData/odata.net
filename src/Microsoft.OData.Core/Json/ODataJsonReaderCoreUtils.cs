@@ -10,17 +10,15 @@ namespace Microsoft.OData.Json
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
-    using Microsoft.OData.JsonLight;
     using Microsoft.Spatial;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.Metadata;
     using ODataErrorStrings = Microsoft.OData.Strings;
     using System.Threading.Tasks;
 
     #endregion Namespaces
 
     /// <summary>
-    /// Helper methods used by the OData reader for the Verbose JSON and JSON Light formats.
+    /// Helper methods used by the OData reader for Json formats.
     /// </summary>
     internal static class ODataJsonReaderCoreUtils
     {

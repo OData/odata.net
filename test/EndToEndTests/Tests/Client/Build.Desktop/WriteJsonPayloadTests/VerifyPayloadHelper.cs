@@ -137,9 +137,9 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             }
 
             Dictionary<string, object> expectedEntryObject = new Dictionary<string, object>();
-            expectedEntryObject.Add(JsonLightConstants.ODataTypeAnnotationName, "#" + NameSpace + entityType.Name);
-            expectedEntryObject.Add(JsonLightConstants.ODataIdAnnotationName, entry.Id == null ? relativeEditLink : entry.Id.OriginalString);
-            expectedEntryObject.Add(JsonLightConstants.ODataEditLinkAnnotationName, entry.EditLink == null ? relativeEditLink + derivedTypeNameSegment : entry.EditLink.AbsoluteUri);
+            expectedEntryObject.Add(JsonConstants.ODataTypeAnnotationName, "#" + NameSpace + entityType.Name);
+            expectedEntryObject.Add(JsonConstants.ODataIdAnnotationName, entry.Id == null ? relativeEditLink : entry.Id.OriginalString);
+            expectedEntryObject.Add(JsonConstants.ODataEditLinkAnnotationName, entry.EditLink == null ? relativeEditLink + derivedTypeNameSegment : entry.EditLink.AbsoluteUri);
 
             // when the writer has IEdmModel, expect other metadata in addition to id/edit/readlink 
             if (hasModel)
@@ -164,7 +164,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                     // add expected navigation properties
                     foreach (var navigation in baseTypeToAddItem.DeclaredNavigationProperties())
                     {
-                        var navigationLinkKey = navigation.Name + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNavigationLinkUrlAnnotationName;
+                        var navigationLinkKey = navigation.Name + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNavigationLinkUrlAnnotationName;
                         if (!expectedEntryObject.ContainsKey(navigationLinkKey))
                         {
                             expectedEntryObject.Add(navigationLinkKey, string.Concat(ServiceUri, relativeEditLink, derivedTypeNameSegment, "/", navigation.Name));
@@ -179,7 +179,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 ODataCollectionValue collectionValue = property.Value as ODataCollectionValue;
                 if (collectionValue != null)
                 {
-                    expectedEntryObject.Add(property.Name + JsonLightConstants.ODataTypeAnnotationName, "#" + collectionValue.TypeName);
+                    expectedEntryObject.Add(property.Name + JsonConstants.ODataTypeAnnotationName, "#" + collectionValue.TypeName);
                 }
 
                 expectedEntryObject.Add(property.Name, property.Value);
@@ -201,15 +201,15 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             if (hasStream)
             {
-                expectedEntryObject.Add(JsonLightConstants.ODataMediaEditLinkAnnotationName, relativeEditLink + "/$value");
+                expectedEntryObject.Add(JsonConstants.ODataMediaEditLinkAnnotationName, relativeEditLink + "/$value");
             }
 
             if (hasModel)
             {
                 foreach (var property in entityType.DeclaredProperties.Where(dp => string.Equals(dp.Type.FullName(), "Edm.Stream", StringComparison.Ordinal)))
                 {
-                    expectedEntryObject.Add(property.Name + JsonLightConstants.ODataMediaEditLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);
-                    expectedEntryObject.Add(property.Name + JsonLightConstants.ODataMediaReadLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);
+                    expectedEntryObject.Add(property.Name + JsonConstants.ODataMediaEditLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);
+                    expectedEntryObject.Add(property.Name + JsonConstants.ODataMediaReadLinkAnnotationName, ServiceUri + relativeEditLink + "/" + property.Name);
                 }
             }
         }

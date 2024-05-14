@@ -35,9 +35,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
 
         private const string ApplicationJson = "application/json";
-        private const string ApplicationJsonODataLight = "application/json;odata.metadata=minimal";
-        private const string ApplicationJsonODataLightStreaming = "application/json;odata.metadata=minimal;odata.streaming=true";
-        private const string ApplicationJsonODataLightNonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false";
+        private const string ApplicationJsonOData = "application/json;odata.metadata=minimal";
+        private const string ApplicationJsonODataStreaming = "application/json;odata.metadata=minimal;odata.streaming=true";
+        private const string ApplicationJsonODataNonStreaming = "application/json;odata.metadata=minimal;odata.streaming=false";
 
         [TestMethod, TestCategory("Reader.ContentType"), Variation(Description = "Verifies that we properly parse the content type header.")]
         [Ignore("VSUpgrade19 - RegTest")]
@@ -81,11 +81,11 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
 
                 #endregion RawValue test cases
 
-                #region JSON Lite test cases
+                #region JSON test cases
                 new ContentTypeTestCase
                 {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLight,
+                    ContentType = ApplicationJsonOData,
                     ExpectedFormat = ODataFormat.Json,
                     ShouldSucceedForPayloadKind = pk =>
                         pk != ODataPayloadKind.Value
@@ -94,7 +94,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new ContentTypeTestCase
                 {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLightStreaming,
+                    ContentType = ApplicationJsonODataStreaming,
                     ExpectedFormat = ODataFormat.Json,
                     ShouldSucceedForPayloadKind = pk =>
                         pk != ODataPayloadKind.Value
@@ -103,13 +103,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 new ContentTypeTestCase
                 {
                     // only batch and raw value will fail (batch payload kind tested separately in BatchContentTypeHeaderParsingTest)
-                    ContentType = ApplicationJsonODataLightNonStreaming,
+                    ContentType = ApplicationJsonODataNonStreaming,
                     ExpectedFormat = ODataFormat.Json,
                     ShouldSucceedForPayloadKind = pk =>
                         pk != ODataPayloadKind.Value
                         && pk != ODataPayloadKind.BinaryValue,
                 },
-                #endregion JSON Lite test cases
+                #endregion JSON test cases
 
                 #region Error test cases
                 new ContentTypeTestCase
@@ -319,7 +319,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 // correct batch content type -- JSON with parameters
                 new ContentTypeTestCase
                 {
-                    ContentType = ApplicationJsonODataLight,
+                    ContentType = ApplicationJsonOData,
                     ExpectedFormat = ODataFormat.Json
                 },
 
@@ -398,9 +398,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmModel model = Microsoft.Test.OData.Utils.Metadata.TestModels.BuildTestModel();
 
             this.CombinatorialEngineProvider.RunCombinations(
-                new[] { ApplicationJson, ApplicationJsonODataLight },
+                new[] { ApplicationJson, ApplicationJsonOData },
                 new[] { ODataPayloadKind.Resource, ODataPayloadKind.ResourceSet },
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (contentType, payloadKind, testConfiguration) =>
                 {
                     ODataVersion version = testConfiguration.Version;
@@ -524,7 +524,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             IEdmOperationImport serviceOp1 = model.EntityContainer.FindOperationImports("ServiceOperation1").Single();
 
             bool isRequest = testConfig.IsRequest;
-            bool isJsonLightRequest = isRequest && testConfig.Format == ODataFormat.Json;
+            bool isJsonRequest = isRequest && testConfig.Format == ODataFormat.Json;
             switch (payloadKind)
             {
                 case ODataPayloadKind.ResourceSet:
@@ -536,7 +536,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         return PayloadBuilder.Entity("TestModel.CityType").PrimitiveProperty("Id", 1).WithTypeAnnotation(cityType).ExpectedEntityType(cityType, citySet);
                     }
                 case ODataPayloadKind.Property:
-                    return PayloadBuilder.PrimitiveProperty(isJsonLightRequest ? string.Empty : null, "SomeCityValue").ExpectedProperty(cityType, "Name");
+                    return PayloadBuilder.PrimitiveProperty(isJsonRequest ? string.Empty : null, "SomeCityValue").ExpectedProperty(cityType, "Name");
                 case ODataPayloadKind.EntityReferenceLink:
                     return PayloadBuilder.DeferredLink("http://odata.org/entityreferencelink").ExpectedNavigationProperty(citySet, cityType, "PoliceStation");
 
@@ -615,7 +615,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             switch (contentType)
             {
                 case ApplicationJson:
-                case ApplicationJsonODataLight:
+                case ApplicationJsonOData:
                     return ODataFormat.Json;
                 default:
                     return null;

@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightContextUriAnnotation.cs" company="Microsoft">
+// <copyright file="JsonContextUriAnnotation.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
+namespace Microsoft.Test.Taupo.OData.Contracts.Json
 {
     #region Namespaces
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
@@ -13,7 +13,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
     /// <summary>
     /// An annotation which stores the context URI for a top-level payload element in JSON Light.
     /// </summary>
-    public class JsonLightContextUriAnnotation : ODataPayloadElementAnnotation
+    public class JsonContextUriAnnotation : ODataPayloadElementAnnotation
     {
         /// <summary>
         /// The string representation of the context URI.
@@ -37,7 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         /// <returns>a clone of the annotation</returns>
         public override ODataPayloadElementAnnotation Clone()
         {
-            return new JsonLightContextUriAnnotation { ContextUri = this.ContextUri };
+            return new JsonContextUriAnnotation { ContextUri = this.ContextUri };
         }
     }
 }

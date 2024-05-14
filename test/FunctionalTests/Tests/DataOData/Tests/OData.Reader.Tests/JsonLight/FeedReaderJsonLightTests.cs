@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="FeedReaderJsonLightTests.cs" company="Microsoft">
+// <copyright file="FeedReaderJsonTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
     using System.Collections.Generic;
@@ -17,10 +17,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     #endregion Namespaces
 
@@ -28,7 +28,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Tests reading of feeds values in JSON Light.
     /// </summary>
     [TestClass, TestCase]
-    public class FeedReaderJsonLightTests : ODataReaderTestCase
+    public class FeedReaderJsonTests : ODataReaderTestCase
     {
         [InjectDependency]
         public PayloadReaderTestDescriptor.Settings Settings { get; set; }
@@ -49,8 +49,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed without next link or inline count.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -60,9 +60,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with a next link annotation before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink")
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -72,9 +72,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with a next link annotation after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink")
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -84,9 +84,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with a inline count annotation before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet(null, 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -96,9 +96,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with a inline count annotation after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet(null, 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -108,10 +108,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with next link and inline count annotation before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink", 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -121,10 +121,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with next link and inline count annotation after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink", 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -134,10 +134,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with next link before and inline count after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink", 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -147,10 +147,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with next link after and inline count before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink", 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model
@@ -160,13 +160,13 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with next link after and inline count before the feed property and custom annotations.",
                     PayloadElement = PayloadBuilder.EntitySet("http://odata.org/test/nextlink", 42)
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
                             "\"@my.annotation\":\"annotation-value\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":\"http://odata.org/test/nextlink\"," +
                             "\"@my.annotation2\":\"annotation-value2\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
                             "\"@my.annotation3\":\"annotation-value3\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42," +
                             "\"@my.annotation4\":\"annotation-value4\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
@@ -177,8 +177,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Feed with primitive item in feed property value.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ 1 ]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[ 1 ]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),               
                     PayloadEdmModel = model,
@@ -189,8 +189,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Feed with array item in feed property value.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Untyped\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[ [ 1 ] ]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Edm.Untyped\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[ [ 1 ] ]" +
                             "}")
                         .ExpectedEntityType(EdmCoreModel.Instance.GetUntyped()),
                     ExpectedResultPayloadElement = (ReaderTestConfiguration t) => { return PayloadBuilder.EntitySet().Append(new ODataPayloadElement[] {PayloadBuilder.EntitySet().Append(new PrimitiveValue("Edm.Int32",1)) }); },
@@ -206,7 +206,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // These descriptors are already tailored specifically for Json Light and 
@@ -232,154 +232,154 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     DebugDescription = "Empty feed with OData property annotation before top-level feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName(JsonLightConstants.ODataValuePropertyName, JsonLightConstants.ODataCountAnnotationName) + "\":\"42\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonUtils.GetPropertyAnnotationName(JsonConstants.ODataValuePropertyName, JsonConstants.ODataCountAnnotationName) + "\":\"42\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonConstants.ODataCountAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with OData property annotation after top-level feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName(JsonLightConstants.ODataValuePropertyName, JsonLightConstants.ODataCountAnnotationName) + "\":\"42\"" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonUtils.GetPropertyAnnotationName(JsonConstants.ODataValuePropertyName, JsonConstants.ODataCountAnnotationName) + "\":\"42\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonConstants.ODataCountAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with invalid feed property value.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":{}" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":{}" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart", "StartObject")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_CannotReadResourceSetContentStart", "StartObject")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Feed with invalid property before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
                             "\"other\":\"42\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonConstants.ODataValuePropertyName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Feed with invalid property annotation before the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("other", JsonLightConstants.ODataCountAnnotationName) + "\":\"42\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonUtils.GetPropertyAnnotationName("other", JsonConstants.ODataCountAnnotationName) + "\":\"42\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonConstants.ODataCountAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Feed with invalid property after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
                             "\"other\":\"42\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet", "other", JsonConstants.ODataValuePropertyName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Feed with invalid property annotation after the feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightUtils.GetPropertyAnnotationName("other", JsonLightConstants.ODataCountAnnotationName) + "\":\"42\"" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonUtils.GetPropertyAnnotationName("other", JsonConstants.ODataCountAnnotationName) + "\":\"42\"" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties", JsonConstants.ODataCountAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Feed with missing feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":42" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":42" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound", "value")
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonResourceDeserializer_ExpectedResourceSetPropertyNotFound", "value")
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with odata.count annotation with null value before top-level feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":null," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":null," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataCountAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataCountAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with odata.nextLink annotation with null value before top-level feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":null," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":null," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataNextLinkAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataNextLinkAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with odata.nextLink annotation with null value after top-level feed property.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName + "\":null" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName + "\":null" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonLightReaderUtils_AnnotationWithNullValue", JsonLightConstants.ODataNextLinkAnnotationName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("ODataJsonReaderUtils_AnnotationWithNullValue", JsonConstants.ODataNextLinkAnnotationName)
                 },
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     DebugDescription = "Empty feed with duplicate feed properties.",
                     PayloadElement = PayloadBuilder.EntitySet()
                         .JsonRepresentation("{" +
-                            "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]," +
-                            "\"" + JsonLightConstants.ODataValuePropertyName + "\":[]" +
+                            "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities\"," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]," +
+                            "\"" + JsonConstants.ODataValuePropertyName + "\":[]" +
                             "}")
                         .ExpectedEntityType(cityType, citiesEntitySet),
                     PayloadEdmModel = model,
-                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonLightConstants.ODataValuePropertyName)
+                    ExpectedException = ODataExpectedExceptions.ODataException("DuplicatePropertyNamesNotAllowed", JsonConstants.ODataValuePropertyName)
                 },
                 #endregion Test cases
             };
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     // These descriptors are already tailored specifically for Json Light and 
@@ -511,14 +511,14 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                     })
                         .JsonRepresentation(
                             "{" +
-                                "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(TestModel.CityType)\"," +
-                                "\"" + JsonLightConstants.ODataValuePropertyName + "\":[" +
+                                "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection(TestModel.CityType)\"," +
+                                "\"" + JsonConstants.ODataValuePropertyName + "\":[" +
                                     "{" +
-                                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\"," +
+                                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\"," +
                                         "\"Id\":1" +
                                     "}," +
                                     "{" +
-                                        "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\"," +
+                                        "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#TestModel.DefaultContainer.Cities/$entity\"," +
                                         "\"Id\":2" +                                        
                                     "}," +
                                 "]" +
@@ -580,7 +580,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (testDescriptor, testConfiguration) =>
                 {
                     if (testConfiguration.IsRequest && testDescriptor.ExpectedException != null)

@@ -8,14 +8,12 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using System.Collections.Generic;
-    using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
 
     /// <summary>
-    /// The JsonLight OData format.
+    /// The Json OData format.
     /// </summary>
     internal sealed class ODataJsonFormat : ODataFormat
     {
@@ -25,7 +23,7 @@ namespace Microsoft.OData.Json
         /// <returns>The name of the format.</returns>
         public override string ToString()
         {
-            return "JsonLight";
+            return "Json";
         }
 
         /// <summary>
@@ -55,7 +53,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return new ODataJsonLightInputContext(messageInfo, messageReaderSettings);
+            return new ODataJsonInputContext(messageInfo, messageReaderSettings);
         }
 
         /// <summary>
@@ -71,7 +69,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return new ODataJsonLightOutputContext(messageInfo, messageWriterSettings);
+            return new ODataJsonOutputContext(messageInfo, messageWriterSettings);
         }
 
         /// <summary>
@@ -103,7 +101,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
             return Task.FromResult<ODataInputContext>(
-                new ODataJsonLightInputContext(messageInfo, messageReaderSettings));
+                new ODataJsonInputContext(messageInfo, messageReaderSettings));
         }
 
         /// <summary>
@@ -120,7 +118,7 @@ namespace Microsoft.OData.Json
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
             return Task.FromResult<ODataOutputContext>(
-                new ODataJsonLightOutputContext(messageInfo, messageWriterSettings));
+                new ODataJsonOutputContext(messageInfo, messageWriterSettings));
         }
 
         /// <summary>
@@ -135,9 +133,9 @@ namespace Microsoft.OData.Json
         {
             var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
             messageInfo.Encoding = detectionInfo.GetEncoding();
-            using (var jsonLightInputContext = new ODataJsonLightInputContext(messageInfo, settings))
+            using (var jsonInputContext = new ODataJsonInputContext(messageInfo, settings))
             {
-                return jsonLightInputContext.DetectPayloadKind(detectionInfo);
+                return jsonInputContext.DetectPayloadKind(detectionInfo);
             }
         }
 
@@ -153,11 +151,11 @@ namespace Microsoft.OData.Json
         {
             var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
             messageInfo.Encoding = detectionInfo.GetEncoding();
-            var jsonLightInputContext = new ODataJsonLightInputContext(messageInfo, settings);
-            return jsonLightInputContext.DetectPayloadKindAsync(detectionInfo)
+            var jsonInputContext = new ODataJsonInputContext(messageInfo, settings);
+            return jsonInputContext.DetectPayloadKindAsync(detectionInfo)
                 .FollowAlwaysWith(t =>
                     {
-                        jsonLightInputContext.Dispose();
+                        jsonInputContext.Dispose();
                     });
         }
     }

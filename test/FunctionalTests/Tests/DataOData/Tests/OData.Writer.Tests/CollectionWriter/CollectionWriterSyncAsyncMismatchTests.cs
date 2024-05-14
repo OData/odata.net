@@ -63,7 +63,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         // [TestMethod, Variation(Description = "Verifies that sync and async calls cannot be mixed on a single collection writer.")]
         public void SyncAsyncMismatchTest()
         {
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 TestCalls,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),

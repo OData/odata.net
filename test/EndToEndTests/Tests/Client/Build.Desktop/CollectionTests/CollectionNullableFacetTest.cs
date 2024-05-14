@@ -141,7 +141,7 @@ using Microsoft.Test.OData.Tests.Client.Common;
             ODataMessageReaderSettings readerSettings = new ODataMessageReaderSettings() { BaseUri = ServiceBaseUri };
 
             var queryRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri.AbsoluteUri + uri, UriKind.Absolute));
-            queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
+            queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJson);
             var queryResponseMessage = queryRequestMessage.GetResponse();
             Assert.Equal(expectedStatusCode, queryResponseMessage.StatusCode);
 

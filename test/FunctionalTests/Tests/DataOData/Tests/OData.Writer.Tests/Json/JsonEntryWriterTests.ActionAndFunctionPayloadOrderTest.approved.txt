@@ -1,0 +1,16 @@
+Combination: 1; TestConfiguration = Format: Json, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#NonMLESet/$entity","@odata.type":"#TestModel.NonMLEType","#defaultAction":{"title":"Default Action","target":"http://www.odata.org/defaultAction"},"#defaultFunction()":{"title":"Default Function","target":"defaultFunctionTarget"}}
+
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#NonMLESet/$entity","@odata.type":"#TestModel.NonMLEType","#defaultAction":{"title":"Default Action","target":"http://www.odata.org/defaultAction"},"#defaultFunction()":{"title":"Default Function","target":"defaultFunctionTarget"}}
+
+Combination: 3; TestConfiguration = Format: Json, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#NonMLESet/$entity","@odata.type":"#TestModel.NonMLEType","NavProp@odata.navigationLink":"http://odata.org/navprop/uri","#defaultAction":{"title":"Default Action","target":"http://www.odata.org/defaultAction"},"#defaultFunction()":{"title":"Default Function","target":"defaultFunctionTarget"}}
+
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#NonMLESet/$entity","@odata.type":"#TestModel.NonMLEType","NavProp@odata.navigationLink":"http://odata.org/navprop/uri","#defaultAction":{"title":"Default Action","target":"http://www.odata.org/defaultAction"},"#defaultFunction()":{"title":"Default Function","target":"defaultFunctionTarget"}}
+

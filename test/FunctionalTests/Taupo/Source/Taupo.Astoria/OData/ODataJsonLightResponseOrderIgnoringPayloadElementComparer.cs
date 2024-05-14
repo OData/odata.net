@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataJsonLightResponseOrderIgnoringPayloadElementComparer.cs" company="Microsoft">
+// <copyright file="ODataJsonResponseOrderIgnoringPayloadElementComparer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,15 +10,15 @@ namespace Microsoft.Test.Taupo.Astoria.OData
     using Microsoft.Test.Taupo.Common;
 
     /// <summary>
-    /// An implementation of the payload element comparer contract that compares JsonLight payloads and ignores the order of properties.
+    /// An implementation of the payload element comparer contract that compares Json payloads and ignores the order of properties.
     /// </summary>
-    [ImplementationName(typeof(IODataPayloadElementComparer), "JsonLightNoOrder")]
-    public class ODataJsonLightResponseOrderIgnoringPayloadElementComparer : ODataPayloadElementComparer
+    [ImplementationName(typeof(IODataPayloadElementComparer), "JsonNoOrder")]
+    public class ODataJsonResponseOrderIgnoringPayloadElementComparer : ODataPayloadElementComparer
     {
         /// <summary>
-        /// Initializes a new instance of the ODataJsonLightResponseOrderIgnoringPayloadElementComparer class.
+        /// Initializes a new instance of the ODataJsonResponseOrderIgnoringPayloadElementComparer class.
         /// </summary>
-        public ODataJsonLightResponseOrderIgnoringPayloadElementComparer()
+        public ODataJsonResponseOrderIgnoringPayloadElementComparer()
             : base(/*ignoreOrder*/ true, /*expectMetadataToBeComputedByConvention*/ true)
         {
         }

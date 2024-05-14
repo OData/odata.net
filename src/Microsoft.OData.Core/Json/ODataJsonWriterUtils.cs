@@ -13,7 +13,6 @@ namespace Microsoft.OData.Json
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using Microsoft.OData.JsonLight;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
@@ -30,14 +29,12 @@ namespace Microsoft.OData.Json
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         internal static void WriteError(
             IJsonWriter jsonWriter,
             Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
-            int maxInnerErrorDepth,
-            bool writingJsonLight)
+            int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
@@ -56,8 +53,7 @@ namespace Microsoft.OData.Json
                 innerError,
                 error.GetInstanceAnnotations(),
                 writeInstanceAnnotationsDelegate,
-                maxInnerErrorDepth,
-                writingJsonLight);
+                maxInnerErrorDepth);
         }
 
         /// <summary>
@@ -176,7 +172,6 @@ namespace Microsoft.OData.Json
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        /// <param name="writingJsonLight">true if we're writing JSON lite, false if we're writing verbose JSON.</param>
         private static void WriteError(
             IJsonWriter jsonWriter,
             string code,
@@ -186,8 +181,7 @@ namespace Microsoft.OData.Json
             ODataInnerError innerError,
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
-            int maxInnerErrorDepth,
-            bool writingJsonLight)
+            int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
@@ -196,14 +190,8 @@ namespace Microsoft.OData.Json
 
             // "error": {
             jsonWriter.StartObjectScope();
-            if (writingJsonLight)
-            {
-                jsonWriter.WriteName(JsonLightConstants.ODataErrorPropertyName);
-            }
-            else
-            {
-                jsonWriter.WriteName(JsonConstants.ODataErrorName);
-            }
+
+            jsonWriter.WriteName(ODataJsonConstants.ODataErrorPropertyName);
 
             jsonWriter.StartObjectScope();
 
@@ -238,11 +226,8 @@ namespace Microsoft.OData.Json
                 WriteInnerError(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName, /* recursionDepth */ 0, maxInnerErrorDepth);
             }
 
-            if (writingJsonLight)
-            {
-                Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
-                writeInstanceAnnotationsDelegate(instanceAnnotations);
-            }
+            Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
+            writeInstanceAnnotationsDelegate(instanceAnnotations);
 
             // } }
             jsonWriter.EndObjectScope();
@@ -429,7 +414,7 @@ namespace Microsoft.OData.Json
 
             // "error": {
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
-            await jsonWriter.WriteNameAsync(JsonLightConstants.ODataErrorPropertyName).ConfigureAwait(false);
+            await jsonWriter.WriteNameAsync(ODataJsonConstants.ODataErrorPropertyName).ConfigureAwait(false);
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
             // "code": "<code>"
@@ -568,6 +553,84 @@ namespace Microsoft.OData.Json
 
             // }
             await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Writes the 'value' property name.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        internal static void WriteValuePropertyName(this IJsonWriter jsonWriter)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+
+            jsonWriter.WriteName(ODataJsonConstants.ODataValuePropertyName);
+        }
+
+        /// <summary>
+        /// Write a JSON property name which represents a property annotation.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="propertyName">The name of the property to annotate.</param>
+        /// <param name="annotationName">The name of the annotation to write.</param>
+        internal static void WritePropertyAnnotationName(this IJsonWriter jsonWriter, string propertyName, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            jsonWriter.WriteName(propertyName + ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
+        }
+
+        /// <summary>
+        /// Write a JSON instance annotation name which represents a instance annotation.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="annotationName">The name of the instance annotation to write.</param>
+        internal static void WriteInstanceAnnotationName(this IJsonWriter jsonWriter, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            jsonWriter.WriteName(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
+        }
+
+        /// <summary>
+        /// Writes the 'value' property name asynchronously.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        internal static Task WriteValuePropertyNameAsync(this IJsonWriter jsonWriter)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+
+            return jsonWriter.WriteNameAsync(ODataJsonConstants.ODataValuePropertyName);
+        }
+
+        /// <summary>
+        /// Write a JSON property name which represents a property annotation asynchronously.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="propertyName">The name of the property to annotate.</param>
+        /// <param name="annotationName">The name of the annotation to write.</param>
+        internal static Task WritePropertyAnnotationNameAsync(this IJsonWriter jsonWriter, string propertyName, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            return jsonWriter.WriteNameAsync(propertyName + ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
+        }
+
+        /// <summary>
+        /// Write a JSON instance annotation name which represents a instance annotation.
+        /// </summary>
+        /// <param name="jsonWriter">The JSON writer to write to.</param>
+        /// <param name="annotationName">The name of the instance annotation to write.</param>
+        internal static Task WriteInstanceAnnotationNameAsync(this IJsonWriter jsonWriter, string annotationName)
+        {
+            Debug.Assert(jsonWriter != null, "jsonWriter != null");
+            Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");
+
+            return jsonWriter.WriteNameAsync(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + annotationName);
         }
     }
 }

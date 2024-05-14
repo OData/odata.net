@@ -22,10 +22,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Json.TextAnnotations;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Fixups;
-    using Microsoft.Test.Taupo.OData.Writer.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
@@ -66,10 +66,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             // The ID annotation is added for JSON as even though JSON has no way to represent the ID ODataLib requires it.
             entitySet = new EntitySetInstance(PayloadGenerator.GenerateJsonPayloads().ToArray()).WithDefaultAtomIDAnnotation();
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             //this.CombinatorialEngineProvider.RunCombinations(
             //    new[] { entitySet },
-            //    this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+            //    this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
             //    (testCase, testConfiguration) =>
             //    {
             //        this.WriteAndVerifyODataPayloadElement(testCase, testConfiguration);
@@ -89,7 +89,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
             this.CombinatorialEngineProvider.RunCombinations(
                 testPayloads.PayloadCases(WriterPayloads.FeedPayloads),
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+                this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
                 (testDescriptor, testConfiguration) =>
                 {
                     if (testDescriptor.IsGeneratedPayload && (testConfiguration.Format == ODataFormat.Json || testDescriptor.Model != null))
@@ -313,10 +313,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 });
             }
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             ////this.CombinatorialEngineProvider.RunCombinations(
             ////   testDescriptors,
-            ////   this.WriterTestConfigurationProvider.JsonLightFormatConfigurationsWithIndent,
+            ////   this.WriterTestConfigurationProvider.JsonFormatConfigurationsWithIndent,
             ////   (testDescriptor, testConfiguration) =>
             ////   {
             ////       testDescriptor.RunTest(testConfiguration, this.Logger);
@@ -469,7 +469,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             Json = string.Join("$(NL)",
                                     "{",
-                                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#CustomersSet\",\"value\":[",
+                                    "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#CustomersSet\",\"value\":[",
                                     string.Empty,
                                     "]",
                                     "}"),
@@ -483,7 +483,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 })
             {
-                // JSON Light does not support writing without model
+                // Json does not support writing without model
                 SkipTestConfiguration = tc => model == null && tc.Format == ODataFormat.Json,
                 Model = model,
                 PayloadEdmElementContainer = customerSet,
@@ -526,8 +526,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Json = "$(Indent)$(Indent)\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName + "\":\"" + count + "\"",
-                                FragmentExtractor = (result) => result.Object().Property(JsonLightConstants.ODataCountAnnotationName)
+                                Json = "$(Indent)$(Indent)\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName + "\":\"" + count + "\"",
+                                FragmentExtractor = (result) => result.Object().Property(JsonConstants.ODataCountAnnotationName)
                             };
                         }
                         else
@@ -540,7 +540,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                     "]"),
                                 FragmentExtractor = (result) =>
                                 {
-                                    return JsonLightWriterUtils.GetTopLevelFeedItemsArray(testConfiguration, result).RemoveAllAnnotations(true);
+                                    return JsonWriterUtils.GetTopLevelFeedItemsArray(testConfiguration, result).RemoveAllAnnotations(true);
                                 }
                             };
                         }
@@ -605,8 +605,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     {
                         return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                         {
-                            Json = "\"" + JsonLightConstants.ODataNextLinkAnnotationName + "\":\"" + nextLink + "\"",
-                            FragmentExtractor = (result) => result.Object().Property(JsonLightConstants.ODataNextLinkAnnotationName)
+                            Json = "\"" + JsonConstants.ODataNextLinkAnnotationName + "\":\"" + nextLink + "\"",
+                            FragmentExtractor = (result) => result.Object().Property(JsonConstants.ODataNextLinkAnnotationName)
                         };
                     }
                     else
@@ -652,7 +652,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             Json = string.Join("$(NL)",
                                     "{",
-                                    "\"" + JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#CustomersSet\",\"value\":[",
+                                    "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#CustomersSet\",\"value\":[",
                                     string.Empty,
                                     "]",
                                     "}"),
@@ -666,7 +666,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     }
                 })
             {
-                // JSON Light does not support writing without model
+                // Json does not support writing without model
                 SkipTestConfiguration = tc => model == null && tc.Format == ODataFormat.Json,
                 Model = model,
                 PayloadEdmElementContainer = customerSet,

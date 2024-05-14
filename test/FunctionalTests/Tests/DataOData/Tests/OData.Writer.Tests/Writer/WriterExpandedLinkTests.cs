@@ -291,7 +291,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     #endregion Expanded link with entity reference link content
                 };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -388,7 +388,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         errorCallback(new ExpectedException(typeof(ArgumentNullException)))),
                 };
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurationsWithIndent.Where(tc => false),

@@ -89,7 +89,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
 
         private static bool AlwaysAdvertiseActions(OperationWrapper serviceAction, object resourceInstance, bool resourceInstanceInFeed, ref ODataAction actionToSerialize)
         {
-            // the links should always be provided and always be absolute, even if they will be written relative in JSON-Light.
+            // the links should always be provided and always be absolute, even if they will be written relative in JSON.
             actionToSerialize.Metadata.Should().NotBeNull().And.Subject.As<Uri>().IsAbsoluteUri.Should().BeTrue();
             actionToSerialize.Target.Should().NotBeNull().And.Subject.As<Uri>().IsAbsoluteUri.Should().BeTrue();
             return true;

@@ -469,7 +469,7 @@ namespace AstoriaUnitTests.Tests
 
                     string payload = request.GetResponseStreamAsText();
 
-                    if (format == UnitTestsUtil.JsonLightMimeType)
+                    if (format == UnitTestsUtil.JsonMimeType)
                     {
                         payload = JsonPrimitiveTypesUtil.FilterJson(payload);
                     }
@@ -493,7 +493,7 @@ namespace AstoriaUnitTests.Tests
             using (var request = service.CreateForInProcess())
             {
                 request.RequestUriString = "/Spatials(1)/Point";
-                TestUtil.RunCombinations(new string[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.MimeApplicationXml }, (format) =>
+                TestUtil.RunCombinations(new string[] { UnitTestsUtil.JsonMimeType, UnitTestsUtil.MimeApplicationXml }, (format) =>
                 {
                     request.Accept = format;
                     request.SendRequest();

@@ -172,7 +172,7 @@ namespace AstoriaUnitTests.Tests
                 },
             };
             
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             SendRequestAndVerifyXPaths(testCases, formats: new string[] { UnitTestsUtil.MimeApplicationXml });
         }
 
@@ -680,8 +680,8 @@ namespace AstoriaUnitTests.Tests
                             new PayloadBuilder()
                                 .AddProperty("ID", 10)
                                 .AddProperty("Name", "Sarah"),
-                            UnitTestsUtil.JsonLightMimeType),
-                        RequestContentType = UnitTestsUtil.JsonLightMimeType },
+                            UnitTestsUtil.JsonMimeType),
+                        RequestContentType = UnitTestsUtil.JsonMimeType },
                     new ErrorCase() { // Type Name specified must be assignable to the type specified in the uri - Atom Format
                         RequestUri = "/People/" + ManagerTypeName,
                         StatusCode = HttpStatusCode.BadRequest,
@@ -702,8 +702,8 @@ namespace AstoriaUnitTests.Tests
                             new PayloadBuilder() { TypeName = EmployeeTypeName }
                                 .AddProperty("ID", 10)
                                 .AddProperty("Name", "Sarah"),
-                            UnitTestsUtil.JsonLightMimeType),
-                        RequestContentType = UnitTestsUtil.JsonLightMimeType },
+                            UnitTestsUtil.JsonMimeType),
+                        RequestContentType = UnitTestsUtil.JsonMimeType },
 #endregion
                 };
 
@@ -1100,11 +1100,11 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
                 request.HttpMethod = "GET";
                 request.RequestUriString = "/People";
-                request.Accept = UnitTestsUtil.JsonLightMimeTypeNoMetadata;
+                request.Accept = UnitTestsUtil.JsonMimeTypeNoMetadata;
                 request.SendRequest();
 
                 Assert.AreEqual(request.ResponseStatusCode, 200, "Request must succeed");
-                var response = request.GetResponseStreamAsXmlDocument(UnitTestsUtil.JsonLightMimeType);
+                var response = request.GetResponseStreamAsXmlDocument(UnitTestsUtil.JsonMimeType);
                 UnitTestsUtil.VerifyXPathExists(response, String.Format("/{0}/value/{1}[count({0})=7]", JsonValidator.ObjectString, JsonValidator.ArrayString));
             }
         }

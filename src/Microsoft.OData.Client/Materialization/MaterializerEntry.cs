@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client.Materialization
             string serverTypeName = this.Entry.TypeName;
             if (entry.TypeAnnotation != null)
             {
-                // If the annotation has a value use it. Otherwise, in JSON-Light, the types can be inferred from the
+                // If the annotation has a value use it. Otherwise, in JSON, the types can be inferred from the
                 // context URI even if they are not present on the wire, so just use the type name from the entry.
                 if (entry.TypeAnnotation.TypeName != null || this.Format != ODataFormat.Json)
                 {

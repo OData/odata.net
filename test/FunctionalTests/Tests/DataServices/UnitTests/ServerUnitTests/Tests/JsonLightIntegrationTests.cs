@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightIntegrationTests.cs" company="Microsoft">
+// <copyright file="JsonIntegrationTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -12,11 +12,11 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     [TestClass]
-    public class JsonLightIntegrationTests
+    public class JsonIntegrationTests
     {
         [TestCategory("Partition2")]
         [TestMethod]
-        public void JsonLightPayloadMetadataIntegrationTest()
+        public void JsonPayloadMetadataIntegrationTest()
         {
             Stream resultStream = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, "application/json;odata.metadata=none", "/Customers?$select=Name", typeof(CustomDataContext));
             Stream stream = TestUtil.EnsureStreamWithSeek(resultStream);

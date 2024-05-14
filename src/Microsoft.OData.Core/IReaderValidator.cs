@@ -8,7 +8,6 @@ namespace Microsoft.OData
 {
     using System;
     using Microsoft.OData.Edm;
-    using Microsoft.OData.JsonLight;
 
     /// <summary>
     /// Reader validator interface.

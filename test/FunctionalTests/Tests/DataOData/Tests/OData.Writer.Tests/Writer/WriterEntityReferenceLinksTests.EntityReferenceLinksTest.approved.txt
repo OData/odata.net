@@ -1,4 +1,4 @@
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -12,7 +12,7 @@ Model Present: true
   ]
 }
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -26,7 +26,7 @@ Model Present: true
   ]
 }
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -38,7 +38,7 @@ Model Present: true
   ]
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -68,7 +68,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -78,7 +78,7 @@ Model Present: true
   ]
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -104,7 +104,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 26; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 26; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -112,7 +112,7 @@ Model Present: true
   ]
 }
 
-Combination: 28; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 28; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -134,7 +134,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 34; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 34; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -142,7 +142,7 @@ Model Present: true
   ]
 }
 
-Combination: 36; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 36; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -164,7 +164,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 42; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 42; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -178,7 +178,7 @@ Model Present: true
   ]
 }
 
-Combination: 44; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 44; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -192,7 +192,7 @@ Model Present: true
   ]
 }
 
-Combination: 50; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 50; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -204,7 +204,7 @@ Model Present: true
   ]
 }
 
-Combination: 52; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 52; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -216,7 +216,7 @@ Model Present: true
   ]
 }
 
-Combination: 58; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 58; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -226,7 +226,7 @@ Model Present: true
   ]
 }
 
-Combination: 60; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 60; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -236,7 +236,7 @@ Model Present: true
   ]
 }
 
-Combination: 66; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 66; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -244,7 +244,7 @@ Model Present: true
   ]
 }
 
-Combination: 68; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 68; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -252,7 +252,7 @@ Model Present: true
   ]
 }
 
-Combination: 74; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 74; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -260,7 +260,7 @@ Model Present: true
   ]
 }
 
-Combination: 76; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 76; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.nextLink":"relative-nextpage","value":[
@@ -268,7 +268,7 @@ Model Present: true
   ]
 }
 
-Combination: 82; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 82; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -282,7 +282,7 @@ Model Present: true
   ]
 }
 
-Combination: 84; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 84; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -296,7 +296,7 @@ Model Present: true
   ]
 }
 
-Combination: 90; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 90; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -308,7 +308,7 @@ Model Present: true
   ]
 }
 
-Combination: 92; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 92; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -336,7 +336,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 98; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 98; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -346,7 +346,7 @@ Model Present: true
   ]
 }
 
-Combination: 100; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 100; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -370,7 +370,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 106; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 106; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -378,7 +378,7 @@ Model Present: true
   ]
 }
 
-Combination: 108; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 108; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -396,7 +396,7 @@ Model Present: true
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata#Collection($ref)" xmlns="http://www.w3.org/2005/Atom" />
 
-Combination: 114; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 114; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -404,7 +404,7 @@ Model Present: true
   ]
 }
 
-Combination: 116; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 116; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","value":[
@@ -422,7 +422,7 @@ Model Present: true
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns:m="http://docs.oasis-open.org/odata/ns/metadata" m:context="http://odata.org/$metadata#Collection($ref)" xmlns="http://www.w3.org/2005/Atom" />
 
-Combination: 122; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 122; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -436,7 +436,7 @@ Model Present: true
   ]
 }
 
-Combination: 124; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 124; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -450,7 +450,7 @@ Model Present: true
   ]
 }
 
-Combination: 130; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 130; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -462,7 +462,7 @@ Model Present: true
   ]
 }
 
-Combination: 132; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 132; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -494,7 +494,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 138; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 138; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -504,7 +504,7 @@ Model Present: true
   ]
 }
 
-Combination: 140; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 140; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -532,7 +532,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 146; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 146; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -540,7 +540,7 @@ Model Present: true
   ]
 }
 
-Combination: 148; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 148; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -564,7 +564,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 154; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 154; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -572,7 +572,7 @@ Model Present: true
   ]
 }
 
-Combination: 156; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 156; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -596,7 +596,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 162; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 162; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -610,7 +610,7 @@ Model Present: true
   ]
 }
 
-Combination: 164; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 164; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -624,7 +624,7 @@ Model Present: true
   ]
 }
 
-Combination: 170; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 170; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -636,7 +636,7 @@ Model Present: true
   ]
 }
 
-Combination: 172; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 172; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -648,7 +648,7 @@ Model Present: true
   ]
 }
 
-Combination: 178; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 178; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -658,7 +658,7 @@ Model Present: true
   ]
 }
 
-Combination: 180; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 180; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -668,7 +668,7 @@ Model Present: true
   ]
 }
 
-Combination: 186; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 186; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -676,7 +676,7 @@ Model Present: true
   ]
 }
 
-Combination: 188; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 188; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -684,7 +684,7 @@ Model Present: true
   ]
 }
 
-Combination: 194; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 194; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -692,7 +692,7 @@ Model Present: true
   ]
 }
 
-Combination: 196; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 196; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@odata.nextLink":"relative-nextpage","value":[
@@ -700,7 +700,7 @@ Model Present: true
   ]
 }
 
-Combination: 202; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 202; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -714,7 +714,7 @@ Model Present: true
   ]
 }
 
-Combination: 204; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 204; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -728,7 +728,7 @@ Model Present: true
   ]
 }
 
-Combination: 210; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 210; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -740,7 +740,7 @@ Model Present: true
   ]
 }
 
-Combination: 212; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 212; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -770,7 +770,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 218; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 218; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -780,7 +780,7 @@ Model Present: true
   ]
 }
 
-Combination: 220; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 220; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -806,7 +806,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 226; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 226; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -814,7 +814,7 @@ Model Present: true
   ]
 }
 
-Combination: 228; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 228; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -836,7 +836,7 @@ Model Present: true
   <m:count>1</m:count>
 </feed>
 
-Combination: 234; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 234; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -844,7 +844,7 @@ Model Present: true
   ]
 }
 
-Combination: 236; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 236; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":1,"value":[
@@ -866,7 +866,7 @@ Model Present: true
   <m:count>1</m:count>
 </feed>
 
-Combination: 242; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 242; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -880,7 +880,7 @@ Model Present: true
   ]
 }
 
-Combination: 244; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 244; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -894,7 +894,7 @@ Model Present: true
   ]
 }
 
-Combination: 250; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 250; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -906,7 +906,7 @@ Model Present: true
   ]
 }
 
-Combination: 252; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 252; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -938,7 +938,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 258; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 258; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -948,7 +948,7 @@ Model Present: true
   ]
 }
 
-Combination: 260; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 260; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -976,7 +976,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 266; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 266; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -984,7 +984,7 @@ Model Present: true
   ]
 }
 
-Combination: 268; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 268; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1008,7 +1008,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 274; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 274; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1016,7 +1016,7 @@ Model Present: true
   ]
 }
 
-Combination: 276; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 276; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1040,7 +1040,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 282; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 282; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1054,7 +1054,7 @@ Model Present: true
   ]
 }
 
-Combination: 284; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 284; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1068,7 +1068,7 @@ Model Present: true
   ]
 }
 
-Combination: 290; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 290; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1080,7 +1080,7 @@ Model Present: true
   ]
 }
 
-Combination: 292; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 292; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1092,7 +1092,7 @@ Model Present: true
   ]
 }
 
-Combination: 298; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 298; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1102,7 +1102,7 @@ Model Present: true
   ]
 }
 
-Combination: 300; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 300; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1112,7 +1112,7 @@ Model Present: true
   ]
 }
 
-Combination: 306; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 306; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1120,7 +1120,7 @@ Model Present: true
   ]
 }
 
-Combination: 308; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 308; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1128,7 +1128,7 @@ Model Present: true
   ]
 }
 
-Combination: 314; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 314; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1136,7 +1136,7 @@ Model Present: true
   ]
 }
 
-Combination: 316; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 316; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1144,7 +1144,7 @@ Model Present: true
   ]
 }
 
-Combination: 322; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 322; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1158,7 +1158,7 @@ Model Present: true
   ]
 }
 
-Combination: 324; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 324; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1172,7 +1172,7 @@ Model Present: true
   ]
 }
 
-Combination: 330; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 330; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1184,7 +1184,7 @@ Model Present: true
   ]
 }
 
-Combination: 332; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 332; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1214,7 +1214,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 338; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 338; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1224,7 +1224,7 @@ Model Present: true
   ]
 }
 
-Combination: 340; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 340; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1250,7 +1250,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 346; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 346; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1258,7 +1258,7 @@ Model Present: true
   ]
 }
 
-Combination: 348; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 348; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1280,7 +1280,7 @@ Model Present: true
   <m:count>3</m:count>
 </feed>
 
-Combination: 354; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 354; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1288,7 +1288,7 @@ Model Present: true
   ]
 }
 
-Combination: 356; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 356; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":3,"value":[
@@ -1310,7 +1310,7 @@ Model Present: true
   <m:count>3</m:count>
 </feed>
 
-Combination: 362; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 362; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1324,7 +1324,7 @@ Model Present: true
   ]
 }
 
-Combination: 364; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 364; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1338,7 +1338,7 @@ Model Present: true
   ]
 }
 
-Combination: 370; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 370; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1350,7 +1350,7 @@ Model Present: true
   ]
 }
 
-Combination: 372; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 372; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1382,7 +1382,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 378; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 378; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1392,7 +1392,7 @@ Model Present: true
   ]
 }
 
-Combination: 380; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 380; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1420,7 +1420,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 386; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 386; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1428,7 +1428,7 @@ Model Present: true
   ]
 }
 
-Combination: 388; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 388; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1452,7 +1452,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 394; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 394; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1460,7 +1460,7 @@ Model Present: true
   ]
 }
 
-Combination: 396; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 396; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1484,7 +1484,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 402; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 402; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1498,7 +1498,7 @@ Model Present: true
   ]
 }
 
-Combination: 404; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 404; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1512,7 +1512,7 @@ Model Present: true
   ]
 }
 
-Combination: 410; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 410; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1524,7 +1524,7 @@ Model Present: true
   ]
 }
 
-Combination: 412; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 412; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1536,7 +1536,7 @@ Model Present: true
   ]
 }
 
-Combination: 418; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 418; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1546,7 +1546,7 @@ Model Present: true
   ]
 }
 
-Combination: 420; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 420; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1556,7 +1556,7 @@ Model Present: true
   ]
 }
 
-Combination: 426; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 426; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1564,7 +1564,7 @@ Model Present: true
   ]
 }
 
-Combination: 428; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 428; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1572,7 +1572,7 @@ Model Present: true
   ]
 }
 
-Combination: 434; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 434; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1580,7 +1580,7 @@ Model Present: true
   ]
 }
 
-Combination: 436; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 436; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@odata.nextLink":"relative-nextpage","value":[
@@ -1588,7 +1588,7 @@ Model Present: true
   ]
 }
 
-Combination: 442; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 442; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1602,7 +1602,7 @@ Model Present: true
   ]
 }
 
-Combination: 444; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 444; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1616,7 +1616,7 @@ Model Present: true
   ]
 }
 
-Combination: 450; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 450; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1628,7 +1628,7 @@ Model Present: true
   ]
 }
 
-Combination: 452; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 452; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1658,7 +1658,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 458; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 458; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1668,7 +1668,7 @@ Model Present: true
   ]
 }
 
-Combination: 460; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 460; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1694,7 +1694,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 466; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 466; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1702,7 +1702,7 @@ Model Present: true
   ]
 }
 
-Combination: 468; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 468; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1724,7 +1724,7 @@ Model Present: true
   <m:count>-1</m:count>
 </feed>
 
-Combination: 474; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 474; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1732,7 +1732,7 @@ Model Present: true
   ]
 }
 
-Combination: 476; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 476; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-1,"value":[
@@ -1754,7 +1754,7 @@ Model Present: true
   <m:count>-1</m:count>
 </feed>
 
-Combination: 482; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 482; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1768,7 +1768,7 @@ Model Present: true
   ]
 }
 
-Combination: 484; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 484; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1782,7 +1782,7 @@ Model Present: true
   ]
 }
 
-Combination: 490; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 490; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1794,7 +1794,7 @@ Model Present: true
   ]
 }
 
-Combination: 492; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 492; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1826,7 +1826,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 498; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 498; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1836,7 +1836,7 @@ Model Present: true
   ]
 }
 
-Combination: 500; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 500; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1864,7 +1864,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 506; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 506; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1872,7 +1872,7 @@ Model Present: true
   ]
 }
 
-Combination: 508; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 508; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1896,7 +1896,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 514; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 514; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1904,7 +1904,7 @@ Model Present: true
   ]
 }
 
-Combination: 516; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 516; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -1928,7 +1928,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 522; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 522; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1942,7 +1942,7 @@ Model Present: true
   ]
 }
 
-Combination: 524; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 524; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1956,7 +1956,7 @@ Model Present: true
   ]
 }
 
-Combination: 530; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 530; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1968,7 +1968,7 @@ Model Present: true
   ]
 }
 
-Combination: 532; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 532; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -1980,7 +1980,7 @@ Model Present: true
   ]
 }
 
-Combination: 538; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 538; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -1990,7 +1990,7 @@ Model Present: true
   ]
 }
 
-Combination: 540; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 540; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -2000,7 +2000,7 @@ Model Present: true
   ]
 }
 
-Combination: 546; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 546; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -2008,7 +2008,7 @@ Model Present: true
   ]
 }
 
-Combination: 548; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 548; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -2016,7 +2016,7 @@ Model Present: true
   ]
 }
 
-Combination: 554; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 554; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -2024,7 +2024,7 @@ Model Present: true
   ]
 }
 
-Combination: 556; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 556; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@odata.nextLink":"relative-nextpage","value":[
@@ -2032,7 +2032,7 @@ Model Present: true
   ]
 }
 
-Combination: 562; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 562; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2046,7 +2046,7 @@ Model Present: true
   ]
 }
 
-Combination: 564; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 564; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2060,7 +2060,7 @@ Model Present: true
   ]
 }
 
-Combination: 570; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 570; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2072,7 +2072,7 @@ Model Present: true
   ]
 }
 
-Combination: 572; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 572; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2102,7 +2102,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 578; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 578; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2112,7 +2112,7 @@ Model Present: true
   ]
 }
 
-Combination: 580; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 580; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2138,7 +2138,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 586; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 586; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2146,7 +2146,7 @@ Model Present: true
   ]
 }
 
-Combination: 588; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 588; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2168,7 +2168,7 @@ Model Present: true
   <m:count>-3</m:count>
 </feed>
 
-Combination: 594; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 594; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2176,7 +2176,7 @@ Model Present: true
   ]
 }
 
-Combination: 596; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 596; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-3,"value":[
@@ -2198,7 +2198,7 @@ Model Present: true
   <m:count>-3</m:count>
 </feed>
 
-Combination: 602; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 602; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2212,7 +2212,7 @@ Model Present: true
   ]
 }
 
-Combination: 604; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 604; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2226,7 +2226,7 @@ Model Present: true
   ]
 }
 
-Combination: 610; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 610; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2238,7 +2238,7 @@ Model Present: true
   ]
 }
 
-Combination: 612; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 612; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2270,7 +2270,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 618; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 618; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2280,7 +2280,7 @@ Model Present: true
   ]
 }
 
-Combination: 620; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 620; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2308,7 +2308,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 626; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 626; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2316,7 +2316,7 @@ Model Present: true
   ]
 }
 
-Combination: 628; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 628; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2340,7 +2340,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 634; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 634; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2348,7 +2348,7 @@ Model Present: true
   ]
 }
 
-Combination: 636; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 636; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2372,7 +2372,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 642; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 642; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2386,7 +2386,7 @@ Model Present: true
   ]
 }
 
-Combination: 644; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 644; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2400,7 +2400,7 @@ Model Present: true
   ]
 }
 
-Combination: 650; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 650; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2412,7 +2412,7 @@ Model Present: true
   ]
 }
 
-Combination: 652; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 652; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2424,7 +2424,7 @@ Model Present: true
   ]
 }
 
-Combination: 658; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 658; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2434,7 +2434,7 @@ Model Present: true
   ]
 }
 
-Combination: 660; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 660; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2444,7 +2444,7 @@ Model Present: true
   ]
 }
 
-Combination: 666; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 666; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2452,7 +2452,7 @@ Model Present: true
   ]
 }
 
-Combination: 668; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 668; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2460,7 +2460,7 @@ Model Present: true
   ]
 }
 
-Combination: 674; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 674; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2468,7 +2468,7 @@ Model Present: true
   ]
 }
 
-Combination: 676; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 676; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@odata.nextLink":"relative-nextpage","value":[
@@ -2476,7 +2476,7 @@ Model Present: true
   ]
 }
 
-Combination: 682; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 682; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2490,7 +2490,7 @@ Model Present: true
   ]
 }
 
-Combination: 684; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 684; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2504,7 +2504,7 @@ Model Present: true
   ]
 }
 
-Combination: 690; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 690; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2516,7 +2516,7 @@ Model Present: true
   ]
 }
 
-Combination: 692; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 692; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2546,7 +2546,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 698; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 698; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2556,7 +2556,7 @@ Model Present: true
   ]
 }
 
-Combination: 700; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 700; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2582,7 +2582,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 706; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 706; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2590,7 +2590,7 @@ Model Present: true
   ]
 }
 
-Combination: 708; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 708; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2612,7 +2612,7 @@ Model Present: true
   <m:count>0</m:count>
 </feed>
 
-Combination: 714; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 714; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2620,7 +2620,7 @@ Model Present: true
   ]
 }
 
-Combination: 716; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 716; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":0,"value":[
@@ -2642,7 +2642,7 @@ Model Present: true
   <m:count>0</m:count>
 </feed>
 
-Combination: 722; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 722; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2656,7 +2656,7 @@ Model Present: true
   ]
 }
 
-Combination: 724; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 724; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2670,7 +2670,7 @@ Model Present: true
   ]
 }
 
-Combination: 730; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 730; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2682,7 +2682,7 @@ Model Present: true
   ]
 }
 
-Combination: 732; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 732; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2714,7 +2714,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 738; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 738; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2724,7 +2724,7 @@ Model Present: true
   ]
 }
 
-Combination: 740; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 740; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2752,7 +2752,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 746; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 746; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2760,7 +2760,7 @@ Model Present: true
   ]
 }
 
-Combination: 748; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 748; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2784,7 +2784,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 754; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 754; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2792,7 +2792,7 @@ Model Present: true
   ]
 }
 
-Combination: 756; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 756; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -2816,7 +2816,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 762; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 762; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2830,7 +2830,7 @@ Model Present: true
   ]
 }
 
-Combination: 764; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 764; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2844,7 +2844,7 @@ Model Present: true
   ]
 }
 
-Combination: 770; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 770; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2856,7 +2856,7 @@ Model Present: true
   ]
 }
 
-Combination: 772; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 772; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2868,7 +2868,7 @@ Model Present: true
   ]
 }
 
-Combination: 778; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 778; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2878,7 +2878,7 @@ Model Present: true
   ]
 }
 
-Combination: 780; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 780; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2888,7 +2888,7 @@ Model Present: true
   ]
 }
 
-Combination: 786; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 786; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2896,7 +2896,7 @@ Model Present: true
   ]
 }
 
-Combination: 788; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 788; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2904,7 +2904,7 @@ Model Present: true
   ]
 }
 
-Combination: 794; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 794; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2912,7 +2912,7 @@ Model Present: true
   ]
 }
 
-Combination: 796; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 796; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@odata.nextLink":"relative-nextpage","value":[
@@ -2920,7 +2920,7 @@ Model Present: true
   ]
 }
 
-Combination: 802; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 802; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -2934,7 +2934,7 @@ Model Present: true
   ]
 }
 
-Combination: 804; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 804; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -2948,7 +2948,7 @@ Model Present: true
   ]
 }
 
-Combination: 810; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 810; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2960,7 +2960,7 @@ Model Present: true
   ]
 }
 
-Combination: 812; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 812; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -2990,7 +2990,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 818; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 818; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3000,7 +3000,7 @@ Model Present: true
   ]
 }
 
-Combination: 820; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 820; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3026,7 +3026,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 826; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 826; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3034,7 +3034,7 @@ Model Present: true
   ]
 }
 
-Combination: 828; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 828; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3056,7 +3056,7 @@ Model Present: true
   <m:count>9223372036854775807</m:count>
 </feed>
 
-Combination: 834; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 834; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3064,7 +3064,7 @@ Model Present: true
   ]
 }
 
-Combination: 836; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 836; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":9223372036854775807,"value":[
@@ -3086,7 +3086,7 @@ Model Present: true
   <m:count>9223372036854775807</m:count>
 </feed>
 
-Combination: 842; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 842; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3100,7 +3100,7 @@ Model Present: true
   ]
 }
 
-Combination: 844; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 844; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3114,7 +3114,7 @@ Model Present: true
   ]
 }
 
-Combination: 850; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 850; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3126,7 +3126,7 @@ Model Present: true
   ]
 }
 
-Combination: 852; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 852; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3158,7 +3158,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 858; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 858; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3168,7 +3168,7 @@ Model Present: true
   ]
 }
 
-Combination: 860; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 860; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3196,7 +3196,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 866; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 866; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3204,7 +3204,7 @@ Model Present: true
   ]
 }
 
-Combination: 868; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 868; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3228,7 +3228,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 874; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 874; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3236,7 +3236,7 @@ Model Present: true
   ]
 }
 
-Combination: 876; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 876; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"http://odata.org/nextpage","value":[
@@ -3260,7 +3260,7 @@ Model Present: true
   <next xmlns="http://docs.oasis-open.org/odata/ns/data">http://odata.org/nextpage</next>
 </feed>
 
-Combination: 882; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 882; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3274,7 +3274,7 @@ Model Present: true
   ]
 }
 
-Combination: 884; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 884; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3288,7 +3288,7 @@ Model Present: true
   ]
 }
 
-Combination: 890; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 890; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3300,7 +3300,7 @@ Model Present: true
   ]
 }
 
-Combination: 892; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 892; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3312,7 +3312,7 @@ Model Present: true
   ]
 }
 
-Combination: 898; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 898; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3322,7 +3322,7 @@ Model Present: true
   ]
 }
 
-Combination: 900; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 900; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3332,7 +3332,7 @@ Model Present: true
   ]
 }
 
-Combination: 906; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 906; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3340,7 +3340,7 @@ Model Present: true
   ]
 }
 
-Combination: 908; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 908; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3348,7 +3348,7 @@ Model Present: true
   ]
 }
 
-Combination: 914; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 914; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3356,7 +3356,7 @@ Model Present: true
   ]
 }
 
-Combination: 916; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 916; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@odata.nextLink":"relative-nextpage","value":[
@@ -3364,7 +3364,7 @@ Model Present: true
   ]
 }
 
-Combination: 922; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 922; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3378,7 +3378,7 @@ Model Present: true
   ]
 }
 
-Combination: 924; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 924; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3392,7 +3392,7 @@ Model Present: true
   ]
 }
 
-Combination: 930; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 930; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3404,7 +3404,7 @@ Model Present: true
   ]
 }
 
-Combination: 932; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 932; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"@TestModel.annotation":321,"@custom.annotation":654,"value":[
@@ -3434,7 +3434,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult3" />
 </feed>
 
-Combination: 938; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 938; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3444,7 +3444,7 @@ Model Present: true
   ]
 }
 
-Combination: 940; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 940; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3470,7 +3470,7 @@ Model Present: true
   <m:ref id="http://odata.org/linkresult1" />
 </feed>
 
-Combination: 946; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 946; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3478,7 +3478,7 @@ Model Present: true
   ]
 }
 
-Combination: 948; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 948; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3500,7 +3500,7 @@ Model Present: true
   <m:count>-9223372036854775808</m:count>
 </feed>
 
-Combination: 954; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 954; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[
@@ -3508,7 +3508,7 @@ Model Present: true
   ]
 }
 
-Combination: 956; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 956; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: true
 {
   "@odata.context":"http://odata.org/$metadata#Collection($ref)","@odata.count":-9223372036854775808,"value":[

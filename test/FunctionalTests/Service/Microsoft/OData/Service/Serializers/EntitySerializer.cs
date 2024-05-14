@@ -598,7 +598,7 @@ namespace Microsoft.OData.Service.Serializers
                 ResourcePropertyInfo navProperty = this.GetNavigationPropertyInfo(expanded, entityToSerialize.Entity, entityToSerialize.ResourceType, property);
                 ODataNestedResourceInfo navLink = this.GetNavigationLink(entityToSerialize, navProperty.Property);
 
-                // WCF Data Services show performance degradation with JsonLight when entities have > 25 Navgations on writing entries
+                // WCF Data Services show performance degradation with Json when entities have > 25 Navgations on writing entries
                 // DEVNOTE: for performance reasons, if the link has no content due to the metadata level, and is not expanded
                 // then don't tell ODataLib about it at all.
                 if (navLink.Url == null && navLink.AssociationLinkUrl == null && !navProperty.Expand)
@@ -851,7 +851,7 @@ namespace Microsoft.OData.Service.Serializers
 
             IEdmEntitySet entitySet = null;
             IEdmEntityType entityType = null;
-            if (!ContentTypeUtil.IsResponseMediaTypeJsonLight(this.Service, /*isEntryOrFeed*/ true))
+            if (!ContentTypeUtil.IsResponseMediaTypeJson(this.Service, /*isEntryOrFeed*/ true))
             {
                 entitySet = WebUtil.GetEntitySet(this.Service.Provider, model, this.RequestDescription.TargetResourceSet);
                 entityType = (IEdmEntityType)model.FindType(this.RequestDescription.TargetResourceType.FullName);

@@ -19,7 +19,7 @@ namespace Microsoft.OData
     /// </summary>
     public abstract class ODataFormat
     {
-        /// <summary>The JSON Light format instance.</summary>
+        /// <summary>The Json format instance.</summary>
         private static ODataJsonFormat JsonFormat = new ODataJsonFormat();
 
         /// <summary>The RAW format instance.</summary>

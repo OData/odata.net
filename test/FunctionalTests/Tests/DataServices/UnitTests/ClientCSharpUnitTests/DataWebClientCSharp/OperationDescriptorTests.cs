@@ -282,7 +282,7 @@ namespace AstoriaUnitTests
         {
             if (format == ODataFormat.Json)
             {
-                // JSON Light builds the title and target with entity container name in front of the simple title name. Atom doesn't include the container name.
+                // Json builds the title and target with entity container name in front of the simple title name. Atom doesn't include the container name.
                 title = String.Format("TestNamespace.{0}", title);
                 return new MyOperationDescriptor() { Title = title, Metadata = String.Format("$metadata#{0}", title), Target = uri + "/" + title };
             }
@@ -505,7 +505,7 @@ namespace AstoriaUnitTests
                 {
                     var target = string.Format("CustomerEntities(1)/{0}Action1", "TestNamespace.");
 
-                    // With JSON Light, if the title is not on the wire (which it's not, if it's null), then the metadata builder kicks in and a non-null value is reported
+                    // With Json, if the title is not on the wire (which it's not, if it's null), then the metadata builder kicks in and a non-null value is reported
                     // There is no real scenario where the title would need to actually be null, so we have decided to not do anything to make this match the Atom behavior.
                     var title = format == ODataFormat.Json ? "TestNamespace.Action1" : null;
 
@@ -599,7 +599,7 @@ namespace AstoriaUnitTests
 
                 if (format == ODataFormat.Json)
                 {
-                    JsonLightTestUtil.ConfigureContextForJsonLight(ctx, null);
+                    JsonTestUtil.ConfigureContextForJson(ctx, null);
                 }
                 else
                 {
@@ -710,7 +710,7 @@ namespace AstoriaUnitTests
                     string contentType;
                     if (format == ODataFormat.Json)
                     {
-                        contentType = UnitTestsUtil.JsonLightMimeType;
+                        contentType = UnitTestsUtil.JsonMimeType;
                         payloadBuilder.Metadata = request.BaseUri + "/$metadata#TestService.CustomerEntities/$entity";
                     }
                     else
@@ -733,7 +733,7 @@ namespace AstoriaUnitTests
                 if (format == ODataFormat.Json)
                 {
                     string serviceEdmx = GetServiceEdmxWithOperations(payloadBuilder);
-                    JsonLightTestUtil.ConfigureContextForJsonLight(ctx, serviceEdmx);
+                    JsonTestUtil.ConfigureContextForJson(ctx, serviceEdmx);
                 }
 
                 QueryOperationResponse<CustomerEntity> qor = (QueryOperationResponse<CustomerEntity>)ctx.Execute<CustomerEntity>(uri);

@@ -32,7 +32,7 @@ namespace AstoriaUnitTests.Tests
             {
                 string jsonPayload = "{ value : 'Foo' }";
 
-                UpdateTests.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(-1)/Name", UnitTestsUtil.JsonLightMimeType, "PUT", 404);
+                UpdateTests.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(-1)/Name", UnitTestsUtil.JsonMimeType, "PUT", 404);
             }
 
             private class UpdatePutPropertyTestCase
@@ -76,7 +76,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ value : 'Foo' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedXPath = "Object/value[text()='Foo']"
                     },
                     // Valid property payload in XML
@@ -91,14 +91,14 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ value : 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                     },
                     // Wrong property name in JSON
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ WrongName : 'Foo' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         // JSON on the other hand fails this because it thinks that the value should be a complex value (if the name of property doesn't match)
                         // and will fail later on when the value doesn't have a type name.
@@ -109,24 +109,24 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ WrongName : null }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         // JSON on the other hand fails this because it thinks that the value should be a complex value (if the name of property doesn't match)
                         // and will fail later on when the value doesn't have a type name.
                         // ODataLib can now parse complex values without property wrappers, and fails here because of the missing type name
                         ExpectedErrorStatusCodeForOpenProperty = 400,
                     },
-                    //// Correct property name in JSON Light
+                    //// Correct property name in Json
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ @odata.type: 'Edm.String', value : 'Foo' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                     },
                     // JSON Missing '
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ value : 'Foo }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         ExpectedErrorStatusCodeForOpenProperty = 400,
                     },
@@ -134,7 +134,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "'Foo'",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         ExpectedErrorStatusCodeForOpenProperty = 400,
                     },
@@ -142,7 +142,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ value : 'Foo', Another : 'Bar' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         ExpectedErrorStatusCodeForOpenProperty = 400,
                     },
@@ -230,7 +230,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdatePutPropertyTestCase
                     {
                         Payload = "{ value: 42 }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers(1)/ID",
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         ExpectedErrorStatusCodeForOpenProperty = 400
@@ -240,7 +240,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         Payload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
                                   "<ads:Name xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:adsm=\"http://docs.oasis-open.org/odata/ns/metadata\">42</ads:Name>",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         RequestUri = "/Customers(1)/ID",
                         ExpectedErrorStatusCodeForDeclaredProperty = 400,
                         ExpectedErrorStatusCodeForOpenProperty = 400
@@ -273,11 +273,11 @@ namespace AstoriaUnitTests.Tests
 
                 UpdateTests.DoUpdatesForVariousProviders("PUT", "/Orders(100)/DollarAmount", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPath, false);
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Orders(100)/DollarAmount", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPath, false);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PUT", "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, false);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, false);
+                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PUT", "/Orders(100)/DollarAmount", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPath, false);
+                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Orders(100)/DollarAmount", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPath, false);
 
-                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", false);
-                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PATCH", false);
+                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", false);
+                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), "/Orders(100)/DollarAmount", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PATCH", false);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition2"), TestMethod, Variation]
@@ -289,30 +289,30 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: '" + typeof(Address).FullName + "', City: 'Redmond'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType
+                            ContentType = UnitTestsUtil.JsonMimeType
                         },
                         // JSON Normal payload without type name
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{ City: 'Redmond' }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                         },
                         // JSON Normal payload without type name
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{City: 'Redmond', State: 'WA'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                         },
                         // JSON Payload 
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: '" + typeof(Address).FullName + "', City: 'Redmond' }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                         },
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{ WrongAddress: \"Foo\" }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             ExpectedErrorStatusCodeForDeclaredProperty = 400,
                             // In this case the payload is read as a top-level complex value without a property wrapper, and thus will fail since the value doesn't have a type
                             ExpectedErrorStatusCodeForOpenProperty = 400
@@ -321,13 +321,13 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{ }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                         },
                         // JSON payload with wrong type name
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: null, City: 'Redmond'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             ExpectedErrorStatusCodeForDeclaredProperty = 400,
                             ExpectedErrorStatusCodeForOpenProperty = 400
                         },
@@ -335,7 +335,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: 42, City: 'Redmond'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             ExpectedErrorStatusCodeForDeclaredProperty = 400,
                             ExpectedErrorStatusCodeForOpenProperty = 400
                         },
@@ -344,7 +344,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{ @odata.type: null, @odata.type: '" + typeof(Address).FullName + "'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             ExpectedErrorStatusCodeForDeclaredProperty = 400,
                             ExpectedErrorStatusCodeForOpenProperty = 400
                         },
@@ -352,7 +352,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{ type: 'Edm.String' City: 'Redmond' }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             ExpectedErrorStatusCodeForDeclaredProperty = null,
                             ExpectedErrorStatusCodeForOpenProperty = 400
                         },
@@ -360,7 +360,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: 'Edm.String', City: 'Redmond' }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             // It works for declared property because the type from the payload is ignored
                             ExpectedErrorStatusCodeForDeclaredProperty = null,
                             // It will fail for open property because the type is not a complex type
@@ -370,7 +370,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{@odata.type: 'TestModel.NonExistant', City: 'Redmond'}",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                             // ODataLib in the Lax mode will ignore the type in this case and use the expected one.
                             ExpectedErrorStatusCodeForDeclaredProperty = null,
                             // It will fail because the type didn't resolve, but it must for open properties
@@ -413,9 +413,9 @@ namespace AstoriaUnitTests.Tests
                     new string[] { "PUT", "PATCH" },
                     (testCase, openProperty, method) =>
                     {
-                        // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
-                        // Convert the previous json verbose payloads to json light then remove this condition
-                        if (testCase.ContentType == UnitTestsUtil.JsonLightMimeType)
+                        // TODO: Fix places where we've lost JsonVerbose coverage to add Json
+                        // Convert the previous json verbose payloads to Json then remove this condition
+                        if (testCase.ContentType == UnitTestsUtil.JsonMimeType)
                         {
                             return;
                         }
@@ -432,7 +432,7 @@ namespace AstoriaUnitTests.Tests
                         new UpdatePutPropertyTestCase
                         {
                             Payload = "{\"@odata.type\":\"Collection(Edm.String)\", \"value\": [] }",
-                            ContentType = UnitTestsUtil.JsonLightMimeType,
+                            ContentType = UnitTestsUtil.JsonMimeType,
                         },
                         // XML Normal collection with type
                         new UpdatePutPropertyTestCase
@@ -478,7 +478,7 @@ namespace AstoriaUnitTests.Tests
                     new
                     {
                         Payload = "{ State: 'WA', City: 'Redmond' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedPropertyNames = new string[] { "State", "City" },
                         ExpectedPropertyValues = new string[] { "WA", "Redmond" },
                     },
@@ -486,7 +486,7 @@ namespace AstoriaUnitTests.Tests
                     new
                     {
                         Payload = "{ City: 'Redmond', State: 'WA' }",
-                        ContentType = UnitTestsUtil.JsonLightMimeType,
+                        ContentType = UnitTestsUtil.JsonMimeType,
                         ExpectedPropertyNames = new string[] { "City", "State" },
                         ExpectedPropertyValues = new string[] { "Redmond", "WA" },
                     },
@@ -555,7 +555,7 @@ namespace AstoriaUnitTests.Tests
                                 requestUri = "/Customers";
                                 headers = new KeyValuePair<string, string>[0];
 
-                                if (contentType == UnitTestsUtil.JsonLightMimeType)
+                                if (contentType == UnitTestsUtil.JsonMimeType)
                                 {
                                     // Cut off the surrounding object record
                                     payload = payload.Substring(1, payload.Length - 2);
@@ -578,7 +578,7 @@ namespace AstoriaUnitTests.Tests
                             }
                             else
                             {
-                                if (contentType == UnitTestsUtil.JsonLightMimeType)
+                                if (contentType == UnitTestsUtil.JsonMimeType)
                                 {
                                     // Cut off the surrounding object record
                                     payload = payload.Substring(1, payload.Length - 2);
@@ -633,7 +633,7 @@ namespace AstoriaUnitTests.Tests
                         JsonValidator.ObjectString) };
 
                 UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPaths, true);
-                UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPaths, true);
+                UpdateTests.DoUpdatesForVariousProviders("PATCH", "/Customers(1)/Address", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPaths, true);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition2"), TestMethod, Variation]
@@ -670,10 +670,10 @@ namespace AstoriaUnitTests.Tests
                         })};
 
                 UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PUT", uri, UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomXPaths, true);
-                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PUT", uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPaths, true);
+                UpdateTests.DoUpdatesForVariousProvidersWithOpenMissing("PUT", uri, UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPaths, true);
 
                 UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.MimeApplicationXml, payloadBuilder, atomOpenTypesXPath, "PUT", true);
-                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", true);
+                UpdateTests.CustomProviderRequest(typeof(CustomRowBasedOpenTypesContext), uri, UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteOpenTypesXPath, "PUT", true);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition2"), TestMethod, Variation]
@@ -697,12 +697,12 @@ namespace AstoriaUnitTests.Tests
                         if (providerType == typeof(ocs.CustomObjectContext))
                         {
                             // EF provider fails with 500 since it doesn't allow null complex values
-                            UnitTestsUtil.VerifyInvalidRequest(jsonPayload1, "/Customers(0)", providerType, UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                            UnitTestsUtil.VerifyInvalidRequest(jsonPayload1, "/Customers(0)", providerType, UnitTestsUtil.JsonMimeType, "PUT", 400);
                             UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers(0)/Address", providerType, UnitTestsUtil.MimeApplicationXml, "PUT", 500);
                         }
                         else
                         {
-                            UpdateTests.CustomProviderRequest(providerType, "/Customers(1)/", UnitTestsUtil.JsonLightMimeType, jsonPayload1, jsonXPath, "PUT", true);
+                            UpdateTests.CustomProviderRequest(providerType, "/Customers(1)/", UnitTestsUtil.JsonMimeType, jsonPayload1, jsonXPath, "PUT", true);
                             UpdateTests.CustomProviderRequest(providerType, "/Customers(1)/Address", UnitTestsUtil.MimeApplicationXml, atomPayload, atomXPath, "PUT", true);
                         }
                     });
@@ -722,7 +722,7 @@ namespace AstoriaUnitTests.Tests
                         && providerType != typeof(EFFK.CustomObjectContextPOCOProxy)),
                     "PATCH",
                     "/Customers(1)/Name",
-                    UnitTestsUtil.JsonLightMimeType,
+                    UnitTestsUtil.JsonMimeType,
                     payloadBuilder,
                     new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>("/Customers(1)/Name", jsonLiteXPath) },
                     true);
@@ -884,7 +884,7 @@ namespace AstoriaUnitTests.Tests
                             "/Entities(1)/" + testCase.PropertyName,
                             new KeyValuePair<string, string[]>[0],
                             typeof(PrimitiveDataTypesContext),
-                            UnitTestsUtil.JsonLightMimeType,
+                            UnitTestsUtil.JsonMimeType,
                             "PUT");
                         UnitTestsUtil.SendRequestAndVerifyXPath(
                             "<ads:" + testCase.PropertyName + " xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\">" + testCase.XmlValue + "</ads:" + testCase.PropertyName + ">",

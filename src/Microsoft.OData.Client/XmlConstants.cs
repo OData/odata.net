@@ -225,16 +225,16 @@ namespace Microsoft.OData.Service
         /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
         internal const string MimeApplicationAtom = "application/atom+xml";
 
-        /// <summary>MIME type for JSON bodies in light mode with minimal metadata.</summary>
+        /// <summary>MIME type for JSON bodies with minimal metadata.</summary>
         internal const string MimeApplicationJsonODataMinimalMetadata = "application/json;odata.metadata=minimal";
 
-        /// <summary>MIME type for JSON bodies in light mode with full metadata.</summary>
+        /// <summary>MIME type for JSON bodies with full metadata.</summary>
         internal const string MimeApplicationJsonODataFullMetadata = "application/json;odata.metadata=full";
 
-        /// <summary>MIME type for JSON bodies in light mode with no metadata.</summary>
+        /// <summary>MIME type for JSON bodies with no metadata.</summary>
         internal const string MimeApplicationJsonODataNoMetadata = "application/json;odata.metadata=none";
 
-        /// <summary>MIME type for JSON bodies (implies light in V3, verbose otherwise) (http://www.iana.org/assignments/media-types/application/).</summary>
+        /// <summary>MIME type for JSON bodies (http://www.iana.org/assignments/media-types/application/).</summary>
         internal const string MimeApplicationJson = "application/json";
 
         /// <summary>MIME type for batch requests - this mime type must be specified in CUD changesets or GET batch requests.</summary>

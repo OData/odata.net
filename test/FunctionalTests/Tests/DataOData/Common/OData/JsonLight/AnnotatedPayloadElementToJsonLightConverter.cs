@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AnnotatedPayloadElementToJsonLightConverter.cs" company="Microsoft">
+// <copyright file="AnnotatedPayloadElementToJsonConverter.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.JsonLight
+namespace Microsoft.Test.Taupo.OData.Json
 {
     #region Namespaces
     using System;
@@ -21,15 +21,15 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
     using Microsoft.Test.Taupo.Contracts;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// The converter from ODataPayloadElement representation (with possible annotations) to JSON Light.
     /// </summary>
-    [ImplementationName(typeof(IPayloadElementToJsonLightConverter), "AnnotatedPayloadElementToJsonLightConverter", HelpText = "Payload to JSON Light converter which allows JSON specific annotations to be used.")]
-    public class AnnotatedPayloadElementToJsonLightConverter : IPayloadElementToJsonLightConverter
+    [ImplementationName(typeof(IPayloadElementToJsonConverter), "AnnotatedPayloadElementToJsonConverter", HelpText = "Payload to JSON Light converter which allows JSON specific annotations to be used.")]
+    public class AnnotatedPayloadElementToJsonConverter : IPayloadElementToJsonConverter
     {
         // The goal for the payload converters is that they are very simple. No clever things in here.
         // They should not even know about versions and such up front. Everything should be guided by the input (ODataPayloadElement).
@@ -45,16 +45,16 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         /// Gets or sets the spatial primitive to odata json converter
         /// </summary>
         [InjectDependency(IsRequired = true)]
-        public SpatialPrimitiveToODataJsonLightValueConverter SpatialConverter { get; set; }
+        public SpatialPrimitiveToODataJsonValueConverter SpatialConverter { get; set; }
 
         /// <summary>
         /// Converts the given payload element into a Json Light representation.
         /// </summary>
         /// <param name="rootElement">The root payload element to convert.</param>        
         /// <returns>The Json Light representation of the payload.</returns>
-        public string ConvertToJsonLight(ODataPayloadElement rootElement)
+        public string ConvertToJson(ODataPayloadElement rootElement)
         {
-            return ConvertToJsonLight(rootElement, /*newline*/null);
+            return ConvertToJson(rootElement, /*newline*/null);
         }
 
         /// <summary>
@@ -64,9 +64,9 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         /// <param name="newline">Newline character(s) to use when writing the returned string.
         /// A null strings results in the use of the default.</param>
         /// <returns>The Json Light representation of the payload.</returns>
-        public string ConvertToJsonLight(ODataPayloadElement rootElement, string newline)
+        public string ConvertToJson(ODataPayloadElement rootElement, string newline)
         {
-            JsonValue jsonValue = this.ConvertToJsonLightValue(rootElement);
+            JsonValue jsonValue = this.ConvertToJsonValue(rootElement);
 
             StringBuilder builder = new StringBuilder();
             using (StringWriter strWriter = new StringWriter(builder, CultureInfo.CurrentCulture))
@@ -76,7 +76,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     strWriter.NewLine = newline;
                 }
 
-                JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(strWriter, writingJsonLight: true);
+                JsonTextPreservingWriter jsonWriter = new JsonTextPreservingWriter(strWriter, writingJson: true);
                 jsonWriter.WriteValue(jsonValue);
             }
 
@@ -88,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         /// </summary>
         /// <param name="rootElement">The root payload element to convert.</param>        
         /// <returns>The Json Light representation of the payload.</returns>
-        public JsonValue ConvertToJsonLightValue(ODataPayloadElement rootElement)
+        public JsonValue ConvertToJsonValue(ODataPayloadElement rootElement)
         {
             JsonValue jsonValue = new SerializeODataPayloadElementVisitor(this).Serialize(rootElement);
 
@@ -112,13 +112,13 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
         private sealed class SerializeODataPayloadElementVisitor : IODataPayloadElementVisitor<JsonValue>
         {
             private Stack<ODataPayloadElement> payloadStack = new Stack<ODataPayloadElement>();
-            private readonly AnnotatedPayloadElementToJsonLightConverter parent;
+            private readonly AnnotatedPayloadElementToJsonConverter parent;
             private JsonValue parentElementValue;
 
             /// <summary>
             /// Initializes a new instance of the SerializeODataPayloadElementVisitor class
             /// </summary>
-            internal SerializeODataPayloadElementVisitor(AnnotatedPayloadElementToJsonLightConverter parent)
+            internal SerializeODataPayloadElementVisitor(AnnotatedPayloadElementToJsonConverter parent)
             {
                 ExceptionUtilities.CheckArgumentNotNull(parent, "parent");
                 this.parent = parent;
@@ -166,7 +166,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             {
                 // This is the MultiValue property of complex types.
                 bool needsWrapping = this.CurrentElementIsRoot();
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                string propertyName = needsWrapping ? JsonConstants.ODataValuePropertyName : payloadElement.Name;
 
                 var jsonProperty = new JsonProperty(propertyName, null);
                 jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
@@ -222,7 +222,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     complexCollectionValue.Add(this.Recurse(item, complexCollectionValue));
                 }
 
-                return this.WrapTopLevelProperty(payloadElement, new JsonProperty(JsonLightConstants.ODataValuePropertyName, complexCollectionValue), /*needsWrapping*/true);
+                return this.WrapTopLevelProperty(payloadElement, new JsonProperty(JsonConstants.ODataValuePropertyName, complexCollectionValue), /*needsWrapping*/true);
             }
 
             /// <summary>
@@ -261,7 +261,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     if (complexObject != null)
                     {
                         InsertContextUriProperty(payloadElement, complexObject);
-                        if (!payloadElement.Annotations.OfType<JsonLightMaintainPropertyOrderAnnotation>().Any())
+                        if (!payloadElement.Annotations.OfType<JsonMaintainPropertyOrderAnnotation>().Any())
                         {
                             this.ReorderPropertyAnnotations(complexObject);
                         }
@@ -290,7 +290,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 if (this.CurrentElementIsRoot())
                 {
                     // Create an entity reference link
-                    return this.WrapTopLevelProperty(payloadElement, new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName, new JsonPrimitiveValue(payloadElement.UriString)), /*needsWrapping*/true);
+                    return this.WrapTopLevelProperty(payloadElement, new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName, new JsonPrimitiveValue(payloadElement.UriString)), /*needsWrapping*/true);
                 }
 
                 bool isResponse = IsResponse(payloadElement);
@@ -311,7 +311,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 // In a response, write an object with the link. The array for it has already been written.
                 return new JsonObject()
                 {
-                    new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName, new JsonPrimitiveValue(payloadElement.UriString))
+                    new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName, new JsonPrimitiveValue(payloadElement.UriString))
                 };
             }
 
@@ -328,7 +328,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 // The XML deserializer will never use it.
                 // So basically this is a non-metadata version of an empty entity set.
 
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                string propertyName = needsWrapping ? JsonConstants.ODataValuePropertyName : payloadElement.Name;
                 var result = new JsonProperty(propertyName, null);
                 result.Value = this.Recurse(payloadElement.Value, result);
                 return this.WrapTopLevelProperty(payloadElement, result, needsWrapping);
@@ -397,7 +397,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     }
                 }
 
-                if (!payloadElement.Annotations.OfType<JsonLightMaintainPropertyOrderAnnotation>().Any())
+                if (!payloadElement.Annotations.OfType<JsonMaintainPropertyOrderAnnotation>().Any())
                 {
                     this.ReorderPropertyAnnotations(entityValue);
                 }
@@ -425,12 +425,12 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                     if (payloadElement.InlineCount.HasValue)
                     {
-                        wrapper.Add(new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName, new JsonPrimitiveValue(payloadElement.InlineCount.Value)));
+                        wrapper.Add(new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName, new JsonPrimitiveValue(payloadElement.InlineCount.Value)));
                     }
 
-                    wrapper.Add(new JsonProperty(JsonLightConstants.ODataValuePropertyName, entitySetValue));
+                    wrapper.Add(new JsonProperty(JsonConstants.ODataValuePropertyName, entitySetValue));
 
-                    AddPropertyIfNotNull(wrapper, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName, payloadElement.NextLink);
+                    AddPropertyIfNotNull(wrapper, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName, payloadElement.NextLink);
                     return wrapper;
                 }
 
@@ -475,11 +475,11 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 if (payloadElement.InlineCount.HasValue)
                 {
-                    wrapper.Add(new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataCountAnnotationName, new JsonPrimitiveValue(payloadElement.InlineCount.Value)));
+                    wrapper.Add(new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataCountAnnotationName, new JsonPrimitiveValue(payloadElement.InlineCount.Value)));
                 }
 
-                wrapper.Add(new JsonProperty(JsonLightConstants.ODataValuePropertyName, linkCollectionValue));
-                AddPropertyIfNotNull(wrapper, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataNextLinkAnnotationName, payloadElement.NextLink);
+                wrapper.Add(new JsonProperty(JsonConstants.ODataValuePropertyName, linkCollectionValue));
+                AddPropertyIfNotNull(wrapper, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataNextLinkAnnotationName, payloadElement.NextLink);
                 return wrapper;
             }
 
@@ -511,7 +511,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             public JsonValue Visit(NullPropertyInstance payloadElement)
             {
                 bool needsWrapping = this.CurrentElementIsRoot();
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                string propertyName = needsWrapping ? JsonConstants.ODataValuePropertyName : payloadElement.Name;
                 JsonValue result = new JsonProperty(propertyName, new JsonPrimitiveValue(null));
                 return this.WrapTopLevelProperty(payloadElement, result, needsWrapping);
             }
@@ -539,7 +539,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 return new JsonObject()
                 {
-                    new JsonProperty(JsonLightConstants.ODataErrorPropertyName, errorObject)
+                    new JsonProperty(JsonConstants.ODataErrorPropertyName, errorObject)
                 };
             }
 
@@ -589,7 +589,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 JsonObject wrapper = new JsonObject();
                 AddContextUriProperty(payloadElement, wrapper);
-                wrapper.Add(new JsonProperty(JsonLightConstants.ODataValuePropertyName, collectionValue));
+                wrapper.Add(new JsonProperty(JsonConstants.ODataValuePropertyName, collectionValue));
                 return wrapper;
             }
 
@@ -619,7 +619,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             {
                 // This is the property with value MultiValue of primitive values.
                 bool needsWrapping = this.CurrentElementIsRoot();
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                string propertyName = needsWrapping ? JsonConstants.ODataValuePropertyName : payloadElement.Name;
 
                 var jsonProperty = new JsonProperty(propertyName, null);
                 jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
@@ -638,7 +638,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             {
                 bool needsWrapping = this.CurrentElementIsRoot();
 
-                string propertyName = needsWrapping ? JsonLightConstants.ODataValuePropertyName : payloadElement.Name;
+                string propertyName = needsWrapping ? JsonConstants.ODataValuePropertyName : payloadElement.Name;
                 JsonProperty jsonProperty = new JsonProperty(propertyName, null);
                 jsonProperty.Value = this.Recurse(payloadElement.Value, jsonProperty);
 
@@ -689,7 +689,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 AddContextUriProperty(payloadElement, serviceDocObject);
 
                 JsonValue workspaceArray = this.Recurse(payloadElement.Workspaces[0], serviceDocObject);
-                serviceDocObject.Add(new JsonProperty(JsonLightConstants.ODataValuePropertyName, workspaceArray));
+                serviceDocObject.Add(new JsonProperty(JsonConstants.ODataValuePropertyName, workspaceArray));
                 return serviceDocObject;
             }
 
@@ -738,8 +738,8 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 ExceptionUtilities.Assert(!this.CurrentElementIsRoot(), "Json serialization does not allow a root element of type: {0}", payloadElement.ElementType.ToString());
 
                 JsonObject collectionObject = new JsonObject();
-                collectionObject.Add(new JsonProperty(JsonLightConstants.ODataWorkspaceCollectionNameName, new JsonPrimitiveValue(payloadElement.Name)));
-                collectionObject.Add(new JsonProperty(JsonLightConstants.ODataWorkspaceCollectionUrlName, new JsonPrimitiveValue(payloadElement.Href)));
+                collectionObject.Add(new JsonProperty(JsonConstants.ODataWorkspaceCollectionNameName, new JsonPrimitiveValue(payloadElement.Name)));
+                collectionObject.Add(new JsonProperty(JsonConstants.ODataWorkspaceCollectionUrlName, new JsonPrimitiveValue(payloadElement.Href)));
                 return collectionObject;
             }
 
@@ -754,7 +754,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 ExceptionUtilities.Assert(jsonObject != null, "jsonObject != null");
 
                 string contextUri = payloadElement.ContextUri();
-                AddPropertyIfNotNull(jsonObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName, contextUri);
+                AddPropertyIfNotNull(jsonObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName, contextUri);
             }
 
             /// <summary>
@@ -770,7 +770,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 string contextUri = payloadElement.ContextUri();
                 if (contextUri != null)
                 {
-                    jsonObject.Insert(0, new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName, new JsonPrimitiveValue(contextUri)));
+                    jsonObject.Insert(0, new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName, new JsonPrimitiveValue(contextUri)));
                 }
             }
 
@@ -796,36 +796,36 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             /// <returns>The metadata property.</returns>
             private void AddMetadataProperties(EntityInstance payloadElement, JsonObject entityObject)
             {
-                AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName, payloadElement.FullTypeName);
-                AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName, payloadElement.Id);
-                AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataETagAnnotationName, payloadElement.ETag);
+                AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName, payloadElement.FullTypeName);
+                AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName, payloadElement.Id);
+                AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataETagAnnotationName, payloadElement.ETag);
 
                 string editLink = payloadElement.GetEditLink();
-                AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataEditLinkAnnotationName, editLink);
+                AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataEditLinkAnnotationName, editLink);
 
                 string readLink = payloadElement.GetSelfLink();
-                AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataReadLinkAnnotationName, readLink);
+                AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataReadLinkAnnotationName, readLink);
 
                 // write all the default stream properties if the entry is an MLE
                 if (payloadElement.IsMediaLinkEntry())
                 {
-                    AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaEditLinkAnnotationName, payloadElement.StreamEditLink);
-                    AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaReadLinkAnnotationName, payloadElement.StreamSourceLink);
-                    AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaContentTypeAnnotationName, payloadElement.StreamContentType);
-                    AddPropertyIfNotNull(entityObject, JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataMediaETagAnnotationName, payloadElement.StreamETag);
+                    AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaEditLinkAnnotationName, payloadElement.StreamEditLink);
+                    AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaReadLinkAnnotationName, payloadElement.StreamSourceLink);
+                    AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaContentTypeAnnotationName, payloadElement.StreamContentType);
+                    AddPropertyIfNotNull(entityObject, JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataMediaETagAnnotationName, payloadElement.StreamETag);
                 }
 
                 var actionDescriptors = payloadElement.ServiceOperationDescriptors.Where(s => s.IsAction).ToList();
                 if (actionDescriptors.Count > 0)
                 {
-                    JsonProperty actionsProperty = this.CreateOperationsObject(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataActionsAnnotationName, actionDescriptors);
+                    JsonProperty actionsProperty = this.CreateOperationsObject(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataActionsAnnotationName, actionDescriptors);
                     entityObject.Add(actionsProperty);
                 }
 
                 var functionsDescriptors = payloadElement.ServiceOperationDescriptors.Where(s => s.IsFunction).ToList();
                 if (functionsDescriptors.Count > 0)
                 {
-                    JsonProperty functionsProperty = this.CreateOperationsObject(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataFunctionsAnnotationName, functionsDescriptors);
+                    JsonProperty functionsProperty = this.CreateOperationsObject(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataFunctionsAnnotationName, functionsDescriptors);
                     entityObject.Add(functionsProperty);
                 }
             }
@@ -848,8 +848,8 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 }
 
                 string propertyName = namedStreamInstance.Name;
-                AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataMediaEditLinkAnnotationName), namedStreamInstance.EditLink);
-                AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataMediaReadLinkAnnotationName), namedStreamInstance.SourceLink);
+                AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(propertyName, JsonConstants.ODataMediaEditLinkAnnotationName), namedStreamInstance.EditLink);
+                AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(propertyName, JsonConstants.ODataMediaReadLinkAnnotationName), namedStreamInstance.SourceLink);
 
                 // NOTE the named stream instance stores two content types; one for the read link and
                 //      one for the edit link. If an edit link is present, the edit link's value will win.
@@ -868,8 +868,8 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     contentTypeString = namedStreamInstance.EditLinkContentType ?? namedStreamInstance.SourceLinkContentType;
                 }
 
-                AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataMediaContentTypeAnnotationName), contentTypeString);
-                AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(propertyName, JsonLightConstants.ODataMediaETagAnnotationName), namedStreamInstance.ETag);
+                AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(propertyName, JsonConstants.ODataMediaContentTypeAnnotationName), contentTypeString);
+                AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(propertyName, JsonConstants.ODataMediaETagAnnotationName), namedStreamInstance.ETag);
             }
 
             /// <summary>
@@ -925,21 +925,21 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                     }
 
                     // Singleton bind in request or deferred link in response
-                    string suffix = isRequest ? JsonLightConstants.ODataBindAnnotationName : JsonLightConstants.ODataNavigationLinkUrlAnnotationName;
-                    string annotationName = JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, suffix);
+                    string suffix = isRequest ? JsonConstants.ODataBindAnnotationName : JsonConstants.ODataNavigationLinkUrlAnnotationName;
+                    string annotationName = JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, suffix);
                     entityObject.Add(new JsonProperty(annotationName, navigationPropertyValue));
                 }
                 else if (expandedLink != null && !isRequest)
                 {
                     // The navigation URL for an expanded link is only written in responses.
-                    AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonLightConstants.ODataNavigationLinkUrlAnnotationName), expandedLink.UriString);
+                    AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonConstants.ODataNavigationLinkUrlAnnotationName), expandedLink.UriString);
                 }
 
                 // Then write the association link if any (respones only)
                 DeferredLink associationLink = navigationProperty.AssociationLink;
                 if (associationLink != null && !isRequest)
                 {
-                    AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonLightConstants.ODataAssociationLinkUrlAnnotationName), associationLink.UriString);
+                    AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonConstants.ODataAssociationLinkUrlAnnotationName), associationLink.UriString);
                 }
 
                 // Then write the expanded content if any
@@ -963,7 +963,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                         EntitySetInstance expandedFeed = (EntitySetInstance)expandedContent;
                         if (!isRequest && expandedFeed.InlineCount.HasValue)
                         {
-                            entityObject.Add(new JsonProperty(JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonLightConstants.ODataCountAnnotationName), new JsonPrimitiveValue(expandedFeed.InlineCount.Value)));
+                            entityObject.Add(new JsonProperty(JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonConstants.ODataCountAnnotationName), new JsonPrimitiveValue(expandedFeed.InlineCount.Value)));
                         }
 
                         JsonValue expandedJsonFeed = this.Recurse(expandedFeed);
@@ -971,7 +971,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                         if (!isRequest)
                         {
-                            AddPropertyIfNotNull(entityObject, JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonLightConstants.ODataNextLinkAnnotationName), expandedFeed.NextLink);
+                            AddPropertyIfNotNull(entityObject, JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonConstants.ODataNextLinkAnnotationName), expandedFeed.NextLink);
                         }
                     }
                     else
@@ -1026,7 +1026,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                         navigationPropertyValue.Add(new JsonPrimitiveValue(linkCollection[i].UriString));
                     }
 
-                    entityObject.Add(new JsonProperty(JsonLightUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonLightConstants.ODataBindAnnotationName), navigationPropertyValue));
+                    entityObject.Add(new JsonProperty(JsonUtils.GetPropertyAnnotationName(navigationProperty.Name, JsonConstants.ODataBindAnnotationName), navigationPropertyValue));
                 }
 
                 // Write the insert operations next
@@ -1114,7 +1114,7 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
             /// <returns>The odata.type property.</returns>
             private JsonProperty CreateTypeName(string fullTypeName)
             {
-                return new JsonProperty(JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(fullTypeName));
+                return new JsonProperty(JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName, new JsonPrimitiveValue(fullTypeName));
             }
 
             /// <summary>
@@ -1262,9 +1262,9 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
 
                 int annotationInsertIndex = metadataPropertyIndex == null ? 0 : metadataPropertyIndex.index + 1;
 
-                foreach (var propertyAnnotation in property.Annotations.OfType<JsonLightPropertyAnnotationAnnotation>())
+                foreach (var propertyAnnotation in property.Annotations.OfType<JsonPropertyAnnotationAnnotation>())
                 {
-                    string annotationPropertyName = string.IsNullOrEmpty(annotationPrefix) ? JsonLightConstants.ODataPropertyAnnotationSeparator + propertyAnnotation.AnnotationName : JsonLightUtils.GetPropertyAnnotationName(annotationPrefix, propertyAnnotation.AnnotationName);
+                    string annotationPropertyName = string.IsNullOrEmpty(annotationPrefix) ? JsonConstants.ODataPropertyAnnotationSeparator + propertyAnnotation.AnnotationName : JsonUtils.GetPropertyAnnotationName(annotationPrefix, propertyAnnotation.AnnotationName);
                     var annotationProperty = new JsonProperty(annotationPropertyName, new JsonPrimitiveValue(propertyAnnotation.AnnotationValue));
                     targetObject.Insert(annotationInsertIndex, annotationProperty);
                 }
@@ -1276,17 +1276,17 @@ namespace Microsoft.Test.Taupo.OData.JsonLight
                 var propertyNames = properties.Select(p => p.Name).ToArray();
                 var firstAnnotationNames = new[]
                 {
-                    JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataContextAnnotationName,
-                    JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataTypeAnnotationName,
-                    JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataIdAnnotationName,
-                    JsonLightConstants.ODataPropertyAnnotationSeparator + JsonLightConstants.ODataETagAnnotationName
+                    JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName,
+                    JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName,
+                    JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataIdAnnotationName,
+                    JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataETagAnnotationName
                 };
 
                 var odataAnnotations = properties.Where(p => firstAnnotationNames.Contains(p.Name));
 
                 // IndexOf('@') > 0 is suitable here, it says that only property annotation is filtered.
-                var reorderTheseAnnotations = properties.Except(odataAnnotations).Where(p => p.Name.IndexOf(JsonLightConstants.ODataPropertyAnnotationSeparator, StringComparison.Ordinal) > 0 && 
-                    propertyNames.Contains(JsonLightConstants.ODataPropertyAnnotationSeparator + p.Name.Split(new[] { '@' }).ElementAt(1)));
+                var reorderTheseAnnotations = properties.Except(odataAnnotations).Where(p => p.Name.IndexOf(JsonConstants.ODataPropertyAnnotationSeparator, StringComparison.Ordinal) > 0 && 
+                    propertyNames.Contains(JsonConstants.ODataPropertyAnnotationSeparator + p.Name.Split(new[] { '@' }).ElementAt(1)));
 
                 var remainingProperties = properties.Except(odataAnnotations).Except(reorderTheseAnnotations).ToList();
 

@@ -33,7 +33,7 @@ namespace AstoriaUnitTests.Tests
         // Issue: #623
         [TestCategory("Partition2")]
         [TestMethod]
-        public void KeyAsSegmentEndToEndSmokeTestInJsonLight()
+        public void KeyAsSegmentEndToEndSmokeTestInJson()
         {
             RunEndToEndSmokeTestWithClient(ctx =>
                                            {

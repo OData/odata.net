@@ -28,7 +28,7 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             this.Invoke(
                 this.AssertDuplicateAnnotationErrorIsThrown,
                 CreateData("Customer"),
-                CreateData(MimeTypes.ApplicationJsonODataLightNonStreaming, MimeTypes.ApplicationJsonODataLightStreaming),
+                CreateData(MimeTypes.ApplicationJsonODataNonStreaming, MimeTypes.ApplicationJsonODataStreaming),
                 new DataDriven.Constraint[0]);
         }
 
@@ -38,13 +38,13 @@ namespace Microsoft.Test.OData.Tests.Client.CustomInstanceAnnotationsTests
             this.Invoke(
                 this.AssertDuplicateAnnotationErrorIsThrown,
                 CreateData("Customer(-10)"),
-                CreateData(MimeTypes.ApplicationJsonODataLightNonStreaming, MimeTypes.ApplicationJsonODataLightStreaming),
+                CreateData(MimeTypes.ApplicationJsonODataNonStreaming, MimeTypes.ApplicationJsonODataStreaming),
                 new DataDriven.Constraint[0]);
         }
 
         internal void AssertDuplicateAnnotationErrorIsThrown(string uri, string contentType)
         {
-            this.AssertInStreamErrorThrown(uri, contentType, "JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection", CustomInstanceAnnotationsGenerator.DuplicateAnnotationName);
+            this.AssertInStreamErrorThrown(uri, contentType, "JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection", CustomInstanceAnnotationsGenerator.DuplicateAnnotationName);
         }
 
         private void AssertInStreamErrorThrown(string uri, string contentType, string resourceIdentifier, params object[] arguments)

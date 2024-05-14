@@ -135,9 +135,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "A relative URI value '{0}' was specified in the data to write, but the metadata document URI or the metadata for the item to be written was not specified for the writer. The metadata document URI and the metadata for the item to be written must be provided to the writer when using relative URI values."
         /// </summary>
-        internal static string ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(object p0)
+        internal static string ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonSerializer_RelativeUriUsedWithoutMetadataDocumentUriOrMetadata, p0);
         }
 
         /// <summary>
@@ -231,25 +231,25 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. State transition is not allowed while writing an expanded navigation property, complex property or complex collection property."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource(object p0, object p1)
+        internal static string ODataJsonDeltaWriter_InvalidTransitionFromNestedResource(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionFromNestedResource, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeltaWriter_InvalidTransitionFromNestedResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "Cannot transition from state '{0}' to state '{1}'. Nested resource can only be written within a delta resource."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource(object p0, object p1)
+        internal static string ODataJsonDeltaWriter_InvalidTransitionToNestedResource(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_InvalidTransitionToNestedResource, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeltaWriter_InvalidTransitionToNestedResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "WriteStart(expandedResourceSet) was called in an invalid state ('{0}'); WriteStart(expandedResourceSet) is only supported in state 'ExpandedNavigationProperty'."
         /// </summary>
-        internal static string ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(object p0)
+        internal static string ODataJsonDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeltaWriter_WriteStartExpandedResourceSetCalledInInvalidState, p0);
         }
 
         /// <summary>
@@ -1400,7 +1400,7 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "JsonLight batch format requires top level property name 'requests' or 'response' but it is missing."
+        /// A string like "Json batch format requires top level property name 'requests' or 'response' but it is missing."
         /// </summary>
         internal static string ODataBatchReader_JsonBatchTopLevelPropertyMissing
         {
@@ -1636,41 +1636,41 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Unknown property name '{0}' for message in batch."
         /// </summary>
-        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
+        internal static string ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonBatchPayloadItemPropertiesCache_UnknownPropertyForMessageInBatch, p0);
         }
 
         /// <summary>
         /// A string like "Duplicate property name '{0}' for request in batch."
         /// </summary>
-        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(object p0)
+        internal static string ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonBatchPayloadItemPropertiesCache_DuplicatePropertyForRequestInBatch, p0);
         }
 
         /// <summary>
         /// A string like "Duplicate header name '{0}' for request in batch."
         /// </summary>
-        internal static string ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(object p0)
+        internal static string ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonBatchPayloadItemPropertiesCache_DuplicateHeaderForRequestInBatch, p0);
         }
 
         /// <summary>
         /// A string like "Unexpected reader.NodeType: {0}."
         /// </summary>
-        internal static string ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
+        internal static string ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnexpectedNodeType, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonBatchBodyContentReaderStream_UnexpectedNodeType, p0);
         }
 
         /// <summary>
         /// A string like "Unknown/undefined type, new type that needs to be supported: {0}?"
         /// </summary>
-        internal static string ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(object p0)
+        internal static string ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonBatchBodyContentReaderStream_UnsupportedContentTypeInHeader, p0);
         }
 
         /// <summary>
@@ -2753,17 +2753,17 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Multiple operations have the same 'Metadata' property value of '{0}'. The 'Target' property value of these operations must be set to a non-null value."
         /// </summary>
-        internal static string ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(object p0)
+        internal static string ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustSpecifyTarget, p0);
         }
 
         /// <summary>
         /// A string like "Multiple operations have the same 'Metadata' property value of '{0}' and the same 'Target' property value of '{1}'. When multiple operations have the same 'Metadata' property value, their 'Target' property values must be unique."
         /// </summary>
-        internal static string ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(object p0, object p1)
+        internal static string ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceSerializer_ActionsAndFunctionsGroupMustNotHaveDuplicateTarget, p0, p1);
         }
 
         /// <summary>
@@ -3597,9 +3597,9 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'."
         /// </summary>
-        internal static string JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(object p0, object p1)
+        internal static string JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonLightInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation, p0, p1);
         }
 
         /// <summary>
@@ -3800,131 +3800,131 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The entity type '{0}' is not compatible with the base type '{1}' of the provided entity set '{2}'. When an entity type is specified for an OData resource set or resource reader, it has to be the same or a subtype of the base type of the specified entity set."
         /// </summary>
-        internal static string ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(object p0, object p1, object p2)
+        internal static string ODataJsonInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType(object p0, object p1, object p2)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType, p0, p1, p2);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_EntityTypeMustBeCompatibleWithEntitySetBaseType, p0, p1, p2);
         }
 
         /// <summary>
-        /// A string like "ODataMessageReader.DetectPayloadKind was called for a request payload. Payload kind detection is only supported for responses in JSON Light."
+        /// A string like "ODataMessageReader.DetectPayloadKind was called for a request payload. Payload kind detection is only supported for responses in Json."
         /// </summary>
-        internal static string ODataJsonLightInputContext_PayloadKindDetectionForRequest
+        internal static string ODataJsonInputContext_PayloadKindDetectionForRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_PayloadKindDetectionForRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_PayloadKindDetectionForRequest);
             }
         }
 
         /// <summary>
-        /// A string like "The parameter '{0}' is specified with a null value. For JSON Light, the '{0}' argument to the 'CreateParameterReader' method cannot be null."
+        /// A string like "The parameter '{0}' is specified with a null value. For Json, the '{0}' argument to the 'CreateParameterReader' method cannot be null."
         /// </summary>
-        internal static string ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader(object p0)
+        internal static string ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_OperationCannotBeNullForCreateParameterReader, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_OperationCannotBeNullForCreateParameterReader, p0);
         }
 
         /// <summary>
-        /// A string like "Parsing JSON Light resource sets or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataResourceReader or ODataMessageReader.CreateODataResourceSetReader method."
+        /// A string like "Parsing Json resource sets or entries in requests without entity set is not supported. Pass in the entity set as a parameter to ODataMessageReader.CreateODataResourceReader or ODataMessageReader.CreateODataResourceSetReader method."
         /// </summary>
-        internal static string ODataJsonLightInputContext_NoEntitySetForRequest
+        internal static string ODataJsonInputContext_NoEntitySetForRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_NoEntitySetForRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_NoEntitySetForRequest);
             }
         }
 
         /// <summary>
-        /// A string like "Parsing JSON Light payloads without a model is only supported for error payloads."
+        /// A string like "Parsing Json payloads without a model is only supported for error payloads."
         /// </summary>
-        internal static string ODataJsonLightInputContext_ModelRequiredForReading
+        internal static string ODataJsonInputContext_ModelRequiredForReading
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_ModelRequiredForReading);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_ModelRequiredForReading);
             }
         }
 
         /// <summary>
         /// A string like "An attempt to read a collection request payload without specifying a collection item type was detected. When reading collection payloads in requests, an expected item type has to be provided."
         /// </summary>
-        internal static string ODataJsonLightInputContext_ItemTypeRequiredForCollectionReaderInRequests
+        internal static string ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightInputContext_ItemTypeRequiredForCollectionReaderInRequests);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonInputContext_ItemTypeRequiredForCollectionReaderInRequests);
             }
         }
 
         /// <summary>
         /// A string like "The required instance annotation 'odata.context' was not found at the beginning of a response payload."
         /// </summary>
-        internal static string ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty
+        internal static string ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeserializer_ContextLinkNotFoundAsFirstProperty);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeserializer_ContextLinkNotFoundAsFirstProperty);
             }
         }
 
         /// <summary>
         /// A string like "The annotation '{0}' was targeting the instance annotation '{1}'. Only the '{2}' annotation is allowed to target an instance annotation."
         /// </summary>
-        internal static string ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(object p0, object p1, object p2)
+        internal static string ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation(object p0, object p1, object p2)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, p0, p1, p2);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeserializer_OnlyODataTypeAnnotationCanTargetInstanceAnnotation, p0, p1, p2);
         }
 
         /// <summary>
-        /// A string like "The annotation '{0}' is found targeting the instance annotation '{1}'. However the value for the instance annotation '{1}' is not found immediately after. In JSON Light, an annotation targeting an instance annotation must be immediately followed by the value of the targeted instance annotation."
+        /// A string like "The annotation '{0}' is found targeting the instance annotation '{1}'. However the value for the instance annotation '{1}' is not found immediately after. In Json, an annotation targeting an instance annotation must be immediately followed by the value of the targeted instance annotation."
         /// </summary>
-        internal static string ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(object p0, object p1)
+        internal static string ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeserializer_AnnotationTargetingInstanceAnnotationWithoutValue, p0, p1);
         }
 
         /// <summary>
-        /// A string like "An attempt to write an entity reference link inside a navigation link after a resource set has been written inside the same navigation link in a request was detected. In JSON Light requests, all entity reference links inside a navigation link have to be written before all resource sets inside the same navigation link."
+        /// A string like "An attempt to write an entity reference link inside a navigation link after a resource set has been written inside the same navigation link in a request was detected. In Json requests, all entity reference links inside a navigation link have to be written before all resource sets inside the same navigation link."
         /// </summary>
-        internal static string ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest
+        internal static string ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_EntityReferenceLinkAfterResourceSetInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_EntityReferenceLinkAfterResourceSetInRequest);
             }
         }
 
         /// <summary>
         /// A string like "The ODataResourceSet.InstanceAnnotations collection must be empty for expanded resource sets. Custom instance annotations are not supported on expanded resource sets."
         /// </summary>
-        internal static string ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet
+        internal static string ODataJsonWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonWriter_InstanceAnnotationNotSupportedOnExpandedResourceSet);
             }
         }
 
         /// <summary>
         /// A string like "Neither an expected type nor a type name in the OData object model was provided for a resource value. When writing a request payload, either an expected type or a type name has to be specified."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest
+        internal static string ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForResourceValueRequest);
             }
         }
 
         /// <summary>
         /// A string like "Neither an expected type nor a type name in the OData object model was provided for a collection property. When writing a request payload, either an expected type or a type name has to be specified."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest
+        internal static string ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueSerializer_NoExpectedTypeOrTypeNameSpecifiedForCollectionValueInRequest);
             }
         }
 
@@ -4032,167 +4032,167 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The annotation '{0}' was found. This annotation is either not recognized or not expected at the current position."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedAnnotationProperties, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties, p0);
         }
 
         /// <summary>
         /// A string like "The property '{0}' has a property annotation '{1}'. This annotation is either not recognized or not expected at the current position."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "An OData property annotation '{0}' was found. This property annotation is either not recognized or not expected at the current position."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation, p0);
         }
 
         /// <summary>
         /// A string like "A property with name '{0}' was found. This property is either not recognized or not expected at the current position."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedProperty(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedProperty, p0);
         }
 
         /// <summary>
-        /// A string like "No top-level properties were found. A top-level property or collection in JSON Light must be represented as a JSON object with exactly one property which is not an annotation."
+        /// A string like "No top-level properties were found. A top-level property or collection in Json must be represented as a JSON object with exactly one property which is not an annotation."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload
+        internal static string ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload);
             }
         }
 
         /// <summary>
         /// A string like "A top-level property with name '{0}' was found in the payload; however, property and collection payloads must always have a top-level property with name '{1}'."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName(object p0, object p1)
+        internal static string ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_InvalidTopLevelPropertyName, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName, p0, p1);
         }
 
         /// <summary>
         /// A string like "The 'odata.type' instance annotation value '{0}' is not a valid type name. The value of the 'odata.type' instance annotation must be a non-empty string."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_InvalidTypeName(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_InvalidTypeName, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_InvalidTypeName, p0);
         }
 
         /// <summary>
         /// A string like "One or more property annotations for property '{0}' were found in the top-level property or collection payload without the property to annotate. Top-level property and collection payloads must contain a single property, with optional annotations for this property."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyAnnotationWithoutProperty, p0);
         }
 
         /// <summary>
         /// A string like "One or more property annotations for property '{0}' were found in the resource value without the property to annotate. Resource values must only contain property annotations for existing properties."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_ResourceValuePropertyAnnotationWithoutProperty, p0);
         }
 
         /// <summary>
         /// A string like "A complex property with an '{0}' property annotation was found. Complex properties must not have the '{0}' property annotation, instead the '{0}' should be specified as an instance annotation in the complex value."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_ComplexValueWithPropertyTypeAnnotation, p0);
         }
 
         /// <summary>
         /// A string like "The 'odata.type' instance annotation in a resource object is not the first property of the object. In OData, the 'odata.type' instance annotation must be the first property of the resource object."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst
+        internal static string ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_ResourceTypeAnnotationNotFirst);
             }
         }
 
         /// <summary>
         /// A string like "The property '{0}' has a property annotation '{1}'. Primitive, complex, collection or open properties can only have an 'odata.type' property annotation."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedDataPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The property with name '{0}' was found after the data property with name '{1}'. If a type is specified for a data property, it must appear before the data property."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty(object p0, object p1)
+        internal static string ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_TypePropertyAfterValueProperty, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty, p0, p1);
         }
 
         /// <summary>
         /// A string like "An '{0}' annotation was read inside a JSON object representing a primitive value; type annotations for primitive values have to be property annotations of the owning property."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_ODataTypeAnnotationInPrimitiveValue, p0);
         }
 
         /// <summary>
         /// A string like "A top-level property with an invalid primitive null value was found. In OData, top-level properties with null value have to be serialized as JSON object with an '{0}' annotation that has the value '{1}'."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue(object p0, object p1)
+        internal static string ODataJsonPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_TopLevelPropertyWithPrimitiveNullValue, p0, p1);
         }
 
         /// <summary>
         /// A string like "Encountered a metadata reference property '{0}' in a scope other than a resource. In OData, a property name with a '#' character indicates a reference into the metadata and is only supported for describing operations bound to a resource."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty, p0);
         }
 
         /// <summary>
         /// A string like "The property with name '{0}' was found in a null payload. In OData, no properties or OData annotations can appear in a null payload."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_NoPropertyAndAnnotationAllowedInNullPayload, p0);
         }
 
         /// <summary>
         /// A string like "A collection type of '{0}' was specified for a non-collection value."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeNotExpected, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_CollectionTypeNotExpected, p0);
         }
 
         /// <summary>
         /// A string like "A non-collection type of '{0}' was specified for a collection value."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected(object p0)
+        internal static string ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_CollectionTypeExpected, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_CollectionTypeExpected, p0);
         }
 
         /// <summary>
         /// A string like "The property with name '{0}' was found with a value node of type '{1}'; however, a resource value of type '{2}' was expected."
         /// </summary>
-        internal static string ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty(object p0, object p1, object p2)
+        internal static string ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty(object p0, object p1, object p2)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightPropertyAndValueDeserializer_ODataResourceExpectedForProperty, p0, p1, p2);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonPropertyAndValueDeserializer_ODataResourceExpectedForProperty, p0, p1, p2);
         }
 
         /// <summary>
@@ -4209,542 +4209,542 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "If a primitive value is representing a resource, the resource must be null."
         /// </summary>
-        internal static string ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource
+        internal static string ODataJsonReader_UnexpectedPrimitiveValueForODataResource
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReader_UnexpectedPrimitiveValueForODataResource);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReader_UnexpectedPrimitiveValueForODataResource);
             }
         }
 
         /// <summary>
         /// A string like "The '{0}' instance or property annotation has a null value. In OData, the '{0}' instance or property annotation must have a non-null string value."
         /// </summary>
-        internal static string ODataJsonLightReaderUtils_AnnotationWithNullValue(object p0)
+        internal static string ODataJsonReaderUtils_AnnotationWithNullValue(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReaderUtils_AnnotationWithNullValue, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReaderUtils_AnnotationWithNullValue, p0);
         }
 
         /// <summary>
         /// A string like "An '{0}' annotation was found with an invalid value. In OData, the only valid value for the '{0}' annotation is '{1}'."
         /// </summary>
-        internal static string ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation(object p0, object p1)
+        internal static string ODataJsonReaderUtils_InvalidValueForODataNullAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightReaderUtils_InvalidValueForODataNullAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The InstanceAnnotations collection has more than one instance annotations with the name '{0}'. All instance annotation names must be unique within the collection."
         /// </summary>
-        internal static string JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(object p0)
+        internal static string JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonLightInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.JsonInstanceAnnotationWriter_DuplicateAnnotationNameInCollection, p0);
         }
 
         /// <summary>
         /// A string like "A null metadata document URI was found in the payload. Metadata document URIs must not be null."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_NullMetadataDocumentUri
+        internal static string ODataJsonContextUriParser_NullMetadataDocumentUri
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_NullMetadataDocumentUri);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_NullMetadataDocumentUri);
             }
         }
 
         /// <summary>
         /// A string like "The context URI '{0}' is not valid for the expected payload kind '{1}'."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(object p0, object p1)
+        internal static string ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_ContextUriDoesNotMatchExpectedPayloadKind, p0, p1);
         }
 
         /// <summary>
         /// A string like "The context URI '{0}' references the entity set or type '{1}'. However, no entity set or type with name '{1}' is declared in the metadata."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName(object p0, object p1)
+        internal static string ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_InvalidEntitySetNameOrTypeName, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_InvalidEntitySetNameOrTypeName, p0, p1);
         }
 
         /// <summary>
         /// A string like "A '$select' query option was found for the payload kind '{0}'. In OData, a '$select' query option is only supported for payload kinds 'Resource' and 'ResourceSet'."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption(object p0)
+        internal static string ODataJsonContextUriParser_InvalidPayloadKindWithSelectQueryOption(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_InvalidPayloadKindWithSelectQueryOption, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_InvalidPayloadKindWithSelectQueryOption, p0);
         }
 
         /// <summary>
-        /// A string like "No model was specified for the ODataMessageReader. A message reader requires a model for JSON Light payload to be specified in the ODataMessageReader constructor."
+        /// A string like "No model was specified for the ODataMessageReader. A message reader requires a model for Json payload to be specified in the ODataMessageReader constructor."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_NoModel
+        internal static string ODataJsonContextUriParser_NoModel
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_NoModel);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_NoModel);
             }
         }
 
         /// <summary>
         /// A string like "The context URL '{0}' is invalid."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_InvalidContextUrl(object p0)
+        internal static string ODataJsonContextUriParser_InvalidContextUrl(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_InvalidContextUrl, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_InvalidContextUrl, p0);
         }
 
         /// <summary>
         /// A string like "Last segment in context URL '{0}' should not be KeySegment."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_LastSegmentIsKeySegment(object p0)
+        internal static string ODataJsonContextUriParser_LastSegmentIsKeySegment(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_LastSegmentIsKeySegment, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_LastSegmentIsKeySegment, p0);
         }
 
         /// <summary>
         /// A string like "The top level context URL '{0}' should be an absolute Uri."
         /// </summary>
-        internal static string ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute(object p0)
+        internal static string ODataJsonContextUriParser_TopLevelContextUrlShouldBeAbsolute(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightContextUriParser_TopLevelContextUrlShouldBeAbsolute, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonContextUriParser_TopLevelContextUrlShouldBeAbsolute, p0);
         }
 
         /// <summary>
         /// A string like "Invalid primitive value '{0}' for @removed annotation. @removed annotation must be a JSON object, optionally containing a 'reason' property."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject(object p0)
+        internal static string ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DeltaRemovedAnnotationMustBeObject, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject, p0);
         }
 
         /// <summary>
         /// A string like "The 'odata.type' instance annotation in a resource object is preceded by an invalid property. In OData, the 'odata.type' instance annotation must be either the first property in the JSON object or the second if the 'odata.context' instance annotation is present."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst
+        internal static string ODataJsonResourceDeserializer_ResourceTypeAnnotationNotFirst
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ResourceTypeAnnotationNotFirst);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_ResourceTypeAnnotationNotFirst);
             }
         }
 
         /// <summary>
         /// A string like "The '{0}' instance annotation in a resource object is preceded by a property or property annotation. In OData, the '{0}' instance annotation must be before any property or property annotation in a resource object."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(object p0)
+        internal static string ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_ResourceInstanceAnnotationPrecededByProperty, p0);
         }
 
         /// <summary>
         /// A string like "Encountered a deleted entity when reading a non-delta response payload. Deleted entities are only supported in request payloads and delta responses."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload
+        internal static string ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedDeletedEntryInResponsePayload);
             }
         }
 
         /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of the content of a resource set; however, a node of type 'StartArray' was expected."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart(object p0)
+        internal static string ODataJsonResourceDeserializer_CannotReadResourceSetContentStart(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadResourceSetContentStart, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_CannotReadResourceSetContentStart, p0);
         }
 
         /// <summary>
         /// A string like "Did not find the required '{0}' property for the expected resource set."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound(object p0)
+        internal static string ODataJsonResourceDeserializer_ExpectedResourceSetPropertyNotFound(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ExpectedResourceSetPropertyNotFound, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_ExpectedResourceSetPropertyNotFound, p0);
         }
 
         /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the entries of a typed resource set; however, a node of type 'StartObject' or 'EndArray', or a null value, was expected."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(object p0)
+        internal static string ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet, p0);
         }
 
         /// <summary>
         /// A string like "A property annotation for a property with name '{0}' was found when reading a top-level resource set. No property annotations, only instance annotations are allowed when reading top-level resource sets."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet(object p0)
+        internal static string ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet, p0);
         }
 
         /// <summary>
         /// A string like "A property with name '{0}' was found when reading a top-level resource set. No properties other than the resource set property with name '{1}' are allowed."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_InvalidPropertyInTopLevelResourceSet, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property '{0}' which only has property annotations in the payload but no property value is declared to be of type '{1}'. In OData, only navigation properties and named streams can be represented as properties without values."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_PropertyWithoutValueWithWrongType(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithWrongType, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_PropertyWithoutValueWithWrongType, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue(object p0)
+        internal static string ODataJsonResourceDeserializer_OpenPropertyWithoutValue(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OpenPropertyWithoutValue, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_OpenPropertyWithoutValue, p0);
         }
 
         /// <summary>
-        /// A string like "A stream property {0} was found in a JSON Light request payload. Stream properties are only supported in responses."
+        /// A string like "A stream property {0} was found in a Json request payload. Stream properties are only supported in responses."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StreamPropertyInRequest(object p0)
+        internal static string ODataJsonResourceDeserializer_StreamPropertyInRequest(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyInRequest, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_StreamPropertyInRequest, p0);
         }
 
         /// <summary>
         /// A string like "The stream property '{0}' has a property annotation '{1}'. Stream property can only have the 'odata.mediaEditLink', 'odata.mediaReadLink', 'odata.mediaEtag' and 'odata.mediaContentType' property annotations."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedStreamPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedStreamPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "A stream property '{0}' has a value in the payload. In OData, stream property must not have a value, it must only use property annotations."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StreamPropertyWithValue(object p0)
+        internal static string ODataJsonResourceDeserializer_StreamPropertyWithValue(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StreamPropertyWithValue, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_StreamPropertyWithValue, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Deferred navigation links can only have the 'odata.navigationLink' and 'odata.associationLink' property annotations."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedDeferredLinkPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartObject' node or 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_CannotReadSingletonNestedResource(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadSingletonNestedResource, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_CannotReadSingletonNestedResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the contents of the property '{1}'; however, a 'StartArray' node was expected."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_CannotReadCollectionNestedResource(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadCollectionNestedResource, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_CannotReadCollectionNestedResource, p0, p1);
         }
 
         /// <summary>
         /// A string like "A 'PrimitiveValue' node with non-null value was found when trying to read the value of the property '{0}'; however, a 'StartArray' node, a 'StartObject' node, or a 'PrimitiveValue' node with null value was expected."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_CannotReadNestedResource(object p0)
+        internal static string ODataJsonResourceDeserializer_CannotReadNestedResource(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_CannotReadNestedResource, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_CannotReadNestedResource, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Expanded resource navigation links can only have the 'odata.context', 'odata.navigationLink' and 'odata.associationLink' property annotations."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedExpandedSingletonNavigationLinkPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Expanded resource set navigation links can only have the 'odata.context', 'odata.navigationLink', 'odata.associationLink' and 'odata.nextLink' property annotations"
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedExpandedCollectionNavigationLinkPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The property '{0}' has a property annotation '{1}'. The complex collection property can only have the 'odata.count', 'odata.type' and 'odata.nextLink' property annotations."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedComplexCollectionPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "Multiple property annotations '{0}' were found when reading the nested resource '{1}'. Only a single property annotation '{0}' can be specified for a nested resource."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_DuplicateNestedResourceSetAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_DuplicateNestedResourceSetAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property annotation '{0}' was found after the property '{1}' it is annotating. Only the 'odata.nextLink' property annotation can be used after the property it is annotating."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedPropertyAnnotationAfterExpandedResourceSet, p0, p1);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has a property annotation '{1}'. Navigation links in request payloads can only have the '{2}' property annotation."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(object p0, object p1, object p2)
+        internal static string ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation(object p0, object p1, object p2)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation, p0, p1, p2);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_UnexpectedNavigationLinkInRequestPropertyAnnotation, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "The resource reference navigation property '{0}' has a property annotation '{1}' with an array value. Resource reference navigation properties can only have a property annotation '{1}' with a string value."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_ArrayValueForSingletonBindPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The resource set reference navigation property '{0}' has a property annotation '{1}' with a string value. Resource set reference navigation properties can only have a property annotation '{1}' with an array value."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_StringValueForCollectionBindPropertyAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_StringValueForCollectionBindPropertyAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The value of '{0}' property annotation is an empty array. The '{0}' property annotation must have a non-empty array as its value."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_EmptyBindArray(object p0)
+        internal static string ODataJsonResourceDeserializer_EmptyBindArray(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_EmptyBindArray, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_EmptyBindArray, p0);
         }
 
         /// <summary>
         /// A string like "The navigation property '{0}' has no expanded value and no '{1}' property annotation. Navigation property in request without expanded value must have the '{1}' property annotation."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink, p0, p1);
         }
 
         /// <summary>
         /// A string like "The resource reference navigation property '{0}' has both the '{1}' property annotation as well as a value. Resource reference navigation properties can have either '{1}' property annotations or values, but not both."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_SingletonNavigationPropertyWithBindingAndValue, p0, p1);
         }
 
         /// <summary>
         /// A string like "An undeclared property '{0}' which only has property annotations in the payload but no property value was found in the payload. In OData, only declared navigation properties and declared named streams can be represented as properties without values."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType(object p0)
+        internal static string ODataJsonResourceDeserializer_PropertyWithoutValueWithUnknownType(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_PropertyWithoutValueWithUnknownType, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_PropertyWithoutValueWithUnknownType, p0);
         }
 
         /// <summary>
         /// A string like "Encountered the operation '{0}' which can not be resolved to an ODataAction or ODataFunction."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_OperationIsNotActionOrFunction(object p0)
+        internal static string ODataJsonResourceDeserializer_OperationIsNotActionOrFunction(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OperationIsNotActionOrFunction, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_OperationIsNotActionOrFunction, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{0}' properties were found for an operation '{1}'. In OData, an operation can have at most one '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation(object p0, object p1)
+        internal static string ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_MultipleOptionalPropertiesInOperation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_MultipleOptionalPropertiesInOperation, p0, p1);
         }
 
         /// <summary>
         /// A string like "Multiple target bindings encountered for the operation '{0}' but the 'target' property was not found in an operation value. To differentiate between multiple target bindings, each operation value must have exactly one 'target' property."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_OperationMissingTargetProperty(object p0)
+        internal static string ODataJsonResourceDeserializer_OperationMissingTargetProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_OperationMissingTargetProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_OperationMissingTargetProperty, p0);
         }
 
         /// <summary>
-        /// A string like "A metadata reference property was found in a JSON Light request payload. Metadata reference properties are only supported in responses."
+        /// A string like "A metadata reference property was found in a Json request payload. Metadata reference properties are only supported in responses."
         /// </summary>
-        internal static string ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest
+        internal static string ODataJsonResourceDeserializer_MetadataReferencePropertyInRequest
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceDeserializer_MetadataReferencePropertyInRequest);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_MetadataReferencePropertyInRequest);
             }
         }
 
         /// <summary>
         /// A string like "The '{0}' property of the operation '{1}' cannot have a null value."
         /// </summary>
-        internal static string ODataJsonLightValidationUtils_OperationPropertyCannotBeNull(object p0, object p1)
+        internal static string ODataJsonValidationUtils_OperationPropertyCannotBeNull(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValidationUtils_OperationPropertyCannotBeNull, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonValidationUtils_OperationPropertyCannotBeNull, p0, p1);
         }
 
         /// <summary>
         /// A string like "Encountered a reference into metadata '{0}' which does not refer to the known metadata url '{1}'. Open metadata reference properties are not supported."
         /// </summary>
-        internal static string ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported(object p0, object p1)
+        internal static string ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValidationUtils_OpenMetadataReferencePropertyNotSupported, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonValidationUtils_OpenMetadataReferencePropertyNotSupported, p0, p1);
         }
 
         /// <summary>
         /// A string like "A relative URI value '{0}' was specified in the payload, but the {1} annotation is missing from the payload. The payload must only contain absolute URIs or the {1} annotation must be on the payload."
         /// </summary>
-        internal static string ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(object p0, object p1)
+        internal static string ODataJsonDeserializer_RelativeUriUsedWithouODataMetadataAnnotation(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightDeserializer_RelativeUriUsedWithouODataMetadataAnnotation, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonDeserializer_RelativeUriUsedWithouODataMetadataAnnotation, p0, p1);
         }
 
         /// <summary>
         /// A string like "The {0} annotation is missing from the payload."
         /// </summary>
-        internal static string ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload(object p0)
+        internal static string ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightResourceMetadataContext_MetadataAnnotationMustBeInPayload, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceMetadataContext_MetadataAnnotationMustBeInPayload, p0);
         }
 
         /// <summary>
         /// A string like "When trying to read the start of a collection, the expected collection property with name '{0}' was not found."
         /// </summary>
-        internal static string ODataJsonLightCollectionDeserializer_ExpectedCollectionPropertyNotFound(object p0)
+        internal static string ODataJsonCollectionDeserializer_ExpectedCollectionPropertyNotFound(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightCollectionDeserializer_ExpectedCollectionPropertyNotFound, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonCollectionDeserializer_ExpectedCollectionPropertyNotFound, p0);
         }
 
         /// <summary>
         /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the items of a collection; however, a 'StartArray' node was expected."
         /// </summary>
-        internal static string ODataJsonLightCollectionDeserializer_CannotReadCollectionContentStart(object p0)
+        internal static string ODataJsonCollectionDeserializer_CannotReadCollectionContentStart(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightCollectionDeserializer_CannotReadCollectionContentStart, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonCollectionDeserializer_CannotReadCollectionContentStart, p0);
         }
 
         /// <summary>
         /// A string like "A property or annotation for a property with name '{0}' or an instance annotation with name '{0}' was found after reading the items of a top-level collection. No additional properties or annotations are allowed after the collection property."
         /// </summary>
-        internal static string ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd(object p0)
+        internal static string ODataJsonCollectionDeserializer_CannotReadCollectionEnd(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightCollectionDeserializer_CannotReadCollectionEnd, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonCollectionDeserializer_CannotReadCollectionEnd, p0);
         }
 
         /// <summary>
         /// A string like "An 'odata.type' annotation with value '{0}' was found for a top-level collection payload; however, top-level collections must specify a collection type."
         /// </summary>
-        internal static string ODataJsonLightCollectionDeserializer_InvalidCollectionTypeName(object p0)
+        internal static string ODataJsonCollectionDeserializer_InvalidCollectionTypeName(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightCollectionDeserializer_InvalidCollectionTypeName, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonCollectionDeserializer_InvalidCollectionTypeName, p0);
         }
 
         /// <summary>
-        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of an entity reference link. In JSON Light, entity reference links must be objects."
+        /// A string like "A node of type '{0}' was read from the JSON reader when trying to read the start of an entity reference link. In Json, entity reference links must be objects."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue, p0);
         }
 
         /// <summary>
         /// A string like "A property annotation with name '{0}' was detected when reading an entity reference link; entity reference links do not support property annotations."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink, p0);
         }
 
         /// <summary>
         /// A string like "An instance annotation with name '{0}' or a property annotation for the property with name '{0}' was found when reading an entity reference link. No OData property or instance annotations are allowed when reading entity reference links."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink, p0);
         }
 
         /// <summary>
         /// A string like "A property with name '{0}' was found when reading an entity reference link. No properties other than the entity reference link property with name '{1}' are allowed."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(object p0, object p1)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink, p0, p1);
         }
 
         /// <summary>
         /// A string like "The required property '{0}' for an entity reference link was not found."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{0}' properties were found in an entity reference link object; however, a single '{0}' property was expected."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink, p0);
         }
 
         /// <summary>
         /// A string like "The '{0}' property of an entity reference link object cannot have a null value."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull, p0);
         }
 
         /// <summary>
         /// A string like "A property annotation was found for entity reference links; however, entity reference links only support instance annotations."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks
+        internal static string ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks);
             }
         }
 
         /// <summary>
         /// A string like "A property with name '{0}' or a property annotation for a property with name '{0}' was found when trying to read a collection of entity reference links; however, a property with name '{1}' was expected."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound(object p0, object p1)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound, p0, p1);
         }
 
         /// <summary>
         /// A string like "A property annotation for a property with name '{0}' was found when reading an entity reference links payload. No property annotations, only instance annotations are allowed when reading entity reference links."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks, p0);
         }
 
         /// <summary>
         /// A string like "Did not find the required '{0}' property for an entity reference links payload."
         /// </summary>
-        internal static string ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound(object p0)
+        internal static string ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound, p0);
         }
 
         /// <summary>
@@ -4766,132 +4766,132 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Multiple '{0}' properties were found in a service document. In OData, a service document must have exactly one '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{0}' properties were found in a service document element. In OData, a service document element must have exactly one '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement, p0);
         }
 
         /// <summary>
         /// A string like "No '{0}' property was found for a service document. In OData, a service document must have exactly one '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_MissingValuePropertyInServiceDocument(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_MissingValuePropertyInServiceDocument, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument, p0);
         }
 
         /// <summary>
         /// A string like "Encountered a service document element without a '{0}' property. In service documents, service document elements must contain a '{0}' property."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement, p0);
         }
 
         /// <summary>
         /// A string like "An unrecognized property annotation '{0}' was found in a '{1}' object in a service document. OData property annotations are not allowed in workspaces."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocument(object p0, object p1)
+        internal static string ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocument, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument, p0, p1);
         }
 
         /// <summary>
         /// A string like "An unrecognized instance annotation '{0}' was found in a '{1}' object in a service document. OData instance annotations are not allowed in workspaces."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocument(object p0, object p1)
+        internal static string ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocument, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument, p0, p1);
         }
 
         /// <summary>
         /// A string like "An unrecognized property annotation '{0}' was found in a service document element. OData property annotations are not allowed in service document elements."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement, p0);
         }
 
         /// <summary>
         /// A string like "An unrecognized instance annotation '{0}' was found in a service document element. OData instance annotations are not allowed in service document elements."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement, p0);
         }
 
         /// <summary>
         /// A string like "Encountered unexpected property '{0}' in a service document element. In service documents, service document element may only have '{1}' and '{2}' properties."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement(object p0, object p1, object p2)
+        internal static string ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement(object p0, object p1, object p2)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement, p0, p1, p2);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "Encountered unexpected property '{0}' in a service document. The top level object of a service document may only have a '{1}' property."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument(object p0, object p1)
+        internal static string ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument, p0, p1);
         }
 
         /// <summary>
         /// A string like "Encountered a property annotation for the property '{0}' which wasn't immediately followed by the property. Property annotations must occur directly before the property being annotated."
         /// </summary>
-        internal static string ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(object p0)
+        internal static string ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty, p0);
         }
 
         /// <summary>
         /// A string like "An OData property annotation was found for a parameter payload; however, parameter payloads do not support OData property annotations."
         /// </summary>
-        internal static string ODataJsonLightParameterDeserializer_PropertyAnnotationForParameters
+        internal static string ODataJsonParameterDeserializer_PropertyAnnotationForParameters
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightParameterDeserializer_PropertyAnnotationForParameters);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonParameterDeserializer_PropertyAnnotationForParameters);
             }
         }
 
         /// <summary>
         /// A string like "One or more property annotations for property '{0}' were found in a parameter payload without the property to annotate. Parameter payloads must not contain property annotations for properties that are not in the payload."
         /// </summary>
-        internal static string ODataJsonLightParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters(object p0)
+        internal static string ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonParameterDeserializer_PropertyAnnotationWithoutPropertyForParameters, p0);
         }
 
         /// <summary>
-        /// A string like "The parameter '{0}' is of the '{1}' primitive type, which is not supported in JSON Light."
+        /// A string like "The parameter '{0}' is of the '{1}' primitive type, which is not supported in Json."
         /// </summary>
-        internal static string ODataJsonLightParameterDeserializer_UnsupportedPrimitiveParameterType(object p0, object p1)
+        internal static string ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightParameterDeserializer_UnsupportedPrimitiveParameterType, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonParameterDeserializer_UnsupportedPrimitiveParameterType, p0, p1);
         }
 
         /// <summary>
-        /// A string like "When trying to read a null collection parameter value in JSON Light, a node of type '{0}' with the value '{1}' was read from the JSON reader; however, a primitive 'null' value was expected."
+        /// A string like "When trying to read a null collection parameter value in Json, a node of type '{0}' with the value '{1}' was read from the JSON reader; however, a primitive 'null' value was expected."
         /// </summary>
-        internal static string ODataJsonLightParameterDeserializer_NullCollectionExpected(object p0, object p1)
+        internal static string ODataJsonParameterDeserializer_NullCollectionExpected(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightParameterDeserializer_NullCollectionExpected, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonParameterDeserializer_NullCollectionExpected, p0, p1);
         }
 
         /// <summary>
         /// A string like "The parameter '{0}' is of an unsupported type kind '{1}'. Only primitive, enum, complex, primitive collection, enum collection and complex collection types are supported."
         /// </summary>
-        internal static string ODataJsonLightParameterDeserializer_UnsupportedParameterTypeKind(object p0, object p1)
+        internal static string ODataJsonParameterDeserializer_UnsupportedParameterTypeKind(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightParameterDeserializer_UnsupportedParameterTypeKind, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonParameterDeserializer_UnsupportedParameterTypeKind, p0, p1);
         }
 
         /// <summary>
@@ -4919,33 +4919,33 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "An OData property annotation '{0}' was found in an error payload; however, error payloads do not support OData property annotations."
         /// </summary>
-        internal static string ODataJsonLightErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(object p0)
+        internal static string ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload, p0);
         }
 
         /// <summary>
         /// A string like "An OData instance annotation '{0}' was found in an error payload; however, error payloads do not support OData instance annotations."
         /// </summary>
-        internal static string ODataJsonLightErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(object p0)
+        internal static string ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload, p0);
         }
 
         /// <summary>
         /// A string like "One or more property annotations for property '{0}' were found in an error payload without the property to annotate. Error payloads must not contain property annotations for properties that are not in the payload."
         /// </summary>
-        internal static string ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError(object p0)
+        internal static string ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightErrorDeserializer_PropertyAnnotationWithoutPropertyForError, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError, p0);
         }
 
         /// <summary>
         /// A string like "A property with name '{0}' was found in the error value of a top-level error. In OData, a top-level error value can only have properties with name 'code', 'message', or 'innererror', or custom instance annotations."
         /// </summary>
-        internal static string ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty(object p0)
+        internal static string ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightErrorDeserializer_TopLevelErrorValueWithInvalidProperty, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty, p0);
         }
 
         /// <summary>
@@ -5069,22 +5069,22 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "A type name was not provided for an instance of ODataCollectionValue."
         /// </summary>
-        internal static string ODataJsonLightValueSerializer_MissingTypeNameOnCollection
+        internal static string ODataJsonValueSerializer_MissingTypeNameOnCollection
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingTypeNameOnCollection);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonValueSerializer_MissingTypeNameOnCollection);
             }
         }
 
         /// <summary>
         /// A string like "A raw value was not provided for an instance of ODataUntypedValue."
         /// </summary>
-        internal static string ODataJsonLightValueSerializer_MissingRawValueOnUntyped
+        internal static string ODataJsonValueSerializer_MissingRawValueOnUntyped
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonLightValueSerializer_MissingRawValueOnUntyped);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonValueSerializer_MissingRawValueOnUntyped);
             }
         }
 

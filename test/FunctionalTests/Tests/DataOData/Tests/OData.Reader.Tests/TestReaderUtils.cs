@@ -216,12 +216,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 payloadElementToSerialize = payloadElementToSerialize.DeepCopy();
 
                 // Annotate elements with version and response/request as appropriate
-                PayloadFormatVersionAnnotatingVisitor.AnnotateJsonLight(
+                PayloadFormatVersionAnnotatingVisitor.AnnotateJson(
                     payloadElementToSerialize,
                     testConfiguration.Version.ToDataServiceProtocolVersion(),
                     testConfiguration.IsRequest);
 
-                payloadSerializer = new JsonPayloadSerializer(settings.PayloadElementToJsonLightConverter.ConvertToJsonLight);
+                payloadSerializer = new JsonPayloadSerializer(settings.PayloadElementToJsonConverter.ConvertToJson);
             }
             else if (testConfiguration.Format == null)
             {

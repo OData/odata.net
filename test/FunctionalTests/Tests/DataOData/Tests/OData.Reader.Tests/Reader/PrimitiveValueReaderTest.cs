@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Reader.Tests;
-    using Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight;
+    using Microsoft.Test.Taupo.OData.Reader.Tests.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     using TestModels = Microsoft.Test.OData.Utils.Metadata.TestModels;
     using Microsoft.OData.Edm;

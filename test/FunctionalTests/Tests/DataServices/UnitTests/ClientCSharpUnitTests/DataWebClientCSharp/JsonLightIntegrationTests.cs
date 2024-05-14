@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightIntegrationTests.cs" company="Microsoft">
+// <copyright file="JsonIntegrationTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -28,7 +28,7 @@ namespace AstoriaUnitTests.Tests
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     [Ignore] // Remove Atom
     // [TestClass]
-    public class JsonLightIntegrationTests
+    public class JsonIntegrationTests
     {
         [TestMethod]
         public void SimpleQuery()
@@ -74,7 +74,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                JsonLightTestUtil.ConfigureContextForJsonLight(ctx);
+                JsonTestUtil.ConfigureContextForJson(ctx);
 
                 var query = ctx.CreateQuery<Customer>("Customers");
                 var customer = query.First();
@@ -116,7 +116,7 @@ namespace AstoriaUnitTests.Tests
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
 
-                JsonLightTestUtil.ConfigureContextForJsonLight(ctx);
+                JsonTestUtil.ConfigureContextForJson(ctx);
 
                 ConfigureContextForSendingRequest2Verification(ctx);
 
@@ -858,7 +858,7 @@ namespace AstoriaUnitTests.Tests
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
                 ctx.MergeOption = mergeOption;
 
-                JsonLightTestUtil.ConfigureContextForJsonLight(ctx);
+                JsonTestUtil.ConfigureContextForJson(ctx);
 
                 ConfigureContextForSendingRequest2Verification(ctx);
 
@@ -868,7 +868,7 @@ namespace AstoriaUnitTests.Tests
 
         private static void ConfigureContextForSendingRequest2Verification(DataServiceContext context)
         {
-            context.SendingRequest2 += VerifyJsonLightRequestHeaders;
+            context.SendingRequest2 += VerifyJsonRequestHeaders;
         }
 
         private static void ConfigureReadStreamUri(DSPServiceDefinition service, string resourceSetName, string resourceTypeName, string namedStreamPropertyName)
@@ -918,7 +918,7 @@ namespace AstoriaUnitTests.Tests
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
                 ctx.MergeOption = mergeOption;
 
-                JsonLightTestUtil.ConfigureContextForJsonLight(ctx);
+                JsonTestUtil.ConfigureContextForJson(ctx);
 
                 ConfigureContextForSendingRequest2Verification(ctx);
 
@@ -926,7 +926,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        private static void VerifyJsonLightRequestHeaders(object sender, SendingRequest2EventArgs args)
+        private static void VerifyJsonRequestHeaders(object sender, SendingRequest2EventArgs args)
         {
             var requestMessage = args.RequestMessage;
             string accept = requestMessage.GetHeader("Accept");

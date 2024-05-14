@@ -1505,11 +1505,11 @@ namespace AstoriaUnitTests.Tests.Server
                 request.HttpMethod = "POST";
                 request.RequestUriString = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveCollection_Primitive";
 
-                request.Accept = UnitTestsUtil.JsonLightMimeType;
+                request.Accept = UnitTestsUtil.JsonMimeType;
                 request.RequestVersion = "4.0;";
                 request.RequestMaxVersion = "4.0;";
 
-                request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                request.RequestContentType = UnitTestsUtil.JsonMimeType;
                 request.SetRequestStreamAsText("{ \"value2\" : 123 }");
 
                 bool IDataServiceInvokable_Invoke_Called = false;
@@ -1774,7 +1774,7 @@ namespace AstoriaUnitTests.Tests.Server
                 new {
                     RequestUri = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityCollectionWithParam_PrimitiveCollection_Primitive",
                     RequestPayload = "{ \"value1\" : 123, \"value2\" : [] }",
-                    ErrorMsg = "When trying to read a null collection parameter value in JSON Light, a node of type 'PrimitiveValue' with the value '123' was read from the JSON reader; however, a primitive 'null' value was expected.",
+                    ErrorMsg = "When trying to read a null collection parameter value in Json, a node of type 'PrimitiveValue' with the value '123' was read from the JSON reader; however, a primitive 'null' value was expected.",
                     StatusCode = 400,
                     StatusCodeWhenContentTypeNull = 400,
                 },
@@ -1838,7 +1838,7 @@ namespace AstoriaUnitTests.Tests.Server
 
             var service = ActionTests.ModelWithActions();
             service.ForceVerboseErrors = true;
-            var contentTypes = new string[] { UnitTestsUtil.JsonLightMimeType, null };
+            var contentTypes = new string[] { UnitTestsUtil.JsonMimeType, null };
 
             t.TestUtil.RunCombinations(testCases, contentTypes, (testCase, contentType) =>
             {
@@ -1882,8 +1882,8 @@ namespace AstoriaUnitTests.Tests.Server
             });
         }
         [Ignore] // Remove Atom
-        // [TestCategory("Partition1"), TestMethod, Variation("Makes sure in Json Light, always bindable actions are omitted in payload.")]
-        public void JsonLightOmitAlwaysAvailableActionsInEntry()
+        // [TestCategory("Partition1"), TestMethod, Variation("Makes sure in Json, always bindable actions are omitted in payload.")]
+        public void JsonOmitAlwaysAvailableActionsInEntry()
         {
             DSPMetadata metadata = new DSPMetadata("ModelWithActions", "AstoriaUnitTests.Tests.Actions");
 
@@ -1941,7 +1941,7 @@ namespace AstoriaUnitTests.Tests.Server
             };
 
             service.ForceVerboseErrors = true;
-            t.TestUtil.RunCombinations(testCases, new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.JsonMimeType }, (testCase, format) =>
+            t.TestUtil.RunCombinations(testCases, new[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonMimeType, UnitTestsUtil.JsonMimeType }, (testCase, format) =>
             {
                 using (TestWebRequest request = service.CreateForInProcess())
                 {
@@ -1958,15 +1958,15 @@ namespace AstoriaUnitTests.Tests.Server
                     Assert.AreEqual(testCase.ExpectedStatusCode, request.ResponseStatusCode);
 
                     string responsePayload = request.GetResponseStreamAsText();
-                    if (format == UnitTestsUtil.JsonMimeType || format == UnitTestsUtil.JsonLightMimeType)
+                    if (format == UnitTestsUtil.JsonMimeType || format == UnitTestsUtil.JsonMimeType)
                     {
-                        Assert.IsTrue(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.SometimesBindableAction"), "Sometimes bindable actions should be in the JsonLight payload.");
-                        Assert.IsFalse(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.AlwaysBindableAction"), "Always bindable actions should be omitted from the JsonLight payload.");
+                        Assert.IsTrue(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.SometimesBindableAction"), "Sometimes bindable actions should be in the Json payload.");
+                        Assert.IsFalse(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.AlwaysBindableAction"), "Always bindable actions should be omitted from the Json payload.");
                     }
                     else
                     {
                         Assert.IsTrue(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.SometimesBindableAction"), "Sometimes bindable actions should be in the payload.");
-                        Assert.IsTrue(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.AlwaysBindableAction"), "Always bindable actions should be in the non-JsonLight payload.");
+                        Assert.IsTrue(responsePayload.Contains("AstoriaUnitTests.Tests.Actions.AlwaysBindableAction"), "Always bindable actions should be in the non-Json payload.");
                     }
                 }
             });
@@ -2038,8 +2038,8 @@ namespace AstoriaUnitTests.Tests.Server
                 {
                     request.HttpMethod = "POST";
                     request.RequestUriString = testCase.RequestUri;
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SetRequestStreamAsText(testCase.Payload);
 
                     t.TestUtil.RunCatching(request.SendRequest);
@@ -2783,7 +2783,7 @@ namespace AstoriaUnitTests.Tests.Server
             {
                 request.HttpMethod = "POST";
                 request.RequestUriString = "/Set/AstoriaUnitTests.Tests.Actions.ActionOnEntityQueryable_Void?Query-String-Header-Force-Error=yes";
-                request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                request.RequestContentType = UnitTestsUtil.JsonMimeType;
                 request.SetRequestStreamAsText(string.Empty);
 
                 Exception e = t.TestUtil.RunCatching(request.SendRequest);
@@ -3827,14 +3827,14 @@ namespace AstoriaUnitTests.Tests.Server
                     request.HttpMethod = "POST";
                     request.RequestUriString = testCase.RequestUri;
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     if (testCase.RequestPayload == null)
                     {
                         request.RequestContentLength = 0;
                     }
                     else
                     {
-                        request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                        request.RequestContentType = UnitTestsUtil.JsonMimeType;
                         request.SetRequestStreamAsText(testCase.RequestPayload);
                     }
 
@@ -3912,7 +3912,7 @@ namespace AstoriaUnitTests.Tests.Server
                     request.HttpMethod = "POST";
                     request.RequestUriString = testCase.RequestUri;
 
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.RequestContentLength = 0;
                     request.SendRequest();
 
@@ -4657,7 +4657,7 @@ namespace AstoriaUnitTests.Tests.Server
                 {
                     request.HttpMethod = testCase.HttpMethod;
                     request.RequestUriString = testCase.RequestUri;
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
                     request.SetRequestStreamAsText(testCase.RequestPayload ?? string.Empty);
 
                     Exception e = t.TestUtil.RunCatching(request.SendRequest);

@@ -24,10 +24,10 @@ namespace Microsoft.Test.Taupo.OData.Json.TextAnnotations
         /// Returns the default text annotation for a specified primitive value.
         /// </summary>
         /// <param name="primitiveValue">The primitive value.</param>
-        /// <param name="writingJsonLight">true if we're writing JSON light, false otherwise.</param>
+        /// <param name="writingJson">true if we're writing Json, false otherwise.</param>
         /// <param name="isIeee754Compatible">if it is IEEE754Compatible</param>
         /// <returns>The default text representation of the primitive value.</returns>
-        public static JsonPrimitiveValueTextAnnotation GetDefault(JsonPrimitiveValue primitiveValue, bool writingJsonLight, bool isIeee754Compatible)
+        public static JsonPrimitiveValueTextAnnotation GetDefault(JsonPrimitiveValue primitiveValue, bool writingJson, bool isIeee754Compatible)
         {
             string result = null;
 
@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Json.TextAnnotations
                         {
                             result = XmlConvert.ToString(doubleValue);
 
-                            if (writingJsonLight && result.IndexOfAny(new char[] {'e', 'E', '.'}) < 0)
+                            if (writingJson && result.IndexOfAny(new char[] {'e', 'E', '.'}) < 0)
                             {
                                 result += ".0";
                             }

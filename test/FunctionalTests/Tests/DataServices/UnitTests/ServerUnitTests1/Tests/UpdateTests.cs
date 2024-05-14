@@ -49,7 +49,7 @@ namespace AstoriaUnitTests.Tests
             {
                 string jsonPayLoad = "{ }";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayLoad, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
+                VerifyInvalidRequestForVariousProviders(jsonPayLoad, "/Customers", UnitTestsUtil.JsonMimeType, "POST", 400);
 
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
                     "<entry xml:base=\"/\" xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" xmlns:adsm=\"http://docs.oasis-open.org/odata/ns/metadata\" xmlns=\"http://www.w3.org/2005/Atom\" />";
@@ -233,7 +233,7 @@ namespace AstoriaUnitTests.Tests
                                   typeof(Customer).FullName)};
 
                 DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, atomXPaths);
-                DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, jsonLiteXPaths);
+                DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonMimeType, payloadGenerator, jsonLiteXPaths);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -272,7 +272,7 @@ namespace AstoriaUnitTests.Tests
                 #endregion
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, new KeyValuePair<string, string[]>[] { atomXPaths1, atomXPaths2 }, true/*verifyETag*/);
-                UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2 }, true/*verifyETag*/);
+                UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2 }, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -388,7 +388,7 @@ namespace AstoriaUnitTests.Tests
                 #endregion
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.AtomFormat, payloadGenerator, new KeyValuePair<string, string[]>[] { atomXPaths1, atomXPaths2, atomXPaths3, atomXPaths4, atomXPaths5 }, true/*verifyETag*/);
-                UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonLightMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2, jsonLiteXPaths3, jsonLiteXPaths4, jsonLiteXPaths5 }, true/*verifyETag*/);
+                UnitTestsUtil.DoInsertsForVariousProviders("/Customers", UnitTestsUtil.JsonMimeType, payloadGenerator, new KeyValuePair<string, string[]>[] { jsonLiteXPaths1, jsonLiteXPaths2, jsonLiteXPaths3, jsonLiteXPaths4, jsonLiteXPaths5 }, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -422,12 +422,12 @@ namespace AstoriaUnitTests.Tests
                 #endregion //JsonXPaths
 
                 UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.AtomFormat, payloadBuilder, new KeyValuePair<string, string[]>[] { atomXPath1, atomXPath2 }, false/*verifyETag*/);
-                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteXPath1, jsonLiteXPath2 }, false/*verifyETag*/);
+                UnitTestsUtil.DoInsertsForVariousProviders("/Customers(1)/Orders", UnitTestsUtil.JsonMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteXPath1, jsonLiteXPath2 }, false/*verifyETag*/);
             }
 
             [Ignore]
             // [TestCategory("Partition1"), TestMethod, Variation]
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             public void UpdatePostInsertResourceToCollectionRepeated()
             {
                 AdHocEntityType orderType = new AdHocEntityType()
@@ -511,7 +511,7 @@ namespace AstoriaUnitTests.Tests
                         request.DataServiceType = TestUtil.LoadDerivedTypeFromAssembly(assembly, typeof(System.Data.Objects.ObjectContext));
                         request.RequestUriString = "/Customers";
                         request.HttpMethod = "POST";
-                        request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0];
+                        request.RequestContentType = SerializationFormatData.Json.MimeTypes[0];
 
                         request.SetRequestStreamAsText("{ CustomerID : \"C1\" }");
                         request.SendRequest();
@@ -692,7 +692,7 @@ namespace AstoriaUnitTests.Tests
 
             private static void PerformDeletes(Type contextType, string uri, KeyValuePair<string, int>[] verifyObjectCountForUris, KeyValuePair<string, string>[] headerValues)
             {
-                string responseFormat = UnitTestsUtil.JsonLightMimeType;
+                string responseFormat = UnitTestsUtil.JsonMimeType;
                 WebServerLocation location = WebServerLocation.InProcess;
 
                 int[] objectCountBeforeDelete = null;
@@ -800,15 +800,15 @@ namespace AstoriaUnitTests.Tests
                     "</entry>";
 
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
-                VerifyInvalidRequestForVariousProviders(payLoad, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders(payLoad, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_SpecifyPayLoadWithMetadataInfoOnlyInUpdate()
             {
-                string jsonLightPayload = "{ @odata.type:\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", odata.editlink:\"/Customers(1)\" }";
+                string JsonPayload = "{ @odata.type:\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", odata.editlink:\"/Customers(1)\" }";
 
-                VerifyInvalidRequestForVariousProviders(jsonLightPayload, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders(JsonPayload, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]
@@ -823,7 +823,7 @@ namespace AstoriaUnitTests.Tests
                                     "}" +
                                    "]";
 
-                VerifyInvalidRequestForVariousProviders(payLoad, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
+                VerifyInvalidRequestForVariousProviders(payLoad, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.JsonMimeType, "PUT", 405);
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]
@@ -853,7 +853,7 @@ namespace AstoriaUnitTests.Tests
                         "</entry>" +
                     "</feed>";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
@@ -873,7 +873,7 @@ namespace AstoriaUnitTests.Tests
                             "</adsm:properties></content>" +
                     "</entry>";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
             }
 
@@ -913,7 +913,7 @@ namespace AstoriaUnitTests.Tests
                         "</entry>" +
                     "</feed>";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
@@ -937,7 +937,7 @@ namespace AstoriaUnitTests.Tests
                              };
 
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.AtomFormat, payloadBuilder, atomXPath, true/*verifyETag*/);
-                DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, true/*verifyETag*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(1)", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPath, true/*verifyETag*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -954,7 +954,7 @@ namespace AstoriaUnitTests.Tests
                              };
 
                 DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.AtomFormat, payloadBuilder, atomXPath, false);
-                DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteXPath, false);
+                DoUpdatesForVariousProviders("PATCH", "/Orders(1)", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteXPath, false);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -971,7 +971,7 @@ namespace AstoriaUnitTests.Tests
                    }.AddProperty("Name", "Foo"));
 
                 VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
-                VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders1(payloadBuilder, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -1001,7 +1001,7 @@ namespace AstoriaUnitTests.Tests
                                     JsonValidator.ObjectString) })};
 
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true, true /*verifyUpdateResponse*/);
-                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -1033,7 +1033,7 @@ namespace AstoriaUnitTests.Tests
                         }) };
 
                 DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true, true /*verifyUpdateResponse*/);
-                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(2)", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPath1, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod, Variation]
@@ -1083,7 +1083,7 @@ namespace AstoriaUnitTests.Tests
                             "</link>" +
                         "</entry>";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)", UnitTestsUtil.AtomFormat, "PUT", 400);
             }
             [Ignore] // Remove Atom
@@ -1108,7 +1108,7 @@ namespace AstoriaUnitTests.Tests
                                 })};
 
                 DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)", UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPath1, true/*verifyETag*/);
-                DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)", UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPath1, true/*verifyETag*/);
+                DoUpdatesForVariousProvidersWithOpenMissing("PATCH", "/Customers(1)", UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPath1, true/*verifyETag*/);
             }
 
             internal enum AddressableElementKind
@@ -1268,7 +1268,7 @@ namespace AstoriaUnitTests.Tests
                                     "\r\n </adsm:properties></content>" +
                                     "</entry>";
                             }
-                            else if (format == SerializationFormatData.JsonLight)
+                            else if (format == SerializationFormatData.Json)
                             {
                             }
                             break;
@@ -1497,14 +1497,14 @@ namespace AstoriaUnitTests.Tests
                     {
                         Url = "/Orders(0)/OrderName",
                         Kind = AddressableElementKind.EntityPrimitiveProperty,
-                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonLightMimeType },
+                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonMimeType },
                     },
                     // Open property
                     new PutContentTypeTarget
                     {
                         Url = "/Orders(0)/OpenProperty",
                         Kind = AddressableElementKind.EntityPrimitiveOpenProperty,
-                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonLightMimeType },
+                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonMimeType },
                     },
                     // Declared property value
                     new PutContentTypeTarget
@@ -1525,14 +1525,14 @@ namespace AstoriaUnitTests.Tests
                     {
                         Url = "/Orders(0)",
                         Kind = AddressableElementKind.Entity,
-                        ValidContentTypes = new [] { UnitTestsUtil.AtomFormat, "application/atom+xml;type=entry", UnitTestsUtil.MimeAny, UnitTestsUtil.JsonLightMimeType },
+                        ValidContentTypes = new [] { UnitTestsUtil.AtomFormat, "application/atom+xml;type=entry", UnitTestsUtil.MimeAny, UnitTestsUtil.JsonMimeType },
                     },
                     // Singleton $ref
                     new PutContentTypeTarget
                     {
                         Url = "/Orders(0)/Customer/$ref",
                         Kind = AddressableElementKind.EntityReference,
-                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonLightMimeType },
+                        ValidContentTypes = new [] { UnitTestsUtil.MimeApplicationXml, UnitTestsUtil.MimeTextXml, UnitTestsUtil.JsonMimeType },
                     },
                 };
 
@@ -1541,7 +1541,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "JSON Single property OrderName",
-                        ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
+                        ContentTypes = new [] { UnitTestsUtil.JsonMimeType },
                         Payload = "{ value: 'Foo' }",
                         ValidKinds = new [] {
                             AddressableElementKind.EntityPrimitiveOpenProperty,
@@ -1562,7 +1562,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "JSON Single property OpenProperty",
-                        ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
+                        ContentTypes = new [] { UnitTestsUtil.JsonMimeType },
                         Payload = "{ value: 'Foo' }",
                         ValidKinds = new [] {
                             AddressableElementKind.EntityPrimitiveProperty,
@@ -1608,7 +1608,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "JSON Entity instance with type",
-                        ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
+                        ContentTypes = new [] { UnitTestsUtil.JsonMimeType },
                         Payload = "{ @odata.type: 'AstoriaUnitTests.Stubs.Order' }",
                         ValidKinds = new [] { AddressableElementKind.Entity },
                     },
@@ -1642,7 +1642,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "JSON Entity instance without type",
-                        ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
+                        ContentTypes = new [] { UnitTestsUtil.JsonMimeType },
                         Payload = "{ }",
                         ValidKinds = new [] { AddressableElementKind.Entity },
                     },
@@ -1679,7 +1679,7 @@ namespace AstoriaUnitTests.Tests
                     new PutContentTypePayload
                     {
                         Description = "JSON feed",
-                        ContentTypes = new [] { UnitTestsUtil.JsonLightMimeType },
+                        ContentTypes = new [] { UnitTestsUtil.JsonMimeType },
                         Payload = "[]",
                         ValidKinds = new AddressableElementKind[] { },
                     },
@@ -1801,7 +1801,7 @@ namespace AstoriaUnitTests.Tests
                         "</entry>" +
                     "</feed>";
 
-                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.JsonLightMimeType, "PUT", 405);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.JsonMimeType, "PUT", 405);
                 VerifyInvalidRequestForVariousProviders(atomPayload, "/Customers(1)/BestFriend/Orders", UnitTestsUtil.AtomFormat, "PUT", 405);
             }
             [Ignore] // Remove Atom
@@ -1830,7 +1830,7 @@ namespace AstoriaUnitTests.Tests
                 var jsonLiteUriAndXPath2 = new KeyValuePair<string, string[]>("/Customers(0)", jsonLiteUriAndXPath1.Value);
 
                 DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.AtomFormat, payloadBuilder, new KeyValuePair<string, string[]>[] { atomUriAndXPath1, atomUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
-                DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.JsonLightMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteUriAndXPath1, jsonLiteUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", "/Customers(1)/BestFriend", UnitTestsUtil.JsonMimeType, payloadBuilder, new KeyValuePair<string, string[]>[] { jsonLiteUriAndXPath1, jsonLiteUriAndXPath2 }, true, true /*verifyUpdateResponse*/);
             }
             [Ignore] // Remove Atom
             // [TestCategory("Partition1"), TestMethod]
@@ -1888,7 +1888,7 @@ namespace AstoriaUnitTests.Tests
                         new string[] { String.Format("/{0}/BestFriend[@IsNull='true']", JsonValidator.ObjectString) })};
 
                 DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.AtomFormat, payloadBuilder, atomUriAndXPaths, true, true /*verifyUpdateResponse*/);
-                DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.JsonLightMimeType, payloadBuilder, jsonLiteUriAndXPaths, true, true /*verifyUpdateResponse*/);
+                DoUpdatesForVariousProviders("PATCH", uri, UnitTestsUtil.JsonMimeType, payloadBuilder, jsonLiteUriAndXPaths, true, true /*verifyUpdateResponse*/);
             }
 
             internal static void DoUpdatesForVariousProviders(string method, string uri, string responseFormat, PayloadBuilder payloadBuilder, string[] xPaths, bool verifyETag)
@@ -2012,7 +2012,7 @@ namespace AstoriaUnitTests.Tests
                         new UnitTestsUtil.SendRequestModifier[] { UnitTestsUtil.SendRequestModifier.None, UnitTestsUtil.SendRequestModifier.UseBatchRequest },
                         (responsePreference, httpMethod, sendRequestModifier) =>
                     {
-                        if (responsePreference.HasValue || (String.Equals(responseFormat, UnitTestsUtil.JsonLightMimeType, StringComparison.OrdinalIgnoreCase) && !uri.Contains("$ref")))
+                        if (responsePreference.HasValue || (String.Equals(responseFormat, UnitTestsUtil.JsonMimeType, StringComparison.OrdinalIgnoreCase) && !uri.Contains("$ref")))
                         {
                             if (responsePreference.HasValue && responsePreference.Value)
                             {
@@ -2227,7 +2227,7 @@ namespace AstoriaUnitTests.Tests
                         newAtomXPath = atomOpenTypesXPath;
                     }
 
-                    CustomProviderRequest(providerType, uri, UnitTestsUtil.JsonLightMimeType, newJsonPayload, newJsonXPath, "PUT", true);
+                    CustomProviderRequest(providerType, uri, UnitTestsUtil.JsonMimeType, newJsonPayload, newJsonXPath, "PUT", true);
                     CustomProviderRequest(providerType, uri, UnitTestsUtil.AtomFormat, newAtomPayload, newAtomXPath, "PUT", true);
                 });
             }
@@ -2296,14 +2296,14 @@ namespace AstoriaUnitTests.Tests
                     TestUtil.RunCombinations(new string[] { "PATCH" }, (httpMethod) =>
                     {
                         ReflectionProvider.NumOfTimesIConcurrencyProviderInvoked = 0;
-                        string etag = UnitTestsUtil.GetETagFromResponse(contextType, uri, UnitTestsUtil.JsonLightMimeType);
+                        string etag = UnitTestsUtil.GetETagFromResponse(contextType, uri, UnitTestsUtil.JsonMimeType);
                         KeyValuePair<string, string>[] headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
 
                         // Passing an valid etag
                         UnitTestsUtil.SendRequestAndVerifyXPath(
                             jsonPayload, "/Customers(1)",
                             new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>(uri, jsonXPath) },
-                            typeof(ReflectionProvider), UnitTestsUtil.JsonLightMimeType,
+                            typeof(ReflectionProvider), UnitTestsUtil.JsonMimeType,
                             httpMethod, headers, true);
                         Assert.IsTrue(ReflectionProvider.NumOfTimesIConcurrencyProviderInvoked == 1, "IConcurrencyProvider must be invoked exactly once - 1");
 
@@ -2313,7 +2313,7 @@ namespace AstoriaUnitTests.Tests
                         UnitTestsUtil.SendRequestAndVerifyXPath(
                             jsonPayload, "/Customers(1)",
                             new KeyValuePair<string, string[]>[] { new KeyValuePair<string, string[]>(uri, jsonXPath) },
-                            typeof(ReflectionProvider), UnitTestsUtil.JsonLightMimeType,
+                            typeof(ReflectionProvider), UnitTestsUtil.JsonMimeType,
                             httpMethod, headers, true);
                         Assert.IsTrue(ReflectionProvider.NumOfTimesIConcurrencyProviderInvoked == 1, "IConcurrencyProvider must be invoked exactly once - 2");
                     });

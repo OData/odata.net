@@ -1,32 +1,32 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 4; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 5; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 5; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 6; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 6; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 7; TestConfiguration = Format: JsonLight, Request: True, Synchronous: False
+Combination: 7; TestConfiguration = Format: Json, Request: True, Synchronous: False
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 
-Combination: 8; TestConfiguration = Format: JsonLight, Request: True, Synchronous: True
+Combination: 8; TestConfiguration = Format: Json, Request: True, Synchronous: True
 Model Present: true
 {"primitiveParameter":"StringValue","complexParameter":{"@odata.context":"http://odata.org/test/$metadata#My.NestedAddressType","@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}},"primitiveCollectionParameter":["Value1","Value2","Value3"],"complexCollectionParameter":[{"@odata.type":"#My.NestedAddressType","City":"Redmond ","Street":{"StreetName":"One Redmond Way","Number":1234}}]}
 

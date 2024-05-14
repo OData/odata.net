@@ -24,7 +24,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         /// <param name="verifiers">The resource string verifiers.</param>
         public JsonProtocolQueryVerifier(IAstoriaServiceDescriptor service, IAstoriaStringResourceVerifiers verifiers)
             : base(
-                MimeTypes.ApplicationJsonODataLightStreaming,
+                MimeTypes.ApplicationJsonODataStreaming,
                 service.ServiceUri,
                 service.ConceptualModel.GetMaxProtocolVersion(),
                 verifiers.SystemDataServicesStringVerifier)

@@ -78,7 +78,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
         public void VerifyDoesNotAllowControlInfo()
         {
             // $controlinfo was briefly used for controlling how much metadata a client wanted
-            // in JSON-Light payloads. It was removed and replaced with a parameter in the media type.
+            // in JSON payloads. It was removed and replaced with a parameter in the media type.
             var collection = new NameValueCollection();
             collection.Add("$controlinfo", "value");
             Action action = () => HttpContextServiceHost.VerifyQueryParameters(collection);

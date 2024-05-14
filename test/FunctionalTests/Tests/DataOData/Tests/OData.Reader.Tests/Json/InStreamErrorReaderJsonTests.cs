@@ -18,7 +18,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
     using Microsoft.Test.Taupo.OData.Contracts;
     using Microsoft.Test.Taupo.OData.Contracts.Json;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
     #endregion Namespaces.
 
@@ -92,10 +92,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 
             this.CombinatorialEngineProvider.RunCombinations(
                 errorCases,
-                this.ReaderTestConfigurationProvider.JsonLightFormatConfigurations,
+                this.ReaderTestConfigurationProvider.JsonFormatConfigurations,
                 (errorCase, testConfiguration) =>
                 {
-                    string errorElementName = JsonLightConstants.ODataErrorPropertyName;
+                    string errorElementName = JsonConstants.ODataErrorPropertyName;
 
                     var testCase = new JsonPayloadErrorTestCase
                     {
@@ -108,7 +108,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 
                     var descriptor = testCase.ToEdmPayloadReaderTestDescriptor(this.PayloadTestDescriptorSettings, this.PayloadExpectedResultSettings);
 
-                    // NOTE: payload generation is not supported for JSON Light yet
+                    // NOTE: payload generation is not supported for Json yet
                     var descriptors = testConfiguration.Format == ODataFormat.Json
                         ? new PayloadReaderTestDescriptor[] { descriptor }
                         : this.PayloadGenerator.GenerateReaderPayloads(descriptor);

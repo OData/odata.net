@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightODataPayloadElementExtensions.cs" company="Microsoft">
+// <copyright file="JsonODataPayloadElementExtensions.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
+namespace Microsoft.Test.Taupo.OData.Contracts.Json
 {
     #region Namespaces
     using System.Text;
@@ -18,13 +18,13 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
     using Microsoft.Test.Taupo.Contracts.EntityModel;
     using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.OData.Common;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// Helper extension methods to annotate ODataPayloadElement with JSON Light specific annotations.
     /// </summary>
-    public static class JsonLightODataPayloadElementExtensions
+    public static class JsonODataPayloadElementExtensions
     {
         /// <summary>
         /// Adds a JSON Lite property annotation annotaion to the specified PropertyInstance.
@@ -39,7 +39,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
             ExceptionUtilities.CheckArgumentNotNull(propertyInstance, "propertyInstance");
             ExceptionUtilities.CheckStringArgumentIsNotNullOrEmpty(annotationName, "annotationName");
 
-            propertyInstance.AddAnnotation(new JsonLightPropertyAnnotationAnnotation { AnnotationName = annotationName, AnnotationValue = annotationValue });
+            propertyInstance.AddAnnotation(new JsonPropertyAnnotationAnnotation { AnnotationName = annotationName, AnnotationValue = annotationValue });
             return propertyInstance;
         }
 
@@ -53,10 +53,10 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         public static T WithContextUri<T>(this T payloadElement, string contextUri) where T : ODataPayloadElement
         {
             ExceptionUtilities.CheckArgumentNotNull(payloadElement, "payloadElement");
-            JsonLightContextUriAnnotation annotation = null;
+            JsonContextUriAnnotation annotation = null;
             if (contextUri != null)
             {
-                annotation = new JsonLightContextUriAnnotation() { ContextUri = contextUri };
+                annotation = new JsonContextUriAnnotation() { ContextUri = contextUri };
                 ODataPayloadElementExtensions.SetAnnotation(payloadElement, annotation);
             }
 
@@ -74,7 +74,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         {
             ExceptionUtilities.CheckArgumentNotNull(payloadElement, "payloadElement");
 
-            JsonLightContextUriProjectionAnnotation annotation = new JsonLightContextUriProjectionAnnotation() { ContextUriProjection = contextUriProjection };
+            JsonContextUriProjectionAnnotation annotation = new JsonContextUriProjectionAnnotation() { ContextUriProjection = contextUriProjection };
             ODataPayloadElementExtensions.SetAnnotation(payloadElement, annotation);
             return payloadElement;
         }
@@ -90,7 +90,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
         public static string ContextUri(this ODataPayloadElement payloadElement)
         {
             ExceptionUtilities.CheckArgumentNotNull(payloadElement, "payloadElement");
-            JsonLightContextUriAnnotation contextUriAnnotation = (JsonLightContextUriAnnotation)payloadElement.GetAnnotation(typeof(JsonLightContextUriAnnotation));
+            JsonContextUriAnnotation contextUriAnnotation = (JsonContextUriAnnotation)payloadElement.GetAnnotation(typeof(JsonContextUriAnnotation));
 
             string contextUri = null;
             bool cacheContextUri = false;
@@ -108,14 +108,14 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
                 if (expectedTypeAnnotation != null)
                 {
                     // Construct a context URI from the exptected type annotation
-                    JsonLightMetadataDocumentUriAnnotation metadataDocumentUriAnnotation =
-                        (JsonLightMetadataDocumentUriAnnotation)payloadElement.GetAnnotation(typeof(JsonLightMetadataDocumentUriAnnotation));
+                    JsonMetadataDocumentUriAnnotation metadataDocumentUriAnnotation =
+                        (JsonMetadataDocumentUriAnnotation)payloadElement.GetAnnotation(typeof(JsonMetadataDocumentUriAnnotation));
                     string metadataDocumentUri = metadataDocumentUriAnnotation == null
-                        ? JsonLightConstants.DefaultMetadataDocumentUri.AbsoluteUri
+                        ? JsonConstants.DefaultMetadataDocumentUri.AbsoluteUri
                         : metadataDocumentUriAnnotation.MetadataDocumentUri;
 
                     string projectionString = null;
-                    JsonLightContextUriProjectionAnnotation contextUriProjectionAnnotation = (JsonLightContextUriProjectionAnnotation)payloadElement.GetAnnotation(typeof(JsonLightContextUriProjectionAnnotation));
+                    JsonContextUriProjectionAnnotation contextUriProjectionAnnotation = (JsonContextUriProjectionAnnotation)payloadElement.GetAnnotation(typeof(JsonContextUriProjectionAnnotation));
                     if (contextUriProjectionAnnotation != null)
                     {
                         // If we have a context URI projection, apply it to the context URI if the context URI does not already have one.
@@ -129,7 +129,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
                             if (!hasProjection)
                             {
                                 // Inject the projection string into the context URI
-                                projectionString = JsonLightConstants.ContextUriProjectionStart + projectionString + JsonLightConstants.ContextUriProjectionEnd;
+                                projectionString = JsonConstants.ContextUriProjectionStart + projectionString + JsonConstants.ContextUriProjectionEnd;
                             }
                         }
                     }
@@ -143,7 +143,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.JsonLight
             if (cacheContextUri)
             {
                 payloadElement.WithContextUri(contextUri);
-                payloadElement.RemoveAnnotations(typeof(JsonLightContextUriProjectionAnnotation));
+                payloadElement.RemoveAnnotations(typeof(JsonContextUriProjectionAnnotation));
             }
 
             return contextUri;

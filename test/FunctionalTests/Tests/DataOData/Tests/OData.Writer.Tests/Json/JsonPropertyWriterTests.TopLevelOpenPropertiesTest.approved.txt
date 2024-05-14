@@ -1,0 +1,32 @@
+Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int64","@odata.type":"#Int64","value":42}
+
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int64","value":42}
+
+Combination: 3; TestConfiguration = Format: Json, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int64","@odata.type":"#Int64","value":42}
+
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.Int64","value":42}
+
+Combination: 5; TestConfiguration = Format: Json, Request: True, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
+
+Combination: 6; TestConfiguration = Format: Json, Request: False, Synchronous: True
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
+
+Combination: 7; TestConfiguration = Format: Json, Request: True, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.GeographyPoint","@odata.type":"#GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
+
+Combination: 8; TestConfiguration = Format: Json, Request: False, Synchronous: False
+Model Present: true
+{"@odata.context":"http://odata.org/test/$metadata#Edm.GeographyPoint","value":{"type":"Point","coordinates":[-100.0,32.0],"crs":{"type":"name","properties":{"name":"EPSG:4326"}}}}
+

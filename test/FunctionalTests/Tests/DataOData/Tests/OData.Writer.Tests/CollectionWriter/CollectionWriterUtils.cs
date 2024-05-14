@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.WriterCombinatorialEngine;
@@ -53,8 +53,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             bool writeCollection = items != null;
             items = items ?? new CollectionWriterTestDescriptor.ItemDescription[0];
 
-            string jsonLightResultTemplate;
-            CreateResultTemplates(writeCollection, items, out jsonLightResultTemplate);
+            string JsonResultTemplate;
+            CreateResultTemplates(writeCollection, items, out JsonResultTemplate);
 
             return (testConfiguration) =>
                 {
@@ -62,9 +62,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                     {
                         return new JsonWriterTestExpectedResults(settings)
                         {
-                            Json = jsonLightResultTemplate,
+                            Json = JsonResultTemplate,
                             FragmentExtractor = (result) => errorOnly
-                                ? result.Object().PropertyValue(JsonLightConstants.ODataErrorPropertyName)
+                                ? result.Object().PropertyValue(JsonConstants.ODataErrorPropertyName)
                                 : result.Object().PropertyValue("value"),
                         };
                     }
@@ -235,10 +235,10 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         private static void CreateResultTemplates(
             bool writeCollection,
             IEnumerable<CollectionWriterTestDescriptor.ItemDescription> itemResults,
-            out string jsonLightResultTemplate)
+            out string JsonResultTemplate)
         {
             List<string> xmlLines = new List<string>();
-            List<string> jsonLightLines = new List<string>();
+            List<string> JsonLines = new List<string>();
 
             if (itemResults != null)
             {
@@ -247,8 +247,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
                 foreach (CollectionWriterTestDescriptor.ItemDescription itemResult in itemResults)
                 {
-                    string[] expectedJsonLines = itemResult.ExpectedJsonLightLines;
-                    List<string> jsonLines = jsonLightLines;
+                    string[] expectedJsonLines = itemResult.ExpectedJsonLines;
+                    List<string> jsonLines = JsonLines;
 
                     bool firstLineInItem = true;
 
@@ -291,23 +291,23 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
 
             if (xmlLines.Count == 0)
             {
-                Debug.Assert(jsonLightLines.Count == 0);
+                Debug.Assert(JsonLines.Count == 0);
                 if (!writeCollection)
                 {
-                    jsonLightResultTemplate = null;
+                    JsonResultTemplate = null;
                     return;
                 }
 
                 // no items
 
                 // "["
-                jsonLightLines.Add(@"$(Indent)[");
+                JsonLines.Add(@"$(Indent)[");
 
                 // write the empty line for JSON payloads without items
-                jsonLightLines.Add("$(Indent)$(Indent)" + string.Empty);
+                JsonLines.Add("$(Indent)$(Indent)" + string.Empty);
 
                 // "]"
-                jsonLightLines.Add(@"$(Indent)]");
+                JsonLines.Add(@"$(Indent)]");
 
                 // <value xmlns="odata-metadata-namespace" />
                 xmlLines.Add(@"<{6} xmlns=""{5}"" xmlns:{7}=""{1}""/>");
@@ -316,16 +316,16 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             {
                 // wrap the lines in the array scope
                 // "["
-                jsonLightLines.Insert(0, "$(Indent)[");
+                JsonLines.Insert(0, "$(Indent)[");
 
 
-                for (int i = 1; i < jsonLightLines.Count; ++i)
+                for (int i = 1; i < JsonLines.Count; ++i)
                 {
-                    jsonLightLines[i] = "$(Indent)$(Indent)" + jsonLightLines[i];
+                    JsonLines[i] = "$(Indent)$(Indent)" + JsonLines[i];
                 }
 
                 // "]"
-                jsonLightLines.Add("$(Indent)]");
+                JsonLines.Add("$(Indent)]");
 
                 // wrap the items with the <m:value xmlns="odata-metadata-namespace"> element
                 xmlLines.Insert(0, @"<{6} xmlns=""{5}"" xmlns:{7}=""{1}"">");
@@ -333,7 +333,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
                 // </m:value>
                 xmlLines.Add(@"</{6}>");
             }
-            jsonLightResultTemplate = string.Join("$(NL)", jsonLightLines);
+            JsonResultTemplate = string.Join("$(NL)", JsonLines);
         }
 
         /// <summary>

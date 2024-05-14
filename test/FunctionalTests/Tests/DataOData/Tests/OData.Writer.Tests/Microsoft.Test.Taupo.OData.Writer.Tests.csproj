@@ -93,11 +93,11 @@
     <Compile Include="Fixups\RemoveMLEAnnotation.cs" />
     <Compile Include="Fixups\RemoveTypeNameAnnotationFromComplexInCollection.cs" />
     <Compile Include="Fixups\ReorderProperties.cs" />
-    <Compile Include="JsonLight\JsonLightNavigationLinkWriterTests.cs" />
-    <Compile Include="JsonLight\JsonLightEntryWriterTests.cs" />
-    <Compile Include="JsonLight\JsonLightParameterWriterTests.cs" />
-    <Compile Include="JsonLight\JsonLightPropertyWriterTests.cs" />
-    <Compile Include="JsonLight\JsonLightWriterUtils.cs" />
+    <Compile Include="Json\JsonNavigationLinkWriterTests.cs" />
+    <Compile Include="Json\JsonEntryWriterTests.cs" />
+    <Compile Include="Json\JsonParameterWriterTests.cs" />
+    <Compile Include="Json\JsonPropertyWriterTests.cs" />
+    <Compile Include="Json\JsonWriterUtils.cs" />
     <Compile Include="Json\ODataJsonDateTimeFormat.cs" />
     <Compile Include="ObjectModelToMessageWriter.cs" />
     <Compile Include="ConvertToUriLiteralTests.cs" />
@@ -157,21 +157,6 @@
     <Content Include="CollectionWriter\CollectionWriterTests.HomogeneousCollectionWriterWithoutMetadataTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.OpenPropertiesInEntryTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteFloatingPointValue.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelOpenPropertiesTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.TopLevelSpatialPropertiesTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightPropertyWriterTests.WriteUntypedValueTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="ParameterWriter\ParameterWriterTests.ParameterPayloadTest_withoutModel.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -194,18 +179,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Writer\WriterEntryTests.NullPropertyNameTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.ActionAndFunctionPayloadOrderTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.TopLevelOpenComplexProperties.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.PayloadOrderTest.approved.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="JsonLight\JsonLightEntryWriterTests.SpatialPropertiesInEntryTest.approved.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="ParameterWriter\ParameterWriterTests.FunctionImportNotInModel.approved.txt">

@@ -1142,7 +1142,7 @@ namespace AstoriaUnitTests.Tests
                                 if (testCase.JsonPayload != null)
                                 {
                                     contentText = testCase.JsonPayload;
-                                    contentType = UnitTestsUtil.JsonLightMimeType;
+                                    contentType = UnitTestsUtil.JsonMimeType;
                                 }
 
                                 if (testCase.TextPayload != null)

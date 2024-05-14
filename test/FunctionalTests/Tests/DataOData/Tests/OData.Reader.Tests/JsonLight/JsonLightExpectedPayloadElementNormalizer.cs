@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightExpectedPayloadElementNormalizer.cs" company="Microsoft">
+// <copyright file="JsonExpectedPayloadElementNormalizer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     #region Namespaces
 
@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     /// Fixes certains differences in reported JSON Light payload.
     /// - When navigation link is present, it always has an association link as well (this is because the reader fills in association link to enable templating).
     /// </remarks>
-    public class JsonLightExpectedPayloadElementNormalizer : ODataPayloadElementVisitorBase
+    public class JsonExpectedPayloadElementNormalizer : ODataPayloadElementVisitorBase
     {
         /// <summary>The payload element this normalizer was created for; 
         /// used to detect whether we are visiting the top-level element or not.</summary>
@@ -37,7 +37,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// <param name="rootPayloadElement">The payload element this normalizer was created for; 
         /// used to detect whether we are visiting the top-level element or not.</param>
         /// <param name="testConfig"></param>
-        private JsonLightExpectedPayloadElementNormalizer(ODataPayloadElement rootPayloadElement, ReaderTestConfiguration testConfiguration)
+        private JsonExpectedPayloadElementNormalizer(ODataPayloadElement rootPayloadElement, ReaderTestConfiguration testConfiguration)
         {
             this.rootPayloadElement = rootPayloadElement;
             this.testConfiguration = testConfiguration;
@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// <returns>The normalized payload element.</returns>
         public static ODataPayloadElement Normalize(ODataPayloadElement payloadElement, ReaderTestConfiguration testConfiguration)
         {
-            new JsonLightExpectedPayloadElementNormalizer(payloadElement, testConfiguration).Recurse(payloadElement);
+            new JsonExpectedPayloadElementNormalizer(payloadElement, testConfiguration).Recurse(payloadElement);
             return payloadElement;
         }
 

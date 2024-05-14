@@ -16,7 +16,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     public class ODataFormatWithParametersTests
     {
         private ODataFormatWithParameters metadataFormat;
-        private ODataFormatWithParameters jsonLightFormat;
+        private ODataFormatWithParameters JsonFormat;
 
         [TestInitialize]
         public void Init()
@@ -25,33 +25,33 @@ namespace AstoriaUnitTests.TDD.Tests.Server
             this.metadataFormat = new ODataFormatWithParameters(ODataFormat.Metadata);
 
             // media type with parameters
-            this.jsonLightFormat = new ODataFormatWithParameters(ODataFormat.Json, "application/atom+xml;odata.metadata=minimal");
+            this.JsonFormat = new ODataFormatWithParameters(ODataFormat.Json, "application/atom+xml;odata.metadata=minimal");
         }
 
         [TestMethod]
         public void FormatShouldBeSame()
         {
             this.metadataFormat.Format.Should().BeSameAs(ODataFormat.Metadata);
-            this.jsonLightFormat.Format.Should().BeSameAs(ODataFormat.Json);
+            this.JsonFormat.Format.Should().BeSameAs(ODataFormat.Json);
         }
         
         [TestMethod]
         public void GetParameterValueShouldBeNullIfNotFound()
         {
             this.metadataFormat.GetParameterValue("foo").Should().BeNull();
-            this.jsonLightFormat.GetParameterValue("foo").Should().BeNull();
+            this.JsonFormat.GetParameterValue("foo").Should().BeNull();
         }
 
         [TestMethod]
         public void GetParameterValueShouldReturnValueIfPresent()
         {
-            this.jsonLightFormat.GetParameterValue("odata.metadata").Should().Be("minimal");
+            this.JsonFormat.GetParameterValue("odata.metadata").Should().Be("minimal");
         }
 
         [TestMethod]
         public void GetParameterValueShouldBeCaseInsensitive()
         {
-            this.jsonLightFormat.GetParameterValue("ODatA.mEtaDatA").Should().Be("minimal");
+            this.JsonFormat.GetParameterValue("ODatA.mEtaDatA").Should().Be("minimal");
         }
     }
 }

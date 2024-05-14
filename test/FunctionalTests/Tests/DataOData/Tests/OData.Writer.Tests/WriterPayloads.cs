@@ -21,7 +21,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
     using Microsoft.Test.Taupo.OData.Atom;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Json;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Json;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Atom;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Common;
     using Microsoft.Test.Taupo.OData.Writer.Tests.Json;
@@ -58,7 +58,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                 // Top level entry
                 new WriterPayloadCase<ODataItem>() 
                 { 
-                    JsonLightFragmentExtractor = JsonUtils.UnwrapTopLevelValue
+                    JsonFragmentExtractor = JsonUtils.UnwrapTopLevelValue
                 }
             };
 
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return result.Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName).First();
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Feed with three (identical) entries, picking the second one
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                             Debug.Assert(entries.Count() == 3, "Expected three entries in the feed.");
                             return entries.ElementAt(2);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing a single entry
@@ -121,7 +121,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing a feed with a single entry
@@ -140,7 +140,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomFeedElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing a feed with three entries; picking the second one
@@ -166,7 +166,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Elements(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName)
                                 .ElementAt(2);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing a feed with a single entry;
@@ -194,7 +194,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomFeedElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomEntryElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
             };
 
@@ -229,7 +229,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomFeedElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing the feed
@@ -247,7 +247,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomFeedElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // Top-level entry with an expanded link containing a feed with a single entry;
@@ -273,7 +273,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                                 .Element(TestAtomConstants.ODataMetadataXNamespace + TestAtomConstants.ODataInlineElementName)
                                 .Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomFeedElementName);
                         },
-                        //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                        //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
             };
 
@@ -304,7 +304,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractPropertiesFromEntry(result).Element(TestAtomConstants.ODataXNamespace + property.Name);
                         },
-                    //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                    //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // TODO: Add other interesting payloads for properties - more properties in an entry, inside a complex property, inside a collection of complex and so on
@@ -337,7 +337,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractPropertiesFromEntry(result).Element(TestAtomConstants.ODataXNamespace + property.Name);
                         },
-                    //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                    //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
                 new WriterPayloadCase<ODataItem>() { // Value as item in a collection
                     ShouldSkip = testConfiguration => propertyValue is ODataCollectionValue,
@@ -349,7 +349,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractPropertiesFromEntry(result).Element(TestAtomConstants.ODataXNamespace + property.Name);
                         },
-                    //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+                    //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
                 },
 
                 // TODO: Add other interesting payloads for property values
@@ -391,7 +391,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractNamedStreamLinksFromEntry(result, namedStreamProperty.Name);
                         },
-                    JsonLightFragmentExtractor = (testConfiguration, result) =>
+                    JsonFragmentExtractor = (testConfiguration, result) =>
                         {
                             return new JsonObject().AddProperties(result.Object().GetPropertyAnnotationsAndProperty(namedStreamProperty.Name));
                         },
@@ -437,7 +437,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractNamedStreamLinksFromEntry(result, namedStreamProperty.Name);
                         },
-                    JsonLightFragmentExtractor = (testConfiguration, result) =>
+                    JsonFragmentExtractor = (testConfiguration, result) =>
                         {
                             return new JsonObject().AddProperties(result.Object().GetPropertyAnnotationsAndProperty(namedStreamProperty.Name));
                         },
@@ -471,7 +471,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return TestAtomUtils.ExtractNamedStreamLinksFromEntry(result, namedStreamProperty.Name);
                         },
-                    JsonLightFragmentExtractor = (testConfiguration, result) =>
+                    JsonFragmentExtractor = (testConfiguration, result) =>
                         {
                             return new JsonObject().AddProperties(result.Object().GetPropertyAnnotationsAndProperty(namedStreamProperty.Name));
                         },
@@ -590,9 +590,9 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             public Func<WriterTestConfiguration, XElement, XElement> AtomFragmentExtractor { get; set; }
 
             /// <summary>
-            /// If specified this func will be called to extract the JSON Light fragment from the modified payload such that the original test case can work with the result.
+            /// If specified this func will be called to extract the Json fragment from the modified payload such that the original test case can work with the result.
             /// </summary>
-            public Func<WriterTestConfiguration, JsonValue, JsonValue> JsonLightFragmentExtractor { get; set; }
+            public Func<WriterTestConfiguration, JsonValue, JsonValue> JsonFragmentExtractor { get; set; }
 
             /// <summary>
             /// If specified and the test descriptor has a model, this func is called to build a model for the new test case.
@@ -657,8 +657,8 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
                         {
                             return new JsonWriterTestExpectedResults(jsonResults)
                             {
-                                FragmentExtractor = this.JsonLightFragmentExtractor == null ? jsonResults.FragmentExtractor :
-                                    (result) => jsonResults.FragmentExtractor(this.JsonLightFragmentExtractor(testConfiguration, result)),
+                                FragmentExtractor = this.JsonFragmentExtractor == null ? jsonResults.FragmentExtractor :
+                                    (result) => jsonResults.FragmentExtractor(this.JsonFragmentExtractor(testConfiguration, result)),
                             };
                         }
 

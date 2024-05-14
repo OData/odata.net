@@ -27,9 +27,9 @@ namespace Microsoft.OData.Service.Serializers
         private readonly ODataMessageReader messageReader;
 
         /// <summary>
-        /// Cached value indicating whether the request is JSON Light
+        /// Cached value indicating whether the request is Json
         /// </summary>
-        private bool? isJsonLightRequest = null;
+        private bool? isJsonRequest = null;
 
         /// <summary>
         /// Initializes a new instance of <see cref="ODataMessageReaderDeserializer"/>.
@@ -69,18 +69,18 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Gets a value indicating whether the request is json light
+        /// Gets a value indicating whether the request is Json
         /// </summary>
-        protected override bool IsJsonLightRequest
+        protected override bool IsJsonRequest
         {
             get
             {
-                if (!this.isJsonLightRequest.HasValue)
+                if (!this.isJsonRequest.HasValue)
                 {
-                    this.isJsonLightRequest = ODataUtils.GetReadFormat(this.messageReader) == ODataFormat.Json;
+                    this.isJsonRequest = ODataUtils.GetReadFormat(this.messageReader) == ODataFormat.Json;
                 }
 
-                return this.isJsonLightRequest.Value;
+                return this.isJsonRequest.Value;
             }
         }
 

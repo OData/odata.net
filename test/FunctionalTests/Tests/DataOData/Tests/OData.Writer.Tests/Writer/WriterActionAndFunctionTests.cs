@@ -36,7 +36,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         [InjectDependency(IsRequired = true)]
         public PayloadWriterTestDescriptor.Settings Settings { get; set; }
 
-        private string GetJsonLightForRelGroup(params ODataOperation[] operations)
+        private string GetJsonForRelGroup(params ODataOperation[] operations)
         {
             bool useArray = operations.Length > 1;
             if (operations.Length > 0)
@@ -137,27 +137,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1 },
                     Atom = GetAtom(action_r1_t1),
-                    JsonLight = GetJsonLightForRelGroup(action_r1_t1),
+                    Json = GetJsonForRelGroup(action_r1_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r1_t2 },
                     Atom = GetAtom(action_r1_t1) + GetAtom(action_r1_t2),
-                    JsonLight = GetJsonLightForRelGroup(action_r1_t1, action_r1_t2),
+                    Json = GetJsonForRelGroup(action_r1_t1, action_r1_t2),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r2_t1 },
                     Atom = GetAtom(action_r1_t1) + GetAtom(action_r2_t1),
-                    JsonLight = GetJsonLightForRelGroup(action_r1_t1) + "," + GetJsonLightForRelGroup(action_r2_t1),
+                    Json = GetJsonForRelGroup(action_r1_t1) + "," + GetJsonForRelGroup(action_r2_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r2_t1, action_r1_t2 },
                     Atom = GetAtom(action_r1_t1) + GetAtom(action_r2_t1) + GetAtom(action_r1_t2),
-                    JsonLight = GetJsonLightForRelGroup(action_r1_t1, action_r1_t2) + "," + GetJsonLightForRelGroup(action_r2_t1),
+                    Json = GetJsonForRelGroup(action_r1_t1, action_r1_t2) + "," + GetJsonForRelGroup(action_r2_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r3_t1 },
                     Atom = GetAtom(action_r3_t1),
-                    JsonLight = GetJsonLightForRelGroup(action_r3_t1),
+                    Json = GetJsonForRelGroup(action_r3_t1),
                 },
             };
 
@@ -166,27 +166,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1 },
                     Atom = GetAtom(function_r1_t1),
-                    JsonLight = GetJsonLightForRelGroup(function_r1_t1),
+                    Json = GetJsonForRelGroup(function_r1_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r1_t2 },
                     Atom = GetAtom(function_r1_t1) + GetAtom(function_r1_t2),
-                    JsonLight = GetJsonLightForRelGroup(function_r1_t1, function_r1_t2),
+                    Json = GetJsonForRelGroup(function_r1_t1, function_r1_t2),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r2_t1 },
                     Atom = GetAtom(function_r1_t1) + GetAtom(function_r2_t1),
-                    JsonLight = GetJsonLightForRelGroup(function_r1_t1) + "," + GetJsonLightForRelGroup(function_r2_t1),
+                    Json = GetJsonForRelGroup(function_r1_t1) + "," + GetJsonForRelGroup(function_r2_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r2_t1, function_r1_t2 },
                     Atom = GetAtom(function_r1_t1) + GetAtom(function_r2_t1) + GetAtom(function_r1_t2),
-                    JsonLight = GetJsonLightForRelGroup(function_r1_t1, function_r1_t2) + "," + GetJsonLightForRelGroup(function_r2_t1),
+                    Json = GetJsonForRelGroup(function_r1_t1, function_r1_t2) + "," + GetJsonForRelGroup(function_r2_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r3_t1 },
                     Atom = GetAtom(function_r3_t1),
-                    JsonLight = GetJsonLightForRelGroup(function_r3_t1),
+                    Json = GetJsonForRelGroup(function_r3_t1),
                 },
             };
 
@@ -198,7 +198,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     actionCase.ODataActions,
                     functionCase.ODataFunctions,
                     Atom = string.Concat(actionCase.Atom, functionCase.Atom),
-                    JsonLight = string.Join(",", new[] { actionCase.JsonLight, functionCase.JsonLight }.Where(x => x != null))
+                    Json = string.Join(",", new[] { actionCase.Json, functionCase.Json }.Where(x => x != null))
                 };
 
             EdmModel model = new EdmModel();
@@ -238,7 +238,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                                 Json = string.Join(
                                     "$(NL)",
                                     "{",
-                                    testCase.JsonLight,
+                                    testCase.Json,
                                     "}"),
                                 ExpectedException2 =
                                     entry.Actions != null && entry.Actions.Contains(null)
@@ -293,7 +293,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                             return;
                         }
 
-                        // We need a model, entity set and entity type for JSON Light
+                        // We need a model, entity set and entity type for Json
                         testDescriptor = new PayloadWriterTestDescriptor<ODataItem>(testDescriptor)
                         {
                             Model = model,

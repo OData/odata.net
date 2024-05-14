@@ -1364,10 +1364,10 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             orderEntry.ETag = "orderETag";
             orderEntry.ReadLink = new Uri(myServiceUri + "orderEntryReadLink");
 
-            expectedOrderObject[JsonLightConstants.ODataIdAnnotationName] = orderEntry.Id.ToString();
-            expectedOrderObject[JsonLightConstants.ODataETagAnnotationName] = orderEntry.ETag;
-            expectedOrderObject[JsonLightConstants.ODataEditLinkAnnotationName] = orderEntry.EditLink.AbsoluteUri;
-            expectedOrderObject[JsonLightConstants.ODataReadLinkAnnotationName] = orderEntry.ReadLink.OriginalString;
+            expectedOrderObject[JsonConstants.ODataIdAnnotationName] = orderEntry.Id.ToString();
+            expectedOrderObject[JsonConstants.ODataETagAnnotationName] = orderEntry.ETag;
+            expectedOrderObject[JsonConstants.ODataEditLinkAnnotationName] = orderEntry.EditLink.AbsoluteUri;
+            expectedOrderObject[JsonConstants.ODataReadLinkAnnotationName] = orderEntry.ReadLink.OriginalString;
 
             var orderEntry2Navigation = new ODataNestedResourceInfo()
             {
@@ -1376,14 +1376,14 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 Url = new Uri("Order(-9)/Customer", UriKind.Relative),
                 AssociationLinkUrl = new Uri("Order(-9)/Customer/$ref", UriKind.Relative),
             };
-            expectedOrderObject["Customer" + "@" + JsonLightConstants.ODataNavigationLinkUrlAnnotationName] = "Order(-9)/Customer";
-            expectedOrderObject["Customer" + "@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName] = "Order(-9)/Customer/$ref";
+            expectedOrderObject["Customer" + "@" + JsonConstants.ODataNavigationLinkUrlAnnotationName] = "Order(-9)/Customer";
+            expectedOrderObject["Customer" + "@" + JsonConstants.ODataAssociationLinkUrlAnnotationName] = "Order(-9)/Customer/$ref";
 
             if (hasModel)
             {
                 // Login navigation is not specified by user, thus will not be in no-model result
-                expectedOrderObject["Login" + "@" + JsonLightConstants.ODataNavigationLinkUrlAnnotationName] = orderEntry.ReadLink + "/Login";
-                expectedOrderObject["Login" + "@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName] = orderEntry.ReadLink + "/Login/$ref";
+                expectedOrderObject["Login" + "@" + JsonConstants.ODataNavigationLinkUrlAnnotationName] = orderEntry.ReadLink + "/Login";
+                expectedOrderObject["Login" + "@" + JsonConstants.ODataAssociationLinkUrlAnnotationName] = orderEntry.ReadLink + "/Login/$ref";
             }
 
             return orderEntry2Navigation;
@@ -1508,8 +1508,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
             properties.Add(thumbnailProperty);
             customerEntry.Properties = properties.ToArray();
 
-            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaEditLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).EditLink.AbsoluteUri);
-            expectedCustomerObject.Add("Thumbnail" + JsonLightConstants.ODataMediaReadLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).ReadLink.AbsoluteUri);
+            expectedCustomerObject.Add("Thumbnail" + JsonConstants.ODataMediaEditLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).EditLink.AbsoluteUri);
+            expectedCustomerObject.Add("Thumbnail" + JsonConstants.ODataMediaReadLinkAnnotationName, (thumbnailProperty.Value as ODataStreamReferenceValue).ReadLink.AbsoluteUri);
 
             return thumbnailProperty;
         }
@@ -1518,8 +1518,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             // create navigation and add expected metadata for no-model verification, use non-trival navigation link to verify association link is calculated
             var orderNavigation = new ODataNestedResourceInfo() { Name = "Orders", IsCollection = true, Url = new Uri(ServiceUri + "Customerdf(-9)/MyOrders") };
-            expectedCustomerObject["Orders" + "@" + JsonLightConstants.ODataNavigationLinkUrlAnnotationName] = orderNavigation.Url.AbsoluteUri;
-            expectedCustomerObject["Orders" + "@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName] = ServiceUri + "Customer(-9)/Orders/$ref";
+            expectedCustomerObject["Orders" + "@" + JsonConstants.ODataNavigationLinkUrlAnnotationName] = orderNavigation.Url.AbsoluteUri;
+            expectedCustomerObject["Orders" + "@" + JsonConstants.ODataAssociationLinkUrlAnnotationName] = ServiceUri + "Customer(-9)/Orders/$ref";
             return orderNavigation;
         }
 
@@ -1534,8 +1534,8 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
                 Url = new Uri(myServiceUri + "Customer(-9)/Logins"),
                 AssociationLinkUrl = new Uri(ServiceUri + "Customer(-9)/Logins/$ref"),
             };
-            expectedCustomerObject["Logins" + "@" + JsonLightConstants.ODataNavigationLinkUrlAnnotationName] = expandedLoginsNavigation.Url.AbsoluteUri;
-            expectedCustomerObject["Logins" + "@" + JsonLightConstants.ODataAssociationLinkUrlAnnotationName] = expandedLoginsNavigation.AssociationLinkUrl.AbsoluteUri;
+            expectedCustomerObject["Logins" + "@" + JsonConstants.ODataNavigationLinkUrlAnnotationName] = expandedLoginsNavigation.Url.AbsoluteUri;
+            expectedCustomerObject["Logins" + "@" + JsonConstants.ODataAssociationLinkUrlAnnotationName] = expandedLoginsNavigation.AssociationLinkUrl.AbsoluteUri;
             return expandedLoginsNavigation;
         }
 

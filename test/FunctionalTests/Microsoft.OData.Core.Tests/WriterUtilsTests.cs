@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.JsonLight;
+using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -12,9 +12,9 @@ namespace Microsoft.OData.Tests
 {
     public class WriterUtilsTests
     {
-        private readonly JsonLightTypeNameOracle typeNameOracle = new JsonMinimalMetadataTypeNameOracle();
+        private readonly JsonTypeNameOracle typeNameOracle = new JsonMinimalMetadataTypeNameOracle();
 
-        #region JSON Light ODataValue type name tests
+        #region Json ODataValue type name tests
         [Fact]
         public void TypeNameShouldBeWrittenIfSpatialValueIsMoreDerivedThanMetadataType()
         {
@@ -158,6 +158,6 @@ namespace Microsoft.OData.Tests
                 EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetString(false)),
                 /* isOpenProperty*/ false));
         }
-        #endregion JSON Light ODataValue type name tests
+        #endregion Json ODataValue type name tests
     }
 }

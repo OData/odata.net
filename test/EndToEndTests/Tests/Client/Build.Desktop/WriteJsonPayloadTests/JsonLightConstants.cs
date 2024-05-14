@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightConstants.cs" company="Microsoft">
+// <copyright file="JsonConstants.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -11,7 +11,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
     /// <summary>
     /// Constants for the JSON Lite format.
     /// </summary>
-    public static class JsonLightConstants
+    public static class JsonConstants
     {
         /// <summary>The prefix for OData annotation names.</summary>
         public const string ODataAnnotationNamespacePrefix = "odata.";

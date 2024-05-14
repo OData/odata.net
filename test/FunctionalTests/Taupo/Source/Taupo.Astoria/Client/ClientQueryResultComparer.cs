@@ -364,7 +364,7 @@ namespace Microsoft.Test.Taupo.Astoria.Client
         {
             if (verb == HttpVerb.Post && inputParameters.OfType<BodyOperationParameter>().Any())
             {
-                this.Assert.IsTrue(headers.GetValues(HttpHeaders.ContentType).Contains(MimeTypes.ApplicationJsonLight), string.Format("Unexpected Content-Type header value:{0}", headers.GetValues(HttpHeaders.ContentType)));
+                this.Assert.IsTrue(headers.GetValues(HttpHeaders.ContentType).Contains(MimeTypes.ApplicationJson), string.Format("Unexpected Content-Type header value:{0}", headers.GetValues(HttpHeaders.ContentType)));
             }
             else
             {

@@ -139,9 +139,9 @@ namespace Microsoft.OData.Service
             Version responseVersion = DataServiceDefaultResponseVersion;
 
             Version effectiveMaxResponseVersion = GetEffectiveMaxResponseVersion(maxProtocolVersion, requestMaxVersion);
-            if (ContentTypeUtil.IsResponseMediaTypeJsonLight(acceptableContentTypes, false /*entityTarget*/, effectiveMaxResponseVersion))
+            if (ContentTypeUtil.IsResponseMediaTypeJson(acceptableContentTypes, false /*entityTarget*/, effectiveMaxResponseVersion))
             {
-                Debug.Assert(effectiveMaxResponseVersion >= Version4Dot0, "effectiveMaxResponseVersion should be at least Version3Dot0 to match JSON Light.");
+                Debug.Assert(effectiveMaxResponseVersion >= Version4Dot0, "effectiveMaxResponseVersion should be at least Version3Dot0 to match Json.");
                 responseVersion = Version4Dot0;
             }
 

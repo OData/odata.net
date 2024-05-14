@@ -392,10 +392,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
                 using (this.parent.Assert.WithMessage("Named stream '{0}' did not match expectation", payloadElement.Name))
                 {
                     this.CompareStreamETag(queryStreamValue, payloadElement.ETag);
-                    if (this.parent.ExpectedPayloadOptions.HasFlag(ODataPayloadOptions.IncludeSelfOrEditLink))
-                    {
-                        this.parent.Assert.IsFalse(payloadElement.EditLink == null && payloadElement.SourceLink == null, "At least one link (self/edit) should be present in the response payload");
-                    }
 
                     if (payloadElement.EditLink != null)
                     {

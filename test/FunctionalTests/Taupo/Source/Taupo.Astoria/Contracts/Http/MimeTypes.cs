@@ -64,17 +64,17 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
         /// <summary>
         /// The 'application/json;odata.metadata=minimal' mime type
         /// </summary>
-        public const string ApplicationJsonLight = ApplicationJson + ODataParameterMinimalMetadata;
+        public const string ApplicationJsonOData = ApplicationJson + ODataParameterMinimalMetadata;
 
         /// <summary>
         /// The 'application/json;odata.metadata=minimal;odata.streaming=true' mime type
         /// </summary>
-        public const string ApplicationJsonODataLightStreaming = ApplicationJsonLight + StreamingParameterTrue;
+        public const string ApplicationJsonODataStreaming = ApplicationJsonOData + StreamingParameterTrue;
 
         /// <summary>
         /// The 'application/json;odata.metadata=minimal;odata.streaming=false' mime type
         /// </summary>
-        public const string ApplicationJsonODataLightNonStreaming = ApplicationJsonLight + StreamingParameterFalse;
+        public const string ApplicationJsonODataNonStreaming = ApplicationJsonOData + StreamingParameterFalse;
 
         /// <summary>
         /// The 'application/octet-stream' mime type

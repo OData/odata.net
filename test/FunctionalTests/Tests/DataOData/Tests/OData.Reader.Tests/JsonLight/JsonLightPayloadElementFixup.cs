@@ -1,10 +1,10 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="JsonLightPayloadElementFixup.cs" company="Microsoft">
+// <copyright file="JsonPayloadElementFixup.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
+namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
 {
     using System;
     using System.Collections.Generic;
@@ -18,19 +18,19 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
     using Microsoft.Test.Taupo.Contracts.Types;
     using Microsoft.Test.Taupo.OData.Common;
     using Microsoft.Test.Taupo.OData.Common.Annotations;
-    using Microsoft.Test.Taupo.OData.Contracts.JsonLight;
-    using Microsoft.Test.Taupo.OData.JsonLight;
+    using Microsoft.Test.Taupo.OData.Contracts.Json;
+    using Microsoft.Test.Taupo.OData.Json;
     using EdmConstants = Microsoft.Test.Taupo.OData.Common.EdmConstants;
 
     /// <summary>
     /// Modifies a payload element for use in Json Lite test configurations.
     /// </summary>
-    public class JsonLightPayloadElementFixup : ODataPayloadElementVisitorBase
+    public class JsonPayloadElementFixup : ODataPayloadElementVisitorBase
     {
         private readonly PayloadReaderTestDescriptor testDescriptor;
         private readonly Stack<ODataPayloadElement> payloadElementStack;
 
-        private JsonLightPayloadElementFixup(PayloadReaderTestDescriptor testDescriptor)
+        private JsonPayloadElementFixup(PayloadReaderTestDescriptor testDescriptor)
         {
             this.testDescriptor = testDescriptor;
             this.payloadElementStack = new Stack<ODataPayloadElement>();
@@ -44,7 +44,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         public static void Fixup(PayloadReaderTestDescriptor testDescriptor)
         {
             testDescriptor.PayloadElement = testDescriptor.PayloadElement.DeepCopy();
-            new JsonLightPayloadElementFixup(testDescriptor).Recurse(testDescriptor.PayloadElement);
+            new JsonPayloadElementFixup(testDescriptor).Recurse(testDescriptor.PayloadElement);
         }
 
         /// <summary>
@@ -186,7 +186,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         {
             base.Visit(payloadElement);
 
-            if (this.CurrentElementIsRoot() && payloadElement.GetAnnotation<JsonLightContextUriAnnotation>() == null)
+            if (this.CurrentElementIsRoot() && payloadElement.GetAnnotation<JsonContextUriAnnotation>() == null)
             {
                 var expectedTypeAnnotation = payloadElement.GetAnnotation<ExpectedTypeODataPayloadElementAnnotation>();
                 if (expectedTypeAnnotation == null)
@@ -213,7 +213,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         {
             base.Visit(payloadElement);
 
-            if (this.CurrentElementIsRoot() && payloadElement.GetAnnotation<JsonLightContextUriAnnotation>() == null)
+            if (this.CurrentElementIsRoot() && payloadElement.GetAnnotation<JsonContextUriAnnotation>() == null)
             {
                 var typeAnnotation = payloadElement.Annotations.OfType<ExpectedTypeODataPayloadElementAnnotation>().SingleOrDefault();
                 if (typeAnnotation == null && !string.IsNullOrEmpty(payloadElement.FullTypeName))
@@ -236,7 +236,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         {
             base.Visit(payloadElement);
 
-            if (payloadElement.GetAnnotation<JsonLightContextUriAnnotation>() == null)
+            if (payloadElement.GetAnnotation<JsonContextUriAnnotation>() == null)
             {
                 var typeAnnotation = payloadElement.Annotations.OfType<ExpectedTypeODataPayloadElementAnnotation>().SingleOrDefault();
                 if (typeAnnotation == null && this.payloadElementStack.Count == 1)
@@ -401,10 +401,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         {
             base.Visit(payloadElement);
 
-            var contextUriAnnotation = payloadElement.GetAnnotation<JsonLightContextUriAnnotation>();
+            var contextUriAnnotation = payloadElement.GetAnnotation<JsonContextUriAnnotation>();
             if (contextUriAnnotation == null)
             {
-                payloadElement.AddAnnotation(new JsonLightContextUriAnnotation { ContextUri = JsonLightConstants.DefaultMetadataDocumentUri.OriginalString });
+                payloadElement.AddAnnotation(new JsonContextUriAnnotation { ContextUri = JsonConstants.DefaultMetadataDocumentUri.OriginalString });
             }
         }
 
@@ -450,7 +450,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
         /// </remarks>
         private void AddExpectedTypeToProperty(PropertyInstance property, IEdmTypeReference propertyValueType, Func<IEdmProperty, bool> matchesProperty)
         {
-            if (property.Annotations.OfType<JsonLightContextUriAnnotation>().Any())
+            if (property.Annotations.OfType<JsonContextUriAnnotation>().Any())
             {
                 return;
             }
@@ -590,9 +590,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.JsonLight
                         if (parentType != null &&
                         parentType.IsOpen &&
                         parentType.Properties().All(p => p.Name != property.Name) &&
-                        property.Annotations.OfType<JsonLightPropertyAnnotationAnnotation>().All(a => a.AnnotationName != JsonLightConstants.ODataTypeAnnotationName))
+                        property.Annotations.OfType<JsonPropertyAnnotationAnnotation>().All(a => a.AnnotationName != JsonConstants.ODataTypeAnnotationName))
                         {
-                            property.WithPropertyAnnotation(JsonLightConstants.ODataTypeAnnotationName, propertyTypeName);
+                            property.WithPropertyAnnotation(JsonConstants.ODataTypeAnnotationName, propertyTypeName);
                         }
                     }
 

@@ -124,7 +124,7 @@ namespace AstoriaUnitTests.Tests
                 new DSPUnitTestServiceDefinition[]{ service },
                 testCase.HttpMethods,
                 testCase.RequestUris,
-                new string[] { UnitTestsUtil.JsonLightMimeType },
+                new string[] { UnitTestsUtil.JsonMimeType },
                 ServiceVersion.ValidVersions, // requestDSV
                 ServiceVersion.ValidVersions, // requestMDSV
                 ServiceVersion.ValidVersions, // maxProtocolVersion

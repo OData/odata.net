@@ -93,7 +93,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException });
                 });
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.EntryPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -185,7 +185,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 };
             });
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.NavigationLinkOnlyPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -265,7 +265,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     new ODataResource() { Properties = new ODataProperty[] { testCase.StreamProperty } },
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException }));
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.NamedStreamPayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -361,7 +361,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedODataExceptionMessage = testCase.ExpectedExceptionMessage });
             });
 
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.ValuePayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),
@@ -393,7 +393,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     testConfiguration => new WriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException });
             });
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors.PayloadCases(WriterPayloads.ValuePayloads),
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(tc => false),

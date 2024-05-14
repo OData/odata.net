@@ -1262,7 +1262,7 @@ namespace Microsoft.OData
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         protected virtual void PrepareResourceForWriteStart(ResourceScope resourceScope, ODataResource resource, bool writingResponse, SelectedPropertiesNode selectedProperties)
         {
-            // No-op Atom and Verbose JSON. The JSON Light writer will override this method and inject the appropriate metadata builder
+            // No-op Atom and Verbose JSON. The Json writer will override this method and inject the appropriate metadata builder
             // into the resource before writing.
             // Actually we can inject the metadata builder in here and
             // remove virtual from this method.
@@ -1277,7 +1277,7 @@ namespace Microsoft.OData
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         protected virtual void PrepareDeletedResourceForWriteStart(DeletedResourceScope resourceScope, ODataDeletedResource deletedResource, bool writingResponse, SelectedPropertiesNode selectedProperties)
         {
-            // No-op Atom and Verbose JSON. The JSON Light writer will override this method and inject the appropriate metadata builder
+            // No-op Atom and Verbose JSON. The Json writer will override this method and inject the appropriate metadata builder
             // into the resource before writing.
             // Actually we can inject the metadata builder in here and
             // remove virtual from this method.
@@ -1533,7 +1533,7 @@ namespace Microsoft.OData
             SelectedPropertiesNode selectedProperties)
         {
             // No-op Atom and Verbose JSON.
-            // ODataJsonLightWriter will override this method and inject the appropriate metadata builder
+            // ODataJsonWriter will override this method and inject the appropriate metadata builder
             // into the resource before writing.
             return TaskUtils.CompletedTask;
         }
@@ -1553,7 +1553,7 @@ namespace Microsoft.OData
             SelectedPropertiesNode selectedProperties)
         {
             // No-op Atom and Verbose JSON.
-            // ODataJsonLightWriter will override this method and inject the appropriate metadata builder
+            // ODataJsonWriter will override this method and inject the appropriate metadata builder
             // into the resource before writing.
             return TaskUtils.CompletedTask;
         }

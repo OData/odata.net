@@ -219,7 +219,7 @@ namespace Microsoft.OData.Service.Serializers
                 }
 
                 // make the target link relative
-                this.MakeOperationTargetRelativeFromMetadataUriIfJsonLight(odataAction);
+                this.MakeOperationTargetRelativeFromMetadataUriIfJson(odataAction);
 
                 return true;
             }
@@ -230,11 +230,11 @@ namespace Microsoft.OData.Service.Serializers
 
         /// <summary>
         /// Method modifies the Operation Target Uri to be relative to the metadata uri if the
-        /// Operation Target has the same host as the metadata uri and the format is JSONLight
+        /// Operation Target has the same host as the metadata uri and the format is Json
         /// </summary>
         /// <param name="operation">Operation to update</param>
         [SuppressMessage("DataWeb.Usage", "AC0019:ShouldNotDireclyAccessPayloadMetadataProperties", Justification = "This component is allowed to set these properties as any user specified updates have already occurred.")]
-        private void MakeOperationTargetRelativeFromMetadataUriIfJsonLight(ODataOperation operation)
+        private void MakeOperationTargetRelativeFromMetadataUriIfJson(ODataOperation operation)
         {
             Debug.Assert(operation != null, "operation != null");
 

@@ -1500,7 +1500,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 this.GetNegativeQueryTestsForMissingProperty,
                 context =>
                 {
-                    JsonLightTestUtil.ConfigureContextForJsonLight(context);
+                    JsonTestUtil.ConfigureContextForJson(context);
                     context.MergeOption = MergeOption.AppendOnly;
                 });
         }
@@ -1513,7 +1513,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 this.GetNegativeQueryTestsForMissingProperty,
                 context =>
                 {
-                    JsonLightTestUtil.ConfigureContextForJsonLight(context);
+                    JsonTestUtil.ConfigureContextForJson(context);
                     context.MergeOption = MergeOption.NoTracking;
                 });
         }

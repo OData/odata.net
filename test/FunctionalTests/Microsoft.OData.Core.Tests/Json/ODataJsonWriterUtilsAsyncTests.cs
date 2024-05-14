@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using Microsoft.OData.Json;
-using Microsoft.OData.JsonLight;
 using Xunit;
 
 namespace Microsoft.OData.Tests.Json
@@ -282,7 +281,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     foreach (var annotation in instanceAnnotations)
                     {
-                        await this.jsonWriter.WriteNameAsync(JsonLightConstants.ODataPropertyAnnotationSeparatorChar + annotation.Name);
+                        await this.jsonWriter.WriteNameAsync(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar + annotation.Name);
                         await this.jsonWriter.WritePrimitiveValueAsync(((ODataPrimitiveValue)annotation.Value).Value);
                     }
                 },

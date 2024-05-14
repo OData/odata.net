@@ -1,4 +1,4 @@
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[
@@ -6,7 +6,7 @@ Model Present: false
   ]
 }
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[
@@ -32,7 +32,7 @@ Model Present: false
   </workspace>
 </service>
 
-Combination: 10; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 10; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[
@@ -40,7 +40,7 @@ Model Present: false
   ]
 }
 
-Combination: 12; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 12; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[
@@ -66,7 +66,7 @@ Model Present: false
   </workspace>
 </service>
 
-Combination: 18; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 18; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[
@@ -74,7 +74,7 @@ Model Present: false
   ]
 }
 
-Combination: 20; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 20; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {
   "@odata.context":"http://odata.org/$metadata","value":[

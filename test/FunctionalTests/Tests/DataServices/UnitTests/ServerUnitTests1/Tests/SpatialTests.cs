@@ -353,7 +353,7 @@ namespace AstoriaUnitTests.Tests.Server
 
         private static ResourceVerification GetResourceVerification(string responseFormat, int id, GeographyPropertyValues defaultValues, TestWebRequest request)
         {
-            Assert.IsTrue(responseFormat == UnitTestsUtil.AtomFormat || responseFormat == UnitTestsUtil.JsonLightMimeType, "Response format {0} not recognized in GetResourceVerification.", responseFormat);
+            Assert.IsTrue(responseFormat == UnitTestsUtil.AtomFormat || responseFormat == UnitTestsUtil.JsonMimeType, "Response format {0} not recognized in GetResourceVerification.", responseFormat);
             DSPResourceSerializerFormat payloadFormat = responseFormat == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.Atom : DSPResourceSerializerFormat.Json;
             return new ResourceVerification(request, payloadFormat, id, defaultValues);
         }
@@ -543,7 +543,7 @@ namespace AstoriaUnitTests.Tests.Server
             request.RequestVersion = "4.0;";
             request.RequestMaxVersion = "4.0;";
             request.RequestHeaders["Prefer"] = preferHeader;
-            request.Accept = payloadFormat == DSPResourceSerializerFormat.Atom ? "application/atom+xml,application/xml" : UnitTestsUtil.JsonLightMimeType;
+            request.Accept = payloadFormat == DSPResourceSerializerFormat.Atom ? "application/atom+xml,application/xml" : UnitTestsUtil.JsonMimeType;
             request.RequestContentType = "application/atom+xml";
             request.SetRequestStreamAsText(payload);
 

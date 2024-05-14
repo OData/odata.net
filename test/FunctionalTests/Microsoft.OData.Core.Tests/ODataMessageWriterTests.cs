@@ -8,16 +8,15 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.OData.JsonLight;
-using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
-using Microsoft.OData.Tests.Json;
-using Microsoft.OData.UriParser;
-using Xunit;
 using System.Xml;
 using System.Xml.Linq;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.OData.Json;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Tests.Json;
+using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm.Csdl;
+using Xunit;
 
 #if NETCOREAPP
 using System.Text.Json;
@@ -40,12 +39,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void CreateCollectionWriterWithoutTypeShouldPassForJsonLight()
+        public void CreateCollectionWriterWithoutTypeShouldPassForJson()
         {
             var settings = new ODataMessageWriterSettings();
             settings.SetContentType(ODataFormat.Json);
             var writer = new ODataMessageWriter(new DummyRequestMessage(), settings, new EdmModel());
-            Assert.IsType<ODataJsonLightCollectionWriter>(writer.CreateODataCollectionWriter(null));
+            Assert.IsType<ODataJsonCollectionWriter>(writer.CreateODataCollectionWriter(null));
         }
 
         [Fact]

@@ -13,7 +13,6 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using System.IO;
     using System.Threading.Tasks;
-    using Microsoft.OData.JsonLight;
 
     #endregion Namespaces
 
@@ -886,7 +885,7 @@ namespace Microsoft.OData.Json
             error = new ODataError();
 
             // we expect one of the supported properties for the value (or end-object)
-            ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 // NOTE the Json reader already ensures that the value of a property node is a string
@@ -894,7 +893,7 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.Code))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
                             return false;
                         }
@@ -912,7 +911,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.Message))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.Message))
                         {
                             return false;
                         }
@@ -930,9 +929,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
                             return false;
                         }
@@ -950,9 +949,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorDetailsName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Details))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Details))
                         {
                             return false;
                         }
@@ -967,7 +966,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
                             return false;
                         }
@@ -994,7 +993,7 @@ namespace Microsoft.OData.Json
             this.ReadInternal();
 
             // if we don't find any properties it is not a valid error object
-            return propertiesFoundBitmask != ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            return propertiesFoundBitmask != ODataJsonReaderUtils.ErrorPropertyBitMask.None;
         }
 
         private bool TryReadErrorDetailsPropertyValue(out ICollection<ODataErrorDetail> details)
@@ -1056,7 +1055,7 @@ namespace Microsoft.OData.Json
             detail = new ODataErrorDetail();
 
             // we expect one of the supported properties for the value (or end-object)
-            var propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            var propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 var propertyName = (string)this.currentBufferedNode.Value;
@@ -1064,9 +1063,9 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Code))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
                             return false;
                         }
@@ -1084,9 +1083,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
                             return false;
                         }
@@ -1104,9 +1103,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
                             return false;
                         }
@@ -1169,7 +1168,7 @@ namespace Microsoft.OData.Json
             innerError = new ODataInnerError();
 
             // we expect one of the supported properties for the value (or end-object)
-            ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 // NOTE the Json reader already ensures that the value of a property node is a string
@@ -1178,7 +1177,7 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorInnerErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
                             return false;
                         }
@@ -1196,7 +1195,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorTypeNameName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.TypeName))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.TypeName))
                         {
                             return false;
                         }
@@ -1214,7 +1213,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorStackTraceName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.StackTrace))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.StackTrace))
                         {
                             return false;
                         }
@@ -1232,7 +1231,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorInnerErrorName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(ref propertiesFoundBitmask, ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
                             return false;
                         }
@@ -1424,7 +1423,7 @@ namespace Microsoft.OData.Json
             ODataError error = new ODataError();
 
             // We expect one of the supported properties for the value (or EndObject)
-            ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 // NOTE: The JSON reader already ensures that the value of a property node is a string
@@ -1432,9 +1431,9 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.Code))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
                             return Tuple.Create(false, error);
                         }
@@ -1450,9 +1449,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.Message))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Message))
                         {
                             return Tuple.Create(false, error);
                         }
@@ -1468,9 +1467,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
                             return Tuple.Create(false, error);
                         }
@@ -1486,9 +1485,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorDetailsName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Details))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Details))
                         {
                             return Tuple.Create(false, error);
                         }
@@ -1504,9 +1503,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
                             return Tuple.Create(false, error);
                         }
@@ -1540,7 +1539,7 @@ namespace Microsoft.OData.Json
 
             // If we don't find any properties it is not a valid error object
             return Tuple.Create(
-                propertiesFoundBitmask != ODataJsonLightReaderUtils.ErrorPropertyBitMask.None,
+                propertiesFoundBitmask != ODataJsonReaderUtils.ErrorPropertyBitMask.None,
                 error);
         }
 
@@ -1624,7 +1623,7 @@ namespace Microsoft.OData.Json
             ODataErrorDetail detail = new ODataErrorDetail();
 
             // We expect one of the supported properties for the value (or EndObject)
-            var propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            var propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 var propertyName = (string)this.currentBufferedNode.Value;
@@ -1632,9 +1631,9 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorCodeName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Code))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Code))
                         {
                             return Tuple.Create(false, detail);
                         }
@@ -1650,9 +1649,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorTargetName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.Target))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.Target))
                         {
                             return Tuple.Create(false, detail);
                         }
@@ -1668,9 +1667,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                                 ref propertiesFoundBitmask,
-                                ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
+                                ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
                             return Tuple.Create(false, detail);
                         }
@@ -1737,7 +1736,7 @@ namespace Microsoft.OData.Json
             ODataInnerError innerError = new ODataInnerError();
 
             // We expect one of the supported properties for the value (or EndObject)
-            ODataJsonLightReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonLightReaderUtils.ErrorPropertyBitMask.None;
+            ODataJsonReaderUtils.ErrorPropertyBitMask propertiesFoundBitmask = ODataJsonReaderUtils.ErrorPropertyBitMask.None;
             while (this.currentBufferedNode.NodeType == JsonNodeType.Property)
             {
                 // NOTE: The JSON reader already ensures that the value of a property node is a string
@@ -1746,9 +1745,9 @@ namespace Microsoft.OData.Json
                 switch (propertyName)
                 {
                     case JsonConstants.ODataErrorInnerErrorMessageName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.MessageValue))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.MessageValue))
                         {
                             return Tuple.Create(false, innerError);
                         }
@@ -1764,9 +1763,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorTypeNameName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.TypeName))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.TypeName))
                         {
                             return Tuple.Create(false, innerError);
                         }
@@ -1782,9 +1781,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorStackTraceName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.StackTrace))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.StackTrace))
                         {
                             return Tuple.Create(false, innerError);
                         }
@@ -1800,9 +1799,9 @@ namespace Microsoft.OData.Json
                         break;
 
                     case JsonConstants.ODataErrorInnerErrorInnerErrorName:
-                        if (!ODataJsonLightReaderUtils.ErrorPropertyNotFound(
+                        if (!ODataJsonReaderUtils.ErrorPropertyNotFound(
                             ref propertiesFoundBitmask,
-                            ODataJsonLightReaderUtils.ErrorPropertyBitMask.InnerError))
+                            ODataJsonReaderUtils.ErrorPropertyBitMask.InnerError))
                         {
                             return Tuple.Create(false, innerError);
                         }

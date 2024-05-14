@@ -70,7 +70,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
         {
             this.CombinatorialEngineProvider.RunCombinations(
                 TestCalls,
-                this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest),
+                this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest),
                 new bool[] { false, true },
                 (testCall, testConfiguration, testSynchronousCall) =>
                 {

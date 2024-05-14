@@ -1349,14 +1349,14 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void ExecuteActionParametersErrorTestsWithJsonLight()
+        public void ExecuteActionParametersErrorTestsWithJson()
         {
             RunExecuteActionParametersErrorTests(ODataFormat.Json, (ctx, uri, testCase) => ctx.Execute(uri, testCase.HttpMethod, testCase.Parameters));
         }
 
 
         [TestMethod]
-        public void ExecuteActionParametersErrorTestsAsyncWithJsonLight()
+        public void ExecuteActionParametersErrorTestsAsyncWithJson()
         {
             RunExecuteActionParametersErrorTests(ODataFormat.Json, (ctx, uri, testCase) => ctx.BeginExecute<object>(uri, asyncResult => ctx.EndExecute<object>(asyncResult), null, testCase.HttpMethod, false, testCase.Parameters));
         }
@@ -1384,23 +1384,23 @@ namespace AstoriaUnitTests
         #region Positive Tests
         [Ignore]
         [TestMethod]
-        public void ExecuteActionParametersTestsWithJsonLight()
+        public void ExecuteActionParametersTestsWithJson()
         {
-            // Test all positive test cases for action body parameter serialization with JSON Light.
+            // Test all positive test cases for action body parameter serialization with Json.
             this.RunExecuteActionParameterTests(true, ODataFormat.Json);
         }
 
         [Ignore]
         [TestMethod]
-        public void ExecuteActionParametersTestsAsyncWithJsonLight()
+        public void ExecuteActionParametersTestsAsyncWithJson()
         {
-            // Test all positive test cases for action parameter serialization in async mode with JSON Light.
+            // Test all positive test cases for action parameter serialization in async mode with Json.
             RunExecuteActionParameterTests(false, ODataFormat.Json);
         }
 
         [Ignore]
         [TestMethod]
-        public void ExecuteUriWithExistingEscapedCollectionValueWithJsonLight()
+        public void ExecuteUriWithExistingEscapedCollectionValueWithJson()
         {
             var testCases = new TestCase[]
             {
@@ -1489,9 +1489,9 @@ namespace AstoriaUnitTests
 
         #region Async Cancel Tests
         [TestMethod]
-        public void ExecuteActionParametersTestsAsyncCancelWithJsonLight()
+        public void ExecuteActionParametersTestsAsyncCancelWithJson()
         {
-            // Test that cancelling an async execute works with JSON Light.
+            // Test that cancelling an async execute works with Json.
             this.RunCancelRequestTest(ODataFormat.Json);
         }
 
@@ -1535,9 +1535,9 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void BeginAndEndExecuteErrorTestsWithJsonLight()
+        public void BeginAndEndExecuteErrorTestsWithJson()
         {
-            // Test that incorrectly calling EndExecute throws error with JSON Light.
+            // Test that incorrectly calling EndExecute throws error with Json.
             this.RunBeginAndEndExecuteErrorTests(ODataFormat.Json);
         }
 
@@ -1621,9 +1621,9 @@ namespace AstoriaUnitTests
         //TODO: Need to update server for serviceoperation parameter
         [Ignore]
         [TestMethod]
-        public void ExecuteServiceOperationTestsWithUriParametersWithJsonLight()
+        public void ExecuteServiceOperationTestsWithUriParametersWithJson()
         {
-            // End-to-End test for uri parameters using service operation with JSON Light.
+            // End-to-End test for uri parameters using service operation with Json.
             RunServiceOperationTestWithUriParameters(ODataFormat.Json);
         }
 
@@ -1707,7 +1707,7 @@ namespace AstoriaUnitTests
         }
 
         [TestMethod]
-        public void PassUriParameterWithoutResolveNameWithJsonLight()
+        public void PassUriParameterWithoutResolveNameWithJson()
         {
             RunPassUriParameterWithoutResolveNameTest(ODataFormat.Json);
         }
@@ -1744,9 +1744,9 @@ namespace AstoriaUnitTests
 
         #region Null values for UriOperationParameter
         [TestMethod]
-        public void ExecuteActionNullUriParameterValueTestsWithJsonLight()
+        public void ExecuteActionNullUriParameterValueTestsWithJson()
         {
-            // Test null values for uri parameter values with JSON Light
+            // Test null values for uri parameter values with Json
             RunExecuteActionNullUriParameterValueTests(ODataFormat.Json);
         }
 

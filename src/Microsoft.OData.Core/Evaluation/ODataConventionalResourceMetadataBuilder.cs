@@ -13,7 +13,7 @@ namespace Microsoft.OData.Evaluation
     using System.Diagnostics.CodeAnalysis;
     using System.Linq;
     using Microsoft.OData.Edm.Vocabularies.V1;
-    using Microsoft.OData.JsonLight;
+    using Microsoft.OData.Json;
     #endregion
 
     /// <summary>
@@ -38,7 +38,7 @@ namespace Microsoft.OData.Evaluation
         protected readonly HashSet<string> ProcessedStreamProperties;
 
         /// <summary>The enumerator for unprocessed navigation links.</summary>
-        private IEnumerator<ODataJsonLightReaderNestedResourceInfo> unprocessedNavigationLinks;
+        private IEnumerator<ODataJsonReaderNestedResourceInfo> unprocessedNavigationLinks;
 
         /// <summary>The enumerator for unprocessed streamProperties.</summary>
         private IEnumerator<string> unprocessedStreamProperties;
@@ -378,14 +378,14 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <returns>Returns the next unprocessed navigation link or null if there's no more navigation links to process.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "A method for consistency with the rest of the API.")]
-        internal override ODataJsonLightReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
+        internal override ODataJsonReaderNestedResourceInfo GetNextUnprocessedNavigationLink()
         {
             if (this.unprocessedNavigationLinks == null)
             {
                 Debug.Assert(this.ResourceMetadataContext != null, "this.resourceMetadataContext != null");
                 this.unprocessedNavigationLinks = this.ResourceMetadataContext.SelectedNavigationProperties
                     .Where(p => !this.ProcessedNestedResourceInfos.Contains(p.Name))
-                    .Select(ODataJsonLightReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
+                    .Select(ODataJsonReaderNestedResourceInfo.CreateProjectedNestedResourceInfo)
                     .GetEnumerator();
             }
 

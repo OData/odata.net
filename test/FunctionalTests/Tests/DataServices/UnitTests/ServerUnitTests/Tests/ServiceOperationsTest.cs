@@ -827,7 +827,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
             foreach (string uri in uriList)
-                foreach (string format in new string[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonLightMimeType })
+                foreach (string format in new string[] { UnitTestsUtil.AtomFormat, UnitTestsUtil.JsonMimeType })
                     foreach (var etagHeader in new KeyValuePair<string, string>[] {
                     new KeyValuePair<string, string>("If-Match", "W/\"foo\""),
                     new KeyValuePair<string, string>("If-None-Match", "W/\"bar\"") })
@@ -986,7 +986,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 SendAndVerifyResults(atomXPaths, uri, UnitTestsUtil.AtomFormat);
-                SendAndVerifyResults(jsonLiteXPaths, uri, UnitTestsUtil.JsonLightMimeType);
+                SendAndVerifyResults(jsonLiteXPaths, uri, UnitTestsUtil.JsonMimeType);
             }
         }
 

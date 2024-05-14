@@ -1,16 +1,16 @@
-Combination: 1; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 1; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata","value":[]}
 
-Combination: 2; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 2; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata","value":[]}
 
-Combination: 3; TestConfiguration = Format: JsonLight, Request: False, Synchronous: False
+Combination: 3; TestConfiguration = Format: Json, Request: False, Synchronous: False
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata","value":[]}
 
-Combination: 4; TestConfiguration = Format: JsonLight, Request: False, Synchronous: True
+Combination: 4; TestConfiguration = Format: Json, Request: False, Synchronous: True
 Model Present: false
 {"@odata.context":"http://odata.org/test/$metadata","value":[]}
 

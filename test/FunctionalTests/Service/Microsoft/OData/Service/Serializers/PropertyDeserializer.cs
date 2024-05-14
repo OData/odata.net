@@ -91,9 +91,9 @@ namespace Microsoft.OData.Service.Serializers
             // V2 Server reads JSON complex values without property wrapper, ODataLib will report these as ODataProperty with empty name, so for those
             //  we need to not compare the property name.
             //
-            // For Json light, we do not validate the property name since in requests we do not parse the metadata URI and thus
+            // For Json, we do not validate the property name since in requests we do not parse the metadata URI and thus
             //   will always report 'value'.
-            if (!this.IsJsonLightRequest && string.CompareOrdinal(segmentInfo.Identifier, property.Name) != 0)
+            if (!this.IsJsonRequest && string.CompareOrdinal(segmentInfo.Identifier, property.Name) != 0)
             {
                 throw DataServiceException.CreateBadRequestError(
                     Microsoft.OData.Service.Strings.PlainXml_IncorrectElementName(segmentInfo.Identifier, property.Name));

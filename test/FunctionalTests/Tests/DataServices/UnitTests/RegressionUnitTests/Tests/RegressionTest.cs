@@ -72,7 +72,7 @@ namespace AstoriaUnitTests.Tests
                         new string[] { String.Format("/{0}[ID=125 and Name='Bar' and odata.type='#{1}']",
                                 JsonValidator.ObjectString,
                                 typeof(CustomerWithoutProperties).FullName) },
-                        typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType);
+                        typeof(CustomDataContext), UnitTestsUtil.JsonMimeType);
                 }
             }
 
@@ -83,7 +83,7 @@ namespace AstoriaUnitTests.Tests
                 using (CustomDataContext.CreateChangeScope())
                 using (TestWebRequest request = TestWebRequest.CreateForLocation(location))
                 {
-                    string responseFormat = UnitTestsUtil.JsonLightMimeType;
+                    string responseFormat = UnitTestsUtil.JsonMimeType;
 
                     Trace.WriteLine("Getting existing customer.../Customers(0)");
                     request.DataServiceType = typeof(CustomDataContext);
@@ -283,7 +283,7 @@ namespace AstoriaUnitTests.Tests
             }
             [Ignore] // Remove Atom
             // [TestMethod, Variation("Assert when an invalid uri is specified for binding in Json")]
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             public void ShouldThrowWhenBindingInvalidUriInJson()
             {
                 //#region jsonPayload and XPaths
@@ -313,9 +313,9 @@ namespace AstoriaUnitTests.Tests
                 using (CustomDataContext.CreateChangeScope())
                 using (ocs.CustomObjectContext.CreateChangeScope())
                 {
-                    // UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "BestFriend"));
+                    // UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "BestFriend"));
                     UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "Orders"));
-                    //UnitTestsUtil.VerifyInvalidRequest(UnitTestsUtil.ConvertReflectionProviderTypesToEdmProviderTypes(jsonPayload), "/Customers", typeof(ocs.CustomObjectContext), UnitTestsUtil.JsonLightMimeType, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "BestFriend"));
+                    //UnitTestsUtil.VerifyInvalidRequest(UnitTestsUtil.ConvertReflectionProviderTypesToEdmProviderTypes(jsonPayload), "/Customers", typeof(ocs.CustomObjectContext), UnitTestsUtil.JsonMimeType, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "BestFriend"));
                     UnitTestsUtil.VerifyInvalidRequest(UnitTestsUtil.ConvertReflectionProviderTypesToEdmProviderTypes(atomPayload), "/Customers", typeof(ocs.CustomObjectContext), UnitTestsUtil.AtomFormat, "POST", 400, DataServicesResourceUtil.GetString("BadRequest_ErrorInSettingPropertyValue", "Orders"));
                 }
             }
@@ -552,12 +552,12 @@ namespace AstoriaUnitTests.Tests
                                             "]" +
                                          "}";
 
-                    UnitTestsUtil.DoInserts(jsonPayload, "/Persons", new string[0], typeof(ocs.CustomManyToManyContainer), UnitTestsUtil.JsonLightMimeType);
+                    UnitTestsUtil.DoInserts(jsonPayload, "/Persons", new string[0], typeof(ocs.CustomManyToManyContainer), UnitTestsUtil.JsonMimeType);
 
                     var uriAndXPathsToVerify = new KeyValuePair<string, string[]>[] {
                         new KeyValuePair<string, string[]>("/Persons(999)/Homes", new string[] { String.Format("count(//{0})=1", JsonValidator.ObjectString) })};
 
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Persons(999)/Homes/$ref?$id=Homes(900)", uriAndXPathsToVerify, typeof(ocs.CustomManyToManyContainer), UnitTestsUtil.JsonLightMimeType, "DELETE", null, false);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Persons(999)/Homes/$ref?$id=Homes(900)", uriAndXPathsToVerify, typeof(ocs.CustomManyToManyContainer), UnitTestsUtil.JsonMimeType, "DELETE", null, false);
                 }
             }
 
@@ -575,10 +575,10 @@ namespace AstoriaUnitTests.Tests
             //            new string[] { String.Format("{0}[value='Foo']", JsonValidator.ObjectString) }) };
 
             //        // Get the etag for Customer(1)
-            //        string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
+            //        string etag = UnitTestsUtil.GetETagFromResponse(typeof(CustomRowBasedOpenTypesContext), "/Customers(1)", UnitTestsUtil.JsonMimeType);
 
             //        var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
-            //        UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonLightMimeType, "PUT", headers, true);
+            //        UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)/Address/StreetAddress", uriAndXPathToVerify, typeof(CustomRowBasedOpenTypesContext), UnitTestsUtil.JsonMimeType, "PUT", headers, true);
             //    }
             //    finally
             //    {
@@ -643,7 +643,7 @@ namespace AstoriaUnitTests.Tests
                         request.RequestStream = null;
                         request.HttpMethod = "GET";
                         request.SendRequest();
-                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonLightMimeType, xpaths);
+                        UnitTestsUtil.VerifyXPaths(request.GetResponseStream(), UnitTestsUtil.JsonMimeType, xpaths);
                     }
                 }
             }
@@ -664,12 +664,12 @@ namespace AstoriaUnitTests.Tests
                     // The changes in the same changeset after the invalid operation must not have been persisted
                     var uriAndXPathsToVerify = new KeyValuePair<string, string[]>[] {
                         new KeyValuePair<string, string[]>("/Orders(1)", new string[] { String.Format("/{0}[ID=1]", JsonValidator.ObjectString) })};
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Orders(1)", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "GET", null, false);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Orders(1)", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "GET", null, false);
 
                     // The changes from the second batch must have been made
                     uriAndXPathsToVerify = new KeyValuePair<string, string[]>[] {
                         new KeyValuePair<string, string[]>("/Orders(0)", new string[] { String.Format("/{0}[DollarAmount=0]", JsonValidator.ObjectString) })};
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Orders(0)", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "GET", null, false);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Orders(0)", uriAndXPathsToVerify, typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "GET", null, false);
                 }
             }
 
@@ -780,7 +780,7 @@ namespace AstoriaUnitTests.Tests
                 string atomPayload = "<?xml version=\"1.0\" encoding=\"utf-8\" standalone=\"yes\"?>" +
                     "<entry xmlns:ads=\"http://docs.oasis-open.org/odata/ns/data\" adsm:null=\"true\" xmlns=\"http://www.w3.org/2005/Atom\" />";
 
-                UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "PUT", 400);
                 UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers(1)", typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "PUT", 400);
             }
             [Ignore] // Remove Atom
@@ -866,8 +866,8 @@ namespace AstoriaUnitTests.Tests
 
                 Type contextType = typeof(TypedCustomDataContext<TestEntity4>);
                 string payload = "{ value : 11 }";
-                UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextType, UnitTestsUtil.JsonLightMimeType, "PUT", 400);
-                UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(2)", contextType, UnitTestsUtil.JsonLightMimeType, "PUT", 400);
+                UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextType, UnitTestsUtil.JsonMimeType, "PUT", 400);
+                UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(2)", contextType, UnitTestsUtil.JsonMimeType, "PUT", 400);
 
                 payload =
                     "<entry xml:base=\"/\" " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1110,7 +1110,7 @@ namespace AstoriaUnitTests.Tests
             [TestMethod, Variation("Updating a key value property directly or setting it to null should throw bad request")]
             public void ShouldThrowWhenUpdatingKeyPropertyOrSettingToNull()
             {
-                UnitTestsUtil.VerifyInvalidRequest("{ value: 2 }", "/Orders(2)/ID", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "PATCH", 400);
+                UnitTestsUtil.VerifyInvalidRequest("{ value: 2 }", "/Orders(2)/ID", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "PATCH", 400);
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Orders(2)/ID/$value", typeof(CustomDataContext), null, "PATCH", 400);
                 UnitTestsUtil.VerifyInvalidRequest(null, "/Orders(2)/ID/$value", typeof(CustomDataContext), null, "DELETE", 400);
             }
@@ -1184,7 +1184,7 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(NorthwindModel.NorthwindContext);
                     request.RequestUriString = "/Customers";
                     request.HttpMethod = "POST";
-                    request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0];
+                    request.RequestContentType = SerializationFormatData.Json.MimeTypes[0];
                     request.SetRequestStreamAsText("{ \"CustomerID\" : \"ALFKI\", \"CompanyName\" : \"foo\" }");
                     Exception exception = TestUtil.RunCatching(request.SendRequest);
                     string response = request.GetResponseStreamAsText();
@@ -1224,7 +1224,7 @@ namespace AstoriaUnitTests.Tests
                     "/Object/value/Array/Object/name[text()='OrderDetails']"
                 };
 
-                UnitTestsUtil.VerifyPayload("", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, null, jsonXPaths);
+                UnitTestsUtil.VerifyPayload("", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, null, jsonXPaths);
             }
 
             [TestMethod, Variation("Make sure that we check for invalid etags and that checks works when we have multiple etag properties")]
@@ -1237,9 +1237,9 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 Type contextType = typeof(TypedCustomDataContext<TestEntity7>);
-                string etagValue = UnitTestsUtil.GetETagFromResponse(contextType, "/Values(1)", UnitTestsUtil.JsonLightMimeType);
+                string etagValue = UnitTestsUtil.GetETagFromResponse(contextType, "/Values(1)", UnitTestsUtil.JsonMimeType);
                 var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-None-Match", etagValue) };
-                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Values(1)", contextType, headers, "GET");
+                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonMimeType, "/Values(1)", contextType, headers, "GET");
                 Assert.AreEqual<int>(request.ResponseStatusCode, (int)HttpStatusCode.NotModified, "this should work");
             }
 
@@ -1258,19 +1258,19 @@ namespace AstoriaUnitTests.Tests
                 ocs.PopulateData.EntityConnection = null;
                 using (EntityConnection connection = ocs.PopulateData.CreateTableAndPopulateData())
                 {
-                    string etag = UnitTestsUtil.GetETagFromResponse(contextType, "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
+                    string etag = UnitTestsUtil.GetETagFromResponse(contextType, "/Customers(1)", UnitTestsUtil.JsonMimeType);
                     var headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
-                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Concurrency/$value", null, contextType, UnitTestsUtil.JsonLightMimeType, "DELETE", headers, true);
-                    etag = UnitTestsUtil.GetETagFromResponse(contextType, "/Customers(1)", UnitTestsUtil.JsonLightMimeType);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(null, "/Customers(1)/Concurrency/$value", null, contextType, UnitTestsUtil.JsonMimeType, "DELETE", headers, true);
+                    etag = UnitTestsUtil.GetETagFromResponse(contextType, "/Customers(1)", UnitTestsUtil.JsonMimeType);
                     headers = new KeyValuePair<string, string>[] { new KeyValuePair<string, string>("If-Match", etag) };
 
                     string payload = "{ @odata.type: '" + UnitTestsUtil.CustomerWithBirthdayTypeName + "' , Concurrency: '123' }";
-                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)", null, contextType, UnitTestsUtil.JsonLightMimeType, "PATCH", headers, true);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Customers(1)", null, contextType, UnitTestsUtil.JsonMimeType, "PATCH", headers, true);
                 }
             }
 
             // [TestMethod, Variation("If the double number has no period in it, json reader fails to read this")]
-            // Todo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // Todo: Fix places where we've lost JsonVerbose coverage to add Json
             [Ignore]
             public void JsonShouldReadDoubleNumberWithoutPeriod()
             {
@@ -1281,15 +1281,15 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 Type contextType = typeof(TypedCustomDataContext<BugBugEntity>);
-                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Values(7E-06)", contextType, null, "GET");
+                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonMimeType, "/Values(7E-06)", contextType, null, "GET");
                 string payload = request.GetResponseStreamAsText();
-                // json light fails here without a model... need to fix the test infrastructure to provide that model.
-                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(7E-06)", null, contextType, UnitTestsUtil.JsonLightMimeType, "PATCH", null, false);
+                // Json fails here without a model... need to fix the test infrastructure to provide that model.
+                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(7E-06)", null, contextType, UnitTestsUtil.JsonMimeType, "PATCH", null, false);
             }
 
             // [TestMethod, Variation("If the double number range is greater than int32 range, but fits within the double scale, json reader fails to read this")]
             [Ignore]
-            // Todo:Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // Todo:Fix places where we've lost JsonVerbose coverage to add Json
             public void JsonShouldReadDoubleNumberGreaterThanInt32Range()
             {
                 TypedCustomDataContext<BugBugEntity>.ValuesRequested += (x, y) =>
@@ -1299,10 +1299,10 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 Type contextType = typeof(TypedCustomDataContext<BugBugEntity>);
-                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Values(9000000000)", contextType, null, "GET");
+                TestWebRequest request = UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonMimeType, "/Values(9000000000)", contextType, null, "GET");
                 string payload = request.GetResponseStreamAsText();
-                // json light fails here without a model... need to fix the test infrastructure to provide that model.
-                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(9000000000)", null, contextType, UnitTestsUtil.JsonLightMimeType, "PATCH", null, false);
+                // Json fails here without a model... need to fix the test infrastructure to provide that model.
+                UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values(9000000000)", null, contextType, UnitTestsUtil.JsonMimeType, "PATCH", null, false);
             }
 
             public class BugBugEntity
@@ -1327,7 +1327,7 @@ namespace AstoriaUnitTests.Tests
                             Assert.IsTrue(args.RequestUri.OriginalString.EndsWith(uri), "the uri must match");
                         };
 
-                        UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.JsonLightMimeType, uri, typeof(CustomDataContext));
+                        UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.JsonMimeType, uri, typeof(CustomDataContext));
                     }
                 }
             }
@@ -1430,7 +1430,7 @@ namespace AstoriaUnitTests.Tests
                 {
                     OpenWebDataServiceHelper.MaxObjectCountOnInsert.Value = 6;
                     TestUtil.ClearMetadataCache();
-                    UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.JsonLightMimeType, "POST", (int)HttpStatusCode.RequestEntityTooLarge);
+                    UnitTestsUtil.VerifyInvalidRequest(jsonPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.JsonMimeType, "POST", (int)HttpStatusCode.RequestEntityTooLarge);
                     UnitTestsUtil.VerifyInvalidRequest(atomPayload, "/Customers", typeof(CustomDataContext), UnitTestsUtil.AtomFormat, "POST", (int)HttpStatusCode.RequestEntityTooLarge);
                 }
             }
@@ -1711,7 +1711,7 @@ namespace AstoriaUnitTests.Tests
             {
                 foreach (string jsonPayload in new string[] { "'", "\"", "[", "{" })
                 {
-                    UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
+                    UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonMimeType, "POST", 400);
                 }
             }
             [Ignore] // Remove Atom
@@ -2083,7 +2083,7 @@ namespace AstoriaUnitTests.Tests
                                         "}" +
                                      "}Some_Var1_That_Should_Cause_An_Exception";
 
-                UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonLightMimeType, "POST", 400);
+                UnitTestsUtil.VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers", UnitTestsUtil.JsonMimeType, "POST", 400);
             }
             [Ignore] // Remove Atom
             // [TestMethod, Variation("xmlns on innererror tag is incorrectly declared")]
@@ -2127,7 +2127,7 @@ namespace AstoriaUnitTests.Tests
             public void JsonDeserializerShouldConvertValuesWhenEnableTypeConversionIsTrue()
             {
                 string payload = "{ ID: 1234.56, Name: 'foo' }";
-                UnitTestsUtil.VerifyInvalidRequest(payload, "/Data", typeof(TestDataContext9), UnitTestsUtil.JsonLightMimeTypeIeee754Compatible, "POST", 400);
+                UnitTestsUtil.VerifyInvalidRequest(payload, "/Data", typeof(TestDataContext9), UnitTestsUtil.JsonMimeTypeIeee754Compatible, "POST", 400);
             }
 
             public class TestDataContext9 : IServiceProvider, Microsoft.OData.Service.Providers.IDataServiceUpdateProvider
@@ -2758,7 +2758,7 @@ namespace AstoriaUnitTests.Tests
                         Exception e = TestUtil.RunCatching(request.SendRequest);
                         Assert.IsNotNull(e, "Must have caused an error because of bad query parameter");
                         Assert.AreEqual(400, request.ResponseStatusCode);
-                        string expectedFormat = format == SerializationFormatData.JsonLight ? UnitTestsUtil.JsonLightMimeType : UnitTestsUtil.MimeApplicationXml;
+                        string expectedFormat = format == SerializationFormatData.Json ? UnitTestsUtil.JsonMimeType : UnitTestsUtil.MimeApplicationXml;
                         expectedFormat = string.Format("{0};", expectedFormat);
                         Assert.IsTrue(request.ResponseContentType.StartsWith(expectedFormat, StringComparison.OrdinalIgnoreCase), string.Format("Expected: '{0}' Actual: {1}", expectedFormat, request.ResponseContentType));
                         String result = request.GetResponseStreamAsText();
@@ -3234,8 +3234,8 @@ Content-Type: application/atom+xml;type=entry
                 Stream response = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.AtomFormat, requestUri, typeof(CustomDataContext));
                 UnitTestsUtil.VerifyXPaths(response, UnitTestsUtil.AtomFormat, atomXPath);
 
-                response = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.JsonLightMimeType, requestUri, typeof(CustomDataContext));
-                UnitTestsUtil.VerifyXPaths(response, UnitTestsUtil.JsonLightMimeType, jsonXPath);
+                response = UnitTestsUtil.GetResponseStream(WebServerLocation.InProcess, UnitTestsUtil.JsonMimeType, requestUri, typeof(CustomDataContext));
+                UnitTestsUtil.VerifyXPaths(response, UnitTestsUtil.JsonMimeType, jsonXPath);
             }
 
             [TestMethod, Variation("$count requests doesn't throw on if-match or if-none-match headers")]
@@ -3290,7 +3290,7 @@ Content-Type: application/atom+xml;type=entry
                 using (ChangeScope.GetChangeScope(contextTypes[0]))
                 using (ChangeScope.GetChangeScope(contextTypes[1]))
                 {
-                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values", null, contextTypes[0], UnitTestsUtil.JsonLightMimeType, "POST", null, true);
+                    UnitTestsUtil.SendRequestAndVerifyXPath(payload, "/Values", null, contextTypes[0], UnitTestsUtil.JsonMimeType, "POST", null, true);
 
                     var headerValues = new KeyValuePair<string, string>[] {
                         new KeyValuePair<string, string>("If-Match", "foo"), // invalid format, since etag must have this format: W/"{0}"
@@ -3303,15 +3303,15 @@ Content-Type: application/atom+xml;type=entry
 
                     for (int i = 0; i < headerValues.Length; i++)
                     {
-                        UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextTypes[0], UnitTestsUtil.JsonLightMimeType, "PATCH", statusCodes[i], headerValues[i]);
-                        UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextTypes[1], UnitTestsUtil.JsonLightMimeType, "PATCH", statusCodes[i], headerValues[i]);
+                        UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextTypes[0], UnitTestsUtil.JsonMimeType, "PATCH", statusCodes[i], headerValues[i]);
+                        UnitTestsUtil.VerifyInvalidRequest(payload, "/Values(1)", contextTypes[1], UnitTestsUtil.JsonMimeType, "PATCH", statusCodes[i], headerValues[i]);
                     }
                 }
             }
 
             // [TestMethod, Variation("Making sure all the etag values are round-trippable")]
             [Ignore]
-            // TODO: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // TODO: Fix places where we've lost JsonVerbose coverage to add Json
             public void AllEtagValuesShouldRoundtrip()
             {
                 string payloadTemplate = "{ ID: 1, Concurrency: XXXX }";
@@ -3335,7 +3335,7 @@ Content-Type: application/atom+xml;type=entry
                         string etag = null;
                         foreach (object value in typeData.SampleValues)
                         {
-                            // TODO: JsonPrimitiveTypesUtil doesn't properly translate datatime objects... need to update it for JsonLight.
+                            // TODO: JsonPrimitiveTypesUtil doesn't properly translate datatime objects... need to update it for Json.
                             string newPayload = payloadTemplate.Replace("XXXX", JsonPrimitiveTypesUtil.PrimitiveToString(value, typeData.ClrType));
 
                             // for the first time, the request will be a POST request with no If-Match header.
@@ -3343,7 +3343,7 @@ Content-Type: application/atom+xml;type=entry
                             if (first)
                             {
                                 etag = UnitTestsUtil.GetTestWebRequestInstance(
-                                    UnitTestsUtil.JsonLightMimeType, "/Values", contextType, null, "POST", newPayload).ResponseETag;
+                                    UnitTestsUtil.JsonMimeType, "/Values", contextType, null, "POST", newPayload).ResponseETag;
                                 first = false;
                             }
                             else
@@ -3351,7 +3351,7 @@ Content-Type: application/atom+xml;type=entry
                                 var headers = new KeyValuePair<string, string>[] {
                                     new KeyValuePair<string, string>("If-Match", etag) };
                                 etag = UnitTestsUtil.GetTestWebRequestInstance(
-                                    UnitTestsUtil.JsonLightMimeType, "/Values(1)", contextType, headers, "PATCH", newPayload).ResponseETag;
+                                    UnitTestsUtil.JsonMimeType, "/Values(1)", contextType, headers, "PATCH", newPayload).ResponseETag;
                             }
                         }
                     }
@@ -3426,7 +3426,7 @@ Content-Type: application/atom+xml;type=entry
                 using (var conn = ocs.PopulateData.CreateTableAndPopulateData())
                 {
                     var request = UnitTestsUtil.GetTestWebRequestInstance(
-                        UnitTestsUtil.JsonLightMimeType, "/Customers(1)", typeof(ocs.CustomObjectContext), new KeyValuePair<string, string>[0], "GET");
+                        UnitTestsUtil.JsonMimeType, "/Customers(1)", typeof(ocs.CustomObjectContext), new KeyValuePair<string, string>[0], "GET");
                     string etag = request.ResponseETag;
                     string responseBody = request.GetResponseStreamAsText();
                     request.Dispose();
@@ -4131,7 +4131,7 @@ Content-Type: application/atom+xml;type=entry
                 {
                     try
                     {
-                        UnitTestsUtil.UpdateAndVerifyPrimitiveProperty(typeof(CustomRowBasedOpenTypesContext), "PUT", "/Orders(0)/DollarAmount/$value", payload, UnitTestsUtil.JsonLightMimeType, null);
+                        UnitTestsUtil.UpdateAndVerifyPrimitiveProperty(typeof(CustomRowBasedOpenTypesContext), "PUT", "/Orders(0)/DollarAmount/$value", payload, UnitTestsUtil.JsonMimeType, null);
                         Assert.Fail("Expected an exception, but no exception was thrown");
                     }
                     catch (Exception e)
@@ -4512,7 +4512,7 @@ Content-Type: application/atom+xml;type=entry
                 TestUtil.RunCombinatorialEngineFail(engine, values =>
                 {
                     var request = UnitTestsUtil.GetTestWebRequestInstance(
-                        UnitTestsUtil.JsonLightMimeType, "/Entities(0)", typeof(FloatPointETagContext), new KeyValuePair<string, string>[0], "GET");
+                        UnitTestsUtil.JsonMimeType, "/Entities(0)", typeof(FloatPointETagContext), new KeyValuePair<string, string>[0], "GET");
 
                     var etag = request.ResponseETag;
 
@@ -4523,7 +4523,7 @@ Content-Type: application/atom+xml;type=entry
                         ((double)values["DoubleValue2"]).ToString(CultureInfo.InvariantCulture));
 
                     UnitTestsUtil.GetTestWebRequestInstance(
-                        UnitTestsUtil.JsonLightMimeType, "/Entities(0)", typeof(FloatPointETagContext), new KeyValuePair<string, string>[] { new KeyValuePair<String, String>("If-Match", etag) }, "PUT",
+                        UnitTestsUtil.JsonMimeType, "/Entities(0)", typeof(FloatPointETagContext), new KeyValuePair<string, string>[] { new KeyValuePair<String, String>("If-Match", etag) }, "PUT",
                         payload);
                 });
             }
@@ -4575,7 +4575,7 @@ Content-Type: application/atom+xml;type=entry
                         TestDataService26.QueryCustomersInjectsBrokenExpression = true;
                         request.ServiceType = typeof(TestDataService26);
                         request.HttpMethod = "POST";
-                        request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0] + ";charset=iso-8859-1";
+                        request.RequestContentType = SerializationFormatData.Json.MimeTypes[0] + ";charset=iso-8859-1";
                         request.RequestUriString = "/Customers";
                         request.SetRequestStreamAsText(payload);
                         request.SendRequest();
@@ -4594,7 +4594,7 @@ Content-Type: application/atom+xml;type=entry
                         TestDataService26.QueryCustomersInjectsBrokenExpression = false;
                         request.ServiceType = typeof(TestDataService26);
                         request.HttpMethod = "POST";
-                        request.RequestContentType = SerializationFormatData.JsonLight.MimeTypes[0] + ";charset=iso-8859-1";
+                        request.RequestContentType = SerializationFormatData.Json.MimeTypes[0] + ";charset=iso-8859-1";
                         request.RequestUriString = "/Customers(2000)/Orders";
                         request.SetRequestStreamAsText(payload);
                         request.SendRequest();
@@ -5318,7 +5318,7 @@ Content-Type: application/atom+xml;type=entry
                         Trace.WriteLine(k);
                     };
 
-                UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonLightMimeType, "/Customers", typeof(TestContext31),
+                UnitTestsUtil.GetTestWebRequestInstance(UnitTestsUtil.JsonMimeType, "/Customers", typeof(TestContext31),
                     new KeyValuePair<string, string>[0], "POST", jsonPayload);
             }
 
@@ -5730,7 +5730,7 @@ Content-Type: application/atom+xml;type=entry
                     request.DataServiceType = typeof(CustomDataContext);
                     request.RequestUriString = "/Customers";
                     request.HttpMethod = "POST";
-                    request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                    request.RequestContentType = UnitTestsUtil.JsonMimeType;
 
                     request.SetRequestStreamAsText(@"{ 
                         ""@odata.type"": ""AstoriaUnitTests.Stubs.Customer"", 
@@ -5741,7 +5741,7 @@ Content-Type: application/atom+xml;type=entry
 
                     request.RequestUriString = "/Customers";
                     request.HttpMethod = "GET";
-                    request.Accept = UnitTestsUtil.JsonLightMimeType;
+                    request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();
                     string responsePayload = request.GetResponseStreamAsText();
                     Assert.IsFalse(responsePayload.Contains("\\\'"));
@@ -6102,7 +6102,7 @@ Content-Type: application/atom+xml;type=entry
             // [TestMethod, Variation("IDSMP: Server does not respond to service-document request if a type is not marked read-only")]
             public void ServerShouldRespondToServiceDocRequestIfTypeNotMarkedReadOnly()
             {
-                foreach (string accept in new[] { UnitTestsUtil.JsonLightMimeType, UnitTestsUtil.MimeApplicationXml })
+                foreach (string accept in new[] { UnitTestsUtil.JsonMimeType, UnitTestsUtil.MimeApplicationXml })
                 {
                     using (TestUtil.RestoreStaticMembersOnDispose(typeof(OpenWebDataServiceHelper)))
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
@@ -6348,7 +6348,7 @@ Content-Type: application/atom+xml;type=entry
                                 request.HttpMethod = "POST";
                                 request.RequestUriString = "/Customers";
                                 request.SetRequestStreamAsText("{ ID : 21 }");
-                                request.RequestContentType = UnitTestsUtil.JsonLightMimeType;
+                                request.RequestContentType = UnitTestsUtil.JsonMimeType;
                             }
 
                             request.SendRequest();

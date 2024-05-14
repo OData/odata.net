@@ -24,9 +24,9 @@ namespace Microsoft.Test.Taupo.OData.Json
         private readonly TextWriter writer;
 
         /// <summary>
-        /// True if we're writing JSON Light, false if we're writing Verbose JSON.
+        /// True if we're writing Json, false if we're writing Verbose JSON.
         /// </summary>
-        private readonly bool writingJsonLight;
+        private readonly bool writingJson;
 
         /// <summary>
         /// If it is IEEE754Compatible, read quoted string for INT64 and decimal;
@@ -38,12 +38,12 @@ namespace Microsoft.Test.Taupo.OData.Json
         /// Creates a JSON writer.
         /// </summary>
         /// <param name="writer">The writer to write the result into.</param>
-        /// <param name="writingJsonLight">true if we are writing JSON Light, false if we're writing Verbose JSON.</param>
+        /// <param name="writingJson">true if we are writing Json, false if we're writing Verbose JSON.</param>
         /// <param name="isIeee754Compatible">If it is IEEE754Compatible, default is false</param>
-        public JsonTextPreservingWriter(TextWriter writer, bool writingJsonLight, bool isIeee754Compatible = false)
+        public JsonTextPreservingWriter(TextWriter writer, bool writingJson, bool isIeee754Compatible = false)
         {
             this.writer = writer;
-            this.writingJsonLight = writingJsonLight;
+            this.writingJson = writingJson;
             this.isIeee754Compatible = isIeee754Compatible;
         }
 
@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Json
         private void WritePrimitiveValue(JsonPrimitiveValue primitiveValue)
         {
             var textAnnotation = primitiveValue.GetAnnotation<JsonPrimitiveValueTextAnnotation>()
-                ?? JsonPrimitiveValueTextAnnotation.GetDefault(primitiveValue, this.writingJsonLight, isIeee754Compatible);
+                ?? JsonPrimitiveValueTextAnnotation.GetDefault(primitiveValue, this.writingJson, isIeee754Compatible);
             this.writer.Write(textAnnotation.Text);
         }
 

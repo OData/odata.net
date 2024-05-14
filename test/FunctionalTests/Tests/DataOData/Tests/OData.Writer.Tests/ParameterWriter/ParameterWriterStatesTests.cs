@@ -153,7 +153,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.ParameterWriter
                 // TODO: Add test cases to cause the writer enter error state then verify that no writes can be performed afterwards.
             };
 
-            var testConfigurations = this.WriterTestConfigurationProvider.JsonLightFormatConfigurations.Where(tc => tc.IsRequest);
+            var testConfigurations = this.WriterTestConfigurationProvider.JsonFormatConfigurations.Where(tc => tc.IsRequest);
             this.CombinatorialEngineProvider.RunCombinations(testConfigurations, testCases, (testConfiguration, testCase) =>
             {
                 PayloadWriterTestDescriptor.WriterTestExpectedResultCallback resultCallback = testConfig => new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings) { ExpectedException2 = testCase.ExpectedException };

@@ -32,7 +32,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client
         }
 
         [Fact]
-        public void ClientShouldNotIncludeIdInJsonLightUpdates()
+        public void ClientShouldNotIncludeIdInJsonUpdates()
         {
             Action<EntityDescriptor> configureDescriptor = d =>
             {

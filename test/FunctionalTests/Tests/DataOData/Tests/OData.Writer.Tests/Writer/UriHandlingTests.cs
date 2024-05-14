@@ -254,7 +254,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 },
             };
 
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             Uri testRelativeUri = baseUri.MakeRelativeUri(testUri);
             Uri invalidRelativeUri = new Uri("../invalid/relative/uri", UriKind.Relative);
             this.CombinatorialEngineProvider.RunCombinations(
@@ -583,7 +583,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 };
             }));
 
-            //ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            //ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
@@ -673,7 +673,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                };
            })));
 
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 this.WriterTestConfigurationProvider.ExplicitFormatConfigurations.Where(c => false),
@@ -752,7 +752,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 };
             }));
 
-            // ToDo: Fix places where we've lost JsonVerbose coverage to add JsonLight
+            // ToDo: Fix places where we've lost JsonVerbose coverage to add Json
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 new bool[] { false, true },

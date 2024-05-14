@@ -309,7 +309,7 @@ namespace Microsoft.OData.Evaluation
 
             if (primitiveValue is ISpatial)
             {
-                // TODO: [JsonLight] Add support for spatial values in ODataEdmStructuredValue
+                // TODO: [Json] Add support for spatial values in ODataEdmStructuredValue
                 throw new NotImplementedException();
             }
 
