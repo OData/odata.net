@@ -68,7 +68,7 @@ namespace Microsoft.OData
             }
         }
 
-        /// <summary>PrimitiveConverter instance for use by the Atom and Json readers and writers.</summary>
+        /// <summary>PrimitiveConverter instance for use by the Json readers and writers.</summary>
         internal static PrimitiveConverter Instance
         {
             get

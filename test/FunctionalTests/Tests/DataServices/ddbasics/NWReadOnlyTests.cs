@@ -98,7 +98,7 @@ namespace AstoriaUnitTests
                 SimpleWorkspace workspace = this.NorthwindWorkspace;
                 Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
                 this.ctx = new northwindClient.northwindContext(baseUri);
-                //this.ctx.EnableAtom = true;
+                //this.ctx.Enable= true;
                 //this.ctx.Format.UseAtom();
                 ctx.Timeout = TestConstants.MaxTestTimeout;
                 Trace.WriteLine("Querying workspace at " + baseUri);
@@ -779,7 +779,7 @@ namespace AstoriaUnitTests
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
 
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
 
@@ -793,7 +793,7 @@ namespace AstoriaUnitTests
                         {
                             // second iteration
                             ctx = new DataServiceContext(baseUri);
-                            //ctx.EnableAtom = true;
+                            //ctx.Enable= true;
                             //ctx.Format.UseAtom();
                             q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
                             custs = new DataServiceCollection<northwindBinding.Customers>(q);
@@ -840,7 +840,7 @@ namespace AstoriaUnitTests
                     Uri baseUri = new Uri(workspace.ServiceEndPoint + workspace.ServiceContainer.Name + ".svc", UriKind.Absolute);
 
                     DataServiceContext ctx = new DataServiceContext(baseUri);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<northwindBinding.Customers>("Customers").Expand("Orders");
 

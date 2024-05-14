@@ -46,7 +46,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            ''Me.'ctx.EnableAtom = True
+            ''Me.'ctx.Enable= True
             ''Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -96,7 +96,7 @@ Partial Public Class ClientModule
 
                     For Each saveoption As SaveChangesOptions In New SaveChangesOptions() {SaveChangesOptions.None, SaveChangesOptions.ContinueOnError, SaveChangesOptions.BatchWithSingleChangeset}
                         ctx = New DataServiceContext(web.ServiceRoot)
-                        ''ctx.EnableAtom = True
+                        ''ctx.Enable= True
                         ''ctx.Format.UseAtom()
                         ctx.ResolveName = AddressOf ResolveName
                         Dim customer = ctx.CreateQuery(Of Customer)("Customers").Execute().Last()

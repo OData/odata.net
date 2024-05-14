@@ -165,9 +165,9 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         }
 
         /// <summary>
-        /// Deserializes the given element, which is assumed to be an atom feed, into an entity set
+        /// Deserializes the given element, which is assumed to be an feed, into an entity set
         /// </summary>
-        /// <param name="feed">An atom feed xml element</param>
+        /// <param name="feed">An feed xml element</param>
         /// <returns>The deserialized entity set</returns>
         private EntitySetInstance DeserializeEntitySet(XElement feed)
         {
@@ -261,9 +261,9 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         }
 
         /// <summary>
-        /// Deserializes an atom entry into an entity instance
+        /// Deserializes an entry into an entity instance
         /// </summary>
-        /// <param name="entry">The xml for an atom entry</param>
+        /// <param name="entry">The xml for an entry</param>
         /// <returns>An entity instance</returns>
         private EntityInstance DeserializeEntity(XElement entry)
         {

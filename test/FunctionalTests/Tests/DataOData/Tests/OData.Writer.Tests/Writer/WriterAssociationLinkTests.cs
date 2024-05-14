@@ -73,12 +73,12 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new {
                     NavigationLink = ObjectModelUtils.CreateDefaultNavigationLink(associationLinkName1, linkUrlUri1),
-                    Atom = BuildXmlAssociationLink(associationLinkName1, "application/xml", linkUrl1),
+                    = BuildXmlAssociationLink(associationLinkName1, "application/xml", linkUrl1),
                     Json = (string)null,
                 },
                 new {
                     NavigationLink = ObjectModelUtils.CreateDefaultNavigationLink(associationLinkName2, linkUrlUri2),
-                    Atom = BuildXmlAssociationLink(associationLinkName2, "application/xml", linkUrl2),
+                    = BuildXmlAssociationLink(associationLinkName2, "application/xml", linkUrl2),
                     Json = (string)null
                 },
             };
@@ -88,7 +88,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new
                 {
                     NavigationLinks = tcs.Select(tc => tc.NavigationLink),
-                    Atom = string.Concat(tcs.Select(tc => tc.Atom)),
+                    = string.Concat(tcs.Select(tc => tc.Atom)),
                     Json = string.Join(",", tcs.Where(tc => tc.Json != null).Select(tc => tc.Json))
                 });
 
@@ -209,7 +209,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
-                    Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
+                    = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
                     Json =
                         "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\"," +
                         "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
@@ -218,21 +218,21 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = new Uri("http://odata.org/navlink"), AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
-                    Atom = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
+                    = BuildXmlNavigationLink("NavProp1", "application/atom+xml;type=entry", "http://odata.org/navlink"),
                     Json = "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/navlink\""
                 },
                 // Just association link URL
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = new Uri("http://odata.org/assoclink") },
                     PropertyName = "NavProp1",
-                    Atom = (string)null,
+                    = (string)null,
                     Json = "\"" + JsonUtils.GetPropertyAnnotationName("NavProp1", JsonConstants.ODataAssociationLinkUrlAnnotationName) + "\":\"http://odata.org/assoclink\""
                 },
                 // Navigation link with both URLs null
                 new {
                     NavigationLink = new ODataNestedResourceInfo() { Name = "NavProp1", IsCollection = false, Url = null, AssociationLinkUrl = null },
                     PropertyName = "NavProp1",
-                    Atom = (string)null,
+                    = (string)null,
                     Json = string.Empty
                 }
             };

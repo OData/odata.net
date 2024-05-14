@@ -57,7 +57,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
     <TestInitialize()> Public Sub PerTestSetup()
         Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot, ODataProtocolVersion.V4)
-        'Me.'ctx.EnableAtom = True
+        'Me.'ctx.Enable= True
         'Me.'ctx.Format.UseAtom()
     End Sub
 
@@ -408,7 +408,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.DataServiceType = GetType(TestCtx)
             request.StartService()
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim entity = ctx.CreateQuery(Of TestEntity)("Data").First
             Assert.AreEqual(1, entity.Id)
@@ -445,7 +445,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
             Me.ctx.Format.UseJson(New EdmModel())
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -550,7 +550,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
                 ' Make sure EndExecute disposes the wait handle
                 Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
                 'ctx.Format.UseAtom()
                 Dim asyncResult = ctx.BeginExecute(Of Customer)(New Uri(request.BaseUri + "/Customers"), Nothing, Nothing)
                 Using waitHandle = asyncResult.AsyncWaitHandle
@@ -575,7 +575,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
 
                 ' Make sure EndLoadProperty disposes the wait handle
                 Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
                 'ctx.Format.UseAtom()
                 Dim customer = ctx.CreateQuery(Of Customer)("Customers").First()
                 Dim asyncResult = ctx.BeginLoadProperty(customer, "Orders", Nothing, Nothing)
@@ -599,7 +599,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.StartService()
 
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
 
             Dim q = From c In ctx.CreateQuery(Of northwindClient.Categories)("Categories")
@@ -630,7 +630,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.DataServiceType = GetType(TestCtx1)
             request.StartService()
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri), ODataProtocolVersion.V4)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             For Each dataServiceVersion As String In serviceVersions
                 TestCtx1.DataServiceResponseVersion = dataServiceVersion
@@ -687,7 +687,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 request.ServiceType = GetType(PlaybackService)
                 request.StartService()
                 Dim ctx = New DataServiceContext(request.ServiceRoot)
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
 
                 Dim order As AstoriaUnitTests.Stubs.Order = New AstoriaUnitTests.Stubs.Order()
                 order.ID = 16584
@@ -738,7 +738,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                     request.ServiceType = GetType(PlaybackService)
                     request.StartService()
                     Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-                    'ctx.EnableAtom = True
+                    'ctx.Enable= True
 
                     Dim order As AstoriaUnitTests.Stubs.Order = New AstoriaUnitTests.Stubs.Order()
                     order.ID = 16584
@@ -1083,7 +1083,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.StartService()
 
             Dim context As DataServiceContext = New DataServiceContext(request.ServiceRoot)
-            ''context.EnableAtom = True
+            ''context.Enable= True
             ''context.Format.UseAtom()
             context.MergeOption = MergeOption.NoTracking
 
@@ -1396,7 +1396,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         TestUtil.RunCombinations(entityGetters,
                                  Sub(entityGetter)
                                      Dim context As DataServiceContext = New DataServiceContext(New Uri(contextUri))
-                                     'context.EnableAtom = True
+                                     'context.Enable= True
                                      Dim dataServiceCollection As DataServiceCollection(Of EntityType) = Nothing
 
                                      Try
@@ -1453,7 +1453,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
         TestUtil.RunCombinations(testCases,
                                  Sub(testCase As DeferredTrackingTestCase(Of EntityType))
                                      Dim context As DataServiceContext = New DataServiceContext(New Uri(contextUri))
-                                     'context.EnableAtom = True
+                                     'context.Enable= True
 
                                      ' Since tracking is deferred, constructing the collection should never fail
                                      Dim dataServiceCollection = New DataServiceCollection(Of EntityType)()
@@ -1650,7 +1650,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
      "</feed>"
 
                 Dim context = New DataServiceContext(request.ServiceRoot)
-                'context.EnableAtom = True
+                'context.Enable= True
                 Dim query = context.CreateQuery(Of Customer)("Customers").Expand("Orders")
                 For Each c In query
                     Assert.IsTrue(c.Orders.Count > 0, "There must be orders populated")
@@ -1698,7 +1698,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 PlaybackService.OverridingPlayback.Value = response
 
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                'context.EnableAtom = True
+                'context.Enable= True
                 Try
                     context.Execute(Of EntityWithCollection)(New Uri("/Entities", UriKind.Relative)).ToList()
                     Assert.Fail("Expected exception did not occur")
@@ -1758,7 +1758,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Dim response = headers & payload.ToString()
                 PlaybackService.OverridingPlayback.Value = response
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                'context.EnableAtom = True
+                'context.Enable= True
 
                 Try
                     context.Execute(Of NamedStreamEntity)(New Uri("/Entities", UriKind.Relative)).ToList()
@@ -1806,7 +1806,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                 Dim response = headers & payload.ToString()
                 PlaybackService.OverridingPlayback.Value = response
                 Dim context = New DataServiceContext(New Uri(host.BaseUri), ODataProtocolVersion.V4)
-                'context.EnableAtom = True
+                'context.Enable= True
 
                 Try
                     context.Execute(Of NamedStreamEntity)(New Uri("/Entities", UriKind.Relative)).ToList()
@@ -1830,7 +1830,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
             request.StartService()
 
             Dim ctx = New DataServiceContext(New Uri(request.BaseUri))
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
 
             Dim q = From customer In ctx.CreateQuery(Of northwindClient.Customers)("Customers")

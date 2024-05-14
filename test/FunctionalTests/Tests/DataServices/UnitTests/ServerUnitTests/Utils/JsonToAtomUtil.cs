@@ -12,7 +12,7 @@ namespace AstoriaUnitTests.Tests
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// This class has all the utility methods that are used by jsontoatom.xslt to convert json payload to atom payload.
+    /// This class has all the utility methods that are used by jsontoatom.xslt to convert json payload to payload.
     /// </summary>
     public class JsonToAtomUtil
     {

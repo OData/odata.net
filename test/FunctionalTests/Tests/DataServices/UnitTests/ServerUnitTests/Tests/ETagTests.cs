@@ -325,7 +325,7 @@ namespace AstoriaUnitTests.Tests
             #endregion //DELETE Tests
 
             #region PUT/PATCH Tests
-            // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
+            // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an payload entry has no content and no links (and it's a V1 entry)
             // We decided to break the old behavior and always check the ETag.
             [Ignore] // Remove Atom
             // [TestMethod, Variation]

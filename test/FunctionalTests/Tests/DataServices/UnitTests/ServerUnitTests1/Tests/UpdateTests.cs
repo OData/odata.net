@@ -251,7 +251,7 @@ namespace AstoriaUnitTests.Tests
 
                 #endregion // Payload
 
-                #region Atom XPaths
+                #region XPaths
                 var atomXPaths1 = new KeyValuePair<string, string[]>(
                     "/Customers",
                     new string[] { "/atom:entry[atom:category/@term='#AstoriaUnitTests.Stubs.Customer' and atom:id='http://host/Customers(125)' and atom:content/adsm:properties[ads:Name='Bar' and ads:ID='125']]" });
@@ -324,7 +324,7 @@ namespace AstoriaUnitTests.Tests
 
                 #endregion // Payload
 
-                #region Atom XPath
+                #region XPath
                 var atomXPaths1 = new KeyValuePair<string, string[]>(
                     "/Customers",
                     new string[] { "/atom:entry[atom:category/@term='#" + customerFullName + "' and atom:id='http://host/Customers(125)' and atom:content/adsm:properties[ads:Name='Foo' and ads:ID='125']]" });
@@ -1579,13 +1579,13 @@ namespace AstoriaUnitTests.Tests
                     },
                     new PutContentTypePayload
                     {
-                        Description = "ATOM Entity instance with type",
+                        Description = "Entity instance with type",
                         ContentTypes = new [] {
                             UnitTestsUtil.AtomFormat,
                             "application/atom+xml;type=entry",
                             "application/atom+xml;type=feed",
                             "application/atom+xml;type=test",
-                            // Server treats */* as ATOM content type
+                            // Server treats */* as content type
                             UnitTestsUtil.MimeAny },
                         Payload = "<entry " +
                                     "xmlns:ads='http://docs.oasis-open.org/odata/ns/data' " +
@@ -1614,13 +1614,13 @@ namespace AstoriaUnitTests.Tests
                     },
                     new PutContentTypePayload
                     {
-                        Description = "ATOM Entity instance without type",
+                        Description = "Entity instance without type",
                         ContentTypes = new [] {
                             UnitTestsUtil.AtomFormat,
                             "application/atom+xml;type=entry",
                             "application/atom+xml;type=feed",
                             "application/atom+xml;type=test",
-                            // Server treats */* as ATOM content type
+                            // Server treats */* as content type
                             UnitTestsUtil.MimeAny },
                         Payload = "<entry " +
                                     "xmlns:ads='http://docs.oasis-open.org/odata/ns/data' " +
@@ -1648,9 +1648,9 @@ namespace AstoriaUnitTests.Tests
                     },
                     new PutContentTypePayload
                     {
-                        Description = "ATOM Feed",
+                        Description = "Feed",
                         ContentTypes = new [] { UnitTestsUtil.AtomFormat, "application/atom+xml;type=feed", 
-                            // Server treats */* as ATOM content type
+                            // Server treats */* as content type
                             UnitTestsUtil.MimeAny },
                         Payload = "<feed " +
                                     "xmlns:ads='http://docs.oasis-open.org/odata/ns/data' " +
@@ -1662,13 +1662,13 @@ namespace AstoriaUnitTests.Tests
                             {
                                 if (kind == AddressableElementKind.Entity && contentType != "application/atom+xml;type=feed")
                                 {
-                                    // Sending an ATOM payload to an entity end point is valid, but it will fail due to the root element called "feed".
+                                    // Sending an payload to an entity end point is valid, but it will fail due to the root element called "feed".
                                     return 400;
                                 }
 
                                 if (kind == AddressableElementKind.Entity && contentType == "application/atom+xml;type=feed")
                                 {
-                                    // Server ignores the type=feed in the content type if it's ATOM content type.
+                                    // Server ignores the type=feed in the content type if it's content type.
                                     // but this will fail due to the root element called "feed"
                                     return 400;
                                 }
@@ -2365,8 +2365,8 @@ namespace AstoriaUnitTests.Tests
 
                     using (TestWebRequest request = service.CreateForInProcess())
                     {
-                        XDocument existingItemAtom = UnitTestsUtil.GetResponseAsAtomXLinq(request, "/Items(0)", "application/atom+xml,application/xml");
-                        XDocument existingStreamAtom = !supportsMR ? null : UnitTestsUtil.GetResponseAsAtomXLinq(request, "/Streams(0)", "application/atom+xml,application/xml");
+                        XDocument existingItem= UnitTestsUtil.GetResponseAsAtomXLinq(request, "/Items(0)", "application/atom+xml,application/xml");
+                        XDocument existingStream= !supportsMR ? null : UnitTestsUtil.GetResponseAsAtomXLinq(request, "/Streams(0)", "application/atom+xml,application/xml");
 
                         IEnumerable<string> httpMethods = new string[] { "POST", "POSTMR", "PUT", "PATCH" };
 
@@ -2388,7 +2388,7 @@ namespace AstoriaUnitTests.Tests
                                 request.Accept = "application/atom+xml,application/xml";
                                 request.RequestHeaders["Prefer"] = preferHeader;
 
-                                XDocument existingAtom = httpMethod == "POSTMR" ? existingStreamAtom : existingItemAtom;
+                                XDocument existing= httpMethod == "POSTMR" ? existingStream: existingItemAtom;
                                 DSPSelfmodifyingResource existingResource = httpMethod == "POSTMR" ? existingStream : existingItem;
 
                                 this.PreferHeader_SetupRequest(request, httpMethod, format, existingAtom, existingResource, (inputAtom) =>
@@ -2487,7 +2487,7 @@ namespace AstoriaUnitTests.Tests
                 };
 
                 // Can't get the payload from the service since we sometimes don't allow read rights
-                XDocument existingItemAtom = XDocument.Parse("<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" +
+                XDocument existingItem= XDocument.Parse("<entry xmlns:d='http://docs.oasis-open.org/odata/ns/data' xmlns:m='http://docs.oasis-open.org/odata/ns/metadata' xmlns='http://www.w3.org/2005/Atom'>" +
                     "<id>http://host/Items(0)</id>" +
                     "<title type='text'></title>" +
                     "<updated>2010-07-19T14:20:32Z</updated>" +
@@ -2787,7 +2787,7 @@ namespace AstoriaUnitTests.Tests
                 request.RequestContentType = httpMethod == "POSTMR" ? UnitTestsUtil.MimeTextPlain : format;
                 request.Accept = format;
 
-                XDocument inputAtom = new XDocument(existingItemAtom);
+                XDocument input= new XDocument(existingItemAtom);
                 // Remove all nav property links as those are not supported on some operations
                 inputAtom.Root.Elements(UnitTestsUtil.AtomNamespace + "link").Where(e =>
                     e.Attribute("rel").Value.Contains("http://docs.oasis-open.org/odata/ns/related/") ||
@@ -2818,7 +2818,7 @@ namespace AstoriaUnitTests.Tests
                 }
                 else
                 {
-                    if (modifyInputAtom != null)
+                    if (modifyInput!= null)
                     {
                         modifyInputAtom(inputAtom);
                     }
@@ -2999,11 +2999,11 @@ namespace AstoriaUnitTests.Tests
                     using (CustomDataContext.CreateChangeScope())
                     using (TestWebRequest request = TestWebRequest.CreateForInProcess())
                     {
-                        var atom = UnitTestsUtil.AtomNamespace;
+                        var = UnitTestsUtil.AtomNamespace;
                         var data = UnitTestsUtil.DataNamespace;
                         var metadata = UnitTestsUtil.MetadataNamespace;
-                        XElement d = new XElement(atom + "entry",
-                            new XElement(atom + "content",
+                        XElement d = new XElement(+ "entry",
+                            new XElement(+ "content",
                                 new XAttribute("type", "application/xml"),
                                 new XElement(metadata + "properties",
                                     new XElement(data + "ID", "1000"))));
@@ -3012,16 +3012,16 @@ namespace AstoriaUnitTests.Tests
                         if (orders > 0)
                         {
                             var link = new XElement(
-                                atom + "link",
+                                + "link",
                                 new XAttribute("rel", "http://docs.oasis-open.org/odata/ns/related/Orders"),
                                 new XAttribute("type", "application/atom+xml;type=feed"),
                                 new XAttribute("title", "Orders"));
                             for (int i = 0; i < orders; i++)
                             {
                                 link.Add(new XElement(metadata + "inline",
-                                    new XElement(atom + "feed",
-                                        new XElement(atom + "entry",
-                                            new XElement(atom + "content",
+                                    new XElement(+ "feed",
+                                        new XElement(+ "entry",
+                                            new XElement(+ "content",
                                                 new XAttribute("type", "application/xml"),
                                                 new XElement(metadata + "properties",
                                                     new XElement(data + "ID", 10000 + i)))))));

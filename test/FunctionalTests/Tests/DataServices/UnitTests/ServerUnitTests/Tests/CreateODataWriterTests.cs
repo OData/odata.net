@@ -110,7 +110,7 @@ namespace AstoriaUnitTests.Tests
         {
             foreach (string acceptType in new string[] { "application/atom+xml", "application/json;odata.metadata=minimal" })
             {
-                // ATOM the value is written to the Feed prior to Start,JSON the value is written after start
+                // the value is written to the Feed prior to Start,JSON the value is written after start
                 // but before end
                 using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
                 using (MyODataWriter.WriteEntryStart.Restore())
@@ -189,7 +189,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void CreateODataWriterDataServerExceptionSurfacingTest()
         {
-            // ATOM the value is written to the Feed prior to Start,JSON the value is written after start
+            // the value is written to the Feed prior to Start,JSON the value is written after start
             // but before end
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
             using (MyODataWriter.WriteEntryStart.Restore())
@@ -218,7 +218,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void CreateODataWriterOtherExceptionTest()
         {
-            // ATOM the value is written to the Feed prior to Start,JSON the value is written after start
+            // the value is written to the Feed prior to Start,JSON the value is written after start
             // but before end
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
             using (MyODataWriter.WriteFeedStart.Restore())
@@ -247,7 +247,7 @@ namespace AstoriaUnitTests.Tests
         [TestMethod]
         public void CreateODataWriterExceptionTestOnLink()
         {
-            // ATOM the value is written to the Feed prior to Start,JSON the value is written after start
+            // the value is written to the Feed prior to Start,JSON the value is written after start
             // but before end
             using (OpenWebDataServiceHelper.CreateODataWriterDelegate.Restore())
             using (MyODataWriter.WriteLinkStart.Restore())

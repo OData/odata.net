@@ -11,7 +11,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Constant values related to the ATOM format.
+    /// Constant values related to the format.
     /// </summary>
     public static class TestAtomConstants
     {
@@ -114,15 +114,15 @@ namespace Microsoft.Test.Taupo.OData.Atom
         public const string ODataInnerErrorInnerErrorElementName = "internalexception";
         #endregion OData constants
 
-        #region Atom Format constants ---------------------------------------------------------------------------------
+        #region Format constants ---------------------------------------------------------------------------------
 
         /// <summary> Schema namespace for Atom.</summary>
         public const string AtomNamespace = "http://www.w3.org/2005/Atom";
 
-        /// <summary> Prefix for the Atom namespace - empty since it is the default namespace.</summary>
+        /// <summary> Prefix for the namespace - empty since it is the default namespace.</summary>
         public const string AtomNamespacePrefix = "";
 
-        /// <summary>The namespace for ATOM application.</summary>
+        /// <summary>The namespace for application.</summary>
         public const string AtomApplicationNamespace = "http://www.w3.org/2007/app";
 
         /// <summary>XML element name to mark entry element in Atom.</summary>
@@ -185,34 +185,34 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>XML element name to mark the 'icon' element in Atom.</summary>
         public const string AtomIconElementName = "icon";
 
-        /// <summary>XML element name to mark the 'name' element in an Atom person construct.</summary>
+        /// <summary>XML element name to mark the 'name' element in an person construct.</summary>
         public const string AtomPersonNameElementName = "name";
 
-        /// <summary>XML element name to mark the 'uri' element in an Atom person construct.</summary>
+        /// <summary>XML element name to mark the 'uri' element in an person construct.</summary>
         public const string AtomPersonUriElementName = "uri";
 
-        /// <summary>XML element name to mark the 'email' element in an Atom person construct.</summary>
+        /// <summary>XML element name to mark the 'email' element in an person construct.</summary>
         public const string AtomPersonEmailElementName = "email";
 
-        /// <summary>'updated' - XML element name for ATOM 'updated' element for entries.</summary>
+        /// <summary>'updated' - XML element name for 'updated' element for entries.</summary>
         public const string AtomUpdatedElementName = "updated";
 
-        /// <summary>'category' - XML element name for ATOM 'category' element for entries.</summary>
+        /// <summary>'category' - XML element name for 'category' element for entries.</summary>
         public const string AtomCategoryElementName = "category";
 
-        /// <summary>'term' - XML attribute name for ATOM 'term' attribute for categories.</summary>
+        /// <summary>'term' - XML attribute name for 'term' attribute for categories.</summary>
         public const string AtomCategoryTermAttributeName = "term";
 
-        /// <summary>'scheme' - XML attribute name for ATOM 'scheme' attribute for categories.</summary>
+        /// <summary>'scheme' - XML attribute name for 'scheme' attribute for categories.</summary>
         public const string AtomCategorySchemeAttributeName = "scheme";
 
-        /// <summary>'scheme' - XML attribute name for ATOM 'label' attribute for categories.</summary>
+        /// <summary>'scheme' - XML attribute name for 'label' attribute for categories.</summary>
         public const string AtomCategoryLabelAttributeName = "label";
 
-        /// <summary> Atom link relation attribute value for edit links.</summary>
+        /// <summary> link relation attribute value for edit links.</summary>
         public const string AtomEditRelationAttributeValue = "edit";
 
-        /// <summary> Atom link relation attribute value for self links.</summary>
+        /// <summary> link relation attribute value for self links.</summary>
         public const string AtomSelfRelationAttributeValue = "self";
 
         /// <summary>XML element name to mark link element in Atom.</summary>
@@ -239,10 +239,10 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>XML element name to mark href attribute element in Atom.</summary>
         public const string AtomHRefAttributeName = "href";
 
-        /// <summary>Atom source attribute name for the content of media link entries.</summary>
+        /// <summary>source attribute name for the content of media link entries.</summary>
         public const string MediaLinkEntryContentSourceAttributeName = "src";
 
-        /// <summary> Atom link relation attribute value for edit-media links.</summary>
+        /// <summary> link relation attribute value for edit-media links.</summary>
         public const string AtomEditMediaRelationAttributeValue = "edit-media";
 
         /// <summary>XML attribute value of the link relation attribute for next page links in Atom.</summary>
@@ -257,13 +257,13 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>XML element name for a next link in a response to a $ref request.</summary>
         public const string ODataNextLinkElementName = "next";
 
-        /// <summary>Atom metadata text construct kind: plain text</summary>
+        /// <summary>metadata text construct kind: plain text</summary>
         public const string AtomTextConstructTextKind = "text";
 
-        /// <summary>Atom metadata text construct kind: html</summary>
+        /// <summary>metadata text construct kind: html</summary>
         public const string AtomTextConstructHtmlKind = "html";
 
-        /// <summary>Atom metadata text construct kind: xhtml</summary>
+        /// <summary>metadata text construct kind: xhtml</summary>
         public const string AtomTextConstructXHtmlKind = "xhtml";
 
         /// <summary>Default title for service document workspaces.</summary>
@@ -278,11 +278,11 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>IANA link relations namespace.</summary>
         public const string IanaLinkRelationsNamespace = "http://www.iana.org/assignments/relation/";
 
-        /// <summary>Guid for Atom Entry and Feed.</summary>
+        /// <summary>Guid for Entry and Feed.</summary>
         public const string AtomGuid = "45ff5496-189d-446c-a137-2881b3e5dd95";
-        #endregion Atom Format constants
+        #endregion Format constants
 
-        #region Atom Publishing Protocol constants
+        #region Publishing Protocol constants
         /// <summary>The name of the top-level 'service' element when writing service documents in Xml format.</summary>
         public const string AtomPublishingServiceElementName = "service";
 
@@ -295,7 +295,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>The name of the 'categories' element encountered while reading a service document in XML format.</summary>
         public const string AtomPublishingCategoriesElementName = "categories";
 
-        /// <summary>The Atom Publishing Protocol (APP) namespace: 'http://www.w3.org/2007/app'.</summary>
+        /// <summary>The Publishing Protocol (APP) namespace: 'http://www.w3.org/2007/app'.</summary>
         public const string AtomPublishingNamespace = "http://www.w3.org/2007/app";
 
         /// <summary>XML attribute name of the accept attribute of a categories element in APP.</summary>
@@ -320,11 +320,11 @@ namespace Microsoft.Test.Taupo.OData.Atom
         public const string AtomPublishingFixedNoValue = "no";
         #endregion
 
-        #region Atom format constants XLinq names
-        /// <summary>Schema namespace for Atom as an XNamespace.</summary>
+        #region format constants XLinq names
+        /// <summary>Schema namespace for as an XNamespace.</summary>
         public static readonly XNamespace AtomXNamespace = XNamespace.Get(TestAtomConstants.AtomNamespace);
 
-        /// <summary>Schema namespace for Atom Publishing Protocol as an XNamespace.</summary>
+        /// <summary>Schema namespace for Publishing Protocol as an XNamespace.</summary>
         public static readonly XNamespace AtomPublishingXNamespace = XNamespace.Get(TestAtomConstants.AtomPublishingNamespace);
 
         /// <summary>XML namespace for data service annotations as XNamespace.</summary>

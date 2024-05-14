@@ -105,62 +105,62 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         public const string TypeAttributeName = "type";
 
         /// <summary>
-        /// Constant for the 'author' element name in atom payloads
+        /// Constant for the 'author' element name in payloads
         /// </summary>
         public const string AuthorElementName = "author";
 
         /// <summary>
-        /// Constant for the 'title' element name in atom payloads
+        /// Constant for the 'title' element name in payloads
         /// </summary>
         public const string TitleElementName = "title";
 
         /// <summary>
-        /// Constant for the 'updated' element name in atom payloads
+        /// Constant for the 'updated' element name in payloads
         /// </summary>
         public const string UpdatedElementName = "updated";
 
         /// <summary>
-        /// Constant for the 'summary' element name in atom payloads
+        /// Constant for the 'summary' element name in payloads
         /// </summary>
         public const string SummaryElementName = "summary";
 
         /// <summary>
-        /// Constant for the 'link' element name in atom payloads
+        /// Constant for the 'link' element name in payloads
         /// </summary>
         public const string LinkElementName = "link";
 
         /// <summary>
-        /// Constant for the 'rel' attribute name in atom payloads
+        /// Constant for the 'rel' attribute name in payloads
         /// </summary>
         public const string RelAttributeName = "rel";
 
         /// <summary>
-        /// Constant for the 'scheme' attribute name in atom payloads
+        /// Constant for the 'scheme' attribute name in payloads
         /// </summary>
         public const string SchemeAttributeName = "scheme";
 
         /// <summary>
-        /// Constant for the 'term' attribute name in atom payloads
+        /// Constant for the 'term' attribute name in payloads
         /// </summary>
         public const string TermAttributeName = "term";
 
         /// <summary>
-        /// Constant for the 'category' element name in atom payloads
+        /// Constant for the 'category' element name in payloads
         /// </summary>
         public const string CategoryElementName = "category";
 
         /// <summary>
-        /// Constant for the 'name' element name in atom payloads
+        /// Constant for the 'name' element name in payloads
         /// </summary>
         public const string NameElementName = "name";
 
         /// <summary>
-        /// Constant for the 'contributor' element name in atom payloads
+        /// Constant for the 'contributor' element name in payloads
         /// </summary>
         public const string ContributorElementName = "contributor";           
 
         /// <summary>
-        /// Constant for the 'email' element name in atom payloads
+        /// Constant for the 'email' element name in payloads
         /// </summary>
         public const string EmailElementName = "email";
 
@@ -205,27 +205,27 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         public const string HasStreamAttributeName = "HasStream";
 
         /// <summary>
-        /// Constant for the 'href' attribute name in atom payloads
+        /// Constant for the 'href' attribute name in payloads
         /// </summary>
         public const string HrefAttributeName = "href";
 
         /// <summary>
-        /// Constant for the 'inline' element name in atom payloads
+        /// Constant for the 'inline' element name in payloads
         /// </summary>
         public const string InlineElementName = "inline";
 
         /// <summary>
-        /// Constant for the 'service' element name in atom service documents
+        /// Constant for the 'service' element name in service documents
         /// </summary>
         public const string ServiceElementName = "service";
 
         /// <summary>
-        /// Constant for the 'workspace' element name in atom service documents
+        /// Constant for the 'workspace' element name in service documents
         /// </summary>
         public const string WorkspaceElementName = "workspace";
 
         /// <summary>
-        /// Constant for the 'collection' element name in atom service documents
+        /// Constant for the 'collection' element name in service documents
         /// </summary>
         public const string CollectionElementName = "collection";
 
@@ -352,22 +352,22 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         public static XName InlineElement { get; private set; }
 
         /// <summary>
-        /// Gets an XName for the 'service' element in ATOM Service document
+        /// Gets an XName for the 'service' element in Service document
         /// </summary>
         public static XName ServiceElement { get; private set; }
 
         /// <summary>
-        /// Gets an XName for the 'workspace' element in ATOM Service document
+        /// Gets an XName for the 'workspace' element in Service document
         /// </summary>
         public static XName WorkspaceElement { get; private set; }
 
         /// <summary>
-        /// Gets an XName for the 'collection' element in ATOM Service document
+        /// Gets an XName for the 'collection' element in Service document
         /// </summary>
         public static XName CollectionElement { get; private set; }
 
         /// <summary>
-        /// Gets an XNamespace for the atom namespace
+        /// Gets an XNamespace for the namespace
         /// </summary>
         public static XNamespace AtomNamespace { get; private set; }
 

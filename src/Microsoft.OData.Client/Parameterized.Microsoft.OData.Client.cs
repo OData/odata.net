@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "The identity value specified by either the Atom id element or the OData-EntityId header must be an absolute URI."
+        /// A string like "The identity value specified by either the id element or the OData-EntityId header must be an absolute URI."
         /// </summary>
         internal static string Context_TrackingExpectsAbsoluteUri
         {
@@ -1023,7 +1023,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. Atom payload has a link, local object has a simple value."
+        /// A string like "Error processing response stream. payload has a link, local object has a simple value."
         /// </summary>
         internal static string Deserialize_MismatchAtomLinkLocalSimple
         {
@@ -1034,7 +1034,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. Atom payload has a feed and the property '{0}' is not a collection."
+        /// A string like "Error processing response stream. payload has a feed and the property '{0}' is not a collection."
         /// </summary>
         internal static string Deserialize_MismatchAtomLinkFeedPropertyNotCollection(object p0)
         {
@@ -1042,7 +1042,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. Atom payload has an entry and the property '{0}' is a collection."
+        /// A string like "Error processing response stream. payload has an entry and the property '{0}' is a collection."
         /// </summary>
         internal static string Deserialize_MismatchAtomLinkEntryPropertyIsCollection(object p0)
         {
@@ -2117,7 +2117,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Expected exactly one Atom entry in the response from the server, but none was found."
+        /// A string like "Expected exactly one entry in the response from the server, but none was found."
         /// </summary>
         internal static string AtomParser_SingleEntry_NoneFound
         {
@@ -2128,7 +2128,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Expected exactly one Atom entry in the response from the server, but more than one was found."
+        /// A string like "Expected exactly one entry in the response from the server, but more than one was found."
         /// </summary>
         internal static string AtomParser_SingleEntry_MultipleFound
         {
@@ -2139,7 +2139,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Expected an Atom feed or entry in the response from the server, but found an unexpected element instead."
+        /// A string like "Expected an feed or entry in the response from the server, but found an unexpected element instead."
         /// </summary>
         internal static string AtomParser_SingleEntry_ExpectedFeedOrEntry
         {
@@ -2257,7 +2257,7 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "The response payload is a not a valid response payload. Please make sure that the top level element is a valid Atom or JSON element or belongs to '{0}' namespace."
+        /// A string like "The response payload is a not a valid response payload. Please make sure that the top level element is a valid JSON element or belongs to '{0}' namespace."
         /// </summary>
         internal static string AtomMaterializer_InvalidResponsePayload(object p0)
         {

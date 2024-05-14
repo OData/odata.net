@@ -530,7 +530,7 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// <summary>
         /// Creates a new resource collection instance.
         /// </summary>
-        /// <param name="title">Title for the resource collection. Will be used as the title as part of the ATOM metadata annotation as well as the name property.</param>
+        /// <param name="title">Title for the resource collection. Will be used as the title as part of the metadata annotation as well as the name property.</param>
         /// <param name="href">Href for the resource collection.</param>
         /// <returns>A new resource collection instance.</returns>
         public static ResourceCollectionInstance ResourceCollection(string title, string href)
@@ -1315,7 +1315,7 @@ namespace Microsoft.Test.Taupo.OData.Common
 
         /// <summary>
         /// Marks the deferred link as pointing to collection or not.
-        /// Note that this should only be used for ATOM tests, as JSON doesn't have this distinction.
+        /// Note that this should only be used for tests, as JSON doesn't have this distinction.
         /// </summary>
         /// <param name="link">The link to set the flag on.</param>
         /// <param name="isCollection">true if the link represents a collection; false if it represents a singleton.

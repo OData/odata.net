@@ -51,7 +51,7 @@ namespace Microsoft.OData.Client
         internal virtual PrimitiveParserToken TokenizeFromXml(XmlReader reader)
         {
             Debug.Assert(reader.NodeType == XmlNodeType.Element, "Reader at element");
-            string elementString = MaterializeAtom.ReadElementString(reader, true);
+            string elementString = MaterializeObject.ReadElementString(reader, true);
             if (elementString != null)
             {
                 return new TextPrimitiveParserToken(elementString);

@@ -66,8 +66,6 @@ DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}
 DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
 PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
 
-AtomValueUtils_CannotConvertValueToAtomPrimitive=Cannot convert a value of type '{0}' to the string representation of an Atom primitive value.
-
 ODataJsonWriter_UnsupportedValueType=The value of type '{0}' is not supported and cannot be converted to a JSON representation.
 ODataJsonWriter_UnsupportedValueInCollection=Unable to serialize an object in a collection as it is not a supported ODataValue.
 ODataJsonWriter_UnsupportedDateTimeFormat=The specified ODataJsonDateTimeFormat is not supported.
@@ -453,11 +451,6 @@ ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not b
 
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
 ODataMetadataOutputContext_NotSupportJsonMetadata=The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.
-
-ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
-
-ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement=The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace.
-ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties=The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property. Navigation properties in ATOM must be represented as {{http://www.w3.org/2005/Atom}}:link elements.
 
 JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation=Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'.
 

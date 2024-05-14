@@ -12,9 +12,9 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Visitor which replaces all 'null' error messages with empty error messages since in ATOM we always get an empty error message if the error element is preset.
+    /// Visitor which replaces all 'null' error messages with empty error messages since in we always get an empty error message if the error element is preset.
     /// </summary>
-    /// <remarks>Only use for ATOM payloads.</remarks>
+    /// <remarks>Only use for payloads.</remarks>
     public class ErrorMessageNormalizer : ODataPayloadElementVisitorBase
     {
         /// <summary>

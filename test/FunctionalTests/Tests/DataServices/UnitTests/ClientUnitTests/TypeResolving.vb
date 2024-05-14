@@ -51,7 +51,7 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
         End Sub
 
@@ -64,7 +64,7 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -391,7 +391,7 @@ Partial Public Class ClientModule
                 Client.TypeResolveContext.ResetData()
 
                 ctx = New DataServiceContext(ctx.BaseUri)
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
                 'ctx.Format.UseAtom()
                 ctx.MergeOption = merge
 
@@ -1271,7 +1271,7 @@ Partial Public Class ClientModule
             web.StartService()
 
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
         End Sub
 
@@ -1284,7 +1284,7 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Client.TypeResolveContext.ResetData()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -1329,7 +1329,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -1648,7 +1648,7 @@ Partial Public Class ClientModule
 
             ' AttachTo
             ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
 
             ctx.AttachTo("Customers", cust)

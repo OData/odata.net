@@ -21,9 +21,9 @@ namespace Microsoft.OData.Client
     #endregion Namespaces
 
     /// <summary>
-    /// Use this class to materialize objects from an application/atom+xml stream.
+    /// Use this class to materialize objects.
     /// </summary>
-    internal class MaterializeAtom : IDisposable, IEnumerable, IEnumerator
+    internal class MaterializeObject : IDisposable, IEnumerable, IEnumerator
     {
         #region Private fields
 
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
         /// <param name="responseMessage">responseMessage</param>
         /// <param name="payloadKind">The kind of the payload to materialize.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
-        internal MaterializeAtom(
+        internal MaterializeObject(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
             ProjectionPlan plan,
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
         /// <param name="format">The format of the response being materialized from.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
         /// <param name="includeLinks">Whether to include navigation properties when materializing an entry.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache, bool includeLinks = true)
+        internal MaterializeObject(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache, bool includeLinks = true)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Private internal constructor used for creating empty wrapper.
         /// </summary>
-        private MaterializeAtom()
+        private MaterializeObject()
         {
         }
 
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// A materializer for empty results
         /// </summary>
-        internal static MaterializeAtom EmptyResults
+        internal static MaterializeObject EmptyResults
         {
             get
             {
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Client
         /// <param name="context">Context of expression to analyze.</param>
         /// <param name="results">the results to wrap</param>
         /// <returns>a new materializer</returns>
-        internal static MaterializeAtom CreateWrapper(DataServiceContext context, IEnumerable results)
+        internal static MaterializeObject CreateWrapper(DataServiceContext context, IEnumerable results)
         {
             return new ResultsWrapper(context, results, null);
         }
@@ -391,7 +391,7 @@ namespace Microsoft.OData.Client
         /// <param name="results">The current page of results</param>
         /// <param name="continuation">The continuation for the results.</param>
         /// <returns>A new materializer.</returns>
-        internal static MaterializeAtom CreateWrapper(DataServiceContext context, IEnumerable results, DataServiceQueryContinuation continuation)
+        internal static MaterializeObject CreateWrapper(DataServiceContext context, IEnumerable results, DataServiceQueryContinuation continuation)
         {
             return new ResultsWrapper(context, results, continuation);
         }
@@ -521,7 +521,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Private type to wrap partial (paged) results and make it look like standard materialized results.
         /// </summary>
-        private class ResultsWrapper : MaterializeAtom
+        private class ResultsWrapper : MaterializeObject
         {
             #region Private fields
 

@@ -1663,7 +1663,7 @@ namespace AstoriaUnitTests.Tests
                 else
                 {
                     // If the type conversion was disable, the actual type of the value should exactly match the payload type
-                    // Unless this was JSON payload in which case our test framework (conversion from ATOM to JSON) can't tell
+                    // Unless this was JSON payload in which case our test framework (conversion from to JSON) can't tell
                     //   if the test wanted the item type be a string (as in XML) or for example int (as in JSON) in the case where no type was specified.
                     if (format == UnitTestsUtil.JsonMimeType && typeName == null)
                     {

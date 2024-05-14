@@ -322,19 +322,19 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                        }
                        else
                        {
-                           throw new ODataTestException("Expected results are only implemented for ATOM and JSON.");
+                           throw new ODataTestException("Expected results are only implemented for and JSON.");
                        }
                    });
            });
         }
 
         /// <summary>
-        /// Returns the expected ATOM payload for an error.
+        /// Returns the expected payload for an error.
         /// </summary>
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The error message.</param>
         /// <param name="innerError">The inner error (if null, don't write anything).</param>
-        /// <returns>The expected ATOM payload for an error.</returns>
+        /// <returns>The expected payload for an error.</returns>
         private static string ExpectedAtomErrorPayload(string code, string message, InnerError innerError)
         {
             return string.Format(
@@ -360,11 +360,11 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         }
 
         /// <summary>
-        /// Returns the expected ATOM payload for an inner error payload.
+        /// Returns the expected payload for an inner error payload.
         /// </summary>
-        /// <param name="innerError">The inner error to create the ATOM payload for.</param>
+        /// <param name="innerError">The inner error to create the payload for.</param>
         /// <param name="depth">The depth of the inner error (starting with 0).</param>
-        /// <returns>The expected ATOM payload for the <paramref name="innerError"/> payload.</returns>
+        /// <returns>The expected payload for the <paramref name="innerError"/> payload.</returns>
         private static string ExpectedAtomInnerErrorPayload(InnerError innerError, int depth)
         {
             if (innerError == null)

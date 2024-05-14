@@ -210,7 +210,7 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Ensures that links in Atom resolve to the expected resource.</summary>
+        /// <summary>Ensures that links in resolve to the expected resource.</summary>
         [Ignore] // Remove Atom
         // [TestCategory("Partition2"), TestMethod]
         public void AtomSerializerLinks()
@@ -775,7 +775,7 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
                     
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     var q = ctx.CreateQuery<Customer>("Customers");
                     q = includeCount ? q.IncludeCount() : q;

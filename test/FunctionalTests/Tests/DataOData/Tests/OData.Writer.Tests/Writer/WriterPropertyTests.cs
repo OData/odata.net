@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             ExpectedTypeName = "TestModel.EntityType"
         };
 
-        private const string MissingTypeNameSentinelTextAtom = "<missingTypeName/>";
+        private const string MissingTypeNameSentinelText= "<missingTypeName/>";
         private const string MissingTypeNameSentinelTextJson = "\"missingTypeName\":null";
 
         private static readonly XElement MissingTypeNameSentinelXElement = new XElement("missingTypeName");
@@ -884,7 +884,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         //   complex on an entry
         //   complex on a complex value
         //   complex on a complex value in collection
-        //   both ATOM and JSON
+        //   both and JSON
         //   primitive on complex or entry value in EPM
         // We're not testing these here, since all of it goes through the same code-path, the only difference is passing around the settings.
         [Ignore] // Remove Atom
@@ -1135,7 +1135,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = (string)null,
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnComplex"),
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty")
                 },
@@ -1146,7 +1146,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = "<typeName>TestNS.MyType</typeName>",
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJson = (object) null,
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
@@ -1157,7 +1157,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = MissingTypeNameSentinelTextAtom,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJson = (object) null,
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
@@ -1168,7 +1168,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonTypeName = (string) null,
                     ExpectedExceptionInJson = (object) new ODataException(ODataJsonValueSerializer_MissingTypeNameOnComplex),
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
@@ -1179,7 +1179,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = "<typeName></typeName>",
                     JsonTypeName = (string) null,
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnComplex"),
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
@@ -1190,7 +1190,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     XmlTypeName = "<typeName>DifferentType</typeName>",
                     JsonTypeName = "\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataTypeAnnotationName + "\":\"DifferentType\"",
                     ExpectedExceptionInJson = (object) null,
-                    ExpectedExceptionInAtom = (object) null,
+                    ExpectedExceptionIn= (object) null,
                     ExpectedExceptionInJsonForResponse = (object) null,
                     ExpectedExceptionInAtomForResponse = (object) null,
                 },
@@ -1297,7 +1297,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
@@ -1309,7 +1309,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.Int32") + "\"",
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJson = new object(),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
@@ -1321,7 +1321,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     JsonTypeName = MissingTypeNameSentinelTextJson,
                     ExpectedExceptionInJson = new object(),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
@@ -1333,7 +1333,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnCollection"),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
@@ -1345,7 +1345,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = "\"type\":\"\"",
                     JsonTypeName = "\"@odata.type\":\"\"",
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                     ExpectedExceptionInAtomForResponse = (object)ODataExpectedExceptions.ODataException("ODataContextUriBuilder_TypeNameMissingForProperty"),
                 },
@@ -1357,7 +1357,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = "\"type\":\"NonCollectionTypeName\"",
                     JsonTypeName = "\"@odata.type\":\"#NonCollectionTypeName\"",
                     ExpectedExceptionInJson = (object)ODataExpectedExceptions.ODataException("WriterValidationUtils_MissingTypeNameWithMetadata"),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = (object)ODataExpectedExceptions.ODataException("ODataJsonValueSerializer_MissingTypeNameOnCollection"),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },
@@ -1369,7 +1369,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     JsonTypeName = "\"type\":\"" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     JsonTypeName = "\"@odata.type\":\"#" + EntityModelUtils.GetCollectionTypeName("Edm.String") + "\"",
                     ExpectedExceptionInJson = new object(),
-                    ExpectedExceptionInAtom = new object(),
+                    ExpectedExceptionIn= new object(),
                     ExpectedExceptionInJsonForResponse = new object(),
                     ExpectedExceptionInAtomForResponse = new object(),
                 },

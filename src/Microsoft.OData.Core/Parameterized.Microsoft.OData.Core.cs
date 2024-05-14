@@ -477,14 +477,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot convert a value of type '{0}' to the string representation of an Atom primitive value."
-        /// </summary>
-        internal static string AtomValueUtils_CannotConvertValueToAtomPrimitive(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomValueUtils_CannotConvertValueToAtomPrimitive, p0);
-        }
-
-        /// <summary>
         /// A string like "The value of type '{0}' is not supported and cannot be converted to a JSON representation."
         /// </summary>
         internal static string ODataJsonWriter_UnsupportedValueType(object p0)
@@ -3568,30 +3560,6 @@ namespace Microsoft.OData {
             {
                 return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataMetadataOutputContext_NotSupportJsonMetadata);
             }
-        }
-
-        /// <summary>
-        /// A string like "A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings."
-        /// </summary>
-        internal static string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified, p0);
-        }
-
-        /// <summary>
-        /// A string like "The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace."
-        /// </summary>
-        internal static string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement, p0, p1);
-        }
-
-        /// <summary>
-        /// A string like "The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property. Navigation properties in ATOM must be represented as {{http://www.w3.org/2005/Atom}}:link elements."
-        /// </summary>
-        internal static string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties(object p0, object p1)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties, p0, p1);
         }
 
         /// <summary>

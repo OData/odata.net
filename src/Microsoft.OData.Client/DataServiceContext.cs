@@ -3875,7 +3875,7 @@ namespace Microsoft.OData.Client
             {
                 if (mediaLink)
                 {
-                    // special case for requesting the "media" value of an ATOM media link entry
+                    // special case for requesting the "media" value of a media link entry
                     Uri relativeUri = UriUtil.CreateUri(XmlConstants.UriValueSegment, UriKind.Relative);
                     requestUri = UriUtil.CreateUri(box.GetResourceUri(this.BaseUriResolver, true /*queryLink*/), relativeUri);
                 }

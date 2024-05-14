@@ -48,7 +48,7 @@ namespace AstoriaUnitTests.Tests
             OpenWebDataServiceHelper.PageSizeCustomizer.Value = (config, type) => { config.SetEntitySetPageSize("Orders", 1); };
             this.callbackFlag = false;
             this.context = new DataServiceContext(serviceRoot);
-            //this.context.EnableAtom = true;
+            //this.context.Enable= true;
             //this.context.Format.UseAtom();
         }
 

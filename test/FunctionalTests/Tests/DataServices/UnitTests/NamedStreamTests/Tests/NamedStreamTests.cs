@@ -1105,7 +1105,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         DSPResource entity = new DSPResource(entityType);
                         entity.SetValue("ID", 111);
-                        string payload = DSPResourceSerializer.WriteEntity(entity, mimeType == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.Atom : DSPResourceSerializerFormat.Json);
+                        string payload = DSPResourceSerializer.WriteEntity(entity, mimeType == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.: DSPResourceSerializerFormat.Json);
 
                         // POST entity
                         request.RequestContentType = mimeType;

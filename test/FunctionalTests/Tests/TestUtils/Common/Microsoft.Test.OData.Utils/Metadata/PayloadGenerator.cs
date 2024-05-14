@@ -59,7 +59,7 @@ namespace Microsoft.Test.OData.Utils.Metadata
         private ODataWriterPayloadNormalizer normalizer = new ODataWriterPayloadNormalizer();
 
         /// <summary>
-        /// Returns Atom payloads based on default model
+        /// Returns payloads based on default model
         /// </summary>
         /// <returns>An IEnumerable of Payloads </returns>
         public IEnumerable<EntityInstance> GenerateAtomPayloads()

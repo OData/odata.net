@@ -585,7 +585,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
             public bool NotGenerated { get; set; }
 
             /// <summary>
-            /// If specified this func will be called to extract the ATOM fragment from the modified payload such that the original test case can work with the result.
+            /// If specified this func will be called to extract the fragment from the modified payload such that the original test case can work with the result.
             /// </summary>
             public Func<WriterTestConfiguration, XElement, XElement> AtomFragmentExtractor { get; set; }
 

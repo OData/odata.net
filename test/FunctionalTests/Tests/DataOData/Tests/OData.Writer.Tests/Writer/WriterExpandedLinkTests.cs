@@ -287,7 +287,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     },
 
                     //// NOTE: Not testing the cases where IsCollection == null here since ERL payloads are only allowed in
-                    ////       requests where IsCollection is required (in ATOM and JSON)
+                    ////       requests where IsCollection is required (in and JSON)
                     #endregion Expanded link with entity reference link content
                 };
 

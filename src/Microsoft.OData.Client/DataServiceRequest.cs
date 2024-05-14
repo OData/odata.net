@@ -61,8 +61,8 @@ namespace Microsoft.OData.Client
         /// <param name="message">the message</param>
         /// <param name="expectedPayloadKind">expected payload kind.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
-        /// <returns>atom materializer</returns>
-        internal static MaterializeAtom Materialize(
+        /// <returns>object materializer</returns>
+        internal static MaterializeObject Materialize(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
             ProjectionPlan plan,
@@ -77,10 +77,10 @@ namespace Microsoft.OData.Client
             // If there is no content (For e.g. /Customers(1)/BestFriend is null), we need to return empty results.
             if (message.StatusCode == (int)HttpStatusCode.NoContent || String.IsNullOrEmpty(contentType))
             {
-                return MaterializeAtom.EmptyResults;
+                return MaterializeObject.EmptyResults;
             }
 
-            return new MaterializeAtom(responseInfo, queryComponents, plan, message, expectedPayloadKind, materializerCache);
+            return new MaterializeObject(responseInfo, queryComponents, plan, message, expectedPayloadKind, materializerCache);
         }
 
         /// <summary>
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Client
                 serviceEx = serviceEx ?? previousInnerException as DataServiceClientException;
                 if (context.IgnoreResourceNotFoundException && serviceEx != null && serviceEx.StatusCode == (int)HttpStatusCode.NotFound)
                 {
-                    QueryOperationResponse qor = new QueryOperationResponse<TElement>(ex.Response.HeaderCollection, ex.Response.Query, MaterializeAtom.EmptyResults);
+                    QueryOperationResponse qor = new QueryOperationResponse<TElement>(ex.Response.HeaderCollection, ex.Response.Query, MaterializeObject.EmptyResults);
                     qor.StatusCode = (int)HttpStatusCode.NotFound;
                     return (IEnumerable<TElement>)qor;
                 }
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Client
             {
                 if (result != null)
                 {
-                    QueryOperationResponse operationResponse = result.GetResponse<TElement>(MaterializeAtom.EmptyResults);
+                    QueryOperationResponse operationResponse = result.GetResponse<TElement>(MaterializeObject.EmptyResults);
 
                     if (operationResponse != null)
                     {
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Client
             catch (InvalidOperationException ex)
             {
                 QueryOperationResponse operationResponse;
-                operationResponse = queryResult.GetResponse<TElement>(MaterializeAtom.EmptyResults);
+                operationResponse = queryResult.GetResponse<TElement>(MaterializeObject.EmptyResults);
                 if (operationResponse != null)
                 {
                     operationResponse.Error = ex;

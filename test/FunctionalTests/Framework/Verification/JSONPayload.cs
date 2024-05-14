@@ -119,7 +119,7 @@ namespace System.Data.Test.Astoria
                         this.Resources = property;
                     else
                     {
-                        // this is to match the resulting structure for parsing links in ATOM / json collections
+                        // this is to match the resulting structure for parsing links in / json collections
                         PayloadObject temp = new PayloadObject(this);
                         temp.Name = property.Name;
                         temp.PayloadProperties.Add(property);

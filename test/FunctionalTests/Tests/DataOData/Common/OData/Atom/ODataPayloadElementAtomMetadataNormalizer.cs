@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Normalizes atom metadata values between multiple properties/annotations where it may be defined.
+    /// Normalizes metadata values between multiple properties/annotations where it may be defined.
     /// </summary>
     /// <remarks>
     /// This visitor modifies the payload element being visited - use deep clone if the original state needs
@@ -36,7 +36,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// Generates a function which normalizes the given payload element and all of its descendants.
         /// </summary>
         /// <param name="testConfiguration">Test configuration to apply during normalization.</param>
-        /// <returns>A function which normalizes the ATOM metadata of a payload element and returns the modified payload element.</returns>
+        /// <returns>A function which normalizes the metadata of a payload element and returns the modified payload element.</returns>
         public static Func<ODataPayloadElement, ODataPayloadElement> GenerateNormalizer(TestConfiguration testConfiguration)
         {
             return new Func<ODataPayloadElement, ODataPayloadElement>(payloadElement =>
@@ -47,7 +47,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Creates a new ATOM metadata normalizer.
+        /// Creates a new metadata normalizer.
         /// </summary>
         /// <param name="testConfiguration">Test configuration to apply during normalization.</param>
         public ODataPayloadElementAtomMetadataNormalizer(TestConfiguration testConfiguration)
@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes entry specific atom metadata.
+        /// Normalizes entry specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(EntityInstance payloadElement)
@@ -81,7 +81,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes feed specific atom metadata.
+        /// Normalizes feed specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(EntitySetInstance payloadElement)
@@ -109,7 +109,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes link collection specific atom metadata.
+        /// Normalizes link collection specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(LinkCollection payloadElement)
@@ -126,7 +126,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes named stream specific atom metadata.
+        /// Normalizes named stream specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(NamedStreamInstance payloadElement)
@@ -173,7 +173,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes navigation property specific atom metadata.
+        /// Normalizes navigation property specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(NavigationPropertyInstance payloadElement)
@@ -193,7 +193,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes resoure collection specific atom metadata.
+        /// Normalizes resoure collection specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(ResourceCollectionInstance payloadElement)
@@ -207,7 +207,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes workspace specific atom metadata.
+        /// Normalizes workspace specific metadata.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         public override void Visit(WorkspaceInstance payloadElement)
@@ -244,7 +244,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes an Atom link property value between an XmlTreeAnnotation and another property.
+        /// Normalizes an link property value between an XmlTreeAnnotation and another property.
         /// </summary>
         /// <typeparam name="T">The type of payload element.</typeparam>
         /// <param name="payloadElement">The payload element to normalize.</param>
@@ -296,7 +296,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes an named stream's Atom link property value between a NamedStreamAtomLinkMetadataAnnotation and another property.
+        /// Normalizes an named stream's link property value between a NamedStreamAtomLinkMetadataAnnotation and another property.
         /// </summary>
         /// <param name="namedStream">The named stream to normalize.</param>
         /// <param name="annotation">The annotation to use for normalizing.</param>
@@ -342,7 +342,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Normalizes a workspace or resource collection's Atom title property value so that it matches the element's title annotation.
+        /// Normalizes a workspace or resource collection's title property value so that it matches the element's title annotation.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize</param>
         /// <param name="titlePropertyValue">The value of the payload element's title property</param>

@@ -150,7 +150,7 @@ namespace AstoriaUnitTests.Tests
 
                         // Add entities
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         foreach (XFeatureTestsEntity entity in testEntities)
                         {
@@ -329,7 +329,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
@@ -408,7 +408,7 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     PopulateClientContextWithTestEntities(ctx);
 
@@ -488,7 +488,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
 
                         if (httpMethod != "POST")
@@ -542,7 +542,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         service.EnableChangeInterceptors = false;
                         PopulateClientContextWithTestEntities(ctx);
@@ -600,7 +600,7 @@ namespace AstoriaUnitTests.Tests
 
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
 
                     ctx.AddObject("Entities", clientMle);
@@ -761,7 +761,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
@@ -811,7 +811,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 
@@ -1204,7 +1204,7 @@ namespace AstoriaUnitTests.Tests
                     {
                         request.StartService();
                         var ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         PopulateClientContextWithTestEntities(ctx);
 

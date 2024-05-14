@@ -31,17 +31,17 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         object DeserializePrimitive(string value, Type expectedType);
 
         /// <summary>
-        /// Convert a datetime primitive value to atom datetime offset format
+        /// Convert a datetime primitive value to datetime offset format
         /// </summary>
         /// <param name="value">DateTime clr value</param>
-        /// <returns>string format of atom datetime offset</returns>
+        /// <returns>string format of datetime offset</returns>
         string ConvertToAtomDateTimeOffset(DateTime value);
 
         /// <summary>
-        /// Convert a datetimeoffse primitive value to atom datetime offset format
+        /// Convert a datetimeoffse primitive value to datetime offset format
         /// </summary>
         /// <param name="value">DateTimeOffset clr value</param>
-        /// <returns>string format of atom datetime offset</returns>
+        /// <returns>string format of datetime offset</returns>
         string ConvertToAtomDateTimeOffset(DateTimeOffset value);
     }
 }

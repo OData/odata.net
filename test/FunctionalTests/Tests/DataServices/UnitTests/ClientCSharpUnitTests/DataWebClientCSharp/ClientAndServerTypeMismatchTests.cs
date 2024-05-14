@@ -411,7 +411,7 @@ namespace AstoriaUnitTests
             responseMessage.SetHeader("OData-Version", "4.0");
 
             var ctx = new DataServiceContextWithCustomTransportLayer(ODataProtocolVersion.V4, requestMessage, responseMessage);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
 
             if (contentType == UnitTestsUtil.JsonMimeType || contentType == UnitTestsUtil.JsonMimeTypeIeee754Compatible)
             {

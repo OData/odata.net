@@ -16,7 +16,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Utility methods related to the ATOM format.
+    /// Utility methods related to the format.
     /// </summary>
     internal static class TestAtomUtils
     {

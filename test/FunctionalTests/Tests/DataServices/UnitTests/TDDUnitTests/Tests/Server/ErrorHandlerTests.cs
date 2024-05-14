@@ -24,7 +24,7 @@ namespace AstoriaUnitTests.TDD.Tests.Server
     [TestClass]
     public class ErrorHandlerTests
     {
-        private const string MimeApplicationAtom = "application/atom+xml";
+        private const string MimeApplication= "application/atom+xml";
         private const string MimeApplicationJsonODataMinimalMetadata = "application/json;odata.metadata=minimal";
         private const string MimeApplicationJsonODataFullMetadata = "application/json;odata.metadata=full";
         private const string MimeApplicationJsonODataNoMetadata = "application/json;odata.metadata=none";

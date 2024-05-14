@@ -33,7 +33,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         //// {1} ... data service namespace
         //// {2} ... default metadata namespace prefix
         //// {3} ... collection item element name 'element'
-        //// {4} ... atom 'type' attribute name
+        //// {4} ... 'type' attribute name
         //// {5} ... data service metadata namespace
 
         private static readonly CollectionWriterTestDescriptor.ItemDescription nullItem =
@@ -469,7 +469,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
         }
 
         [Ignore] // Remove Atom
-        [TestMethod, Variation(Description = "Test the the reading of heterogeneous ATOM collection payloads.")]
+        [TestMethod, Variation(Description = "Test the the reading of heterogeneous collection payloads.")]
         public void HeterogeneousCollectionWriterWithoutMetadataTest()
         {
             var collections = new[]
@@ -589,7 +589,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.CollectionWriter
             // {1} ... data service namespace
             // {2} ... default metadata namespace prefix
             // {3} ... collection item element name 'element'
-            // {4} ... atom 'type' attribute name
+            // {4} ... 'type' attribute name
             // {5} ... data service metadata namespace
 
             var collectionItem = new CollectionWriterTestDescriptor.ItemDescription

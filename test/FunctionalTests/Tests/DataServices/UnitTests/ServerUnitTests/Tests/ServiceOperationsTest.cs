@@ -630,7 +630,7 @@ namespace AstoriaUnitTests.Tests
                     request.SendRequest();
 
                     DataServiceContext clientContext = new DataServiceContext(new Uri(request.BaseUri), Microsoft.OData.Client.ODataProtocolVersion.V4);
-                    //clientContext.EnableAtom = true;
+                    //clientContext.Enable= true;
                     //clientContext.Format.UseAtom();
                     clientContext.Timeout = 6000;
                     var customersWithBirthday = clientContext.CreateQuery<Customer>("CustomersWithDerivedTypeIdentiferSegment").OfType<CustomerWithBirthday>().ToList();
@@ -655,7 +655,7 @@ namespace AstoriaUnitTests.Tests
                     request.SendRequest();
 
                     DataServiceContext clientContext = new DataServiceContext(new Uri(request.BaseUri), Microsoft.OData.Client.ODataProtocolVersion.V4);
-                    //clientContext.EnableAtom = true;
+                    //clientContext.Enable= true;
                     //clientContext.Format.UseAtom();
                     clientContext.Timeout = 6000;
                     var customersWithBirthday = (from customerWithBirthday in clientContext.CreateQuery<Customer>("CustomersWithDerivedTypeIdentiferSegment").OfType<CustomerWithBirthday>()

@@ -18,8 +18,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
     #endregion Namespaces
 
     /// <summary>
-    /// Converts ATOM metadata from the given payload element and its descendants into
-    /// XmlTree annotations suitable for payloads when ATOM metadata reading is enabled.
+    /// Converts metadata from the given payload element and its descendants into
+    /// XmlTree annotations suitable for payloads when metadata reading is enabled.
     /// This happens for stream properties and association links that are read as atom:link elements
     /// but otherwise ignored in requests.
     /// </summary>
@@ -40,8 +40,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
         }
 
         /// <summary>
-        /// Converts ATOM metadata from the given payload element and its descendants into
-        /// XmlTree annotations suitable for payloads when ATOM metadata reading is enabled.
+        /// Converts metadata from the given payload element and its descendants into
+        /// XmlTree annotations suitable for payloads when metadata reading is enabled.
         /// This happens for stream properties and association links that are read as atom:link elements
         /// but otherwise ignored in some cases.
         /// </summary>
@@ -55,7 +55,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Common
         }
 
         /// <summary>
-        /// Converts the ATOM metadata annotation of stream properties and assocation links
+        /// Converts the metadata annotation of stream properties and assocation links
         /// into XmlTree annotations and removes the stream properties/association links from the payload.
         /// </summary>
         /// <param name="payloadElement">The entity instance to visit.</param>

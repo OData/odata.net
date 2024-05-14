@@ -355,12 +355,12 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entityDescriptor">entity descriptor whose response is getting materialized.</param>
         /// <param name="responseInfo">information about the response to be materialized.</param>
-        /// <returns>an instance of MaterializeAtom, that can be used to materialize the response.</returns>
-        protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
+        /// <returns>an instance of MaterializeObject, that can be used to materialize the response.</returns>
+        protected override MaterializeObject GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
             Debug.Assert(this.cachedResponse.Exception == null && this.cachedResponse.MaterializerEntry != null, "this.cachedResponse.Exception == null && this.cachedResponse.Entry != null");
             ODataResource entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
-            return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format, base.MaterializerCache);
+            return new MaterializeObject(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format, base.MaterializerCache);
         }
 
         /// <summary>

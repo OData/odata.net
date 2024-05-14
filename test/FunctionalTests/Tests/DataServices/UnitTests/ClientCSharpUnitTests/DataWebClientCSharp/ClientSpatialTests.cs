@@ -45,7 +45,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 //context.Format.UseAtom();
                 var tripLegs = context.CreateQuery<TripLegWithCollection<GeographyPoint>>("TripLegs").Where(t => t.ID == SpatialTestUtil.DefaultId).ToList();
                 var tripLeg = tripLegs.Single();

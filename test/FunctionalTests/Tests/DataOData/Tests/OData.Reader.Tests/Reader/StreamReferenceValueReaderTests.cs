@@ -63,7 +63,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     PayloadElement = PayloadBuilder.StreamProperty("StreamProperty", contentType: "mime/type"),
                     PayloadEdmModel = model,
-                    // Doesn't work for ATOM as ATOM needs the self link to put the content type on
+                    // Doesn't work for as needs the self link to put the content type on
                     SkipTestConfiguration = tc => false
                 },
                 // Read link and content type
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 {
                     PayloadElement = PayloadBuilder.StreamProperty("StreamProperty", etag: "etag"),
                     PayloadEdmModel = model,
-                    // Doesn't work for ATOM as ATOM needs the edit link to put the etag on
+                    // Doesn't work for as needs the edit link to put the etag on
                     SkipTestConfiguration = tc => false
                 },
                 // Just edit link and etag - valid for readers
@@ -112,7 +112,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                 = CreateStreamPropertyMetadataTestDescriptors(this.JsonSettings).SelectMany(td => this.PayloadGenerator.GenerateReaderPayloads(td));
 
             // NOTE: manual JSON tests and error tests are part of the JSON specific StreamPropertyWithMetadataJsonTests test case
-            // NOTE: manual ATOM tests and error tests are part of the ATOM specific StreamPropertyWithMetadataAtomTests test case
+            // NOTE: manual tests and error tests are part of the specific StreamPropertyWithMetadataAtomTests test case
             this.CombinatorialEngineProvider.RunCombinations(
                 testDescriptors,
                 // No stream properties in requests or <V3 payloads

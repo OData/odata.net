@@ -220,7 +220,7 @@ namespace Microsoft.OData.Service
                 resultDescription = new RequestDescription(segmentInfos, resultUri);
 
                 // Only GET and PUT operations are allowed for a request uri refering to a named stream.
-                // Note that we defer the same test for the default atom stream till later when we know if the instance type is an MLE.
+                // Note that we defer the same test for the default stream till later when we know if the instance type is an MLE.
                 if (resultDescription.TargetKind == RequestTargetKind.MediaResource &&
                     resultDescription.IsNamedStream &&
                     service.OperationContext.RequestMessage.HttpVerb.IsChange() &&

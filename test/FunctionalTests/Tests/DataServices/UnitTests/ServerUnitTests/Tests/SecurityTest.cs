@@ -556,7 +556,7 @@ namespace AstoriaUnitTests.Tests
                     switch (this.feature)
                     {
                         case StackConsumingFeature.AtomDeserializer:
-                            // ATOM deserializer shares limits with JSON deserialized.
+                            // deserializer shares limits with JSON deserialized.
                             int atomDeserializerDepth = 105;
                             request.HttpMethod = "POST";
                             request.RequestContentType = SerializationFormatData.Atom.MimeTypes[0];

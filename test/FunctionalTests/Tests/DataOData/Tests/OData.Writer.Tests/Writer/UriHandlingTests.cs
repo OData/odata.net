@@ -172,7 +172,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed generator Uri
+                {   // metadata: feed generator Uri
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -181,7 +181,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed logo
+                {   // metadata: feed logo
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -190,7 +190,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed icon
+                {   // metadata: feed icon
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -199,7 +199,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed author
+                {   // metadata: feed author
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -208,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed contributor
+                {   // metadata: feed contributor
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -217,7 +217,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: feed link
+                {   // metadata: feed link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -226,7 +226,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: entry author
+                {   // metadata: entry author
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
@@ -235,7 +235,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: entry contributor
+                {   // metadata: entry contributor
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
@@ -244,7 +244,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Formats = new [] { ODataFormat.Json }
                 },
                 relativeUri => new BaseUriErrorTestCase
-                {   // Atom metadata: entry link
+                {   // metadata: entry link
                     ItemFunc = new Func<IEnumerable<ODataItem>>(() =>
                     {
                         ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
@@ -441,7 +441,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ResponseOnly = true,
             },
             new UriTestCase
-            {   // Atom metadata: feed generator Uri
+            {   // metadata: feed generator Uri
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -450,7 +450,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed logo
+            {   // metadata: feed logo
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -459,7 +459,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed icon
+            {   // metadata: feed icon
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -468,7 +468,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed author
+            {   // metadata: feed author
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -477,7 +477,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed contributor
+            {   // metadata: feed contributor
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -488,7 +488,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed self link
+            {   // metadata: feed self link
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -497,7 +497,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: feed next page link
+            {   // metadata: feed next page link
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -508,7 +508,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 ResponseOnly = true
             },
             new UriTestCase
-            {   // Atom metadata: feed link
+            {   // metadata: feed link
                 ItemFunc = (url) =>
                 {
                     ODataResourceSet feed = ObjectModelUtils.CreateDefaultFeed();
@@ -517,7 +517,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: entry author
+            {   // metadata: entry author
                 ItemFunc = (url) =>
                 {
                     ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
@@ -527,7 +527,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: entry contributor
+            {   // metadata: entry contributor
                 ItemFunc = (url) =>
                 {
                     ODataResource entry = ObjectModelUtils.CreateDefaultEntry();
@@ -537,7 +537,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 JsonExtractor = null,
             },
             new UriTestCase
-            {   // Atom metadata: entry link
+            {   // metadata: entry link
                 ItemFunc = (url) =>
                 {
                     ODataResource entry = ObjectModelUtils.CreateDefaultEntry();

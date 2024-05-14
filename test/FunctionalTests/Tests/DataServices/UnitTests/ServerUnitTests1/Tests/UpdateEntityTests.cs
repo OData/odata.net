@@ -569,7 +569,7 @@ namespace AstoriaUnitTests.Tests
                     },
                     #endregion
 
-                    #region ATOM entity type parsing
+                    #region entity type parsing
                     // Invalid type name
                     new UpdateEntityFormatTestCase
                     {
@@ -740,7 +740,7 @@ namespace AstoriaUnitTests.Tests
                     },
                     #endregion
 
-                    #region ATOM content element parsing
+                    #region content element parsing
                     // Empty content element with no attributes
                     // ODataLib no treats missing or empty type attribute as text/plain (it doesn't allow text/plain itself though).
                     new UpdateEntityFormatTestCase
@@ -887,7 +887,7 @@ namespace AstoriaUnitTests.Tests
                     },
                     #endregion
 
-                    #region ATOM property payloads
+                    #region property payloads
                     // Try to update a key property with correct value, should work (the value is ignored).
                     new UpdateEntityFormatTestCase
                     {
@@ -1009,7 +1009,7 @@ namespace AstoriaUnitTests.Tests
                     #endregion
 
                     #region ATOM
-                    // Update to Orders in ATOM should not fail, since there are no Customers anywhere.
+                    // Update to Orders in should not fail, since there are no Customers anywhere.
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Order).FullName + "'/>" +
@@ -1017,9 +1017,9 @@ namespace AstoriaUnitTests.Tests
                             "</entry>",
                         ContentType = UnitTestsUtil.AtomFormat,
                     },
-                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with ATOM payload.
+                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with payload.
                     //   We decided to fix this issue (since it's a security problem) and thus we should fail.
-                    // Update to Orders in ATOM which includes a bind to Customers.
+                    // Update to Orders in which includes a bind to Customers.
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Order).FullName + "'/>" +
@@ -1029,9 +1029,9 @@ namespace AstoriaUnitTests.Tests
                         ContentType = UnitTestsUtil.AtomFormat,
                         ExpectedErrorStatusCode = 400
                     },
-                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with ATOM payload.
+                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with payload.
                     //   We decided to fix this issue (since it's a security problem) and thus we should fail.
-                    // Update to Orders in ATOM which includes a bind to Customers.
+                    // Update to Orders in which includes a bind to Customers.
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Order).FullName + "'/>" +
@@ -1041,9 +1041,9 @@ namespace AstoriaUnitTests.Tests
                         ContentType = UnitTestsUtil.AtomFormat,
                         ExpectedErrorStatusCode = 400,
                     },
-                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with ATOM payload.
+                    // Astoria Server doesn't check resource set accessibility if a bind operation is done against it with payload.
                     //   We decided to fix this issue (since it's a security problem) and thus we should fail.
-                    // Update to Orders in ATOM which includes a deep insert to Customers.
+                    // Update to Orders in which includes a deep insert to Customers.
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Order).FullName + "'/>" +
@@ -1102,9 +1102,9 @@ namespace AstoriaUnitTests.Tests
                     #endregion
 
                     #region ATOM
-                    // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
+                    // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an payload entry has no content and no links (and it's a V1 entry)
                     // We decided to break the old behavior and always check the ETag.
-                    // ATOM entity - the entity has no content and no links and it doesn't have MLE or EPM
+                    // entity - the entity has no content and no links and it doesn't have MLE or EPM
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1116,7 +1116,7 @@ namespace AstoriaUnitTests.Tests
                         ETagHeaderValue = "W/\"wrongETag\"",
                         ExpectedErrorStatusCode = 412,
                     },
-                    // ATOM entity - if the entity has content, the ETag is validated
+                    // entity - if the entity has content, the ETag is validated
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1129,7 +1129,7 @@ namespace AstoriaUnitTests.Tests
                         ETagHeaderValue = "W/\"wrongETag\"",
                         ExpectedErrorStatusCode = 412
                     },
-                    // ATOM entity - if the entity has content, the ETag is validated
+                    // entity - if the entity has content, the ETag is validated
                     // ODataLib accepts content with no type attribute as if it was text/plain.
                     new UpdateEntityFormatTestCase
                     {
@@ -1143,7 +1143,7 @@ namespace AstoriaUnitTests.Tests
                         ETagHeaderValue = "W/\"wrongETag\"",
                         ExpectedErrorStatusCode = 412
                     },
-                    // ATOM entity - if the entity has any link element, the ETag is validated
+                    // entity - if the entity has any link element, the ETag is validated
                     new UpdateEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1256,7 +1256,7 @@ namespace AstoriaUnitTests.Tests
                     #endregion
 
                     #region ATOM
-                    // Simple ATOM Add - Add is reported
+                    // Simple Add - Add is reported
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1267,7 +1267,7 @@ namespace AstoriaUnitTests.Tests
                         OnlyForMethod = m => m == "POST",
                         ExpectedUpdateOperation = UpdateOperations.Add
                     },
-                    // ATOM update with no properties - Change is reported
+                    // update with no properties - Change is reported
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1277,7 +1277,7 @@ namespace AstoriaUnitTests.Tests
                         OnlyForMethod = m => m != "POST",
                         ExpectedUpdateOperation = UpdateOperations.Change
                     },
-                    // ATOM update with key properties - Change is reported
+                    // update with key properties - Change is reported
                     new ChangeInterceptorEntityFormatTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1362,7 +1362,7 @@ namespace AstoriaUnitTests.Tests
                     #endregion
 
                     #region ATOM
-                    // ATOM payload order ID,Name
+                    // payload order ID,Name
                     new
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1376,7 +1376,7 @@ namespace AstoriaUnitTests.Tests
                         ExpectedPropertyNames = new string[] { "ID", "Name" },
                         ExpectedPropertyValues = new string[] { "42", "Bart" },
                     },
-                    // ATOM payload order Name,ID
+                    // payload order Name,ID
                     new
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + ">" +
@@ -1390,7 +1390,7 @@ namespace AstoriaUnitTests.Tests
                         ExpectedPropertyNames = new string[] { "Name", "ID" },
                         ExpectedPropertyValues = new string[] { "Bart", "42" },
                     },
-                    // ATOM payload same property twice, the provider is called for both values in the payload order
+                    // payload same property twice, the provider is called for both values in the payload order
                     // each payload property gets its own SetValue call.
                     new
                     {
@@ -1406,7 +1406,7 @@ namespace AstoriaUnitTests.Tests
                         ExpectedPropertyNames = new string[] { "ID", "Name" },
                         ExpectedPropertyValues = new string[] { "42", "Bart_Homer" },
                     },
-                    // ATOM payload same property twice and another in between, the provider is called for both values in the payload order
+                    // payload same property twice and another in between, the provider is called for both values in the payload order
                     // each payload property gets its own SetValue call.
                     new
                     {

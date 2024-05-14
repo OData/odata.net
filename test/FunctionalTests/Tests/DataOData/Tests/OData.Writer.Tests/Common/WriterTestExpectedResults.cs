@@ -142,7 +142,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     }
 
     /// <summary>
-    /// Class which represents expected results for ATOM writer test
+    /// Class which represents expected results for writer test
     /// </summary>
     internal class AtomWriterTestExpectedResults : WriterTestExpectedResults
     {
@@ -226,7 +226,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     }
 
     /// <summary>
-    /// Class which represents expected results for ATOM writer test
+    /// Class which represents expected results for writer test
     /// </summary>
     internal class RawValueWriterTestExpectedResults : WriterTestExpectedResults
     {

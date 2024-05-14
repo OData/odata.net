@@ -2231,7 +2231,7 @@ namespace AstoriaUnitTests
                 int receivingResponseCalls = 0;
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.BuildingRequest += (sender, args) =>
                 {

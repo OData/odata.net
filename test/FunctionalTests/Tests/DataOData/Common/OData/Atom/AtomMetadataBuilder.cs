@@ -17,7 +17,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Extension methods for annotating ODataPayloadElements with Atom metadata values
+    /// Extension methods for annotating ODataPayloadElements with metadata values
     /// </summary>
     public static class AtomMetadataBuilder
     {
@@ -353,7 +353,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
             ExceptionUtilities.CheckArgumentNotNull(namedStream, "namedStream");
 
             // The Test OM representation for Named Streams does not allow individual annotation of the two links that it represents.
-            // Thus, we special case Named Streams, and apply two annotations to represent ATOM link metadata - one for serialization and one for comparison.
+            // Thus, we special case Named Streams, and apply two annotations to represent link metadata - one for serialization and one for comparison.
 
             // This annotation will replace the standard serialization of the NamedStreamInstance with the link XElement.
             var xmlAnnotation = namedStream.Annotations.OfType<XmlPayloadElementRepresentationAnnotation>().SingleOrDefault();
@@ -564,7 +564,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Annotates an ODataPayloadElement with an Atom Person construct.
+        /// Annotates an ODataPayloadElement with an Person construct.
         /// </summary>
         /// <typeparam name="T">The type of ODataPayloadElement.</typeparam>
         /// <param name="payloadElement">The payload element to annotate.</param>
@@ -588,7 +588,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Annotates an ODataPayloadElement with an Atom Text construct.
+        /// Annotates an ODataPayloadElement with an Text construct.
         /// </summary>
         /// <typeparam name="T">The type of ODataPayloadElement.</typeparam>
         /// <param name="payloadElement">The payload element to annotate.</param>
@@ -608,7 +608,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>
         /// Creates the XmlTreeAnnotation annotations that represent the attributes with non-null values.
         /// </summary>
-        /// <param name="attributeNameValuePairs">The attribute name-value pairs to convert to Atom attribute annotations.</param>
+        /// <param name="attributeNameValuePairs">The attribute name-value pairs to convert to attribute annotations.</param>
         /// <returns>An XmlTreeAnnotation for each non-null value attribute.</returns>
         private static XmlTreeAnnotation[] CreateAtomAttributes(params KeyValuePair<string, string>[] attributeNameValuePairs)
         {
@@ -623,7 +623,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         /// <summary>
         /// Creates the XmlTreeAnnotation annotations that represent the elements with non-null values.
         /// </summary>
-        /// <param name="attributeNameValuePairs">The element name-value pairs to convert to Atom element annotations.</param>
+        /// <param name="attributeNameValuePairs">The element name-value pairs to convert to element annotations.</param>
         /// <returns>An XmlTreeAnnotation for each non-null value element.</returns>
         private static XmlTreeAnnotation[] CreateAtomElements(params KeyValuePair<string, string>[] elementNameValuePairs)
         {
@@ -636,7 +636,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Creates the XmlTreeAnnotation annotation that represents the Atom Publishing Protocol (APP) element.
+        /// Creates the XmlTreeAnnotation annotation that represents the Publishing Protocol (APP) element.
         /// </summary>
         /// <param name="localName">The local name of the element.</param>
         /// <param name="value">The value of the element.</param>

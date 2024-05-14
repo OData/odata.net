@@ -209,7 +209,7 @@ namespace Microsoft.OData.Service
         /// <summary>The name of the Cookie HTTP header</summary>
         internal const string HttpCookie = "Cookie";
 
-        /// <summary>The Slug header name. Used by ATOM to hint the server on which MR is being POSTed.</summary>
+        /// <summary>The Slug header name. Used to hint the server on which MR is being POSTed.</summary>
         internal const string HttpSlug = "Slug";
 
         #endregion HTTP constants.
@@ -222,9 +222,6 @@ namespace Microsoft.OData.Service
         /// <summary>MIME type general binary bodies (http://www.iana.org/assignments/media-types/application/).</summary>
         internal const string MimeApplicationOctetStream = "application/octet-stream";
 #if !ODATA_CLIENT
-        /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
-        internal const string MimeApplicationAtom = "application/atom+xml";
-
         /// <summary>MIME type for JSON bodies with minimal metadata.</summary>
         internal const string MimeApplicationJsonODataMinimalMetadata = "application/json;odata.metadata=minimal";
 
@@ -349,51 +346,6 @@ namespace Microsoft.OData.Service
 
         #endregion WCF constants.
 
-        #region ATOM constants
-        /// <summary> Schema Namespace prefix for atom.</summary>
-        internal const string AtomNamespacePrefix = "atom";
-
-        /// <summary>XML element name to mark content element in Atom.</summary>
-        internal const string AtomContentElementName = "content";
-
-        /// <summary>XML element name to mark entry element in Atom.</summary>
-        internal const string AtomEntryElementName = "entry";
-
-        /// <summary>XML element name to mark feed element in Atom.</summary>
-        internal const string AtomFeedElementName = "feed";
-
-        /// <summary>'author' - XML element name for ATOM 'author' element for entries.</summary>
-        internal const string AtomAuthorElementName = "author";
-
-        /// <summary>'contributor' - XML element name for ATOM 'author' element for entries.</summary>
-        internal const string AtomContributorElementName = "contributor";
-
-        /// <summary>'category' - XML element name for ATOM 'category' element for entries.</summary>
-        internal const string AtomCategoryElementName = "category";
-
-        /// <summary>XML element name to mark link element in Atom.</summary>
-        internal const string AtomLinkElementName = "link";
-
-#if ODATA_CLIENT
-        /// <summary>'scheme' - XML attribute name for ATOM 'scheme' attribute for categories.</summary>
-        internal const string AtomCategorySchemeAttributeName = "scheme";
-
-        /// <summary>'term' - XML attribute name for ATOM 'term' attribute for categories.</summary>
-        internal const string AtomCategoryTermAttributeName = "term";
-
-        /// <summary>XML element name to mark id element in Atom.</summary>
-        internal const string AtomIdElementName = "id";
-
-        /// <summary>XML element name to mark link relation attribute in Atom.</summary>
-        internal const string AtomLinkRelationAttributeName = "rel";
-
-        /// <summary>Atom attribute that indicates the actual location for an entry's content.</summary>
-        internal const string AtomContentSrcAttributeName = "src";
-
-        /// <summary>XML element string for "next" links: [atom:link rel="next"]</summary>
-        internal const string AtomLinkNextAttributeString = "next";
-
-#endif
         /// <summary>author/email</summary>
         internal const string SyndAuthorEmail = "SyndicationAuthorEmail";
 
@@ -414,9 +366,6 @@ namespace Microsoft.OData.Service
 
         /// <summary>title</summary>
         internal const string SyndTitle = "SyndicationTitle";
-
-        /// <summary>'updated' - XML element name for ATOM 'updated' element for entries.</summary>
-        internal const string AtomUpdatedElementName = "updated";
 
         /// <summary>contributor/email</summary>
         internal const string SyndContributorEmail = "SyndicationContributorEmail";
@@ -478,13 +427,13 @@ namespace Microsoft.OData.Service
         /// <summary>XML attribute name to specify the type of the element.</summary>
         internal const string AtomTypeAttributeName = "type";
 
-        /// <summary> Atom link relation attribute value for self links.</summary>
+        /// <summary> link relation attribute value for self links.</summary>
         internal const string AtomSelfRelationAttributeValue = "self";
 
-        /// <summary> Atom link relation attribute value for edit links.</summary>
+        /// <summary> link relation attribute value for edit links.</summary>
         internal const string AtomEditRelationAttributeValue = "edit";
 
-        /// <summary> Atom link relation attribute value for edit-media links.</summary>
+        /// <summary> link relation attribute value for edit-media links.</summary>
         internal const string AtomEditMediaRelationAttributeValue = "edit-media";
 
         /// <summary>Link relation: alternate - refers to a substitute for this context.</summary>
@@ -505,10 +454,10 @@ namespace Microsoft.OData.Service
         /// <summary>Link relation: service - indicates a URI that can be used to retrieve a service document.</summary>
         internal const string AtomServiceRelationAttributeValue = "service";
 
-        /// <summary> Atom attribute which indicates the null value for the element.</summary>
+        /// <summary> attribute which indicates the null value for the element.</summary>
         internal const string AtomNullAttributeName = "null";
 
-        /// <summary> Atom attribute which indicates the etag value for the declaring entry element.</summary>
+        /// <summary> attribute which indicates the etag value for the declaring entry element.</summary>
         internal const string AtomETagAttributeName = "etag";
 
         /// <summary>'Inline' - wrapping element for inlined entry/feed content.</summary>
@@ -519,8 +468,6 @@ namespace Microsoft.OData.Service
 
         /// <summary>'count' element</summary>
         internal const string RowCountElement = "count";
-
-        #endregion ATOM constants
 
         #region XML constants.
 
@@ -590,15 +537,6 @@ namespace Microsoft.OData.Service
 
         /// <summary>XML namespace for data service edit-media link for named media resources.</summary>
         internal const string DataWebMediaResourceEditNamespace = "http://docs.oasis-open.org/odata/ns/edit-media/";
-
-        /// <summary>ATOM Scheme Namespace For DataWeb.</summary>
-        internal const string DataWebSchemeNamespace = "http://docs.oasis-open.org/odata/ns/scheme";
-
-        /// <summary>Schema Namespace for Atom Publishing Protocol.</summary>
-        internal const string AppNamespace = "http://www.w3.org/2007/app";
-
-        /// <summary> Schema Namespace For Atom.</summary>
-        internal const string AtomNamespace = "http://www.w3.org/2005/Atom";
 
         /// <summary> Schema Namespace prefix For xmlns.</summary>
         internal const string XmlnsNamespacePrefix = "xmlns";

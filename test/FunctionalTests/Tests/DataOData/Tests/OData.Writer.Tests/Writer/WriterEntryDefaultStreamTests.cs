@@ -55,28 +55,28 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new {  // Completely empty default stream is valid and should not produce any MLE/MR related values in the payload
                     DefaultStream = new ODataStreamReferenceValue(),
-                    Atom = outOfContentProperties,
+                    = outOfContentProperties,
                 },
                 new {  // Bare minimum for valid default stream
                     DefaultStream = new ODataStreamReferenceValue() { ReadLink = readLinkUri, EditLink = null, ContentType = contentType, ETag = null },
-                    Atom = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
+                    = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                            outOfContentProperties
                 },
                 new {  // with edit link
                     DefaultStream = new ODataStreamReferenceValue() { ReadLink = readLinkUri, EditLink = editLinkUri, ContentType = contentType, ETag = null },
-                    Atom = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
+                    = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                            "<link rel=\"edit-media\" href=\"" + editLink + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                            outOfContentProperties
                 },
                 new {  // just edit link
                     DefaultStream = new ODataStreamReferenceValue() { ReadLink = null, EditLink = editLinkUri, ContentType = null, ETag = null },
-                    Atom = "<link rel=\"edit-media\" href=\"" + editLink + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
+                    = "<link rel=\"edit-media\" href=\"" + editLink + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                            outOfContentProperties
                 },
                 // etag without edit link is invalid and is covered in input validation tests
                 new {  // with edit link and etag
                     DefaultStream = new ODataStreamReferenceValue() { ReadLink = readLinkUri, EditLink = editLinkUri, ContentType = contentType, ETag = etag },
-                    Atom = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
+                    = "<content type=\"" + contentType + "\" src=\"" + readLinkUri + "\" xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                            "<link rel=\"edit-media\" href=\"" + editLink + "\" p2:etag=\"" + atomEscapedEtag + "\" xmlns:p2=\"" + TestAtomConstants.ODataMetadataNamespace + "\" " +
                             "xmlns=\"" + TestAtomConstants.AtomNamespace + "\" />" +
                             outOfContentProperties
@@ -95,7 +95,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         {
                             return new AtomWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                             {
-                                Xml = "<DefaultStream>" + testCase.Atom + "</DefaultStream>",
+                                Xml = "<DefaultStream>" + testCase.+ "</DefaultStream>",
                                 FragmentExtractor = (result) =>
                                 {
                                     var content = result.Element(TestAtomConstants.AtomXNamespace + TestAtomConstants.AtomContentElementName);

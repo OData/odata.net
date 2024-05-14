@@ -629,7 +629,7 @@ namespace AstoriaUnitTests.Tests
                     TestUtil.RunCombinatorialEngineFail(engine, delegate (Hashtable values)
                     {
                         bool allowed = (bool)values["AllowBuchanan"];
-                        bool atom = (bool)values["Atom"];
+                        bool = (bool)values["Atom"];
                         request.Accept = (atom) ? "*/*" : UnitTestsUtil.JsonMimeType;
 
                         NorthwindServiceWithFilters.AllowBuchanan = allowed;
@@ -2963,7 +2963,7 @@ OData-Version: 4.0
                     request.Accept = "application/atom+xml,application/xml";
                     request.SendRequest();
 
-                    // verify atom service document format
+                    // verify service document format
                     var actualResponse = request.GetResponseStreamAsText();
 
                     string atomEntitySetElements = null;
@@ -2981,7 +2981,7 @@ OData-Version: 4.0
                           "</workspace>" +
                         "</service>";
 
-                    Assert.AreEqual(expectedResponse, actualResponse, "The atom service  document format is not as expected");
+                    Assert.AreEqual(expectedResponse, actualResponse, "The service  document format is not as expected");
 
                     request.Accept = UnitTestsUtil.JsonMimeType;
                     request.SendRequest();

@@ -137,7 +137,7 @@ namespace AstoriaUnitTests.Tests
 
                             if (format != UnitTestsUtil.JsonMimeType)
                             {
-                                // json format does not write out nav links if the 1-1 property is null, atom does.
+                                // json format does not write out nav links if the 1-1 property is null, does.
                                 Assert.AreEqual(navigationLinks.Count, relationshipLinks.Count, "there should be equal number of relationship and navigation links");
                             }
 

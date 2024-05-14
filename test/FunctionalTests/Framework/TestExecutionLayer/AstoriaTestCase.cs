@@ -518,7 +518,7 @@ namespace System.Data.Test.Astoria
                 "{3} , {0},{1},{2},{4}{5}{6}{7}",
                 GenerateClientTypes ? "Client Mapped" : "",
                 GenerateServerEPMMappings ? "Server Mapped" : "",
-                MapToAtomElements ? "Mapped to Atom" : "Mapped to Non-Atom Elements",
+                MapToAtomElements ? "Mapped to Atom" : "Mapped to Non-Elements",
                 testVarAttrib.Desc, InheritanceFilter.ToString(),
                 KeepSameNamespace ? "Same Namespace" : "Different NameSpaces",
                 PreDefinedPaths != null ? ",PredefinedPaths" : "", KeepInContent.ToString());

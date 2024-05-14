@@ -270,7 +270,7 @@ namespace Microsoft.OData.Service.Serializers
                     Debug.Assert(topLevel, "Updates don't allow deep payload, only deep links.");
 
                     // If it's a top level resource, then it cannot be null.
-                    // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an ATOM payload entry has no content and no links (and it's a V1 entry)
+                    // [Astoria-ODataLib-Integration] WCF DS Server doesn't check ETags if an payload entry has no content and no links (and it's a V1 entry)
                     // We decided to break WCF DS and always check ETag - seems like a security issue.
                     entityResource = this.GetObjectFromSegmentInfo(
                         entityResourceType,
@@ -561,7 +561,7 @@ namespace Microsoft.OData.Service.Serializers
                 if (entityResourceType.ResourceTypeKind == ResourceTypeKind.EntityType)
                 {
                     // Get the target resource set for the navigation property, this also causes validation of the resource set and thus migth fail.
-                    // WCF DS Used to do this in ATOM only if the link was expanded, which was a security issue we decided to fix, so now we do it always.
+                    // WCF DS Used to do this in only if the link was expanded, which was a security issue we decided to fix, so now we do it always.
                     targetResourceSet = this.GetNavigationPropertyTargetResourceSet(entityResourceSet, entityResourceType, navigationProperty);
                 }
 
@@ -640,8 +640,8 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(entityResource != null, "entityResource != null");
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
-            // Ignore entity reference links without any URL (this is effectively ATOM only since in JSON there always has to be some
-            // URL, null would cause failure when reading it, in ATOM this is the case of a link without any href and no content).
+            // Ignore entity reference links without any URL (this is effectively only since in JSON there always has to be some
+            // URL, null would cause failure when reading it, in this is the case of a link without any href and no content).
             if (entityReferenceLink.Url == null)
             {
                 return;
@@ -661,7 +661,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="targetResourceSet">The resource set of the target of the navigation property.</param>
         /// <param name="entityResource">The entity resource to apply the value to.</param>
         /// <param name="feed">The feed to apply.</param>
-        /// <remarks>Note that the targetResourceSet will be filled for non-ATOM formats, but it will be null for ATOM.</remarks>
+        /// <remarks>Note that the targetResourceSet will be filled for non-formats, but it will be null for ATOM.</remarks>
         private void ApplyFeedInNavigationProperty(
             ResourceProperty navigationProperty,
             ResourceSetWrapper targetResourceSet,
@@ -774,7 +774,7 @@ namespace Microsoft.OData.Service.Serializers
         /// <param name="targetResourceSet">The resource set of the target of the navigation property.</param>
         /// <param name="entityResource">The entity resource to apply the value to.</param>
         /// <param name="entry">The entry to apply. This can be null if the null value should be applied.</param>
-        /// <remarks>Note that the targetResourceSet will be filled for non-ATOM formats, but it will be null for ATOM.</remarks>
+        /// <remarks>Note that the targetResourceSet will be filled for non-formats, but it will be null for ATOM.</remarks>
         private void ApplyEntryInNavigationProperty(
             ResourceProperty navigationProperty,
             ResourceSetWrapper targetResourceSet,

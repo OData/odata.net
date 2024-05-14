@@ -979,8 +979,8 @@ namespace Microsoft.Test.Taupo.OData.Json
                 }
 
                 // NOTE: ODataLib currently stores the entity set names for JSON service documents
-                //       in the Href property (since the title property is only available in ATOM 
-                //       and retrieved from ATOM metadata in that case).
+                //       in the Href property (since the title property is only available in 
+                //       and retrieved from metadata in that case).
                 return new JsonPrimitiveValue(payloadElement.Href);
             }
 

@@ -364,7 +364,7 @@ namespace Microsoft.OData.Service.Serializers
         }
 
         /// <summary>
-        /// Writes the feed element for the atom payload.
+        /// Writes the feed element for the payload.
         /// </summary>
         /// <param name="expanded">Expanded properties for the result.</param>
         /// <param name="elements">Collection of entries in the feed element.</param>
@@ -393,7 +393,7 @@ namespace Microsoft.OData.Service.Serializers
             this.PayloadMetadataPropertyManager.SetId(feed, () => getAbsoluteUri());
 
             // support for $count
-            // in ATOM we write it at the beginning (we always have)
+            // in we write it at the beginning (we always have)
             //   in JSON for backward compatiblity reasons we write it at the end, so we must not fill it here.
             if (topLevel && this.RequestDescription.CountOption == RequestQueryCountOption.CountQuery)
             {

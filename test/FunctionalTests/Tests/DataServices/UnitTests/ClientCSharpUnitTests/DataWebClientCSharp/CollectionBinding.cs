@@ -311,7 +311,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 host.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 var dsc = new DataServiceCollection<EntityWithCollection<IntCollection>>(ctx);
                 EntityWithCollection<IntCollection> entity = new EntityWithCollection<IntCollection>();
@@ -513,7 +513,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 return clone;
             }
 
-            // Used to create Atom payload for complex types
+            // Used to create payload for complex types
             public override string ToString()
             {
                 StringBuilder complexTypePayloadFragment = new StringBuilder();
@@ -882,7 +882,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             public readonly object NewValue;
         }
 
-        // Creates an Atom payload fragment for a collection
+        // Creates an payload fragment for a collection
         private static string CreateCollectionPayloadFragment(object collection)
         {
             string edmCollectionItemTypeName = GetEdmCollectionItemTypeName(collection.GetType());
@@ -899,7 +899,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             return collectionPayload.ToString();
         }
 
-        // Creates a full Atom payload for a single entity, using the specified fragment to build any entity properties except ID, which is already included
+        // Creates a full payload for a single entity, using the specified fragment to build any entity properties except ID, which is already included
         private static string CreateAtomPayload(string payloadFragment, string baseUri)
         {
             return String.Format(
@@ -1171,7 +1171,7 @@ Connection: Close
                 PlaybackService.OverridingPlayback.Value = CreateAtomPayload(entityPayload, host.BaseUri);
                 // Create and set test context
                 context = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 //context.Format.UseAtom();
                 // Create DataServiceCollection for the specified entity type
                 DataServiceCollection<EntityType> dsc = new DataServiceCollection<EntityType>(context, null, TrackingMode.AutoChangeTracking, null, this.entityChangedHandler, null);

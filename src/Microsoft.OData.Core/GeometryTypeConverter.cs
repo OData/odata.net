@@ -4,8 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.IO;
-using System.Xml;
 using Microsoft.OData.Json;
 using Microsoft.Spatial;
 
@@ -20,26 +18,6 @@ namespace Microsoft.OData
     /// </summary>
     internal sealed class GeometryTypeConverter : IPrimitiveTypeConverter
     {
-        /// <summary>
-        /// Write the Atom representation of an instance of a primitive type to an XmlWriter.
-        /// </summary>
-        /// <param name="instance">The instance to write.</param>
-        /// <param name="writer">The Xml writer to use to write the instance.</param>
-        public void WriteAtom(object instance, XmlWriter writer)
-        {
-            ((Geometry)instance).SendTo(GmlFormatter.Create().CreateWriter(writer));
-        }
-
-        /// <summary>
-        /// Write the Atom representation of an instance of a primitive type to an TextWriter.
-        /// </summary>
-        /// <param name="instance">The instance to write.</param>
-        /// <param name="writer">The text writer to use to write the instance.</param>
-        public void WriteAtom(object instance, TextWriter writer)
-        {
-            ((Geometry)instance).SendTo(WellKnownTextSqlFormatter.Create().CreateWriter(writer));
-        }
-
         /// <summary>
         /// Write the Json representation of an instance of a primitive type to a json object.
         /// </summary>

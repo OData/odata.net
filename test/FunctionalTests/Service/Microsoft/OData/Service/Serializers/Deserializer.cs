@@ -420,7 +420,7 @@ namespace Microsoft.OData.Service.Serializers
             Debug.Assert(
                 (service.OperationContext.RequestMessage.HttpVerb == HttpVerbs.POST && resourceType.IsMediaLinkEntry) ||
                 (service.OperationContext.RequestMessage.HttpVerb == HttpVerbs.PUT && description.TargetKind == RequestTargetKind.MediaResource),
-                "We are here because this is either a POST to an Atom MR or a PUT to a default/named stream.");
+                "We are here because this is either a POST to an MR or a PUT to a default/named stream.");
 
             ResourceProperty streamProperty = null; // null for default stream.
             if (description.TargetKind == RequestTargetKind.MediaResource)

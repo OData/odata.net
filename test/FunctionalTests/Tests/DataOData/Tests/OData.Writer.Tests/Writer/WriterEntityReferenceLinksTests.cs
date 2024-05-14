@@ -538,7 +538,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 }
                 else
                 {
-                    throw new TestInfrastructureException("Expected ATOM or JSON.");
+                    throw new TestInfrastructureException("Expected or JSON.");
                 }
             };
         }
@@ -553,7 +553,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         {
             Uri baseUri = testConfig.MessageWriterSettings.BaseUri;
 
-            Debug.Assert(testConfig.Format == ODataFormat.Json, "Only ATOM and JSON are supported.");
+            Debug.Assert(testConfig.Format == ODataFormat.Json, "Only and JSON are supported.");
             if (uri.IsAbsoluteUri)
             {
                 return uri.AbsoluteUri;
@@ -613,7 +613,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 }
                 else
                 {
-                    throw new TestInfrastructureException("Expected ATOM or JSON.");
+                    throw new TestInfrastructureException("Expected or JSON.");
                 }
             };
         }

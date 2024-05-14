@@ -157,7 +157,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -187,7 +187,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -323,7 +323,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -352,7 +352,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = GetContextWithBuildingRequestHandler(web, args => args.RequestUri.AbsoluteUri.Contains("skiptoken"), args => args.RequestMessage.Url.AbsoluteUri.Contains("skiptoken"));
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -813,7 +813,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
@@ -846,7 +846,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
@@ -877,7 +877,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
@@ -915,7 +915,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 var ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 string log = string.Empty;
@@ -986,7 +986,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.DataServiceType = typeof(EndToEndTestService);
                 web.StartService();
                 DataServiceContext ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -1057,7 +1057,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 web.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(web.ServiceRoot);
-                // ctx.EnableAtom = true;
+                // ctx.Enable= true;
                 // ctx.Format.UseAtom();
                 AddDescriptorShouldBeNullVerifier(ctx);
 
@@ -1122,7 +1122,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                     using (CustomDataContext.CreateChangeScope())
                     {
                         DataServiceContext ctx = new DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4);
-                        // ctx.EnableAtom = true;
+                        // ctx.Enable= true;
                         // ctx.Format.UseAtom();
                         ctx.ResolveName = T => T.FullName;
                         List<Descriptor> actualSendingRequestDescriptors = new List<Descriptor>() { };

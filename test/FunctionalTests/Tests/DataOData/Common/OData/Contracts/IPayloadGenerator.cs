@@ -18,7 +18,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts
     public interface IPayloadGenerator
     {
         /// <summary>
-        /// A simple Enumerator method for traversing over Atom payloads 
+        /// A simple Enumerator method for traversing over payloads 
         /// </summary>
         /// <returns>An IEnumerable of payloads</returns>
         IEnumerable<EntityInstance> GenerateAtomPayloads();

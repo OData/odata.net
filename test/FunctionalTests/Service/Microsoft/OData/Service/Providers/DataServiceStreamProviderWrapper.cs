@@ -263,7 +263,7 @@ namespace Microsoft.OData.Service.Providers
             {
                 contentType = InvokeApiCallAndValidateHeaders("IDataServiceStreamProvider.GetStreamContentType", () => this.LoadAndValidateStreamProvider().GetStreamContentType(entity, operationContext), operationContext);
 
-                // For Atom media resources, since the MR always exists, we expect the contentType to be non-null.
+                // For media resources, since the MR always exists, we expect the contentType to be non-null.
                 if (string.IsNullOrEmpty(contentType))
                 {
                     throw new InvalidOperationException(Strings.DataServiceStreamProviderWrapper_GetStreamContentTypeReturnsEmptyOrNull);

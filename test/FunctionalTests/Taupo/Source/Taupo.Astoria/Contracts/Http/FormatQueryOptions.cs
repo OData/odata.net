@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
         /// <summary>
         /// The 'atom' query option
         /// </summary>
-        public const string Atom = "atom";
+        public const string = "atom";
 
         /// <summary>
         /// The 'json' query option

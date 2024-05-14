@@ -144,7 +144,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             // The goal here is to return the Target Path Value expected by the test annotation. It uses the same values as 
             // SyndicationItemProperty enumeration found in the Microsoft.OData.Service.Common.
 
-            // if the attribute value in one of the Atom mapping we need to strip the "Syndication" from the beginning and parse it as enum.
+            // if the attribute value in one of the mapping we need to strip the "Syndication" from the beginning and parse it as enum.
             // if not it will be a custom property
             string value = attributeValue.Replace(ODataConstants.EpmAttributePrefix, null);
             Astoria.Contracts.SyndicationItemProperty targetValue;

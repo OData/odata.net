@@ -150,7 +150,7 @@ namespace AstoriaUnitTests.Tests
             List<KeyValuePair<string, object>> results = new List<KeyValuePair<string, object>>();
             var odataReader = createOdataReader();
             DataServiceContext context = new DataServiceContext(new Uri("http://www.foo.com"));
-            // context.EnableAtom = true;
+            // context.Enable= true;
             var responsePipeline = new DataServiceClientResponsePipelineConfiguration(context);
             responsePipeline.OnEntryEnded(args => results.Add(new KeyValuePair<string, object>("OnEntryEnded", args)));
             responsePipeline.OnEntryStarted(args => results.Add(new KeyValuePair<string, object>("OnEntryStarted", args)));

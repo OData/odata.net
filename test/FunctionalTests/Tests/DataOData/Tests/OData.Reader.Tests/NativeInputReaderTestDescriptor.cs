@@ -20,12 +20,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #endregion Namespaces
 
     /// <summary>
-    /// Reader test descriptor for tests which need to specify the input as exact ATOM or JSON payload.
+    /// Reader test descriptor for tests which need to specify the input as exact or JSON payload.
     /// </summary>
     public class NativeInputReaderTestDescriptor : ReaderTestDescriptor
     {
         /// <summary>
-        /// The input for ATOM payloads.
+        /// The input for payloads.
         /// </summary>
         private XElement atomInput;
 
@@ -73,12 +73,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// The input for ATOM payloads as text XML.
+        /// The input for payloads as text XML.
         /// </summary>
         public string AtomInputXml { get; set; }
 
         /// <summary>
-        /// The input for ATOM payloads. This overrides AtomInputXml if both are specified.
+        /// The input for payloads. This overrides AtomInputXml if both are specified.
         /// </summary>
         public XElement AtomInput
         {

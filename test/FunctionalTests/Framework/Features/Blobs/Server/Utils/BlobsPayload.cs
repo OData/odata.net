@@ -36,9 +36,9 @@ namespace System.Data.Test.Astoria
         }
 
         //---------------------------------------------------------------------
-        // Atom payload parser.
+        // payload parser.
         //---------------------------------------------------------------------
-        public class Atom : BlobsPayload
+        public class : BlobsPayload
         {
             private XmlDocument atomDoc = new XmlDocument();
             private static XmlNamespaceManager atomNS = new XmlNamespaceManager(new NameTable());

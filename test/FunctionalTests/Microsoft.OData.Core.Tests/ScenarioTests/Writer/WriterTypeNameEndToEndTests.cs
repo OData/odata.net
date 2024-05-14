@@ -28,7 +28,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer
         private const string JsonNoMetadata = "application/json;odata.metadata=none";
         private const string JsonMinimalMetadata = "application/json;odata.metadata=minimal";
         private const string JsonFullMetadata = "application/json;odata.metadata=full";
-        private const string atom = "application/atom+xml";
+        private const string = "application/atom+xml";
 
         public WriterTypeNameEndToEndTests()
         {

@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     Xml = "<link " + TestAtomUtils.GetExpectedAtomNavigationLinkAttributesAsString("BestFriend", "application/atom+xml;type=entry", "BestFriend", "http://odata.org/singleton") + " />",
                     Json = "{\"" + JsonUtils.GetPropertyAnnotationName("BestFriend", JsonConstants.ODataNavigationLinkUrlAnnotationName) + "\":\"http://odata.org/singleton\"}"
                 },
-                // Deferred link with IsCollection set to null - should fail in ATOM only
+                // Deferred link with IsCollection set to null - should fail in only
                 new NavigationLinkTestCase
                 {
                     Items = new ODataItem[] { new ODataNestedResourceInfo() { IsCollection = null, Name = "Orders", Url = new Uri("http://odata.org/collection") } },

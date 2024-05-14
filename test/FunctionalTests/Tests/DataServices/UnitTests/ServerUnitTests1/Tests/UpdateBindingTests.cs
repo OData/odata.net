@@ -786,7 +786,7 @@ namespace AstoriaUnitTests.Tests
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
-                            "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' href='Orders(1)' type='application/atom xml'/>" +
+                            "<link rel='http://docs.oasis-open.org/odata/ns/related/Orders' href='Orders(1)' type='application/xml'/>" +
                             "<content type='application/xml'><adsm:properties><ads:ID adsm:type='Edm.Int32'>42</ads:ID></adsm:properties></content>" +
                             "</entry>",
                         ContentType = UnitTestsUtil.AtomFormat,
@@ -943,7 +943,7 @@ namespace AstoriaUnitTests.Tests
                         HasExpandedEntry = true
                     },
                     // Two feeds in one inline - doesn't fail - this is a bug where we read one more node than wanted
-                    // We decided to break and don't allow multiple ATOM elements in an expanded navigation property.
+                    // We decided to break and don't allow multiple elements in an expanded navigation property.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -957,8 +957,8 @@ namespace AstoriaUnitTests.Tests
                         HasExpandedEntry = true
                     },
                     // Second element in inline has feed in it - this will work - bug
-                    // We decided to break and don't allow multiple ATOM elements in an expanded navigation property.
-                    // Since this payload has feed and test elements in ATOM namespace it should fail.
+                    // We decided to break and don't allow multiple elements in an expanded navigation property.
+                    // Since this payload has feed and test elements in namespace it should fail.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -976,8 +976,8 @@ namespace AstoriaUnitTests.Tests
                         HasExpandedEntry = true
                     },
                     // Second element in inline has feed in it - this will work - bug
-                    // We decided to break and don't allow multiple ATOM elements in an expanded navigation property.
-                    // Since this payload has only feed ATOM element, and then non-ATOM element, it should succeed (empty feed is used)
+                    // We decided to break and don't allow multiple elements in an expanded navigation property.
+                    // Since this payload has only feed element, and then non-element, it should succeed (empty feed is used)
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -1010,7 +1010,7 @@ namespace AstoriaUnitTests.Tests
                         HasExpandedEntry = true
                     },
                     // Two expanded feeds in one inline in XML - this fails because it tries to read the second entry as if without a feed
-                    // Used to fail and with ODL fails as well, since two elements from ATOM are not allowed in inline.
+                    // Used to fail and with ODL fails as well, since two elements from are not allowed in inline.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -1028,7 +1028,7 @@ namespace AstoriaUnitTests.Tests
                         ExpectedErrorStatusCode = 400
                     },
                     // Two expanded feeds in one inline, second wrapped in any element in XML - this actuall works
-                    // We decided to break and don't allow multiple ATOM elements in an expanded navigation property.
+                    // We decided to break and don't allow multiple elements in an expanded navigation property.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -1429,8 +1429,8 @@ namespace AstoriaUnitTests.Tests
                         ExpectedErrorStatusCode = 400
                     },
                     // Two expanded entries in one inline in one link, second wrapped in any element in XML - works
-                    // We decided to break WCF DS and fail on multiple ATOM elements in inline.
-                    //  In this case there's entry and test elements from ATOM namespace - so it should fail.
+                    // We decided to break WCF DS and fail on multiple elements in inline.
+                    //  In this case there's entry and test elements from namespace - so it should fail.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -1449,8 +1449,8 @@ namespace AstoriaUnitTests.Tests
                         HasExpandedEntry = true
                     },
                     // Two expanded entries in one inline in one link, second wrapped in any element in XML - works
-                    // We decided to break WCF DS and fail on multiple ATOM elements in inline.
-                    //  In this case there's entry in ATOM namespace and then non-ATOM element, so we read the entry just fine.
+                    // We decided to break WCF DS and fail on multiple elements in inline.
+                    //  In this case there's entry in namespace and then non-element, so we read the entry just fine.
                     new UpdateBindResultTestCase
                     {
                         Payload = "<entry " + TestUtil.CommonPayloadNamespaces + "><category scheme='http://docs.oasis-open.org/odata/ns/scheme' term='" + typeof(Customer).FullName + "'/>" +
@@ -1508,8 +1508,8 @@ namespace AstoriaUnitTests.Tests
                         ContentType = UnitTestsUtil.AtomFormat,
                         ExpectedErrorStatusCode = 400
                     },
-                    // Non atom element in expand fails
-                    // We decided to relax the original server behavior here and ignore any non-atom elements inside the inline element.
+                    // Non element in expand fails
+                    // We decided to relax the original server behavior here and ignore any non-elements inside the inline element.
                     // this means it looks like an empty inline, which wins over the href and means a null value.
                     new UpdateBindResultTestCase
                     {

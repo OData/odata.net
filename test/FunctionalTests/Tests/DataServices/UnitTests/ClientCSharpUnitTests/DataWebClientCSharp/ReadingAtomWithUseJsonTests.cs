@@ -23,14 +23,14 @@ namespace AstoriaUnitTests
     #endregion
 
     /// <summary>
-    /// Test ReadingAtom when useJson on the Context is selected
+    /// Test Readingwhen useJson on the Context is selected
     /// </summary>
     // For comment out test cases, see github: https://github.com/OData/odata.net/issues/881
     // [TestClass]
     public class ReadingAtomWithJsonTests
     {
-        /// <summary>MIME type for ATOM bodies (http://www.iana.org/assignments/media-types/application/).</summary>
-        internal const string MimeApplicationAtom = "application/atom+xml";
+        /// <summary>MIME type for bodies (http://www.iana.org/assignments/media-types/application/).</summary>
+        internal const string MimeApplication= "application/atom+xml";
 
         /// <summary>MIME type for XML bodies.</summary>
         internal const string MimeApplicationXml = "application/xml";
@@ -158,7 +158,7 @@ namespace AstoriaUnitTests
             responseMessage.SetHeader("Content-Length", responseMessage.MemoryStream.Length.ToString());
 
             var context = new DataServiceContextWithCustomTransportLayer(maxDataServiceVersion, requestMessage, responseMessage);
-            //context.EnableAtom = true;
+            //context.Enable= true;
             context.ResolveName = ResolveName;
             context.ResolveType = ResolveType;
             context.Format.UseJson(Model);

@@ -764,7 +764,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
         /// TODO: This was test is split from AppJsonContentTypeVersioningTest, as the payload for entity reference links has been changed in V4.
         /// Earlier it used to be of type application/xml or text/xml, but in V4, it has to be application/atom+xml, since the root element is feed.
         /// The CreateAppJsonVersioningTestCases has one test case where it tries to set AcceptCharSet to "application/json;q=0.8,application/atom+xml
-        /// Since both of these are acceptable in case of reference links, the product code sends out Atom payload (since that was the last one specified).
+        /// Since both of these are acceptable in case of reference links, the product code sends out payload (since that was the last one specified).
         /// Since this test is supposed to be testing JSON payload, this need to be changed to work with JSON.
         /// </summary>
         [Ignore] // Remove Atom

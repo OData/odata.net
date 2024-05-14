@@ -1403,7 +1403,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         }
 
         /// <summary>
-        /// Compares the Xml written by an ATOM writer with the expected result.
+        /// Compares the Xml written by an writer with the expected result.
         /// </summary>
         /// <param name="expectedResults">The expected results.</param>
         /// <param name="observedText">The observed payload text.</param>
@@ -1441,7 +1441,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         }
 
         /// <summary>
-        /// Compares the Xml written by an ATOM writer with the expected result.
+        /// Compares the Xml written by an writer with the expected result.
         /// </summary>
         /// <param name="expectedResults">The expected results.</param>
         /// <param name="stream">The memory stream to read the observed result from.</param>
@@ -1460,7 +1460,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests
         }
 
         /// <summary>
-        /// Compares the Xml written by an ATOM writer with the expected result.
+        /// Compares the Xml written by an writer with the expected result.
         /// </summary>
         /// <param name="expectedResults">The expected results.</param>
         /// <param name="getObservedXml">The observed payload XML.</param>

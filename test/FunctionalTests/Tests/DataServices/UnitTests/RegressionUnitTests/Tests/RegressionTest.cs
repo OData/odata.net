@@ -223,7 +223,7 @@ namespace AstoriaUnitTests.Tests
 
                     if (responseFormat == UnitTestsUtil.AtomFormat && httpMethodName == "PUT")
                     {
-                        // PUT atom payloads are not round-trippable since we try and attach the relationships
+                        // PUT payloads are not round-trippable since we try and attach the relationships
                         // which is not allowed in PUT payloads.
                         return;
                     }
@@ -1735,7 +1735,7 @@ namespace AstoriaUnitTests.Tests
                     Type clrType = Nullable.GetUnderlyingType(typeData.ClrType) ?? typeData.ClrType;
                     foreach (object sampleValue in typeData.SampleValues)
                     {
-                        // For atom case, there are 2 scenarios to test when EnableTypeConversion is set to false.
+                        // For case, there are 2 scenarios to test when EnableTypeConversion is set to false.
                         // When the type name is written on the wire, we will do the conversion to the type mentioned on the wire
                         // Otherwise, we will just pass the type as string. We need to test both the scenarios.
 
@@ -2536,7 +2536,7 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     Microsoft.OData.Client.DataServiceContext ctx = new northwindClient.northwindContext(new Uri(request.BaseUri));
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
 
                     var q1 = ctx.CreateQuery<northwindClient.Customers>("Customers").Select(c => c as northwindClient.Customers);
@@ -5470,7 +5470,7 @@ Content-Type: application/atom+xml;type=entry
                 public AstoriaDataContext()
                 {
                     this.ctx = new DataServiceContext(AstoriaDataContext.ContextUri);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //this.ctx.Format.UseAtom();
                 }
 
@@ -5514,7 +5514,7 @@ Content-Type: application/atom+xml;type=entry
                         requestToAstoria.DataServiceType = typeof(AstoriaDataContext);
                         requestToAstoria.StartService();
                         DataServiceContext ctxToAstoria = new DataServiceContext(requestToAstoria.ServiceRoot);
-                        //ctxToAstoria.EnableAtom = true;
+                        //ctxToAstoria.Enable= true;
                         //ctxToAstoria.Format.UseAtom();
                         foreach (Customer c in ctxToAstoria.CreateQuery<Customer>("Customers"))
                         {
@@ -5566,7 +5566,7 @@ Content-Type: application/atom+xml;type=entry
                     request.HttpMethod = "GET";
                     request.Accept = UnitTestsUtil.AtomFormat;
                     request.SendRequest();
-                    XmlDocument atom = UnitTestsUtil.GetResponseAsAtom(request);
+                    XmlDocument = UnitTestsUtil.GetResponseAsAtom(request);
                     string payload = atom.InnerXml;
 
                     string[] XPathExprs = new string[]
@@ -6538,7 +6538,7 @@ Content-Type: application/atom+xml;type=entry
                         {
                             request.StartService();
                             var ctx = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                            //ctx.EnableAtom = true;
+                            //ctx.Enable= true;
                             //ctx.Format.UseAtom();
 
                             // Get the entity

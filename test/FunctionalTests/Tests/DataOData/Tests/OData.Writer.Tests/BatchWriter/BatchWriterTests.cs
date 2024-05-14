@@ -500,7 +500,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         {
             Uri baseUri = new Uri("http://odata.org/base");
 
-            // the expected entry result (ATOM and JSON)
+            // the expected entry result (and JSON)
             string entryPayloadExpectedAtomResultTemplate =
                 string.Join(
                 "$(NL)",
@@ -1087,7 +1087,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             };
 
             // TODO: Fix places where we've lost JsonVerbose coverage to add Json
-            // Write everything to the batch (ATOM + JSON)
+            // Write everything to the batch (+ JSON)
             this.CombinatorialEngineProvider.RunCombinations(
                 testCases,
                 this.WriterTestConfigurationProvider.DefaultFormatConfigurationsWithIndent,
@@ -1114,7 +1114,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         /// <summary>
         /// Set the acceptable headers for the batch operations to make sure we pick the same encoding default as for the batch structure;
         /// since our validator does not create new readers for the operations we cannot switch encodings. This is necessary because we currently
-        /// always pick UTF-8 (without BOM) as default for the batch structure but the Xml writer for writing operations in ATOM uses UTF-8 (with BOM).
+        /// always pick UTF-8 (without BOM) as default for the batch structure but the Xml writer for writing operations in uses UTF-8 (with BOM).
         /// </summary>
         /// <param name="testConfig">The test configuration to set the headers on.</param>
         /// <returns>A cloned test configuration with the proper accept headers.</returns>

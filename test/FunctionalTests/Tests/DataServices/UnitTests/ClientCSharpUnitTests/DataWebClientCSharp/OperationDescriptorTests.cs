@@ -282,7 +282,7 @@ namespace AstoriaUnitTests
         {
             if (format == ODataFormat.Json)
             {
-                // Json builds the title and target with entity container name in front of the simple title name. Atom doesn't include the container name.
+                // Json builds the title and target with entity container name in front of the simple title name. doesn't include the container name.
                 title = String.Format("TestNamespace.{0}", title);
                 return new MyOperationDescriptor() { Title = title, Metadata = String.Format("$metadata#{0}", title), Target = uri + "/" + title };
             }
@@ -506,7 +506,7 @@ namespace AstoriaUnitTests
                     var target = string.Format("CustomerEntities(1)/{0}Action1", "TestNamespace.");
 
                     // With Json, if the title is not on the wire (which it's not, if it's null), then the metadata builder kicks in and a non-null value is reported
-                    // There is no real scenario where the title would need to actually be null, so we have decided to not do anything to make this match the Atom behavior.
+                    // There is no real scenario where the title would need to actually be null, so we have decided to not do anything to make this match the behavior.
                     var title = format == ODataFormat.Json ? "TestNamespace.Action1" : null;
 
                     return new List<List<MyOperationDescriptor>> { new List<MyOperationDescriptor>()
@@ -591,7 +591,7 @@ namespace AstoriaUnitTests
             {
                 request.StartService();
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
 
                 Uri uri = new Uri(request.ServiceRoot + "/" + testCase.RequestUriString);
 
@@ -728,7 +728,7 @@ namespace AstoriaUnitTests
 
                 Uri uri = new Uri(request.ServiceRoot + "/" + testCase.RequestUriString);
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
 
                 if (format == ODataFormat.Json)
                 {

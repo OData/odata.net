@@ -23,12 +23,6 @@ namespace Microsoft.OData
         /// <summary>'multipart' - media type.</summary>
         internal const string MimeMultipartType = "multipart";
 
-        /// <summary>'atom+xml' - constant for atom+xml subtypes.</summary>
-        internal const string MimeAtomXmlSubType = "atom+xml";
-
-        /// <summary>'atomsvc+xml' - constant for atomsvc+xml subtypes.</summary>
-        internal const string MimeAtomSvcXmlSubType = "atomsvc+xml";
-
         /// <summary>'xml' - constant for xml subtypes.</summary>
         internal const string MimeXmlSubType = "xml";
 
@@ -94,15 +88,6 @@ namespace Microsoft.OData
 
         /// <summary>Media type for XML bodies.</summary>
         internal const string MimeApplicationXml = MimeApplicationType + Separator + MimeXmlSubType;
-
-        /// <summary>Media type for ATOM payloads.</summary>
-        internal const string MimeApplicationAtomXml = MimeApplicationType + Separator + MimeAtomXmlSubType;
-
-        /// <summary>Media type for links referencing a single resource.</summary>
-        internal const string MimeApplicationAtomXmlTypeEntry = MimeApplicationAtomXml + ";" + MimeTypeParameterName + "=" + MimeTypeParameterValueEntry;
-
-        /// <summary>Media type for links referencing a collection of entries.</summary>
-        internal const string MimeApplicationAtomXmlTypeFeed = MimeApplicationAtomXml + ";" + MimeTypeParameterName + "=" + MimeTypeParameterValueFeed;
 
         /// <summary>Media type for JSON payloads.</summary>
         internal const string MimeApplicationJson = MimeApplicationType + Separator + MimeJsonSubType;

@@ -151,7 +151,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                             }
                             else
                             {
-                                throw new NotSupportedException("Only ATOM and JSON formats are supported for batch payloads.");
+                                throw new NotSupportedException("Only and JSON formats are supported for batch payloads.");
                             }
                         }
                     }
@@ -183,7 +183,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                                 }
                                 else
                                 {
-                                    throw new NotSupportedException("Only ATOM and JSON formats are supported for batch payloads.");
+                                    throw new NotSupportedException("Only and JSON formats are supported for batch payloads.");
                                 }
                             }
                         }
@@ -269,7 +269,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 };
             }
 
-            throw new NotSupportedException("Only ATOM and JSON formats are supported for batch payloads.");
+            throw new NotSupportedException("Only and JSON formats are supported for batch payloads.");
         }
     }
 }

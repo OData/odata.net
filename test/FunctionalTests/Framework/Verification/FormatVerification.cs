@@ -223,7 +223,7 @@ namespace System.Data.Test.Astoria
 
                 /* atom:feed elements SHOULD contain one atom:link element with a rel
                     attribute value of "self".  This is the preferred URI for
-                    retrieving Atom Feed Documents representing this Atom feed.
+                    retrieving Feed Documents representing this feed.
                 
                    atom:feed elements MUST NOT contain more than one atom:link
                     element with a rel attribute value of "alternate" that has the
@@ -278,7 +278,7 @@ namespace System.Data.Test.Astoria
 
             /* atom:entry elements MUST contain one or more atom:author elements,
                 unless the atom:entry contains an atom:source element that
-                contains an atom:author element or, in an Atom Feed Document, the
+                contains an atom:author element or, in an Feed Document, the
                 atom:feed element contains an atom:author element itself.
             */
             childNodes = entry.SelectNodes("atom:author", this.FormatVerifier.XmlNamespaceManager);

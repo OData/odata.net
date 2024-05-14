@@ -219,7 +219,7 @@ namespace System.Data.Test.Astoria
                         
                         try
                         {
-                            // JSON, Atom or PlainXml ($ref) payload.
+                            // JSON, or PlainXml ($ref) payload.
                             VerifyStatusCode(response);
                             if (response.Request.ExpectedStatusCode == System.Net.HttpStatusCode.OK)
                             {
@@ -508,7 +508,7 @@ namespace System.Data.Test.Astoria
         public static void VerifyResponseFormat(AstoriaResponse response)
         {
             if ((response.Request.Format == SerializationFormatKind.JSON && response.ContentType.StartsWith(SerializationFormatKinds.JsonMimeType, StringComparison.Ordinal)) ||
-                (response.Request.Format == SerializationFormatKind.Atom && response.ContentType != "application/xml"))
+                (response.Request.Format == SerializationFormatKind.&& response.ContentType != "application/xml"))
                 throw new TestFailedException(String.Format("Error content-type does not match request content-type - expected: {0}, actual: {1}", response.Request.Format.ToString(), response.ContentType));
         }
 

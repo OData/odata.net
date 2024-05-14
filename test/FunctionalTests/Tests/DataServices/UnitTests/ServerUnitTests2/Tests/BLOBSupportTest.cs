@@ -1011,7 +1011,7 @@ namespace AstoriaUnitTests.Tests
                     req.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(req.ServiceRoot);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     var q = from p in ctx.CreateQuery<Photo>("Items") where p.ParentFolder != null select new { p.ParentFolder.ID };
 
@@ -2899,7 +2899,7 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
 
                     ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
@@ -3746,7 +3746,7 @@ namespace AstoriaUnitTests.Tests
                         {
                             BLOBSupportTest.ValidateInterceptorOverride = () => { };
                             Assert.IsNull(SendRequest(typeof(NorthwindDefaultStreamService), request, "GET", "/Orders?$expand=Customers", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                            XmlDocument ordersAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                            XmlDocument ordersAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                             new Dimension("Accept", UnitTestsUtil.ResponseFormats),
@@ -3803,7 +3803,7 @@ namespace AstoriaUnitTests.Tests
                         {
                             BLOBSupportTest.ValidateInterceptorOverride = () => { };
                             Assert.IsNull(SendRequest(typeof(PhotoDataService), request, "GET", "/Items?$expand=ParentFolder", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                            XmlDocument itemsAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                            XmlDocument itemsAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                             CombinatorialEngine engine = CombinatorialEngine.FromDimensions(
                             new Dimension("Accept", UnitTestsUtil.ResponseFormats),
@@ -3897,7 +3897,7 @@ namespace AstoriaUnitTests.Tests
                             request.RequestMaxVersion = "4.0";
 
                             Assert.IsNull(SendRequest(contextType, request, "GET", "/Customers?$expand=BestFriend", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                            XmlDocument customersAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                            XmlDocument customersAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                             SendRequest(contextType, request, "GET", queryString, null, null, accept, null, null, null, 200);
                             XmlDocument atomResponse = UnitTestsUtil.GetResponseAsAtom(request);
@@ -4111,7 +4111,7 @@ namespace AstoriaUnitTests.Tests
                 using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
                 {
                     Assert.IsNull(SendRequest(typeof(NorthwindDefaultStreamService), request, "GET", "/Customers", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                    XmlDocument customersAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                    XmlDocument customersAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                     int customersCount = customersAsAtom.SelectNodes("/atom:feed/atom:entry[atom:link[@rel = 'edit' and @title = 'Customers']]", TestUtil.TestNamespaceManager).Count;
                     Assert.IsTrue(customersCount >= 0);
@@ -4133,7 +4133,7 @@ namespace AstoriaUnitTests.Tests
 
                             XmlDocument atomResponse = UnitTestsUtil.GetResponseAsAtom(request);
                             // Verify we really received AtomPub feed
-                            // Verify embedded all atom entries have etags
+                            // Verify embedded all entries have etags
                             UnitTestsUtil.VerifyXPathExpressionResults(atomResponse, true, new string[] { 
                                 "boolean(/atom:feed)",
                                 "not(/atom:feed/atom:entry[not(@adsm:etag)])",
@@ -4201,7 +4201,7 @@ namespace AstoriaUnitTests.Tests
                             request.RequestMaxVersion = "4.0";
 
                             Assert.IsNull(SendRequest(contextType, request, "GET", "/Customers", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                            XmlDocument customersAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                            XmlDocument customersAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                             int customersCount = customersAsAtom.SelectNodes("/atom:feed/atom:entry", TestUtil.TestNamespaceManager).Count;
                             Assert.IsTrue(customersCount >= 0);
@@ -4248,7 +4248,7 @@ namespace AstoriaUnitTests.Tests
                         {
                             BLOBSupportTest.ValidateInterceptorOverride = () => { };
                             Assert.IsNull(SendRequest(typeof(PhotoDataService), request, "GET", "/Items", null, null, UnitTestsUtil.AtomFormat, null, null, null, 200));
-                            XmlDocument itemsAsAtom = UnitTestsUtil.GetResponseAsAtom(request);
+                            XmlDocument itemsAs= UnitTestsUtil.GetResponseAsAtom(request);
 
                             int itemsCount = itemsAsAtom.SelectNodes("/atom:feed/atom:entry", TestUtil.TestNamespaceManager).Count;
                             Assert.IsTrue(itemsCount >= 0);
@@ -4447,7 +4447,7 @@ namespace AstoriaUnitTests.Tests
                     request.StartService();
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.ResolveName = type =>
                     {
@@ -4620,7 +4620,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);
@@ -4753,7 +4753,7 @@ namespace AstoriaUnitTests.Tests
                         request.StartService();
 
                         DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri));
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
                         ctx.SendingRequest2 += new EventHandler<SendingRequest2EventArgs>(ctx_SendingRequest);

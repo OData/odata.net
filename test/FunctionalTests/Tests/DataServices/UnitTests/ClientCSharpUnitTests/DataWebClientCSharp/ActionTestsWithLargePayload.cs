@@ -302,7 +302,7 @@ namespace AstoriaUnitTests
                 t.TestUtil.RunCombinations(testCases, (testCase) =>
                 {
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.ResolveType = name => typeof(Customer);
                     Uri uri = new Uri(request.ServiceRoot + testCase.RequestUri);

@@ -340,7 +340,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
             }
             else
             {
-                // We need only some to use indentation but we want for each of ATOM and JSON to to have some which use it for sure
+                // We need only some to use indentation but we want for each of and JSON to to have some which use it for sure
                 int[] primes = new int[] { 1, 2, 3, 5, 7, 11, 13, 17, 19 };
                 foreach (var config in configurationsWithDefaultSettings)
                 {
@@ -386,7 +386,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         private sealed class CachedConfigurations
         {
             /// <summary>
-            /// List of all ATOM configurations with default settings.
+            /// List of all configurations with default settings.
             /// </summary>
             public List<WriterTestConfiguration> AtomConfigurations { get; set; }
 

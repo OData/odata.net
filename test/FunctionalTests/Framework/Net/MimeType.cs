@@ -22,7 +22,7 @@ namespace System.Data.Test.Astoria
     {
         private static readonly ReadOnlyCollection<SerializationFormatKind> SerializationTypes =
             new ReadOnlyCollection<SerializationFormatKind>(
-                new SerializationFormatKind[] { SerializationFormatKind.JSON, SerializationFormatKind.Atom });
+                new SerializationFormatKind[] { SerializationFormatKind.JSON, SerializationFormatKind.});
 
         public static ReadOnlyCollection<SerializationFormatKind> GetSerializationTypes()
         {

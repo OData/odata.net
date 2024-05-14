@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Contracts.Atom
     public static class XmlODataPayloadElementExtensions
     {
         /// <summary>
-        /// String which holds xml namespace declaration attributes for the standard Atom and Data Services namespaces.
+        /// String which holds xml namespace declaration attributes for the standard and Data Services namespaces.
         /// </summary>
         private const string StandardAtomNamespaceDeclarations =
             "xmlns:" + ODataConstants.DataServicesNamespaceDefaultPrefix + "=\"" + ODataConstants.DataServicesNamespaceName + "\" " +

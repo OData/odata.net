@@ -86,7 +86,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 var userInput = "Customer 0' or true";
                 var q = from c in ctx.CreateQuery<Customer>("Customers")
@@ -108,7 +108,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.Configurations.RequestPipeline.OnMessageCreating = (args) => new HttpClientRequestMessage(args);
 
@@ -211,7 +211,7 @@ namespace AstoriaUnitTests.Tests
                 web.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(web.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 List<TestEntity1> entities = ctx.CreateQuery<TestEntity1>("Entities").ToList();
@@ -332,7 +332,7 @@ namespace AstoriaUnitTests.Tests
                 service.StartService();
 
                 var ctx = new DataServiceContext(service.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 TestEntity2 newEntity = new TestEntity2() { ID = null, Value = "Something" };
 
@@ -530,7 +530,7 @@ namespace AstoriaUnitTests.Tests
         {
             // Alinq translator should throw better exception when constant expression are not convertable to string, but outer expression is also incorrect.
             var ctx = new DataServiceContext(new Uri("http://localhost/service.svc"));
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
             var q = from c in ctx.CreateQuery<Customer>("Customers")
                     where c.GetType() == typeof(Customer)
@@ -734,7 +734,7 @@ namespace AstoriaUnitTests.Tests
                     {
 
                         DataServiceContext ctx = new DataServiceContext(service.ServiceRoot);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
 
                         ctx.AddObject("Products", new CustomDataClient.Product() { ID = 1000 });
@@ -811,7 +811,7 @@ namespace AstoriaUnitTests.Tests
             request.StartService();
 
             DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
 
             Random rand = new Random(DateTime.Now.Millisecond);
@@ -893,7 +893,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.RunCombinations(UnitTestsUtil.BooleanValues, (useAttach) =>
                     {
                         var ctx = new DataServiceContext(service.ServiceRoot);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
 
                         var o1 = new Order() { ID = 10 };
@@ -1074,7 +1074,7 @@ namespace AstoriaUnitTests.Tests
             TestUtil.RunCombinations(versions, (maxProtocolVersion) =>
                 {
                     DataServiceContext context = new DataServiceContext(serviceUri, maxProtocolVersion);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
 
                     context.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
@@ -1202,7 +1202,7 @@ namespace AstoriaUnitTests.Tests
 
                         // Verify the correct URIs are used whether they come from the payload or the headers
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, protocolVersion);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
 
                         ctx.AddAndUpdateResponsePreference = responsePreference;
@@ -1340,7 +1340,7 @@ namespace AstoriaUnitTests.Tests
                 requestMessage,
                 responseMessage);
 
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
 
             TestEntity7 entity = new TestEntity7()
@@ -1584,7 +1584,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 // Repos: when the IIF statement returns an entity type when the null check is false and the null check is against a non-entity property.
@@ -1609,7 +1609,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Order newOrder1 = new Order();
@@ -1636,7 +1636,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 var customer = ctx.CreateQuery<Customer>("Customers").FirstOrDefault();
@@ -1690,7 +1690,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 var testCases = new[]
@@ -1849,7 +1849,7 @@ namespace AstoriaUnitTests.Tests
         private static void TestLoadProperty<T>(Uri uri) where T : ICollection<Order>
         {
             DataServiceContext ctx = new DataServiceContext(uri);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
             ctx.UndeclaredPropertyBehavior = UndeclaredPropertyBehavior.Support;
 
@@ -1970,7 +1970,7 @@ namespace AstoriaUnitTests.Tests
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.ResolveType = ((name) =>
@@ -2041,8 +2041,8 @@ namespace AstoriaUnitTests.Tests
 
                 var context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
 
-                // Atom is the default, but setting it explicitly to ensure we are testing the right scenario
-                //context.EnableAtom = true;
+                // is the default, but setting it explicitly to ensure we are testing the right scenario
+                //context.Enable= true;
                 //context.Format.UseAtom();
                 Exception ex = TestUtil.RunCatching(() => context.Execute<Customer>(new Uri(request.ServiceRoot + "/Customers?$format=json")));
                 Assert.IsNotNull(ex, "Expected an exception, but none thrown");
@@ -2066,8 +2066,8 @@ namespace AstoriaUnitTests.Tests
 
                 var context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
 
-                // Atom is the default, but setting it explicitly to ensure we are testing the right scenario
-                //context.EnableAtom = true;
+                // is the default, but setting it explicitly to ensure we are testing the right scenario
+                //context.Enable= true;
                 //context.Format.UseAtom();
                 context.SendingRequest2 += (c, args) => args.RequestMessage.SetHeader("Accept", "application/json");
                 var ex = TestUtil.RunCatching(() => context.Execute<Customer>(new Uri(request.ServiceRoot + "/Customers")));

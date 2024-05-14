@@ -207,11 +207,11 @@ namespace System.Data.Test.Astoria
                         ContentType_Internal = SerializationFormatKinds.MimeTextPlain;
                     }
                 }
-                else if (propertyUri && !valueUri && (Format == SerializationFormatKind.Atom || Format == SerializationFormatKind.Default))
+                else if (propertyUri && !valueUri && (Format == SerializationFormatKind.|| Format == SerializationFormatKind.Default))
                 {
                     ContentType_Internal = SerializationFormatKinds.MimeApplicationXml;
                 }
-                else if (linksUri && (Format == SerializationFormatKind.Atom || Format == SerializationFormatKind.Default))
+                else if (linksUri && (Format == SerializationFormatKind.|| Format == SerializationFormatKind.Default))
                 {
                     ContentType_Internal = "application/xml";
                 }
@@ -283,7 +283,7 @@ namespace System.Data.Test.Astoria
             {
                 Accept_Internal = "*/*";
             }
-            else if ((propertyUri || linksUri) && (Format == SerializationFormatKind.Atom || Format == SerializationFormatKind.Default))
+            else if ((propertyUri || linksUri) && (Format == SerializationFormatKind.|| Format == SerializationFormatKind.Default))
             {
                 Accept_Internal = "application/xml";
             }

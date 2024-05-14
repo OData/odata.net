@@ -65,7 +65,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Creates Collection instance of store Collection items.
         /// </summary>
-        /// <param name="collectionProperty">ODataProperty instance representing the Collection as seen in the atom payload.</param>
+        /// <param name="collectionProperty">ODataProperty instance representing the Collection as seen in the payload.</param>
         /// <param name="userCollectionType">CLR type of the Collection as defined by the user.</param>
         /// <returns>Newly created Collection instance. Never null.</returns>
         internal object CreateCollectionPropertyInstance(ODataProperty collectionProperty, Type userCollectionType)
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Applies collectionValue item to the provided <paramref name="collectionInstance"/>.
         /// </summary>
-        /// <param name="collectionProperty">Atom property containing materialized Collection items.</param>
+        /// <param name="collectionProperty">Property containing materialized Collection items.</param>
         /// <param name="collectionInstance">Collection instance. Must implement ICollection&lt;T&gt; where T is either primitive or complex type (not an entity).</param>
         /// <param name="collectionItemType">Type of items in the Collection. Note: this could be calculated from collectionInstance but we already have it in upstream methods.</param>
         /// <param name="addValueToBackingICollectionInstance">Action called actually add a Collection item to <paramref name="collectionInstance" /></param>
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Tries to create a collection instance and apply the materialized collection values.
         /// </summary>
         /// <param name="collectionItemType">Type of the collection item.</param>
-        /// <param name="collectionProperty">Atom property containing materialized collection items.</param>
+        /// <param name="collectionProperty">Property containing materialized collection items.</param>
         /// <param name="collectionInstance">The collection instance.</param>
         /// <returns>true if successful</returns>
         internal bool TryMaterializeODataCollectionValue(Type collectionItemType, ODataProperty collectionProperty, out object collectionInstance)

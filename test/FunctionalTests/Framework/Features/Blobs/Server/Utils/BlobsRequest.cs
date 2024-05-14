@@ -190,7 +190,7 @@ namespace System.Data.Test.Astoria
             // Verify content type: xml for Atom, json for JSON.
             if (!base.Batched && !string.IsNullOrEmpty(response.Payload))
             {
-                if (base.Format == SerializationFormatKind.Atom && !response.ContentType.Contains("xml") ||
+                if (base.Format == SerializationFormatKind.&& !response.ContentType.Contains("xml") ||
                     (base.Format == SerializationFormatKind.JSON && !response.ContentType.Contains("json")))
                 {
                     AstoriaTestLog.WriteLine(string.Format("Wrong Content-Type {0} in response to {1} request: ", response.ContentType, base.Format));

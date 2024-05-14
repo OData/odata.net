@@ -923,7 +923,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             /// <summary>
-            /// Determines if the specified content type is an ATOM content type.
+            /// Determines if the specified content type is an content type.
             /// </summary>
             /// <param name="contentType">The content type to inspect.</param>
             /// <returns>true if the content type is ATOM; false otherwise</returns>

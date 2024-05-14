@@ -8,9 +8,9 @@ namespace AstoriaUnitTests.TDD.Common
 {
     public static class TestConstants
     {
-        public const string MimeApplicationAtom = "application/atom+xml";
+        public const string MimeApplication= "application/atom+xml";
         public const string MimeApplicationXml = "application/xml";
-        public const string MimeApplicationAtomPlusXml = MimeApplicationAtom + "," + MimeApplicationXml;
+        public const string MimeApplicationAtomPlusXml = MimeApplication+ "," + MimeApplicationXml;
         public const string MimeApplicationJsonODataMinimalMetadata = "application/json;odata.metadata=minimal";
         public const string MimeApplicationJsonODataFullMetadata = "application/json;odata.metadata=full";
         public const string MimeApplicationJsonODataVerbose = "application/json;odata.metadata=verbose";

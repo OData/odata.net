@@ -20,7 +20,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
     public class BatchPayloadWriterTestDescriptor<T> : PayloadWriterTestDescriptor<T>
     {
          /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>
@@ -82,7 +82,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         }
 
         /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>

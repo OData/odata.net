@@ -23,12 +23,12 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         private static readonly TimeSpan zeroOffset = new TimeSpan(0, 0, 0);
 
         /// <summary>
-        /// Constant for atom format of local date times
+        /// Constant for format of local date times
         /// </summary>
         private const string AtomLocalDateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:sszzz";
 
         /// <summary>
-        /// Constant for atom format of UTC date time
+        /// Constant for format of UTC date time
         /// </summary>
         private const string AtomUniversalDateTimeOffsetFormat = "yyyy-MM-ddTHH:mm:ssZ";
 
@@ -364,10 +364,10 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         }
 
         /// <summary>
-        /// Convert a datetime primitive value to atom datetime offset format
+        /// Convert a datetime primitive value to datetime offset format
         /// </summary>
         /// <param name="value">DateTime clr value</param>
-        /// <returns>string format of atom datetime offset</returns>
+        /// <returns>string format of datetime offset</returns>
         public string ConvertToAtomDateTimeOffset(DateTime value)
         {
             DateTimeOffset offset = new DateTimeOffset(value);
@@ -375,10 +375,10 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         }
 
         /// <summary>
-        /// Convert a datetimeoffset primitive value to atom datetime offset format
+        /// Convert a datetimeoffset primitive value to datetime offset format
         /// </summary>
         /// <param name="value">DateTimeOffset clr value</param>
-        /// <returns>string format of atom datetime offset</returns>
+        /// <returns>string format of datetime offset</returns>
         public string ConvertToAtomDateTimeOffset(DateTimeOffset value)
         {
             if (value.Offset == zeroOffset)

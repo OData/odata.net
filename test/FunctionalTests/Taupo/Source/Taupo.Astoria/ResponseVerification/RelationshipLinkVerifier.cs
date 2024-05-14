@@ -191,7 +191,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             {
                 this.VerifyLinkUriValue(associationLink.UriString, expectedAssociationUri, request, response);
 
-                // extra verifications for atom payload
+                // extra verifications for payload
                 if (this.IsAtomResponse(response))
                 {
                     this.VerifyAtomAssociationLinkTypeAttribute(associationLink, request, response);
@@ -218,7 +218,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
                 this.VerifyLinkUriValue(((DeferredLink)navigation.Value).UriString, expectedNavigationUri, request, response);
             }
 
-            // extra verifications for atom payload
+            // extra verifications for payload
             if (this.IsAtomResponse(response))
             {
                 this.VerifyAtomNavigationLinkTypeAttribute(navigation.Value, request, response);
@@ -275,7 +275,7 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
         }
 
         /// <summary>
-        /// Returns true if response content is Atom feed/entry.
+        /// Returns true if response content is feed/entry.
         /// </summary>
         /// <param name="response">The response to check the content type.</param>
         /// <returns>True if the content type is Atom, otherwise False.</returns>

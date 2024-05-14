@@ -78,7 +78,7 @@ namespace Microsoft.OData.Client
         #region Properties
 
         /// <summary>Gets the URI that is the identity value of the entity.</summary>
-        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the Atom response.</returns>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the response.</returns>
         public Uri Identity
         {
             get

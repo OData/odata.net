@@ -143,7 +143,7 @@ namespace AstoriaUnitTests.Tests
                 TestUtil.RunCombinations(saveChangesModes, saveChangesOptions, (saveChangesMode, saveChangesOption) =>
                     {
                         DataServiceContext context = new DataServiceContext(new Uri(request.BaseUri));
-                        //context.EnableAtom = true;
+                        //context.Enable= true;
                         //context.Format.UseAtom();
                         HttpTestHookConsumer testHookConsumer = new HttpTestHookConsumer(context, false);
 

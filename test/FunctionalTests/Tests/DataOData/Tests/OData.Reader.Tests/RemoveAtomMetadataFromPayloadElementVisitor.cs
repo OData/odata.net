@@ -14,12 +14,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #endregion Namespaces
 
     /// <summary>
-    /// Visitor which removes ATOM metadata from <see cref="ODataPayloadElement"/> objects.
+    /// Visitor which removes metadata from <see cref="ODataPayloadElement"/> objects.
     /// </summary>
     public class RemoveAtomMetadataFromPayloadElementVisitor : ODataPayloadElementVisitorBase
     {
         /// <summary>
-        /// Removes ATOM metadata from the given payload element and its descendants.
+        /// Removes metadata from the given payload element and its descendants.
         /// </summary>
         /// <param name="payloadElement">The root of the payload element tree to visit.</param>
         /// <returns>The <paramref name="payloadElement"/> after it has been visited.</returns>
@@ -40,7 +40,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Removes ATOM metadata annotations from an <see cref="EntityInstance"/>.
+        /// Removes metadata annotations from an <see cref="EntityInstance"/>.
         /// </summary>
         /// <param name="payloadElement">The entity instance to visit.</param>
         public override void Visit(EntityInstance payloadElement)
@@ -50,7 +50,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Removes ATOM link metadata annotations from a <see cref="NamedStreamInstance"/>.
+        /// Removes link metadata annotations from a <see cref="NamedStreamInstance"/>.
         /// </summary>
         /// <param name="payloadElement">The named stream instance to visit.</param>
         public override void Visit(NamedStreamInstance payloadElement)
@@ -60,7 +60,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Removes ATOM link metadata annotations from a <see cref="NavigationPropertyInstance"/>.
+        /// Removes link metadata annotations from a <see cref="NavigationPropertyInstance"/>.
         /// </summary>
         /// <param name="payloadElement">The navigation property instance to visit.</param>
         public override void Visit(NavigationPropertyInstance payloadElement)
@@ -73,7 +73,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Removes the title property and ATOM metadata annotations from a <see cref="WorkspaceInstance"/>.
+        /// Removes the title property and metadata annotations from a <see cref="WorkspaceInstance"/>.
         /// </summary>
         /// <param name="payloadElement">The workspace instance to visit.</param>
         public override void Visit(WorkspaceInstance payloadElement)
@@ -83,7 +83,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// Removes the title property and ATOM metadata annotations from a <see cref="ResourceCollectionInstance"/>.
+        /// Removes the title property and metadata annotations from a <see cref="ResourceCollectionInstance"/>.
         /// </summary>
         /// <param name="payloadElement">The resource collection instance to visit</param>
         public override void Visit(ResourceCollectionInstance payloadElement)

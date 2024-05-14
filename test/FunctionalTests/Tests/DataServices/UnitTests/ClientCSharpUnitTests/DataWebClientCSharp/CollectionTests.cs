@@ -903,7 +903,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         private static DataServiceContext GetContextForCollectionMaterializationTestCases(string baseUri)
         {
             DataServiceContext ctx = new DataServiceContext(new Uri(baseUri), ODataProtocolVersion.V4);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
 
             ctx.ResolveType = (typeName) =>
             {
@@ -1493,7 +1493,7 @@ X-Powered-By: ASP.NET
                     };
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.AddObject("Entities", entity);
 
@@ -1696,7 +1696,7 @@ X-Powered-By: ASP.NET
                 };
 
                 DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri));
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.AddObject("Entities", entity);
                 ctx.SaveChanges();
@@ -1856,7 +1856,7 @@ X-Powered-By: ASP.NET
                 request.StartService();
 
                 DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.MergeOption = MergeOption.NoTracking;
 
@@ -2212,7 +2212,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test expansions and projections of collection - entity type
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2240,7 +2240,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test expansions and projections of collection - anonymous/nonentity type
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2266,7 +2266,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2289,7 +2289,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2312,7 +2312,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to non-entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2334,7 +2334,7 @@ X-Powered-By: ASP.NET
                 {
                     // Test projecting collection to non-entity types
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in context.CreateQuery<CollectionEntityType>("Entities")
                             where e.ID == 0
@@ -2357,7 +2357,7 @@ X-Powered-By: ASP.NET
                 // Test projecting collection to non-entity types
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
@@ -2378,7 +2378,7 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
@@ -2400,7 +2400,7 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
@@ -2420,7 +2420,7 @@ X-Powered-By: ASP.NET
                 }
                 {
                     DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                    //context.EnableAtom = true;
+                    //context.Enable= true;
                     //context.Format.UseAtom();
                     var q = from e in ctx.CreateQuery<CollectionEntityType>("Entities")
                             select new
@@ -2582,7 +2582,7 @@ X-Powered-By: ASP.NET
                     };
 
                     DataServiceContext ctx = new DataServiceContext(new Uri(host.BaseUri), ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
 
                     SaveChangesOptions? saveChangesOptions = null;
@@ -2704,7 +2704,7 @@ X-Powered-By: ASP.NET
                         };
 
                         DataServiceContext ctx = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
                         ctx.AddObject("entity", testCase.Entity);
                         ctx.SaveChanges();

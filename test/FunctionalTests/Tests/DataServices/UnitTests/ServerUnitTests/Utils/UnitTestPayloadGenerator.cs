@@ -29,7 +29,7 @@ namespace AstoriaUnitTests.Tests
         static UnitTestPayloadGenerator()
         {
             Settings.SetServiceDocumentUri(MetadataDocumentUri);
-            // Settings.EnableAtom = true;
+            // Settings.Enable= true;
         }
         
         public UnitTestPayloadGenerator(HttpStatusCode statusCode, string contentType)

@@ -30,7 +30,7 @@ namespace Microsoft.OData.Client
         private readonly DataServiceRequest query;
 
         /// <summary>Enumerable of objects in query</summary>
-        private readonly MaterializeAtom results;
+        private readonly MaterializeObject results;
 
         #endregion Private fields
 
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Client
         /// <param name="headers">HTTP headers</param>
         /// <param name="query">original query</param>
         /// <param name="results">retrieved objects</param>
-        internal QueryOperationResponse(HeaderCollection headers, DataServiceRequest query, MaterializeAtom results)
+        internal QueryOperationResponse(HeaderCollection headers, DataServiceRequest query, MaterializeObject results)
             : base(headers)
         {
             this.query = query;
@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>get a non-null enumerable of the result</summary>
-        internal MaterializeAtom Results
+        internal MaterializeObject Results
         {
             get
             {
@@ -121,7 +121,7 @@ namespace Microsoft.OData.Client
         /// <param name="results">constructor parameter3</param>
         /// <returns>returns a new strongly typed instance of QueryOperationResponse.</returns>
         [System.Runtime.CompilerServices.MethodImpl(System.Runtime.CompilerServices.MethodImplOptions.NoInlining | System.Runtime.CompilerServices.MethodImplOptions.NoOptimization)]
-        internal static QueryOperationResponse GetInstance(Type elementType, HeaderCollection headers, DataServiceRequest query, MaterializeAtom results)
+        internal static QueryOperationResponse GetInstance(Type elementType, HeaderCollection headers, DataServiceRequest query, MaterializeObject results)
         {
             Type genericType = typeof(QueryOperationResponse<>).MakeGenericType(elementType);
             return (QueryOperationResponse)Activator.CreateInstance(

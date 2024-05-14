@@ -136,27 +136,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1 },
-                    Atom = GetAtom(action_r1_t1),
+                    = GetAtom(action_r1_t1),
                     Json = GetJsonForRelGroup(action_r1_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r1_t2 },
-                    Atom = GetAtom(action_r1_t1) + GetAtom(action_r1_t2),
+                    = GetAtom(action_r1_t1) + GetAtom(action_r1_t2),
                     Json = GetJsonForRelGroup(action_r1_t1, action_r1_t2),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r2_t1 },
-                    Atom = GetAtom(action_r1_t1) + GetAtom(action_r2_t1),
+                    = GetAtom(action_r1_t1) + GetAtom(action_r2_t1),
                     Json = GetJsonForRelGroup(action_r1_t1) + "," + GetJsonForRelGroup(action_r2_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r1_t1, action_r2_t1, action_r1_t2 },
-                    Atom = GetAtom(action_r1_t1) + GetAtom(action_r2_t1) + GetAtom(action_r1_t2),
+                    = GetAtom(action_r1_t1) + GetAtom(action_r2_t1) + GetAtom(action_r1_t2),
                     Json = GetJsonForRelGroup(action_r1_t1, action_r1_t2) + "," + GetJsonForRelGroup(action_r2_t1),
                 },
                 new {
                     ODataActions = new ODataAction[] { action_r3_t1 },
-                    Atom = GetAtom(action_r3_t1),
+                    = GetAtom(action_r3_t1),
                     Json = GetJsonForRelGroup(action_r3_t1),
                 },
             };
@@ -165,27 +165,27 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
             {
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1 },
-                    Atom = GetAtom(function_r1_t1),
+                    = GetAtom(function_r1_t1),
                     Json = GetJsonForRelGroup(function_r1_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r1_t2 },
-                    Atom = GetAtom(function_r1_t1) + GetAtom(function_r1_t2),
+                    = GetAtom(function_r1_t1) + GetAtom(function_r1_t2),
                     Json = GetJsonForRelGroup(function_r1_t1, function_r1_t2),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r2_t1 },
-                    Atom = GetAtom(function_r1_t1) + GetAtom(function_r2_t1),
+                    = GetAtom(function_r1_t1) + GetAtom(function_r2_t1),
                     Json = GetJsonForRelGroup(function_r1_t1) + "," + GetJsonForRelGroup(function_r2_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r1_t1, function_r2_t1, function_r1_t2 },
-                    Atom = GetAtom(function_r1_t1) + GetAtom(function_r2_t1) + GetAtom(function_r1_t2),
+                    = GetAtom(function_r1_t1) + GetAtom(function_r2_t1) + GetAtom(function_r1_t2),
                     Json = GetJsonForRelGroup(function_r1_t1, function_r1_t2) + "," + GetJsonForRelGroup(function_r2_t1),
                 },
                 new {
                     ODataFunctions = new ODataFunction[] { function_r3_t1 },
-                    Atom = GetAtom(function_r3_t1),
+                    = GetAtom(function_r3_t1),
                     Json = GetJsonForRelGroup(function_r3_t1),
                 },
             };
@@ -197,7 +197,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 {
                     actionCase.ODataActions,
                     functionCase.ODataFunctions,
-                    Atom = string.Concat(actionCase.Atom, functionCase.Atom),
+                    = string.Concat(actionCase.Atom, functionCase.Atom),
                     Json = string.Join(",", new[] { actionCase.Json, functionCase.Json }.Where(x => x != null))
                 };
 

@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     SkipTestConfiguration = tc => tc.IsRequest,
                 },
 
-                // relative URI without a base URI should fail in Atom and Json, but is allowed in Verbose JSON.
+                // relative URI without a base URI should fail in and Json, but is allowed in Verbose JSON.
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadElement = PayloadBuilder.ServiceDocument().Workspace(

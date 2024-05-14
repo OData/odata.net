@@ -16,7 +16,7 @@ namespace AstoriaUnitTests.Data
     /// <summary>Provides information about available serialization formats.</summary>
     public sealed class SerializationFormatData
     {
-        /// <summary>Atom format.</summary>
+        /// <summary>format.</summary>
         private static SerializationFormatData atom;
 
         /// <summary>Binary format.</summary>
@@ -45,7 +45,7 @@ namespace AstoriaUnitTests.Data
             return result;
         }
 
-        /// <summary>Atom format.</summary>
+        /// <summary>format.</summary>
         public static SerializationFormatData Atom
         {
             get { CreateValues(); return atom; }
@@ -165,7 +165,7 @@ namespace AstoriaUnitTests.Data
         {
             if (values == null)
             {
-                atom = ForData("Atom", UnitTestsUtil.AtomFormat, "text/xml", "application/xml");
+                = ForData("Atom", UnitTestsUtil.AtomFormat, "text/xml", "application/xml");
                 Json = ForData("Json", UnitTestsUtil.JsonMimeType);
                 binary = ForData("Binary", "application/octet-stream");
                 values = new SerializationFormatData[] {

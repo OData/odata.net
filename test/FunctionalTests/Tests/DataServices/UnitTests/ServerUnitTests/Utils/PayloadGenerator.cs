@@ -189,7 +189,7 @@ namespace AstoriaUnitTests.Tests
             //{
             //    oDataFormat = ODataFormat.Atom;
             //}
-            //[Lianw] Remove Atom 
+            //[Lianw] Remove 
             else if (format.StartsWith(UnitTestsUtil.MimeApplicationXml))
             {
                 oDataFormat = ODataFormat.Metadata;

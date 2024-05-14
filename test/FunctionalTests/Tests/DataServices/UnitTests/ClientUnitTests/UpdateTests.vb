@@ -55,7 +55,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
             Me.ctx.Format.UseJson(New EdmModel())
             AddHandler Me.ctx.SendingRequest2, AddressOf SendingRequestListenHttpMethod
@@ -315,7 +315,7 @@ Partial Public Class ClientModule
         Public Sub ClientUpdate_0()
             ' create the customer to database
             Dim ctx1 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'ctx1.EnableAtom = True
+            'ctx1.Enable= True
             'ctx1.Format.UseAtom()
             ctx1.AddToCustomers(NorthwindSimpleModel.Customers.CreateCustomers("88998", "Microsoft"))
             ctx1.SaveChanges()
@@ -323,7 +323,7 @@ Partial Public Class ClientModule
 
             ' show the customer is in the database
             Dim ctx2 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'ctx2.EnableAtom = True
+            'ctx2.Enable= True
             'ctx2.Format.UseAtom()
             Dim customer2 = (From cust In ctx2.Customers Where cust.CustomerID = "88998" Select cust).First
             Assert.IsNotNull(customer2)
@@ -335,7 +335,7 @@ Partial Public Class ClientModule
 
             ' add the customer again
             Dim ctx3 = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'ctx3.EnableAtom = True
+            'ctx3.Enable= True
             'ctx3.Format.UseAtom()
             ctx3.AddToCustomers(NorthwindSimpleModel.Customers.CreateCustomers("88998", "Microsoft"))
             ctx3.SaveChanges()
@@ -389,7 +389,7 @@ Partial Public Class ClientModule
                         web.StartService()
                         Try
                             Dim customCtx As DataServiceContext = New DataServiceContext(web.ServiceRoot, ODataProtocolVersion.V4)
-                            'customCtx.EnableAtom = True
+                            'customCtx.Enable= True
                             'customCtx.Format.UseAtom()
                             customCtx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent
                             Dim customer = customCtx.Execute(Of AstoriaUnitTests.Stubs.Customer)(New Uri("/Customers(0)", UriKind.Relative)).First()
@@ -426,7 +426,7 @@ Partial Public Class ClientModule
             Util.SaveChanges(ctx, SaveChangesOptions.None, 1, 0)
 
             ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim d As NorthwindSimpleModel.Customers = Enumerable.Single(Of NorthwindSimpleModel.Customers)(ctx.CreateQuery(Of NorthwindSimpleModel.Customers)("/Customers('ab')"))
             Assert.AreEqual("foo", d.ContactName)
@@ -638,7 +638,7 @@ Partial Public Class ClientModule
             Dim changeset As SaveChangesOptions = CType(hashtable.Item("Changeset"), SaveChangesOptions)
 
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
             Me.ctx.Timeout = 30
             beginSaveChanges = False
@@ -1128,7 +1128,7 @@ Partial Public Class ClientModule
                     web.StartService()
                     Try
                         Dim customCtx As DataServiceContext = New DeleteComplexPropertyContext(web.ServiceRoot)
-                        'customCtx.EnableAtom = True
+                        'customCtx.Enable= True
                         'customCtx.Format.UseAtom()
                         Dim customer = customCtx.Execute(Of AstoriaUnitTests.Stubs.Customer)(New Uri("/Customers(0)", UriKind.Relative)).First()
                         customer.Address = Nothing
@@ -1762,7 +1762,7 @@ Partial Public Class ClientModule
 
                             Dim saveChangesOptions = batchOptions Or patchOptions
                             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                            'context.EnableAtom = True
+                            'context.Enable= True
                             'context.Format.UseAtom()
                             context.AddAndUpdateResponsePreference = responsePreference
 
@@ -1812,7 +1812,7 @@ Partial Public Class ClientModule
                         Sub(responsePreference, saveOption, executionMethod)
                             mrService.ClearChanges()
                             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-                            'context.EnableAtom = True
+                            'context.Enable= True
                             'context.Format.UseAtom()
                             context.AddAndUpdateResponsePreference = responsePreference
 
@@ -1931,7 +1931,7 @@ Partial Public Class ClientModule
             ' GET an entity with old identity and edit link
             Dim oldIdentity = New Uri("urn:old-identity")
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            'context.EnableAtom = True
+            'context.Enable= True
             Dim oldEditLink = New Uri(context.BaseUri.ToString() & "/oldentity1")
             service.ProcessRequestOverride =
                 Function(clientRequest)
@@ -2038,7 +2038,7 @@ Partial Public Class ClientModule
             Dim editLinkInPayload = If((payloadOptions And ClientUpdateTests.PayloadOptions.PayloadWithEditLink) = ClientUpdateTests.PayloadOptions.PayloadWithEditLink, request.ServiceRoot.AbsoluteUri + "/editLinkInPayload/Customers(1)", Nothing)
 
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            'context.EnableAtom = True
+            'context.Enable= True
 
             service.ProcessRequestOverride =
                 Function(clientRequest)
@@ -2153,7 +2153,7 @@ Partial Public Class ClientModule
             Dim editLinkInPayload = If((payloadOptions And ClientUpdateTests.PayloadOptions.PayloadWithEditLink) = ClientUpdateTests.PayloadOptions.PayloadWithEditLink, request.ServiceRoot.AbsoluteUri + "/editLinkInPayload/Customers(1)", Nothing)
 
             Dim context = New DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4)
-            'context.EnableAtom = True
+            'context.Enable= True
 
             service.ProcessRequestOverride =
                 Function(clientRequest)

@@ -106,7 +106,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         {
             if (string.Equals(mimeType, MimeTypes.ApplicationAtomXml, StringComparison.Ordinal))
             {
-                // resulting atom payloads with/without model should be the same except for the updated time stamps
+                // resulting payloads with/without model should be the same except for the updated time stamps
                 const string pattern = @"<updated>([A-Za-z0-9\-\:]{20})\</updated>";
                 const string replacement = "<updated>0000-00-00T00:00:00Z</updated>";
                 writerOuput1 = Regex.Replace(writerOuput1, pattern, (match) => replacement);

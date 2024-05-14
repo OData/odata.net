@@ -397,7 +397,7 @@ namespace AstoriaUnitTests
         {
             using (Stream response = ProcessWebRequest(requestUri, MimeApplicationAtomXml, "GET", out responseHeaders))
             {
-                XmlDocument atom = new XmlDocument(TestNameTable);
+                XmlDocument = new XmlDocument(TestNameTable);
                 atom.Load(response);
                 return atom;
             }

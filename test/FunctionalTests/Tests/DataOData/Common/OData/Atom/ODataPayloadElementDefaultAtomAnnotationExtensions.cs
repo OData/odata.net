@@ -13,12 +13,12 @@ namespace Microsoft.Test.Taupo.OData.Atom
     #endregion Namespaces
 
     /// <summary>
-    /// Payload Extensions to add Default Atom Annotations to EntityInstance, EntitySetInstance and possibly other types.
+    /// Payload Extensions to add Default Annotations to EntityInstance, EntitySetInstance and possibly other types.
     /// </summary>
     public static class ODataPayloadElementDefaultAtomAnnotationExtensions
     {
         /// <summary>
-        /// Adds Default Atom annotations to entry represented as EntityInstance
+        /// Adds Default annotations to entry represented as EntityInstance
         /// </summary>
         /// <typeparam name="T">EntityInstance</typeparam>
         /// <param name="payloadElement">Entry to add annotations to</param>
@@ -30,7 +30,7 @@ namespace Microsoft.Test.Taupo.OData.Atom
         }
 
         /// <summary>
-        /// Adds default Atom annotations for feed represented as EntitySetInstance
+        /// Adds default annotations for feed represented as EntitySetInstance
         /// </summary>
         /// <typeparam name="T">EntitySetInstance</typeparam>
         /// <param name="entitySet">EntitySetInstance to add annotations to</param>

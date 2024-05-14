@@ -15,7 +15,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
     using Microsoft.VisualStudio.TestTools.UnitTesting;
 
     /// <summary>
-    /// Tests for writing ATOM metadata with the ODatamessage writer.
+    /// Tests for writing metadata with the ODatamessage writer.
     /// </summary>
     [TestClass, TestCase]
     public class WriterMetadataDocumentAtomTests : ODataWriterTestCase
@@ -25,7 +25,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Atom
 
         // For comment out test cases, see github: https://github.com/OData/odata.net/issues/883
         [Ignore] // Remove Atom
-        // [TestMethod, Variation(Description = "Test the writing of ATOM metadata document payloads.")]
+        // [TestMethod, Variation(Description = "Test the writing of metadata document payloads.")]
         public void MetadataDocumentWriterAtomTest()
         {
             MetadataWriterTestDescriptor testDescriptor =

@@ -162,7 +162,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
             }
             else
             {
-                Debug.Assert(format == DSPResourceSerializerFormat.Json, "Only ATOM and JSON formats are supported.");
+                Debug.Assert(format == DSPResourceSerializerFormat.Json, "Only and JSON formats are supported.");
                 serializer = new DSPResourceJsonSerializer(output, encoding);
             }
 
@@ -265,7 +265,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
     }
 
     /// <summary>
-    /// Simple serializer to convert a DSPResource to Atom format. For generating payloads for insert/update tests.
+    /// Simple serializer to convert a DSPResource to format. For generating payloads for insert/update tests.
     /// </summary>
     public class DSPResourceAtomSerializer : DSPResourceSerializer
     {
@@ -287,11 +287,11 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
         /// <summary>XML attribute name to specify the type of the element.</summary>
         private const string AtomTypeAttributeName = "type";
 
-        /// <summary>Atom attribute that indicates the actual location for an entry's content.</summary>
+        /// <summary>attribute that indicates the actual location for an entry's content.</summary>
         private const string AtomContentSrcAttributeName = "src";
 
 
-        /// <summary> Atom attribute which indicates the null value for the element.</summary>
+        /// <summary> attribute which indicates the null value for the element.</summary>
         private const string AtomNullAttributeName = "null";
 
         /// <summary>'true' literal, as used in XML.</summary>
@@ -300,13 +300,13 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
         /// <summary>'adsm' - namespace prefix for DataWebMetadataNamespace.</summary>
         private const string DataWebMetadataNamespacePrefix = "m";
 
-        /// <summary>'category' - XML element name for ATOM 'category' element for entries.</summary>
+        /// <summary>'category' - XML element name for 'category' element for entries.</summary>
         private const string AtomCategoryElementName = "category";
 
-        /// <summary>'term' - XML attribute name for ATOM 'term' attribute for categories.</summary>
+        /// <summary>'term' - XML attribute name for 'term' attribute for categories.</summary>
         private const string AtomCategoryTermAttributeName = "term";
 
-        /// <summary>'scheme' - XML attribute name for ATOM 'scheme' attribute for categories.</summary>
+        /// <summary>'scheme' - XML attribute name for 'scheme' attribute for categories.</summary>
         private const string AtomCategorySchemeAttributeName = "scheme";
 
         /// <summary>'element' - XML element name for item in the collection property.</summary>
@@ -323,7 +323,7 @@ namespace AstoriaUnitTests.Stubs.DataServiceProvider
         private XmlWriter writer;
 
         /// <summary>
-        /// Creates an Atom serializer.
+        /// Creates an serializer.
         /// </summary>
         /// <param name="output">Output stream.</param>
         /// <param name="encoding">Stream encoding.</param>

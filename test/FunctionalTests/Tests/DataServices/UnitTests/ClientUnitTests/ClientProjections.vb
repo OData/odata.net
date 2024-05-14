@@ -135,7 +135,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
 
         End Sub
@@ -791,7 +791,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
             Me.ctx.ResolveType = AddressOf CustomTypeResolver
             Me.ctx.ResolveName = AddressOf CustomTypeNameResolver

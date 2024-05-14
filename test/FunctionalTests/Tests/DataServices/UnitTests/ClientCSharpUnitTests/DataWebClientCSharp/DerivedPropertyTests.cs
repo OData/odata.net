@@ -1768,7 +1768,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(new Uri(request.BaseUri), ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 //context.Format.UseAtom();
 
                 if (configureContext != null)
@@ -1849,7 +1849,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                             request.SendRequest(host);
                             return new DataServiceHostResponseMessage(host);
                         });
-                        //ctx.EnableAtom = true;
+                        //ctx.Enable= true;
                         //ctx.Format.UseAtom();
 
                         if (version < ODataProtocolVersion.V4)
@@ -2957,7 +2957,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                 {
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(new Uri(request.BaseUri, UriKind.Absolute), ODataProtocolVersion.V4);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.ResolveType = (typeName) =>
                     {

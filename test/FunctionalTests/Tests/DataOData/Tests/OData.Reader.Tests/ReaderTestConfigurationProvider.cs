@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// List of all interesting configuration for ATOM format payloads.
+        /// List of all interesting configuration for format payloads.
         /// </summary>
         //public virtual IEnumerable<ReaderTestConfiguration> AtomFormatConfigurations
         //{
@@ -223,7 +223,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         private sealed class CachedConfigurations
         {
             /// <summary>
-            /// List of all ATOM configurations with default settings.
+            /// List of all configurations with default settings.
             /// </summary>
             // public List<ReaderTestConfiguration> AtomConfigurations { get; set; }
 

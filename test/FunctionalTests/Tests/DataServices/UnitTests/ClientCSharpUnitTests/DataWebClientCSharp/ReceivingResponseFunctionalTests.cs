@@ -42,7 +42,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
 
@@ -62,7 +62,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Product product = new Product(77, "bottle", false);
@@ -90,7 +90,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.ResolveName = T => T.FullName;
@@ -126,7 +126,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.NoContent;
@@ -220,7 +220,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Product product1 = new Product(77, "bottle", false);
@@ -252,7 +252,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Product product1 = new Product(77, "bottle", false);
@@ -292,7 +292,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Product product1 = new Product(77, "bottle", false);
@@ -301,7 +301,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 ctx.AddObject("Products", product2);
 
                 ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.ResolveName = T => T.FullName;
@@ -331,7 +331,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.ResolveName = T => T.FullName;
@@ -368,7 +368,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 Product product1 = new Product(77, "bottle", false);
@@ -401,7 +401,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent;
@@ -447,7 +447,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent;
@@ -492,7 +492,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.AddAndUpdateResponsePreference = DataServiceResponsePreference.IncludeContent;
@@ -677,7 +677,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 playbackService.OverridingPlayback = GetBlobResponse(web.BaseUri);
 
                 var ctx = GetContextForCustomHeaderResponseService(web);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
@@ -710,7 +710,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 playbackService.OverridingPlayback = GetBlobResponse(web.BaseUri);
 
                 var ctx = GetContextForCustomHeaderResponseService(web);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 var query = ctx.CreateQuery<BaseEntity>("Categories(1)");
@@ -738,7 +738,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 this.AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
@@ -762,7 +762,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 this.AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
@@ -796,7 +796,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
@@ -827,7 +827,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 AddReceivingResponseValidationListener(ctx, AssertDescriptorIsNull);
 
@@ -912,7 +912,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.ResolveName = T => T.FullName;
                 Customer existingCustomer = ctx.Execute<Customer>(new Uri(request.BaseUri + "/Customers")).First();
@@ -957,7 +957,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             using (TestWebRequest request = TestWebRequest.CreateForInProcessWcf())
             {
                 var ctx = GetContextForCustomHeaderResponseService(request);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
 
                 ctx.ReceivingResponse += new EventHandler<ReceivingResponseEventArgs>((sender, arg) =>

@@ -332,7 +332,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 //context.Format.UseAtom();
 
                 // Query the top level set
@@ -388,7 +388,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 request.StartService();
 
                 DataServiceContext context = new DataServiceContext(request.ServiceRoot, ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 context.MergeOption = MergeOption.NoTracking;
 
                 var tests = getTests(context);

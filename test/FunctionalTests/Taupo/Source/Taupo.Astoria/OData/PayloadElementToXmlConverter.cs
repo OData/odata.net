@@ -101,7 +101,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     // xmlns:m="http://docs.oasis-open.org/odata/ns/metadata"
                     new XAttribute(XNamespace.Xmlns.GetName(DataServicesMetadataNamespacePrefix), DataServicesMetadataNamespace),
 
-                    // ATOM namespace
+                    // namespace
                     new XAttribute("xmlns", AtomNamespace),
                 };
             
@@ -712,7 +712,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     // xmlns="http://www.w3.org/2007/app"
                     new XAttribute("xmlns", AtomPubNamespace),
 
-                    // ATOM namespace
+                    // namespace
                     new XAttribute(XNamespace.Xmlns.GetName("atom"), AtomNamespace),
                 };
 

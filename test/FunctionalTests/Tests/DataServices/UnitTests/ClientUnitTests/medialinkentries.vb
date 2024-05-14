@@ -67,7 +67,7 @@ Partial Public Class ClientModule
             ' the current astoria servers don't produce results with MLEs, so
             ' we just take a regular payload and turn it into one with an MLE in it
             Dim ctx As New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim doc As XDocument = XDocument.Load(MediaLinkEntryTest.ConcatUrl(web.BaseUri, "Photos(1)?$format=atom"))
             ConvertToMLE(doc.Root, "Photo", False)
@@ -82,7 +82,7 @@ Partial Public Class ClientModule
             ' the current astoria servers don't produce results with MLEs, so
             ' we just take a regular payload and turn it into one with an MLE in it
             Dim ctx As New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim doc As XDocument = XDocument.Load(MediaLinkEntryTest.ConcatUrl(web.BaseUri, "Photos?$format=atom"))
 
@@ -105,7 +105,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition2")> <ExpectedException(GetType(InvalidOperationException))> <TestMethod()>
         Public Sub MalformedMediaLinkEntries()
             Dim ctx As New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim doc As XDocument = XDocument.Load(ConcatUrl(web.BaseUri, "Photos(1)?$format=atom"))
             ConvertToMLE(doc.Root, "Photo", True)
@@ -121,7 +121,7 @@ Partial Public Class ClientModule
 
             For Each w As TestWebRequest In WebServiceTypes
                 Dim ctx As New DataServiceContext(w.ServiceRoot)
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
                 'ctx.Format.UseAtom()
                 Dim doc As XDocument = XDocument.Load(ConcatUrl(w.BaseUri, "Photos(1)?$format=atom"))
 
@@ -145,7 +145,7 @@ Partial Public Class ClientModule
                 For i As Integer = 0 To 1
                     ' new ctx to avoid any state management glitches
                     ctx = New DataServiceContext(w.ServiceRoot)
-                    'ctx.EnableAtom = True
+                    'ctx.Enable= True
                     'ctx.Format.UseAtom()
                     Dim entry = ctx.Execute(Of PhotoEntity)(New Uri("/EchoAtom/$value?s='" & EncodeForUrl(doc.ToString()) & "'", UriKind.Relative)).AsEnumerable.Single()
                     Assert.IsTrue(entry.Name = "aaa")
@@ -174,7 +174,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition2")> <TestMethod()>
         Public Sub LoadMediaEntryLinkPropertyMetadataErrors()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim threw As Boolean
 
@@ -223,7 +223,7 @@ Partial Public Class ClientModule
                 ConvertToMLE(doc.Root, "Photo", False)
                 ConvertToMLE(doc2.Root, "Photo", False, "http://mynewuri")
                 Dim ctx = New DataServiceContext(web.ServiceRoot)
-                'ctx.EnableAtom = True
+                'ctx.Enable= True
                 'ctx.Format.UseAtom()
                 ctx.MergeOption = merge
                 Dim mlentry = ctx.Execute(Of PhotoEntity)(New Uri("/EchoAtom/$value?s='" & EncodeForUrl(doc.ToString()) & "'", UriKind.Relative)).AsEnumerable().Single()
@@ -267,7 +267,7 @@ Partial Public Class ClientModule
             Dim doc As XDocument = XDocument.Load(MediaLinkEntryTest.ConcatUrl(web.BaseUri, "Photos(1)?$format=atom"))
             ConvertToMLE(doc.Root, "Photo", False)
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim mlentry = ctx.Execute(Of PhotoEntity)(New Uri("/EchoAtom/$value?s='" & EncodeForUrl(doc.ToString()) & "'", UriKind.Relative)).AsEnumerable().Single()
 
@@ -283,7 +283,7 @@ Partial Public Class ClientModule
         <TestCategory("Partition2")> <TestMethod()>
         Public Sub AsyncGetReadStream()
             Dim ctx = New DataServiceContext(web.ServiceRoot)
-            'ctx.EnableAtom = True
+            'ctx.Enable= True
             'ctx.Format.UseAtom()
             Dim doc As XDocument = XDocument.Load(MediaLinkEntryTest.ConcatUrl(web.BaseUri, "Photos(1)?$format=atom"))
             ConvertToMLE(doc.Root, "Photo", False)
@@ -377,7 +377,7 @@ Partial Public Class ClientModule
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New SpacesPhotos.SpacesPhotosService(web.ServiceRoot)
             Me.ctx.Format.UseJson(New EdmModel())
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
         End Sub
 
         <TestCleanup()> Public Sub PerTestCleanup()

@@ -95,4 +95,21 @@
     <AdditionalFiles Include="PublicAPI/$(TargetFramework)/PublicAPI.Unshipped.txt" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Microsoft.OData.Core.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Microsoft.OData.Core.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parameterized.Microsoft.OData.Core.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parameterized.Microsoft.OData.Core.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

@@ -736,8 +736,8 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entityDescriptor">entity descriptor whose response is getting materialized.</param>
         /// <param name="responseInfo">information about the response to be materialized.</param>
-        /// <returns>an instance of MaterializeAtom, that can be used to materialize the response.</returns>
-        protected abstract MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo);
+        /// <returns>an instance of MaterializeObject, that can be used to materialize the response.</returns>
+        protected abstract MaterializeObject GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo);
 
         /// <summary>cleanup work to do once the batch / savechanges is complete</summary>
         protected override void CompletedRequest()
@@ -1420,7 +1420,7 @@ namespace Microsoft.OData.Client
         /// <param name="etag">etag value, if specified in the response header.</param>
         private void MaterializeResponse(EntityDescriptor entityDescriptor, ResponseInfo responseInfo, string etag)
         {
-            using (MaterializeAtom materializer = this.GetMaterializer(entityDescriptor, responseInfo))
+            using (MaterializeObject materializer = this.GetMaterializer(entityDescriptor, responseInfo))
             {
                 materializer.SetInsertingObject(entityDescriptor.Entity);
 

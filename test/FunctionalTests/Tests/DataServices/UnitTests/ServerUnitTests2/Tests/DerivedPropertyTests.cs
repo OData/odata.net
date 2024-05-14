@@ -659,7 +659,7 @@ namespace AstoriaUnitTests.Tests
 #endregion
 #region invalid POST scenarios
                     // ODataLib was fixed and reports missing type name as an annotation.
-                    new ErrorCase() { // Type Name must be specified if the resource type has derived types - Atom Format
+                    new ErrorCase() { // Type Name must be specified if the resource type has derived types - Format
                         RequestUri = "/People/" + EmployeeTypeName,
                         StatusCode = HttpStatusCode.BadRequest,
                         HttpMethodNames = new string[] { "POST" },
@@ -682,7 +682,7 @@ namespace AstoriaUnitTests.Tests
                                 .AddProperty("Name", "Sarah"),
                             UnitTestsUtil.JsonMimeType),
                         RequestContentType = UnitTestsUtil.JsonMimeType },
-                    new ErrorCase() { // Type Name specified must be assignable to the type specified in the uri - Atom Format
+                    new ErrorCase() { // Type Name specified must be assignable to the type specified in the uri - Format
                         RequestUri = "/People/" + ManagerTypeName,
                         StatusCode = HttpStatusCode.BadRequest,
                         HttpMethodNames = new string[] { "POST" },

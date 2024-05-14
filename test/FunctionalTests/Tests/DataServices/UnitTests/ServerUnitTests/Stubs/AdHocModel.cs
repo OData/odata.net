@@ -277,12 +277,12 @@ namespace AstoriaUnitTests.Stubs
         public string SourcePath { get; set; }
         public string TargetPath { get; set; }
 
-        //atom is true
+        //is true
         //public AtomSyndicationItemProperty SyndicationItem { get; set; }
         //public AtomSyndicationTextContentKind? ContentKind { get; set; }
         //public String CriteriaValue { get; set; }
 
-        //atom is false
+        //is false
         public string NsPrefix { get; set; }
         public string NsUri { get; set; }
     }

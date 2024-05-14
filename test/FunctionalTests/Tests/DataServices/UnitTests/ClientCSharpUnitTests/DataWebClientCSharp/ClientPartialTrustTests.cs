@@ -52,7 +52,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrust(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
             ctx.MergeOption = MergeOption.OverwriteChanges;
 
@@ -114,7 +114,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrustAnonymousType(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
             var q = ctx.CreateQuery<Customer>("Customers").Select(c => new
             {
@@ -153,7 +153,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
         public void ClientProjectionPartialTrustRef(Uri serviceRoot)
         {
             DataServiceContext ctx = new DataServiceContext(serviceRoot);
-            //ctx.EnableAtom = true;
+            //ctx.Enable= true;
             //ctx.Format.UseAtom();
             var q = ctx.CreateQuery<Order>("Orders").Where(o => o.ID == 0).Select(o => new NarrowCustomer()
             {
@@ -171,7 +171,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
             {
                 // Querying url of the nested type - doing this makes the entity non-tracking, but populated the link property
                 DataServiceContext context = new DataServiceContext(serviceRoot, ODataProtocolVersion.V4);
-                //context.EnableAtom = true;
+                //context.Enable= true;
                 var q = from s in context.CreateQuery<StreamType>("MySet1")
                             select new
                             {

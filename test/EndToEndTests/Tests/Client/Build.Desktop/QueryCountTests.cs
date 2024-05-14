@@ -141,7 +141,7 @@ namespace Microsoft.Test.OData.Tests.Client
         /// when $count=true results 
         /// odata.count in json payload 
         /// and 
-        /// m:count in atom payload
+        /// m:count in payload
         /// </summary>
         [Fact]
         public void CountPayloadVerification()
@@ -194,7 +194,7 @@ namespace Microsoft.Test.OData.Tests.Client
 
                 if (mimeType == MimeTypes.ApplicationAtomXml)
                 {
-                    // resulting atom payloads with/without model should be the same except for the updated time stamps
+                    // resulting payloads with/without model should be the same except for the updated time stamps
                     const string pattern = @"<updated>([A-Za-z0-9\-\:]{20})\</updated>";
                     const string replacement = "<updated>0000-00-00T00:00:00Z</updated>";
                     defaultResponsestring = Regex.Replace(defaultResponsestring, pattern, (match) => replacement);

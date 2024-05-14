@@ -49,7 +49,7 @@ Partial Public Class ClientModule
 
         <TestInitialize()> Public Sub PerTestSetup()
             Me.ctx = New NorthwindSimpleModel.NorthwindContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
         End Sub
 
@@ -574,7 +574,7 @@ Partial Public Class ClientModule
             End Try
 
             Dim ctx2 = New NorthwindSimpleModel.NorthwindContext(ctx.BaseUri)
-            'ctx2.EnableAtom = True
+            'ctx2.Enable= True
             'ctx2.Format.UseAtom()
             Dim customer = ctx2.Customers().First()
 

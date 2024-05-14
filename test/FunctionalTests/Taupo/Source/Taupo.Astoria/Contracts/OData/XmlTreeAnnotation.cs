@@ -14,7 +14,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
     using Microsoft.Test.Taupo.Contracts;
 
     /// <summary>
-    /// A simple representation of the xml trees that can be present in Atom payloads
+    /// A simple representation of the xml trees that can be present in payloads
     /// </summary>
     public class XmlTreeAnnotation : ODataPayloadElementEquatableAnnotation
     {
@@ -71,7 +71,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         internal Func<object, object, bool> ValueEqualityFunc { get; set; }
 
         /// <summary>
-        ///  Helper method for creating atom entity-property-mapping trees
+        ///  Helper method for creating entity-property-mapping trees
         /// </summary>
         /// <param name="localName">The local name</param>
         /// <param name="value">The property value</param>
@@ -91,7 +91,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         }
 
         /// <summary>
-        ///  Helper method for creating atom attribute entity-property-mapping trees
+        ///  Helper method for creating attribute entity-property-mapping trees
         /// </summary>
         /// <param name="localName">The local name</param>
         /// <param name="value">The property value</param>
@@ -121,7 +121,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         /// <returns>A new tree with the given values</returns>
         public static XmlTreeAnnotation Custom(string localName, string namespaceName, string namespacePrefix, bool isAttribute, string value, params XmlTreeAnnotation[] children)
         {
-            ExceptionUtilities.Assert(namespaceName != ODataConstants.AtomNamespaceName, "Should not be used for ATOM mappings");
+            ExceptionUtilities.Assert(namespaceName != ODataConstants.AtomNamespaceName, "Should not be used for mappings");
             return new XmlTreeAnnotation()
             {
                 LocalName = localName,

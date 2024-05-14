@@ -52,7 +52,7 @@ Partial Public Class ClientModule
             AstoriaUnitTests.Stubs.OpenWebDataServiceHelper.PageSizeCustomizer.Value = AddressOf PageSizeCustomizer
 
             Me.ctx = New CustomDataContext(web.ServiceRoot)
-            'Me.'ctx.EnableAtom = True
+            'Me.'ctx.Enable= True
             'Me.'ctx.Format.UseAtom()
 
             BaseTestWebRequest.SerializedTestArguments = New Hashtable()
@@ -488,7 +488,7 @@ Partial Public Class ClientModule
                             testCase.NextLink +
                             "</feed>"
                         Dim context = New DataServiceContext(request.ServiceRoot)
-                        'context.EnableAtom = True
+                        'context.Enable= True
                         Dim qor = CType(context.Execute(Of Customer)("/Items"), QueryOperationResponse(Of Customer))
                         Dim exception = TestUtil.RunCatching(Sub()
                                                                  qor.AsEnumerable().Count()

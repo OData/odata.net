@@ -15,17 +15,17 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #endregion Namespaces
 
     /// <summary>
-    /// Normalizes property order in payload element tree for ATOM format.
+    /// Normalizes property order in payload element tree for format.
     /// </summary>
     /// <remarks>
-    /// When entry is written as ATOM the order of properties is partially lost on the wire due to limitations of the format.
-    /// This normalizer will fix the order of the properties in the payload element tree to match the one used by the ATOM format.
+    /// When entry is written as the order of properties is partially lost on the wire due to limitations of the format.
+    /// This normalizer will fix the order of the properties in the payload element tree to match the one used by the format.
     /// Note that the normalizer will modify the tree, so the caller may need to clone it before normalizing.
     /// </remarks>
     public class AtomPayloadElementPropertyOrderNormalizer : ODataPayloadElementVisitorBase
     {
         /// <summary>
-        /// Normalizes property order in payload element tree for ATOM format.
+        /// Normalizes property order in payload element tree for format.
         /// </summary>
         /// <param name="payloadElement">The payload element to normalize.</param>
         /// <returns>The normalized payload element.</returns>
@@ -46,7 +46,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             // First recurse to children so that we get those normalized and then normalize the parent entity.
             base.Visit(payloadElement);
 
-            // When we write properties into ATOM we write them in this order:
+            // When we write properties into we write them in this order:
             // - Navigation properties
             // - Named stream properties
             // - All other properties (simple properties)

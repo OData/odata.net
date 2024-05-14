@@ -278,14 +278,14 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
     }
 
     /// <summary>
-    /// Test payload and result descriptor consisting of a payload, an expected ATOM result,
+    /// Test payload and result descriptor consisting of a payload, an expected result,
     /// an expected JSON result and optional extractors to identify the part of the result that
     /// needs to be compared against the expected result data.
     /// </summary>
     public class PayloadWriterTestDescriptor<T> : PayloadWriterTestDescriptor
     {
         /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>
@@ -368,7 +368,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>
@@ -389,15 +389,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>
         /// <param name="payloadItem">The OData payload item to write.</param>
-        /// <param name="atomResult">The expected ATOM result.</param>
+        /// <param name="atomResult">The expected result.</param>
         /// <param name="jsonResult">The expected JSON result.</param>
         /// <param name="atomExtractor">
-        /// An optional function to get a fragment of the full ATOM result to compare 
+        /// An optional function to get a fragment of the full result to compare 
         /// against the expected result data (e.g., extract a single element from 
         /// the fully serialized payload).</param>
         /// <param name="jsonExtractor">
@@ -418,15 +418,15 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Common
         }
 
         /// <summary>
-        /// Create a new descriptor instance given a payload item, expected ATOM and JSON results
+        /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
         /// <param name="settings">Settings class to use.</param>
         /// <param name="payloadItems">The OData payload items to write.</param>
-        /// <param name="atomResult">The expected ATOM result.</param>
+        /// <param name="atomResult">The expected result.</param>
         /// <param name="jsonResult">The expected JSON result.</param>
         /// <param name="atomExtractor">
-        /// An optional function to get a fragment of the full ATOM result to compare 
+        /// An optional function to get a fragment of the full result to compare 
         /// against the expected result data (e.g., extract a single element from 
         /// the fully serialized payload).</param>
         /// <param name="jsonExtractor">

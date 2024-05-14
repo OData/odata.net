@@ -52,7 +52,7 @@ namespace AstoriaUnitTests.Tests
             _baseUri = request.ServiceRoot;
 
             context = new DataServiceContext(_baseUri);
-            //context.EnableAtom = true;
+            //context.Enable= true;
             //context.Format.UseAtom();
             context.MergeOption = MergeOption.NoTracking;
             context.SendingRequest2 += LinqTests.VerifyMimeTypeForCountRequests;
@@ -117,7 +117,7 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(ReadOnlyTestContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
@@ -151,7 +151,7 @@ namespace AstoriaUnitTests.Tests
                     request.DataServiceType = typeof(NorthwindContext);
                     request.StartService();
                     DataServiceContext ctx = new DataServiceContext(request.ServiceRoot);
-                    //ctx.EnableAtom = true;
+                    //ctx.Enable= true;
                     //ctx.Format.UseAtom();
                     ctx.MergeOption = MergeOption.NoTracking;
 
@@ -8416,7 +8416,7 @@ namespace AstoriaUnitTests.Tests
                 request.DataServiceType = typeof(Projections_ServiceOperations_NorthWindDataContextService);
                 request.StartService();
                 var ctx = new DataServiceContext(request.ServiceRoot);
-                //ctx.EnableAtom = true;
+                //ctx.Enable= true;
                 //ctx.Format.UseAtom();
                 ctx.MergeOption = Microsoft.OData.Client.MergeOption.NoTracking;
 

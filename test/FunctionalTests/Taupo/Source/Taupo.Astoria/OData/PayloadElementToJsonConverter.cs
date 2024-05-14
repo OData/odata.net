@@ -662,7 +662,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 ExceptionUtilities.Assert(!this.isRootElement, "Json serialization does not allow a root element of type: {0}", payloadElement.ElementType.ToString());
 
                 // NOTE: Following the ODataLib approach here where the Href is used as the entity set name in JSON.
-                //       The Title is only available in ATOM through ATOM metadata.
+                //       The Title is only available in through metadata.
                 this.writer.WriteString(payloadElement.Href);
             }
 

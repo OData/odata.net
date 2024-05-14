@@ -309,7 +309,7 @@ namespace AstoriaUnitTests.Tests.Server
             }
         }
         [Ignore] // Remove Atom
-        // [TestCategory("Partition2"), TestMethod, Variation("Serialize Geodetic properties on entities using the ObjectContextServiceProvider and Atom and Json formats")]
+        // [TestCategory("Partition2"), TestMethod, Variation("Serialize Geodetic properties on entities using the ObjectContextServiceProvider and and Json formats")]
         public void SerializeGeodeticPropertiesInResource()
         {
             var testCases = new[] 
@@ -354,7 +354,7 @@ namespace AstoriaUnitTests.Tests.Server
         private static ResourceVerification GetResourceVerification(string responseFormat, int id, GeographyPropertyValues defaultValues, TestWebRequest request)
         {
             Assert.IsTrue(responseFormat == UnitTestsUtil.AtomFormat || responseFormat == UnitTestsUtil.JsonMimeType, "Response format {0} not recognized in GetResourceVerification.", responseFormat);
-            DSPResourceSerializerFormat payloadFormat = responseFormat == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.Atom : DSPResourceSerializerFormat.Json;
+            DSPResourceSerializerFormat payloadFormat = responseFormat == UnitTestsUtil.AtomFormat ? DSPResourceSerializerFormat.: DSPResourceSerializerFormat.Json;
             return new ResourceVerification(request, payloadFormat, id, defaultValues);
         }
         [Ignore] // Remove Atom
@@ -543,7 +543,7 @@ namespace AstoriaUnitTests.Tests.Server
             request.RequestVersion = "4.0;";
             request.RequestMaxVersion = "4.0;";
             request.RequestHeaders["Prefer"] = preferHeader;
-            request.Accept = payloadFormat == DSPResourceSerializerFormat.Atom ? "application/atom+xml,application/xml" : UnitTestsUtil.JsonMimeType;
+            request.Accept = payloadFormat == DSPResourceSerializerFormat.? "application/atom+xml,application/xml" : UnitTestsUtil.JsonMimeType;
             request.RequestContentType = "application/atom+xml";
             request.SetRequestStreamAsText(payload);
 
@@ -616,7 +616,7 @@ namespace AstoriaUnitTests.Tests.Server
             request.HttpMethod = "GET";
             XDocument response = UnitTestsUtil.GetResponseAsAtomXLinq(request, string.Format("/{0}({1})", resourceSetName, id), "application/atom+xml,application/xml");
             XElement entry = response.Root.Element(UnitTestsUtil.AtomNamespace + "content");
-            Assert.IsNotNull(entry, "Expected the request to produce an ATOM entry.");
+            Assert.IsNotNull(entry, "Expected the request to produce an entry.");
             return entry.Element(UnitTestsUtil.MetadataNamespace + "properties");
         }
 

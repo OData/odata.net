@@ -413,9 +413,9 @@ namespace AstoriaUnitTests.Tests
             return node == null ? null : node.Value;
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XDocument GetResponseAsAtomXLinq(TestWebRequest request)
         {
             string format = (!string.IsNullOrEmpty(request.Accept) && request.Accept == UnitTestsUtil.JsonMimeType) ? UnitTestsUtil.JsonMimeType : UnitTestsUtil.AtomFormat;
@@ -430,20 +430,20 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
         /// <param name="uri">The uri to send the request to.</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XDocument GetResponseAsAtomXLinq(TestWebRequest request, string uri)
         {
             return GetResponseAsAtomXLinq(request, uri, request.Accept);
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
         /// <param name="uri">The request URI string (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XDocument GetResponseAsAtomXLinq(TestWebRequest request, string uri, string format)
         {
             request.Accept = format;
@@ -453,11 +453,11 @@ namespace AstoriaUnitTests.Tests
             return GetResponseAsAtomXLinq(request);
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="dataServiceType">The type of the service to run the request against.</param>
         /// <param name="uri">The request URI string (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XDocument GetResponseAsAtomXLinq(Type dataServiceType, string uri, string format)
         {
             using (TestUtil.MetadataCacheCleaner())
@@ -468,9 +468,9 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XmlDocument GetResponseAsAtom(TestWebRequest request, JsonToAtomUtil jsonToAtomUtil = null)
         {
             string format = TestUtil.GetMediaType(request.ResponseContentType);
@@ -486,20 +486,20 @@ namespace AstoriaUnitTests.Tests
             }
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
         /// <param name="uri">The uri to send the request to.</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XmlDocument GetResponseAsAtom(TestWebRequest request, string uri)
         {
             return GetResponseAsAtom(request, uri, request.Accept);
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="request">The request object to use.</param>
         /// <param name="uri">The request URI string (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XmlDocument GetResponseAsAtom(TestWebRequest request, string uri, string format)
         {
             request.Accept = format;
@@ -509,11 +509,11 @@ namespace AstoriaUnitTests.Tests
             return GetResponseAsAtom(request);
         }
 
-        /// <summary>Sends a request and returns the response as ATOM XML.</summary>
+        /// <summary>Sends a request and returns the response as XML.</summary>
         /// <param name="dataServiceType">The type of the service to run the request against.</param>
         /// <param name="uri">The request URI string (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
-        /// <returns>The response as ATOM XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
+        /// <returns>The response as XML. If the response came as JSON the method will convert the JSON to ATOM.</returns>
         public static XmlDocument GetResponseAsAtom(Type dataServiceType, string uri, string format)
         {
             using (TestUtil.MetadataCacheCleaner())
@@ -547,7 +547,7 @@ namespace AstoriaUnitTests.Tests
             }
 
             Json2AtomXslt.Transform(json, arguments, new StringWriter(sb));
-            XmlDocument atom = new XmlDocument();
+            XmlDocument = new XmlDocument();
             atom.LoadXml(sb.ToString());
             return atom;
         }
@@ -568,7 +568,7 @@ namespace AstoriaUnitTests.Tests
             // produce valid upload payload from Json Strings
             arguments.AddParam("isupload", String.Empty, isUploadPayload);
 
-            XDocument atom = new XDocument();
+            XDocument = new XDocument();
             using (XmlWriter writer = atom.CreateWriter())
             {
                 Json2AtomXslt.Transform(json.CreateNavigator(TestUtil.TestNameTable), arguments, writer);
@@ -600,7 +600,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>Sends a request and verifies that the response is 204 - No Content</summary>
         /// <param name="request">The request object to use.</param>
         /// <param name="uri">The request URI (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
         public static void VerifyNoContentResponse(TestWebRequest request, string uri, string format)
         {
             request.Accept = format;
@@ -617,7 +617,7 @@ namespace AstoriaUnitTests.Tests
         /// <summary>Sends a request and verifies that the response is 204 - No Content</summary>
         /// <param name="request">The type of the service to run the request against.</param>
         /// <param name="uri">The request URI (relative)</param>
-        /// <param name="format">The format in which to request the response (ATOM or JSON)</param>
+        /// <param name="format">The format in which to request the response (or JSON)</param>
         public static void VerifyNoContentResponse(Type dataServiceType, string uri, string format)
         {
             using (TestUtil.MetadataCacheCleaner())
@@ -1148,7 +1148,7 @@ namespace AstoriaUnitTests.Tests
             }
             else
             {
-                Assert.IsTrue(responseFormat == AtomFormat, "expecting only atom format");
+                Assert.IsTrue(responseFormat == AtomFormat, "expecting only format");
                 return GetAtomPayload(entityType, entity);
             }
         }
@@ -1188,8 +1188,8 @@ namespace AstoriaUnitTests.Tests
             return writer.ToString();
         }
 
-        /// <summary>Given the ATOM entry element the method returns the property element for the specified property path.</summary>
-        /// <param name="entry">The ATOM entry element.</param>
+        /// <summary>Given the entry element the method returns the property element for the specified property path.</summary>
+        /// <param name="entry">The entry element.</param>
         /// <param name="path">Path to the property to return.</param>
         /// <returns>The XElement for that property or null if it could not be found.</returns>
         public static XElement GetPropertyPathFromAtomEntryContent(XElement entry, string path)
@@ -1238,7 +1238,7 @@ namespace AstoriaUnitTests.Tests
             }
             else
             {
-                Assert.IsTrue(responseFormat == UnitTestsUtil.AtomFormat, "expecting atom format");
+                Assert.IsTrue(responseFormat == UnitTestsUtil.AtomFormat, "expecting format");
                 string xpath = "/atom:entry/atom:content/adsm:properties/ads:" + property.Name;
                 XmlNode node = TestUtil.AssertSelectSingleElement(document, xpath);
 
@@ -1629,7 +1629,7 @@ namespace AstoriaUnitTests.Tests
                     payload = payload.Replace("'/" + set, "'/CustomObjectContext." + set);
                     payload = payload.Replace("\"/" + set, "\"/CustomObjectContext." + set);
 
-                    // replace uri in atom payload
+                    // replace uri in payload
                     //payload = payload.Replace("'Customers", "'CustomObjectContext.Customers");
                     payload = payload.Replace("'" + set, "'CustomObjectContext." + set);
                     payload = payload.Replace("\"" + set, "\"CustomObjectContext." + set);
