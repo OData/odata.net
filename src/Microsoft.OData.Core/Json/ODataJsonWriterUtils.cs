@@ -135,9 +135,9 @@ namespace Microsoft.OData.Json
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal static Task WriteErrorAsync(
+        internal static ValueTask WriteErrorAsync(
             IJsonWriter jsonWriter,
-            Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
+            Func<ICollection<ODataInstanceAnnotation>, ValueTask> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
             int maxInnerErrorDepth)
@@ -409,7 +409,7 @@ namespace Microsoft.OData.Json
         /// <param name="writeInstanceAnnotationsDelegate">Delegate to write the instance annotations.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteErrorAsync(
+        private static async ValueTask WriteErrorAsync(
             IJsonWriter jsonWriter,
             string code,
             string message,
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Json
             IEnumerable<ODataErrorDetail> details,
             ODataInnerError innerError,
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
-            Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
+            Func<ICollection<ODataInstanceAnnotation>, ValueTask> writeInstanceAnnotationsDelegate,
             int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
@@ -526,7 +526,7 @@ namespace Microsoft.OData.Json
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteInnerErrorAsync(IJsonWriter jsonWriter, ODataInnerError innerError,
+        private static async ValueTask WriteInnerErrorAsync(IJsonWriter jsonWriter, ODataInnerError innerError,
             string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");

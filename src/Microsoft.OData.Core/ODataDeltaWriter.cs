@@ -27,7 +27,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet);
+        public abstract ValueTask WriteStartAsync(ODataDeltaResourceSet deltaResourceSet);
 
         /// <summary>
         /// Finish writing a delta resource set.
@@ -38,7 +38,7 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a delta resource set.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteEndAsync();
+        public abstract ValueTask WriteEndAsync();
 
         /// <summary>
         /// Start writing a nested resource info.
@@ -51,7 +51,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
+        public abstract ValueTask WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo);
 
         /// <summary>
         /// Start writing an expanded resource set.
@@ -64,7 +64,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expandedResourceSet">The expanded resource set to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataResourceSet expandedResourceSet);
+        public abstract ValueTask WriteStartAsync(ODataResourceSet expandedResourceSet);
 
         /// <summary>
         /// Start writing a delta resource.
@@ -77,7 +77,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaResource">The delta resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync(ODataResource deltaResource);
+        public abstract ValueTask WriteStartAsync(ODataResource deltaResource);
 
 
         /// <summary>
@@ -91,7 +91,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry);
+        public abstract ValueTask WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry);
 
         /// <summary>
         /// Writing a delta link.
@@ -104,7 +104,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink);
+        public abstract ValueTask WriteDeltaLinkAsync(ODataDeltaLink deltaLink);
 
         /// <summary>
         /// Writing a delta deleted link.
@@ -117,7 +117,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink);
+        public abstract ValueTask WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink);
 
         /// <summary>
         /// Flushes the write buffer to the underlying stream.

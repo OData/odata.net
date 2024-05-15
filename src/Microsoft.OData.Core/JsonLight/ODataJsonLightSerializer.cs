@@ -293,7 +293,7 @@ namespace Microsoft.OData.JsonLight
         /// </summary>
         /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteTopLevelPayloadAsync(Func<Task> payloadWriterFunc)
+        internal async ValueTask WriteTopLevelPayloadAsync(Func<ValueTask> payloadWriterFunc)
         {
             Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
 
@@ -310,7 +310,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WriteTopLevelErrorAsync(ODataError error, bool includeDebugInformation)
+        internal ValueTask WriteTopLevelErrorAsync(ODataError error, bool includeDebugInformation)
         {
             Debug.Assert(error != null, "error != null");
 
@@ -598,8 +598,8 @@ namespace Microsoft.OData.JsonLight
         /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <param name="arg3">The third argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected async Task WriteTopLevelPayloadAsync<TArg1, TArg2, TArg3>(
-            Func<TArg1, TArg2, TArg3, Task> payloadWriterFunc,
+        protected async ValueTask WriteTopLevelPayloadAsync<TArg1, TArg2, TArg3>(
+            Func<TArg1, TArg2, TArg3, ValueTask> payloadWriterFunc,
             TArg1 arg1,
             TArg2 arg2,
             TArg3 arg3)

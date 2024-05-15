@@ -49,9 +49,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resourceSet">The resource set or collection to write.</param>
-        public virtual Task WriteStartAsync(ODataResourceSet resourceSet)
+        public virtual ValueTask WriteStartAsync(ODataResourceSet resourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, resourceSetParam) => thisParam.WriteStart(resourceSetParam),
                 this,
                 resourceSet);
@@ -90,9 +90,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a resource set. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="deltaResourceSet">The resource set or collection to write.</param>
-        public virtual Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
+        public virtual ValueTask WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, deltaResourceSetParam) => thisParam.WriteStart(deltaResourceSetParam),
                 this,
                 deltaResourceSet);
@@ -168,9 +168,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="resource">The resource or item to write.</param>
-        public virtual Task WriteStartAsync(ODataResource resource)
+        public virtual ValueTask WriteStartAsync(ODataResource resource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, resourceParam) => thisParam.WriteStart(resourceParam),
                 this,
                 resource);
@@ -190,9 +190,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deletedResource">The deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public virtual Task WriteStartAsync(ODataDeletedResource deletedResource)
+        public virtual ValueTask WriteStartAsync(ODataDeletedResource deletedResource)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, deletedResourceParam) => thisParam.WriteStart(deletedResourceParam),
                 this,
                 deletedResource);
@@ -214,9 +214,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public virtual Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        public virtual ValueTask WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, deltaLinkParam) => thisParam.WriteDeltaLink(deltaLinkParam),
                 this,
                 deltaLink);
@@ -238,9 +238,9 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="deltaDeletedLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public virtual Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
+        public virtual ValueTask WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, deltaDeletedLinkParam) => thisParam.WriteDeltaDeletedLink(deltaDeletedLinkParam),
                 this,
                 deltaDeletedLink);
@@ -277,9 +277,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously start writing a nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="nestedResourceInfo">The nested resource info to writer.</param>
-        public virtual Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        public virtual ValueTask WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, nestedResourceInfoParam) => thisParam.WriteStart(nestedResourceInfoParam),
                 this,
                 nestedResourceInfo);
@@ -305,9 +305,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive value within an untyped collection. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveValue">The primitive value to write.</param>
-        public virtual Task WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
+        public virtual ValueTask WritePrimitiveAsync(ODataPrimitiveValue primitiveValue)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, primitiveValueParam) => thisParam.WritePrimitive(primitiveValueParam),
                 this,
                 primitiveValue);
@@ -348,9 +348,9 @@ namespace Microsoft.OData
         /// <summary> Asynchronously write a primitive property within a resource. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="primitiveProperty">The primitive property to write.</param>
-        public virtual Task WriteStartAsync(ODataPropertyInfo primitiveProperty)
+        public virtual ValueTask WriteStartAsync(ODataPropertyInfo primitiveProperty)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, primitivePropertyParam) => thisParam.WriteStart(primitivePropertyParam),
                 this,
                 primitiveProperty);
@@ -378,9 +378,9 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates a stream for writing a binary value.</summary>
         /// <returns>A stream to write a binary value to.</returns>
-        public virtual Task<Stream> CreateBinaryWriteStreamAsync()
+        public virtual ValueTask<Stream> CreateBinaryWriteStreamAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam) => thisParam.CreateBinaryWriteStream(),
                 this);
         }
@@ -395,9 +395,9 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates a TextWriter for writing a string value.</summary>
         /// <returns>A TextWriter to write a string value.</returns>
-        public virtual Task<TextWriter> CreateTextWriterAsync()
+        public virtual ValueTask<TextWriter> CreateTextWriterAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam) => thisParam.CreateTextWriter(),
                 this);
         }
@@ -408,9 +408,9 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously finish writing a resource set, resource, or nested resource info. </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public virtual Task WriteEndAsync()
+        public virtual ValueTask WriteEndAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam) => thisParam.WriteEnd(),
                 this);
         }
@@ -435,9 +435,9 @@ namespace Microsoft.OData
         /// The <see cref="ODataNestedResourceInfo.Url"/> will be ignored in that case and the Uri from the <see cref="ODataEntityReferenceLink.Url"/> will be used
         /// as the binding URL to be written.
         /// </remarks>
-        public virtual Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
+        public virtual ValueTask WriteEntityReferenceLinkAsync(ODataEntityReferenceLink entityReferenceLink)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
+            return TaskUtils.GetValueTaskForSynchronousOperation(
                 (thisParam, entityReferenceLinkParam) => thisParam.WriteEntityReferenceLink(entityReferenceLinkParam),
                 this,
                 entityReferenceLink);

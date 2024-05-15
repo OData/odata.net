@@ -2194,7 +2194,7 @@ namespace Microsoft.OData.Core.Tests.JsonLight
         /// then flushes and reads the stream back as a string for customized verification.
         /// </summary>
         private async Task<string> SetupJsonLightWriterAndRunTestAsync(
-            Func<ODataJsonLightWriter, Task> func,
+            Func<ODataJsonLightWriter, ValueTask> func,
             IEdmNavigationSource navigationSource,
             IEdmStructuredType resourceType,
             bool writingResourceSet = false,

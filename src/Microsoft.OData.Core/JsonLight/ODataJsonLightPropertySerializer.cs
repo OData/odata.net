@@ -974,7 +974,7 @@ namespace Microsoft.OData.JsonLight
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
+        private ValueTask WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
@@ -988,7 +988,7 @@ namespace Microsoft.OData.JsonLight
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
