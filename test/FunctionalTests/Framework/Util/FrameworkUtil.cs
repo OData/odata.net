@@ -196,9 +196,9 @@ namespace System.Data.Test.Astoria
 
             if (string.IsNullOrEmpty(result))
             {
-                throw new Exception($"ASSEMBLY PATH {assemblyPath}, CUR DIR {Environment.CurrentDirectory}, ENLISTEMENT WITH TRAITS {result}");
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                //return @"D:\a\1\s";
+                // Let's fall back to the path used in the continuous integration pipeline build agent
+                return @"D:\a\_work\1\s";
             }
 
 
