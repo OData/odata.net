@@ -166,8 +166,7 @@ namespace System.Data.Test.Astoria
 
             // Second use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
-            Console.WriteLine("ASSEMBLY PATH {0}", assemblyPath);
-            Console.WriteLine("GET CURRENT DIR {0}", Environment.CurrentDirectory);
+
             if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
@@ -194,27 +193,27 @@ namespace System.Data.Test.Astoria
             }
 
 
-            Console.WriteLine("ENLINESTMENT FROM TRAITS {0}", result);
-            if (string.IsNullOrEmpty(result))
-            {
-                // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                return @"D:\a\_work\1\s";
-            }
+            throw new Exception($"ASSEMBLY PATH {assemblyPath}, CUR DIR {Environment.CurrentDirectory}, ENLISTEMENT WITH TRAITS {result}");
+            //if (string.IsNullOrEmpty(result))
+            //{
+            //    // Unable to determine ENLISTMENT_ROOT from these traits folders.
+            //    return @"D:\a\_work\1\s";
+            //}
 
-            // We check the result path again to ensure it is an ENLISTMENT_ROOT.
-            foreach (string traitsFolder in traitsFolders)
-            {
-                string pathToCheck = result + traitsFolder;
-                if (!Directory.Exists(pathToCheck))
-                {
-                    // The result seems not be a valid enlistment root containing some necessary subfolders.
-                    return null;
-                }
+            //// We check the result path again to ensure it is an ENLISTMENT_ROOT.
+            //foreach (string traitsFolder in traitsFolders)
+            //{
+            //    string pathToCheck = result + traitsFolder;
+            //    if (!Directory.Exists(pathToCheck))
+            //    {
+            //        // The result seems not be a valid enlistment root containing some necessary subfolders.
+            //        return null;
+            //    }
                 
-            }
+            //}
 
-            // At last we find ENLISTMENT_ROOT.
-            return result;
+            //// At last we find ENLISTMENT_ROOT.
+            //return result;
         }
     }
 }
