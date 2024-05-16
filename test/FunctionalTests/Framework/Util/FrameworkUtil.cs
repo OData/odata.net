@@ -201,22 +201,22 @@ namespace System.Data.Test.Astoria
                 //return @"D:\a\1\s";
             }
 
-            
+
 
             //// We check the result path again to ensure it is an ENLISTMENT_ROOT.
-            //foreach (string traitsFolder in traitsFolders)
-            //{
-            //    string pathToCheck = result + traitsFolder;
-            //    if (!Directory.Exists(pathToCheck))
-            //    {
-            //        // The result seems not be a valid enlistment root containing some necessary subfolders.
-            //        return null;
-            //    }
+            foreach (string traitsFolder in traitsFolders)
+            {
+                string pathToCheck = result + traitsFolder;
+                if (!Directory.Exists(pathToCheck))
+                {
+                    // The result seems not be a valid enlistment root containing some necessary subfolders.
+                    return null;
+                }
 
-            //}
+            }
 
-            //// At last we find ENLISTMENT_ROOT.
-            //return result;
+            // At last we find ENLISTMENT_ROOT.
+            return result;
         }
     }
 }
