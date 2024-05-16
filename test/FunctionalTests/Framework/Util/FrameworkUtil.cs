@@ -164,8 +164,9 @@ namespace System.Data.Test.Astoria
                 return result;
             }
 
-            // Second, use environment variable defined in CI build agents
-            result = Environment.GetEnvironmentVariable("Build.SourcesDirectory");
+            // Second, use environment variable defined in build agents
+            // See: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables
+            result = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
             if (!string.IsNullOrEmpty(result))
             {
                 throw new Exception($"SOURCES DIR {result}");
