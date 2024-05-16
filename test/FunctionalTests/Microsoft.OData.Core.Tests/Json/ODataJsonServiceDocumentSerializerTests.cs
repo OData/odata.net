@@ -221,9 +221,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteServiceDocumentAsync_WritesExpectedOutput(ODataServiceDocument serviceDocument, string expected)
         {
             var result = await SetupJsonServiceDocumentSerializerAndRunTestAsync(
-                (JsonServiceDocumentSerializer) =>
+                (jsonServiceDocumentSerializer) =>
                 {
-                    return JsonServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
+                    return jsonServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
                 });
 
             Assert.Equal(expected, result);
@@ -284,9 +284,9 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentSerializerAndRunTestAsync(
-                    (JsonServiceDocumentSerializer) =>
+                    (jsonServiceDocumentSerializer) =>
                     {
-                        return JsonServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
+                        return jsonServiceDocumentSerializer.WriteServiceDocumentAsync(serviceDocument);
                     }));
 
             Assert.Equal(exceptionMessage, exception.Message);

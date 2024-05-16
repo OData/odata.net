@@ -247,7 +247,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     setPhotoAction));
 
             Assert.Equal(
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     setAttributesAction));
 
             Assert.Equal(

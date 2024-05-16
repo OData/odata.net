@@ -1756,7 +1756,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type),
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type),
                     isIeee754Compatible: isIeee754Compatible));
 
             Assert.Equal(
@@ -1778,7 +1778,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                     ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("PrimitiveValue", "StartObject", "value"),
@@ -1818,7 +1818,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(exceptionMessage, exception.Message);
         }
@@ -2025,7 +2025,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(exceptionMessage, exception.Message);
         }
@@ -2074,7 +2074,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName(null),
@@ -2096,7 +2096,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.etag"),
@@ -2182,7 +2182,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("PrimitiveValue", "StartObject", "value"),
@@ -2289,7 +2289,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(exceptionMessage, exception.Message);
         }
@@ -2310,7 +2310,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonReaderUtils_InvalidValueForODataNullAnnotation("odata.null", "true"),
@@ -2331,7 +2331,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ValidationUtils_IncorrectTypeKind("Collection(Edm.Int32)", "Primitive", "Collection"),
@@ -2353,7 +2353,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedODataPropertyAnnotation("odata.type"),
@@ -2374,7 +2374,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_TypePropertyAfterValueProperty("odata.type", "value"),
@@ -2393,7 +2393,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyPayload,
@@ -2413,7 +2413,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTopLevelPropertyName("foobar", "value"),
@@ -2436,7 +2436,7 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    (JsonDeserializer) => JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
+                    (jsonDeserializer) => jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type)));
 
             Assert.Equal(
                 ErrorStrings.JsonReaderExtensions_UnexpectedNodeDetectedWithPropertyName("StartArray", "StartObject", "value"),

@@ -1696,14 +1696,14 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = SetupJsonWriterAndRunTest(
-                (JsonWriter) =>
+                (jsonWriter) =>
                 {
-                    JsonWriter.WriteStart(orderResource);
-                    JsonWriter.WriteStart(addressNestedResourceInfo);
-                    JsonWriter.WriteStart(addressResource);
-                    JsonWriter.WriteEnd();
-                    JsonWriter.WriteEnd();
-                    JsonWriter.WriteEnd();
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteStart(addressNestedResourceInfo);
+                    jsonWriter.WriteStart(addressResource);
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
                 },
                 customerEntitySet,
                 customerEntityType);
@@ -1722,7 +1722,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerNestedResourceInfo),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerNestedResourceInfo),
                     this.customerEntitySet,
                     this.customerEntityType));
 
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(stateProperty),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(stateProperty),
                     this.customerEntitySet,
                     this.customerEntityType));
 
@@ -1799,7 +1799,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerResourceSet),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: false));
@@ -1814,7 +1814,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerResource),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerResource),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: true));
@@ -1829,7 +1829,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: false,
@@ -1851,7 +1851,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
                     // Shouldn't be written at top-level, either way but we validate writingDelta flag first
-                    (JsonWriter) => JsonWriter.WriteDeltaLinkAsync(deltaLink),
+                    (jsonWriter) => jsonWriter.WriteDeltaLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
                     writingResourceSet: false,
@@ -1872,7 +1872,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
                     // Shouldn't be written at top-level, either way but we validate writingDelta flag first
-                    (JsonWriter) => JsonWriter.WriteDeltaDeletedLinkAsync(deltaLink),
+                    (jsonWriter) => jsonWriter.WriteDeltaDeletedLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
                     writingResourceSet: false,
@@ -2029,7 +2029,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(orderResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(orderResourceSet),
                 this.orderEntitySet,
                 this.orderEntityType,
                 writingResourceSet: true,
@@ -2048,7 +2048,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
                 writingResourceSet: true,
@@ -2067,7 +2067,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
                 writingResourceSet: true,

@@ -68,9 +68,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteResourceSetStartMetadataPropertiesAsync_WritesResourceSetMetadataProperties(bool isUndeclared, string propertyName, string expected)
         {
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceSetStartMetadataPropertiesAsync(
+                    return jsonResourceSerializer.WriteResourceSetStartMetadataPropertiesAsync(
                         CreateCategoryResourceSet(),
                         propertyName,
                         "NS.Category",
@@ -300,9 +300,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteNavigationLinkMetadataAsync(
+                    return jsonResourceSerializer.WriteNavigationLinkMetadataAsync(
                         nestedResourceInfo,
                         new NullDuplicatePropertyNameChecker());
                 });
@@ -334,9 +334,9 @@ namespace Microsoft.OData.Tests.Json
                 this.messageWriterSettings.ODataUri);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteNestedResourceInfoContextUrlAsync(
+                    return jsonResourceSerializer.WriteNestedResourceInfoContextUrlAsync(
                         nestedResourceInfo,
                         contextUrlInfo);
                 });
@@ -400,9 +400,9 @@ namespace Microsoft.OData.Tests.Json
             }
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteOperationsAsync(
+                    return jsonResourceSerializer.WriteOperationsAsync(
                         operations.Select(operationFactory),
                         isAction);
                 });
@@ -421,9 +421,9 @@ namespace Microsoft.OData.Tests.Json
                 /* throwIfMissingTypeInfo */ true);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteDeltaContextUriAsync(
+                    return jsonResourceSerializer.WriteDeltaContextUriAsync(
                         typeContext,
                         ODataDeltaKind.Resource,
                         /* parentContextUrlInfo */ null);
@@ -443,9 +443,9 @@ namespace Microsoft.OData.Tests.Json
                 /* throwIfMissingTypeInfo */ true);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceContextUriAsync(
+                    return jsonResourceSerializer.WriteResourceContextUriAsync(
                         typeContext,
                         /* parentContextUrlInfo */ null);
                 });
@@ -464,9 +464,9 @@ namespace Microsoft.OData.Tests.Json
                 /* throwIfMissingTypeInfo */ true);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceSetContextUriAsync(typeContext);
+                    return jsonResourceSerializer.WriteResourceSetContextUriAsync(typeContext);
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://tempuri.org/$metadata#Categories\"", result);

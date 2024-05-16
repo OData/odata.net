@@ -596,7 +596,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                 if (testConfiguration.Format == ODataFormat.Json)
                 {
-                    string JsonResult =
+                    string jsonResult =
                         "{" +
                         "$(NL)" +
                         "$(Indent)" +
@@ -607,7 +607,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
 
                     return new JsonWriterTestExpectedResults(this.Settings.ExpectedResultSettings)
                     {
-                        Json = string.Join("$(NL)", JsonResult),
+                        Json = string.Join("$(NL)", jsonResult),
                         FragmentExtractor = (result) => result
                     };
                 }

@@ -584,7 +584,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteValueParameterAsync(int? luckyNumber, string expected)
         {
             var result = await SetupJsonParameterWriterAndRunTestAsync(
-                (JsonParameterWriter) => JsonParameterWriter.WriteValueAsync("LuckyNumber", luckyNumber));
+                (jsonParameterWriter) => jsonParameterWriter.WriteValueAsync("LuckyNumber", luckyNumber));
 
             Assert.Equal($"{{\"LuckyNumber\":{expected}}}", result);
         }
@@ -595,7 +595,7 @@ namespace Microsoft.OData.Tests.Json
             var favoriteColor = new ODataEnumValue("Black", "NS.Color");
 
             var result = await SetupJsonParameterWriterAndRunTestAsync(
-                (JsonParameterWriter) => JsonParameterWriter.WriteValueAsync("FavoriteColor", favoriteColor));
+                (jsonParameterWriter) => jsonParameterWriter.WriteValueAsync("FavoriteColor", favoriteColor));
 
             Assert.Equal("{\"FavoriteColor\":\"Black\"}", result);
         }
@@ -743,7 +743,7 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.WriteValueAsync("prodId", 1),
+                    (jsonParameterWriter) => jsonParameterWriter.WriteValueAsync("prodId", 1),
                     edmOperation: edmFunction,
                     writingResponse: false));
 
@@ -797,7 +797,7 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateCollectionWriterAsync("product"),
+                    (jsonParameterWriter) => jsonParameterWriter.CreateCollectionWriterAsync("product"),
                     edmOperation: edmFunction,
                     writingResponse: false));
 
@@ -818,7 +818,7 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateResourceWriterAsync("color"),
+                    (jsonParameterWriter) => jsonParameterWriter.CreateResourceWriterAsync("color"),
                     edmOperation: edmAction,
                     writingResponse: false));
 
@@ -839,7 +839,7 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateResourceSetWriterAsync("color"),
+                    (jsonParameterWriter) => jsonParameterWriter.CreateResourceSetWriterAsync("color"),
                     edmOperation: edmAction,
                     writingResponse: false));
 
@@ -857,7 +857,7 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.WriteValueAsync("a", 1),
+                    (jsonParameterWriter) => jsonParameterWriter.WriteValueAsync("a", 1),
                     edmOperation: edmFunction,
                     writingResponse: false));
 
@@ -871,7 +871,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.WriteValueAsync(null, 13)));
+                    (jsonParameterWriter) => jsonParameterWriter.WriteValueAsync(null, 13)));
         }
 
         [Fact]
@@ -879,7 +879,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateCollectionWriterAsync(null)));
+                    (jsonParameterWriter) => jsonParameterWriter.CreateCollectionWriterAsync(null)));
         }
 
         [Fact]
@@ -887,7 +887,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateResourceWriterAsync(null)));
+                    (jsonParameterWriter) => jsonParameterWriter.CreateResourceWriterAsync(null)));
         }
 
         [Fact]
@@ -895,7 +895,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ArgumentNullException>(
                 () => SetupJsonParameterWriterAndRunTestAsync(
-                    (JsonParameterWriter) => JsonParameterWriter.CreateResourceSetWriterAsync(null)));
+                    (jsonParameterWriter) => jsonParameterWriter.CreateResourceSetWriterAsync(null)));
         }
 
         [Fact]

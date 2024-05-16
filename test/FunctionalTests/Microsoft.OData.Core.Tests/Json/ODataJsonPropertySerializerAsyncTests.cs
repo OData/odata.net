@@ -263,9 +263,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteTopLevelPropertyAsync_WritesTopLevelProperty()
         {
             var result = await this.SetupSerializerAndRunTestAsync(
-                (JsonPropertySerializer) =>
+                (jsonPropertySerializer) =>
                 {
-                    return JsonPropertySerializer.WriteTopLevelPropertyAsync(
+                    return jsonPropertySerializer.WriteTopLevelPropertyAsync(
                         new ODataProperty { Name = "LuckyNumber", Value = new ODataPrimitiveValue(13) }
                     );
                 });
