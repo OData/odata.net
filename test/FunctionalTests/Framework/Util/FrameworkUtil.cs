@@ -193,12 +193,14 @@ namespace System.Data.Test.Astoria
             }
 
 
+
+            if (string.IsNullOrEmpty(result))
+            {
+                // Unable to determine ENLISTMENT_ROOT from these traits folders.
+                return @"D:\a\1\s";
+            }
+
             throw new Exception($"ASSEMBLY PATH {assemblyPath}, CUR DIR {Environment.CurrentDirectory}, ENLISTEMENT WITH TRAITS {result}");
-            //if (string.IsNullOrEmpty(result))
-            //{
-            //    // Unable to determine ENLISTMENT_ROOT from these traits folders.
-            //    return @"D:\a\_work\1\s";
-            //}
 
             //// We check the result path again to ensure it is an ENLISTMENT_ROOT.
             //foreach (string traitsFolder in traitsFolders)
@@ -209,7 +211,7 @@ namespace System.Data.Test.Astoria
             //        // The result seems not be a valid enlistment root containing some necessary subfolders.
             //        return null;
             //    }
-                
+
             //}
 
             //// At last we find ENLISTMENT_ROOT.
