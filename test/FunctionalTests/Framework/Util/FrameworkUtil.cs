@@ -169,8 +169,7 @@ namespace System.Data.Test.Astoria
             result = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
             if (!string.IsNullOrEmpty(result))
             {
-                throw new Exception($"SOURCES DIR {result}");
-                // return result;
+                return result;
             }
 
             // Third use current assembly location to determine.
@@ -206,8 +205,7 @@ namespace System.Data.Test.Astoria
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                // Let's fall back to the path used in the continuous integration pipeline build agent
-                return @"D:\a\_work\1\s";
+                return @"D:\a\1\s";
             }
 
 
