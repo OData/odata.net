@@ -164,7 +164,15 @@ namespace System.Data.Test.Astoria
                 return result;
             }
 
-            // Second use current assembly location to determine.
+            // Second, use environment variable defined in CI build agents
+            result = Environment.GetEnvironmentVariable("Build.SourcesDirectory");
+            if (!string.IsNullOrEmpty(result))
+            {
+                throw new Exception($"SOURCES DIR {result}");
+                // return result;
+            }
+
+            // Third use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
 
             if (string.IsNullOrEmpty(assemblyPath))
