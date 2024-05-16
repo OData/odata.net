@@ -166,10 +166,10 @@ namespace System.Data.Test.Astoria
         {
             //throw new Exception("aaaa test   " + EnlistmentRoot ?? " is null ");
             string dir = Path.Combine(EnlistmentRoot, @"test\FunctionalTests\Tests\Data\ServerUnitTests");
-            //if (!Directory.Exists(dir))
-            //{
-            //    throw new ApplicationException(@"Missing ServerUnitTests directory: " + dir);
-            //}
+            if (!Directory.Exists(dir))
+            {
+                throw new ApplicationException(@"Missing ServerUnitTests directory: " + dir);
+            }
 
             return dir;
         }
@@ -183,10 +183,10 @@ namespace System.Data.Test.Astoria
             get
             {
                 string dir = Path.Combine(EnlistmentRoot, @"test\FunctionalTests\Tests\Data\Northwind");
-                //if (!Directory.Exists(dir))
-                //{
-                //    throw new ApplicationException(@"Missing NorthwindMetadataDirectory: " + dir);
-                //}
+                if (!Directory.Exists(dir))
+                {
+                    throw new ApplicationException(@"Missing NorthwindMetadataDirectory: " + dir);
+                }
 
                 return dir;
             }

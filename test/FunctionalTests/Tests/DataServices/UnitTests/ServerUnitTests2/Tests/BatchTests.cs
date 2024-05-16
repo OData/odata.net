@@ -238,26 +238,7 @@ namespace AstoriaUnitTests.Tests
                         (dataServiceVersion) =>
                         {
                             Type contextType = typeof(CustomRowBasedContext);
-                            string path = Path.Combine(batchRequestsDirectory, "ModificationOutsideChangesetbatch" + ".txt");
-                            try
-                            {
-                                Directory.GetFileSystemEntries(batchRequestsDirectory);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine($"Failed to open directory {e.Message}");
-                            }
-
-                            try
-                            {
-                                File.OpenRead(path);
-                            }
-                            catch (Exception e)
-                            {
-                                Console.WriteLine($"Failed to open file {e.Message}");
-                            }
-
-                            string requestContent = File.ReadAllText(path);
+                            string requestContent = File.ReadAllText(Path.Combine(batchRequestsDirectory, "ModificationOutsideChangesetbatch" + ".txt"));
 
                             string responseFileName = "ModificationOutsideChangesetresponse.txt";
 
