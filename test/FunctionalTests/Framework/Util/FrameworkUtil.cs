@@ -166,6 +166,8 @@ namespace System.Data.Test.Astoria
 
             // Second use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+            Console.WriteLine("ASSEMBLY PATH {0}", assemblyPath);
+            Console.WriteLine("GET CURRENT DIR {0}", Environment.CurrentDirectory);
             if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
@@ -191,12 +193,12 @@ namespace System.Data.Test.Astoria
                 }
             }
 
-            
 
+            Console.WriteLine("ENLINESTMENT FROM TRAITS {0}", result);
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
-                return @"D:\a\1\s";
+                return @"D:\a\_work\1\s";
             }
 
             // We check the result path again to ensure it is an ENLISTMENT_ROOT.
