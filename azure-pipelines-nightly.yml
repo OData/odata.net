@@ -72,7 +72,7 @@ extends:
           outputs:
             - output: pipelineArtifact
               displayName: 'Publish Artifact - NuGet Release Packages'
-              targetPath: '$(Build.ArtifactsStagingDirectory)\NuGet-Release'
+              targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Release'
               artifactName: NuGetRelease
             - output: nuget
               displayName: 'MyGet push - Nightly packages to MyGet'
