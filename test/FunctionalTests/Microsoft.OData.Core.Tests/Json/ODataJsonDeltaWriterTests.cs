@@ -2863,22 +2863,22 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteDeltaPayloadAsync(ODataDeltaResourceSet deltaResourceSet, bool writingRequest, ODataVersion odataVersion, string expected)
         {
             var result = await SetupJsonDeltaWriterAndRunTestAsync(
-                async (JsonDeltaWriter) =>
+                async (jsonDeltaWriter) =>
                 {
-                    await JsonDeltaWriter.WriteStartAsync(deltaResourceSet);
-                    await JsonDeltaWriter.WriteStartAsync(customerUpdated);
-                    await JsonDeltaWriter.WriteEndAsync();
-                    await JsonDeltaWriter.WriteDeltaDeletedLinkAsync(linkToOrder10643);
-                    await JsonDeltaWriter.WriteDeltaLinkAsync(linkToOrder10645);
-                    await JsonDeltaWriter.WriteStartAsync(order10643);
-                    await JsonDeltaWriter.WriteStartAsync(shippingAddressInfo);
-                    await JsonDeltaWriter.WriteStartAsync(shippingAddress);
-                    await JsonDeltaWriter.WriteEndAsync(); // shippingAddress
-                    await JsonDeltaWriter.WriteEndAsync(); // shippingAddressInfo
-                    await JsonDeltaWriter.WriteEndAsync(); // order10643
-                    await JsonDeltaWriter.WriteDeltaDeletedEntryAsync(customerDeletedEntry);
-                    await JsonDeltaWriter.WriteEndAsync(); // deltaResourceSet
-                    await JsonDeltaWriter.FlushAsync();
+                    await jsonDeltaWriter.WriteStartAsync(deltaResourceSet);
+                    await jsonDeltaWriter.WriteStartAsync(customerUpdated);
+                    await jsonDeltaWriter.WriteEndAsync();
+                    await jsonDeltaWriter.WriteDeltaDeletedLinkAsync(linkToOrder10643);
+                    await jsonDeltaWriter.WriteDeltaLinkAsync(linkToOrder10645);
+                    await jsonDeltaWriter.WriteStartAsync(order10643);
+                    await jsonDeltaWriter.WriteStartAsync(shippingAddressInfo);
+                    await jsonDeltaWriter.WriteStartAsync(shippingAddress);
+                    await jsonDeltaWriter.WriteEndAsync(); // shippingAddress
+                    await jsonDeltaWriter.WriteEndAsync(); // shippingAddressInfo
+                    await jsonDeltaWriter.WriteEndAsync(); // order10643
+                    await jsonDeltaWriter.WriteDeltaDeletedEntryAsync(customerDeletedEntry);
+                    await jsonDeltaWriter.WriteEndAsync(); // deltaResourceSet
+                    await jsonDeltaWriter.FlushAsync();
                 },
                 this.GetCustomers(),
                 this.GetCustomerType(),
@@ -2892,29 +2892,29 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteExpandedResourceSetAsync()
         {
             var result = await SetupJsonDeltaWriterAndRunTestAsync(
-                async (JsonDeltaWriter) =>
+                async (jsonDeltaWriter) =>
                 {
-                    await JsonDeltaWriter.WriteStartAsync(deltaFeed);
-                    await JsonDeltaWriter.WriteStartAsync(customerEntry);
-                    await JsonDeltaWriter.WriteStartAsync(ordersNavigationLink);
-                    await JsonDeltaWriter.WriteStartAsync(ordersFeed);
-                    await JsonDeltaWriter.WriteStartAsync(orderEntry);
-                    await JsonDeltaWriter.WriteStartAsync(shippingAddressInfo);
-                    await JsonDeltaWriter.WriteStartAsync(shippingAddress);
-                    await JsonDeltaWriter.WriteEndAsync(); // shippingAddress
-                    await JsonDeltaWriter.WriteEndAsync(); // shippingAddressInfo
-                    await JsonDeltaWriter.WriteEndAsync(); // orderEntry
-                    await JsonDeltaWriter.WriteEndAsync(); // ordersFeed
-                    await JsonDeltaWriter.WriteEndAsync(); // ordersNavigationLink
-                    await JsonDeltaWriter.WriteStartAsync(favouriteProductsNavigationLink);
-                    await JsonDeltaWriter.WriteStartAsync(favouriteProductsFeed);
-                    await JsonDeltaWriter.WriteStartAsync(productEntry);
-                    await JsonDeltaWriter.WriteEndAsync(); // productEntry
-                    await JsonDeltaWriter.WriteEndAsync(); // favouriteProductsFeed
-                    await JsonDeltaWriter.WriteEndAsync(); // favouriteProductsNavigationLink
-                    await JsonDeltaWriter.WriteEndAsync(); // customerEntry
-                    await JsonDeltaWriter.WriteEndAsync(); // deltaFeed
-                    await JsonDeltaWriter.FlushAsync();
+                    await jsonDeltaWriter.WriteStartAsync(deltaFeed);
+                    await jsonDeltaWriter.WriteStartAsync(customerEntry);
+                    await jsonDeltaWriter.WriteStartAsync(ordersNavigationLink);
+                    await jsonDeltaWriter.WriteStartAsync(ordersFeed);
+                    await jsonDeltaWriter.WriteStartAsync(orderEntry);
+                    await jsonDeltaWriter.WriteStartAsync(shippingAddressInfo);
+                    await jsonDeltaWriter.WriteStartAsync(shippingAddress);
+                    await jsonDeltaWriter.WriteEndAsync(); // shippingAddress
+                    await jsonDeltaWriter.WriteEndAsync(); // shippingAddressInfo
+                    await jsonDeltaWriter.WriteEndAsync(); // orderEntry
+                    await jsonDeltaWriter.WriteEndAsync(); // ordersFeed
+                    await jsonDeltaWriter.WriteEndAsync(); // ordersNavigationLink
+                    await jsonDeltaWriter.WriteStartAsync(favouriteProductsNavigationLink);
+                    await jsonDeltaWriter.WriteStartAsync(favouriteProductsFeed);
+                    await jsonDeltaWriter.WriteStartAsync(productEntry);
+                    await jsonDeltaWriter.WriteEndAsync(); // productEntry
+                    await jsonDeltaWriter.WriteEndAsync(); // favouriteProductsFeed
+                    await jsonDeltaWriter.WriteEndAsync(); // favouriteProductsNavigationLink
+                    await jsonDeltaWriter.WriteEndAsync(); // customerEntry
+                    await jsonDeltaWriter.WriteEndAsync(); // deltaFeed
+                    await jsonDeltaWriter.FlushAsync();
                 }, this.GetCustomers(),
                 this.GetCustomerType());
 
@@ -3118,7 +3118,7 @@ namespace Microsoft.OData.Tests.Json
             bool writingRequest = false)
         {
             this.stream = new AsyncStream(new MemoryStream());
-            var JsonOutputContext = CreateJsonOutputContext(
+            var jsonOutputContext = CreateJsonOutputContext(
                     this.stream,
                     this.GetModel(),
                     /*fullMetadata*/ false,
@@ -3126,12 +3126,12 @@ namespace Microsoft.OData.Tests.Json
                     odataVersion,
                     !writingRequest,
                     /*isAsync*/ true);
-            var JsonDeltaWriter = new ODataJsonDeltaWriter(
-                JsonOutputContext,
+            var jsonDeltaWriter = new ODataJsonDeltaWriter(
+                jsonOutputContext,
                 navigationSource,
                 resourceType);
 
-            await func(JsonDeltaWriter);
+            await func(jsonDeltaWriter);
 
             this.stream.Seek(0, SeekOrigin.Begin);
             return await new StreamReader(this.stream).ReadToEndAsync();

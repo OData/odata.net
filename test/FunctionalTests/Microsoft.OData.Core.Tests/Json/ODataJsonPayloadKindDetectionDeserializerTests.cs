@@ -92,9 +92,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonPayloadKindDetectionDeserializerAndRunTestAsync(
                 payload,
-                async (JsonPayloadKindDetectionDeserializer) =>
+                async (jsonPayloadKindDetectionDeserializer) =>
                 {
-                    var payloadKinds = await JsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
+                    var payloadKinds = await jsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
 
                     Assert.Equal(2, payloadKinds.Count());
                     Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Resource)));
@@ -110,9 +110,9 @@ namespace Microsoft.OData.Tests.Json
         {
             await SetupJsonPayloadKindDetectionDeserializerAndRunTestAsync(
                 payload,
-                async (JsonPayloadKindDetectionDeserializer) =>
+                async (jsonPayloadKindDetectionDeserializer) =>
                 {
-                    var payloadKinds = await JsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
+                    var payloadKinds = await jsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
 
                     Assert.Single(payloadKinds);
                     Assert.Single(payloadKinds.Where(d => d.Equals(ODataPayloadKind.Error)));
@@ -131,9 +131,9 @@ namespace Microsoft.OData.Tests.Json
         {
             await SetupJsonPayloadKindDetectionDeserializerAndRunTestAsync(
                 payload,
-                async (JsonPayloadKindDetectionDeserializer) =>
+                async (jsonPayloadKindDetectionDeserializer) =>
                 {
-                    var payloadKinds = await JsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
+                    var payloadKinds = await jsonPayloadKindDetectionDeserializer.DetectPayloadKindAsync(this.payloadKindDetectionInfo);
 
                     Assert.Empty(payloadKinds);
                 });
@@ -150,9 +150,9 @@ namespace Microsoft.OData.Tests.Json
                 isAsync: true,
                 isResponse: isResponse))
             {
-                var JsonPayloadKindDetectionDeserializer = new ODataJsonPayloadKindDetectionDeserializer(jsonInputContext);
+                var jsonPayloadKindDetectionDeserializer = new ODataJsonPayloadKindDetectionDeserializer(jsonInputContext);
 
-                await func(JsonPayloadKindDetectionDeserializer);
+                await func(jsonPayloadKindDetectionDeserializer);
             }
         }
 
@@ -167,9 +167,9 @@ namespace Microsoft.OData.Tests.Json
                 isAsync: false,
                 isResponse: isResponse))
             {
-                var JsonPayloadKindDetectionDeserializer = new ODataJsonPayloadKindDetectionDeserializer(jsonInputContext);
+                var jsonPayloadKindDetectionDeserializer = new ODataJsonPayloadKindDetectionDeserializer(jsonInputContext);
 
-                action(JsonPayloadKindDetectionDeserializer);
+                action(jsonPayloadKindDetectionDeserializer);
             }
         }
 

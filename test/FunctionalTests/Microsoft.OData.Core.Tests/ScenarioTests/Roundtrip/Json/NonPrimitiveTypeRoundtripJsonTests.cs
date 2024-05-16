@@ -200,9 +200,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             using (var outputContext = new ODataJsonOutputContext(messageInfoForWriter, settings))
             {
-                var JsonWriter = new ODataJsonWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
-                JsonWriter.WriteStart(entry);
-                JsonWriter.WriteEnd();
+                var jsonWriter = new ODataJsonWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
+                jsonWriter.WriteStart(entry);
+                jsonWriter.WriteEnd();
             }
 
             stream.Position = 0;
@@ -220,12 +220,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             using (var inputContext = new ODataJsonInputContext(messageInfoForReader, new ODataMessageReaderSettings()))
             {
-                var JsonReader = new ODataJsonReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
-                while (JsonReader.Read())
+                var jsonReader = new ODataJsonReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
+                while (jsonReader.Read())
                 {
-                    if (JsonReader.State == ODataReaderState.ResourceEnd)
+                    if (jsonReader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entryOut = JsonReader.Item as ODataResource;
+                        ODataResource entryOut = jsonReader.Item as ODataResource;
                         actualValue = entryOut.Properties.Single(p => p.Name == propertyName).ODataValue;
                     }
                 }
@@ -254,27 +254,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             using (var outputContext = new ODataJsonOutputContext(messageInfoForWriter, settings))
             {
-                var JsonWriter = new ODataJsonWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
-                JsonWriter.WriteStart(entry);
-                JsonWriter.WriteStart(nestedResourceInfo);
+                var jsonWriter = new ODataJsonWriter(outputContext, this.studentSet, this.studentInfo, /*writingFeed*/ false);
+                jsonWriter.WriteStart(entry);
+                jsonWriter.WriteStart(nestedResourceInfo);
                 if (resourceSet != null)
                 {
-                    JsonWriter.WriteStart(resourceSet);
+                    jsonWriter.WriteStart(resourceSet);
                 }
 
                 foreach (var value in resources)
                 {
-                    JsonWriter.WriteStart(value);
-                    JsonWriter.WriteEnd();
+                    jsonWriter.WriteStart(value);
+                    jsonWriter.WriteEnd();
                 }
 
                 if (resourceSet != null)
                 {
-                    JsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
                 }
 
-                JsonWriter.WriteEnd();
-                JsonWriter.WriteEnd();
+                jsonWriter.WriteEnd();
+                jsonWriter.WriteEnd();
             }
 
             stream.Position = 0;
@@ -292,12 +292,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
 
             using (var inputContext = new ODataJsonInputContext(messageInfoForReader, new ODataMessageReaderSettings()))
             {
-                var JsonReader = new ODataJsonReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
-                while (JsonReader.Read())
+                var jsonReader = new ODataJsonReader(inputContext, this.studentSet, this.studentInfo, /*readingFeed*/ false);
+                while (jsonReader.Read())
                 {
-                    if (JsonReader.State == ODataReaderState.ResourceEnd)
+                    if (jsonReader.State == ODataReaderState.ResourceEnd)
                     {
-                        actualResources.Add(JsonReader.Item as ODataResource);
+                        actualResources.Add(jsonReader.Item as ODataResource);
                     }
                 }
             }

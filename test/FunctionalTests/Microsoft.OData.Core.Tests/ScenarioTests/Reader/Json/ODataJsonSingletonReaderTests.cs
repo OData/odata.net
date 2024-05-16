@@ -412,12 +412,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             using (var inputContext = new ODataJsonInputContext(
                 new StringReader(payload), messageInfo, settings))
             {
-                var JsonReader = new ODataJsonReader(inputContext, singleton, webType, /*readingFeed*/ false);
-                while (JsonReader.Read())
+                var jsonReader = new ODataJsonReader(inputContext, singleton, webType, /*readingFeed*/ false);
+                while (jsonReader.Read())
                 {
-                    if (JsonReader.State == ODataReaderState.ResourceEnd)
+                    if (jsonReader.State == ODataReaderState.ResourceEnd)
                     {
-                        ODataResource entry = JsonReader.Item as ODataResource;
+                        ODataResource entry = jsonReader.Item as ODataResource;
                         return entry;
                     }
                 }
@@ -438,12 +438,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.Json
             using (var inputContext = new ODataJsonInputContext(
                 new StringReader(payload), messageInfo, new ODataMessageReaderSettings()))
             {
-                var JsonReader = new ODataJsonReader(inputContext, singleton, webType, /*readingFeed*/ false);
-                while (JsonReader.Read())
+                var jsonReader = new ODataJsonReader(inputContext, singleton, webType, /*readingFeed*/ false);
+                while (jsonReader.Read())
                 {
-                    if (JsonReader.State == ODataReaderState.NestedResourceInfoEnd)
+                    if (jsonReader.State == ODataReaderState.NestedResourceInfoEnd)
                     {
-                        ODataNestedResourceInfo navigationLink = JsonReader.Item as ODataNestedResourceInfo;
+                        ODataNestedResourceInfo navigationLink = jsonReader.Item as ODataNestedResourceInfo;
                         return navigationLink;
                     }
                 }

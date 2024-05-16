@@ -1168,12 +1168,12 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 EdmCoreModel.Instance,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
-                    await JsonDeserializer.JsonReader.ReadPropertyNameAsync();
+                    await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
+                    await jsonDeserializer.JsonReader.ReadPropertyNameAsync();
 
-                    var annotationValue = await JsonDeserializer.ReadAndValidateAnnotationStringValueAsync("@odata.id");
+                    var annotationValue = await jsonDeserializer.ReadAndValidateAnnotationStringValueAsync("@odata.id");
                     Assert.Equal("Customers(1)", annotationValue);
                 });
         }
@@ -1186,12 +1186,12 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 EdmCoreModel.Instance,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
-                    await JsonDeserializer.JsonReader.ReadPropertyNameAsync();
+                    await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
+                    await jsonDeserializer.JsonReader.ReadPropertyNameAsync();
 
-                    var annotationValue = await JsonDeserializer.ReadAnnotationStringValueAsync("@odata.id");
+                    var annotationValue = await jsonDeserializer.ReadAnnotationStringValueAsync("@odata.id");
                     Assert.Equal("Customers(1)", annotationValue);
                 });
         }
@@ -1207,9 +1207,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await JsonDeserializer.ReadPayloadStartAsync(
+                    await jsonDeserializer.ReadPayloadStartAsync(
                     payloadKind,
                     new PropertyAndAnnotationCollector(true),
                     isReadingNestedPayload: false,
@@ -1217,11 +1217,11 @@ namespace Microsoft.OData.Tests.Json
 
                     if (expectedContextUri == null)
                     {
-                        Assert.Null(JsonDeserializer.ContextUriParseResult);
+                        Assert.Null(jsonDeserializer.ContextUriParseResult);
                     }
                     else
                     {
-                        Assert.Equal(expectedContextUri, JsonDeserializer.ContextUriParseResult?.ContextUri?.AbsoluteUri);
+                        Assert.Equal(expectedContextUri, jsonDeserializer.ContextUriParseResult?.ContextUri?.AbsoluteUri);
                     }
                 });
         }
@@ -1237,10 +1237,10 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
-                    var contextUri = await JsonDeserializer.ReadContextUriAnnotationAsync(
+                    await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
+                    var contextUri = await jsonDeserializer.ReadContextUriAnnotationAsync(
                         ODataPayloadKind.Resource,
                         new PropertyAndAnnotationCollector(true),
                         failOnMissingContextUriAnnotation: false);
@@ -1260,11 +1260,11 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    async (JsonDeserializer) =>
+                    async (jsonDeserializer) =>
                     {
-                        await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
+                        await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
 
-                        await JsonDeserializer.ReadContextUriAnnotationAsync(
+                        await jsonDeserializer.ReadContextUriAnnotationAsync(
                             ODataPayloadKind.Resource,
                             new PropertyAndAnnotationCollector(true),
                             failOnMissingContextUriAnnotation: true);
@@ -1288,17 +1288,17 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await JsonDeserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, new PropertyAndAnnotationCollector(true), false, true);
-                    Assert.Equal("@odata.deltaLink", await JsonDeserializer.JsonReader.ReadPropertyNameAsync());
-                    var annotationValueAsUri = await JsonDeserializer.ReadAnnotationStringValueAsUriAsync("@odata.deltaLink");
+                    await jsonDeserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, new PropertyAndAnnotationCollector(true), false, true);
+                    Assert.Equal("@odata.deltaLink", await jsonDeserializer.JsonReader.ReadPropertyNameAsync());
+                    var annotationValueAsUri = await jsonDeserializer.ReadAnnotationStringValueAsUriAsync("@odata.deltaLink");
 
                     var expectedUri = expected == null ? null : new Uri(expected);
                     Assert.Equal(expectedUri, annotationValueAsUri);
                     Assert.Equal(
                         "http://tempuri.org/$metadata#Customers/$delta",
-                        JsonDeserializer.ContextUriParseResult.ContextUri.AbsoluteUri);
+                        jsonDeserializer.ContextUriParseResult.ContextUri.AbsoluteUri);
                 });
         }
 
@@ -1313,15 +1313,15 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await JsonDeserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, new PropertyAndAnnotationCollector(true), false, true);
-                    Assert.Equal("@odata.deltaLink", await JsonDeserializer.JsonReader.ReadPropertyNameAsync());
-                    var annotationValueAsUri = await JsonDeserializer.ReadAndValidateAnnotationStringValueAsUriAsync("@odata.deltaLink");
+                    await jsonDeserializer.ReadPayloadStartAsync(ODataPayloadKind.Delta, new PropertyAndAnnotationCollector(true), false, true);
+                    Assert.Equal("@odata.deltaLink", await jsonDeserializer.JsonReader.ReadPropertyNameAsync());
+                    var annotationValueAsUri = await jsonDeserializer.ReadAndValidateAnnotationStringValueAsUriAsync("@odata.deltaLink");
 
                     Assert.Equal(
                         "http://tempuri.org/$metadata#Customers/$delta",
-                        JsonDeserializer.ContextUriParseResult.ContextUri.AbsoluteUri);
+                        jsonDeserializer.ContextUriParseResult.ContextUri.AbsoluteUri);
                     Assert.Equal(new Uri("http://tempuri.org/Customers?$deltatoken=13"), annotationValueAsUri);
                 });
         }
@@ -1336,12 +1336,12 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 EdmCoreModel.Instance,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
-                    await JsonDeserializer.JsonReader.ReadPropertyNameAsync();
+                    await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
+                    await jsonDeserializer.JsonReader.ReadPropertyNameAsync();
 
-                    var value = await JsonDeserializer.ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync("@odata.count");
+                    var value = await jsonDeserializer.ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync("@odata.count");
 
                     Assert.Equal(13, value);
                 },
@@ -1423,9 +1423,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(null);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(null);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     var nameProperty = Assert.Single(resource.Properties);
@@ -1524,12 +1524,12 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     EdmCoreModel.Instance,
-                    async (JsonDeserializer) =>
+                    async (jsonDeserializer) =>
                     {
-                        await AdvanceReaderToFirstPropertyAsync(JsonDeserializer.JsonReader);
-                        await JsonDeserializer.JsonReader.ReadPropertyNameAsync();
+                        await AdvanceReaderToFirstPropertyAsync(jsonDeserializer.JsonReader);
+                        await jsonDeserializer.JsonReader.ReadPropertyNameAsync();
 
-                        await JsonDeserializer.ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync("@odata.count");
+                        await jsonDeserializer.ReadAndValidateAnnotationAsLongForIeee754CompatibleAsync("@odata.count");
                     },
                     isIeee754Compatible: isIeee754Compatible));
 
@@ -1694,9 +1694,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var primitiveValue = Assert.IsType<ODataPrimitiveValue>(property.ODataValue);
                     Assert.Equal(expected, primitiveValue.Value);
@@ -1722,9 +1722,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
                 });
         }
 
@@ -1840,9 +1840,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var primitiveValue = Assert.IsType<ODataPrimitiveValue>(property.ODataValue);
                     Assert.Equal(13, primitiveValue.Value);
@@ -1874,9 +1874,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
                     var collectionValue = Assert.IsType<ODataCollectionValue>(property.Value);
                     Assert.Equal(2, collectionValue.Items.Count());
                     Assert.Equal("foo", collectionValue.Items.First());
@@ -1901,9 +1901,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var tempProperty = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var tempProperty = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     Assert.Equal(1730M, tempProperty.Value);
                 });
@@ -1923,9 +1923,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     Assert.IsType<ODataNullValue>(property.ODataValue);
                 });
@@ -1944,9 +1944,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     var properties = resource.Properties.ToList();
@@ -1973,9 +1973,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     var tempProperty = Assert.Single(resource.Properties);
@@ -2046,9 +2046,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     Assert.Equal(2, resource.Properties.Count());
@@ -2120,9 +2120,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
                     if (!string.IsNullOrEmpty(annotationFilter))
@@ -2154,9 +2154,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var collectionValue = Assert.IsType<ODataCollectionValue>(property.ODataValue);
                     Assert.Equal(2, collectionValue.Items.Count());
@@ -2204,9 +2204,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var primitiveValue = Assert.IsType<ODataPrimitiveValue>(property.ODataValue);
                     var geographyPoint = Assert.IsAssignableFrom<GeographyPoint>(primitiveValue.Value);
@@ -2234,9 +2234,9 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    var property = await JsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
+                    var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     Assert.IsType<ODataNullValue>(property.ODataValue);
                 });
@@ -2452,10 +2452,10 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                 payload,
                 model,
-                async (JsonDeserializer) =>
+                async (jsonDeserializer) =>
                 {
-                    await JsonDeserializer.JsonReader.ReadAsync();
-                    var nonEntityValue = await JsonDeserializer.ReadNonEntityValueAsync(
+                    await jsonDeserializer.JsonReader.ReadAsync();
+                    var nonEntityValue = await jsonDeserializer.ReadNonEntityValueAsync(
                         payloadTypeName: "Edm.Untyped",
                         expectedValueTypeReference: EdmCoreModel.Instance.GetUntyped(),
                         propertyAndAnnotationCollector: null,
@@ -2482,10 +2482,10 @@ namespace Microsoft.OData.Tests.Json
                 () => SetupJsonPropertyAndValueDeserializerAndRunTestAsync(
                     payload,
                     model,
-                    async (JsonDeserializer) =>
+                    async (jsonDeserializer) =>
                     {
-                        await JsonDeserializer.JsonReader.ReadAsync();
-                        await JsonDeserializer.ReadNonEntityValueAsync(
+                        await jsonDeserializer.JsonReader.ReadAsync();
+                        await jsonDeserializer.ReadNonEntityValueAsync(
                             payloadTypeName: "NS.Address",
                             expectedValueTypeReference: new EdmComplexTypeReference(addressComplexType, true),
                             propertyAndAnnotationCollector: null,
@@ -2618,9 +2618,9 @@ namespace Microsoft.OData.Tests.Json
                 isAsync: true,
                 isIeee754Compatible: isIeee754Compatible))
             {
-                var JsonDeserializer = new ODataJsonPropertyAndValueDeserializer(jsonInputContext);
+                var jsonDeserializer = new ODataJsonPropertyAndValueDeserializer(jsonInputContext);
 
-                await func(JsonDeserializer);
+                await func(jsonDeserializer);
             }
         }
 
@@ -2633,7 +2633,7 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, EdmCoreModel.Instance, isAsync: true))
             {
-                var JsonDeserializer = new ODataJsonPropertyAndValueDeserializer(jsonInputContext);
+                var jsonDeserializer = new ODataJsonPropertyAndValueDeserializer(jsonInputContext);
 
                 if (readPropertyAnnotationValueDelegate == null)
                 {
@@ -2659,15 +2659,15 @@ namespace Microsoft.OData.Tests.Json
                     propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
                 }
 
-                await setupDelegate(JsonDeserializer.JsonReader);
+                await setupDelegate(jsonDeserializer.JsonReader);
 
-                await JsonDeserializer.ProcessPropertyAsync(
+                await jsonDeserializer.ProcessPropertyAsync(
                     propertyAndAnnotationCollector: propertyAndAnnotationCollector,
                     readPropertyAnnotationValueDelegate: (propertyName) => readPropertyAnnotationValueDelegate(
-                        JsonDeserializer.JsonReader,
+                        jsonDeserializer.JsonReader,
                         propertyName),
                     handlePropertyDelegate: (propertyParsingResult, propertyName) => verificationDelegate(
-                        JsonDeserializer.JsonReader,
+                        jsonDeserializer.JsonReader,
                         propertyAndAnnotationCollector,
                         propertyParsingResult,
                         propertyName));

@@ -182,8 +182,8 @@ namespace Microsoft.OData.Tests.Json
                 ServiceProvider = serviceProvider
             };
 
-            var JsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
-            return new ODataJsonEntityReferenceLinkSerializer(JsonOutputContext);
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
+            return new ODataJsonEntityReferenceLinkSerializer(jsonOutputContext);
         }
 
         /// <summary>
@@ -193,10 +193,10 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(Func<ODataJsonEntityReferenceLinkSerializer, Task> func, IServiceProvider serviceProvider = null, bool writingTopLevelCollection = false)
         {
-            var JsonEntityReferenceLinkSerializer = CreateODataJsonEntityReferenceLinkSerializer(true, serviceProvider, true);
-            await func(JsonEntityReferenceLinkSerializer);
-            await JsonEntityReferenceLinkSerializer.JsonOutputContext.FlushAsync();
-            await JsonEntityReferenceLinkSerializer.JsonWriter.FlushAsync();
+            var jsonEntityReferenceLinkSerializer = CreateODataJsonEntityReferenceLinkSerializer(true, serviceProvider, true);
+            await func(jsonEntityReferenceLinkSerializer);
+            await jsonEntityReferenceLinkSerializer.JsonOutputContext.FlushAsync();
+            await jsonEntityReferenceLinkSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

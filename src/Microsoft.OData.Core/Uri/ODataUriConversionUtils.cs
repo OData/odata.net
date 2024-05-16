@@ -584,20 +584,20 @@ namespace Microsoft.OData
             using (ODataJsonOutputContext jsonOutputContext =
                 new ODataJsonOutputContext(stream, messageInfo, messageWriterSettings))
             {
-                ODataJsonValueSerializer JsonValueSerializer = new ODataJsonValueSerializer(jsonOutputContext);
+                ODataJsonValueSerializer jsonValueSerializer = new ODataJsonValueSerializer(jsonOutputContext);
 
                 if (!isResourceValue)
                 {
-                    writeValue(JsonValueSerializer, null);
+                    writeValue(jsonValueSerializer, null);
                 }
                 else
                 {
-                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = JsonValueSerializer.GetDuplicatePropertyNameChecker();
-                    writeValue(JsonValueSerializer, duplicatePropertyNameChecker);
-                    JsonValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
+                    IDuplicatePropertyNameChecker duplicatePropertyNameChecker = jsonValueSerializer.GetDuplicatePropertyNameChecker();
+                    writeValue(jsonValueSerializer, duplicatePropertyNameChecker);
+                    jsonValueSerializer.ReturnDuplicatePropertyNameChecker(duplicatePropertyNameChecker);
                 }
 
-                JsonValueSerializer.AssertRecursionDepthIsZero();
+                jsonValueSerializer.AssertRecursionDepthIsZero();
                 jsonOutputContext.JsonWriter.Flush();
             }
         }

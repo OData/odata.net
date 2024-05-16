@@ -31,7 +31,7 @@ namespace Microsoft.OData.Json
         private readonly ODataJsonInputContext jsonInputContext;
 
         /// <summary>The resource and resource set deserializer to read input with.</summary>
-        private readonly ODataJsonResourceDeserializer jsoResourceDeserializer;
+        private readonly ODataJsonResourceDeserializer jsonResourceDeserializer;
 
         /// <summary>The scope associated with the top level of this payload.</summary>
         private readonly JsonTopLevelScope topLevelScope;
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Json
                 "If the expected type is specified we need model as well. We should have verified that by now.");
 
             this.jsonInputContext = jsonInputContext;
-            this.jsoResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+            this.jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
             this.readingParameter = readingParameter;
             this.topLevelScope = new JsonTopLevelScope(navigationSource, expectedResourceType, new ODataUri());
             this.EnterScope(this.topLevelScope);
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
             Debug.Assert(
                 this.IsReadingNestedPayload ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.None,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.None,
                 "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
             PropertyAndAnnotationCollector propertyAndAnnotationCollector =
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Json
             // { "value" :
             // or
             // { "parameterName" :
-            this.jsoResourceDeserializer.ReadPayloadStart(
+            this.jsonResourceDeserializer.ReadPayloadStart(
                 payloadKind,
                 propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload || this.readingParameter,
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
             Debug.Assert(
                 this.IsReadingNestedPayload ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.None,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.None,
                 "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
 
             PropertyAndAnnotationCollector propertyAndAnnotationCollector =
@@ -206,7 +206,7 @@ namespace Microsoft.OData.Json
             ODataPayloadKind payloadKind = this.ReadingResourceSet ?
                 this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.ResourceSet : ODataPayloadKind.Resource;
 
-            await this.jsoResourceDeserializer.ReadPayloadStartAsync(
+            await this.jsonResourceDeserializer.ReadPayloadStartAsync(
                 payloadKind,
                 propertyAndAnnotationCollector,
                 this.IsReadingNestedPayload,
@@ -388,14 +388,14 @@ namespace Microsoft.OData.Json
         protected override async Task<bool> ReadAtPrimitiveImplementationAsync()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
                 "Pre-Condition: JsonNodeType.PrimitiveValue (null or untyped)");
 
             this.PopScope(ODataReaderState.Primitive);
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This should never hit the end of the input.
-            await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+            await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                 .ConfigureAwait(false);
             await this.ReadNextResourceSetItemAsync()
                 .ConfigureAwait(false);
@@ -868,18 +868,18 @@ namespace Microsoft.OData.Json
             // etc. from the resource object.
             if (this.jsonInputContext.ReadingResponse && !this.IsReadingNestedPayload)
             {
-                Debug.Assert(this.jsoResourceDeserializer.ContextUriParseResult != null,
+                Debug.Assert(this.jsonResourceDeserializer.ContextUriParseResult != null,
                     "We should have failed by now if we don't have parse results for context URI.");
 
                 // Validate the context URI parsed from the payload against the entity set and entity type passed in through the API.
                 ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(
-                    this.jsoResourceDeserializer.ContextUriParseResult, this.CurrentScope, true);
+                    this.jsonResourceDeserializer.ContextUriParseResult, this.CurrentScope, true);
             }
 
             // Get the $select query option from the metadata link, if we have one.
-            string selectQueryOption = this.jsoResourceDeserializer.ContextUriParseResult == null
+            string selectQueryOption = this.jsonResourceDeserializer.ContextUriParseResult == null
                 ? null
-                : this.jsoResourceDeserializer.ContextUriParseResult.SelectQueryOption;
+                : this.jsonResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
             SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(selectQueryOption, (this.CurrentResourceTypeReference != null) ? this.CurrentResourceTypeReference.AsStructured().StructuredDefinition() : null, this.jsonInputContext.Model);
 
@@ -896,12 +896,12 @@ namespace Microsoft.OData.Json
                     ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
 
                     // Read top-level resource set annotations for delta resource sets.
-                    this.jsoResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                    this.jsonResourceDeserializer.ReadTopLevelResourceSetAnnotations(
                         resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true,
                         /*readAllFeedProperties*/isReordering);
                     this.ReadDeltaResourceSetStart(resourceSet, selectedProperties);
 
-                    this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+                    this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
                 }
                 else
                 {
@@ -911,7 +911,7 @@ namespace Microsoft.OData.Json
                         if (!this.readingParameter)
                         {
                             // Skip top-level resource set annotations for nested resource sets.
-                            this.jsoResourceDeserializer.ReadTopLevelResourceSetAnnotations(
+                            this.jsonResourceDeserializer.ReadTopLevelResourceSetAnnotations(
                                 resourceSet, propertyAndAnnotationCollector, /*forResourceSetStart*/true,
                                 /*readAllFeedProperties*/isReordering);
                         }
@@ -923,7 +923,7 @@ namespace Microsoft.OData.Json
                             //      {...}, <------------ complex object.
                             //      {...}, <------------ complex object.
                             // ]
-                            this.jsoResourceDeserializer.JsonReader.Read();
+                            this.jsonResourceDeserializer.JsonReader.Read();
                         }
                     }
 
@@ -979,14 +979,14 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.State == ODataReaderState.ResourceSetEnd || this.State == ODataReaderState.DeltaResourceSetEnd, "Not in (delta) resource set end state.");
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
                 (this.ParentScope != null && (this.ParentScope.ResourceType == null || this.ParentScope.ResourceType.TypeKind == EdmTypeKind.Untyped) &&
-                    (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndArray)) ||
+                    (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndArray)) ||
                 !this.IsTopLevel && !this.jsonInputContext.ReadingResponse,
                 "Pre-Condition: expected JsonNodeType.EndObject or JsonNodeType.Property, or JsonNodeType.StartArray, JsonNodeTypeStart.Object, or JsonNodeType.EndArray with an untyped collection");
 
@@ -1037,10 +1037,10 @@ namespace Microsoft.OData.Json
 
                 // Read the end-object node of the resource set object and position the reader on the next input node
                 // This can hit the end of the input.
-                this.jsoResourceDeserializer.JsonReader.Read();
+                this.jsonResourceDeserializer.JsonReader.Read();
 
                 // read the end-of-payload
-                this.jsoResourceDeserializer.ReadPayloadEnd(this.IsReadingNestedPayload);
+                this.jsonResourceDeserializer.ReadPayloadEnd(this.IsReadingNestedPayload);
 
                 // replace the 'Start' scope with the 'Completed' scope
                 this.ReplaceScope(ODataReaderState.Completed);
@@ -1084,7 +1084,7 @@ namespace Microsoft.OData.Json
             {
                 this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType as IEdmStructuredType;
                 ODataResourceMetadataBuilder builder =
-                    this.jsoResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
+                    this.jsonResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
                         this.jsonInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                         this.ReadingDelta);
@@ -1120,7 +1120,7 @@ namespace Microsoft.OData.Json
             {
                 // Debug.Assert(this.IsExpandedLinkContent || this.CurrentResourceType.IsODataComplexTypeKind() || this.CurrentResourceType.TypeKind == EdmTypeKind.Untyped,
                 //    "null or untyped resource can only be reported in an expanded link or in collection of complex instance.");
-                this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.PrimitiveValue);
+                this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.PrimitiveValue);
 
                 // There's nothing to read, so move to the end resource state
                 this.EndEntry();
@@ -1133,16 +1133,16 @@ namespace Microsoft.OData.Json
             {
                 // End of resource
                 // All the properties have already been read before we actually entered the EntryStart state (since we read as far as we can in any given state).
-                this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
+                this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
                 this.EndEntry();
             }
 
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.PrimitiveValue or JsonNodeType.Property or JsonNodeType.EndObject");
 
             return true;
@@ -1161,13 +1161,13 @@ namespace Microsoft.OData.Json
                     ? ODataPayloadKind.ResourceSet
                     : ODataPayloadKind.Resource;
                 ODataPath odataPath = ODataJsonContextUriParser.Parse(
-                    this.jsoResourceDeserializer.Model,
+                    this.jsonResourceDeserializer.Model,
                     UriUtils.UriToString(nestedInfo.ContextUrl),
                     payloadKind,
-                    this.jsoResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
-                    this.jsoResourceDeserializer.JsonInputContext.ReadingResponse,
+                    this.jsonResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
+                    this.jsonResourceDeserializer.JsonInputContext.ReadingResponse,
                     true,
-                    this.jsoResourceDeserializer.MessageReaderSettings.BaseUri,
+                    this.jsonResourceDeserializer.MessageReaderSettings.BaseUri,
                     this.CurrentNavigationSource).Path;
 
                 return new ODataUri() { Path = odataPath };
@@ -1188,9 +1188,9 @@ namespace Microsoft.OData.Json
         private bool ReadAtResourceEndImplementationSynchronously()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsoResourceDeserializer.JsonReader.GetValue() == null),
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
+                this.jsonResourceDeserializer.JsonReader.GetValue() == null),
                 "Pre-Condition: JsonNodeType.EndObject or JsonNodeType.PrimitiveValue (null)");
 
             // We have to cache these values here, since the PopScope below will destroy them.
@@ -1201,7 +1201,7 @@ namespace Microsoft.OData.Json
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This can hit the end of the input.
-            this.jsoResourceDeserializer.JsonReader.Read();
+            this.jsonResourceDeserializer.JsonReader.Read();
 
             // Analyze the next Json token to determine whether it is start object (next resource), end array (resource set end) or eof (top-level resource end)
             bool result = true;
@@ -1210,15 +1210,15 @@ namespace Microsoft.OData.Json
                 // NOTE: we rely on the underlying JSON reader to fail if there is more than one value at the root level.
                 Debug.Assert(
                     this.IsReadingNestedPayload ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
                     "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // read the end-of-payload
                 Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
-                this.jsoResourceDeserializer.ReadPayloadEnd(this.IsReadingNestedPayload);
+                this.jsonResourceDeserializer.ReadPayloadEnd(this.IsReadingNestedPayload);
                 Debug.Assert(
                     this.IsReadingNestedPayload ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
                     "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // replace the 'Start' scope with the 'Completed' scope
@@ -1228,8 +1228,8 @@ namespace Microsoft.OData.Json
             else if (isExpandedLinkContent)
             {
                 Debug.Assert(
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject || // expanded link resource as last property of the owning resource
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property, // expanded link resource with more properties on the resource
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject || // expanded link resource as last property of the owning resource
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property, // expanded link resource with more properties on the resource
                     "Invalid JSON reader state for reading end of resource in expanded link.");
 
                 // finish reading the expanded link
@@ -1258,14 +1258,14 @@ namespace Microsoft.OData.Json
         private bool ReadAtPrimitiveSynchronously()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
                 "Pre-Condition: JsonNodeType.PrimitiveValue (null or untyped)");
 
             this.PopScope(ODataReaderState.Primitive);
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This should never hit the end of the input.
-            this.jsoResourceDeserializer.JsonReader.Read();
+            this.jsonResourceDeserializer.JsonReader.Read();
             this.ReadNextResourceSetItem();
             return true;
         }
@@ -1296,7 +1296,7 @@ namespace Microsoft.OData.Json
 
             if (((JsonDeletedResourceScope)(this.CurrentScope)).Is40DeletedResource)
             {
-                this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
+                this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject);
                 this.EndEntry();
                 return true;
             }
@@ -1350,14 +1350,14 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(readerState == ODataReaderState.DeltaLink || readerState == ODataReaderState.DeltaDeletedLink, "ReadAtDeltaLinkImplementation called when not on delta(deleted)link");
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Not positioned at end of object after reading delta link");
 
             this.PopScope(readerState);
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This should never hit the end of the input.
-            this.jsoResourceDeserializer.JsonReader.Read();
+            this.jsonResourceDeserializer.JsonReader.Read();
             this.ReadNextResourceSetItem();
             return true;
         }
@@ -1387,12 +1387,12 @@ namespace Microsoft.OData.Json
         private bool ReadAtNestedResourceInfoStartImplementationSynchronously()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsoResourceDeserializer.JsonReader.GetValue() == null,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
+                this.jsonResourceDeserializer.JsonReader.GetValue() == null,
                 "Pre-Condition: expected JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
@@ -1407,12 +1407,12 @@ namespace Microsoft.OData.Json
                 {
                     this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
                 }
-                else if (!this.jsoResourceDeserializer.JsonReader.IsOnValueNode())
+                else if (!this.jsonResourceDeserializer.JsonReader.IsOnValueNode())
                 {
                     // Deferred link (nested resource info which doesn't have a value and is in the response)
                     ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
                         parentResourceState.PropertyAndAnnotationCollector, currentLink);
-                    this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+                    this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
                     // Record that we read the link on the parent resource's scope.
                     parentResourceState.NavigationPropertiesRead.Add(currentLink.Name);
@@ -1573,7 +1573,7 @@ namespace Microsoft.OData.Json
 
         private bool ReadNextNestedInfo()
         {
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.EndObject,
                 JsonNodeType.Property);
             Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart, "Should be in (deleted) resource start state after reading stream.");
@@ -1589,7 +1589,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                readerNestedInfo = this.jsoResourceDeserializer.ReadResourceContent(resourceState);
+                readerNestedInfo = this.jsonResourceDeserializer.ReadResourceContent(resourceState);
             }
 
             if (readerNestedInfo == null)
@@ -1673,8 +1673,8 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            this.jsoResourceDeserializer.ReadResourceSetContentStart();
-            IJsonReader jsonReader = this.jsoResourceDeserializer.JsonReader;
+            this.jsonResourceDeserializer.ReadResourceSetContentStart();
+            IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray
                 && jsonReader.NodeType != JsonNodeType.StartObject
                 && jsonReader.NodeType != JsonNodeType.PrimitiveValue
@@ -1696,7 +1696,7 @@ namespace Microsoft.OData.Json
                 "Not in ResourceSetStart or DeltaResourceSetStart state when reading end of (delta) resource set.");
             Debug.Assert(this.Item is ODataResourceSetBase, "Current Item is not ResourceSetBase");
 
-            this.jsoResourceDeserializer.ReadResourceSetContentEnd();
+            this.jsonResourceDeserializer.ReadResourceSetContentEnd();
 
             ODataJsonReaderNestedResourceInfo expandedNestedResourceInfo = null;
             JsonNestedResourceInfoScope parentNestedResourceInfoScope = (JsonNestedResourceInfoScope)this.ExpandedLinkContentParentScope;
@@ -1709,7 +1709,7 @@ namespace Microsoft.OData.Json
             {
                 // Temp ban reading the instance annotation after the resource set in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
                 // Nested resource set payload won't have a NextLink annotation after the resource set itself since the payload is NOT pageable.
-                this.jsoResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.Item as ODataResourceSetBase,
+                this.jsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEnd(this.Item as ODataResourceSetBase,
                     expandedNestedResourceInfo, this.topLevelScope.PropertyAndAnnotationCollector);
             }
 
@@ -1737,9 +1737,9 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                Debug.Assert(this.jsoResourceDeserializer.JsonReader.GetValue() == null,
+                Debug.Assert(this.jsonResourceDeserializer.JsonReader.GetValue() == null,
                     "If a primitive value is representing an expanded resource its value must be null.");
 
                 IEdmStructuralProperty structuralProperty =
@@ -1747,9 +1747,9 @@ namespace Microsoft.OData.Json
                 if (structuralProperty != null && !structuralProperty.Type.IsNullable)
                 {
                     ODataNullValueBehaviorKind nullValueReadBehaviorKind =
-                        this.jsoResourceDeserializer.ReadingResponse
+                        this.jsonResourceDeserializer.ReadingResponse
                             ? ODataNullValueBehaviorKind.Default
-                            : this.jsoResourceDeserializer.Model.NullValueReadBehaviorKind(structuralProperty);
+                            : this.jsonResourceDeserializer.Model.NullValueReadBehaviorKind(structuralProperty);
 
                     if (nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default)
                     {
@@ -1822,12 +1822,12 @@ namespace Microsoft.OData.Json
             IEdmNavigationSource source = this.CurrentNavigationSource;
             IEdmTypeReference resourceTypeReference = this.CurrentResourceTypeReference;
 
-            this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property,
+            this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.StartObject, JsonNodeType.Property,
                 JsonNodeType.EndObject, JsonNodeType.PrimitiveValue);
 
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                object primitiveValue = this.jsoResourceDeserializer.JsonReader.GetValue();
+                object primitiveValue = this.jsonResourceDeserializer.JsonReader.GetValue();
                 if (primitiveValue != null)
                 {
                     // primitive value in an untyped collection
@@ -1846,7 +1846,7 @@ namespace Microsoft.OData.Json
                     // null resource
                     if (resourceTypeReference.IsComplex() || resourceTypeReference.IsUntyped())
                     {
-                        this.jsoResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(this.CurrentResourceTypeReference, true, "", null);
+                        this.jsonResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(this.CurrentResourceTypeReference, true, "", null);
                     }
 
                     this.EnterScope(new JsonResourceScope(ODataReaderState.ResourceStart, /*resource*/ null,
@@ -1859,9 +1859,9 @@ namespace Microsoft.OData.Json
 
             // If the reader is on StartObject then read over it. This happens for entries in resource set.
             // For top-level entries the reader will be positioned on the first resource property (after odata.context if it was present).
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject)
             {
-                this.jsoResourceDeserializer.JsonReader.Read();
+                this.jsonResourceDeserializer.JsonReader.Read();
             }
 
             ODataDeltaKind resourceKind = ODataDeltaKind.Resource;
@@ -1870,20 +1870,20 @@ namespace Microsoft.OData.Json
             if (this.ReadingResourceSet || this.IsExpandedLinkContent || (this.ReadingDelta && !this.IsTopLevel))
             {
                 string contextUriStr =
-                    this.jsoResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource,
+                    this.jsonResourceDeserializer.ReadContextUriAnnotation(ODataPayloadKind.Resource,
                         propertyAndAnnotationCollector, false);
                 if (contextUriStr != null)
                 {
                     contextUriStr =
-                        UriUtils.UriToString(this.jsoResourceDeserializer.ProcessUriFromPayload(contextUriStr));
+                        UriUtils.UriToString(this.jsonResourceDeserializer.ProcessUriFromPayload(contextUriStr));
                     ODataJsonContextUriParseResult parseResult = ODataJsonContextUriParser.Parse(
-                        this.jsoResourceDeserializer.Model,
+                        this.jsonResourceDeserializer.Model,
                         contextUriStr,
                         this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
-                        this.jsoResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
+                        this.jsonResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
                         this.jsonInputContext.ReadingResponse || this.ReadingDelta,
                         true,
-                        this.jsoResourceDeserializer.BaseUri, 
+                        this.jsonResourceDeserializer.BaseUri, 
                         this.CurrentNavigationSource);
 
                     if (parseResult != null)
@@ -1912,7 +1912,7 @@ namespace Microsoft.OData.Json
             ODataDeletedResource deletedResource = null;
             if (this.ReadingDelta && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
             {
-                deletedResource = this.jsoResourceDeserializer.ReadDeletedResource();
+                deletedResource = this.jsonResourceDeserializer.ReadDeletedResource();
                 if (deletedResource != null)
                 {
                     resourceKind = ODataDeltaKind.DeletedEntry;
@@ -1939,7 +1939,7 @@ namespace Microsoft.OData.Json
                     // OData 4.0 deleted entry
                     if (deletedResource == null)
                     {
-                        deletedResource = this.jsoResourceDeserializer.ReadDeletedEntry();
+                        deletedResource = this.jsonResourceDeserializer.ReadDeletedEntry();
                         this.StartDeletedResource(
                             deletedResource,
                             source,
@@ -1994,8 +1994,8 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(deltaResourceSet != null, "resourceSet != null");
 
-            this.jsoResourceDeserializer.ReadResourceSetContentStart();
-            IJsonReader jsonReader = this.jsoResourceDeserializer.JsonReader;
+            this.jsonResourceDeserializer.ReadResourceSetContentStart();
+            IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
@@ -2026,7 +2026,7 @@ namespace Microsoft.OData.Json
             ODataResourceBase currentResource = this.Item as ODataResourceBase;
 
             // Read the odata.type annotation.
-            this.jsoResourceDeserializer.ReadResourceTypeName(this.CurrentResourceState);
+            this.jsonResourceDeserializer.ReadResourceTypeName(this.CurrentResourceState);
 
             // Resolve the type name
             this.ApplyResourceTypeNameFromPayload(currentResource.TypeName);
@@ -2044,9 +2044,9 @@ namespace Microsoft.OData.Json
             }
 
             this.CurrentResourceState.FirstNestedInfo =
-                this.jsoResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
+                this.jsonResourceDeserializer.ReadResourceContent(this.CurrentResourceState);
 
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.Property,
                 JsonNodeType.StartObject,
                 JsonNodeType.StartArray,
@@ -2062,12 +2062,12 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.State == ODataReaderState.ResourceSetStart ||
                 this.State == ODataReaderState.DeltaResourceSetStart,
                 "Reading a resource set item while not in a ResourceSetStart or DeltaResourceSetStart state.");
-            this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue,
+            this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.PrimitiveValue,
                 JsonNodeType.StartObject, JsonNodeType.StartArray);
             IEdmType resourceType = this.CurrentScope.ResourceType;
 
             // End of item in a resource set
-            switch (this.jsoResourceDeserializer.JsonReader.NodeType)
+            switch (this.jsonResourceDeserializer.JsonReader.NodeType)
             {
                 case JsonNodeType.StartObject:
                     // another resource in a resource set
@@ -2087,14 +2087,14 @@ namespace Microsoft.OData.Json
                     {
                         throw new ODataException(
                         ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
-                            this.jsoResourceDeserializer.JsonReader.NodeType));
+                            this.jsonResourceDeserializer.JsonReader.NodeType));
                     }
 
                     // Is this a stream, or a binary or string value with a collection that the client wants to read as a stream
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {
                         // we are at a null value, or a non-null primitive value within an untyped collection
-                        object primitiveValue = this.jsoResourceDeserializer.JsonReader.GetValue();
+                        object primitiveValue = this.jsonResourceDeserializer.JsonReader.GetValue();
                         if (primitiveValue != null)
                         {
                             this.EnterScope(new JsonPrimitiveScope(new ODataPrimitiveValue(primitiveValue),
@@ -2121,7 +2121,7 @@ namespace Microsoft.OData.Json
                 default:
                     throw new ODataException(
                         ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
-                            this.jsoResourceDeserializer.JsonReader.NodeType));
+                            this.jsonResourceDeserializer.JsonReader.NodeType));
             }
         }
 
@@ -2281,18 +2281,18 @@ namespace Microsoft.OData.Json
                 this.CurrentResourceType as IEdmEntityType,
                 this.CurrentScope.ODataUri));
 
-            this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+            this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
             // Read source property.
-            this.jsoResourceDeserializer.ReadDeltaLinkSource(link);
+            this.jsonResourceDeserializer.ReadDeltaLinkSource(link);
 
             // Read relationship property.
-            this.jsoResourceDeserializer.ReadDeltaLinkRelationship(link);
+            this.jsonResourceDeserializer.ReadDeltaLinkRelationship(link);
 
             // Read target property.
-            this.jsoResourceDeserializer.ReadDeltaLinkTarget(link);
+            this.jsonResourceDeserializer.ReadDeltaLinkTarget(link);
 
-            Debug.Assert(this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject, "Unexpected content in a delta (deleted) link");
+            Debug.Assert(this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject, "Unexpected content in a delta (deleted) link");
         }
 
         /// <summary>
@@ -2308,12 +2308,12 @@ namespace Microsoft.OData.Json
             IEdmTypeReference targetResourceTypeReference = readerNestedResourceInfo.NestedResourceTypeReference;
 
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                this.jsoResourceDeserializer.JsonReader.GetValue() == null,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
+                this.jsonResourceDeserializer.JsonReader.GetValue() == null,
                 "Post-Condition: expected JsonNodeType.StartObject or JsonNodeType.StartArray or JsonNodeType.Primitive (null), or JsonNodeType.Property, JsonNodeType.EndObject");
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "Navigation links must have a name.");
@@ -2340,7 +2340,7 @@ namespace Microsoft.OData.Json
                 // For undeclared links, we will apply conventional metadata evaluation just as declared links.
                 this.CurrentResourceState.ResourceTypeFromMetadata = this.ParentScope.ResourceType as IEdmStructuredType;
                 ODataResourceMetadataBuilder resourceMetadataBuilder =
-                    this.jsoResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
+                    this.jsonResourceDeserializer.MetadataContext.GetResourceMetadataBuilderForReader(
                         this.CurrentResourceState,
                         this.jsonInputContext.MessageReaderSettings.EnableReadingKeyAsSegment,
                         this.ReadingDelta);
@@ -2503,7 +2503,7 @@ namespace Microsoft.OData.Json
 
             if (!this.ReadingDelta)
             {
-                this.jsoResourceDeserializer.ValidateMediaEntity(resourceState);
+                this.jsonResourceDeserializer.ValidateMediaEntity(resourceState);
             }
 
             // In non-delta responses, ensure that all projected properties get created.
@@ -2552,19 +2552,19 @@ namespace Microsoft.OData.Json
         /// </summary>
         private void ResolveScopeInfoFromContextUrl()
         {
-            if (this.jsoResourceDeserializer.ContextUriParseResult != null)
+            if (this.jsonResourceDeserializer.ContextUriParseResult != null)
             {
-                this.CurrentScope.ODataUri.Path = this.jsoResourceDeserializer.ContextUriParseResult.Path;
+                this.CurrentScope.ODataUri.Path = this.jsonResourceDeserializer.ContextUriParseResult.Path;
 
                 if (this.CurrentScope.NavigationSource == null)
                 {
                     this.CurrentScope.NavigationSource =
-                        this.jsoResourceDeserializer.ContextUriParseResult.NavigationSource;
+                        this.jsonResourceDeserializer.ContextUriParseResult.NavigationSource;
                 }
 
                 if (this.CurrentScope.ResourceType == null)
                 {
-                    IEdmType typeFromContext = this.jsoResourceDeserializer.ContextUriParseResult.EdmType;
+                    IEdmType typeFromContext = this.jsonResourceDeserializer.ContextUriParseResult.EdmType;
                     if (typeFromContext != null)
                     {
                         if (typeFromContext.TypeKind == EdmTypeKind.Collection)
@@ -2573,7 +2573,7 @@ namespace Microsoft.OData.Json
                             if (!(typeFromContext is IEdmStructuredType))
                             {
                                 typeFromContext = new EdmUntypedStructuredType();
-                                this.jsoResourceDeserializer.ContextUriParseResult.EdmType = new EdmCollectionType(typeFromContext.ToTypeReference());
+                                this.jsonResourceDeserializer.ContextUriParseResult.EdmType = new EdmCollectionType(typeFromContext.ToTypeReference());
                             }
                         }
 
@@ -2581,7 +2581,7 @@ namespace Microsoft.OData.Json
                         if (resourceType == null)
                         {
                             resourceType = new EdmUntypedStructuredType();
-                            this.jsoResourceDeserializer.ContextUriParseResult.EdmType = resourceType;
+                            this.jsonResourceDeserializer.ContextUriParseResult.EdmType = resourceType;
                         }
 
                         this.CurrentScope.ResourceTypeReference = resourceType.ToTypeReference(true).AsStructured();
@@ -2632,18 +2632,18 @@ namespace Microsoft.OData.Json
             // etc. from the resource object.
             if (this.jsonInputContext.ReadingResponse && !this.IsReadingNestedPayload)
             {
-                Debug.Assert(this.jsoResourceDeserializer.ContextUriParseResult != null,
+                Debug.Assert(this.jsonResourceDeserializer.ContextUriParseResult != null,
                     "We should have failed by now if we don't have parse results for context URI.");
 
                 // Validate the context URI parsed from the payload against the entity set and entity type passed in through the API.
                 ReaderValidationUtils.ValidateResourceSetOrResourceContextUri(
-                    this.jsoResourceDeserializer.ContextUriParseResult, this.CurrentScope, true);
+                    this.jsonResourceDeserializer.ContextUriParseResult, this.CurrentScope, true);
             }
 
             // Get the $select query option from the metadata link, if we have one.
-            string selectQueryOption = this.jsoResourceDeserializer.ContextUriParseResult == null
+            string selectQueryOption = this.jsonResourceDeserializer.ContextUriParseResult == null
                 ? null
-                : this.jsoResourceDeserializer.ContextUriParseResult.SelectQueryOption;
+                : this.jsonResourceDeserializer.ContextUriParseResult.SelectQueryOption;
 
             SelectedPropertiesNode selectedProperties = SelectedPropertiesNode.Create(
                 selectQueryOption,
@@ -2663,7 +2663,7 @@ namespace Microsoft.OData.Json
                     ODataDeltaResourceSet resourceSet = new ODataDeltaResourceSet();
 
                     // Read top-level resource set annotations for delta resource sets.
-                    await this.jsoResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
+                    await this.jsonResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
                         resourceSet,
                         propertyAndAnnotationCollector,
                         forResourceSetStart: true,
@@ -2671,7 +2671,7 @@ namespace Microsoft.OData.Json
                     await this.ReadDeltaResourceSetStartAsync(resourceSet, selectedProperties)
                         .ConfigureAwait(false);
 
-                    this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
+                    this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndArray, JsonNodeType.StartObject);
                 }
                 else
                 {
@@ -2681,7 +2681,7 @@ namespace Microsoft.OData.Json
                         if (!this.readingParameter)
                         {
                             // Skip top-level resource set annotations for nested resource sets.
-                            await this.jsoResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
+                            await this.jsonResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
                                 resourceSet,
                                 propertyAndAnnotationCollector,
                                 forResourceSetStart: true,
@@ -2695,7 +2695,7 @@ namespace Microsoft.OData.Json
                             //      {...}, <------------ complex object.
                             //      {...}, <------------ complex object.
                             // ]
-                            await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+                            await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                                 .ConfigureAwait(false);
                         }
                     }
@@ -2759,14 +2759,14 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(this.State == ODataReaderState.ResourceSetEnd || this.State == ODataReaderState.DeltaResourceSetEnd, "Not in (delta) resource set end state.");
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput ||
                 (this.ParentScope != null && (this.ParentScope.ResourceType == null || this.ParentScope.ResourceType.TypeKind == EdmTypeKind.Untyped) &&
-                    (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndArray)) ||
+                    (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndArray)) ||
                 !this.IsTopLevel && !this.jsonInputContext.ReadingResponse,
                 "Pre-Condition: expected JsonNodeType.EndObject or JsonNodeType.Property, or JsonNodeType.StartArray, JsonNodeTypeStart.Object, or JsonNodeType.EndArray with an untyped collection");
 
@@ -2818,11 +2818,11 @@ namespace Microsoft.OData.Json
 
                 // Read the end-object node of the resource set object and position the reader on the next input node
                 // This can hit the end of the input.
-                await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+                await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                     .ConfigureAwait(false);
 
                 // Read the end-of-payload
-                await this.jsoResourceDeserializer.ReadPayloadEndAsync(this.IsReadingNestedPayload)
+                await this.jsonResourceDeserializer.ReadPayloadEndAsync(this.IsReadingNestedPayload)
                     .ConfigureAwait(false);
 
                 // Replace the 'Start' scope with the 'Completed' scope
@@ -2860,9 +2860,9 @@ namespace Microsoft.OData.Json
         private async Task<bool> ReadAtResourceEndInternalImplementationAsync()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                await this.jsoResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null),
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
+                await this.jsonResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null),
                 "Pre-Condition: JsonNodeType.EndObject or JsonNodeType.PrimitiveValue (null)");
 
             // We have to cache these values here, since the PopScope below will destroy them.
@@ -2873,7 +2873,7 @@ namespace Microsoft.OData.Json
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This can hit the end of the input.
-            await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+            await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                 .ConfigureAwait(false);
 
             // Analyze the next Json token to determine whether it is start object (next resource), end array (resource set end) or eof (top-level resource end)
@@ -2884,16 +2884,16 @@ namespace Microsoft.OData.Json
                 // NOTE: We rely on the underlying JSON reader to fail if there is more than one value at the root level.
                 Debug.Assert(
                     this.IsReadingNestedPayload ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
                     "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // Read the end-of-payload
                 Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
-                await this.jsoResourceDeserializer.ReadPayloadEndAsync(this.IsReadingNestedPayload)
+                await this.jsonResourceDeserializer.ReadPayloadEndAsync(this.IsReadingNestedPayload)
                     .ConfigureAwait(false);
                 Debug.Assert(
                     this.IsReadingNestedPayload ||
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndOfInput,
                     "Expected JSON reader to have reached the end of input when not reading a nested payload.");
 
                 // Replace the 'Start' scope with the 'Completed' scope
@@ -2903,8 +2903,8 @@ namespace Microsoft.OData.Json
             else if (isExpandedLinkContent)
             {
                 Debug.Assert(
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject || // expanded link resource as last property of the owning resource
-                    this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property, // expanded link resource with more properties on the resource
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject || // expanded link resource as last property of the owning resource
+                    this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property, // expanded link resource with more properties on the resource
                     "Invalid JSON reader state for reading end of resource in expanded link.");
 
                 // Finish reading the expanded link
@@ -2943,12 +2943,12 @@ namespace Microsoft.OData.Json
         private async Task<bool> ReadAtNestedResourceInfoStartInternalImplementationAsync()
         {
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
-                await this.jsoResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartArray ||
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue &&
+                await this.jsonResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null,
                 "Pre-Condition: expected JsonNodeType.Property, JsonNodeType.EndObject, JsonNodeType.StartObject, JsonNodeType.StartArray or JsonNodeType.Primitive (null)");
 
             ODataNestedResourceInfo currentLink = this.CurrentNestedResourceInfo;
@@ -2963,13 +2963,13 @@ namespace Microsoft.OData.Json
                 {
                     this.ReplaceScope(ODataReaderState.NestedResourceInfoEnd);
                 }
-                else if (!this.jsoResourceDeserializer.JsonReader.IsOnValueNode())
+                else if (!this.jsonResourceDeserializer.JsonReader.IsOnValueNode())
                 {
                     // Deferred link (nested resource info which doesn't have a value and is in the response)
                     ReaderUtils.CheckForDuplicateNestedResourceInfoNameAndSetAssociationLink(
                         parentResourceState.PropertyAndAnnotationCollector,
                         currentLink);
-                    this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+                    this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
                     // Record that we read the link on the parent resource's scope.
                     parentResourceState.NavigationPropertiesRead.Add(currentLink.Name);
@@ -3048,7 +3048,7 @@ namespace Microsoft.OData.Json
         /// </returns>
         private async Task<bool> ReadNextNestedInfoAsync()
         {
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.EndObject,
                 JsonNodeType.Property);
             Debug.Assert(this.State == ODataReaderState.ResourceStart || this.State == ODataReaderState.DeletedResourceStart,
@@ -3065,7 +3065,7 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                readerNestedInfo = await this.jsoResourceDeserializer.ReadResourceContentAsync(resourceState)
+                readerNestedInfo = await this.jsonResourceDeserializer.ReadResourceContentAsync(resourceState)
                     .ConfigureAwait(false);
             }
 
@@ -3159,21 +3159,21 @@ namespace Microsoft.OData.Json
                 this.CurrentResourceType as IEdmEntityType,
                 this.CurrentScope.ODataUri));
 
-            this.jsoResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
+            this.jsonResourceDeserializer.AssertJsonCondition(JsonNodeType.EndObject, JsonNodeType.Property);
 
             // Read source property.
-            await this.jsoResourceDeserializer.ReadDeltaLinkSourceAsync(link)
+            await this.jsonResourceDeserializer.ReadDeltaLinkSourceAsync(link)
                 .ConfigureAwait(false);
 
             // Read relationship property.
-            await this.jsoResourceDeserializer.ReadDeltaLinkRelationshipAsync(link)
+            await this.jsonResourceDeserializer.ReadDeltaLinkRelationshipAsync(link)
                 .ConfigureAwait(false);
 
             // Read target property.
-            await this.jsoResourceDeserializer.ReadDeltaLinkTargetAsync(link)
+            await this.jsonResourceDeserializer.ReadDeltaLinkTargetAsync(link)
                 .ConfigureAwait(false);
 
-            Debug.Assert(this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject, "Unexpected content in a delta (deleted) link");
+            Debug.Assert(this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject, "Unexpected content in a delta (deleted) link");
         }
 
         /// <summary>
@@ -3191,9 +3191,9 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
-            await this.jsoResourceDeserializer.ReadResourceSetContentStartAsync()
+            await this.jsonResourceDeserializer.ReadResourceSetContentStartAsync()
                 .ConfigureAwait(false);
-            IJsonReader jsonReader = this.jsoResourceDeserializer.JsonReader;
+            IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray
                 && jsonReader.NodeType != JsonNodeType.StartObject
                 && jsonReader.NodeType != JsonNodeType.PrimitiveValue
@@ -3222,7 +3222,7 @@ namespace Microsoft.OData.Json
                 "Not in ResourceSetStart or DeltaResourceSetStart state when reading end of (delta) resource set.");
             Debug.Assert(this.Item is ODataResourceSetBase, "Current Item is not ResourceSetBase");
 
-            await this.jsoResourceDeserializer.ReadResourceSetContentEndAsync()
+            await this.jsonResourceDeserializer.ReadResourceSetContentEndAsync()
                 .ConfigureAwait(false);
 
             ODataJsonReaderNestedResourceInfo expandedNestedResourceInfo = null;
@@ -3236,7 +3236,7 @@ namespace Microsoft.OData.Json
             {
                 // Temp ban reading the instance annotation after the resource set in parameter payload. (!this.IsReadingNestedPayload => !this.readingParameter)
                 // Nested resource set payload won't have a NextLink annotation after the resource set itself since the payload is NOT pageable.
-                await this.jsoResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
+                await this.jsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
                     this.Item as ODataResourceSetBase,
                     expandedNestedResourceInfo,
                     this.topLevelScope.PropertyAndAnnotationCollector).ConfigureAwait(false);
@@ -3263,10 +3263,10 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
                 Debug.Assert(
-                    await this.jsoResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null,
+                    await this.jsonResourceDeserializer.JsonReader.GetValueAsync().ConfigureAwait(false) == null,
                     "If a primitive value is representing an expanded resource its value must be null.");
 
                 IEdmStructuralProperty structuralProperty =
@@ -3274,9 +3274,9 @@ namespace Microsoft.OData.Json
                 if (structuralProperty != null && !structuralProperty.Type.IsNullable)
                 {
                     ODataNullValueBehaviorKind nullValueReadBehaviorKind =
-                        this.jsoResourceDeserializer.ReadingResponse
+                        this.jsonResourceDeserializer.ReadingResponse
                             ? ODataNullValueBehaviorKind.Default
-                            : this.jsoResourceDeserializer.Model.NullValueReadBehaviorKind(structuralProperty);
+                            : this.jsonResourceDeserializer.Model.NullValueReadBehaviorKind(structuralProperty);
 
                     if (nullValueReadBehaviorKind == ODataNullValueBehaviorKind.Default)
                     {
@@ -3335,15 +3335,15 @@ namespace Microsoft.OData.Json
             IEdmNavigationSource source = this.CurrentNavigationSource;
             IEdmTypeReference resourceTypeReference = this.CurrentResourceTypeReference;
 
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.StartObject,
                 JsonNodeType.Property,
                 JsonNodeType.EndObject,
                 JsonNodeType.PrimitiveValue);
 
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue)
             {
-                object primitiveValue = await this.jsoResourceDeserializer.JsonReader.GetValueAsync()
+                object primitiveValue = await this.jsonResourceDeserializer.JsonReader.GetValueAsync()
                     .ConfigureAwait(false);
 
                 if (primitiveValue != null)
@@ -3367,7 +3367,7 @@ namespace Microsoft.OData.Json
                     // null resource
                     if (resourceTypeReference.IsComplex() || resourceTypeReference.IsUntyped())
                     {
-                        this.jsoResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(
+                        this.jsonResourceDeserializer.MessageReaderSettings.Validator.ValidateNullValue(
                             this.CurrentResourceTypeReference,
                             validateNullValue: true,
                             propertyName: "",
@@ -3389,9 +3389,9 @@ namespace Microsoft.OData.Json
 
             // If the reader is on StartObject then read over it. This happens for entries in resource set.
             // For top-level entries the reader will be positioned on the first resource property (after odata.context if it was present).
-            if (this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject)
+            if (this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.StartObject)
             {
-                await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+                await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                     .ConfigureAwait(false);
             }
 
@@ -3400,22 +3400,22 @@ namespace Microsoft.OData.Json
             // if this is a resourceSet, expanded link, or non-top level resource in a delta result, read the contextUrl
             if (this.ReadingResourceSet || this.IsExpandedLinkContent || (this.ReadingDelta && !this.IsTopLevel))
             {
-                string contextUriStr = await this.jsoResourceDeserializer.ReadContextUriAnnotationAsync(
+                string contextUriStr = await this.jsonResourceDeserializer.ReadContextUriAnnotationAsync(
                     ODataPayloadKind.Resource,
                     propertyAndAnnotationCollector,
                     failOnMissingContextUriAnnotation: false).ConfigureAwait(false);
 
                 if (contextUriStr != null)
                 {
-                    contextUriStr = UriUtils.UriToString(this.jsoResourceDeserializer.ProcessUriFromPayload(contextUriStr));
+                    contextUriStr = UriUtils.UriToString(this.jsonResourceDeserializer.ProcessUriFromPayload(contextUriStr));
                     ODataJsonContextUriParseResult parseResult = ODataJsonContextUriParser.Parse(
-                        this.jsoResourceDeserializer.Model,
+                        this.jsonResourceDeserializer.Model,
                         contextUriFromPayload: contextUriStr,
                         payloadKind: this.ReadingDelta ? ODataPayloadKind.Delta : ODataPayloadKind.Resource,
-                        clientCustomTypeResolver: this.jsoResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
+                        clientCustomTypeResolver: this.jsonResourceDeserializer.MessageReaderSettings.ClientCustomTypeResolver,
                         needParseFragment: this.jsonInputContext.ReadingResponse || this.ReadingDelta,
                         true,
-                        this.jsoResourceDeserializer.BaseUri, 
+                        this.jsonResourceDeserializer.BaseUri, 
                         this.CurrentNavigationSource);
 
                     if (parseResult != null)
@@ -3443,7 +3443,7 @@ namespace Microsoft.OData.Json
             ODataDeletedResource deletedResource = null;
             if (this.ReadingDelta && (resourceKind == ODataDeltaKind.Resource || resourceKind == ODataDeltaKind.DeletedEntry))
             {
-                deletedResource = await this.jsoResourceDeserializer.ReadDeletedResourceAsync()
+                deletedResource = await this.jsonResourceDeserializer.ReadDeletedResourceAsync()
                     .ConfigureAwait(false);
                 if (deletedResource != null)
                 {
@@ -3473,7 +3473,7 @@ namespace Microsoft.OData.Json
                     // OData 4.0 deleted entry
                     if (deletedResource == null)
                     {
-                        deletedResource = await this.jsoResourceDeserializer.ReadDeletedEntryAsync()
+                        deletedResource = await this.jsonResourceDeserializer.ReadDeletedEntryAsync()
                             .ConfigureAwait(false);
                         this.StartDeletedResource(
                             deletedResource,
@@ -3524,7 +3524,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(this.State == ODataReaderState.ResourceSetStart ||
                 this.State == ODataReaderState.DeltaResourceSetStart,
                 "Reading a resource set item while not in a ResourceSetStart or DeltaResourceSetStart state.");
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.EndArray,
                 JsonNodeType.PrimitiveValue,
                 JsonNodeType.StartObject,
@@ -3532,7 +3532,7 @@ namespace Microsoft.OData.Json
             IEdmType resourceType = this.CurrentScope.ResourceType;
 
             // End of item in a resource set
-            switch (this.jsoResourceDeserializer.JsonReader.NodeType)
+            switch (this.jsonResourceDeserializer.JsonReader.NodeType)
             {
                 case JsonNodeType.StartObject:
                     // Another resource in a resource set
@@ -3555,14 +3555,14 @@ namespace Microsoft.OData.Json
                     if (resourceType?.TypeKind == EdmTypeKind.Entity && !resourceType.IsOpen())
                     {
                         throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
-                            this.jsoResourceDeserializer.JsonReader.NodeType));
+                            this.jsonResourceDeserializer.JsonReader.NodeType));
                     }
 
                     // Is this a stream, or a binary or string value with a collection that the client wants to read as a stream
                     if (!TryReadPrimitiveAsStream(resourceType))
                     {
                         // We are at a null value, or a non-null primitive value within an untyped collection
-                        object primitiveValue = await this.jsoResourceDeserializer.JsonReader.GetValueAsync()
+                        object primitiveValue = await this.jsonResourceDeserializer.JsonReader.GetValueAsync()
                             .ConfigureAwait(false);
 
                         if (primitiveValue != null)
@@ -3597,7 +3597,7 @@ namespace Microsoft.OData.Json
                     break;
                 default:
                     throw new ODataException(ODataErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet(
-                        this.jsoResourceDeserializer.JsonReader.NodeType));
+                        this.jsonResourceDeserializer.JsonReader.NodeType));
             }
         }
         /// <summary>
@@ -3615,9 +3615,9 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(deltaResourceSet != null, "resourceSet != null");
 
-            await this.jsoResourceDeserializer.ReadResourceSetContentStartAsync()
+            await this.jsonResourceDeserializer.ReadResourceSetContentStartAsync()
                 .ConfigureAwait(false);
-            IJsonReader jsonReader = this.jsoResourceDeserializer.JsonReader;
+            IJsonReader jsonReader = this.jsonResourceDeserializer.JsonReader;
             if (jsonReader.NodeType != JsonNodeType.EndArray && jsonReader.NodeType != JsonNodeType.StartObject)
             {
                 throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet(jsonReader.NodeType));
@@ -3643,7 +3643,7 @@ namespace Microsoft.OData.Json
             ODataResourceBase currentResource = this.Item as ODataResourceBase;
 
             // Read the odata.type annotation.
-            await this.jsoResourceDeserializer.ReadResourceTypeNameAsync(this.CurrentResourceState)
+            await this.jsonResourceDeserializer.ReadResourceTypeNameAsync(this.CurrentResourceState)
                 .ConfigureAwait(false);
 
             // Resolve the type name
@@ -3661,10 +3661,10 @@ namespace Microsoft.OData.Json
                 this.CurrentResourceSetValidator.ValidateResource(this.CurrentResourceType);
             }
 
-            this.CurrentResourceState.FirstNestedInfo = await this.jsoResourceDeserializer.ReadResourceContentAsync(
+            this.CurrentResourceState.FirstNestedInfo = await this.jsonResourceDeserializer.ReadResourceContentAsync(
                 this.CurrentResourceState).ConfigureAwait(false);
 
-            this.jsoResourceDeserializer.AssertJsonCondition(
+            this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.Property,
                 JsonNodeType.StartObject,
                 JsonNodeType.StartArray,
@@ -3691,14 +3691,14 @@ namespace Microsoft.OData.Json
                 readerState == ODataReaderState.DeltaLink || readerState == ODataReaderState.DeltaDeletedLink,
                 "ReadAtDeltaLinkImplementation called when not on delta(deleted)link");
             Debug.Assert(
-                this.jsoResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
+                this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject,
                 "Not positioned at end of object after reading delta link");
 
             this.PopScope(readerState);
 
             // Read over the end object node (or null value) and position the reader on the next node in the input.
             // This should never hit the end of the input.
-            await this.jsoResourceDeserializer.JsonReader.ReadAsync()
+            await this.jsonResourceDeserializer.JsonReader.ReadAsync()
                 .ConfigureAwait(false);
             await this.ReadNextResourceSetItemAsync()
                 .ConfigureAwait(false);

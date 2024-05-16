@@ -57,9 +57,9 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = EdmCoreModel.Instance.GetString(false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                (JsonCollectionSerializer) =>
+                (jsonCollectionSerializer) =>
                 {
-                    return JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    return jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
                 });
 
             Assert.Equal("[", result);
@@ -79,10 +79,10 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = EdmCoreModel.Instance.GetString(false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                async (JsonCollectionSerializer) =>
+                async (jsonCollectionSerializer) =>
                 {
-                    await JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
-                    await JsonCollectionSerializer.WriteCollectionEndAsync();
+                    await jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    await jsonCollectionSerializer.WriteCollectionEndAsync();
                 });
 
             Assert.Equal("[]", result);
@@ -102,9 +102,9 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEntityTypeReference(this.entityType, false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                (JsonCollectionSerializer) =>
+                (jsonCollectionSerializer) =>
                 {
-                    return JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    return jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
                 },
                 /* container */ null,
                 /* writeTopLevelCollection */ true);
@@ -127,9 +127,9 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEntityTypeReference(this.entityType, false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                (JsonCollectionSerializer) =>
+                (jsonCollectionSerializer) =>
                 {
-                    return JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    return jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
                 },
                 /* container */ null,
                 /* writeTopLevelCollection */ true);
@@ -156,9 +156,9 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEntityTypeReference(this.entityType, false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                (JsonCollectionSerializer) =>
+                (jsonCollectionSerializer) =>
                 {
-                    return JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    return jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
                 },
                 /* container */ null,
                 /* writeTopLevelCollection */ true);
@@ -187,10 +187,10 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEntityTypeReference(this.entityType, false);
 
             var result = await SetupODataJsonCollectionSerializerAndRunTestAsync(
-                async (JsonCollectionSerializer) =>
+                async (jsonCollectionSerializer) =>
                 {
-                    await JsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
-                    await JsonCollectionSerializer.WriteCollectionEndAsync();
+                    await jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, itemTypeReference);
+                    await jsonCollectionSerializer.WriteCollectionEndAsync();
                 },
                 /* container */ null,
                 /* writeTopLevelCollection */ true);
@@ -231,10 +231,10 @@ namespace Microsoft.OData.Tests.Json
         private async Task<string> SetupODataJsonCollectionSerializerAndRunTestAsync(Func<ODataJsonCollectionSerializer, Task> func, IServiceProvider container = null, bool writingTopLevelCollection = false)
         {
             this.stream = new AsyncStream(this.stream);
-            var JsonCollectionSerializer = CreateODataJsonCollectionSerializer(true, container, true, writingTopLevelCollection);
-            await func(JsonCollectionSerializer);
-            await JsonCollectionSerializer.JsonOutputContext.FlushAsync();
-            await JsonCollectionSerializer.JsonWriter.FlushAsync();
+            var jsonCollectionSerializer = CreateODataJsonCollectionSerializer(true, container, true, writingTopLevelCollection);
+            await func(jsonCollectionSerializer);
+            await jsonCollectionSerializer.JsonOutputContext.FlushAsync();
+            await jsonCollectionSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

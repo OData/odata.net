@@ -77,10 +77,10 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritePropertyInfoAsync_WritesUndeclaredProperty(bool isTopLevel, string expected)
         {
             var result = await this.SetupSerializerAndRunTestAsync(
-                async (JsonPropertySerializer) =>
+                async (jsonPropertySerializer) =>
                 {
-                    await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonPropertySerializer.WritePropertyInfoAsync(
+                    await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonPropertySerializer.WritePropertyInfoAsync(
                         this.undeclaredPropertyWithInstanceAnnotations,
                         /* owningType */ null,
                         isTopLevel,
@@ -97,10 +97,10 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritePropertyInfoAsync_WritesDeclaredProperty(bool isTopLevel, string expected)
         {
             var result = await this.SetupSerializerAndRunTestAsync(
-                async (JsonPropertySerializer) =>
+                async (jsonPropertySerializer) =>
                 {
-                    await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonPropertySerializer.WritePropertyInfoAsync(
+                    await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonPropertySerializer.WritePropertyInfoAsync(
                         this.declaredPropertyWithInstanceAnnotations,
                         this.entityType,
                         isTopLevel,
@@ -115,10 +115,10 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritePropertyInfoAsync_WritesStreamProperty()
         {
             var result = await this.SetupSerializerAndRunTestAsync(
-                async (JsonPropertySerializer) =>
+                async (jsonPropertySerializer) =>
                 {
-                    await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonPropertySerializer.WritePropertyInfoAsync(
+                    await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonPropertySerializer.WritePropertyInfoAsync(
                         this.streamProperty,
                         /* owningType */ null,
                         /* isTopLevel */ false, // Stream properties are not allowed at the top level
@@ -245,10 +245,10 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritePropertyAsync_WritesExpectedOutput(ODataProperty property, IEdmStructuredType owningType, string expected)
         {
             var result = await this.SetupSerializerAndRunTestAsync(
-                async (JsonPropertySerializer) =>
+                async (jsonPropertySerializer) =>
                 {
-                    await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonPropertySerializer.WritePropertyAsync(
+                    await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonPropertySerializer.WritePropertyAsync(
                         property,
                         owningType,
                         /* isTopLevel */ false,
@@ -287,16 +287,16 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await this.SetupSerializerAndRunTestAsync(
-                async (JsonPropertySerializer) =>
+                async (jsonPropertySerializer) =>
                 {
-                    await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonPropertySerializer.WritePropertyAsync(
+                    await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonPropertySerializer.WritePropertyAsync(
                         property,
                         owningType: null,
                         isTopLevel: false,
                         duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
                         metadataBuilder: null);
-                    await JsonPropertySerializer.JsonWriter.EndObjectScopeAsync();
+                    await jsonPropertySerializer.JsonWriter.EndObjectScopeAsync();
                 });
 
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
@@ -320,16 +320,16 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await this.SetupSerializerAndRunTestAsync(
-               async (JsonPropertySerializer) =>
+               async (jsonPropertySerializer) =>
                {
-                   await JsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
-                   await JsonPropertySerializer.WritePropertyAsync(
+                   await jsonPropertySerializer.JsonWriter.StartObjectScopeAsync();
+                   await jsonPropertySerializer.WritePropertyAsync(
                        property,
                        owningType: null,
                        isTopLevel: false,
                        duplicatePropertyNameChecker: new DuplicatePropertyNameChecker(),
                        metadataBuilder: null);
-                   await JsonPropertySerializer.JsonWriter.EndObjectScopeAsync();
+                   await jsonPropertySerializer.JsonWriter.EndObjectScopeAsync();
                }, configureServices);
 
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
@@ -339,12 +339,12 @@ namespace Microsoft.OData.Tests.Json
         private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonPropertySerializer, Task> func, Action<IServiceCollection> configureServices = null)
         {
             Stream outputStream = new AsyncStream(new MemoryStream());
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext(outputStream, configureServices);
-            var JsonPropertySerializer = new ODataJsonPropertySerializer(JsonOutputContext, /* initContextUriBuilder */ true);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext(outputStream, configureServices);
+            var jsonPropertySerializer = new ODataJsonPropertySerializer(jsonOutputContext, /* initContextUriBuilder */ true);
 
-            await func(JsonPropertySerializer);
-            await JsonPropertySerializer.JsonOutputContext.FlushAsync();
-            await JsonPropertySerializer.JsonWriter.FlushAsync();
+            await func(jsonPropertySerializer);
+            await jsonPropertySerializer.JsonOutputContext.FlushAsync();
+            await jsonPropertySerializer.JsonWriter.FlushAsync();
 
             outputStream.Position = 0;
 

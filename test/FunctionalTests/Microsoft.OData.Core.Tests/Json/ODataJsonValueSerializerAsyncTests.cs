@@ -502,10 +502,10 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupJsonValueSerializerAndRunTestAsync(Func<ODataJsonValueSerializer, Task> func, IServiceProvider serviceProvider = null)
         {
-            var JsonValueSerializer = CreateODataJsonValueSerializer(true, serviceProvider, true);
-            await func(JsonValueSerializer);
-            await JsonValueSerializer.JsonOutputContext.FlushAsync();
-            await JsonValueSerializer.JsonWriter.FlushAsync();
+            var jsonValueSerializer = CreateODataJsonValueSerializer(true, serviceProvider, true);
+            await func(jsonValueSerializer);
+            await jsonValueSerializer.JsonOutputContext.FlushAsync();
+            await jsonValueSerializer.JsonWriter.FlushAsync();
             
             this.stream.Position = 0;
             

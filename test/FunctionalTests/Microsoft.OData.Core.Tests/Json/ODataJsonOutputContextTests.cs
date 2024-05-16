@@ -266,9 +266,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteResourceSetAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var resourceSetWriter = await JsonOutputContext.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    var resourceSetWriter = await jsonOutputContext.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
                     var resourceSet = CreateOrderResourceSet();
 
                     await resourceSetWriter.WriteStartAsync(resourceSet);
@@ -282,9 +282,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteResourceAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var resourceWriter = await JsonOutputContext.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    var resourceWriter = await jsonOutputContext.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                     var resource = CreateOrderResource();
 
                     await resourceWriter.WriteStartAsync(resource);
@@ -300,9 +300,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteCollectionAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var collectionWriter = await JsonOutputContext.CreateODataCollectionWriterAsync(EdmCoreModel.Instance.GetString(false));
+                    var collectionWriter = await jsonOutputContext.CreateODataCollectionWriterAsync(EdmCoreModel.Instance.GetString(false));
                     var collectionStart = new ODataCollectionStart
                     {
                         SerializationInfo = new ODataCollectionStartSerializationInfo
@@ -327,12 +327,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteParameterAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     var rateCustomerAction = new EdmAction("NS", "RateCustomer", EdmCoreModel.Instance.GetInt32(false));
                     rateCustomerAction.AddParameter("customerId", EdmCoreModel.Instance.GetInt32(false));
                     
-                    var parameterWriter = await JsonOutputContext.CreateODataParameterWriterAsync(rateCustomerAction);
+                    var parameterWriter = await jsonOutputContext.CreateODataParameterWriterAsync(rateCustomerAction);
 
                     await parameterWriter.WriteStartAsync();
                     await parameterWriter.WriteValueAsync("customerId", 1);
@@ -347,9 +347,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteResourceSetUriParameterAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var resourceSetUriParameterWriter = await JsonOutputContext.CreateODataUriParameterResourceSetWriterAsync(
+                    var resourceSetUriParameterWriter = await jsonOutputContext.CreateODataUriParameterResourceSetWriterAsync(
                         this.orderEntitySet, this.orderEntityType);
                     var orderResourceSet = CreateOrderResourceSet();
                     var orderResource = CreateOrderResource();
@@ -368,9 +368,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteResourceUriParameterAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var resourceUriParameterWriter = await JsonOutputContext.CreateODataUriParameterResourceWriterAsync(
+                    var resourceUriParameterWriter = await jsonOutputContext.CreateODataUriParameterResourceWriterAsync(
                         this.orderEntitySet, this.orderEntityType);
                     var orderResource = CreateOrderResource();
 
@@ -388,9 +388,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteDeltaResourceSetAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var deltaResourceSetWriter = await JsonOutputContext.CreateODataDeltaResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    var deltaResourceSetWriter = await jsonOutputContext.CreateODataDeltaResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
                     var deltaResourceSet = CreateOrderDeltaResourceSet();
 
                     await deltaResourceSetWriter.WriteStartAsync(deltaResourceSet);
@@ -407,9 +407,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteDeltaResourceAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var deltaResourceWriter = await JsonOutputContext.CreateODataDeltaWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    var deltaResourceWriter = await jsonOutputContext.CreateODataDeltaWriterAsync(this.orderEntitySet, this.orderEntityType);
                     var orderDeltaResourceSet = CreateOrderDeltaResourceSet();
                     var deltaResource = CreateOrderResource();
 
@@ -430,9 +430,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteBatchAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
-                    var batchWriter = await JsonOutputContext.CreateODataBatchWriterAsync();
+                    var batchWriter = await jsonOutputContext.CreateODataBatchWriterAsync();
 
                     await batchWriter.WriteStartBatchAsync();
                     var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WritePropertyAsync(property));
+                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(property));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"@Is.LuckyNumber\":true,\"value\":13}",
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WritePropertyAsync(geographyProperty));
+                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geographyProperty));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.GeographyPoint\"," +
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WritePropertyAsync(geographyCollectionProperty));
+                (jsonOutputContext) => jsonOutputContext.WritePropertyAsync(geographyCollectionProperty));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Collection(Edm.Geography)\"," +
@@ -558,7 +558,7 @@ namespace Microsoft.OData.Tests.Json
                 builder.AddSingleton<IJsonWriterFactory>(_ => new DefaultJsonWriterFactory());
             });
 
-            var JsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
             var geographyCollection = new object[]
             {
                 GeographyFactory.Point(33.1, -110.0).Build(),
@@ -576,8 +576,8 @@ namespace Microsoft.OData.Tests.Json
                 }
             };
 
-            await JsonOutputContext.WritePropertyAsync(geographyCollectionProperty);
-            await JsonOutputContext.FlushAsync();
+            await jsonOutputContext.WritePropertyAsync(geographyCollectionProperty);
+            await jsonOutputContext.FlushAsync();
 
             this.stream.Position = 0;
             var result = await new StreamReader(this.stream).ReadToEndAsync();
@@ -603,7 +603,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WriteEntityReferenceLinkAsync(entityReferenceLink),
+                (jsonOutputContext) => jsonOutputContext.WriteEntityReferenceLinkAsync(entityReferenceLink),
                 writingResponse);
 
             Assert.Equal(
@@ -626,7 +626,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WriteEntityReferenceLinksAsync(entityReferenceLinks),
+                (jsonOutputContext) => jsonOutputContext.WriteEntityReferenceLinksAsync(entityReferenceLinks),
                 writingResponse);
 
             Assert.Equal(
@@ -648,7 +648,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WriteServiceDocumentAsync(serviceDocument));
+                (jsonOutputContext) => jsonOutputContext.WriteServiceDocumentAsync(serviceDocument));
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata\"," +
@@ -662,7 +662,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteErrorAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                (JsonOutputContext) => JsonOutputContext.WriteErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false));
+                (jsonOutputContext) => jsonOutputContext.WriteErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false));
 
             Assert.Equal(
                 "{\"error\":{\"code\":\"NRE\",\"message\":\"Object reference not set to an instance of an object\",\"@Is.Error\":true}}",
@@ -673,12 +673,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteInStreamErrorWhenWritingResourceSetAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     // This should cause in-stream error listener to be initialized with an ODataJsonWriter instance
-                    await JsonOutputContext.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonOutputContext.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
-                    await JsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
+                    await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 });
 
             Assert.Equal(
@@ -690,12 +690,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteInStreamErrorWhenWritingDeltaAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     // This should cause in-stream error listener to be initialized an ODataJsonDeltaWriter instance
-                    await JsonOutputContext.CreateODataDeltaWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonOutputContext.CreateODataDeltaWriterAsync(this.orderEntitySet, this.orderEntityType);
 
-                    await JsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
+                    await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 });
 
             Assert.Equal(
@@ -707,12 +707,12 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteInStreamErrorWhenWritingCollectionAsync()
         {
             var result = await SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     // This should cause in-stream error listener to be initialized an ODataJsonCollectionWriter instance
-                    await JsonOutputContext.CreateODataCollectionWriterAsync(new EdmEntityTypeReference(this.orderEntityType, true));
+                    await jsonOutputContext.CreateODataCollectionWriterAsync(new EdmEntityTypeReference(this.orderEntityType, true));
 
-                    await JsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
+                    await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 });
 
             Assert.Equal(
@@ -725,12 +725,12 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     // This should cause in-stream error listener to be initialized an ODataJsonParameterWriter instance
-                    await JsonOutputContext.CreateODataParameterWriterAsync(/*operation*/ null);
+                    await jsonOutputContext.CreateODataParameterWriterAsync(/*operation*/ null);
 
-                    await JsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
+                    await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 }));
 
             Assert.Equal(Strings.ODataParameterWriter_InStreamErrorNotSupported, exception.Message);
@@ -741,12 +741,12 @@ namespace Microsoft.OData.Tests.Json
         {
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonOutputContextAndRunTestAsync(
-                async (JsonOutputContext) =>
+                async (jsonOutputContext) =>
                 {
                     // This should cause in-stream error listener to be initialized with an ODataJsonBatchWriter instance
-                    await JsonOutputContext.CreateODataBatchWriterAsync();
+                    await jsonOutputContext.CreateODataBatchWriterAsync();
 
-                    await JsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
+                    await jsonOutputContext.WriteInStreamErrorAsync(this.nullReferenceError, /*includeDebugInformation*/ false);
                 }));
 
             Assert.Equal(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch, exception.Message);
@@ -809,9 +809,9 @@ namespace Microsoft.OData.Tests.Json
         {
             this.stream = new AsyncStream(this.stream);
             var messageInfo = CreateMessageInfo(this.model, asynchronous: true, writingResponse: writingResponse);
-            var JsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
 
-            await func(JsonOutputContext);
+            await func(jsonOutputContext);
 
             this.stream.Position = 0;
             return await new StreamReader(this.stream).ReadToEndAsync();

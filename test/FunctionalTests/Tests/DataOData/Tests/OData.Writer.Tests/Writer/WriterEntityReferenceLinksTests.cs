@@ -447,7 +447,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                 string nextLinkString = null;
 
                 JsonStrings.Add("{");
-                var JsonFirstLine = "$(Indent)\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection($ref)\",";
+                var jsonFirstLine = "$(Indent)\"" + JsonConstants.ODataPropertyAnnotationSeparator + JsonConstants.ODataContextAnnotationName + "\":\"http://odata.org/test/$metadata#Collection($ref)\",";
 
                 if ((resultUriStrings == null || resultUriStrings.Length == 0) && !count.HasValue && nextPageLinkString == null && testConfiguration.Format != ODataFormat.Json)
                 {
@@ -503,7 +503,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                         }
                     }
 
-                    var JsonLastLine = "$(Indent)]";
+                    var jsonLastLine = "$(Indent)]";
 
                     if (count.HasValue && forceNextLinkAndCountAtEnd)
                     {

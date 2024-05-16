@@ -307,8 +307,8 @@ namespace Microsoft.OData.Tests.Json
                 Model = mainModel,
                 PayloadUriConverter = urlResolver
             };
-            var JsonOutputContext = new ODataJsonOutputContext(messageInfo, messageWriterSettings);
-            return new ODataJsonServiceDocumentSerializer(JsonOutputContext);
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, messageWriterSettings);
+            return new ODataJsonServiceDocumentSerializer(jsonOutputContext);
         }
 
         private static Action WriteServiceDocumentShouldError(ODataServiceDocument serviceDocument, IODataPayloadUriConverter urlResolver = null)
@@ -333,10 +333,10 @@ namespace Microsoft.OData.Tests.Json
         private async Task<string> SetupJsonServiceDocumentSerializerAndRunTestAsync(Func<ODataJsonServiceDocumentSerializer, Task> func)
         {
             Stream memoryStream = new AsyncStream(new MemoryStream());
-            var JsonServiceDocumentSerializer = CreateODataJsonServiceDocumentSerializer(memoryStream, /* urlResolver */ null, true);
-            await func(JsonServiceDocumentSerializer);
-            await JsonServiceDocumentSerializer.JsonOutputContext.FlushAsync();
-            await JsonServiceDocumentSerializer.JsonWriter.FlushAsync();
+            var jsonServiceDocumentSerializer = CreateODataJsonServiceDocumentSerializer(memoryStream, /* urlResolver */ null, true);
+            await func(jsonServiceDocumentSerializer);
+            await jsonServiceDocumentSerializer.JsonOutputContext.FlushAsync();
+            await jsonServiceDocumentSerializer.JsonWriter.FlushAsync();
 
             memoryStream.Position = 0;
             return await new StreamReader(memoryStream).ReadToEndAsync();

@@ -180,9 +180,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                 payload,
-                async (JsonServiceDocumentDeserializer) =>
+                async (jsonServiceDocumentDeserializer) =>
                 {
-                    var serviceDocument = await JsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
+                    var serviceDocument = await jsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
 
                     var customersEntitySet = Assert.Single(serviceDocument.EntitySets);
                     Assert.Equal("Customers", customersEntitySet.Name);
@@ -209,9 +209,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                 payload,
-                async (JsonServiceDocumentDeserializer) =>
+                async (jsonServiceDocumentDeserializer) =>
                 {
-                    var serviceDocument = await JsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
+                    var serviceDocument = await jsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
 
                     Assert.Empty(serviceDocument.EntitySets);
                     Assert.Empty(serviceDocument.Singletons);
@@ -229,9 +229,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                 payload,
-                async (JsonServiceDocumentDeserializer) =>
+                async (jsonServiceDocumentDeserializer) =>
                 {
-                    var serviceDocument = await JsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
+                    var serviceDocument = await jsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
 
                     Assert.Empty(serviceDocument.EntitySets);
                     Assert.Empty(serviceDocument.Singletons);
@@ -256,9 +256,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                 payload,
-                async (JsonServiceDocumentDeserializer) =>
+                async (jsonServiceDocumentDeserializer) =>
                 {
-                    var serviceDocument = await JsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
+                    var serviceDocument = await jsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
 
                     Assert.Empty(serviceDocument.EntitySets);
                     Assert.Empty(serviceDocument.FunctionImports);
@@ -278,9 +278,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                 payload,
-                async (JsonServiceDocumentDeserializer) =>
+                async (jsonServiceDocumentDeserializer) =>
                 {
-                    var serviceDocument = await JsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
+                    var serviceDocument = await jsonServiceDocumentDeserializer.ReadServiceDocumentAsync();
 
                     var customersEntitySet = Assert.Single(serviceDocument.EntitySets);
                     Assert.Equal("Customers", customersEntitySet.Name);
@@ -302,7 +302,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocument("odata.type", "value"),
@@ -319,7 +319,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocument("odata.type", "value"),
@@ -336,7 +336,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("value"),
@@ -367,7 +367,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_MissingValuePropertyInServiceDocument("value"),
@@ -384,7 +384,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocument("value"),
@@ -400,7 +400,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocument("unexpectedProp", "value"),
@@ -416,7 +416,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_InstanceAnnotationInServiceDocumentElement("odata.type"),
@@ -432,7 +432,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationInServiceDocumentElement("odata.type"),
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_DuplicatePropertiesInServiceDocumentElement(property),
@@ -471,7 +471,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_MissingRequiredPropertyInServiceDocumentElement(property),
@@ -487,7 +487,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ValidationUtils_ServiceDocumentElementUrlMustNotBeNull,
@@ -503,7 +503,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top5Customers"),
@@ -519,7 +519,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_PropertyAnnotationWithoutProperty("name"),
@@ -535,7 +535,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonServiceDocumentDeserializerAndRunTestAsync(
                     payload,
-                    (JsonServiceDocumentDeserializer) => JsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
+                    (jsonServiceDocumentDeserializer) => jsonServiceDocumentDeserializer.ReadServiceDocumentAsync()));
 
             Assert.Equal(
                 ErrorStrings.ODataJsonServiceDocumentDeserializer_UnexpectedPropertyInServiceDocumentElement("unexpectedProp", "name", "url"),
@@ -548,9 +548,9 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: false))
             {
-                var JsonServiceDocumentDeserializer = new ODataJsonServiceDocumentDeserializer(jsonInputContext);
+                var jsonServiceDocumentDeserializer = new ODataJsonServiceDocumentDeserializer(jsonInputContext);
 
-                serviceDocument = JsonServiceDocumentDeserializer.ReadServiceDocument();
+                serviceDocument = jsonServiceDocumentDeserializer.ReadServiceDocument();
             }
 
             return serviceDocument;
@@ -584,9 +584,9 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: true))
             {
-                var JsonServiceDocumentDeserializer = new ODataJsonServiceDocumentDeserializer(jsonInputContext);
+                var jsonServiceDocumentDeserializer = new ODataJsonServiceDocumentDeserializer(jsonInputContext);
 
-                await func(JsonServiceDocumentDeserializer);
+                await func(jsonServiceDocumentDeserializer);
             }
         }
     }

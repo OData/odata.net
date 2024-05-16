@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.Json
         private EdmModel model;
         private Stream stream;
         private ODataMessageWriterSettings settings;
-        private ODataJsonValueSerializer JsonValueSerializer;
+        private ODataJsonValueSerializer jsonValueSerializer;
         private EdmEnumType dayEnumType;
         private EdmComplexType mealComplexType;
 
@@ -425,8 +425,8 @@ namespace Microsoft.OData.Tests.Json
                 ServiceProvider = serviceProvider
             };
             var context = new ODataJsonOutputContext(messageInfo, this.settings);
-            this.JsonValueSerializer = new ODataJsonValueSerializer(context);
-            return new JsonInstanceAnnotationWriter(this.JsonValueSerializer, new JsonMinimalMetadataTypeNameOracle());
+            this.jsonValueSerializer = new ODataJsonValueSerializer(context);
+            return new JsonInstanceAnnotationWriter(this.jsonValueSerializer, new JsonMinimalMetadataTypeNameOracle());
         }
 
         /// <summary>
@@ -436,11 +436,11 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupJsonInstanceAnnotationWriterAndRunTestAsync(Func<JsonInstanceAnnotationWriter, Task> func, IServiceProvider container = null)
         {
-            var JsonInstanceAnnotationWriter = CreateJsonInstanceAnnotationWriter(true, container, true);
-            await this.JsonValueSerializer.JsonWriter.StartObjectScopeAsync();
-            await func(JsonInstanceAnnotationWriter);
-            await this.JsonValueSerializer.JsonOutputContext.FlushAsync();
-            await this.JsonValueSerializer.JsonWriter.FlushAsync();
+            var jsonInstanceAnnotationWriter = CreateJsonInstanceAnnotationWriter(true, container, true);
+            await this.jsonValueSerializer.JsonWriter.StartObjectScopeAsync();
+            await func(jsonInstanceAnnotationWriter);
+            await this.jsonValueSerializer.JsonOutputContext.FlushAsync();
+            await this.jsonValueSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

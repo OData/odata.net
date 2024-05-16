@@ -179,16 +179,16 @@ OData-Version: 4.0
                                     }
                                     else
                                     {
-                                        var JsonResourceReader = messageReader.CreateODataResourceReader();
+                                        var jsonResourceReader = messageReader.CreateODataResourceReader();
 
-                                        while (JsonResourceReader.Read())
+                                        while (jsonResourceReader.Read())
                                         {
-                                            switch (JsonResourceReader.State)
+                                            switch (jsonResourceReader.State)
                                             {
                                                 case ODataReaderState.ResourceEnd:
                                                     Assert.NotEmpty(verifyResourceStack);
                                                     var innerVerifyResourceStack = verifyResourceStack.Pop();
-                                                    innerVerifyResourceStack(JsonResourceReader.Item as ODataResource);
+                                                    innerVerifyResourceStack(jsonResourceReader.Item as ODataResource);
                                                     break;
                                             }
                                         }
@@ -278,16 +278,16 @@ OData-Version: 4.0
                                     }
                                     else
                                     {
-                                        var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                        var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
-                                        while (await JsonResourceReader.ReadAsync())
+                                        while (await jsonResourceReader.ReadAsync())
                                         {
-                                            switch (JsonResourceReader.State)
+                                            switch (jsonResourceReader.State)
                                             {
                                                 case ODataReaderState.ResourceEnd:
                                                     Assert.NotEmpty(verifyResourceStack);
                                                     var innerVerifyResourceStack = verifyResourceStack.Pop();
-                                                    innerVerifyResourceStack(JsonResourceReader.Item as ODataResource);
+                                                    innerVerifyResourceStack(jsonResourceReader.Item as ODataResource);
                                                     break;
                                             }
                                         }
@@ -322,14 +322,14 @@ OData-Version: 4.0
 
                                 using (var messageReader = new ODataMessageReader(operationResponseMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = messageReader.CreateODataResourceReader();
+                                    var jsonResourceReader = messageReader.CreateODataResourceReader();
 
-                                    while (JsonResourceReader.Read())
+                                    while (jsonResourceReader.Read())
                                     {
-                                        switch (JsonResourceReader.State)
+                                        switch (jsonResourceReader.State)
                                         {
                                             case ODataReaderState.ResourceEnd:
-                                                var resource = JsonResourceReader.Item as ODataResource;
+                                                var resource = jsonResourceReader.Item as ODataResource;
                                                 resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);
@@ -372,14 +372,14 @@ OData-Version: 4.0
 
                                 using (var messageReader = new ODataMessageReader(operationResponseMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
-                                    while (await JsonResourceReader.ReadAsync())
+                                    while (await jsonResourceReader.ReadAsync())
                                     {
-                                        switch (JsonResourceReader.State)
+                                        switch (jsonResourceReader.State)
                                         {
                                             case ODataReaderState.ResourceEnd:
-                                                var resource = JsonResourceReader.Item as ODataResource;
+                                                var resource = jsonResourceReader.Item as ODataResource;
                                                 resourceRead = true;
                                                 Assert.NotNull(resource);
                                                 Assert.Equal("NS.Customer", resource.TypeName);

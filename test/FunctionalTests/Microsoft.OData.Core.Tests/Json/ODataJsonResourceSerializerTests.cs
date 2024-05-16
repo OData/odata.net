@@ -85,7 +85,7 @@ namespace Microsoft.OData.Tests.Json
         [InlineData(true, "{\"@odata.type\":\"#NS.Category\",\"@odata.id\":\"http://tempuri.org/Categories(1)\"")]
         public async Task WriteResourceStartMetadataPropertiesAsync_WritesResourceMetadataProperties(bool isUndeclared, string expected)
         {
-            var JsonWriterResourceState = new TestODataJsonWriterResourceState(
+            var jsonWriterResourceState = new TestODataJsonWriterResourceState(
                 CreateCategoryResource(),
                 this.categoryEntityType,
                 CreateCategorySerializationInfo(),
@@ -93,10 +93,10 @@ namespace Microsoft.OData.Tests.Json
                 isUndeclared);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceStartMetadataPropertiesAsync(
-                        JsonWriterResourceState);
+                    return jsonResourceSerializer.WriteResourceStartMetadataPropertiesAsync(
+                        jsonWriterResourceState);
                 });
 
             Assert.Equal(expected, result);
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Tests.Json
             var resource = CreateCategoryResource();
             resource.ETag = "etag";
 
-            var JsonWriterResourceState = new TestODataJsonWriterResourceState(
+            var jsonWriterResourceState = new TestODataJsonWriterResourceState(
                 resource,
                 this.categoryEntityType,
                 CreateCategorySerializationInfo(),
@@ -116,10 +116,10 @@ namespace Microsoft.OData.Tests.Json
                 false);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceStartMetadataPropertiesAsync(
-                        JsonWriterResourceState);
+                    return jsonResourceSerializer.WriteResourceStartMetadataPropertiesAsync(
+                        jsonWriterResourceState);
                 });
 
             Assert.Equal("{\"@odata.id\":\"http://tempuri.org/Categories(1)\",\"@odata.etag\":\"etag\"", result);
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(GetWriteResourceMetadataPropertiesTestData))]
         public async Task WriteResourceMetadataPropertiesAsync_WritesResourceMetadataProperties(ODataResource resource, string expected)
         {
-            var JsonWriterResourceState = new TestODataJsonWriterResourceState(
+            var jsonWriterResourceState = new TestODataJsonWriterResourceState(
                 resource,
                 this.categoryEntityType,
                 CreateCategorySerializationInfo(),
@@ -184,10 +184,10 @@ namespace Microsoft.OData.Tests.Json
                 false);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceMetadataPropertiesAsync(
-                        JsonWriterResourceState);
+                    return jsonResourceSerializer.WriteResourceMetadataPropertiesAsync(
+                        jsonWriterResourceState);
                 });
 
             Assert.Equal(expected, result);
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests.Json
                 unprocessedNavigationLinksFactory: () => GetNavigationLinks(resource.Id),
                 unprocessedStreamPropertiesFactory: () => GetStreamProperties(resource.Id));
 
-            var JsonWriterResourceState = new TestODataJsonWriterResourceState(
+            var jsonWriterResourceState = new TestODataJsonWriterResourceState(
                 resource,
                 this.categoryEntityType,
                 CreateCategorySerializationInfo(),
@@ -210,10 +210,10 @@ namespace Microsoft.OData.Tests.Json
                 false);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceEndMetadataPropertiesAsync(
-                        JsonWriterResourceState,
+                    return jsonResourceSerializer.WriteResourceEndMetadataPropertiesAsync(
+                        jsonWriterResourceState,
                         new NullDuplicatePropertyNameChecker());
                 });
 
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Tests.Json
         [MemberData(nameof(GetWriteResourceEndMetadataPropertiesTestData))]
         public async Task WriteResourceEndMetadataPropertiesAsync_WritesActionsAndFunctionsMetadataProperties(ODataResource resource, string expected)
         {
-            var JsonWriterResourceState = new TestODataJsonWriterResourceState(
+            var jsonWriterResourceState = new TestODataJsonWriterResourceState(
                 resource,
                 this.categoryEntityType,
                 CreateCategorySerializationInfo(),
@@ -278,10 +278,10 @@ namespace Microsoft.OData.Tests.Json
                 false);
 
             var result = await SetupJsonResourceSerializerAndRunTestAsync(
-                (JsonResourceSerializer) =>
+                (jsonResourceSerializer) =>
                 {
-                    return JsonResourceSerializer.WriteResourceEndMetadataPropertiesAsync(
-                        JsonWriterResourceState,
+                    return jsonResourceSerializer.WriteResourceEndMetadataPropertiesAsync(
+                        jsonWriterResourceState,
                         new NullDuplicatePropertyNameChecker());
                 });
 
@@ -474,13 +474,13 @@ namespace Microsoft.OData.Tests.Json
 
         private async Task<string> SetupJsonResourceSerializerAndRunTestAsync(Func<ODataJsonResourceSerializer, Task> func)
         {
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext();
-            var JsonResourceSerializer = new ODataJsonResourceSerializer(JsonOutputContext);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext();
+            var jsonResourceSerializer = new ODataJsonResourceSerializer(jsonOutputContext);
 
-            await JsonResourceSerializer.JsonWriter.StartObjectScopeAsync();
-            await func(JsonResourceSerializer);
-            await JsonResourceSerializer.JsonOutputContext.FlushAsync();
-            await JsonResourceSerializer.JsonWriter.FlushAsync();
+            await jsonResourceSerializer.JsonWriter.StartObjectScopeAsync();
+            await func(jsonResourceSerializer);
+            await jsonResourceSerializer.JsonOutputContext.FlushAsync();
+            await jsonResourceSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var uriString = resourceId.ToString();
 
-            var JsonReaderNestedResourceInfo = ODataJsonReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(
+            var jsonReaderNestedResourceInfo = ODataJsonReaderNestedResourceInfo.CreateResourceReaderNestedResourceInfo(
                 nestedResourceInfo: new ODataNestedResourceInfo
                 {
                     Name = "BestSeller",
@@ -578,7 +578,7 @@ namespace Microsoft.OData.Tests.Json
                 nestedProperty: this.categoryEntityType.FindProperty("BestSeller"),
                 nestedResourceType: this.productEntityType);
 
-            yield return JsonReaderNestedResourceInfo;
+            yield return jsonReaderNestedResourceInfo;
         }
 
         private IEnumerable<ODataProperty> GetStreamProperties(Uri resourceId)

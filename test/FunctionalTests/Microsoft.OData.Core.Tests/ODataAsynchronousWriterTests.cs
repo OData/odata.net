@@ -90,7 +90,7 @@ namespace Microsoft.OData.Tests
 
                     using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.userModel))
                     {
-                        var JsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.singleton, this.testType);
+                        var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.singleton, this.testType);
                         var testResponse = new ODataResource
                         {
                             TypeName = "NS.Test",
@@ -100,8 +100,8 @@ namespace Microsoft.OData.Tests
                             }
                         };
 
-                        await JsonWriter.WriteStartAsync(testResponse);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(testResponse);
+                        await jsonWriter.WriteEndAsync();
                     }
                 });
 
