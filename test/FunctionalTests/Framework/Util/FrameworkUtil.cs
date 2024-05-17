@@ -200,17 +200,13 @@ namespace System.Data.Test.Astoria
                 }
             }
 
-
-
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
                 return @"D:\a\1\s";
             }
 
-
-
-            //// We check the result path again to ensure it is an ENLISTMENT_ROOT.
+            // We check the result path again to ensure it is an ENLISTMENT_ROOT.
             foreach (string traitsFolder in traitsFolders)
             {
                 string pathToCheck = result + traitsFolder;
