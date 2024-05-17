@@ -80,18 +80,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         }
 
         /// <summary>
-        /// List of all interesting configuration for format payloads.
-        /// </summary>
-        //public virtual IEnumerable<ReaderTestConfiguration> AtomFormatConfigurations
-        //{
-        //    get
-        //    {
-        //        CachedConfigurations configurations = this.InitializeConfigurations();
-        //        return configurations.AtomConfigurations;
-        //    }
-        //}
-
-        /// <summary>
         /// List of all interesting configurations with format for payloads which doesn't depend on format = raw content.
         /// </summary>
         public virtual IEnumerable<ReaderTestConfiguration> DefaultFormatConfigurations
@@ -222,11 +210,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// </summary>
         private sealed class CachedConfigurations
         {
-            /// <summary>
-            /// List of all configurations with default settings.
-            /// </summary>
-            // public List<ReaderTestConfiguration> AtomConfigurations { get; set; }
-
             /// <summary>
             /// List of all JSON configurations with default settings.
             /// </summary>

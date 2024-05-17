@@ -20,15 +20,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
     #endregion Namespaces
 
     /// <summary>
-    /// Reader test descriptor for tests which need to specify the input as exact or JSON payload.
+    /// Reader test descriptor for tests which need to specify the input as exact JSON payload.
     /// </summary>
     public class NativeInputReaderTestDescriptor : ReaderTestDescriptor
     {
-        /// <summary>
-        /// The input for payloads.
-        /// </summary>
-        private XElement atomInput;
-
         /// <summary>
         /// The input for JSON payloads.
         /// </summary>
@@ -64,40 +59,10 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public NativeInputReaderTestDescriptor(NativeInputReaderTestDescriptor other)
             : base(other)
         {
-            this.AtomInput = other.AtomInput;
-            this.AtomInputXml = other.AtomInputXml;
             this.JsonInputText = other.JsonInputText;
             this.JsonInput = other.JsonInput;
             this.DefaultInput = other.DefaultInput;
             this.InputCreator = other.InputCreator;
-        }
-
-        /// <summary>
-        /// The input for payloads as text XML.
-        /// </summary>
-        public string AtomInputXml { get; set; }
-
-        /// <summary>
-        /// The input for payloads. This overrides AtomInputXml if both are specified.
-        /// </summary>
-        public XElement AtomInput
-        {
-            get
-            {
-                if (this.atomInput == null && this.AtomInputXml != null)
-                {
-                    return XElement.Parse(this.AtomInputXml);
-                }
-                else
-                {
-                    return this.atomInput;
-                }
-            }
-
-            set
-            {
-                this.atomInput = value;
-            }
         }
 
         /// <summary>
@@ -146,11 +111,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         public override string ToString()
         {
             string result = base.ToString();
-            XElement atomInput = this.AtomInput;
-            if (atomInput != null)
-            {
-                result += "\r\nATOM: " + atomInput.ToString();
-            }
 
             JsonValue jsonInput = this.JsonInput;
             if (jsonInput != null)

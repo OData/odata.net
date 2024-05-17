@@ -172,7 +172,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
             // Only test complex and collection values here, since open primitive properties rely on format specific primitive type support.
             // The open primitive properties tests are thus format specific and are here:
             //   JSON - PrimitiveValueReaderJsonTests.UntypedPrimitiveValueTest
-            //   - PrimitiveValueReaderAtomTests.PrimitiveValueWithoutType
             IEnumerable<PayloadReaderTestDescriptor> testDescriptors = PayloadReaderTestDescriptorGenerator.CreateComplexValueTestDescriptors(this.Settings, true, false);
 
             // Add spatial open property tests
@@ -1046,7 +1045,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         .ExpectedEntityType(cityWithMapType, citiesEntitySet),
                     PayloadEdmModel = model,
                 },
-                // Just MR content type - invalid for since there's no way to express that in payload
+                // Just MR content type.
                 new PayloadReaderTestDescriptor(settings)
                 {
                     PayloadElement = PayloadBuilder.Entity(cityWithMapType.FullName()).PrimitiveProperty("Id", 1).AsMediaLinkEntry().StreamContentType("mime/type")

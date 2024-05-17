@@ -190,13 +190,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             else
             {
                 this.VerifyLinkUriValue(associationLink.UriString, expectedAssociationUri, request, response);
-
-                // extra verifications for payload
-                if (this.IsAtomResponse(response))
-                {
-                    this.VerifyAtomAssociationLinkTypeAttribute(associationLink, request, response);
-                    this.VerifyAtomTitleAttribute(navigation, associationLink, request, response);
-                }
             }
         }
 
@@ -216,13 +209,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             else
             {
                 this.VerifyLinkUriValue(((DeferredLink)navigation.Value).UriString, expectedNavigationUri, request, response);
-            }
-
-            // extra verifications for payload
-            if (this.IsAtomResponse(response))
-            {
-                this.VerifyAtomNavigationLinkTypeAttribute(navigation.Value, request, response);
-                this.VerifyAtomTitleAttribute(navigation, navigation.Value, request, response);
             }
         }
 

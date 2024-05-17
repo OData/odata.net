@@ -239,7 +239,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
                 if (isValidTopLevelError)
                 {
                     // if we have a valid top-level error we expect an ODataErrorException to be thrown.
-                    ODataError error = ConvertErrorPayload((ODataErrorPayload)descriptor.PayloadElement, /*forAtom*/false);
+                    ODataError error = ConvertErrorPayload((ODataErrorPayload)descriptor.PayloadElement);
                     expectedException = ODataExpectedExceptions.ODataErrorException(error, "ODataErrorException_GeneralError");
                 }
                 else
@@ -276,9 +276,8 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
         /// Converts an <see cref="ODataErrorpayload"/> into the corresponding <see cref="ODataError"/>.
         /// </summary>
         /// <param name="errorPayload">The error payload to convert.</param>
-        /// <param name="forAtom">true if the conversion follows format rules; false for JSON format rules.</param>
         /// <returns>A new <see cref="ODataError"/> representing the <paramref name="errorPayload"/>.</returns>
-        private static ODataError ConvertErrorPayload(ODataErrorPayload errorPayload, bool forAtom)
+        private static ODataError ConvertErrorPayload(ODataErrorPayload errorPayload)
         {
             ODataError error = new ODataError();
 

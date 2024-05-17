@@ -80,7 +80,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                     SkipTestConfiguration = tc => tc.IsRequest,
                 },
 
-                // relative URI without a base URI should fail in and Json, but is allowed in Verbose JSON.
+                // relative URI without a base URI should fail in and Json.
                 new PayloadReaderTestDescriptor(this.Settings)
                 {
                     PayloadElement = PayloadBuilder.ServiceDocument().Workspace(
@@ -117,7 +117,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Reader
                         // Add an empty expected type annotation to cause metadata link to be generated in test serializer.
                         testDescriptor.PayloadElement.AddExpectedTypeAnnotation();
 
-                        // Json resource collections require the "Name" property, but it won't round-trip for verbose json, so add Name here.
+                        // Json resource collections require the "Name" property.
                         foreach (var workspace in ((ServiceDocumentInstance)testDescriptor.PayloadElement).Workspaces)
                         {
                             int count = 0;

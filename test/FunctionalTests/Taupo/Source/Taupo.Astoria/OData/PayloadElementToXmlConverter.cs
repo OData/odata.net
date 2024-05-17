@@ -15,7 +15,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
     using Microsoft.Test.Taupo.Astoria.Contracts.OData;
     using Microsoft.Test.Taupo.Common;
     using Microsoft.Test.Taupo.Spatial.Contracts;
-    
+
     /// <summary>
     /// The converter from a reach payload elemnt representation to the atom/xml representation.
     /// </summary>
@@ -104,7 +104,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                     // namespace
                     new XAttribute("xmlns", AtomNamespace),
                 };
-            
+
             var tempElement = new XElement("Temporary");
 
             this.VisitPayloadElement(rootElement, tempElement);
@@ -363,7 +363,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
                 XElement countElement = CreateMetadataElement(feed, "count");
                 countElement.Value = payloadElement.InlineCount.Value.ToString(CultureInfo.InvariantCulture);
             }
-            
+
             foreach (EntityInstance entity in payloadElement)
             {
                 this.VisitPayloadElement(entity, feed);
@@ -398,8 +398,8 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             }
 
             XElement linkElement = CreateAtomLinkElement(
-                this.currentXElement, 
-                DataServicesRelatedNamespace + navPropertyInstance.Name, 
+                this.currentXElement,
+                DataServicesRelatedNamespace + navPropertyInstance.Name,
                 payloadElement.UriString,
                 contentType);
 
@@ -463,7 +463,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
 
                 PostProcessXElement(payloadElement, sourceLinkElement);
             }
-            
+
             if (payloadElement.EditLink != null)
             {
                 XElement editLinkElement = CreateAtomLinkElement(

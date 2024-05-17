@@ -42,10 +42,6 @@
   <!-- Source files -->
   <ItemGroup>
     <Compile Include="$(DataFxIncPath)\AssemblyRefs.cs" />
-    <Compile Include="Atom\TestAtomConstants.cs" />
-    <Compile Include="Atom\AtomMetadataBuilder.cs" />
-    <Compile Include="Atom\ODataPayloadElementAtomMetadataNormalizer.cs" />
-    <Compile Include="Atom\ODataPayloadElementDefaultAtomAnnotationExtensions.cs" />
     <Compile Include="Common\Annotations\BatchBoundaryAnnotation.cs" />
     <Compile Include="Common\Annotations\CustomContentTypeHeaderAnnotation.cs" />
     <Compile Include="Common\Annotations\IgnoreEntitySetAnnotation.cs" />

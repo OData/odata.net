@@ -178,17 +178,17 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         public void ODataBatchWriterBaseUriTests()
         {
             Func<Uri, Uri, ExpectedException, BatchWriterTestDescriptor> createInvokation = (uri, baseUri, expectedException) =>
+            {
+                var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
                 {
-                    var invocations = new BatchWriterTestDescriptor.InvocationAndOperationDescriptor[]
-                    {
                         BatchWriterUtils.StartBatch(),
                         BatchWriterUtils.QueryOperation("GET", uri),
                         BatchWriterUtils.EndBatch(),
-                    };
-                    return expectedException == null
-                        ? new BatchWriterTestDescriptor(this.Settings, invocations, (Dictionary<string, string>)null, baseUri)
-                        : new BatchWriterTestDescriptor(this.Settings, invocations, expectedException, baseUri);
                 };
+                return expectedException == null
+                    ? new BatchWriterTestDescriptor(this.Settings, invocations, (Dictionary<string, string>)null, baseUri)
+                    : new BatchWriterTestDescriptor(this.Settings, invocations, expectedException, baseUri);
+            };
 
             var testCases = new[]
                 {
@@ -449,37 +449,37 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
                 }));
 
             Func<CrossReferencingTestCase, BatchWriterTestDescriptor> createChangeSetRequest = (testCase) =>
+            {
+                var invocations = new List<BatchWriterTestDescriptor.InvocationAndOperationDescriptor>();
+                invocations.Add(BatchWriterUtils.StartBatch());
+                invocations.Add(BatchWriterUtils.StartChangeSet());
+
+                var operations = testCase.Operations;
+                for (int i = 0; i < operations.Length; ++i)
                 {
-                    var invocations = new List<BatchWriterTestDescriptor.InvocationAndOperationDescriptor>();
-                    invocations.Add(BatchWriterUtils.StartBatch());
+                    invocations.Add(operations[i]);
+                }
+
+                var operations2 = testCase.Operations2;
+                if (operations2 != null)
+                {
+                    invocations.Add(BatchWriterUtils.EndChangeSet());
                     invocations.Add(BatchWriterUtils.StartChangeSet());
 
-                    var operations = testCase.Operations;
-                    for (int i = 0; i < operations.Length; ++i)
+                    for (int i = 0; i < operations2.Length; ++i)
                     {
-                        invocations.Add(operations[i]);
+                        invocations.Add(operations2[i]);
                     }
+                }
 
-                    var operations2 = testCase.Operations2;
-                    if (operations2 != null)
-                    {
-                        invocations.Add(BatchWriterUtils.EndChangeSet());
-                        invocations.Add(BatchWriterUtils.StartChangeSet());
+                invocations.Add(BatchWriterUtils.EndChangeSet());
+                invocations.Add(BatchWriterUtils.EndBatch());
 
-                        for (int i = 0; i < operations2.Length; ++i)
-                        {
-                            invocations.Add(operations2[i]);
-                        }
-                    }
-
-                    invocations.Add(BatchWriterUtils.EndChangeSet());
-                    invocations.Add(BatchWriterUtils.EndBatch());
-
-                    var expectedException = testCase.BaseUri == null ? testCase.ExpectedExceptionNoBaseUri : testCase.ExpectedException;
-                    return expectedException == null
-                        ? new BatchWriterTestDescriptor(this.Settings, invocations.ToArray(), (Dictionary<string, string>)null, testCase.BaseUri)
-                        : new BatchWriterTestDescriptor(this.Settings, invocations.ToArray(), expectedException);
-                };
+                var expectedException = testCase.BaseUri == null ? testCase.ExpectedExceptionNoBaseUri : testCase.ExpectedException;
+                return expectedException == null
+                    ? new BatchWriterTestDescriptor(this.Settings, invocations.ToArray(), (Dictionary<string, string>)null, testCase.BaseUri)
+                    : new BatchWriterTestDescriptor(this.Settings, invocations.ToArray(), expectedException);
+            };
 
             IEnumerable<BatchWriterTestDescriptor> testDescriptors = testCases.Select(tc => createChangeSetRequest(tc));
 
@@ -525,44 +525,44 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             };
 
             Func<Uri, string, WriterTestConfiguration, BatchWriterUtils.ODataPayload> createODataPayload = (uri, expectedUri, testConfig) =>
+            {
+                Debug.Assert(!uri.IsAbsoluteUri, "Expected a relative Uri.");
+                ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
+                sampleEntry.ReadLink = uri;
+                ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
+
+                Uri testCaseBaseUri = testConfig.MessageWriterSettings.BaseUri;
+
+                string expectedResult = null;
+                if (testConfig.Format == ODataFormat.Json)
                 {
-                    Debug.Assert(!uri.IsAbsoluteUri, "Expected a relative Uri.");
-                    ODataResource sampleEntry = ObjectModelUtils.CreateDefaultEntryWithAtomMetadata();
-                    sampleEntry.ReadLink = uri;
-                    ODataItem[] entryPayload = new ODataItem[] { sampleEntry };
-
-                    Uri testCaseBaseUri = testConfig.MessageWriterSettings.BaseUri;
-
-                    string expectedResult = null;
-                    if (testConfig.Format == ODataFormat.Json)
+                    // construct the expected Uri from the payload URI
+                    if (expectedUri == null)
                     {
-                        // construct the expected Uri from the payload URI
-                        if (expectedUri == null)
+                        // in JSON we expect an absolute URI in the payload; otherwise keep the relative one (but it will fail).
+                        if (testCaseBaseUri != null)
                         {
-                            // in JSON we expect an absolute URI in the payload; otherwise keep the relative one (but it will fail).
-                            if (testCaseBaseUri != null)
-                            {
-                                expectedUri = new Uri(testCaseBaseUri, uri).AbsoluteUri;
-                            }
-                            else
-                            {
-                                expectedUri = uri.OriginalString;
-                            }
+                            expectedUri = new Uri(testCaseBaseUri, uri).AbsoluteUri;
                         }
-
-                        expectedResult = JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResultTemplate);
-                        expectedResult = string.Format(CultureInfo.InvariantCulture, expectedResult, expectedUri);
+                        else
+                        {
+                            expectedUri = uri.OriginalString;
+                        }
                     }
 
-                    testConfig = SetAcceptableHeaders(testConfig);
+                    expectedResult = JsonUtils.WrapTopLevelValue(testConfig, entryPayloadExpectedJsonResultTemplate);
+                    expectedResult = string.Format(CultureInfo.InvariantCulture, expectedResult, expectedUri);
+                }
 
-                    return new BatchWriterUtils.ODataPayload
-                    {
-                        Items = new ODataItem[] { sampleEntry },
-                        TestConfiguration = testConfig,
-                        ExpectedResult = expectedResult,
-                    };
+                testConfig = SetAcceptableHeaders(testConfig);
+
+                return new BatchWriterUtils.ODataPayload
+                {
+                    Items = new ODataItem[] { sampleEntry },
+                    TestConfiguration = testConfig,
+                    ExpectedResult = expectedResult,
                 };
+            };
 
             // Start with test cases that use the cross-referencing link in the body of the payload and have a base URI
             IEnumerable<Func<WriterTestConfiguration, Uri, string, CrossReferencingTestCase>> testCaseFuncs = new Func<WriterTestConfiguration, Uri, string, CrossReferencingTestCase>[]

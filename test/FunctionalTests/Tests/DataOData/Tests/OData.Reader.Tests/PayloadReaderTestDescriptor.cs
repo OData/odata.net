@@ -923,17 +923,6 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests
             }
 
             /// <summary>
-            /// Determines if the specified content type is an content type.
-            /// </summary>
-            /// <param name="contentType">The content type to inspect.</param>
-            /// <returns>true if the content type is ATOM; false otherwise</returns>
-            private static bool IsAtomMimeType(string contentType)
-            {
-                return contentType.StartsWith(MimeTypes.ApplicationAtomXml, StringComparison.OrdinalIgnoreCase)
-                    || contentType.StartsWith(MimeTypes.ApplicationXml, StringComparison.OrdinalIgnoreCase);
-            }
-
-            /// <summary>
             /// Determines if the specified content type is an JSON content type.
             /// </summary>
             /// <param name="contentType">The content type to inspect.</param>

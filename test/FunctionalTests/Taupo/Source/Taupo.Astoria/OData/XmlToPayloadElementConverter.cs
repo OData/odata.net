@@ -101,7 +101,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
         public ODataPayloadElement ConvertToPayloadElement(XElement element)
         {
             ExceptionUtilities.CheckArgumentNotNull(element, "element");
-            
+
             ODataPayloadElement result;
             if (element.Name == AtomFeed)
             {
@@ -246,7 +246,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             AddXmlBaseAnnotation(metadataPayload, edmxElement);
 
             XElement[] schemaElements = dataServicesElement.Elements().Where(e => e.Name.LocalName == "Schema").ToArray();
-            
+
             ExceptionUtilities.CheckObjectNotNull(this.CsdlParser, "Cannot deserialize metadata without a CSDL parser.");
             var model = this.CsdlParser.Parse(schemaElements);
             metadataPayload.EntityModelSchema = model;
@@ -273,7 +273,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             AddXmlBaseAnnotation(entity, entry);
 
             this.DeserializeEntryAttributes(entry, entity);
-            
+
             // get the content and properties, as well as any MLE metadata
             XElement content = entry.Element(AtomContent);
             XElement properties = null;
@@ -641,7 +641,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             {
                 link.Annotations.Add(new TitleAnnotation(titleAttribute.Value));
             }
-            
+
             AddXmlBaseAnnotation(link, linkValue);
         }
 
@@ -803,7 +803,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             {
                 var result = new DeferredLink() { UriString = link.Attribute(AtomId).Value };
                 AddXmlBaseAnnotation(result, link);
-                
+
                 // add the element so that later validation can happen to validate the MetadataUri namespace is not used
                 var xmlPayloadRep = new XmlPayloadElementRepresentationAnnotation() { XmlNodes = new XNode[] { link } };
                 result.Annotations.Add(xmlPayloadRep);
@@ -829,7 +829,7 @@ namespace Microsoft.Test.Taupo.Astoria.OData
             {
                 // deserialize the expanded element
                 ExpandedLink expanded = new ExpandedLink() { UriString = hrefValue };
-                
+
                 if (inline.HasElements)
                 {
                     expanded.ExpandedElement = this.ConvertToPayloadElement(inline.Elements().Single());

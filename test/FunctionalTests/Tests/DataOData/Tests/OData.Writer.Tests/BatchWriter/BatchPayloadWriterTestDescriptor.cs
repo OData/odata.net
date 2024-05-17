@@ -19,7 +19,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
 
     public class BatchPayloadWriterTestDescriptor<T> : PayloadWriterTestDescriptor<T>
     {
-         /// <summary>
+        /// <summary>
         /// Create a new descriptor instance given a payload item, expected and JSON results
         /// and optional extractors
         /// </summary>
@@ -52,7 +52,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
         internal BatchPayloadWriterTestDescriptor(Settings settings, IEnumerable<T> payloadItems)
             : base(settings, payloadItems)
         {
-            
+
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             Settings settings,
             IEnumerable<T> payloadItems,
             WriterTestExpectedResultCallback expectedResultCallback)
-            : base(settings,payloadItems, expectedResultCallback)
+            : base(settings, payloadItems, expectedResultCallback)
         {
         }
 
@@ -154,13 +154,13 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             TestWriterUtils.SetFailAsynchronousCalls(messageStream, testConfiguration.Synchronous);
 
             var boundary = this.PayloadElement.GetAnnotation<BatchBoundaryAnnotation>();
-            
+
             // We create a new test configuration for batch because the payload indicates whether we are dealing with a request or a response and the configuration won't know that in advance
             var newTestConfig = new WriterTestConfiguration(testConfiguration.Format, testConfiguration.MessageWriterSettings, this.PayloadElement is BatchRequestPayload, testConfiguration.Synchronous);
             TestMessage testMessage = TestWriterUtils.CreateOutputMessageFromStream(messageStream, newTestConfig, this.PayloadKind, boundary.BatchBoundaryInHeader, this.UrlResolver);
             return testMessage;
         }
 
-       
+
     }
 }

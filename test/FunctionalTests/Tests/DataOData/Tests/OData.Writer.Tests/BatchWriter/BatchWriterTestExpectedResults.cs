@@ -196,28 +196,28 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.BatchWriter
             }
 
             return (observedContent) =>
+            {
+                if (comparer != null)
                 {
-                    if (comparer != null)
-                    {
-                        return comparer(observedContent);
-                    }
+                    return comparer(observedContent);
+                }
 
-                    if (normalizer != null)
-                    {
-                        observedContent = normalizer(observedContent);
-                    }
+                if (normalizer != null)
+                {
+                    observedContent = normalizer(observedContent);
+                }
 
-                    if (string.CompareOrdinal(expectedContent, observedContent) != 0)
-                    {
-                        return string.Format(
-                            "Different operation content.{0}Expected:{0}-->{1}<--{0}Actual:{0}-->{2}<--{0}",
-                            Environment.NewLine,
-                            expectedContent,
-                            observedContent);
-                    }
+                if (string.CompareOrdinal(expectedContent, observedContent) != 0)
+                {
+                    return string.Format(
+                        "Different operation content.{0}Expected:{0}-->{1}<--{0}Actual:{0}-->{2}<--{0}",
+                        Environment.NewLine,
+                        expectedContent,
+                        observedContent);
+                }
 
-                    return null;
-                };
+                return null;
+            };
         }
 
         /// <summary>
