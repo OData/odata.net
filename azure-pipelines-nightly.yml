@@ -73,7 +73,7 @@ extends:
           outputs:	
           - output: pipelineArtifact	
             displayName: 'Publish Artifact - NuGet Debug Packages'	
-            targetPath: '$(Build.ArtifactsStagingDirectory)\NuGet-Debug'	
+            targetPath: '$(Build.ArtifactStagingDirectory)\NuGet-Debug'	
             artifactName: NuGetDebug	
         steps:	
           - template: /nightly.yml@self
