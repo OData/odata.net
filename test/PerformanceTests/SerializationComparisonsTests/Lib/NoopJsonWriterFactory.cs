@@ -18,7 +18,7 @@ namespace ExperimentsLib
     {
         public IJsonWriter CreateJsonWriter(Stream stream, bool isIeee754Compatible, Encoding encoding)
         {
-            throw new System.NotImplementedException();
+            return new NoopJsonWriter();
         }
     }
 }
