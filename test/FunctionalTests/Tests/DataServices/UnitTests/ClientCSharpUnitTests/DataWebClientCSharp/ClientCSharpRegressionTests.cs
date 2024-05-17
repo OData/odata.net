@@ -989,19 +989,19 @@ namespace AstoriaUnitTests.Tests
                 HelperMethod<CustomerNonEntity>(
                     request.ServiceRoot,
                     "/Customers",
-                    DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidNonEntityType", typeof(CustomerNonEntity)));
+                    DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidNonEntityType", typeof(CustomerNonEntity)));
 
                 // Top Level Type Mismatch: Client - NonEntity, Server - Entity - Single Entity case
                 HelperMethod<CustomerNonEntity>(
                     request.ServiceRoot,
                     "/Customers(1)",
-                    DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidNonEntityType", typeof(CustomerNonEntity)));
+                    DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidNonEntityType", typeof(CustomerNonEntity)));
 
                 // Top Level Type Mismatch: Client - Entity, Server - NonEntity
                 HelperMethod<AddressEntity>(
                     request.ServiceRoot,
                     "/Customers(0)/Address",
-                    DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(AddressEntity)));
+                    DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(AddressEntity)));
 
                 // The reason for doing $select here is if we do not do $select, Orders will should up as unexpanded link, and the client already validates that the property
                 // must be a collection for unexpanded collection links.

@@ -135,7 +135,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(MyInfo), "MyInfo", testContext.Model);
 
             Action test = () => this.CreateCollectionValueMaterializationPolicy(testContext).CreateCollectionInstance((IEdmCollectionTypeReference)clientTypeAnnotation.EdmTypeReference, clientTypeAnnotation.ElementType);
-            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_DataServiceCollectionNotSupportedForNonEntities);
+            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.ObjectMaterializer_DataServiceCollectionNotSupportedForNonEntities);
         }
 
         [Fact]
@@ -146,7 +146,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             var clientTypeAnnotation = new ClientTypeAnnotation(edmType, typeof(ListWithNoEmptyConstructors), "Points", testContext.Model);
 
             Action test = () => this.CreateCollectionValueMaterializationPolicy(testContext).CreateCollectionInstance((IEdmCollectionTypeReference)clientTypeAnnotation.EdmTypeReference, clientTypeAnnotation.ElementType);
-            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_MaterializationTypeError(clientTypeAnnotation.ElementType.FullName));
+            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.ObjectMaterializer_MaterializationTypeError(clientTypeAnnotation.ElementType.FullName));
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace AstoriaUnitTests.TDD.Tests.Client.Materialization
             };
 
             Action test = () => this.CreateCollectionValueMaterializationPolicy(testContext).CreateCollectionPropertyInstance(odataProperty, typeof(ListWithNoEmptyConstructors));
-            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.AtomMaterializer_NoParameterlessCtorForCollectionProperty("foo", typeof(ListWithNoEmptyConstructors).Name));
+            test.ShouldThrow<InvalidOperationException>().WithMessage(DSClient.Strings.ObjectMaterializer_NoParameterlessCtorForCollectionProperty("foo", typeof(ListWithNoEmptyConstructors).Name));
         }
 
         [Fact]

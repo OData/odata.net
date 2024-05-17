@@ -149,7 +149,7 @@ namespace Microsoft.OData.Client.Materialization
                 return this.currentFeed.Count.Value;
             }
 
-            throw new InvalidOperationException(DSClient.Strings.MaterializeFromAtom_CountNotPresent);
+            throw new InvalidOperationException(DSClient.Strings.MaterializeFromObject_CountNotPresent);
         }
 
         /// <summary>

@@ -881,7 +881,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                 PropertyName = "Description"
             },
             new MaterializationTestCase( // Complex type on the server but entity on the client with m:type - should fail. For .LoadProperty we have a different exception since we are not able to distiguish between a collection and single entity in AtomMaterializer
-                alternateException: new InvalidOperationException(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity))),
+                alternateException: new InvalidOperationException(DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(BaseEntity))),
                 loadProperty: true) {
                 CollectionItemType = typeof(BaseEntity),
                  CollectionPropertyPayload = @"<m:value m:type=""Collection(AstoriaUnitTests.DataWebClientCSharp.BaseEntity)"" xmlns:d=""http://docs.oasis-open.org/odata/ns/data"" xmlns:m=""http://docs.oasis-open.org/odata/ns/metadata"">
@@ -889,7 +889,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                         <d:ID>3</d:ID>
                     </m:element>
                 </m:value>",
-               ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity))),
+               ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(BaseEntity))),
                 ValuesToInitializeCollection = (IEnumerable)null,
                 PropertyName = "Collection"
             },
@@ -992,7 +992,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                         <d:ID>3</d:ID>
                     </m:element>
                 </m:value>",
-                    ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity))),
+                    ExpectedException = (Exception)new InvalidOperationException(DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(BaseEntity))),
                     ValuesToInitializeCollection = (IEnumerable)null,
                     PropertyName = "Collection"
                 });
@@ -1089,7 +1089,7 @@ namespace AstoriaUnitTests.DataWebClientCSharp
                             {
                                 Exception actualException = ex is TargetInvocationException ? ex.InnerException : ex;
 
-                                if (expectedException.Message == DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity)))
+                                if (expectedException.Message == DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(BaseEntity)))
                                 {
                                     if (entityType.Name == typeof(MaterializationTestComplextTypeWithCollection<,>).Name || entityType.Name == typeof(MaterializationTestsEntityWithComplexTypeWithCollection<,>).Name)
                                     {
@@ -1291,7 +1291,7 @@ X-Powered-By: ASP.NET
                             {
                                 Exception actualException = ex is TargetInvocationException || ex is DataServiceQueryException ? ex.InnerException : ex;
 
-                                if (expectedException.Message == DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidEntityType", typeof(BaseEntity)) &&
+                                if (expectedException.Message == DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidEntityType", typeof(BaseEntity)) &&
                                     (entityType.Name == typeof(MaterializationTestComplextTypeWithCollection<,>).Name || entityType.Name == typeof(MaterializationTestsEntityWithComplexTypeWithCollection<,>).Name))
                                 {
                                     TestUtil.AssertContains(actualException.Message, "The property 'Collection' is of entity type and it cannot be a property of the type '");

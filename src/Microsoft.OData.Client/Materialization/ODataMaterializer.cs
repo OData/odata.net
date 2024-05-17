@@ -244,7 +244,7 @@ namespace Microsoft.OData.Client.Materialization
                     // Hence we need to explicitly check for System.Object to allow this
                     if (edmType != null && !edmType.TypeKind.IsStructured())
                     {
-                        throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidNonEntityType(materializerType.FullName));
+                        throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidNonEntityType(materializerType.FullName));
                     }
 
                     ODataReaderWrapper reader = ODataReaderWrapper.Create(messageReader, payloadKind, edmType, responseInfo.ResponsePipeline);
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Client.Materialization
                             // Top level properties cannot be of entity type.
                             if (edmType != null && (edmType.TypeKind == EdmTypeKind.Entity || edmType.TypeKind == EdmTypeKind.Complex))
                             {
-                                throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(materializerType.FullName));
+                                throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidEntityType(materializerType.FullName));
                             }
 
                             result = new ODataPropertyMaterializer(messageReader, materializerContext, materializerType, queryComponents.SingleResult);
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Client.Materialization
                             var odataError = messageReader.ReadError();
                             throw new ODataErrorException(odataError.Message, odataError);
                         default:
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidResponsePayload(XmlConstants.DataWebNamespace));
+                            throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidResponsePayload(XmlConstants.DataWebNamespace));
                     }
                 }
 
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (payloadKinds.Count == 0)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidResponsePayload(XmlConstants.DataWebNamespace));
+                    throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidResponsePayload(XmlConstants.DataWebNamespace));
                 }
 
                 // Pick the first payload kind detected by ODataLib and use that to parse the exception.
@@ -394,7 +394,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (detectionResult.Format != ODataFormat.Json && detectionResult.Format != ODataFormat.RawValue)
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidContentTypeEncountered(responseMessage.GetHeader(XmlConstants.HttpContentType)));
+                    throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidContentTypeEncountered(responseMessage.GetHeader(XmlConstants.HttpContentType)));
                 }
 
                 payloadKind = detectionResult.PayloadKind;

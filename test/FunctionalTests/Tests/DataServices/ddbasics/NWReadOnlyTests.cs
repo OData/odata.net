@@ -476,7 +476,7 @@ namespace AstoriaUnitTests
             {
                 var baseQuery = ctx.CreateQuery<northwindClient.Customers>("Customer");
                 var inlineQuery = baseQuery.IncludeCount();
-                string countNotPresentMsg = DataServicesClientResourceUtil.GetString("MaterializeFromAtom_CountNotPresent");
+                string countNotPresentMsg = DataServicesClientResourceUtil.GetString("MaterializeFromObject_CountNotPresent");
                 string resourceNotFoundCustomerMsg = DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "Customer");
                 string resourceNotFoundVar1Msg = DataServicesResourceUtil.GetString("RequestUriProcessor_ResourceNotFound", "VAR1");
 
@@ -623,7 +623,7 @@ namespace AstoriaUnitTests
                     catch (InvalidOperationException ex)
                     {
                         Assert.AreEqual(i, 0);
-                        string expectedMsg = DataServicesClientResourceUtil.GetString("MaterializeFromAtom_CountNotPresent");
+                        string expectedMsg = DataServicesClientResourceUtil.GetString("MaterializeFromObject_CountNotPresent");
                         Assert.AreEqual(expectedMsg, ex.Message);
                     }
                 }
@@ -678,7 +678,7 @@ namespace AstoriaUnitTests
                     catch (InvalidOperationException ex)
                     {
                         Assert.AreEqual(i, 0);  // only happens in the first case
-                        string expectedMsg = DataServicesClientResourceUtil.GetString("MaterializeFromAtom_CountNotPresent");
+                        string expectedMsg = DataServicesClientResourceUtil.GetString("MaterializeFromObject_CountNotPresent");
                         Assert.AreEqual(expectedMsg, ex.Message);
                     }
                 }

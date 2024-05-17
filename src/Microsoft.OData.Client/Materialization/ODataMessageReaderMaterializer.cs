@@ -80,7 +80,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <returns>The count value returned from the server</returns>
         internal override long CountValue
         {
-            get { throw new InvalidOperationException(ClientStrings.MaterializeFromAtom_CountNotPresent); }
+            get { throw new InvalidOperationException(ClientStrings.MaterializeFromObject_CountNotPresent); }
         }
 
         /// <summary>

@@ -1368,7 +1368,7 @@ Imports <xmlns:m="http://docs.oasis-open.org/odata/ns/metadata">
                     End Sub,
                     Sub(dsc, ex)
                         Assert.AreEqual(GetType(InvalidOperationException), ex.InnerException.GetType(), "Inner exception type did not match")
-                        Assert.AreEqual(DataServicesClientResourceUtil.GetString("AtomMaterializer_InvalidNonEntityType", GetType(INPCTypeWithoutID)), ex.InnerException.Message, "Inner exception message did not match")
+                        Assert.AreEqual(DataServicesClientResourceUtil.GetString("ObjectMaterializer_InvalidNonEntityType", GetType(INPCTypeWithoutID)), ex.InnerException.Message, "Inner exception message did not match")
                         ' no validation, since the dsc is created, but the exception is thrown later while loading the entity
                     End Sub)
             End Using

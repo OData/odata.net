@@ -1693,7 +1693,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new Employee { ID = e.ID, Manager = new PeopleManager { ID = (e as Employee).Manager.ID, Name = (e as Employee).Manager.Name }}),
 
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Manager"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Manager"),
                 typeof(InvalidOperationException)
             );
 
@@ -1708,7 +1708,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new Employee { Manager = new PeopleManager { Name = (e as Employee).Manager.Name }}),
 
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Manager"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Manager"),
                 typeof(InvalidOperationException)
             );
 
@@ -1720,7 +1720,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new MyEmployeeEntity { ID = e.ID, Colleagues = (e as Employee).Colleagues.Select(c => new MyEmployeeEntity { ID = c.ID, Name = c.Name }).ToList()}),
                     people.Select(e => new Employee { ID = e.ID, Colleagues = (e as Employee).Colleagues.Select(c => new Employee { ID = c.ID, Name = c.Name }).ToList()}),
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Colleagues"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Colleagues"),
                 typeof(InvalidOperationException)
             );
 
@@ -1733,7 +1733,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new MyEmployeeEntity { Colleagues = (e as Employee).Colleagues.Select(c => new MyEmployeeEntity { Name = c.Name }).ToList()}),
                     people.Select(e => new Employee { Colleagues = (e as Employee).Colleagues.Select(c => new Employee { Name = c.Name }).ToList()}),
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Colleagues"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Colleagues"),
                 typeof(InvalidOperationException)
             );
 
@@ -1744,7 +1744,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new { ID = e.ID, Office = new { Building = (e as Employee).Office.Building, OfficeNumber = (e as Employee).Office.OfficeNumber }}),
                     people.Select(e => new MyEmployeeNonEntity { MyID = e.ID, MyOffice = new MyOfficeComplexType { BuildingName = (e as Employee).Office.Building, OfficeNumber = (e as Employee).Office.OfficeNumber }}),
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Office"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Office"),
                 typeof(InvalidOperationException)
             );
 
@@ -1756,7 +1756,7 @@ namespace AstoriaUnitTests.Tests.DerivedProperty
                     people.Select(e => new { Office = new { Building = (e as Employee).Office.Building, OfficeNumber = (e as Employee).Office.OfficeNumber }}),
                     people.Select(e => new MyEmployeeNonEntity { MyOffice = new MyOfficeComplexType { BuildingName = (e as Employee).Office.Building, OfficeNumber = (e as Employee).Office.OfficeNumber }}),
                 },
-                DataServicesClientResourceUtil.GetString("AtomMaterializer_PropertyMissing", "Office"),
+                DataServicesClientResourceUtil.GetString("ObjectMaterializer_PropertyMissing", "Office"),
                 typeof(InvalidOperationException)
             );
         }

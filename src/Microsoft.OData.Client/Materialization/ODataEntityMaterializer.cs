@@ -402,7 +402,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (result == null)
             {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
+                throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_PropertyNotExpectedEntry(name));
             }
 
             if (!materializerContext.AutoNullPropagation)
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.Entry == null)
             {
-                throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToInitializeIsNull(resultType.FullName));
+                throw new NullReferenceException(DSClient.Strings.ObjectMaterializer_EntryToInitializeIsNull(resultType.FullName));
             }
 
             if (!entry.EntityHasBeenResolved)
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else if (!resultType.IsAssignableFrom(entry.ActualType.ElementType))
             {
-                string message = DSClient.Strings.AtomMaterializer_ProjectEntityTypeMismatch(
+                string message = DSClient.Strings.ObjectMaterializer_ProjectEntityTypeMismatch(
                     resultType.FullName,
                     entry.ActualType.ElementType.FullName,
                     entry.Id);
@@ -652,7 +652,7 @@ namespace Microsoft.OData.Client.Materialization
                         else
                         {
                             // the named stream projected did not come back as part of the property
-                            throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                            throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_PropertyMissing(propertyName));
                         }
                     }
 
@@ -674,7 +674,7 @@ namespace Microsoft.OData.Client.Materialization
                     link = odataProperty == null && links != null ? links.Where(p => p.Name == propertyName).FirstOrDefault() : null;
                     if (link == null && odataProperty == null)
                     {
-                        throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                        throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_PropertyMissing(propertyName));
                     }
 
                     if (link != null)
@@ -775,7 +775,7 @@ namespace Microsoft.OData.Client.Materialization
                         // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                         if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                         {
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
+                            throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                         }
 
                         if (property.IsPrimitiveOrEnumOrComplexCollection)
@@ -796,7 +796,7 @@ namespace Microsoft.OData.Client.Materialization
                         {
                             if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(property.NullablePropertyType))
                             {
-                                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, property.NullablePropertyType));
+                                throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_CannotAssignNull(odataProperty.Name, property.NullablePropertyType));
                             }
 
                             this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
@@ -856,12 +856,12 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (odataProperty == null)
                 {
-                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                    throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_PropertyMissing(propertyName));
                 }
 
                 if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(expectedPropertyType))
                 {
-                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, expectedPropertyType));
+                    throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_CannotAssignNull(odataProperty.Name, expectedPropertyType));
                 }
 
                 this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(expectedPropertyType, odataProperty);
@@ -970,7 +970,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.Entry == null)
             {
-                throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToAccessIsNull(name));
+                throw new NullReferenceException(DSClient.Strings.ObjectMaterializer_EntryToAccessIsNull(name));
             }
         }
 
@@ -1050,7 +1050,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (link == null)
             {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                throw new InvalidOperationException(DSClient.Strings.ObjectMaterializer_PropertyMissing(propertyName));
             }
 
             return MaterializerNestedEntry.GetNestedEntry(link, materializerContext);

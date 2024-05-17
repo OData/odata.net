@@ -264,7 +264,7 @@ namespace Microsoft.OData.Client.Materialization
                 // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
+                    throw DSClient.Error.InvalidOperation(DSClient.Strings.ObjectMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                 }
 
                 if (property.IsKnownType)
