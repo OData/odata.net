@@ -49,7 +49,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.EntityModel
         /// Initializes a new instance of the PropertyMappingAnnotation class
         /// </summary>
         /// <param name="sourcePath">sourcepath to map</param>
-        /// <param name="targetSyndicationItem">specific sydication item to target</param>
+        /// <param name="targetSyndicationItem">Atom specific sydication item to target</param>
         /// <param name="targetTextContentKind">ContentKind of mapping</param>
         /// <param name="keepInContent">Whether to keep the mapped property outputing to the feed</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Globalization", "CA1308:NormalizeStringsToUppercase", Justification = "Not normalizing, need lowercase strings for xml")]

@@ -20,7 +20,7 @@ namespace Microsoft.OData.Tests
         private static readonly List<ODataMediaTypeFormat> BatchMediaTypes = new List<ODataMediaTypeFormat>();
 
         /// <summary>
-        /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/>, excluded.
+        /// An array that maps stores the supported media types for all <see cref="ODataPayloadKind"/>.
         /// Here is a comparison baseline
         /// </summary>
         /// <remarks>

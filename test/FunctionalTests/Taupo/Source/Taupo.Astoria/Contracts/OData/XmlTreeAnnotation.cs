@@ -51,7 +51,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         /// Gets or sets a value indicating whether or not this node in the tree is an attribute
         /// </summary>
         public bool IsAttribute { get; set; }
-        
+
         /// <summary>
         /// Gets the child notes of the this node
         /// </summary>

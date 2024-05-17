@@ -393,7 +393,6 @@ namespace Microsoft.OData.Service.Serializers
             this.PayloadMetadataPropertyManager.SetId(feed, () => getAbsoluteUri());
 
             // support for $count
-            // in we write it at the beginning (we always have)
             //   in JSON for backward compatiblity reasons we write it at the end, so we must not fill it here.
             if (topLevel && this.RequestDescription.CountOption == RequestQueryCountOption.CountQuery)
             {

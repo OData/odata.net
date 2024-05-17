@@ -104,19 +104,7 @@ namespace Microsoft.Test.OData.Tests.Client.WriteJsonPayloadTests
         /// <param name="mimeType">The mime type</param>
         public static void VerifyPayloadString(string writerOuput1, string writerOutput2, string mimeType)
         {
-            if (string.Equals(mimeType, MimeTypes.ApplicationAtomXml, StringComparison.Ordinal))
-            {
-                // resulting payloads with/without model should be the same except for the updated time stamps
-                const string pattern = @"<updated>([A-Za-z0-9\-\:]{20})\</updated>";
-                const string replacement = "<updated>0000-00-00T00:00:00Z</updated>";
-                writerOuput1 = Regex.Replace(writerOuput1, pattern, (match) => replacement);
-                writerOutput2 = Regex.Replace(writerOutput2, pattern, (match) => replacement);
-                Assert.Equal(writerOuput1, writerOutput2);
-            }
-            else
-            {
-                Assert.Equal(writerOuput1, writerOutput2);
-            }
+            Assert.Equal(writerOuput1, writerOutput2);
         }
 
         /// <summary>

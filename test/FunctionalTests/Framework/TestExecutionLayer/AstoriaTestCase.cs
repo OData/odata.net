@@ -362,7 +362,6 @@ namespace System.Data.Test.Astoria
         public bool IncludeComplexTypes { get; set; }
         public bool GenerateClientTypes { get; set; }
         public bool RemoveUnEligibleTypes { get; set; }
-        public bool MapToAtomElements { get; set; }
         public bool MapToNonAtomElements { get; set; }
         public string[] PreDefinedPaths { get; set; }
         public InerhitedTypes InheritanceFilter { get; set; }
@@ -450,7 +449,6 @@ namespace System.Data.Test.Astoria
                     KeepInContent,//bool pKeepInContent,
                     RemoveUnEligibleTypes,//bool pRemoveUnEligibleTypes,
                     GenerateClientTypes,//bool pGenerateClientTypes,
-                    MapToAtomElements,//bool pMapPropertiesToAtomElements,
                     MapToNonAtomElements,//bool pMapPropertiesToNonAtomElements,
                     GenerateServerEPMMappings,//bool GenerateServerEPMMappings,
                     KeepSameNamespace,//bool KeepSameNamespace,
@@ -518,7 +516,6 @@ namespace System.Data.Test.Astoria
                 "{3} , {0},{1},{2},{4}{5}{6}{7}",
                 GenerateClientTypes ? "Client Mapped" : "",
                 GenerateServerEPMMappings ? "Server Mapped" : "",
-                MapToAtomElements ? "Mapped to Atom" : "Mapped to Non-Elements",
                 testVarAttrib.Desc, InheritanceFilter.ToString(),
                 KeepSameNamespace ? "Same Namespace" : "Different NameSpaces",
                 PreDefinedPaths != null ? ",PredefinedPaths" : "", KeepInContent.ToString());

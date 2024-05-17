@@ -1023,30 +1023,30 @@ namespace Microsoft.OData.Client {
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. payload has a link, local object has a simple value."
+        /// A string like "Error processing response stream.Payload has a link, local object has a simple value."
         /// </summary>
-        internal static string Deserialize_MismatchAtomLinkLocalSimple
+        internal static string Deserialize_MismatchObjectLinkLocalSimple
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchAtomLinkLocalSimple);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchObjectLinkLocalSimple);
             }
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. payload has a feed and the property '{0}' is not a collection."
+        /// A string like "Error processing response stream. Payload has a feed and the property '{0}' is not a collection."
         /// </summary>
-        internal static string Deserialize_MismatchAtomLinkFeedPropertyNotCollection(object p0)
+        internal static string Deserialize_MismatchObjectLinkFeedPropertyNotCollection(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchAtomLinkFeedPropertyNotCollection, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchObjectLinkFeedPropertyNotCollection, p0);
         }
 
         /// <summary>
-        /// A string like "Error processing response stream. payload has an entry and the property '{0}' is a collection."
+        /// A string like "Error processing response stream. Payload has an entry and the property '{0}' is a collection."
         /// </summary>
-        internal static string Deserialize_MismatchAtomLinkEntryPropertyIsCollection(object p0)
+        internal static string Deserialize_MismatchObjectLinkEntryPropertyIsCollection(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchAtomLinkEntryPropertyIsCollection, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.Deserialize_MismatchObjectLinkEntryPropertyIsCollection, p0);
         }
 
         /// <summary>
@@ -1237,44 +1237,44 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "Count value is not part of the response stream."
         /// </summary>
-        internal static string MaterializeFromAtom_CountNotPresent
+        internal static string MaterializeFromObject_CountNotPresent
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromAtom_CountNotPresent);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromObject_CountNotPresent);
             }
         }
 
         /// <summary>
         /// A string like "The top level link is only available after the response has been enumerated."
         /// </summary>
-        internal static string MaterializeFromAtom_TopLevelLinkNotAvailable
+        internal static string MaterializeFromObject_TopLevelLinkNotAvailable
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromAtom_TopLevelLinkNotAvailable);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromObject_TopLevelLinkNotAvailable);
             }
         }
 
         /// <summary>
         /// A string like "The collection is not part of the current entry"
         /// </summary>
-        internal static string MaterializeFromAtom_CollectionKeyNotPresentInLinkTable
+        internal static string MaterializeFromObject_CollectionKeyNotPresentInLinkTable
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromAtom_CollectionKeyNotPresentInLinkTable);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromObject_CollectionKeyNotPresentInLinkTable);
             }
         }
 
         /// <summary>
         /// A string like "This response does not contain any nested collections. Use null as Key instead."
         /// </summary>
-        internal static string MaterializeFromAtom_GetNestLinkForFlatCollection
+        internal static string MaterializeFromObject_GetNestLinkForFlatCollection
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromAtom_GetNestLinkForFlatCollection);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.MaterializeFromObject_GetNestLinkForFlatCollection);
             }
         }
 
@@ -2119,184 +2119,184 @@ namespace Microsoft.OData.Client {
         /// <summary>
         /// A string like "Expected exactly one entry in the response from the server, but none was found."
         /// </summary>
-        internal static string AtomParser_SingleEntry_NoneFound
+        internal static string ObjectParser_SingleEntry_NoneFound
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomParser_SingleEntry_NoneFound);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectParser_SingleEntry_NoneFound);
             }
         }
 
         /// <summary>
         /// A string like "Expected exactly one entry in the response from the server, but more than one was found."
         /// </summary>
-        internal static string AtomParser_SingleEntry_MultipleFound
+        internal static string ObjectParser_SingleEntry_MultipleFound
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomParser_SingleEntry_MultipleFound);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectParser_SingleEntry_MultipleFound);
             }
         }
 
         /// <summary>
-        /// A string like "Expected an feed or entry in the response from the server, but found an unexpected element instead."
+        /// A string like "Expected a feed or entry in the response from the server, but found an unexpected element instead."
         /// </summary>
-        internal static string AtomParser_SingleEntry_ExpectedFeedOrEntry
+        internal static string ObjectParser_SingleEntry_ExpectedFeedOrEntry
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomParser_SingleEntry_ExpectedFeedOrEntry);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectParser_SingleEntry_ExpectedFeedOrEntry);
             }
         }
 
         /// <summary>
         /// A string like "The null value from property '{0}' cannot be assigned to a type '{1}'."
         /// </summary>
-        internal static string AtomMaterializer_CannotAssignNull(object p0, object p1)
+        internal static string ObjectMaterializer_CannotAssignNull(object p0, object p1)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_CannotAssignNull, p0, p1);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_CannotAssignNull, p0, p1);
         }
 
         /// <summary>
         /// A string like "An entry of type '{0}' cannot be added to a collection that contains instances of type '{1}'. This may occur when an existing entry of a different type has the same identity value or when the same entity is projected into two different types in a single query."
         /// </summary>
-        internal static string AtomMaterializer_EntryIntoCollectionMismatch(object p0, object p1)
+        internal static string ObjectMaterializer_EntryIntoCollectionMismatch(object p0, object p1)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_EntryIntoCollectionMismatch, p0, p1);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_EntryIntoCollectionMismatch, p0, p1);
         }
 
         /// <summary>
         /// A string like "An entry returned by the navigation property '{0}' is null and cannot be initialized. You should check for a null value before accessing this property."
         /// </summary>
-        internal static string AtomMaterializer_EntryToAccessIsNull(object p0)
+        internal static string ObjectMaterializer_EntryToAccessIsNull(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_EntryToAccessIsNull, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_EntryToAccessIsNull, p0);
         }
 
         /// <summary>
         /// A string like "An entry that contains the data required to create an instance of type '{0}' is null and cannot be initialized. You should check for a null value before accessing this entry."
         /// </summary>
-        internal static string AtomMaterializer_EntryToInitializeIsNull(object p0)
+        internal static string ObjectMaterializer_EntryToInitializeIsNull(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_EntryToInitializeIsNull, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_EntryToInitializeIsNull, p0);
         }
 
         /// <summary>
         /// A string like "An entity of type '{0}' cannot be projected because there is already an instance of type '{1}' for '{2}'."
         /// </summary>
-        internal static string AtomMaterializer_ProjectEntityTypeMismatch(object p0, object p1, object p2)
+        internal static string ObjectMaterializer_ProjectEntityTypeMismatch(object p0, object p1, object p2)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_ProjectEntityTypeMismatch, p0, p1, p2);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_ProjectEntityTypeMismatch, p0, p1, p2);
         }
 
         /// <summary>
         /// A string like "The expected property '{0}' could not be found while processing an entry. Check for null before accessing this property."
         /// </summary>
-        internal static string AtomMaterializer_PropertyMissing(object p0)
+        internal static string ObjectMaterializer_PropertyMissing(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_PropertyMissing, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_PropertyMissing, p0);
         }
 
         /// <summary>
         /// A string like "Property '{0}' is not an entity."
         /// </summary>
-        internal static string AtomMaterializer_PropertyNotExpectedEntry(object p0)
+        internal static string ObjectMaterializer_PropertyNotExpectedEntry(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_PropertyNotExpectedEntry, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_PropertyNotExpectedEntry, p0);
         }
 
         /// <summary>
         /// A string like "A DataServiceCollection can only contain entity types. Primitive and complex types cannot be contained by this kind of collection."
         /// </summary>
-        internal static string AtomMaterializer_DataServiceCollectionNotSupportedForNonEntities
+        internal static string ObjectMaterializer_DataServiceCollectionNotSupportedForNonEntities
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_DataServiceCollectionNotSupportedForNonEntities);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_DataServiceCollectionNotSupportedForNonEntities);
             }
         }
 
         /// <summary>
         /// A string like "Collection property '{0}' cannot be created because the type '{1}' does not have a public parameterless constructor."
         /// </summary>
-        internal static string AtomMaterializer_NoParameterlessCtorForCollectionProperty(object p0, object p1)
+        internal static string ObjectMaterializer_NoParameterlessCtorForCollectionProperty(object p0, object p1)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_NoParameterlessCtorForCollectionProperty, p0, p1);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_NoParameterlessCtorForCollectionProperty, p0, p1);
         }
 
         /// <summary>
         /// A string like "The element '{0}' is not a valid collection item. The name of the collection item element must be 'element' and must belong to the 'http://docs.oasis-open.org/odata/ns/data' namespace."
         /// </summary>
-        internal static string AtomMaterializer_InvalidCollectionItem(object p0)
+        internal static string ObjectMaterializer_InvalidCollectionItem(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_InvalidCollectionItem, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_InvalidCollectionItem, p0);
         }
 
         /// <summary>
         /// A string like "There is a type mismatch between the client and the service. Type '{0}' is an entity type, but the type in the response payload does not represent an entity type. Please ensure that types defined on the client match the data model of the service, or update the service reference on the client."
         /// </summary>
-        internal static string AtomMaterializer_InvalidEntityType(object p0)
+        internal static string ObjectMaterializer_InvalidEntityType(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_InvalidEntityType, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_InvalidEntityType, p0);
         }
 
         /// <summary>
         /// A string like "There is a type mismatch between the client and the service. Type '{0}' is not an entity type, but the type in the response payload represents an entity type. Please ensure that types defined on the client match the data model of the service, or update the service reference on the client."
         /// </summary>
-        internal static string AtomMaterializer_InvalidNonEntityType(object p0)
+        internal static string ObjectMaterializer_InvalidNonEntityType(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_InvalidNonEntityType, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_InvalidNonEntityType, p0);
         }
 
         /// <summary>
         /// A string like "Materialization of top level collection expected ICollection&lt;&gt;, but actual type was {0}."
         /// </summary>
-        internal static string AtomMaterializer_CollectionExpectedCollection(object p0)
+        internal static string ObjectMaterializer_CollectionExpectedCollection(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_CollectionExpectedCollection, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_CollectionExpectedCollection, p0);
         }
 
         /// <summary>
         /// A string like "The response payload is a not a valid response payload. Please make sure that the top level element is a valid JSON element or belongs to '{0}' namespace."
         /// </summary>
-        internal static string AtomMaterializer_InvalidResponsePayload(object p0)
+        internal static string ObjectMaterializer_InvalidResponsePayload(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_InvalidResponsePayload, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_InvalidResponsePayload, p0);
         }
 
         /// <summary>
         /// A string like "The response content type '{0}' is not currently supported."
         /// </summary>
-        internal static string AtomMaterializer_InvalidContentTypeEncountered(object p0)
+        internal static string ObjectMaterializer_InvalidContentTypeEncountered(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_InvalidContentTypeEncountered, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_InvalidContentTypeEncountered, p0);
         }
 
         /// <summary>
         /// A string like "Cannot materialize the results into a collection type '{0}' because it does not have a parameterless constructor."
         /// </summary>
-        internal static string AtomMaterializer_MaterializationTypeError(object p0)
+        internal static string ObjectMaterializer_MaterializationTypeError(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_MaterializationTypeError, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_MaterializationTypeError, p0);
         }
 
         /// <summary>
         /// A string like "Reset should never be called for collection reader in an internal enumerable."
         /// </summary>
-        internal static string AtomMaterializer_ResetAfterEnumeratorCreationError
+        internal static string ObjectMaterializer_ResetAfterEnumeratorCreationError
         {
             get
             {
-                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_ResetAfterEnumeratorCreationError);
+                return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_ResetAfterEnumeratorCreationError);
             }
         }
 
         /// <summary>
         /// A string like "Cannot materialize a collection of a primitives or complex without the type '{0}' being a collection."
         /// </summary>
-        internal static string AtomMaterializer_TypeShouldBeCollectionError(object p0)
+        internal static string ObjectMaterializer_TypeShouldBeCollectionError(object p0)
         {
-            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.AtomMaterializer_TypeShouldBeCollectionError, p0);
+            return Microsoft.OData.Client.TextRes.GetString(Microsoft.OData.Client.TextRes.ObjectMaterializer_TypeShouldBeCollectionError, p0);
         }
 
         /// <summary>

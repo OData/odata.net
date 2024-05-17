@@ -29,8 +29,7 @@ namespace Microsoft.Test.OData.Services.TestServices.AstoriaDefaultWithAccessRes
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);
             this.OnContextCreated();
             this.Format.LoadServiceModel = GeneratedEdmModel.GetInstance;
-            // The default language is changed to JSON from at V4, manually change the generate code to make sure we don't lose coverage.
-            //this.Format.UseAtom();
+            // The default language is changed to JSON at V4, manually change the generated code to make sure we don't lose coverage.
         }
         partial void OnContextCreated();
         /// <summary>

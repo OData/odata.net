@@ -86,9 +86,6 @@ namespace Microsoft.Test.Taupo.Astoria.ResponseVerification
             {
                 switch (request.Uri.Format)
                 {
-                    case FormatQueryOptions.Atom:
-                        acceptedContentType = MimeTypes.ApplicationAtomXml;
-                        break;
                     case FormatQueryOptions.Xml:
                         acceptedContentType = MimeTypes.ApplicationXml;
                         break;

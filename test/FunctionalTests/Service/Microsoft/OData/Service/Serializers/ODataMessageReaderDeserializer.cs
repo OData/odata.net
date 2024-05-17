@@ -45,7 +45,7 @@ namespace Microsoft.OData.Service.Serializers
         {
             AstoriaRequestMessage requestMessage = dataService.OperationContext.RequestMessage;
 
-            // WCF DS needs to treat content type */* as payload, so check for it here and override the content type header
+            // WCF DS needs to treat content type */* as ATOM payload, so check for it here and override the content type header
             if (ContentTypeUtil.CompareMimeType(requestMessage.ContentType, XmlConstants.MimeAny))
             {
                 requestMessage.ContentType = XmlConstants.MimeApplicationAtom;

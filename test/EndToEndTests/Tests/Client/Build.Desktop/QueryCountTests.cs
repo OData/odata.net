@@ -140,8 +140,6 @@ namespace Microsoft.Test.OData.Tests.Client
         /// <summary>
         /// when $count=true results 
         /// odata.count in json payload 
-        /// and 
-        /// m:count in payload
         /// </summary>
         [Fact]
         public void CountPayloadVerification()
@@ -163,10 +161,6 @@ namespace Microsoft.Test.OData.Tests.Client
                     {
                         Assert.True(responseString.Contains("\"@odata.count\":10"));
                     }
-                }
-                else
-                {
-                    Assert.True(responseString.Contains("<m:count>10</m:count>"));
                 }
             }
         }
@@ -191,15 +185,6 @@ namespace Microsoft.Test.OData.Tests.Client
                 requestMessage.SetHeader("Accept", mimeType);
 
                 var responseString = this.GetResponseContent(requestMessage);
-
-                if (mimeType == MimeTypes.ApplicationAtomXml)
-                {
-                    // resulting payloads with/without model should be the same except for the updated time stamps
-                    const string pattern = @"<updated>([A-Za-z0-9\-\:]{20})\</updated>";
-                    const string replacement = "<updated>0000-00-00T00:00:00Z</updated>";
-                    defaultResponsestring = Regex.Replace(defaultResponsestring, pattern, (match) => replacement);
-                    responseString = Regex.Replace(responseString, pattern, (match) => replacement);
-                }
 
                 Assert.Equal(defaultResponsestring, responseString);
             }

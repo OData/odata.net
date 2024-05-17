@@ -12,19 +12,9 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.Http
     public static class FormatQueryOptions
     {
         /// <summary>
-        /// The 'atom' query option
-        /// </summary>
-        public const string = "atom";
-
-        /// <summary>
         /// The 'json' query option
         /// </summary>
         public const string Json = "json";
-
-        /// <summary>
-        /// The 'verbosejson' query option
-        /// </summary>
-        public const string VerboseJson = "verbosejson";
 
         /// <summary>
         /// The 'xml' query option

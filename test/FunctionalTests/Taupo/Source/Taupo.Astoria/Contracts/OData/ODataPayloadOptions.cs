@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.Astoria.Contracts.OData
         IncludeTypeNamesForNullValues = 1 << 12,
 
         /// <summary>
-        /// Indicates that payloads should include ETags (JSON does not include ETags in payload, while and JSON-Verbose do)
+        /// Indicates that payloads should include ETags (JSON does not include ETags in payload)
         /// </summary>
         IncludeETags = 1 << 13,
 

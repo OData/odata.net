@@ -94,7 +94,7 @@ namespace System.Data.Test.Astoria
             dataWebNamespaceMetadataAttribute.Value = DataWebMetadataXmlNamespace;
             topElement.Attributes.Append(dataWebNamespaceMetadataAttribute);
 
-            //add namespace
+            //add xml namespace
             XmlAttribute atomNamespaceAttribute = document.CreateAttribute("xmlns");
             atomNamespaceAttribute.Value = AtomXmlNamespace;
             topElement.Attributes.Append(atomNamespaceAttribute);

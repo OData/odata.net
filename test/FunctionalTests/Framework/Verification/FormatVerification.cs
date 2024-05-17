@@ -193,7 +193,7 @@ namespace System.Data.Test.Astoria
                         foreach (XmlNode node in entries)
                         {
                             XmlNode authorNode = node.SelectSingleNode("atom:author[1]", _formatVerifier.XmlNamespaceManager);
-                            if( authorNode == null)
+                            if (authorNode == null)
                                 AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.1 Feed element: No author node in entry of feed without author node."));
                         }
                     }
@@ -203,7 +203,7 @@ namespace System.Data.Test.Astoria
 
                 // atom:feed elements MUST NOT contain more than one atom:generator element.
                 childNodes = xmlData.SelectNodes("atom:generator", _formatVerifier.XmlNamespaceManager);
-                if(childNodes.Count > 1 )
+                if (childNodes.Count > 1)
                     AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.1 Feed element: More than 1 generator node found for feed."));
 
                 // atom:feed elements MUST NOT contain more than one atom:icon element.
@@ -218,7 +218,7 @@ namespace System.Data.Test.Astoria
 
                 // atom:feed elements MUST contain exactly one atom:id element
                 childNodes = xmlData.SelectNodes("atom:id", _formatVerifier.XmlNamespaceManager);
-                if( childNodes.Count != 1 )
+                if (childNodes.Count != 1)
                     AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.1 Feed element: Not exactly 1 id node found for feed."));
 
                 /* atom:feed elements SHOULD contain one atom:link element with a rel
@@ -305,7 +305,7 @@ namespace System.Data.Test.Astoria
                     }
                 }
 
-                if( !authorFound )
+                if (!authorFound)
                     AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.2 Entry element: No author element found for entry"));
             }
 
@@ -335,7 +335,7 @@ namespace System.Data.Test.Astoria
                         relAltAttribFound = true;
                 }
 
-                if( !relAltAttribFound )
+                if (!relAltAttribFound)
                     AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.2 Entry element: No link node with rel='alternate' found for entry with no content."));
             }
 
@@ -407,7 +407,7 @@ namespace System.Data.Test.Astoria
             if (contentWithSrcFound || contentWithBase64Found)
             {
                 XmlNodeList summaryNodes = entry.SelectNodes("atom:summary", this.FormatVerifier.XmlNamespaceManager);
-                if( summaryNodes.Count == 0 )
+                if (summaryNodes.Count == 0)
                     AstoriaTestLog.FailAndContinue(new TestFailedException("4.1.2 Entry element: No summary node found with Base64 or src'd content for entry."));
             }
 
@@ -513,7 +513,7 @@ namespace System.Data.Test.Astoria
         protected override void VerifyEntry(XmlNode entry)
         {
             XmlNodeList categoryNodes = entry.SelectNodes("atom:category", this.FormatVerifier.XmlNamespaceManager);
-            foreach( XmlNode categoryNode in categoryNodes )
+            foreach (XmlNode categoryNode in categoryNodes)
             {
                 XmlAttribute termAttrib = categoryNode.Attributes["term"];
                 if (termAttrib == null)
@@ -601,7 +601,7 @@ namespace System.Data.Test.Astoria
         {
             XmlNodeList linkNodes = entry.SelectNodes("atom:link", this.FormatVerifier.XmlNamespaceManager);
 
-            foreach( XmlNode linkNode in linkNodes)
+            foreach (XmlNode linkNode in linkNodes)
             {
                 XmlAttribute hrefAttrib = linkNode.Attributes["href"];
                 if (hrefAttrib == null)
@@ -746,7 +746,7 @@ namespace System.Data.Test.Astoria
             childNodes = authorNode.SelectNodes("atom:email", _formatVerifier.XmlNamespaceManager);
             if (childNodes.Count > 1)
                 AstoriaTestLog.FailAndContinue(new TestFailedException("3.2.1 atomPersonConstruct element: Greater than 1 email node found for atomPersonConstruct."));
-        }        
+        }
     }
 
     public class FormatVerifyUtils
