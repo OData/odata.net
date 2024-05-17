@@ -17,7 +17,7 @@ namespace Microsoft.Test.OData.Tests.Client
     public static class DataDrivenClientTestExtensionMethods
     {
         /// <summary>
-        /// Runs a client test with son OData formats.
+        /// Runs a client test with Json OData formats.
         /// </summary>
         /// <typeparam name="TContext">The DataServiceContext type.</typeparam>
         /// <param name="testBase">The test class running the test.</param>

@@ -71,6 +71,7 @@ namespace Microsoft.OData
         internal const string DuplicateAnnotationForPropertyNotAllowed = "DuplicateAnnotationForPropertyNotAllowed";
         internal const string DuplicateAnnotationForInstanceAnnotationNotAllowed = "DuplicateAnnotationForInstanceAnnotationNotAllowed";
         internal const string PropertyAnnotationAfterTheProperty = "PropertyAnnotationAfterTheProperty";
+        internal const string AtomValueUtils_CannotConvertValueToAtomPrimitive = "AtomValueUtils_CannotConvertValueToAtomPrimitive";
         internal const string ODataJsonWriter_UnsupportedValueType = "ODataJsonWriter_UnsupportedValueType";
         internal const string ODataJsonWriter_UnsupportedValueInCollection = "ODataJsonWriter_UnsupportedValueInCollection";
         internal const string ODataJsonWriter_UnsupportedDateTimeFormat = "ODataJsonWriter_UnsupportedDateTimeFormat";
@@ -408,6 +409,9 @@ namespace Microsoft.OData
         internal const string ODataMetadataInputContext_ErrorReadingMetadata = "ODataMetadataInputContext_ErrorReadingMetadata";
         internal const string ODataMetadataOutputContext_ErrorWritingMetadata = "ODataMetadataOutputContext_ErrorWritingMetadata";
         internal const string ODataMetadataOutputContext_NotSupportJsonMetadata = "ODataMetadataOutputContext_NotSupportJsonMetadata";
+        internal const string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified = "ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified";
+        internal const string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement = "ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement";
+        internal const string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties = "ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties";
         internal const string JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation = "JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation";
         internal const string EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid = "EdmLibraryExtensions_OperationGroupReturningActionsAndFunctionsModelInvalid";
         internal const string EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid = "EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid";
