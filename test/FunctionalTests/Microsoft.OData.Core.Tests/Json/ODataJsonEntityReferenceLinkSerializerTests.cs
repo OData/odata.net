@@ -43,9 +43,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(
-                (JsonEntityReferenceLinkSerializer) =>
+                (jsonEntityReferenceLinkSerializer) =>
                 {
-                    return JsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(entityReferenceLink);
+                    return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(entityReferenceLink);
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://tempuri.org/$metadata#$ref\"," +
@@ -118,9 +118,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteEntityReferenceLinkAsync_WritesExpectedOutput(ODataEntityReferenceLinks entityReferenceLinks, string expected)
         {
             var result = await SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(
-                (JsonEntityReferenceLinkSerializer) =>
+                (jsonEntityReferenceLinkSerializer) =>
                 {
-                    return JsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(entityReferenceLinks);
+                    return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(entityReferenceLinks);
                 });
 
             Assert.Equal(expected, result);
@@ -136,9 +136,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(
-                    (JsonEntityReferenceLinkSerializer) =>
+                    (jsonEntityReferenceLinkSerializer) =>
                     {
-                        return JsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(entityReferenceLinks);
+                        return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinksAsync(entityReferenceLinks);
                     }));
 
             Assert.Equal(Strings.WriterValidationUtils_EntityReferenceLinksLinkMustNotBeNull, exception.Message);
@@ -154,9 +154,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(
-                    (JsonEntityReferenceLinkSerializer) =>
+                    (jsonEntityReferenceLinkSerializer) =>
                     {
-                        return JsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(entityReferenceLink);
+                        return jsonEntityReferenceLinkSerializer.WriteEntityReferenceLinkAsync(entityReferenceLink);
                     }));
 
             Assert.Equal(Strings.WriterValidationUtils_EntityReferenceLinkUrlMustNotBeNull, exception.Message);
@@ -182,8 +182,8 @@ namespace Microsoft.OData.Tests.Json
                 ServiceProvider = serviceProvider
             };
 
-            var JsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
-            return new ODataJsonEntityReferenceLinkSerializer(JsonOutputContext);
+            var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
+            return new ODataJsonEntityReferenceLinkSerializer(jsonOutputContext);
         }
 
         /// <summary>
@@ -193,10 +193,10 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupODataJsonEntityReferenceLinkSerializerAndRunTestAsync(Func<ODataJsonEntityReferenceLinkSerializer, Task> func, IServiceProvider serviceProvider = null, bool writingTopLevelCollection = false)
         {
-            var JsonEntityReferenceLinkSerializer = CreateODataJsonEntityReferenceLinkSerializer(true, serviceProvider, true);
-            await func(JsonEntityReferenceLinkSerializer);
-            await JsonEntityReferenceLinkSerializer.JsonOutputContext.FlushAsync();
-            await JsonEntityReferenceLinkSerializer.JsonWriter.FlushAsync();
+            var jsonEntityReferenceLinkSerializer = CreateODataJsonEntityReferenceLinkSerializer(true, serviceProvider, true);
+            await func(jsonEntityReferenceLinkSerializer);
+            await jsonEntityReferenceLinkSerializer.JsonOutputContext.FlushAsync();
+            await jsonEntityReferenceLinkSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

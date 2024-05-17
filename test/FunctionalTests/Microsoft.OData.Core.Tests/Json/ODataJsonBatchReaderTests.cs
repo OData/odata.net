@@ -56,14 +56,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -72,10 +72,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -114,14 +114,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -130,10 +130,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 break;
                             case ODataBatchReaderState.ChangesetStart:
-                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", JsonBatchReader.CurrentGroupId);
+                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", jsonBatchReader.CurrentGroupId);
                                 break;
                             default:
                                 break;
@@ -216,14 +216,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.NotEmpty(verifyContentIdStack);
                                 Assert.Equal(verifyContentIdStack.Pop(), operationRequestMessage.ContentId);
@@ -238,10 +238,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotEmpty(verifyResourceStack);
@@ -315,14 +315,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.NotEmpty(verifyContentIdStack);
                                 Assert.Equal(verifyContentIdStack.Pop(), operationRequestMessage.ContentId);
@@ -339,10 +339,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotEmpty(verifyResourceStack);
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 break;
                             case ODataBatchReaderState.ChangesetStart:
-                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", JsonBatchReader.CurrentGroupId);
+                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", jsonBatchReader.CurrentGroupId);
                                 break;
                             default:
                                 break;
@@ -375,15 +375,15 @@ namespace Microsoft.OData.Core.Tests.Json
 
             SetupJsonBatchReaderAndRunTest(
                 payload,
-                (JsonBatchReader) =>
+                (jsonBatchReader) =>
                 {
                     try
                     {
-                        while (JsonBatchReader.Read())
+                        while (jsonBatchReader.Read())
                         {
-                            if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                            if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                             {
-                                var operationRequestMessage = JsonBatchReader.CreateOperationRequestMessage();
+                                var operationRequestMessage = jsonBatchReader.CreateOperationRequestMessage();
                                 // Verify that the Property "null-header" exists and it's value is set to NULL
                                 var nullHeaderProperty = operationRequestMessage.Headers.FirstOrDefault(p => p.Key == "null-header");
                                 Assert.NotNull(nullHeaderProperty.Key);
@@ -411,15 +411,15 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
                     try
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
-                            if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                            if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                             {
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
                                 // Verify that the Property "null-header" exists and it's value is set to NULL
                                 var nullHeaderProperty = operationRequestMessage.Headers.FirstOrDefault(p => p.Key == "null-header");
                                 Assert.NotNull(nullHeaderProperty.Key);
@@ -450,14 +450,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = Assert.Throws<ODataException>(
                 () => SetupJsonBatchReaderAndRunTest(
                 payload,
-                (JsonBatchReader) =>
+                (jsonBatchReader) =>
                 {
-                    while (JsonBatchReader.Read())
+                    while (jsonBatchReader.Read())
                     {
-                        if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                        if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                         {
                             // The json properties are just iterated through and have no purpose for this test case
-                            JsonBatchReader.CreateOperationRequestMessage();
+                            jsonBatchReader.CreateOperationRequestMessage();
                         }
                     }
                     Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
@@ -483,14 +483,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                        if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                         {
                             // The json properties are just iterated through and have no purpose for this test case
-                            await JsonBatchReader.CreateOperationRequestMessageAsync();
+                            await jsonBatchReader.CreateOperationRequestMessageAsync();
                         }
                     }
                     Assert.False(true, "The test failed, because the duplicate header has not thrown an ODataException");
@@ -514,14 +514,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = Assert.Throws<ODataException>(
                 () => SetupJsonBatchReaderAndRunTest(
                 payload,
-                (JsonBatchReader) =>
+                (jsonBatchReader) =>
                 {
-                    while (JsonBatchReader.Read())
+                    while (jsonBatchReader.Read())
                     {
-                        if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                        if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                         {
                             // The json properties are just iterated through and have no purpose for this test case
-                            JsonBatchReader.CreateOperationRequestMessage();
+                            jsonBatchReader.CreateOperationRequestMessage();
                         }
                     }
                     Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
@@ -545,14 +545,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
-                            if (JsonBatchReader.State == ODataBatchReaderState.Operation)
+                            if (jsonBatchReader.State == ODataBatchReaderState.Operation)
                             {
                                 // The json properties are just iterated through and have no purpose for this test case
-                                await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                await jsonBatchReader.CreateOperationRequestMessageAsync();
                             }
                         }
                         Assert.False(true, "The test failed, because the duplicate header has thrown no ODataException");
@@ -574,21 +574,21 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationResponseMessage = await JsonBatchReader.CreateOperationResponseMessageAsync();
+                                var operationResponseMessage = await jsonBatchReader.CreateOperationResponseMessageAsync();
 
                                 using (var messageReader = new ODataMessageReader(operationResponseMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -626,21 +626,21 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationResponseMessage = await JsonBatchReader.CreateOperationResponseMessageAsync();
+                                var operationResponseMessage = await jsonBatchReader.CreateOperationResponseMessageAsync();
 
                                 using (var messageReader = new ODataMessageReader(operationResponseMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -659,7 +659,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 break;
                             case ODataBatchReaderState.ChangesetStart:
-                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", JsonBatchReader.CurrentGroupId);
+                                Assert.Equal("69028f2c-f57b-4850-89f0-b7e5e002d4bc", jsonBatchReader.CurrentGroupId);
                                 break;
                             default:
                                 break;
@@ -683,14 +683,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -699,10 +699,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -742,14 +742,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -758,10 +758,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -794,14 +794,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -833,14 +833,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 Assert.Equal("1", operationRequestMessage.ContentId);
                                 Assert.NotNull(operationRequestMessage.Url);
@@ -849,10 +849,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
-                                    var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
+                                    var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
 
                                     await DoReadAsync(
-                                        JsonResourceReader,
+                                        jsonResourceReader,
                                         verifyResourceAction: (resource) =>
                                         {
                                             Assert.NotNull(resource);
@@ -892,14 +892,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
@@ -931,14 +931,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             await SetupJsonBatchReaderAndRunTestAsync(
                 payload,
-                async (JsonBatchReader) =>
+                async (jsonBatchReader) =>
                 {
-                    while (await JsonBatchReader.ReadAsync())
+                    while (await jsonBatchReader.ReadAsync())
                     {
-                        switch (JsonBatchReader.State)
+                        switch (jsonBatchReader.State)
                         {
                             case ODataBatchReaderState.Operation:
-                                var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                 using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                 {
@@ -964,9 +964,9 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
                         }
                     },
@@ -985,9 +985,9 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
                         }
                     },
@@ -1011,9 +1011,9 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
                             // No call to JsonBatchReader.CreateOperationRequestMessageAsync()
                         }
@@ -1043,20 +1043,20 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
-                            switch (JsonBatchReader.State)
+                            switch (jsonBatchReader.State)
                             {
                                 case ODataBatchReaderState.Operation:
-                                    var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                    var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                     using (var messageReader = new ODataMessageReader(operationRequestMessage, new ODataMessageReaderSettings(), this.model))
                                     {
-                                        var JsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
+                                        var jsonResourceReader = await messageReader.CreateODataResourceReaderAsync();
 
-                                        await DoReadAsync(JsonResourceReader);
+                                        await DoReadAsync(jsonResourceReader);
                                     }
 
                                     break;
@@ -1086,14 +1086,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
-                            switch (JsonBatchReader.State)
+                            switch (jsonBatchReader.State)
                             {
                                 case ODataBatchReaderState.Operation:
-                                    var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                    var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                     break;
                                 default:
@@ -1122,14 +1122,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonBatchReaderAndRunTestAsync(
                     payload,
-                    async (JsonBatchReader) =>
+                    async (jsonBatchReader) =>
                     {
-                        while (await JsonBatchReader.ReadAsync())
+                        while (await jsonBatchReader.ReadAsync())
                         {
-                            switch (JsonBatchReader.State)
+                            switch (jsonBatchReader.State)
                             {
                                 case ODataBatchReaderState.Operation:
-                                    var operationRequestMessage = await JsonBatchReader.CreateOperationRequestMessageAsync();
+                                    var operationRequestMessage = await jsonBatchReader.CreateOperationRequestMessageAsync();
 
                                     break;
                                 default:
@@ -1145,20 +1145,20 @@ namespace Microsoft.OData.Core.Tests.Json
         }
 
         private async Task DoReadAsync(
-            ODataReader JsonReader,
+            ODataReader jsonReader,
             Action<ODataResourceSet> verifyResourceSetAction = null,
             Action<ODataResource> verifyResourceAction = null)
         {
-            while (await JsonReader.ReadAsync())
+            while (await jsonReader.ReadAsync())
             {
-                switch (JsonReader.State)
+                switch (jsonReader.State)
                 {
                     case ODataReaderState.ResourceSetStart:
                         break;
                     case ODataReaderState.ResourceSetEnd:
                         if (verifyResourceSetAction != null)
                         {
-                            verifyResourceSetAction(JsonReader.Item as ODataResourceSet);
+                            verifyResourceSetAction(jsonReader.Item as ODataResourceSet);
                         }
 
                         break;
@@ -1167,7 +1167,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     case ODataReaderState.ResourceEnd:
                         if (verifyResourceAction != null)
                         {
-                            verifyResourceAction(JsonReader.Item as ODataResource);
+                            verifyResourceAction(jsonReader.Item as ODataResource);
                         }
 
                         break;
@@ -1185,11 +1185,11 @@ namespace Microsoft.OData.Core.Tests.Json
             Action<ODataJsonBatchReader> func,
             bool isResponse = true)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, isAsync: false, isResponse: isResponse))
+            using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: false, isResponse: isResponse))
             {
-                var JsonBatchReader = new ODataJsonBatchReader(JsonInputContext, synchronous: true);
+                var jsonBatchReader = new ODataJsonBatchReader(jsonInputContext, synchronous: true);
 
-                func(JsonBatchReader);
+                func(jsonBatchReader);
             }
         }
 
@@ -1201,11 +1201,11 @@ namespace Microsoft.OData.Core.Tests.Json
             Func<ODataJsonBatchReader, Task> func,
             bool isResponse = true)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
+            using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
             {
-                var JsonBatchReader = new ODataJsonBatchReader(JsonInputContext, synchronous: false);
+                var jsonBatchReader = new ODataJsonBatchReader(jsonInputContext, synchronous: false);
 
-                await func(JsonBatchReader);
+                await func(jsonBatchReader);
             }
         }
 

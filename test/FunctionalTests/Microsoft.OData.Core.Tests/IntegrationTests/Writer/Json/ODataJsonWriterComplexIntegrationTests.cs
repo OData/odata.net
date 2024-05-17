@@ -173,8 +173,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         private string SerializeComplexResource(IEdmStructuredType owningType, ODataResource complex)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext(outputStream);
-            var odataWriter = JsonOutputContext.CreateODataResourceWriter(null, owningType);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext(outputStream);
+            var odataWriter = jsonOutputContext.CreateODataResourceWriter(null, owningType);
             odataWriter.WriteStart(complex);
             odataWriter.WriteEnd();
             odataWriter.Flush();
@@ -187,8 +187,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         private string SerializeComplexResourceInEntity(ODataResource complex)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext(outputStream);
-            var odataWriter = JsonOutputContext.CreateODataResourceWriter(null, entityType);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext(outputStream);
+            var odataWriter = jsonOutputContext.CreateODataResourceWriter(null, entityType);
             odataWriter.WriteStart(new ODataResource()
             {
                 SerializationInfo = new ODataResourceSerializationInfo()

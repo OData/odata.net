@@ -37,16 +37,16 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonCollectionReaderAndRunTestAsync(
                 payload,
                 itemTypeReference,
-                async (JsonCollectionReader) =>
+                async (jsonCollectionReader) =>
                 {
                     var collectionItems = new List<object>();
 
-                    while (await JsonCollectionReader.ReadAsync())
+                    while (await jsonCollectionReader.ReadAsync())
                     {
-                        switch (JsonCollectionReader.State)
+                        switch (jsonCollectionReader.State)
                         {
                             case ODataCollectionReaderState.Value:
-                                collectionItems.Add(JsonCollectionReader.Item);
+                                collectionItems.Add(jsonCollectionReader.Item);
                                 break;
                             default:
                                 break;
@@ -69,16 +69,16 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonCollectionReaderAndRunTestAsync(
                 payload,
                 itemTypeReference,
-                async (JsonCollectionReader) =>
+                async (jsonCollectionReader) =>
                 {
                     var collectionItems = new List<object>();
 
-                    while (await JsonCollectionReader.ReadAsync())
+                    while (await jsonCollectionReader.ReadAsync())
                     {
-                        switch (JsonCollectionReader.State)
+                        switch (jsonCollectionReader.State)
                         {
                             case ODataCollectionReaderState.Value:
-                                collectionItems.Add(JsonCollectionReader.Item);
+                                collectionItems.Add(jsonCollectionReader.Item);
                                 break;
                             default:
                                 break;
@@ -99,16 +99,16 @@ namespace Microsoft.OData.Tests.Json
             await SetupJsonCollectionReaderAndRunTestAsync(
                 payload,
                 new EdmEnumTypeReference(colorEnumType, true),
-                async (JsonCollectionReader) =>
+                async (jsonCollectionReader) =>
                 {
                     var collectionItems = new List<object>();
 
-                    while (await JsonCollectionReader.ReadAsync())
+                    while (await jsonCollectionReader.ReadAsync())
                     {
-                        switch (JsonCollectionReader.State)
+                        switch (jsonCollectionReader.State)
                         {
                             case ODataCollectionReaderState.Value:
-                                collectionItems.Add(JsonCollectionReader.Item);
+                                collectionItems.Add(jsonCollectionReader.Item);
                                 break;
                             default:
                                 break;
@@ -151,11 +151,11 @@ namespace Microsoft.OData.Tests.Json
             Func<ODataJsonCollectionReader, Task> func,
             bool isResponse = true)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
+            using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
             {
-                var JsonCollectionReader = new ODataJsonCollectionReader(JsonInputContext, itemTypeReference, listener: null);
+                var jsonCollectionReader = new ODataJsonCollectionReader(jsonInputContext, itemTypeReference, listener: null);
 
-                await func(JsonCollectionReader);
+                await func(jsonCollectionReader);
             }
         }
 

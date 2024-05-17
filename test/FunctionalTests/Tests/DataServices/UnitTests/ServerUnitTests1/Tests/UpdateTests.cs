@@ -806,9 +806,9 @@ namespace AstoriaUnitTests.Tests
             [TestCategory("Partition1"), TestMethod, Variation]
             public void UpdatePutError_SpecifyPayLoadWithMetadataInfoOnlyInUpdate()
             {
-                string JsonPayload = "{ @odata.type:\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", odata.editlink:\"/Customers(1)\" }";
+                string jsonPayload = "{ @odata.type:\"#AstoriaUnitTests.Stubs.CustomerWithBirthday\", odata.editlink:\"/Customers(1)\" }";
 
-                VerifyInvalidRequestForVariousProviders(JsonPayload, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
+                VerifyInvalidRequestForVariousProviders(jsonPayload, "/Customers(1)", UnitTestsUtil.JsonMimeType, "PUT", 400);
             }
 
             [TestCategory("Partition1"), TestMethod, Variation]

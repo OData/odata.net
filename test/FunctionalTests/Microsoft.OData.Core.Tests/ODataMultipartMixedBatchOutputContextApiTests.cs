@@ -153,9 +153,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
 #endif
                 {
-                    var JsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 var dependsOnIds = new List<string> { "1" };
@@ -168,9 +168,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
 #endif
                 {
-                    var JsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -195,9 +195,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
                     {
-                        var JsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     var dependsOnIds = new List<string> { "1" };
@@ -206,9 +206,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
                     {
-                        var JsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        JsonWriter.WriteStart(customerResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                        jsonWriter.WriteStart(customerResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();
@@ -278,9 +278,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
 #endif
                 {
-                    var JsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -295,9 +295,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
 #endif
                 {
-                    var JsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -322,9 +322,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
                     {
-                        var JsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();
@@ -335,9 +335,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
                     {
-                        var JsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        JsonWriter.WriteStart(customerResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                        jsonWriter.WriteStart(customerResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();
@@ -413,9 +413,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
 #endif
                 {
-                    var JsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -442,9 +442,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        var JsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();
@@ -505,9 +505,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
 #endif
                 {
-                    var JsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
@@ -530,9 +530,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        var JsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndBatch();
@@ -585,9 +585,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
 #endif
                 {
-                    var JsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
 
@@ -611,9 +611,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        var JsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndBatch();
@@ -666,9 +666,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
 #endif
                 {
-                    var JsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
@@ -691,9 +691,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
                     {
-                        var JsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndBatch();
@@ -805,9 +805,9 @@ POST http://tempuri.org/Orders HTTP/1.1
                 using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
 #endif
                 {
-                    var JsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndBatchAsync();
@@ -830,9 +830,9 @@ POST http://tempuri.org/Orders HTTP/1.1
 
                     using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
                     {
-                        var JsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = nestedMessageWriter.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndBatch();
@@ -891,9 +891,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
 #endif
                 {
-                    var JsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -908,9 +908,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
 #endif
                 {
-                    var JsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
+                    var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
                 }
 
                 await multipartMixedBatchWriter.WriteEndChangesetAsync();
@@ -935,9 +935,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, nestedWriterSettings))
                     {
-                        var JsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
-                        JsonWriter.WriteStart(orderResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter1.CreateODataResourceWriter(this.orderEntitySet, this.orderEntityType);
+                        jsonWriter.WriteStart(orderResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();
@@ -948,9 +948,9 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                     using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, nestedWriterSettings))
                     {
-                        var JsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
-                        JsonWriter.WriteStart(customerResource);
-                        JsonWriter.WriteEnd();
+                        var jsonWriter = messageWriter2.CreateODataResourceWriter(this.customerEntitySet, this.customerEntityType);
+                        jsonWriter.WriteStart(customerResource);
+                        jsonWriter.WriteEnd();
                     }
 
                     multipartMixedBatchWriter.WriteEndChangeset();

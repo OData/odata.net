@@ -213,9 +213,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonErrorDeserializerAndRunTestAsync(
                 payload,
-                async (JsonErrorDeserializer) =>
+                async (jsonErrorDeserializer) =>
                 {
-                    var error = await JsonErrorDeserializer.ReadTopLevelErrorAsync();
+                    var error = await jsonErrorDeserializer.ReadTopLevelErrorAsync();
 
                     Assert.NotNull(error);
                     Assert.Equal("forbidden", error.ErrorCode);
@@ -252,9 +252,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonErrorDeserializerAndRunTestAsync(
                 payload,
-                async (JsonErrorDeserializer) =>
+                async (jsonErrorDeserializer) =>
                 {
-                    var error = await JsonErrorDeserializer.ReadTopLevelErrorAsync();
+                    var error = await jsonErrorDeserializer.ReadTopLevelErrorAsync();
 
                     Assert.NotNull(error);
                     var errorTokenInstanceAnnotation = Assert.Single(error.GetInstanceAnnotations());
@@ -273,9 +273,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonErrorDeserializerAndRunTestAsync(
                 payload,
-                async (JsonErrorDeserializer) =>
+                async (jsonErrorDeserializer) =>
                 {
-                    var error = await JsonErrorDeserializer.ReadTopLevelErrorAsync();
+                    var error = await jsonErrorDeserializer.ReadTopLevelErrorAsync();
 
                     Assert.NotNull(error);
                     Assert.NotNull(error.InnerError);
@@ -299,7 +299,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonReaderUtils_MultipleErrorPropertiesWithSameName("error"),
@@ -314,7 +314,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonErrorDeserializer_TopLevelErrorWithInvalidProperty("UnexpectedProp"),
@@ -330,7 +330,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonErrorDeserializer_InstanceAnnotationNotAllowedInErrorPayload("odata.type"),
@@ -346,7 +346,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonErrorDeserializer_PropertyAnnotationWithoutPropertyForError("target"),
@@ -362,7 +362,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.ResolveError"),
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonErrorDeserializer_PropertyAnnotationNotAllowedInErrorPayload("odata.etag"),
@@ -396,7 +396,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_InvalidTypeName("odata.type"),
@@ -412,7 +412,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonErrorDeserializerAndRunTestAsync(
                     payload,
-                    (JsonErrorDeserializer) => JsonErrorDeserializer.ReadTopLevelErrorAsync()));
+                    (jsonErrorDeserializer) => jsonErrorDeserializer.ReadTopLevelErrorAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonErrorDeserializer_TopLevelErrorValueWithInvalidProperty("UnexpectedProp"),
@@ -424,11 +424,11 @@ namespace Microsoft.OData.Tests.Json
             Func<ODataJsonErrorDeserializer, Task> func,
             IEdmModel model = null)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, model, isAsync: true))
+            using (var jsonInputContext = CreateJsonInputContext(payload, model, isAsync: true))
             {
-                var JsonErrorDeserializer = new ODataJsonErrorDeserializer(JsonInputContext);
+                var jsonErrorDeserializer = new ODataJsonErrorDeserializer(jsonInputContext);
 
-                await func(JsonErrorDeserializer);
+                await func(jsonErrorDeserializer);
             }
         }
 

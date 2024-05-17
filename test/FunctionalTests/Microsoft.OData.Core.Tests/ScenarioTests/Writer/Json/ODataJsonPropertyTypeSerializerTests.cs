@@ -436,19 +436,19 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         private string SerializeProperty(ODataProperty odataProperty, ODataVersion version = ODataVersion.V4)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext(outputStream, version);
-            var serializer = new ODataJsonPropertySerializer(JsonOutputContext);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext(outputStream, version);
+            var serializer = new ODataJsonPropertySerializer(jsonOutputContext);
 
-            JsonOutputContext.JsonWriter.StartObjectScope();
+            jsonOutputContext.JsonWriter.StartObjectScope();
             serializer.WriteProperties(
                 this.entityType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
                 new NullDuplicatePropertyNameChecker(),
                 null);
-            JsonOutputContext.JsonWriter.EndObjectScope();
+            jsonOutputContext.JsonWriter.EndObjectScope();
 
-            JsonOutputContext.Flush();
+            jsonOutputContext.Flush();
             outputStream.Position = 0;
             string result = new StreamReader(outputStream).ReadToEnd();
             return result;

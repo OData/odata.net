@@ -37,27 +37,27 @@ namespace Microsoft.OData.Tests.Json
 
             SetupJsonCollectionDeserializerAndRunTest(
                 payload,
-                (JsonCollectionDeserializer) =>
+                (jsonCollectionDeserializer) =>
                 {
-                    JsonCollectionDeserializer.ReadPayloadStart(
+                    jsonCollectionDeserializer.ReadPayloadStart(
                         ODataPayloadKind.Collection,
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         allowEmptyPayload: false);
 
-                    var collectionStart = JsonCollectionDeserializer.ReadCollectionStart(
+                    var collectionStart = jsonCollectionDeserializer.ReadCollectionStart(
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         expectedItemTypeReference: expectedItemTypeReference,
                         out IEdmTypeReference actualItemTypeReference);
-                    JsonCollectionDeserializer.JsonReader.Read(); // Read StartArray [
-                    var collectionItem1 = JsonCollectionDeserializer.ReadCollectionItem(
+                    jsonCollectionDeserializer.JsonReader.Read(); // Read StartArray [
+                    var collectionItem1 = jsonCollectionDeserializer.ReadCollectionItem(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    var collectionItem2 = JsonCollectionDeserializer.ReadCollectionItem(
+                    var collectionItem2 = jsonCollectionDeserializer.ReadCollectionItem(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    JsonCollectionDeserializer.ReadCollectionEnd(
+                    jsonCollectionDeserializer.ReadCollectionEnd(
                         isReadingNestedPayload: false);
 
                     Assert.NotNull(collectionStart);
@@ -81,27 +81,27 @@ namespace Microsoft.OData.Tests.Json
 
             SetupJsonCollectionDeserializerAndRunTest(
                 payload,
-                (JsonCollectionDeserializer) =>
+                (jsonCollectionDeserializer) =>
                 {
-                    JsonCollectionDeserializer.ReadPayloadStart(
+                    jsonCollectionDeserializer.ReadPayloadStart(
                         ODataPayloadKind.Collection,
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         allowEmptyPayload: false);
 
-                    var collectionStart = JsonCollectionDeserializer.ReadCollectionStart(
+                    var collectionStart = jsonCollectionDeserializer.ReadCollectionStart(
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         expectedItemTypeReference: expectedItemTypeReference,
                         out IEdmTypeReference actualItemTypeReference);
-                    JsonCollectionDeserializer.JsonReader.Read(); // Read StartArray [
-                    var collectionItem1 = JsonCollectionDeserializer.ReadCollectionItem(
+                    jsonCollectionDeserializer.JsonReader.Read(); // Read StartArray [
+                    var collectionItem1 = jsonCollectionDeserializer.ReadCollectionItem(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    var collectionItem2 = JsonCollectionDeserializer.ReadCollectionItem(
+                    var collectionItem2 = jsonCollectionDeserializer.ReadCollectionItem(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    JsonCollectionDeserializer.ReadCollectionEnd(
+                    jsonCollectionDeserializer.ReadCollectionEnd(
                         isReadingNestedPayload: false);
 
                     Assert.NotNull(collectionStart);
@@ -127,26 +127,26 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonCollectionDeserializerAndRunTestAsync(
                 payload,
-                async (JsonCollectionDeserializer) =>
+                async (jsonCollectionDeserializer) =>
                 {
-                    await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                    await jsonCollectionDeserializer.ReadPayloadStartAsync(
                         ODataPayloadKind.Collection,
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         allowEmptyPayload: false);
 
-                    var readCollectionStartResult = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                    var readCollectionStartResult = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         expectedItemTypeReference: expectedItemTypeReference);
-                    await JsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
-                    var collectionItem1 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                    await jsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
+                    var collectionItem1 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    var collectionItem2 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                    var collectionItem2 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    await JsonCollectionDeserializer.ReadCollectionEndAsync(
+                    await jsonCollectionDeserializer.ReadCollectionEndAsync(
                         isReadingNestedPayload: false);
 
                     Assert.NotNull(readCollectionStartResult);
@@ -174,26 +174,26 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonCollectionDeserializerAndRunTestAsync(
                 payload,
-                async (JsonCollectionDeserializer) =>
+                async (jsonCollectionDeserializer) =>
                 {
-                    await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                    await jsonCollectionDeserializer.ReadPayloadStartAsync(
                         ODataPayloadKind.Collection,
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         allowEmptyPayload: false);
 
-                    var readCollectionStartResult = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                    var readCollectionStartResult = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                         propertyAndAnnotationCollector,
                         isReadingNestedPayload: false,
                         expectedItemTypeReference: expectedItemTypeReference);
-                    await JsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
-                    var collectionItem1 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                    await jsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
+                    var collectionItem1 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    var collectionItem2 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                    var collectionItem2 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                         expectedItemTypeReference,
                         collectionValidator: null);
-                    await JsonCollectionDeserializer.ReadCollectionEndAsync(
+                    await jsonCollectionDeserializer.ReadCollectionEndAsync(
                         isReadingNestedPayload: false);
 
                     Assert.NotNull(readCollectionStartResult);
@@ -215,15 +215,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -247,15 +247,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -278,15 +278,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -308,15 +308,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -339,15 +339,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -370,15 +370,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -402,15 +402,15 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
@@ -437,28 +437,28 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonCollectionDeserializer) =>
+                    async (jsonCollectionDeserializer) =>
                     {
-                        await JsonCollectionDeserializer.ReadPayloadStartAsync(
+                        await jsonCollectionDeserializer.ReadPayloadStartAsync(
                             ODataPayloadKind.Collection,
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             allowEmptyPayload: false);
 
-                        var collectionStart = await JsonCollectionDeserializer.ReadCollectionStartAsync(
+                        var collectionStart = await jsonCollectionDeserializer.ReadCollectionStartAsync(
                             propertyAndAnnotationCollector,
                             isReadingNestedPayload: false,
                             expectedItemTypeReference: expectedItemTypeReference);
-                        await JsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
+                        await jsonCollectionDeserializer.JsonReader.ReadAsync(); // Read StartArray [
 
-                        var collectionItem1 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                        var collectionItem1 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                             expectedItemTypeReference,
                             collectionValidator: null);
-                        var collectionItem2 = await JsonCollectionDeserializer.ReadCollectionItemAsync(
+                        var collectionItem2 = await jsonCollectionDeserializer.ReadCollectionItemAsync(
                             expectedItemTypeReference,
                             collectionValidator: null);
 
-                        await JsonCollectionDeserializer.ReadCollectionEndAsync(
+                        await jsonCollectionDeserializer.ReadCollectionEndAsync(
                             isReadingNestedPayload: false);
                     }));
 
@@ -472,11 +472,11 @@ namespace Microsoft.OData.Tests.Json
             Action<ODataJsonCollectionDeserializer> action,
             bool isResponse = true)
         {
-            using (var JsonInputContext = CreateJsonInputcontext(payload, isAsync: false, isResponse))
+            using (var jsonInputContext = CreateJsonInputcontext(payload, isAsync: false, isResponse))
             {
-                var JsonCollectionDeserializer = new ODataJsonCollectionDeserializer(JsonInputContext);
+                var jsonCollectionDeserializer = new ODataJsonCollectionDeserializer(jsonInputContext);
 
-                action(JsonCollectionDeserializer);
+                action(jsonCollectionDeserializer);
             }
         }
 
@@ -485,11 +485,11 @@ namespace Microsoft.OData.Tests.Json
             Func<ODataJsonCollectionDeserializer, Task> func,
             bool isResponse = true)
         {
-            using (var JsonInputContext = CreateJsonInputcontext(payload, isAsync: true, isResponse))
+            using (var jsonInputContext = CreateJsonInputcontext(payload, isAsync: true, isResponse))
             {
-                var JsonCollectionDeserializer = new ODataJsonCollectionDeserializer(JsonInputContext);
+                var jsonCollectionDeserializer = new ODataJsonCollectionDeserializer(jsonInputContext);
 
-                await func(JsonCollectionDeserializer);
+                await func(jsonCollectionDeserializer);
             }
         }
 

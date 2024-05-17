@@ -163,10 +163,10 @@ OData-Version: 4.0
 
                     using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.model))
                     {
-                        var JsonReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
+                        var jsonReader = await messageReader.CreateODataResourceReaderAsync(this.customerEntitySet, this.customerEntityType);
 
                         await DoReadAsync(
-                            JsonReader as ODataJsonReader,
+                            jsonReader as ODataJsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotNull(resource);
@@ -205,10 +205,10 @@ OData-Version: 4.0
 
                     using (var messageReader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), this.model))
                     {
-                        var JsonReader = await messageReader.CreateODataResourceSetReaderAsync(this.customerEntitySet, this.customerEntityType);
+                        var jsonReader = await messageReader.CreateODataResourceSetReaderAsync(this.customerEntitySet, this.customerEntityType);
 
                         await DoReadAsync(
-                            JsonReader as ODataJsonReader,
+                            jsonReader as ODataJsonReader,
                             verifyResourceSetAction: (resourceSet) =>
                             {
                                 Assert.NotNull(resourceSet);
@@ -314,20 +314,20 @@ Content-Type: application/json
         }
 
         private async Task DoReadAsync(
-           ODataJsonReader JsonReader,
+           ODataJsonReader jsonReader,
            Action<ODataResourceSet> verifyResourceSetAction = null,
            Action<ODataResource> verifyResourceAction = null)
         {
-            while (await JsonReader.ReadAsync())
+            while (await jsonReader.ReadAsync())
             {
-                switch (JsonReader.State)
+                switch (jsonReader.State)
                 {
                     case ODataReaderState.ResourceSetStart:
                         break;
                     case ODataReaderState.ResourceSetEnd:
                         if (verifyResourceSetAction != null)
                         {
-                            verifyResourceSetAction(JsonReader.Item as ODataResourceSet);
+                            verifyResourceSetAction(jsonReader.Item as ODataResourceSet);
                         }
 
                         break;
@@ -336,7 +336,7 @@ Content-Type: application/json
                     case ODataReaderState.ResourceEnd:
                         if (verifyResourceAction != null)
                         {
-                            verifyResourceAction(JsonReader.Item as ODataResource);
+                            verifyResourceAction(jsonReader.Item as ODataResource);
                         }
 
                         break;

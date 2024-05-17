@@ -2252,7 +2252,7 @@ namespace Microsoft.OData.Json
             public OperationsDeserializerContext(ODataResourceBase resource, ODataJsonResourceDeserializer jsonResourceDeserializer)
             {
                 Debug.Assert(resource != null, "resource != null");
-                Debug.Assert(jsonResourceDeserializer != null, "jsoResourceDeserializer != null");
+                Debug.Assert(jsonResourceDeserializer != null, "jsonResourceDeserializer != null");
 
                 this.resource = resource;
                 this.jsonResourceDeserializer = jsonResourceDeserializer;

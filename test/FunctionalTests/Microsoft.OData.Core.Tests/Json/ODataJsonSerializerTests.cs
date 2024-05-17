@@ -316,10 +316,10 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = await SetupSerializerAndRunTestAsync(
                 "functionName",
-                async (JsonSerializer) =>
+                async (jsonSerializer) =>
                 {
-                    await JsonSerializer.WritePayloadStartAsync();
-                    await JsonSerializer.WritePayloadEndAsync();
+                    await jsonSerializer.WritePayloadStartAsync();
+                    await jsonSerializer.WritePayloadEndAsync();
                 });
 
             Assert.Equal("functionName()", result);
@@ -330,10 +330,10 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = await SetupSerializerAndRunTestAsync(
                 null,
-                async (JsonSerializer) =>
+                async (jsonSerializer) =>
                 {
-                    await JsonSerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument);
+                    await jsonSerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.ServiceDocument);
                 });
 
             Assert.Equal("{\"@odata.context\":\"http://example.com/$metadata\"", result);
@@ -344,16 +344,16 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = await SetupSerializerAndRunTestAsync(
                 null,
-                async (JsonSerializer) =>
+                async (jsonSerializer) =>
                 {
                     var property = new ODataProperty { Name = "Prop", Value = 13 };
                     var contextUrlInfo = ODataContextUrlInfo.Create(
                         property.ODataValue, ODataVersion.V4,
-                        JsonSerializer.JsonOutputContext.MessageWriterSettings.ODataUri,
-                        JsonSerializer.Model);
+                        jsonSerializer.JsonOutputContext.MessageWriterSettings.ODataUri,
+                        jsonSerializer.Model);
 
-                    await JsonSerializer.JsonWriter.StartObjectScopeAsync();
-                    await JsonSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.Resource,
+                    await jsonSerializer.JsonWriter.StartObjectScopeAsync();
+                    await jsonSerializer.WriteContextUriPropertyAsync(ODataPayloadKind.Resource,
                         () => contextUrlInfo, /* parentContextUrlInfo */ null, propertyName: "Prop");
                 });
 
@@ -365,12 +365,12 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = await SetupSerializerAndRunTestAsync(
                 null,
-                (JsonSerializer) =>
+                (jsonSerializer) =>
                 {
-                    return JsonSerializer.WriteTopLevelPayloadAsync(
+                    return jsonSerializer.WriteTopLevelPayloadAsync(
                         () =>
                         {
-                            return JsonSerializer.JsonWriter.WriteValueAsync(13);
+                            return jsonSerializer.JsonWriter.WriteValueAsync(13);
                         });
                 });
 
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Tests.Json
         {
             var result = await SetupSerializerAndRunTestAsync(
                 null,
-                (JsonSerializer) =>
+                (jsonSerializer) =>
                 {
                     ODataError error = new ODataError
                     {
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Tests.Json
                     };
                     error.InnerError.Properties.Add("correlationId", new ODataPrimitiveValue(new Guid("4784efae-d1c4-4f1f-baba-e811b3b0826c")));
 
-                    return JsonSerializer.WriteTopLevelErrorAsync(error, true);
+                    return jsonSerializer.WriteTopLevelErrorAsync(error, true);
                 });
 
             Assert.Equal("{\"error\":{" +
@@ -430,10 +430,10 @@ namespace Microsoft.OData.Tests.Json
         private static async Task<string> SetupSerializerAndRunTestAsync(string jsonpFunctionName, Func<ODataJsonSerializer, Task> func)
         {
             var stream = new AsyncStream(new MemoryStream());
-            var JsonSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
-            await func(JsonSerializer);
-            await JsonSerializer.JsonOutputContext.FlushAsync();
-            await JsonSerializer.JsonWriter.FlushAsync();
+            var jsonSerializer = GetSerializer(stream, jsonpFunctionName, isAsync: true);
+            await func(jsonSerializer);
+            await jsonSerializer.JsonOutputContext.FlushAsync();
+            await jsonSerializer.JsonWriter.FlushAsync();
             stream.Position = 0;
             var streamReader = new StreamReader(stream);
 

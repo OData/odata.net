@@ -217,9 +217,9 @@ namespace Microsoft.OData.Tests
 
             await SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                 payload,
-                async (JsonEntityReferenceLinkDeserializer) =>
+                async (jsonEntityReferenceLinkDeserializer) =>
                 {
-                    var entityReferenceLink = await JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+                    var entityReferenceLink = await jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
 
                     Assert.NotNull(entityReferenceLink);
                     Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLink.Url.AbsoluteUri);
@@ -236,10 +236,10 @@ namespace Microsoft.OData.Tests
                 payload,
                 this.model))
             {
-                var JsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
+                var jsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
 
                 var exception = Assert.Throws<ODataException>(
-                    () => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinks());
+                    () => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinks());
 
                 Assert.Equal(
                     ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks("value"),
@@ -260,10 +260,10 @@ namespace Microsoft.OData.Tests
                 payload,
                 this.model))
             {
-                var JsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
+                var jsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
 
                 var exception = Assert.Throws<ODataException>(
-                    () => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLink());
+                    () => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLink());
 
                 Assert.Equal(
                     ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink("UnexpectedProp"),
@@ -280,9 +280,9 @@ namespace Microsoft.OData.Tests
 
             await SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                 payload,
-                async (JsonEntityReferenceLinkDeserializer) =>
+                async (jsonEntityReferenceLinkDeserializer) =>
                 {
-                    var entityReferenceLink = await JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
+                    var entityReferenceLink = await jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync();
 
                     Assert.NotNull(entityReferenceLink);
                     Assert.Equal("http://tempuri.org/Orders(1)", entityReferenceLink.Url.AbsoluteUri);
@@ -303,9 +303,9 @@ namespace Microsoft.OData.Tests
 
             await SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                 payload,
-                async (JsonEntityReferenceLinkDeserializer) =>
+                async (jsonEntityReferenceLinkDeserializer) =>
                 {
-                    var entityReferenceLinks = await JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+                    var entityReferenceLinks = await jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
 
                     Assert.NotNull(entityReferenceLinks);
                     Assert.Equal(2, entityReferenceLinks.Links.Count());
@@ -326,9 +326,9 @@ namespace Microsoft.OData.Tests
 
             await SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                 payload,
-                async (JsonEntityReferenceLinkDeserializer) =>
+                async (jsonEntityReferenceLinkDeserializer) =>
                 {
-                    var entityReferenceLinks = await JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+                    var entityReferenceLinks = await jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
 
                     Assert.NotNull(entityReferenceLinks);
                     Assert.Equal(2, entityReferenceLinks.Links.Count());
@@ -351,9 +351,9 @@ namespace Microsoft.OData.Tests
 
             await SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                 payload,
-                async (JsonEntityReferenceLinkDeserializer) =>
+                async (jsonEntityReferenceLinkDeserializer) =>
                 {
-                    var entityReferenceLinks = await JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
+                    var entityReferenceLinks = await jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync();
 
                     Assert.NotNull(entityReferenceLinks);
                     var entityReferenceLink = Assert.Single(entityReferenceLinks.Links);
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedAnnotationProperties("odata.deltaLink"),
@@ -395,7 +395,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidEntityReferenceLinksPropertyFound("UnexpectedProp", "value"),
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLinks,
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_ExpectedEntityReferenceLinksPropertyNotFound("value"),
@@ -442,7 +442,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top2Orders"),
@@ -458,7 +458,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                     ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyAnnotationInEntityReferenceLinks("value"),
@@ -474,7 +474,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkMustBeObjectValue("PrimitiveValue"),
@@ -490,7 +490,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MultipleUriPropertiesInEntityReferenceLink("odata.id"),
@@ -506,7 +506,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidPropertyInEntityReferenceLink("odata.nextLink", "odata.id"),
@@ -522,7 +522,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinksAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_EntityReferenceLinkUrlCannotBeNull("odata.id"),
@@ -539,7 +539,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty("odata.id"),
@@ -558,7 +558,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_InvalidAnnotationInEntityReferenceLink("UnexpectedProp"),
@@ -574,7 +574,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonPropertyAndValueDeserializer_UnexpectedMetadataReferenceProperty("#NS.Top2Orders"),
@@ -589,7 +589,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_MissingEntityReferenceLinkProperty("odata.id"),
@@ -605,7 +605,7 @@ namespace Microsoft.OData.Tests
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonEntityReferenceLinkDeserializerAndRunTestAsync(
                     payload,
-                    (JsonEntityReferenceLinkDeserializer) => JsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
+                    (jsonEntityReferenceLinkDeserializer) => jsonEntityReferenceLinkDeserializer.ReadEntityReferenceLinkAsync()));
 
             Assert.Equal(
                 ODataErrorStrings.ODataJsonEntityReferenceLinkDeserializer_PropertyAnnotationForEntityReferenceLink("odata.type"),
@@ -696,9 +696,9 @@ namespace Microsoft.OData.Tests
                 isAsync: true,
                 isResponse: isResponse))
             {
-                var JsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
+                var jsonEntityReferenceLinkDeserializer = new ODataJsonEntityReferenceLinkDeserializer(jsonInputContext);
 
-                await func(JsonEntityReferenceLinkDeserializer);
+                await func(jsonEntityReferenceLinkDeserializer);
             }
         }
 

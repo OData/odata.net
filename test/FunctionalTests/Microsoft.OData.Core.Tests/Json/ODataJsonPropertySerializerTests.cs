@@ -631,19 +631,19 @@ namespace Microsoft.OData.Tests.Json
         private string SerializeProperty(IEdmStructuredType owningType, ODataProperty odataProperty, Action<IServiceCollection> configureServices = null)
         {
             MemoryStream outputStream = new MemoryStream();
-            ODataJsonOutputContext JsonOutputContext = this.CreateJsonOutputContext(outputStream, configureServices);
-            var serializer = new ODataJsonPropertySerializer(JsonOutputContext);
+            ODataJsonOutputContext jsonOutputContext = this.CreateJsonOutputContext(outputStream, configureServices);
+            var serializer = new ODataJsonPropertySerializer(jsonOutputContext);
 
-            JsonOutputContext.JsonWriter.StartObjectScope();
+            jsonOutputContext.JsonWriter.StartObjectScope();
             serializer.WriteProperties(
                 owningType,
                 new[] { odataProperty },
                 /*isComplexValue*/ false,
                 new NullDuplicatePropertyNameChecker(),
                 null);
-            JsonOutputContext.JsonWriter.EndObjectScope();
+            jsonOutputContext.JsonWriter.EndObjectScope();
 
-            JsonOutputContext.Flush();
+            jsonOutputContext.Flush();
             outputStream.Position = 0;
             string result = new StreamReader(outputStream).ReadToEnd();
 

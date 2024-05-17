@@ -327,9 +327,9 @@ namespace Microsoft.OData.Tests.Json
             var streamValue = new ODataBinaryStreamValue(stream, leaveOpen);
 
             var result = this.SetupSerializerAndRunTest(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    JsonValueSerializer.WriteStreamValue(streamValue);
+                    jsonValueSerializer.WriteStreamValue(streamValue);
                 });
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
@@ -355,9 +355,9 @@ namespace Microsoft.OData.Tests.Json
             var container = ServiceProviderHelper.BuildServiceProvider(configureServices);
 
             var result = this.SetupSerializerAndRunTest(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    JsonValueSerializer.WriteStreamValue(streamValue);
+                    jsonValueSerializer.WriteStreamValue(streamValue);
                 }, container);
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);

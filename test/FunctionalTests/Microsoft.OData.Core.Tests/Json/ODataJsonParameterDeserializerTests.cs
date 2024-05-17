@@ -44,9 +44,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -65,9 +65,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -88,9 +88,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -110,9 +110,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -132,9 +132,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -154,9 +154,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -178,9 +178,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -200,9 +200,9 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterDeserializerAndRunTestAsync(
                 payload,
-                async (JsonParameterDeserializer) =>
+                async (jsonParameterDeserializer) =>
                 {
-                    var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                    var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                     Assert.True(parameterRead);
                 },
@@ -222,13 +222,13 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    async (JsonParameterDeserializer) =>
+                    async (jsonParameterDeserializer) =>
                     {
-                        var parameterRead = await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                        var parameterRead = await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
 
                         Assert.True(parameterRead);
                         // Read next parameter
-                        await JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
+                        await jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector);
                     },
                     transferProductAction));
 
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     getRatingFunction));
 
             Assert.Equal(
@@ -303,7 +303,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     setPhotoAction));
 
             Assert.Equal(
@@ -325,7 +325,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterDeserializerAndRunTestAsync(
                     payload,
-                    (JsonParameterDeserializer) => JsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
+                    (jsonParameterDeserializer) => jsonParameterDeserializer.ReadNextParameterAsync(this.propertyAndAnnotationCollector),
                     setAttributesAction));
 
             Assert.Equal(
@@ -338,17 +338,17 @@ namespace Microsoft.OData.Tests.Json
             Func<ODataJsonParameterDeserializer, Task> func,
             IEdmOperation edmOperation = null)
         {
-            using (var JsonInputContext = CreateJsonInputContext(
+            using (var jsonInputContext = CreateJsonInputContext(
                 payload,
                 isAsync: true,
                 isResponse: false))
             {
-                var JsonParameterReader = new ODataJsonParameterReader(JsonInputContext, edmOperation);
-                var JsonParameterDeserializer = new ODataJsonParameterDeserializer(JsonParameterReader, JsonInputContext);
+                var jsonParameterReader = new ODataJsonParameterReader(jsonInputContext, edmOperation);
+                var jsonParameterDeserializer = new ODataJsonParameterDeserializer(jsonParameterReader, jsonInputContext);
 
-                await JsonParameterDeserializer.JsonReader.ReadAsync();
-                await JsonParameterDeserializer.JsonReader.ReadAsync();
-                await func(JsonParameterDeserializer);
+                await jsonParameterDeserializer.JsonReader.ReadAsync();
+                await jsonParameterDeserializer.JsonReader.ReadAsync();
+                await func(jsonParameterDeserializer);
             }
         }
 

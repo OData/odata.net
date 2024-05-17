@@ -172,10 +172,10 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEntityTypeReference(productEntityType, true);
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.FlushAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.FlushAsync();
                 },
                 model,
                 itemTypeReference);
@@ -204,11 +204,11 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteItemAsync(odataResource);
-                    await JsonCollectionWriter.FlushAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteItemAsync(odataResource);
+                    await jsonCollectionWriter.FlushAsync();
                 },
                 model,
                 itemTypeReference);
@@ -226,11 +226,11 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = EdmCoreModel.Instance.GetString(true);
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteItemAsync("Foo");
-                    await JsonCollectionWriter.WriteEndAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteItemAsync("Foo");
+                    await jsonCollectionWriter.WriteEndAsync();
                 },
                 model,
                 itemTypeReference);
@@ -261,11 +261,11 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = new EdmEnumTypeReference(colorEnumType, true);
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteItemAsync(new ODataEnumValue(enumValue));
-                    await JsonCollectionWriter.WriteEndAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteItemAsync(new ODataEnumValue(enumValue));
+                    await jsonCollectionWriter.WriteEndAsync();
                 },
                 model,
                 itemTypeReference);
@@ -303,12 +303,12 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteItemAsync(odataResource1);
-                    await JsonCollectionWriter.WriteItemAsync(odataResource2);
-                    await JsonCollectionWriter.WriteEndAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteItemAsync(odataResource1);
+                    await jsonCollectionWriter.WriteItemAsync(odataResource2);
+                    await jsonCollectionWriter.WriteEndAsync();
                 },
                 model,
                 itemTypeReference);
@@ -325,10 +325,10 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = EdmCoreModel.Instance.GetString(true);
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteEndAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteEndAsync();
                 },
                 model,
                 itemTypeReference);
@@ -345,11 +345,11 @@ namespace Microsoft.OData.Tests.Json
             var itemTypeReference = EdmCoreModel.Instance.GetString(true);
 
             var result = await SetupJsonCollectionWriterAndRunTestAsync(
-                async (JsonCollectionWriter) =>
+                async (jsonCollectionWriter) =>
                 {
-                    await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                    await JsonCollectionWriter.WriteItemAsync(null);
-                    await JsonCollectionWriter.WriteEndAsync();
+                    await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                    await jsonCollectionWriter.WriteItemAsync(null);
+                    await jsonCollectionWriter.WriteEndAsync();
                 },
                 model,
                 itemTypeReference);
@@ -365,11 +365,11 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                        await JsonCollectionWriter.WriteEndAsync();
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteEndAsync();
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -386,10 +386,10 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -406,11 +406,11 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                        await JsonCollectionWriter.WriteItemAsync("Foo");
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteItemAsync("Foo");
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -427,11 +427,11 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                        await JsonCollectionWriter.WriteEndAsync();
-                        await JsonCollectionWriter.WriteItemAsync("Foo");
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteEndAsync();
+                        await jsonCollectionWriter.WriteItemAsync("Foo");
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -448,9 +448,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteItemAsync("Foo");
+                        await jsonCollectionWriter.WriteItemAsync("Foo");
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -467,11 +467,11 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteStartAsync(collectionStart);
-                        await JsonCollectionWriter.WriteEndAsync();
-                        await JsonCollectionWriter.WriteEndAsync();
+                        await jsonCollectionWriter.WriteStartAsync(collectionStart);
+                        await jsonCollectionWriter.WriteEndAsync();
+                        await jsonCollectionWriter.WriteEndAsync();
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -488,9 +488,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonCollectionWriterAndRunTestAsync(
-                    async (JsonCollectionWriter) =>
+                    async (jsonCollectionWriter) =>
                     {
-                        await JsonCollectionWriter.WriteEndAsync();
+                        await jsonCollectionWriter.WriteEndAsync();
                     },
                     new EdmModel(),
                     EdmCoreModel.Instance.GetString(true)));
@@ -556,9 +556,9 @@ namespace Microsoft.OData.Tests.Json
             IEdmTypeReference itemTypeReference)
         {
             var stream = new AsyncStream(new MemoryStream());
-            var JsonOutputContext = CreateJsonOutputContext(stream, model, /* writingResponse */ true, /* synchronous */ false);
-            var JsonCollectionWriter = new ODataJsonCollectionWriter(JsonOutputContext, itemTypeReference);
-            await func(JsonCollectionWriter);
+            var jsonOutputContext = CreateJsonOutputContext(stream, model, /* writingResponse */ true, /* synchronous */ false);
+            var jsonCollectionWriter = new ODataJsonCollectionWriter(jsonOutputContext, itemTypeReference);
+            await func(jsonCollectionWriter);
 
             stream.Position = 0;
             return await new StreamReader(stream).ReadToEndAsync();

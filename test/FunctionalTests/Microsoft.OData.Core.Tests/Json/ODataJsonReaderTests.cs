@@ -52,8 +52,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceSetAction: (resourceSet) =>
                     {
                         Assert.NotNull(resourceSet);
@@ -109,8 +109,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceSetAction: (resourceSet) =>
                     {
                         Assert.NotNull(resourceSet);
@@ -149,8 +149,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceSetAction: (nestedResourceSet) =>
                     {
                         Assert.Equal(0, nestedResourceSet.Count);
@@ -218,8 +218,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -277,8 +277,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyDeltaResourceSetAction: (deltaResourceSet) =>
                     {
                         Assert.NotNull(deltaResourceSet);
@@ -337,8 +337,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyDeltaResourceSetAction: (deltaResourceSet) =>
                     {
                         Assert.NotNull(deltaResourceSet);
@@ -429,8 +429,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -505,8 +505,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -568,8 +568,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -659,8 +659,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -722,8 +722,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyDeltaResourceSetAction: (deltaResourceSet) =>
                     {
                         Assert.NotNull(deltaResourceSet);
@@ -752,8 +752,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyDeltaResourceSetAction: (deltaResourceSet) =>
                     {
                         Assert.NotNull(deltaResourceSet);
@@ -784,8 +784,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyDeltaResourceSetAction: (deltaResourceSet) =>
                     {
                         Assert.NotNull(deltaResourceSet);
@@ -818,8 +818,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyNestedPropertyInfoAction: (item) =>
                     {
                         ODataStreamPropertyInfo streamPropertyInfo = Assert.IsType<ODataStreamPropertyInfo>(item);
@@ -856,8 +856,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyNestedPropertyInfoAction: (item) =>
                     {
                         ODataStreamPropertyInfo streamPropertyInfo = item as ODataStreamPropertyInfo;
@@ -884,8 +884,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyNestedPropertyInfoAction: (item) =>
                     {
                         ODataStreamPropertyInfo streamPropertyInfo = item as ODataStreamPropertyInfo;
@@ -939,8 +939,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -970,8 +970,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyEntityReferenceLinkAction: (entityReferenceLink) =>
                     {
                         Assert.NotNull(entityReferenceLink);
@@ -1040,8 +1040,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1096,8 +1096,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1152,8 +1152,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1176,8 +1176,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1235,8 +1235,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.orderEntitySet,
                 this.orderEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1289,8 +1289,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1344,8 +1344,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1370,8 +1370,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1408,8 +1408,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1448,8 +1448,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1483,8 +1483,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1517,8 +1517,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotNull(resource);
@@ -1620,8 +1620,8 @@ namespace Microsoft.OData.Tests.Json
                 payload,
                 this.customerEntitySet,
                 this.customerEntityType,
-                (JsonReader) => DoReadAsync(
-                    JsonReader,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
                     verifyResourceAction: (resource) =>
                     {
                         Assert.NotEmpty(verifyResourceActionStack);
@@ -1655,7 +1655,7 @@ namespace Microsoft.OData.Tests.Json
                     payload,
                     this.customerEntitySet,
                     this.customerEntityType,
-                    (JsonReader) => DoReadAsync(JsonReader)));
+                    (jsonReader) => DoReadAsync(jsonReader)));
 
             Assert.Equal(ErrorStrings.ODataJsonReader_CannotReadResourcesOfResourceSet("PrimitiveValue"),
                 exception.Message);
@@ -1677,7 +1677,7 @@ namespace Microsoft.OData.Tests.Json
                     payload,
                     this.customerEntitySet,
                     this.customerEntityType,
-                    (JsonReader) => DoReadAsync(JsonReader)));
+                    (jsonReader) => DoReadAsync(jsonReader)));
 
             Assert.Equal(ErrorStrings.ODataJsonResourceDeserializer_InvalidNodeTypeForItemsInResourceSet("PrimitiveValue"),
                 exception.Message);
@@ -1698,7 +1698,7 @@ namespace Microsoft.OData.Tests.Json
                     payload,
                     this.customerEntitySet,
                     this.customerEntityType,
-                    (JsonReader) => DoReadAsync(JsonReader)));
+                    (jsonReader) => DoReadAsync(jsonReader)));
 
             Assert.Equal(
                 ErrorStrings.ReaderValidationUtils_NullNamedValueForNonNullableType("BillingAddress", "NS.Address"),
@@ -1706,7 +1706,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         private async Task DoReadAsync(
-            ODataJsonReader JsonReader,
+            ODataJsonReader jsonReader,
             Action<ODataResourceSet> verifyResourceSetAction = null,
             Action<ODataResource> verifyResourceAction = null,
             Action<ODataNestedResourceInfo> verifyNestedResourceInfoAction = null,
@@ -1719,14 +1719,14 @@ namespace Microsoft.OData.Tests.Json
             Action<TextReader> verifyTextStreamAction = null,
             Action<ODataPrimitiveValue> verifyPrimitiveAction = null)
         {
-            while (await JsonReader.ReadAsync())
+            while (await jsonReader.ReadAsync())
             {
-                switch (JsonReader.State)
+                switch (jsonReader.State)
                 {
                     case ODataReaderState.ResourceSetStart:
                         if (verifyResourceSetAction != null)
                         {
-                            verifyResourceSetAction(JsonReader.Item as ODataResourceSet);
+                            verifyResourceSetAction(jsonReader.Item as ODataResourceSet);
                         }
 
                         break;
@@ -1735,7 +1735,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.ResourceStart:
                         if (verifyResourceAction != null)
                         {
-                            verifyResourceAction(JsonReader.Item as ODataResource);
+                            verifyResourceAction(jsonReader.Item as ODataResource);
                         }
 
                         break;
@@ -1744,7 +1744,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.NestedResourceInfoStart:
                         if (verifyNestedResourceInfoAction != null)
                         {
-                            verifyNestedResourceInfoAction(JsonReader.Item as ODataNestedResourceInfo);
+                            verifyNestedResourceInfoAction(jsonReader.Item as ODataNestedResourceInfo);
                         }
 
                         break;
@@ -1753,7 +1753,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.DeltaResourceSetStart:
                         if (verifyDeltaResourceSetAction != null)
                         {
-                            verifyDeltaResourceSetAction(JsonReader.Item as ODataDeltaResourceSet);
+                            verifyDeltaResourceSetAction(jsonReader.Item as ODataDeltaResourceSet);
                         }
 
                         break;
@@ -1762,7 +1762,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.DeletedResourceStart:
                         if (verifyDeletedResourceAction != null)
                         {
-                            verifyDeletedResourceAction(JsonReader.Item as ODataDeletedResource);
+                            verifyDeletedResourceAction(jsonReader.Item as ODataDeletedResource);
                         }
 
                         break;
@@ -1771,38 +1771,38 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.Primitive:
                         if (verifyPrimitiveAction != null)
                         {
-                            verifyPrimitiveAction(JsonReader.Item as ODataPrimitiveValue);
+                            verifyPrimitiveAction(jsonReader.Item as ODataPrimitiveValue);
                         }
 
                         break;
                     case ODataReaderState.DeltaLink:
                         if (verifyDeltaLinkAction != null)
                         {
-                            verifyDeltaLinkAction(JsonReader.Item as ODataDeltaLinkBase);
+                            verifyDeltaLinkAction(jsonReader.Item as ODataDeltaLinkBase);
                         }
 
                         break;
                     case ODataReaderState.DeltaDeletedLink:
                         if (verifyDeltaLinkAction != null)
                         {
-                            verifyDeltaLinkAction(JsonReader.Item as ODataDeltaLinkBase);
+                            verifyDeltaLinkAction(jsonReader.Item as ODataDeltaLinkBase);
                         }
 
                         break;
                     case ODataReaderState.EntityReferenceLink:
                         if (verifyEntityReferenceLinkAction != null)
                         {
-                            verifyEntityReferenceLinkAction(JsonReader.Item as ODataEntityReferenceLink);
+                            verifyEntityReferenceLinkAction(jsonReader.Item as ODataEntityReferenceLink);
                         }
 
                         break;
                     case ODataReaderState.Stream:
-                        var streamItem = JsonReader.Item as ODataStreamItem;
+                        var streamItem = jsonReader.Item as ODataStreamItem;
                         Assert.NotNull(streamItem);
 
                         if (streamItem.PrimitiveTypeKind == EdmPrimitiveTypeKind.String)
                         {
-                            using (var textReader = await JsonReader.CreateTextReaderAsync())
+                            using (var textReader = await jsonReader.CreateTextReaderAsync())
                             {
                                 if (verifyTextStreamAction != null)
                                 {
@@ -1812,7 +1812,7 @@ namespace Microsoft.OData.Tests.Json
                         }
                         else
                         {
-                            using (var stream = await JsonReader.CreateReadStreamAsync())
+                            using (var stream = await jsonReader.CreateReadStreamAsync())
                             {
                                 if (verifyBinaryStreamAction != null)
                                 {
@@ -1825,7 +1825,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.NestedProperty:
                         if (verifyNestedPropertyInfoAction != null)
                         {
-                            verifyNestedPropertyInfoAction(JsonReader.Item);
+                            verifyNestedPropertyInfoAction(jsonReader.Item);
                         }
 
                         break;
@@ -1867,10 +1867,10 @@ namespace Microsoft.OData.Tests.Json
             bool isResponse = true,
             IODataReaderWriterListener readerWriterListener = null)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
+            using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: isResponse))
             {
-                var JsonReader = new ODataJsonReader(
-                    JsonInputContext,
+                var jsonReader = new ODataJsonReader(
+                    jsonInputContext,
                     navigationSource,
                     expectedResourceType,
                     readingResourceSet,
@@ -1878,7 +1878,7 @@ namespace Microsoft.OData.Tests.Json
                     readingDelta,
                     listener: readerWriterListener);
 
-                await func(JsonReader);
+                await func(jsonReader);
             }
         }
 

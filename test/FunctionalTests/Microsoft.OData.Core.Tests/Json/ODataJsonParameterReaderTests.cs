@@ -678,11 +678,11 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                async (JsonParameterReader) =>
+                async (jsonParameterReader) =>
                 {
-                    await DoReadAsync(JsonParameterReader);
+                    await DoReadAsync(jsonParameterReader);
                     
-                    Assert.Equal(ODataParameterReaderState.Completed, JsonParameterReader.State);
+                    Assert.Equal(ODataParameterReaderState.Completed, jsonParameterReader.State);
                 });
         }
 
@@ -695,7 +695,7 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(JsonParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
+                (jsonParameterReader) => DoReadAsync(jsonParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
         }
 
         [Fact]
@@ -707,7 +707,7 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(JsonParameterReader));
+                (jsonParameterReader) => DoReadAsync(jsonParameterReader));
         }
 
         [Fact]
@@ -720,7 +720,7 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonParameterReaderAndRunTestAsync(
                     payload,
-                    (JsonParameterReader) => DoReadAsync(JsonParameterReader)));
+                    (jsonParameterReader) => DoReadAsync(jsonParameterReader)));
 
             Assert.Equal(
                 Strings.ODataParameterReaderCore_ParametersMissingInPayload("ActionImport", "rating"),
@@ -739,8 +739,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) =>
                     {
                         Assert.NotEmpty(valueActionStack);
@@ -760,7 +760,7 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(JsonParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
+                (jsonParameterReader) => DoReadAsync(jsonParameterReader, verifyValueAction: (value) => Assert.Equal(4, value)));
         }
 
         [Fact]
@@ -775,8 +775,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) =>
                     {
                         Assert.NotEmpty(valueActionStack);
@@ -798,8 +798,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyCollectionAction: async (collectionReader) =>
                     {
                         while (await collectionReader.ReadAsync())
@@ -827,8 +827,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) =>
                     {
                         Assert.NotEmpty(verifyValueActionStack);
@@ -851,8 +851,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) => Assert.Equal("Great product!", value),
                     verifyCollectionAction: async (collectionReader) =>
                     {
@@ -885,8 +885,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) => Assert.Equal(13.5M, value),
                     verifyCollectionAction: async (collectionReader) =>
                     {
@@ -912,8 +912,8 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) =>
                     {
                         Assert.IsType<double>(value);
@@ -934,10 +934,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -963,10 +963,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1011,10 +1011,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotEmpty(verifyResourceActionStack);
@@ -1062,10 +1062,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotEmpty(verifyResourceActionStack);
@@ -1090,10 +1090,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1120,10 +1120,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) => Assert.Null(resource))));
         }
 
@@ -1142,10 +1142,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1172,10 +1172,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1204,10 +1204,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1255,13 +1255,13 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: async (JsonReader) =>
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: async (jsonReader) =>
                     {
                         resourceSetCount++;
                         await DoReadAsync(
-                            JsonReader,
+                            jsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotEmpty(verifyResourceActionStack);
@@ -1313,13 +1313,13 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: async (JsonReader) =>
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: async (jsonReader) =>
                     {
                         resourceSetCount++;
                         await DoReadAsync(
-                            JsonReader,
+                            jsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotEmpty(verifyResourceActionStack);
@@ -1346,11 +1346,11 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) => Assert.Equal(4, value),
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1379,15 +1379,15 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
                     verifyValueAction: (value) =>
                     {
                         var favoriteColor = Assert.IsType<ODataEnumValue>(value);
                         Assert.Equal("Black", favoriteColor.Value);
                     },
-                    verifyResourceAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                    verifyResourceAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotNull(resource);
@@ -1443,13 +1443,13 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceAction: async (JsonReader) =>
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceAction: async (jsonReader) =>
                     {
                         outerResourceCount++;
                         await DoReadAsync(
-                            JsonReader,
+                            jsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotEmpty(verifyResourceActionStack);
@@ -1497,13 +1497,13 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: async (JsonReader) =>
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: async (jsonReader) =>
                     {
                         resourceSetCount++;
                         await DoReadAsync(
-                            JsonReader,
+                            jsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotEmpty(verifyResourceActionStack);
@@ -1511,11 +1511,11 @@ namespace Microsoft.OData.Tests.Json
                                 innerVerifyResourceAction(resource);
                             });
                     },
-                    verifyResourceAction: async (JsonReader) =>
+                    verifyResourceAction: async (jsonReader) =>
                     {
                         resourceCount++;
                         await DoReadAsync(
-                            JsonReader,
+                            jsonReader,
                             verifyResourceAction: (resource) =>
                             {
                                 Assert.NotEmpty(verifyResourceActionStack);
@@ -1564,10 +1564,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotEmpty(verifyResourceActionStack);
@@ -1613,10 +1613,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotEmpty(verifyResourceActionStack);
@@ -1662,10 +1662,10 @@ namespace Microsoft.OData.Tests.Json
 
             await SetupJsonParameterReaderAndRunTestAsync(
                 payload,
-                (JsonParameterReader) => DoReadAsync(
-                    JsonParameterReader,
-                    verifyResourceSetAction: (JsonReader) => DoReadAsync(
-                        JsonReader,
+                (jsonParameterReader) => DoReadAsync(
+                    jsonParameterReader,
+                    verifyResourceSetAction: (jsonReader) => DoReadAsync(
+                        jsonReader,
                         verifyResourceAction: (resource) =>
                         {
                             Assert.NotEmpty(verifyResourceActionStack);
@@ -1789,52 +1789,52 @@ namespace Microsoft.OData.Tests.Json
             string payload,
             Func<ODataJsonParameterReader, Task> func)
         {
-            using (var JsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: false))
+            using (var jsonInputContext = CreateJsonInputContext(payload, isAsync: true, isResponse: false))
             {
-                var JsonParameterReader = new ODataJsonParameterReader(
-                    JsonInputContext,
+                var jsonParameterReader = new ODataJsonParameterReader(
+                    jsonInputContext,
                     this.action);
 
-                await func(JsonParameterReader);
+                await func(jsonParameterReader);
             }
         }
 
         private async Task DoReadAsync(
-            ODataJsonParameterReader JsonParameterReader,
+            ODataJsonParameterReader jsonParameterReader,
             Action<object> verifyValueAction = null,
             Func<ODataCollectionReader, Task> verifyCollectionAction = null,
             Func<ODataJsonReader, Task> verifyResourceAction = null,
             Func<ODataJsonReader, Task> verifyResourceSetAction = null)
         {
-            while (await JsonParameterReader.ReadAsync())
+            while (await jsonParameterReader.ReadAsync())
             {
-                switch(JsonParameterReader.State)
+                switch(jsonParameterReader.State)
                 {
                     case ODataParameterReaderState.Value:
                         if (verifyValueAction != null)
                         {
-                            verifyValueAction(JsonParameterReader.Value);
+                            verifyValueAction(jsonParameterReader.Value);
                         }
 
                         break;
                     case ODataParameterReaderState.Collection:
                         if (verifyCollectionAction != null)
                         {
-                            await verifyCollectionAction(await JsonParameterReader.CreateCollectionReaderAsync());
+                            await verifyCollectionAction(await jsonParameterReader.CreateCollectionReaderAsync());
                         }
 
                         break;
                     case ODataParameterReaderState.Resource:
                         if (verifyResourceAction != null)
                         {
-                            await verifyResourceAction(await JsonParameterReader.CreateResourceReaderAsync() as ODataJsonReader);
+                            await verifyResourceAction(await jsonParameterReader.CreateResourceReaderAsync() as ODataJsonReader);
                         }
 
                         break;
                     case ODataParameterReaderState.ResourceSet:
                         if (verifyResourceSetAction != null)
                         {
-                            await verifyResourceSetAction(await JsonParameterReader.CreateResourceSetReaderAsync() as ODataJsonReader);
+                            await verifyResourceSetAction(await jsonParameterReader.CreateResourceSetReaderAsync() as ODataJsonReader);
                         }
 
                         break;
@@ -1845,20 +1845,20 @@ namespace Microsoft.OData.Tests.Json
         }
 
         private async Task DoReadAsync(
-           ODataJsonReader JsonReader,
+           ODataJsonReader jsonReader,
            Action<ODataResourceSet> verifyResourceSetAction = null,
            Action<ODataResource> verifyResourceAction = null)
         {
-            while (await JsonReader.ReadAsync())
+            while (await jsonReader.ReadAsync())
             {
-                switch (JsonReader.State)
+                switch (jsonReader.State)
                 {
                     case ODataReaderState.ResourceSetStart:
                         break;
                     case ODataReaderState.ResourceSetEnd:
                         if (verifyResourceSetAction != null)
                         {
-                            verifyResourceSetAction(JsonReader.Item as ODataResourceSet);
+                            verifyResourceSetAction(jsonReader.Item as ODataResourceSet);
                         }
 
                         break;
@@ -1867,7 +1867,7 @@ namespace Microsoft.OData.Tests.Json
                     case ODataReaderState.ResourceEnd:
                         if (verifyResourceAction != null)
                         {
-                            verifyResourceAction(JsonReader.Item as ODataResource);
+                            verifyResourceAction(jsonReader.Item as ODataResource);
                         }
 
                         break;

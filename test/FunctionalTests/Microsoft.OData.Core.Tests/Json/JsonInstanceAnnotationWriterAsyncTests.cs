@@ -24,7 +24,7 @@ namespace Microsoft.OData.Tests.Json
         private EdmModel model;
         private Stream stream;
         private ODataMessageWriterSettings settings;
-        private ODataJsonValueSerializer JsonValueSerializer;
+        private ODataJsonValueSerializer jsonValueSerializer;
         private EdmEnumType dayEnumType;
         private EdmComplexType mealComplexType;
 
@@ -67,9 +67,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync(instanceAnnotations);
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync(instanceAnnotations);
                 });
 
             Assert.Equal("{\"@Error.Level\":\"Warning\",\"@Error.Severity\":\"Critical\"", result);
@@ -163,9 +163,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteInstanceAnnotationAsync_WritesInstanceAnnotation(ODataInstanceAnnotation instanceAnnotation, string expected)
         {
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationAsync(instanceAnnotation, /* ignoreFilter */ true, "FunFacts");
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationAsync(instanceAnnotation, /* ignoreFilter */ true, "FunFacts");
                 });
 
             Assert.Equal(expected, result);
@@ -179,9 +179,9 @@ namespace Microsoft.OData.Tests.Json
                     new ODataNullValue());
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationAsync(instanceAnnotation, /* ignoreFilter */ false, "FunFacts");
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationAsync(instanceAnnotation, /* ignoreFilter */ false, "FunFacts");
                 });
 
             Assert.Equal("{" /* Object scope left paren */, result);
@@ -197,9 +197,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                         instanceAnnotations,
                         new InstanceAnnotationWriteTracker(), 
                         /* ignoreFilter */ true,
@@ -220,9 +220,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                    (JsonInstanceAnnotationWriter) =>
+                    (jsonInstanceAnnotationWriter) =>
                     {
-                        return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                        return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                             instanceAnnotations,
                             new InstanceAnnotationWriteTracker(),
                             /* ignoreFilter */ true,
@@ -243,9 +243,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                         instanceAnnotations,
                         new InstanceAnnotationWriteTracker(),
                         /* ignoreFilter */ true,
@@ -266,9 +266,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                         instanceAnnotations,
                         "FunFacts",
                         /* isUndeclaredProperty */ false);
@@ -287,9 +287,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonInstanceAnnotationWriterAndRunTestAsync(
-                (JsonInstanceAnnotationWriter) =>
+                (jsonInstanceAnnotationWriter) =>
                 {
-                    return JsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
+                    return jsonInstanceAnnotationWriter.WriteInstanceAnnotationsAsync(
                         instanceAnnotations,
                         "FunFacts",
                         /* isUndeclaredProperty */ true);
@@ -425,8 +425,8 @@ namespace Microsoft.OData.Tests.Json
                 ServiceProvider = serviceProvider
             };
             var context = new ODataJsonOutputContext(messageInfo, this.settings);
-            this.JsonValueSerializer = new ODataJsonValueSerializer(context);
-            return new JsonInstanceAnnotationWriter(this.JsonValueSerializer, new JsonMinimalMetadataTypeNameOracle());
+            this.jsonValueSerializer = new ODataJsonValueSerializer(context);
+            return new JsonInstanceAnnotationWriter(this.jsonValueSerializer, new JsonMinimalMetadataTypeNameOracle());
         }
 
         /// <summary>
@@ -436,11 +436,11 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupJsonInstanceAnnotationWriterAndRunTestAsync(Func<JsonInstanceAnnotationWriter, Task> func, IServiceProvider container = null)
         {
-            var JsonInstanceAnnotationWriter = CreateJsonInstanceAnnotationWriter(true, container, true);
-            await this.JsonValueSerializer.JsonWriter.StartObjectScopeAsync();
-            await func(JsonInstanceAnnotationWriter);
-            await this.JsonValueSerializer.JsonOutputContext.FlushAsync();
-            await this.JsonValueSerializer.JsonWriter.FlushAsync();
+            var jsonInstanceAnnotationWriter = CreateJsonInstanceAnnotationWriter(true, container, true);
+            await this.jsonValueSerializer.JsonWriter.StartObjectScopeAsync();
+            await func(jsonInstanceAnnotationWriter);
+            await this.jsonValueSerializer.JsonOutputContext.FlushAsync();
+            await this.jsonValueSerializer.JsonWriter.FlushAsync();
 
             this.stream.Position = 0;
 

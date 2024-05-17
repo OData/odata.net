@@ -75,7 +75,7 @@ namespace Microsoft.OData.Tests
                     using (var messageWriter = new ODataMessageWriter(responseMessage, writerSettings, this.model))
 #endif
                     {
-                        var JsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
+                        var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
                         var customerResponse = new ODataResource
                         {
                             TypeName = "NS.Customer",
@@ -91,8 +91,8 @@ namespace Microsoft.OData.Tests
                             }
                         };
 
-                        await JsonWriter.WriteStartAsync(customerResponse);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(customerResponse);
+                        await jsonWriter.WriteEndAsync();
                     }
                 });
 

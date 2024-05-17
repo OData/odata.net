@@ -58,9 +58,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteNullValueAsync_WritesNull()
         {
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteNullValueAsync();
+                    return jsonValueSerializer.WriteNullValueAsync();
                 });
 
             Assert.Equal("null", result);
@@ -73,9 +73,9 @@ namespace Microsoft.OData.Tests.Json
             var colorEdmEnumTypeReference = new EdmEnumTypeReference(this.colorEnumType, false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteEnumValueAsync(colorEnumValue, colorEdmEnumTypeReference);
+                    return jsonValueSerializer.WriteEnumValueAsync(colorEnumValue, colorEdmEnumTypeReference);
                 });
 
             Assert.Equal("\"White\"", result);
@@ -88,9 +88,9 @@ namespace Microsoft.OData.Tests.Json
             var colorEdmEnumTypeReference = new EdmEnumTypeReference(this.colorEnumType, false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteEnumValueAsync(colorEnumValue, colorEdmEnumTypeReference);
+                    return jsonValueSerializer.WriteEnumValueAsync(colorEnumValue, colorEdmEnumTypeReference);
                 });
 
             Assert.Equal("null", result);
@@ -109,9 +109,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteResourceValueAsync(
+                    return jsonValueSerializer.WriteResourceValueAsync(
                         resourceValue,
                         /* metadataTypeReference */ null,
                         /* isOpenProperty */ false,
@@ -137,9 +137,9 @@ namespace Microsoft.OData.Tests.Json
             var metadataTypeReference = new EdmComplexTypeReference(this.attributesComplexType, false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteResourceValueAsync(
+                    return jsonValueSerializer.WriteResourceValueAsync(
                         resourceValue,
                         metadataTypeReference,
                         /* isOpenProperty */ true,
@@ -230,9 +230,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task WriteCollectionValueAsync_WritesExpectedValue(ODataCollectionValue collectionValue, string expected)
         {
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteCollectionValueAsync(
+                    return jsonValueSerializer.WriteCollectionValueAsync(
                         collectionValue,
                         /* metadataTypeReference */ null,
                         /* valueTypeReference */ null,
@@ -274,9 +274,9 @@ namespace Microsoft.OData.Tests.Json
             var metadataTypeReference = new EdmCollectionTypeReference(new EdmCollectionType(new EdmComplexTypeReference(this.attributesComplexType, false)));
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteCollectionValueAsync(
+                    return jsonValueSerializer.WriteCollectionValueAsync(
                         collectionValue,
                         metadataTypeReference,
                         /* valueTypeReference */ null,
@@ -298,9 +298,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteCollectionValueAsync(
+                    return jsonValueSerializer.WriteCollectionValueAsync(
                         collectionValue,
                         /* metadataTypeReference */ null, // No metadata type for top-level properties
                         /* valueTypeReference */ null,
@@ -324,9 +324,9 @@ namespace Microsoft.OData.Tests.Json
             var metadataTypeReference = EdmCoreModel.GetCollection(EdmCoreModel.Instance.GetInt32(false));
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteCollectionValueAsync(
+                    return jsonValueSerializer.WriteCollectionValueAsync(
                         collectionValue,
                         metadataTypeReference,
                         /* valueTypeReference */ null,
@@ -348,9 +348,9 @@ namespace Microsoft.OData.Tests.Json
             };
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteCollectionValueAsync(
+                    return jsonValueSerializer.WriteCollectionValueAsync(
                         collectionValue,
                         /* metadataTypeReference */ null,
                         /* valueTypeReference */ null,
@@ -372,9 +372,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonValueSerializerAndRunTestAsync(
-                    (JsonValueSerializer) =>
+                    (jsonValueSerializer) =>
                     {
-                        return JsonValueSerializer.WriteCollectionValueAsync(
+                        return jsonValueSerializer.WriteCollectionValueAsync(
                             collectionValue,
                             /* metadataTypeReference */ null,
                             /* valueTypeReference */ null,
@@ -396,9 +396,9 @@ namespace Microsoft.OData.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonValueSerializerAndRunTestAsync(
-                    (JsonValueSerializer) =>
+                    (jsonValueSerializer) =>
                     {
-                        return JsonValueSerializer.WriteCollectionValueAsync(
+                        return jsonValueSerializer.WriteCollectionValueAsync(
                             collectionValue,
                             /* metadataTypeReference */ null,
                             /* valueTypeReference */ null,
@@ -417,9 +417,9 @@ namespace Microsoft.OData.Tests.Json
             var dateEdmTypeReference = EdmCoreModel.Instance.GetDate(false);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WritePrimitiveValueAsync(date, dateEdmTypeReference);
+                    return jsonValueSerializer.WritePrimitiveValueAsync(date, dateEdmTypeReference);
                 });
 
             Assert.Equal("\"2014-09-17\"", result);
@@ -433,9 +433,9 @@ namespace Microsoft.OData.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => {
                     return SetupJsonValueSerializerAndRunTestAsync(
-                        (JsonValueSerializer) =>
+                        (jsonValueSerializer) =>
                         {
-                            return JsonValueSerializer.WriteUntypedValueAsync(untypedValue);
+                            return jsonValueSerializer.WriteUntypedValueAsync(untypedValue);
                         });
                 });
 
@@ -448,9 +448,9 @@ namespace Microsoft.OData.Tests.Json
             var untypedValue = new ODataUntypedValue { RawValue = "3.141592653589793238" };
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteUntypedValueAsync(untypedValue);
+                    return jsonValueSerializer.WriteUntypedValueAsync(untypedValue);
                 });
 
             Assert.Equal("3.141592653589793238", result);
@@ -467,9 +467,9 @@ namespace Microsoft.OData.Tests.Json
             var streamValue = new ODataBinaryStreamValue(stream);
 
             var result = await SetupJsonValueSerializerAndRunTestAsync(
-                (JsonValueSerializer) =>
+                (jsonValueSerializer) =>
                 {
-                    return JsonValueSerializer.WriteStreamValueAsync(streamValue);
+                    return jsonValueSerializer.WriteStreamValueAsync(streamValue);
                 });
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
@@ -502,10 +502,10 @@ namespace Microsoft.OData.Tests.Json
         /// </summary>
         private async Task<string> SetupJsonValueSerializerAndRunTestAsync(Func<ODataJsonValueSerializer, Task> func, IServiceProvider serviceProvider = null)
         {
-            var JsonValueSerializer = CreateODataJsonValueSerializer(true, serviceProvider, true);
-            await func(JsonValueSerializer);
-            await JsonValueSerializer.JsonOutputContext.FlushAsync();
-            await JsonValueSerializer.JsonWriter.FlushAsync();
+            var jsonValueSerializer = CreateODataJsonValueSerializer(true, serviceProvider, true);
+            await func(jsonValueSerializer);
+            await jsonValueSerializer.JsonOutputContext.FlushAsync();
+            await jsonValueSerializer.JsonWriter.FlushAsync();
             
             this.stream.Position = 0;
             

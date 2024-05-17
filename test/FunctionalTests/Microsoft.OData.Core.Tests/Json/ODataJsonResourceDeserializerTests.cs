@@ -40,15 +40,15 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext("{\"value\":[]}", model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
-                var jsonReader = JsonResourceDeserializer.JsonReader;
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonReader = jsonResourceDeserializer.JsonReader;
 
                 await AdvanceReaderToFirstPropertyAsync(jsonReader);
                 await jsonReader.ReadAsync();
 
-                await JsonResourceDeserializer.ReadResourceSetContentStartAsync();
+                await jsonResourceDeserializer.ReadResourceSetContentStartAsync();
                 Assert.Equal(JsonNodeType.EndArray, jsonReader.NodeType);
-                await JsonResourceDeserializer.ReadResourceSetContentEndAsync();
+                await jsonResourceDeserializer.ReadResourceSetContentEndAsync();
                 Assert.Equal(JsonNodeType.EndObject, jsonReader.NodeType);
             }
         }
@@ -63,13 +63,13 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var resourceState = new TestJsonReaderResourceState(this.customersEntitySet, this.customerEntityType);
 
-                await JsonResourceDeserializer.ReadResourceTypeNameAsync(resourceState);
+                await jsonResourceDeserializer.ReadResourceTypeNameAsync(resourceState);
 
                 Assert.Equal("NS.Customer", resourceState.Resource.TypeName);
             }
@@ -86,11 +86,11 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
-                var deletedResource = await JsonResourceDeserializer.ReadDeletedResourceAsync();
+                var deletedResource = await jsonResourceDeserializer.ReadDeletedResourceAsync();
 
                 Assert.Equal(deletedEntryReason, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -106,11 +106,11 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
-                var deletedResource = await JsonResourceDeserializer.ReadDeletedEntryAsync();
+                var deletedResource = await jsonResourceDeserializer.ReadDeletedEntryAsync();
 
                 Assert.Equal(deletedEntryReason, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -125,11 +125,11 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
-                var deletedResource = await JsonResourceDeserializer.ReadDeletedEntryAsync();
+                var deletedResource = await jsonResourceDeserializer.ReadDeletedEntryAsync();
 
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -145,11 +145,11 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload: payload, model: model, isAsync: false))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                AdvanceReaderToFirstProperty(JsonResourceDeserializer.JsonReader);
+                AdvanceReaderToFirstProperty(jsonResourceDeserializer.JsonReader);
 
-                var deletedResource = JsonResourceDeserializer.ReadDeletedEntry();
+                var deletedResource = jsonResourceDeserializer.ReadDeletedEntry();
 
                 Assert.Equal(deletedEntryReason, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -164,11 +164,11 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload: payload, model: model, isAsync: false))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                AdvanceReaderToFirstProperty(JsonResourceDeserializer.JsonReader);
+                AdvanceReaderToFirstProperty(jsonResourceDeserializer.JsonReader);
 
-                var deletedResource = JsonResourceDeserializer.ReadDeletedEntry();
+                var deletedResource = jsonResourceDeserializer.ReadDeletedEntry();
 
                 Assert.Equal(DeltaDeletedEntryReason.Deleted, deletedResource.Reason);
                 Assert.Equal("http://tempuri.org/Customers(1)", deletedResource.Id.AbsoluteUri);
@@ -182,15 +182,15 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var deltaLink = new ODataDeltaLink(null, null, null);
 
-                await JsonResourceDeserializer.ReadDeltaLinkSourceAsync(deltaLink);
-                await JsonResourceDeserializer.ReadDeltaLinkRelationshipAsync(deltaLink);
-                await JsonResourceDeserializer.ReadDeltaLinkTargetAsync(deltaLink);
+                await jsonResourceDeserializer.ReadDeltaLinkSourceAsync(deltaLink);
+                await jsonResourceDeserializer.ReadDeltaLinkRelationshipAsync(deltaLink);
+                await jsonResourceDeserializer.ReadDeltaLinkTargetAsync(deltaLink);
 
                 Assert.Equal("http://tempuri.org/Categories(1)", deltaLink.Source.AbsoluteUri);
                 Assert.Equal("BestSeller", deltaLink.Relationship);
@@ -1284,16 +1284,16 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, this.model, isResponse: true))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
                 var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
-                await JsonResourceDeserializer.ReadPayloadStartAsync(
+                await jsonResourceDeserializer.ReadPayloadStartAsync(
                     ODataPayloadKind.ResourceSet,
                     propertyAndAnnotationCollector,
                     false,
                     true);
 
-                await JsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
+                await jsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
                     resourceSet,
                     expandedNestedResourceInfo: null,
                     propertyAndAnnotationCollector);
@@ -1548,9 +1548,9 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, this.model, isResponse: true))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await JsonResourceDeserializer.ReadPayloadStartAsync(
+                await jsonResourceDeserializer.ReadPayloadStartAsync(
                     ODataPayloadKind.Resource,
                     new PropertyAndAnnotationCollector(true),
                     false,
@@ -1558,17 +1558,17 @@ namespace Microsoft.OData.Tests.Json
 
                 var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
-                await JsonResourceDeserializer.JsonReader.ReadAsync(); // Read over property name
-                var annotationValue = await JsonResourceDeserializer.ReadEntryInstanceAnnotationAsync(
+                await jsonResourceDeserializer.JsonReader.ReadAsync(); // Read over property name
+                var annotationValue = await jsonResourceDeserializer.ReadEntryInstanceAnnotationAsync(
                     annotationName: "odata.type",
                     anyPropertyFound: false,
                     typeAnnotationFound: false,
                     propertyAndAnnotationCollector);
                 Assert.Equal("NS.Category", annotationValue);
 
-                await JsonResourceDeserializer.JsonReader.ReadAsync(); // Read over property name
+                await jsonResourceDeserializer.JsonReader.ReadAsync(); // Read over property name
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => JsonResourceDeserializer.ReadEntryInstanceAnnotationAsync(
+                    () => jsonResourceDeserializer.ReadEntryInstanceAnnotationAsync(
                         annotationName: "odata.type",
                         anyPropertyFound: false,
                         typeAnnotationFound: true, // Type annotation was in a previous call
@@ -1745,14 +1745,14 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext("{\"value\":{}}", model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
-                var jsonReader = JsonResourceDeserializer.JsonReader;
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonReader = jsonResourceDeserializer.JsonReader;
 
                 await AdvanceReaderToFirstPropertyAsync(jsonReader);
                 await jsonReader.ReadAsync();
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => JsonResourceDeserializer.ReadResourceSetContentStartAsync());
+                    () => jsonResourceDeserializer.ReadResourceSetContentStartAsync());
 
                 Assert.Equal(
                     ErrorStrings.ODataJsonResourceDeserializer_CannotReadResourceSetContentStart("StartObject"),
@@ -1769,12 +1769,12 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => JsonResourceDeserializer.ReadDeletedResourceAsync());
+                    () => jsonResourceDeserializer.ReadDeletedResourceAsync());
 
                 Assert.Equal(
                     ErrorStrings.ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties,
@@ -1791,12 +1791,12 @@ namespace Microsoft.OData.Tests.Json
 
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => JsonResourceDeserializer.ReadDeletedResourceAsync());
+                    () => jsonResourceDeserializer.ReadDeletedResourceAsync());
 
                 Assert.Equal(
                     ErrorStrings.ODataJsonResourceDeserializer_DeltaRemovedAnnotationMustBeObject("NaO"),
@@ -1815,12 +1815,12 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, model))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await AdvanceReaderToFirstPropertyAsync(JsonResourceDeserializer.JsonReader);
+                await AdvanceReaderToFirstPropertyAsync(jsonResourceDeserializer.JsonReader);
 
                 var exception = await Assert.ThrowsAsync<ODataException>(
-                    () => JsonResourceDeserializer.ReadDeletedEntryAsync());
+                    () => jsonResourceDeserializer.ReadDeletedEntryAsync());
 
                 Assert.Equal(
                     ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
@@ -1839,12 +1839,12 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload: payload, model: model, isAsync: false))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                AdvanceReaderToFirstProperty(JsonResourceDeserializer.JsonReader);
+                AdvanceReaderToFirstProperty(jsonResourceDeserializer.JsonReader);
 
                 var exception = Assert.Throws<ODataException>(
-                    () => JsonResourceDeserializer.ReadDeletedEntry());
+                    () => jsonResourceDeserializer.ReadDeletedEntry());
 
                 Assert.Equal(
                     ErrorStrings.ODataWriterCore_NestedContentNotAllowedIn40DeletedEntry,
@@ -1966,9 +1966,9 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, this.model, isResponse: isResponse))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
 
-                await JsonResourceDeserializer.ReadPayloadStartAsync(
+                await jsonResourceDeserializer.ReadPayloadStartAsync(
                     ODataPayloadKind.Resource,
                     new PropertyAndAnnotationCollector(true),
                     false,
@@ -1976,7 +1976,7 @@ namespace Microsoft.OData.Tests.Json
 
                 var resourceState = new TestJsonReaderResourceState(navigationSource, structuredType);
 
-                await JsonResourceDeserializer.ReadResourceContentAsync(resourceState);
+                await jsonResourceDeserializer.ReadResourceContentAsync(resourceState);
 
                 verifyAction(resourceState);
             }
@@ -1991,16 +1991,16 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, this.model, isResponse: true))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
                 var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
 
-                await JsonResourceDeserializer.ReadPayloadStartAsync(
+                await jsonResourceDeserializer.ReadPayloadStartAsync(
                     ODataPayloadKind.ResourceSet,
                     propertyAndAnnotationCollector,
                     false,
                     true);
 
-                await JsonResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
+                await jsonResourceDeserializer.ReadTopLevelResourceSetAnnotationsAsync(
                     resourceSet,
                     propertyAndAnnotationCollector,
                     forResourceSetStart: forResourceSetStart,
@@ -2019,11 +2019,11 @@ namespace Microsoft.OData.Tests.Json
         {
             using (var jsonInputContext = CreateJsonInputContext(payload, this.model, isResponse: isResponse))
             {
-                var JsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
+                var jsonResourceDeserializer = new ODataJsonResourceDeserializer(jsonInputContext);
                 var propertyAndAnnotationCollector = new PropertyAndAnnotationCollector(true);
-                var jsonReader = JsonResourceDeserializer.JsonReader;
+                var jsonReader = jsonResourceDeserializer.JsonReader;
 
-                await JsonResourceDeserializer.ReadPayloadStartAsync(
+                await jsonResourceDeserializer.ReadPayloadStartAsync(
                     ODataPayloadKind.Resource,
                     propertyAndAnnotationCollector,
                     false,
@@ -2033,7 +2033,7 @@ namespace Microsoft.OData.Tests.Json
                 await jsonReader.ReadAsync(); // Read over expanded navigation property
                 await jsonReader.SkipValueAsync();
 
-                await JsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
+                await jsonResourceDeserializer.ReadNextLinkAnnotationAtResourceSetEndAsync(
                     nestedResourceSet,
                     expandedNestedResourceInfo: expandedNestedResourceInfo,
                     propertyAndAnnotationCollector);

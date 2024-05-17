@@ -239,10 +239,10 @@ namespace Microsoft.OData.Core.Tests.Json
         public async Task WriteTopLevelResourceSetAsync(ODataResourceSet customerResourceSet, string expected)
         {
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteEndAsync(); // Flushes the stream
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteEndAsync(); // Flushes the stream
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -338,10 +338,10 @@ namespace Microsoft.OData.Core.Tests.Json
         public async Task WriteTopLevelDeltaResourceSetAsync(ODataDeltaResourceSet customerDeltaResourceSet, string expected)
         {
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerDeltaResourceSet);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerDeltaResourceSet);
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -365,16 +365,16 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderNestedResource = CreateOrderResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(orderDeltaResourceSet);
-                    await JsonWriter.WriteStartAsync(orderNestedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(orderDeltaResourceSet);
+                    await jsonWriter.WriteStartAsync(orderNestedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -484,10 +484,10 @@ namespace Microsoft.OData.Core.Tests.Json
         public async Task WriteTopLevelResourceAsync(ODataResource resource, string expected)
         {
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(resource);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(resource);
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType);
@@ -568,14 +568,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderResource = CreateOrderResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(nestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(nestedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(nestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(nestedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -595,16 +595,16 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderNestedResource = CreateOrderResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(orderResourceSet);
-                    await JsonWriter.WriteStartAsync(orderNestedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(orderResourceSet);
+                    await jsonWriter.WriteStartAsync(orderNestedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType);
@@ -628,12 +628,12 @@ namespace Microsoft.OData.Core.Tests.Json
             customerDeletedResource.Reason = reason;
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerDeltaResourceSet);
-                    await JsonWriter.WriteStartAsync(customerDeletedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerDeltaResourceSet);
+                    await jsonWriter.WriteStartAsync(customerDeletedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -661,12 +661,12 @@ namespace Microsoft.OData.Core.Tests.Json
             customerDeletedResource.Reason = reason;
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerDeltaResourceSet);
-                    await JsonWriter.WriteStartAsync(customerDeletedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerDeltaResourceSet);
+                    await jsonWriter.WriteStartAsync(customerDeletedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -695,14 +695,14 @@ namespace Microsoft.OData.Core.Tests.Json
             customerDeletedResource.Reason = reason;
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(customerNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(customerDeletedResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(customerNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(customerDeletedResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -727,13 +727,13 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerEntityReferenceLink = CreateCustomerEntityReferenceLink(1);
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(customerNestedResourceInfo);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(customerEntityReferenceLink);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(customerNestedResourceInfo);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(customerEntityReferenceLink);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType);
@@ -902,16 +902,16 @@ namespace Microsoft.OData.Core.Tests.Json
                     IsAsync = true,
                     Model = model,
                 };
-                var JsonOutputContext = new ODataJsonOutputContext(messageInfo, odataMessageWriterSettings);
-                var JsonWriter = new ODataJsonWriter(
-                    JsonOutputContext,
+                var jsonOutputContext = new ODataJsonOutputContext(messageInfo, odataMessageWriterSettings);
+                var jsonWriter = new ODataJsonWriter(
+                    jsonOutputContext,
                     null,
                     null,
                     false);
 
                 // write the response
-                await JsonWriter.WriteStartAsync(serviceSideResponseResource);
-                await JsonWriter.WriteEndAsync();
+                await jsonWriter.WriteStartAsync(serviceSideResponseResource);
+                await jsonWriter.WriteEndAsync();
 
                 // confirm that the written response was the expected response
                 memoryStream.Position = 0;
@@ -940,16 +940,16 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(orderResourceSet);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(orderResourceSet);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType);
@@ -972,11 +972,11 @@ namespace Microsoft.OData.Core.Tests.Json
                 "Customer");
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderDeltaResourceSet);
-                    await JsonWriter.WriteDeltaLinkAsync(deltaLink);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderDeltaResourceSet);
+                    await jsonWriter.WriteDeltaLinkAsync(deltaLink);
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1003,11 +1003,11 @@ namespace Microsoft.OData.Core.Tests.Json
                 "Customer");
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderDeltaResourceSet);
-                    await JsonWriter.WriteDeltaDeletedLinkAsync(deltaDeletedLink);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderDeltaResourceSet);
+                    await jsonWriter.WriteDeltaDeletedLinkAsync(deltaDeletedLink);
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1031,12 +1031,12 @@ namespace Microsoft.OData.Core.Tests.Json
             var stateProperty = new ODataProperty { Name = "State", Value = "Washington" };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(stateProperty);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(stateProperty);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -1074,13 +1074,13 @@ namespace Microsoft.OData.Core.Tests.Json
             var stateProperty = new ODataPropertyInfo { Name = "State" };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(stateProperty);
-                    await JsonWriter.WritePrimitiveAsync(primitiveValue);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(stateProperty);
+                    await jsonWriter.WritePrimitiveAsync(primitiveValue);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -1094,10 +1094,10 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerResourceSet = CreateCustomerResourceSet();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteEndAsync();
                 },
                 navigationSource: null,
                 resourceType: null,
@@ -1115,12 +1115,12 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerResource = CreateCustomerResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 navigationSource: null,
                 resourceType: null,
@@ -1143,10 +1143,10 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
                 },
                 navigationSource: null,
                 resourceType: null);
@@ -1164,12 +1164,12 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerResource = CreateCustomerResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderDeltaResourceSet);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderDeltaResourceSet);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1191,19 +1191,19 @@ namespace Microsoft.OData.Core.Tests.Json
             var pangramProperty = new ODataPropertyInfo { Name = "Pangram" };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(pangramProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(pangramProperty);
 
-                    using (var textWriter = await JsonWriter.CreateTextWriterAsync())
+                    using (var textWriter = await jsonWriter.CreateTextWriterAsync())
                     {
                         await textWriter.WriteAsync("The quick brown fox jumps over the lazy dog");
                         await textWriter.FlushAsync();
                     }
                     
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -1228,15 +1228,15 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(streamProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(streamProperty);
 
 #if NETCOREAPP
-                    await using (var stream = await JsonWriter.CreateBinaryWriteStreamAsync())
+                    await using (var stream = await jsonWriter.CreateBinaryWriteStreamAsync())
 #else
-                    using (var stream = await JsonWriter.CreateBinaryWriteStreamAsync())
+                    using (var stream = await jsonWriter.CreateBinaryWriteStreamAsync())
 #endif
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
@@ -1247,8 +1247,8 @@ namespace Microsoft.OData.Core.Tests.Json
                         await stream.FlushAsync();
                     }
 
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -1282,12 +1282,12 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(streamProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(streamProperty);
 
-                    using (var stream = await JsonWriter.CreateBinaryWriteStreamAsync())
+                    using (var stream = await jsonWriter.CreateBinaryWriteStreamAsync())
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
@@ -1297,8 +1297,8 @@ namespace Microsoft.OData.Core.Tests.Json
                         await stream.FlushAsync(CancellationToken.None);
                     }
 
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1326,12 +1326,12 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(pangramProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(pangramProperty);
 
-                    using (var textWriter = await JsonWriter.CreateTextWriterAsync())
+                    using (var textWriter = await jsonWriter.CreateTextWriterAsync())
                     {
                         string value = "The quick brown";
                         string value1 = " fox jumps over";
@@ -1347,8 +1347,8 @@ namespace Microsoft.OData.Core.Tests.Json
                         await textWriter.FlushAsync();
                     }
 
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1372,16 +1372,16 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerResource = CreateCustomerResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResourceSet);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(customerNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderResourceSet);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(customerNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1407,16 +1407,16 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderResource = CreateOrderResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(orderResourceSet);
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(orderResourceSet);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -1441,14 +1441,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderEntityReferenceLink2 = CreateOrderEntityReferenceLink(2);
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -1475,14 +1475,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderEntityReferenceLink2 = CreateOrderEntityReferenceLink(2);
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
-                    await JsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink1);
+                    await jsonWriter.WriteEntityReferenceLinkAsync(orderEntityReferenceLink2);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -1507,12 +1507,12 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerResource = CreateCustomerResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -1537,16 +1537,16 @@ namespace Microsoft.OData.Core.Tests.Json
             var productResource = CreateProductResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(productCollectionNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(productResourceSet);
-                    await JsonWriter.WriteStartAsync(productResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(productCollectionNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(productResourceSet);
+                    await jsonWriter.WriteStartAsync(productResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType);
@@ -1568,14 +1568,14 @@ namespace Microsoft.OData.Core.Tests.Json
             var orderCollectionNestedResourceInfo = CreateOrderCollectionNestedResourceInfo();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -1595,10 +1595,10 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerDeltaResourceSet = CreateCustomerDeltaResourceSet();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerDeltaResourceSet);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(customerDeltaResourceSet);
+                        await jsonWriter.WriteEndAsync();
                     },
                     this.customerEntitySet,
                     this.customerEntityType,
@@ -1616,10 +1616,10 @@ namespace Microsoft.OData.Core.Tests.Json
             var customerDeletedResource = CreateCustomerDeletedResource();
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerDeletedResource);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(customerDeletedResource);
+                        await jsonWriter.WriteEndAsync();
                     },
                     this.customerEntitySet,
                     this.customerEntityType,
@@ -1655,14 +1655,14 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = await SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(addressNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(addressNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 customerEntitySet,
                 customerEntityType);
@@ -1696,14 +1696,14 @@ namespace Microsoft.OData.Core.Tests.Json
             };
 
             var result = SetupJsonWriterAndRunTest(
-                (JsonWriter) =>
+                (jsonWriter) =>
                 {
-                    JsonWriter.WriteStart(orderResource);
-                    JsonWriter.WriteStart(addressNestedResourceInfo);
-                    JsonWriter.WriteStart(addressResource);
-                    JsonWriter.WriteEnd();
-                    JsonWriter.WriteEnd();
-                    JsonWriter.WriteEnd();
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteStart(addressNestedResourceInfo);
+                    jsonWriter.WriteStart(addressResource);
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
                 },
                 customerEntitySet,
                 customerEntityType);
@@ -1722,7 +1722,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerNestedResourceInfo),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerNestedResourceInfo),
                     this.customerEntitySet,
                     this.customerEntityType));
 
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(stateProperty),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(stateProperty),
                     this.customerEntitySet,
                     this.customerEntityType));
 
@@ -1754,12 +1754,12 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(stateProperty);
-                    // Missing: await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteStartAsync(countryProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(stateProperty);
+                    // Missing: await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(countryProperty);
                 },
                 this.orderEntitySet,
                 this.orderEntityType));
@@ -1778,11 +1778,11 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(stateProperty);
-                    await JsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(stateProperty);
+                    await jsonWriter.WriteStartAsync(customerResource);
                 },
                 this.orderEntitySet,
                 this.orderEntityType));
@@ -1799,7 +1799,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerResourceSet),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: false));
@@ -1814,7 +1814,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerResource),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerResource),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: true));
@@ -1829,7 +1829,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                    (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                     this.customerEntitySet,
                     this.customerEntityType,
                     writingResourceSet: false,
@@ -1851,7 +1851,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
                     // Shouldn't be written at top-level, either way but we validate writingDelta flag first
-                    (JsonWriter) => JsonWriter.WriteDeltaLinkAsync(deltaLink),
+                    (jsonWriter) => jsonWriter.WriteDeltaLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
                     writingResourceSet: false,
@@ -1872,7 +1872,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
                     // Shouldn't be written at top-level, either way but we validate writingDelta flag first
-                    (JsonWriter) => JsonWriter.WriteDeltaDeletedLinkAsync(deltaLink),
+                    (jsonWriter) => jsonWriter.WriteDeltaDeletedLinkAsync(deltaLink),
                     this.orderEntitySet,
                     this.orderEntityType,
                     writingResourceSet: false,
@@ -1889,10 +1889,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync((ODataResource)null);
-                        await JsonWriter.WriteStartAsync(customerNestedResourceInfo);
+                        await jsonWriter.WriteStartAsync((ODataResource)null);
+                        await jsonWriter.WriteStartAsync(customerNestedResourceInfo);
                     },
                     this.customerEntitySet,
                     this.customerEntityType));
@@ -1910,10 +1910,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(orderResource);
-                        await JsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteStartAsync(orderResource);
+                        await jsonWriter.WriteStartAsync(customerResource);
                     },
                     this.orderEntitySet,
                     this.orderEntityType));
@@ -1931,10 +1931,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerResource);
-                        await JsonWriter.WriteStartAsync(orderResourceSet);
+                        await jsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteStartAsync(orderResourceSet);
                     },
                     this.customerEntitySet,
                     this.customerEntityType));
@@ -1957,11 +1957,11 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>
                 (() => SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(orderResource);
-                    await JsonWriter.WriteStartAsync(customerNestedResourceInfo);
-                    await JsonWriter.WriteStartAsync(deletedResource);
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(customerNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(deletedResource);
                 },
                 this.orderEntitySet,
                 this.orderEntityType,
@@ -1981,10 +1981,10 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(orderResourceSet);
-                        await JsonWriter.WriteStartAsync(orderDeletedResource);
+                        await jsonWriter.WriteStartAsync(orderResourceSet);
+                        await jsonWriter.WriteStartAsync(orderDeletedResource);
                     },
                     this.orderEntitySet,
                     this.orderEntityType,
@@ -2005,11 +2005,11 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerResource);
-                        await JsonWriter.WriteStartAsync(orderCollectionNestedResource);
-                        await JsonWriter.WriteStartAsync(orderDeltaResourceSet);
+                        await jsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteStartAsync(orderCollectionNestedResource);
+                        await jsonWriter.WriteStartAsync(orderDeltaResourceSet);
                     },
                     this.customerEntitySet,
                     this.customerEntityType,
@@ -2029,7 +2029,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(orderResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(orderResourceSet),
                 this.orderEntitySet,
                 this.orderEntityType,
                 writingResourceSet: true,
@@ -2048,7 +2048,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
                 writingResourceSet: true,
@@ -2067,7 +2067,7 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                (JsonWriter) => JsonWriter.WriteStartAsync(customerDeltaResourceSet),
+                (jsonWriter) => jsonWriter.WriteStartAsync(customerDeltaResourceSet),
                 this.customerEntitySet,
                 this.customerEntityType,
                 writingResourceSet: true,
@@ -2087,14 +2087,14 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(customerResourceSet);
-                    await JsonWriter.WriteStartAsync(customerResource);
-                    await JsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteStartAsync(customerResourceSet);
+                    await jsonWriter.WriteStartAsync(customerResource);
+                    await jsonWriter.WriteStartAsync(orderCollectionNestedResourceInfo);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.customerEntitySet,
                 this.customerEntityType,
@@ -2113,13 +2113,13 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerResource);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteEndAsync();
                         // WriterState equals Completed at this point
                         // Try to start writing again
-                        await JsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteStartAsync(customerResource);
                     },
                     this.customerEntitySet,
                     this.customerEntityType));
@@ -2136,13 +2136,13 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                    async (JsonWriter) =>
+                    async (jsonWriter) =>
                     {
-                        await JsonWriter.WriteStartAsync(customerResource);
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteStartAsync(customerResource);
+                        await jsonWriter.WriteEndAsync();
                         // WriterState equals Completed at this point
                         // Try to end writing again
-                        await JsonWriter.WriteEndAsync();
+                        await jsonWriter.WriteEndAsync();
                     },
                     this.customerEntitySet,
                     this.customerEntityType));
@@ -2164,20 +2164,20 @@ namespace Microsoft.OData.Core.Tests.Json
 
             var exception = await Assert.ThrowsAsync<ODataException>(
                 () => SetupJsonWriterAndRunTestAsync(
-                async (JsonWriter) =>
+                async (jsonWriter) =>
                 {
-                    await JsonWriter.WriteStartAsync(addressResource);
-                    await JsonWriter.WriteStartAsync(streamProperty);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(streamProperty);
 
                     // `using` intentionally not used so as not to trigger dispose
-                    var stream = await JsonWriter.CreateBinaryWriteStreamAsync();
+                    var stream = await jsonWriter.CreateBinaryWriteStreamAsync();
                     var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
                     await stream.WriteAsync(bytes, 0, 10);
                     await stream.FlushAsync();
 
-                    await JsonWriter.WriteEndAsync();
-                    await JsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
                 },
                 this.orderEntitySet,
                 this.orderEntityType));
@@ -2203,10 +2203,10 @@ namespace Microsoft.OData.Core.Tests.Json
             IODataReaderWriterListener writerListener = null,
             Action<IServiceCollection> configAction = null)
         {
-            var JsonOutputContext = CreateJsonOutputContext(writingRequest, true, configAction);
+            var jsonOutputContext = CreateJsonOutputContext(writingRequest, true, configAction);
 
-            var JsonWriter = new ODataJsonWriter(
-                JsonOutputContext,
+            var jsonWriter = new ODataJsonWriter(
+                jsonOutputContext,
                 navigationSource,
                 resourceType,
                 writingResourceSet,
@@ -2214,7 +2214,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingDelta,
                 writerListener);
 
-            await func(JsonWriter);
+            await func(jsonWriter);
 
             this.stream.Position = 0;
             return await new StreamReader(this.stream).ReadToEndAsync();
@@ -2236,10 +2236,10 @@ namespace Microsoft.OData.Core.Tests.Json
             IODataReaderWriterListener writerListener = null,
             Action<IServiceCollection> configAction = null)
         {
-            var JsonOutputContext = CreateJsonOutputContext(writingRequest, false, configAction);
+            var jsonOutputContext = CreateJsonOutputContext(writingRequest, false, configAction);
 
-            var JsonWriter = new ODataJsonWriter(
-                JsonOutputContext,
+            var jsonWriter = new ODataJsonWriter(
+                jsonOutputContext,
                 navigationSource,
                 resourceType,
                 writingResourceSet,
@@ -2247,7 +2247,7 @@ namespace Microsoft.OData.Core.Tests.Json
                 writingDelta,
                 writerListener);
 
-            action(JsonWriter);
+            action(jsonWriter);
 
             this.stream.Position = 0;
             return new StreamReader(this.stream).ReadToEnd();
