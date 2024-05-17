@@ -159,7 +159,7 @@ namespace Microsoft.OData.Client
 
                         if (materializedCollection == null)
                         {
-                            throw new DataServiceClientException(Strings.AtomMaterializer_CollectionExpectedCollection(innerObject.GetType().ToString()));
+                            throw new DataServiceClientException(Strings.ObjectMaterializer_CollectionExpectedCollection(innerObject.GetType().ToString()));
                         }
 
                         Debug.Assert(!enumerator.MoveNext(), "MaterializationEvents of top level collection expected one result of ICollection<>, but found at least 2 results");

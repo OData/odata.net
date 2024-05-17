@@ -429,7 +429,7 @@ namespace Microsoft.OData.Client
                 {
                     // expectingSingleValue && !moved : haven't started parsing single value (single value should not have next link anyway)
                     // !expectingSingleValue && !IsEndOfStream : collection type feed did not finish parsing yet
-                    throw new InvalidOperationException(Strings.MaterializeFromAtom_TopLevelLinkNotAvailable);
+                    throw new InvalidOperationException(Strings.MaterializeFromObject_TopLevelLinkNotAvailable);
                 }
 
                 // we have already moved to the end of stream
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Client
                 if (!this.materializer.NextLinkTable.TryGetValue(key, out result))
                 {
                     // someone has asked for a collection that's "out of scope" or doesn't exist
-                    throw new ArgumentException(Strings.MaterializeFromAtom_CollectionKeyNotPresentInLinkTable);
+                    throw new ArgumentException(Strings.MaterializeFromObject_CollectionKeyNotPresentInLinkTable);
                 }
             }
 
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.MaterializeFromAtom_GetNestLinkForFlatCollection);
+                    throw new InvalidOperationException(Strings.MaterializeFromObject_GetNestLinkForFlatCollection);
                 }
             }
 

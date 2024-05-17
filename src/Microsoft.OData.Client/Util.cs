@@ -339,7 +339,7 @@ namespace Microsoft.OData.Client
         /// <returns>true of null is true</returns>
         internal static bool DoesNullAttributeSayTrue(XmlReader reader)
         {
-            string attributeValue = reader.GetAttribute(XmlConstants.AtomNullAttributeName, XmlConstants.DataWebMetadataNamespace);
+            string attributeValue = reader.GetAttribute(null, XmlConstants.DataWebMetadataNamespace);
             return (attributeValue != null) && XmlConvert.ToBoolean(attributeValue);
         }
 
