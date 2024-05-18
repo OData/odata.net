@@ -101,19 +101,19 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
-        public void GetTargetSegmentsForSingletonNavigationPropertyUnderComplexProperty()
+        public void GetTargetSegmentsForSingletonNavigationPropertyUnderNavigationProperty()
         {
-            string targetPath = "NS.Default/Me/Address/City";
+            string targetPath = "NS.Default/Me/Cities/NightClubs";
             List<IEdmElement> segments = edmModel.GetTargetSegments(targetPath.Split('/'), true).ToList();
 
             Assert.Equal(4, segments.Count);
             Assert.IsAssignableFrom<IEdmEntityContainer>(segments[0]);
             Assert.IsAssignableFrom<IEdmSingleton>(segments[1]);
-            Assert.IsAssignableFrom<IEdmStructuralProperty>(segments[2]);
+            Assert.IsAssignableFrom<IEdmNavigationProperty>(segments[2]);
             Assert.IsAssignableFrom<IEdmNavigationProperty>(segments[3]);
-            Assert.Equal("Me", (segments[1] as IEdmSingleton).Name);
-            Assert.Equal("Address", (segments[2] as IEdmStructuralProperty).Name);
-            Assert.Equal("City", (segments[3] as IEdmNavigationProperty).Name);
+            Assert.Equal("Me", (segments[1] as IEdmSingleton)!.Name);
+            Assert.Equal("Cities", (segments[2] as IEdmNavigationProperty)!.Name);
+            Assert.Equal("NightClubs", (segments[3] as IEdmNavigationProperty)!.Name);
         }
 
         [Fact]
@@ -162,9 +162,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
 
             this.VipCustomer = new EdmEntityType("NS", "VipCustomer", this.Customer);
             this.Model.AddElement(this.VipCustomer);
+
             this.City = new EdmEntityType("NS", "City");
             this.City.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
             this.Model.AddElement(this.City);
+
+            this.Nightclub = new EdmEntityType("NS", "Nightclub");
+            this.Nightclub.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
+            this.Model.AddElement(this.Nightclub);
 
             this.NavUnderComplex = this.Address.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
@@ -179,6 +184,14 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
                 {
                     Name = "Cities",
                     Target = this.City,
+                    TargetMultiplicity = EdmMultiplicity.Many,
+                });
+
+            this.NavUnderCity = this.City.AddUnidirectionalNavigation(
+                new EdmNavigationPropertyInfo()
+                {
+                    Name = "Nightclubs",
+                    Target = this.Nightclub,
                     TargetMultiplicity = EdmMultiplicity.Many,
                 });
 
@@ -201,11 +214,13 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         public EdmEntityType Customer { get; private set; }
         public EdmEntityType VipCustomer { get; private set; }
         public EdmEntityType City { get; private set; }
+        public EdmEntityType Nightclub { get; private set; }
         public EdmComplexType Address { get; private set; }
         public EdmComplexType DerivedAddress { get; private set; }
         public IEdmProperty NameProperty { get; private set; }
         public IEdmProperty AddressProperty { get; private set; }
         public EdmNavigationProperty NavUnderComplex { get; private set; }
         public EdmNavigationProperty NavUnderCustomer { get; private set; }
+        public EdmNavigationProperty NavUnderCity { get; private set; }
     }
 }

@@ -248,7 +248,7 @@ namespace Microsoft.OData.Edm
 
             IEdmTypeReference typeReference = edmProperty.Type;
 
-            IEdmType edmType = typeReference.Definition;
+            IEdmType edmType = typeReference.Definition.AsElementType();
 
             if (edmType is IEdmStructuredType structuredType)
             {
