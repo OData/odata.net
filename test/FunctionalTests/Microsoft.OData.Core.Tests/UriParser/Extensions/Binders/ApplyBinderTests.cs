@@ -124,7 +124,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             Assert.NotNull(binaryOperation.Left);
             ConvertNode propertyConvertNode = Assert.IsType<ConvertNode>(binaryOperation.Left);
             Assert.NotNull(propertyConvertNode.Source);
-            SingleValueOpenPropertyAccessNode propertyAccess = Assert.IsType< SingleValueOpenPropertyAccessNode>(propertyConvertNode.Source);
+            SingleValueOpenPropertyAccessNode propertyAccess = Assert.IsType<SingleValueOpenPropertyAccessNode>(propertyConvertNode.Source);
             Assert.Equal("TotalPrice", propertyAccess.Name);
         }
 
@@ -200,6 +200,34 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             GroupByPropertyNode addressNode = Assert.Single(groupBy.GroupingProperties);
 
             Assert.Equal("MyAddress", addressNode.Name);
+            Assert.Null(addressNode.Expression);
+
+            GroupByPropertyNode cityNode = Assert.Single(addressNode.ChildTransformations);
+            Assert.Equal("City", cityNode.Name);
+            Assert.NotNull(cityNode.Expression);
+            Assert.Empty(cityNode.ChildTransformations);
+        }
+
+        [Fact]
+        public void BindApplyWitGroupByWithOpenComplexShouldReturnApplyClause()
+        {
+            IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyOpenAddress/City))");
+
+            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+
+            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyClause actual = binder.BindApply(tokens);
+
+            Assert.NotNull(actual);
+            TransformationNode transformation = Assert.Single(actual.Transformations);
+            GroupByTransformationNode groupBy = Assert.IsType<GroupByTransformationNode>(transformation);
+
+            Assert.Equal(TransformationNodeKind.GroupBy, groupBy.Kind);
+            Assert.Null(groupBy.ChildTransformations);
+            Assert.NotNull(groupBy.GroupingProperties);
+            GroupByPropertyNode addressNode = Assert.Single(groupBy.GroupingProperties);
+
+            Assert.Equal("MyOpenAddress", addressNode.Name);
             Assert.Null(addressNode.Expression);
 
             GroupByPropertyNode cityNode = Assert.Single(addressNode.ChildTransformations);
@@ -653,7 +681,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             AggregateTransformationNode aggregate = Assert.IsType<AggregateTransformationNode>(groupBy.ChildTransformations);
             Assert.NotNull(aggregate.AggregateExpressions);
 
-            Assert.IsType< EntitySetAggregateExpression>(Assert.Single(aggregate.AggregateExpressions));
+            Assert.IsType<EntitySetAggregateExpression>(Assert.Single(aggregate.AggregateExpressions));
         }
 
         [Fact]
