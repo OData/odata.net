@@ -101,6 +101,22 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
         }
 
         [Fact]
+        public void GetTargetSegmentsForSingletonNavigationPropertyUnderComplexProperty()
+        {
+            string targetPath = "NS.Default/Me/Address/City";
+            List<IEdmElement> segments = edmModel.GetTargetSegments(targetPath.Split('/'), true).ToList();
+
+            Assert.Equal(4, segments.Count);
+            Assert.IsAssignableFrom<IEdmEntityContainer>(segments[0]);
+            Assert.IsAssignableFrom<IEdmSingleton>(segments[1]);
+            Assert.IsAssignableFrom<IEdmStructuralProperty>(segments[2]);
+            Assert.IsAssignableFrom<IEdmNavigationProperty>(segments[3]);
+            Assert.Equal("Me", (segments[1] as IEdmSingleton).Name);
+            Assert.Equal("Address", (segments[2] as IEdmStructuralProperty).Name);
+            Assert.Equal("City", (segments[3] as IEdmNavigationProperty).Name);
+        }
+
+        [Fact]
         public void GetTargetSegmentsForSingletonNavigationPropertyUnderNavigationProperty()
         {
             string targetPath = "NS.Default/Me/Cities/NightClubs";
@@ -111,9 +127,9 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             Assert.IsAssignableFrom<IEdmSingleton>(segments[1]);
             Assert.IsAssignableFrom<IEdmNavigationProperty>(segments[2]);
             Assert.IsAssignableFrom<IEdmNavigationProperty>(segments[3]);
-            Assert.Equal("Me", (segments[1] as IEdmSingleton)!.Name);
-            Assert.Equal("Cities", (segments[2] as IEdmNavigationProperty)!.Name);
-            Assert.Equal("NightClubs", (segments[3] as IEdmNavigationProperty)!.Name);
+            Assert.Equal("Me", (segments[1] as IEdmSingleton).Name);
+            Assert.Equal("Cities", (segments[2] as IEdmNavigationProperty).Name);
+            Assert.Equal("NightClubs", (segments[3] as IEdmNavigationProperty).Name);
         }
 
         [Fact]
@@ -190,7 +206,7 @@ namespace Microsoft.OData.Edm.Tests.ExtensionMethods
             this.NavUnderCity = this.City.AddUnidirectionalNavigation(
                 new EdmNavigationPropertyInfo()
                 {
-                    Name = "Nightclubs",
+                    Name = "NightClubs",
                     Target = this.Nightclub,
                     TargetMultiplicity = EdmMultiplicity.Many,
                 });
