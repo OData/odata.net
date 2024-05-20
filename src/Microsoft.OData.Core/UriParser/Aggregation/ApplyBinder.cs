@@ -292,11 +292,11 @@ namespace Microsoft.OData.UriParser.Aggregation
                 }
                 else if (node.Kind == QueryNodeKind.SingleComplexNode)
                 {
-                    node = (SingleValueNode)((SingleComplexNode)node).Source;
+                    node = ((SingleComplexNode)node).Source;
                 }
                 else if (node.Kind == QueryNodeKind.SingleNavigationNode)
                 {
-                    node = ((SingleNavigationNode)node).Source as SingleValueNode;
+                    node = ((SingleNavigationNode)node).Source;
                 }
                 else if (node.Kind == QueryNodeKind.SingleValueOpenPropertyAccess)
                 {
