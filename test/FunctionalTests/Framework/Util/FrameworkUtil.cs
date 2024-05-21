@@ -157,16 +157,17 @@ namespace System.Data.Test.Astoria
 
         private static string FindEnlistmentRootHeuristically()
         {
-            // First use environment variable if defined by user.
-            string result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
+
+            // First, use environment variable defined in build agents
+            // See: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables
+            string result = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
             if (!string.IsNullOrEmpty(result))
             {
                 return result;
             }
 
-            // Second, use environment variable defined in build agents
-            // See: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables
-            result = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
+            // Second use environment variable if defined by user.
+            result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
             if (!string.IsNullOrEmpty(result))
             {
                 return result;

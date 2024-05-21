@@ -25,12 +25,6 @@ resources:
 variables:
 - name: __NugetSecurityAnalysisWarningLevel__
   value: none
-- name: BuildConfiguration
-  value: release
-- name: BuildPlatform
-  value: anycpu
-- name: ProductBinPath
-  value: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)
 - name: runCodesignValidationInjection
   value: false
 
@@ -54,17 +48,17 @@ extends:
           snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
           snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
           gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
-          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'	
+          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
           mainDll1: 'Microsoft.OData.Edm.dll'	
-          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'	
+          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
           mainDll2: 'Microsoft.OData.Core.dll'	
-          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'	
+          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
           mainDll3: 'Microsoft.Spatial.dll'	
-          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'	
+          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
           mainDll4: 'Microsoft.OData.Client.dll'	
-          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'	
+          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(buildConfiguration)'	
           mainDll5: 'Microsoft.OData.Service.Design.T4.dll'	
-          ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product	
+          ProductBinPath: $(Build.SourcesDirectory)\bin\$(buildPlatform)\$(buildConfiguration)\Product	
         steps:	
           - template: /buildandtest.yml@self	
           - template: /credscan.yml@self
@@ -76,17 +70,17 @@ extends:
           snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
           snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
           gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(BuildConfiguration)'
+          ProductBinPath1: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
           mainDll1: 'Microsoft.OData.Edm.dll'
-          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(BuildConfiguration)'
+          ProductBinPath2: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
           mainDll2: 'Microsoft.OData.Core.dll'
-          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(BuildConfiguration)'
+          ProductBinPath3: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
           mainDll3: 'Microsoft.Spatial.dll'
-          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(BuildConfiguration)'
+          ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
           mainDll4: 'Microsoft.OData.Client.dll'
-          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(BuildConfiguration)'
+          ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(buildConfiguration)'
           mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
-          ProductBinPath: $(Build.SourcesDirectory)\bin\$(BuildPlatform)\$(BuildConfiguration)\Product
+          ProductBinPath: $(Build.SourcesDirectory)\bin\$(buildPlatform)\$(buildConfiguration)\Product
         steps:
           - template: /buildandtest.yml@self
           - template: /credscan.yml@self

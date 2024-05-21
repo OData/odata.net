@@ -34,7 +34,7 @@ steps:
   displayName: 'Build'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(BuildConfiguration) --no-incremental'
+    arguments: '--configuration $(buildConfiguration) --no-incremental'
     projects: |
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
@@ -42,15 +42,15 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
 - task: DotNetCoreCLI@2
-  condition: eq(variables.BuildConfiguration, 'Release')
+  condition: eq(variables.buildConfiguration, 'Release')
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
