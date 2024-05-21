@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Microsoft.OData.Client.Materialization
 {
     /// <summary>
-    /// Materializer state for a given <see cref="ODataDeltaResourceSet"/>.
+    /// ObjectMaterializer state for a given <see cref="ODataDeltaResourceSet"/>.
     /// </summary>
     internal class MaterializerDeltaFeed : IMaterializerState
     {

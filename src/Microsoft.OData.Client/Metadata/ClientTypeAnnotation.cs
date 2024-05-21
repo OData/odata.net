@@ -35,10 +35,10 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>Storage for the client model.</summary>
         private readonly ClientEdmModel model;
 
-        /// <summary>Set to true if the type is marked as ATOM-style media link entry</summary>
+        /// <summary>Set to true if the type is marked as a media link entry</summary>
         private bool? isMediaLinkEntry;
 
-        /// <summary>Property that holds data for ATOM-style media link entries</summary>
+        /// <summary>Property that holds data for media link entries</summary>
         private ClientPropertyAnnotation mediaDataMember;
 
         /// <summary>Whether any property (including properties on descendant types) of this type is a collection of primitive or complex types.</summary>
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Client.Metadata
             }
         }
 
-        /// <summary>Property that holds data for ATOM-style media link entries</summary>
+        /// <summary>Property that holds data for media link entries</summary>
         internal ClientPropertyAnnotation MediaDataMember
         {
             get
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client.Metadata
             }
         }
 
-        /// <summary>Returns true if the type is marked as ATOM-style media link entry</summary>
+        /// <summary>Returns true if the type is marked as a media link entry</summary>
         internal bool IsMediaLinkEntry
         {
             get
@@ -240,7 +240,7 @@ namespace Microsoft.OData.Client.Metadata
         }
 
         /// <summary>
-        /// Check if this type represents an ATOM-style media link entry and
+        /// Check if this type represents a media link entry and
         /// if so mark the ClientType as such
         /// </summary>
         private void CheckMediaLinkEntry()

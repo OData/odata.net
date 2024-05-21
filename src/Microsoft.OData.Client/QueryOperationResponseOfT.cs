@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client
         /// <param name="headers">HTTP headers</param>
         /// <param name="query">original query</param>
         /// <param name="results">retrieved objects</param>
-        internal QueryOperationResponse(HeaderCollection headers, DataServiceRequest query, MaterializeAtom results)
+        internal QueryOperationResponse(HeaderCollection headers, DataServiceRequest query, ObjectMaterializer results)
             : base(headers, query, results)
         {
         }
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.MaterializeFromAtom_CountNotPresent);
+                    throw new InvalidOperationException(Strings.MaterializeFromObject_CountNotPresent);
                 }
             }
         }

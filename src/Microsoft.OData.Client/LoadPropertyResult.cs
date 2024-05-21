@@ -58,7 +58,7 @@ namespace Microsoft.OData.Client
         /// <returns>QueryOperationResponse instance containing information about the response.</returns>
         internal QueryOperationResponse LoadProperty()
         {
-            MaterializeAtom results = null;
+            ObjectMaterializer results = null;
 
             DataServiceContext context = (DataServiceContext)this.Source;
 
@@ -177,11 +177,11 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Load property data from an ATOM response
+        /// Load property data from a response
         /// </summary>
         /// <param name="property">The property being loaded</param>
         /// <returns>property values as IEnumerable.</returns>
-        private MaterializeAtom ReadPropertyFromAtom(ClientPropertyAnnotation property)
+        private ObjectMaterializer ReadPropertyFromAtom(ClientPropertyAnnotation property)
         {
             DataServiceContext context = (DataServiceContext)this.Source;
             bool merging = context.ApplyingChanges;
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Client
                 DataServiceQueryContinuation continuation = null;
 
                 // elementType.ElementType has Nullable stripped away, use nestedType for materializer
-                using (MaterializeAtom materializer = this.GetMaterializer(this.plan))
+                using (ObjectMaterializer materializer = this.GetMaterializer(this.plan))
                 {
                     Debug.Assert(materializer != null, "materializer != null -- otherwise GetMaterializer() returned null rather than empty");
 
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Client
                     continuation = materializer.GetContinuation(null);
                 }
 
-                return MaterializeAtom.CreateWrapper(context, results, continuation);
+                return ObjectMaterializer.CreateWrapper(context, results, continuation);
             }
             finally
             {
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="property">The property being loaded</param>
         /// <returns>property values as IEnumerable.</returns>
-        private MaterializeAtom ReadPropertyFromRawData(ClientPropertyAnnotation property)
+        private ObjectMaterializer ReadPropertyFromRawData(ClientPropertyAnnotation property)
         {
             DataServiceContext context = (DataServiceContext)this.Source;
 
@@ -327,7 +327,7 @@ namespace Microsoft.OData.Client
                     property.MimeTypeProperty.SetValue(this.entity, mimeType, null, false);
                 }
 
-                return MaterializeAtom.CreateWrapper(context, results);
+                return ObjectMaterializer.CreateWrapper(context, results);
             }
             finally
             {

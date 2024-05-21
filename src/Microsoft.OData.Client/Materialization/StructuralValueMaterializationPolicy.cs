@@ -111,7 +111,7 @@ namespace Microsoft.OData.Client.Materialization
         internal void MaterializePrimitiveDataValue(Type type, ODataProperty property)
         {
             Debug.Assert(type != null, "type != null");
-            Debug.Assert(property != null, "atomProperty != null");
+            Debug.Assert(property != null, "entryProperty != null");
 
             if (!property.HasMaterializedValue(this.MaterializerContext))
             {
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Client.Materialization
                 // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                 if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                 {
-                    throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
+                    throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                 }
 
                 if (property.IsKnownType)

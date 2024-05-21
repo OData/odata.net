@@ -284,7 +284,7 @@ namespace Microsoft.OData
             // OData clients when creating new MLE/MR might not have the MR information (yet) when sending the first PUT, but they still
             // need to mark the resource as MLE so that properties are written out-of-content. In such scenario the client can just set an empty
             // default stream to mark the resource as MLE.
-            // That will cause the ATOM writer to write the properties outside the content without producing any content element.
+            // That will cause the writer to write the properties outside the content without producing any content element.
             if (streamReference.EditLink == null && streamReference.ReadLink == null && !isDefaultStream)
             {
                 throw new ODataException(Strings.WriterValidationUtils_StreamReferenceValueMustHaveEditLinkOrReadLink);

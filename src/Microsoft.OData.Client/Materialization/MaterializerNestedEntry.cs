@@ -10,7 +10,7 @@ using System.Diagnostics;
 namespace Microsoft.OData.Client.Materialization
 {
     /// <summary>
-    /// Materializer state for a given <see cref="ODataNestedResourceInfo"/>
+    /// ObjectMaterializer state for a given <see cref="ODataNestedResourceInfo"/>
     /// </summary>
     internal class MaterializerNestedEntry : IMaterializerState
     {

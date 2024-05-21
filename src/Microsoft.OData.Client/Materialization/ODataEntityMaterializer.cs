@@ -59,7 +59,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// Gets the Entity Materializer Context
+        /// Gets the Entity ObjectMaterializer Context
         /// </summary>
         internal EntityTrackingAdapter EntityTrackingAdapter { get; private set; }
 
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Creates a list to a target element type.</summary>
-        /// <param name="materializer">Materializer used to flow link tracking.</param>
+        /// <param name="materializer">ObjectMaterializer used to flow link tracking.</param>
         /// <typeparam name="T">Element type to enumerate over.</typeparam>
         /// <typeparam name="TTarget">Element type for list.</typeparam>
         /// <param name="source">Element source.</param>
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Client.Materialization
             }
 
             bool result = false;
-            MaterializerNestedEntry atomProperty = default(MaterializerNestedEntry);
+            MaterializerNestedEntry entryProperty = default(MaterializerNestedEntry);
             IEnumerable<ODataNestedResourceInfo> properties = entry.NestedResourceInfos;
             ClientEdmModel model = entry.EntityDescriptor.Model;
             for (int i = 0; i < path.Count; i++)
@@ -281,22 +281,22 @@ namespace Microsoft.OData.Client.Materialization
 
                 IEdmType expectedEdmType = model.GetOrCreateEdmType(expectedType);
                 ClientPropertyAnnotation property = model.GetClientTypeAnnotation(expectedEdmType).GetProperty(propertyName, UndeclaredPropertyBehavior.ThrowException);
-                atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(properties, propertyName, materializerContext);
-                EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.NestedResourceInfo);
-                if (atomProperty.Feed != null)
+                entryProperty = ODataEntityMaterializer.GetPropertyOrThrow(properties, propertyName, materializerContext);
+                EntryValueMaterializationPolicy.ValidatePropertyMatch(property, entryProperty.NestedResourceInfo);
+                if (entryProperty.Feed != null)
                 {
                     Debug.Assert(segmentIsLeaf, "segmentIsLeaf -- otherwise the path generated traverses a feed, which should be disallowed");
                     result = false;
                 }
-                else if (atomProperty.Entry != null)
+                else if (entryProperty.Entry != null)
                 {
                     if (segmentIsLeaf)
                     {
-                        result = atomProperty.Entry.Entry == null;
+                        result = entryProperty.Entry.Entry == null;
                     }
                     else
                     {
-                        entry = atomProperty.Entry;
+                        entry = entryProperty.Entry;
                         properties = entry.NestedResourceInfos;
                     }
                 }
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Provides support for Select invocations for projections.</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="resultType">Expected result type.</param>
@@ -330,7 +330,7 @@ namespace Microsoft.OData.Client.Materialization
             ClientEdmModel edmModel = materializer.MaterializerContext.Model;
             ClientTypeAnnotation entryType = entry.ActualType ?? edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(expectedType));
             IEnumerable list = (IEnumerable)Util.ActivatorCreateInstance(typeof(List<>).MakeGenericType(resultType));
-            MaterializerNestedEntry atomProperty = default(MaterializerNestedEntry);
+            MaterializerNestedEntry entryProperty = default(MaterializerNestedEntry);
             ClientPropertyAnnotation property = null;
             for (int i = 0; i < path.Count; i++)
             {
@@ -350,17 +350,17 @@ namespace Microsoft.OData.Client.Materialization
 
                 // If we are projecting a property defined on a derived type and the entry is of the base type, get property would throw. The user need to check for null in the query.
                 // e.g. Select(p => new MyEmployee { ID = p.ID, Manager = (p as Employee).Manager == null ? null : new MyManager { ID = (p as Employee).Manager.ID } })
-                atomProperty = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, propertyName, materializer.MaterializerContext);
+                entryProperty = ODataEntityMaterializer.GetPropertyOrThrow(entry.NestedResourceInfos, propertyName, materializer.MaterializerContext);
 
-                if (atomProperty.Entry != null)
+                if (entryProperty.Entry != null)
                 {
-                    entry = atomProperty.Entry;
+                    entry = entryProperty.Entry;
                     entryType = edmModel.GetClientTypeAnnotation(edmModel.GetOrCreateEdmType(property.PropertyType));
                 }
             }
 
-            EntryValueMaterializationPolicy.ValidatePropertyMatch(property, atomProperty.NestedResourceInfo);
-            MaterializerFeed sourceFeed = MaterializerFeed.GetFeed(atomProperty.Feed, materializer.MaterializerContext);
+            EntryValueMaterializationPolicy.ValidatePropertyMatch(property, entryProperty.NestedResourceInfo);
+            MaterializerFeed sourceFeed = MaterializerFeed.GetFeed(entryProperty.Feed, materializer.MaterializerContext);
             Debug.Assert(
                 sourceFeed.Feed != null,
                 "sourceFeed != null -- otherwise ValidatePropertyMatch should have thrown or property isn't a collection (and should be part of this plan)");
@@ -402,7 +402,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (result == null)
             {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyNotExpectedEntry(name));
+                throw new InvalidOperationException(DSClient.Strings.Materializer_PropertyNotExpectedEntry(name));
             }
 
             if (!materializerContext.AutoNullPropagation)
@@ -413,7 +413,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="resultType">Expected result type.</param>
@@ -437,7 +437,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.Entry == null)
             {
-                throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToInitializeIsNull(resultType.FullName));
+                throw new NullReferenceException(DSClient.Strings.Materializer_EntryToInitializeIsNull(resultType.FullName));
             }
 
             if (!entry.EntityHasBeenResolved)
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Client.Materialization
             }
             else if (!resultType.IsAssignableFrom(entry.ActualType.ElementType))
             {
-                string message = DSClient.Strings.AtomMaterializer_ProjectEntityTypeMismatch(
+                string message = DSClient.Strings.Materializer_ProjectEntityTypeMismatch(
                     resultType.FullName,
                     entry.ActualType.ElementType.FullName,
                     entry.Id);
@@ -466,16 +466,16 @@ namespace Microsoft.OData.Client.Materialization
 
                 // NOTE:
                 // 1. The delegate calls into methods such as ProjectionValueForPath or ProjectionCheckValueForPathIsNull where the projection path is given. Those methods
-                //    will throw if property is missing from the Atom entry and there is no TypeAs before the property access. I.e. if the Manager property is missing in the
-                //    Atom entry for (p as Employee).Manager, we return null. But we would throw for e.Manager because we are not accessing a derived property.
-                // 2. If Manager is missing in the Atom entry for (p as Employee).Manager.Name, the delegate would throw because we are accessing the Name property on Manager
+                //    will throw if property is missing from the entry and there is no TypeAs before the property access. I.e. if the Manager property is missing in the
+                //    entry for (p as Employee).Manager, we return null. But we would throw for e.Manager because we are not accessing a derived property.
+                // 2. If Manager is missing in the entry for (p as Employee).Manager.Name, the delegate would throw because we are accessing the Name property on Manager
                 //    which is null.  We require user to do a null check, e.g. "(p as Employee).Manager == null ? null (p as Employee).Manager.Name".
                 object value = propertyValues[i](materializer, entry.Entry, expectedType);
 
-                // If the property is missing in the Atom entry, we are projecting a derived property and entry is of the base type which the property is not defined on.
+                // If the property is missing in the entry, we are projecting a derived property and entry is of the base type which the property is not defined on.
                 // We don't want to set the property value, which is null, for the non-existing property on the base type.
                 // Take the example Select(p => new MyEmployee { Manager = (p as Employee).Manager }), if p is of Person type, the Manager navigation property would not
-                // be on its Atom payload from the server. Thus we don't need to set the MyEmployee.Manager link.
+                // be on its payload from the server. Thus we don't need to set the MyEmployee.Manager link.
                 StreamDescriptor streamInfo;
                 var odataProperty = entry.Entry.Properties.Where(p => p.Name == propertyName).FirstOrDefault();
                 var link = odataProperty == null && entry.NestedResourceInfos != null ? entry.NestedResourceInfos.Where(l => l.Name == propertyName).FirstOrDefault() : null;
@@ -564,7 +564,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Materializes an entry with no special selection.</summary>
-        /// <param name="materializer">Materializer under which materialization should take place.</param>
+        /// <param name="materializer">ObjectMaterializer under which materialization should take place.</param>
         /// <param name="entry">Entry with object to materialize.</param>
         /// <param name="expectedEntryType">Expected type for the entry.</param>
         /// <returns>The materialized instance.</returns>
@@ -576,7 +576,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Materializes an entry without including in-lined expanded links.</summary>
-        /// <param name="materializer">Materializer under which materialization should take place.</param>
+        /// <param name="materializer">ObjectMaterializer under which materialization should take place.</param>
         /// <param name="entry">Entry with object to materialize.</param>
         /// <param name="expectedEntryType">Expected type for the entry.</param>
         /// <returns>The materialized instance.</returns>
@@ -652,7 +652,7 @@ namespace Microsoft.OData.Client.Materialization
                         else
                         {
                             // the named stream projected did not come back as part of the property
-                            throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                            throw new InvalidOperationException(DSClient.Strings.Materializer_PropertyMissing(propertyName));
                         }
                     }
 
@@ -674,7 +674,7 @@ namespace Microsoft.OData.Client.Materialization
                     link = odataProperty == null && links != null ? links.Where(p => p.Name == propertyName).FirstOrDefault() : null;
                     if (link == null && odataProperty == null)
                     {
-                        throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                        throw new InvalidOperationException(DSClient.Strings.Materializer_PropertyMissing(propertyName));
                     }
 
                     if (link != null)
@@ -775,7 +775,7 @@ namespace Microsoft.OData.Client.Materialization
                         // This is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
                         if (ClientTypeUtil.TypeOrElementTypeIsEntity(property.PropertyType))
                         {
-                            throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
+                            throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidEntityType(property.EntityCollectionItemType ?? property.PropertyType));
                         }
 
                         if (property.IsPrimitiveOrEnumOrComplexCollection)
@@ -796,7 +796,7 @@ namespace Microsoft.OData.Client.Materialization
                         {
                             if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(property.NullablePropertyType))
                             {
-                                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, property.NullablePropertyType));
+                                throw new InvalidOperationException(DSClient.Strings.Materializer_CannotAssignNull(odataProperty.Name, property.NullablePropertyType));
                             }
 
                             this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(property.NullablePropertyType, odataProperty);
@@ -856,12 +856,12 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (odataProperty == null)
                 {
-                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                    throw new InvalidOperationException(DSClient.Strings.Materializer_PropertyMissing(propertyName));
                 }
 
                 if (odataProperty.Value == null && !ClientTypeUtil.CanAssignNull(expectedPropertyType))
                 {
-                    throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_CannotAssignNull(odataProperty.Name, expectedPropertyType));
+                    throw new InvalidOperationException(DSClient.Strings.Materializer_CannotAssignNull(odataProperty.Name, expectedPropertyType));
                 }
 
                 this.entryValueMaterializationPolicy.MaterializePrimitiveDataValue(expectedPropertyType, odataProperty);
@@ -970,7 +970,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (entry.Entry == null)
             {
-                throw new NullReferenceException(DSClient.Strings.AtomMaterializer_EntryToAccessIsNull(name));
+                throw new NullReferenceException(DSClient.Strings.Materializer_EntryToAccessIsNull(name));
             }
         }
 
@@ -1005,7 +1005,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Materializes the result of a projection into a list.</summary>
-        /// <param name="materializer">Materializer to use for the operation.</param>
+        /// <param name="materializer">ObjectMaterializer to use for the operation.</param>
         /// <param name="list">Target list.</param>
         /// <param name="nestedExpectedType">Expected type for nested object.</param>
         /// <param name="entries">Entries to materialize from.</param>
@@ -1050,7 +1050,7 @@ namespace Microsoft.OData.Client.Materialization
 
             if (link == null)
             {
-                throw new InvalidOperationException(DSClient.Strings.AtomMaterializer_PropertyMissing(propertyName));
+                throw new InvalidOperationException(DSClient.Strings.Materializer_PropertyMissing(propertyName));
             }
 
             return MaterializerNestedEntry.GetNestedEntry(link, materializerContext);

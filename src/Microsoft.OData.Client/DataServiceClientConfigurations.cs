@@ -16,7 +16,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Creates a data service client configurations class
         /// </summary>
-        /// <param name="sender"> The sender for the Reading Atom event.</param>
+        /// <param name="sender"> The sender for the Reading event.</param>
         internal DataServiceClientConfigurations(object sender)
         {
             Debug.Assert(sender != null, "sender!= null");

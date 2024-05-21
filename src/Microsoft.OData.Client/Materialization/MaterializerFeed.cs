@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData;
 
     /// <summary>
-    /// Materializer state for a given ODataResourceSet
+    /// ObjectMaterializer state for a given ODataResourceSet
     /// </summary>
     internal struct MaterializerFeed : IMaterializerState
     {

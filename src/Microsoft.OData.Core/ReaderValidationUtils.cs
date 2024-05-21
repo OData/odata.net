@@ -216,7 +216,7 @@ namespace Microsoft.OData
         /// <param name="expectStructuredType">This value indicates if a structured type is expected to be return.
         /// True for structured type, false for non-structured type, null for indetermination.</param>
         /// <param name="defaultPrimitivePayloadType">The default payload type if none is specified in the payload;
-        /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
+        /// for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="expectedTypeReference">The expected type reference, or null if no expected type is available.</param>
         /// <param name="payloadTypeName">The payload type name, or null if no payload type was specified.</param>
         /// <param name="model">The model to use.</param>
@@ -337,7 +337,7 @@ namespace Microsoft.OData
         /// <param name="payloadType">The resolved payload type, or null if no payload type was specified.</param>
         /// <param name="payloadTypeName">The name of the payload type, or null if no payload type was specified.</param>
         /// <param name="defaultPayloadType">The default payload type if none is specified in the payload;
-        /// for ATOM this is Edm.String, for JSON it is null since there is no payload type name for primitive types in the payload.</param>
+        /// for JSON it is null since there is no payload type name for primitive types in the payload.</param>
         /// <param name="model">The model to use.</param>
         /// <param name="clientCustomTypeResolver">Custom type resolver used by client, or null if none.</param>
         /// <param name="enablePrimitiveTypeConversion">Whether primitive type conversion is enabled.</param>

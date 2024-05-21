@@ -41,7 +41,7 @@ namespace Microsoft.OData.Json
         /// <param name="isReadingNestedPayload">true if we are reading a nested collection inside a parameter payload; otherwise false.</param>
         /// <param name="expectedItemTypeReference">The expected item type reference or null if none is expected.</param>
         /// <param name="actualItemTypeReference">The validated actual item type reference (if specified in the payload) or the expected item type reference.</param>
-        /// <returns>An <see cref="ODataCollectionStart"/> representing the collection-level information. Currently this is only the name of the collection in ATOM.</returns>
+        /// <returns>An <see cref="ODataCollectionStart"/> representing the collection-level information.</returns>
         /// <remarks>
         /// Pre-Condition:  Any:                      the start of a nested collection value; if this is not a 'StartArray' node this method will fail.
         ///                 JsonNodeType.Property:    the first property of the collection wrapper object after the context URI.
@@ -293,7 +293,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1. An <see cref="ODataCollectionStart"/> representing the collection-level information.
         /// 2. The validated actual item type reference (if specified in the payload) or the expected item type reference.
-        /// Currently this is only the name of the collection in ATOM.
+        /// Currently this is only the name of the collection.
         /// </returns>
         /// <remarks>
         /// Pre-Condition:  Any:                      the start of a nested collection value; if this is not a 'StartArray' node this method will fail.

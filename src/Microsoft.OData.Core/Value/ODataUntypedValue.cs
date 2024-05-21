@@ -17,7 +17,6 @@ namespace Microsoft.OData
         /// The caller of the setter is responsible for formatting the value for the
         /// data transmission protocol it will be used in.
         /// For instance, if the protocol is JSON, the caller must format this value as JSON.
-        /// If the protocol is Atom, the caller must format this value as XML.
         /// This library will not perform any formatting.
         /// </remarks>
         public string RawValue

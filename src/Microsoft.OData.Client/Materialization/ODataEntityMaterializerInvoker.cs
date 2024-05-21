@@ -32,7 +32,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Creates a list to a target element type.</summary>
-        /// <param name="materializer">Materializer used to flow link tracking.</param>
+        /// <param name="materializer">ObjectMaterializer used to flow link tracking.</param>
         /// <typeparam name="T">Element type to enumerate over.</typeparam>
         /// <typeparam name="TTarget">Element type for list.</typeparam>
         /// <param name="source">Element source.</param>
@@ -69,7 +69,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Provides support for Select invocations for projections.</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="resultType">Expected result type.</param>
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Initializes a projection-driven entry (with a specific type and specific properties).</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="resultType">Expected result type.</param>
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Projects a simple value from the specified <paramref name="path"/>.</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for <paramref name="entry"/>.</param>
         /// <param name="path">Path to pull value for.</param>
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Projects a simple dynamic value from the specified <paramref name="path"/>.</summary>
-        /// <param name="materializer">Materializer under which projection is taking place.</param>
+        /// <param name="materializer">ObjectMaterializer under which projection is taking place.</param>
         /// <param name="entry">Root entry for paths.</param>
         /// <param name="expectedType">Expected type for dynamic value.</param>
         /// <param name="path">Path to pull value for.</param>
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Materializes an entry with no special selection.</summary>
-        /// <param name="materializer">Materializer under which materialization should take place.</param>
+        /// <param name="materializer">ObjectMaterializer under which materialization should take place.</param>
         /// <param name="entry">Entry with object to materialize.</param>
         /// <param name="expectedEntryType">Expected type for the entry.</param>
         /// <returns>The materialized instance.</returns>
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>Materializes an entry without including in-lined expanded links.</summary>
-        /// <param name="materializer">Materializer under which materialization should take place.</param>
+        /// <param name="materializer">ObjectMaterializer under which materialization should take place.</param>
         /// <param name="entry">Entry with object to materialize.</param>
         /// <param name="expectedEntryType">Expected type for the entry.</param>
         /// <returns>The materialized instance.</returns>

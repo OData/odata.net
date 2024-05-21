@@ -23,11 +23,10 @@ namespace Microsoft.OData
             set;
         }
 
-        /// <summary>Gets or sets the name of the element; this is the entity set or singleton name in JSON and the HREF in Atom.</summary>
+        /// <summary>Gets or sets the name of the element; this is the entity set or singleton name in JSON.</summary>
         /// <returns>The name of the element.</returns>
         /// <remarks>
         /// This property is required when reading and writing the Json format.
-        /// If present in ATOM, it will be used to populate the title element.
         /// </remarks>
         public string Name
         {

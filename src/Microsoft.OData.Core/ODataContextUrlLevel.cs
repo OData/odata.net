@@ -20,7 +20,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Show root context URL of the payload and the context URL for any deleted entries or added or deleted links in a delta response,
         /// or for entities or entity collections whose set cannot be determined from the root context URL
-        /// Used for atom and json with odata.metadata=minimal
+        /// Used for json with odata.metadata=minimal
         /// </summary>
         OnDemand = 1,
 

@@ -340,14 +340,14 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entityDescriptor">The entity descriptor whose response is getting materialized.</param>
         /// <param name="responseInfo">Information about the response to be materialized.</param>
-        /// <returns>An instance of <see cref="MaterializeAtom"/> that can be used to materialize the response.</returns>
-        protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
+        /// <returns>An instance of <see cref="ObjectMaterializer"/> that can be used to materialize the response.</returns>
+        protected override ObjectMaterializer GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
             Debug.Assert(this.materializerStateForDescriptor != null, "this.materializerStateForDescriptor != null");
 
             if (this.materializerStateForDescriptor.TryGetValue(entityDescriptor, out IMaterializerState materializerState) && materializerState is MaterializerEntry materializerEntry)
             {
-                return new MaterializeAtom(responseInfo, new[] { materializerEntry.Entry }, entityDescriptor.Entity.GetType(), materializerEntry.Format, base.MaterializerCache, false);
+                return new ObjectMaterializer(responseInfo, new[] { materializerEntry.Entry }, entityDescriptor.Entity.GetType(), materializerEntry.Format, base.MaterializerCache, false);
             }
 
             return null;

@@ -19,18 +19,18 @@ namespace Microsoft.OData.Client
         /// <summary>The entity being (de)serialized</summary>
         private object entity;
 
-        /// <summary>The ATOM entry data to/from the network</summary>
+        /// <summary>The entry data to/from the network</summary>
         private XElement data;
 
-        /// <summary>The xml base of the feed or entry containing the current ATOM entry</summary>
+        /// <summary>The xml base of the feed or entry containing the current entry</summary>
         private Uri baseUri;
 
         /// <summary>
         /// Constructor
         /// </summary>
         /// <param name="entity">The entity being (de)serialized</param>
-        /// <param name="data">The ATOM entry data to/from the network</param>
-        /// <param name="baseUri">The xml base of the feed or entry containing the current ATOM entry</param>
+        /// <param name="data">The entry data to/from the network</param>
+        /// <param name="baseUri">The xml base of the feed or entry containing the current entry</param>
         internal ReadingWritingEntityEventArgs(object entity, XElement data, Uri baseUri)
         {
             Debug.Assert(entity != null, "entity != null");

@@ -25,7 +25,6 @@ namespace Microsoft.OData.Client
     {
         #region Fields
         /// <summary>uri to identify the entity</summary>
-        /// <remarks>&lt;atom:id&gt;identity&lt;/id&gt;</remarks>
         private Uri identity;
 
         /// <summary>entity</summary>
@@ -38,11 +37,9 @@ namespace Microsoft.OData.Client
         private Uri addToUri;
 
         /// <summary>uri to query the entity</summary>
-        /// <remarks>&lt;atom:link rel="self" href="queryLink" /&gt;</remarks>
         private Uri selfLink;
 
         /// <summary>uri to edit the entity. In case of deep add, this can also refer to the navigation property name.</summary>
-        /// <remarks>&lt;atom:link rel="edit" href="editLink" /&gt;</remarks>
         private Uri editLink;
 
         /// <summary>
@@ -78,7 +75,7 @@ namespace Microsoft.OData.Client
         #region Properties
 
         /// <summary>Gets the URI that is the identity value of the entity.</summary>
-        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the Atom response.</returns>
+        /// <returns>The <see cref="Microsoft.OData.Client.EntityDescriptor.Identity" /> property corresponds to the identity element of the entry that represents the entity in the response.</returns>
         public Uri Identity
         {
             get
@@ -412,7 +409,7 @@ namespace Microsoft.OData.Client
                 else
                 {
                     // we should merge the data always, as we do in the query case. There might be servers, who might send partial data back.
-                    AtomMaterializerLog.MergeEntityDescriptorInfo(this.transientEntityDescriptor, value, true /*mergeInfo*/, MergeOption.OverwriteChanges);
+                    ObjectMaterializerLog.MergeEntityDescriptorInfo(this.transientEntityDescriptor, value, true /*mergeInfo*/, MergeOption.OverwriteChanges);
                 }
 
                 // During save changes call, BaseSaveResult.ChangeEntries contains the list of descriptors which are changed.

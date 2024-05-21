@@ -9,7 +9,7 @@ using System.Diagnostics;
 namespace Microsoft.OData.Client.Materialization
 {
     /// <summary>
-    /// Materializer state for a given <see cref="ODataDeletedResource"/>.
+    /// ObjectMaterializer state for a given <see cref="ODataDeletedResource"/>.
     /// </summary>
     internal class MaterializerDeletedEntry : IMaterializerState
     {

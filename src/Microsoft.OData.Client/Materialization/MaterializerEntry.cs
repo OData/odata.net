@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client.Materialization
     using Microsoft.OData.Client.Metadata;
 
     /// <summary>
-    /// Materializer state for a given ODataResource
+    /// ObjectMaterializer state for a given ODataResource
     /// </summary>
     internal class MaterializerEntry : IMaterializerState
     {
@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>entity descriptor object which keeps track of the entity state and other entity specific information.</summary>
         private readonly EntityDescriptor entityDescriptor;
 
-        /// <summary>True if the context format is Atom or if the MergeOption is anything other than NoTracking.</summary>
+        /// <summary>True if the MergeOption is anything other than NoTracking.</summary>
         private readonly bool isTracking;
 
         /// <summary>Entry flags.</summary>
@@ -126,9 +126,9 @@ namespace Microsoft.OData.Client.Materialization
         }
 
         /// <summary>
-        /// True if the context format is Atom or if the context's MergeOption is anything other than NoTracking.
+        /// True if the context's MergeOption is anything other than NoTracking.
         /// This is used to avoid building URI metadata information that is not needed outside of the context, such
-        /// as odata.id and odata.editlink. Since this information is always available in the payload with Atom, for
+        /// as odata.id and odata.editlink. Since this information is always available in the payload, for
         /// backward compatibility we continue using it as we always have, even for NoTracking cases.
         /// </summary>
         public bool IsTracking

@@ -37,7 +37,7 @@ namespace Microsoft.OData
         };
 
         /// <summary>
-        /// MediaTypeResolver without atom support
+        /// MediaTypeResolver.
         /// </summary>
         private static readonly ODataMediaTypeResolver MediaTypeResolver = new ODataMediaTypeResolver();
 

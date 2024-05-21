@@ -66,7 +66,7 @@ DuplicateAnnotationForPropertyNotAllowed=Multiple annotations with the name '{0}
 DuplicateAnnotationForInstanceAnnotationNotAllowed=Multiple annotations with the name '{0}' were detected for the instance annotation with name '{1}'. In OData, duplicate annotations are not allowed.
 PropertyAnnotationAfterTheProperty=An annotation with name '{0}' for property '{1}' was detected after the property, or after an annotation for another property. In OData, annotations for a property must be in a single group and must appear before the property they annotate.
 
-AtomValueUtils_CannotConvertValueToAtomPrimitive=Cannot convert a value of type '{0}' to the string representation of an Atom primitive value.
+ValueUtils_CannotConvertValueToPrimitive=Cannot convert a value of type '{0}' to the string representation of a primitive value.
 
 ODataJsonWriter_UnsupportedValueType=The value of type '{0}' is not supported and cannot be converted to a JSON representation.
 ODataJsonWriter_UnsupportedValueInCollection=Unable to serialize an object in a collection as it is not a supported ODataValue.
@@ -454,10 +454,10 @@ ODataMetadataInputContext_ErrorReadingMetadata=The metadata document could not b
 ODataMetadataOutputContext_ErrorWritingMetadata=The metadata document could not be written as specified.\r\n{0}
 ODataMetadataOutputContext_NotSupportJsonMetadata=The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.
 
-ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
+ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified=A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings.
 
-ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement=The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace.
-ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties=The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property. Navigation properties in ATOM must be represented as {{http://www.w3.org/2005/Atom}}:link elements.
+ODataPropertyAndValueDeserializer_InvalidCollectionElement=The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace.
+ODataPropertyAndValueDeserializer_NavigationPropertyInProperties=The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property.
 
 JsonInstanceAnnotationWriter_NullValueNotAllowedForInstanceAnnotation=Writing null value for the instance annotation '{0}' is not allowed. The instance annotation '{0}' has the expected type '{1}[Nullable=False]'.
 
@@ -466,10 +466,10 @@ EdmLibraryExtensions_UnBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Inva
 EdmLibraryExtensions_NoParameterBoundOperationsFoundFromIEdmModelFindMethodIsInvalid=Invalid implementation of an IEdmModel, an operation '{0}' was found using the IEdmModel method 'FindDeclaredBoundOperations' should never return bound operations without any parameters.
 EdmLibraryExtensions_ValueOverflowForUnderlyingType=Value '{0}' was either too large or too small for a '{1}'.
 
-ODataAtomResourceDeserializer_ContentWithWrongType=The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element.
+ODataXmlResourceDeserializer_ContentWithWrongType=The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element.
 
-ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in a top-level error value. In OData, the value of a top-level error value can have no more than one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element
-ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in an inner error value. In OData, the value of an inner error value can have at most one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element.
+ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in a top-level error value. In OData, the value of a top-level error value can have no more than one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element
+ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName=Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in an inner error value. In OData, the value of an inner error value can have at most one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element.
 
 CollectionWithoutExpectedTypeValidator_InvalidItemTypeKind=An invalid item type kind '{0}' was found. Items in a collection can only be of type kind 'Primitive' or 'Complex', but not of type kind '{0}'.
 CollectionWithoutExpectedTypeValidator_IncompatibleItemTypeKind=An item of type kind '{0}' was found in a collection that otherwise has items of type kind '{1}'. In OData, all items in a collection must have the same type kind.
@@ -672,10 +672,10 @@ ODataInstanceAnnotation_ValueCannotBeODataStreamReferenceValue=The value of an i
 ODataJsonValueSerializer_MissingTypeNameOnCollection=A type name was not provided for an instance of ODataCollectionValue.
 ODataJsonValueSerializer_MissingRawValueOnUntyped=A raw value was not provided for an instance of ODataUntypedValue.
 
-AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement=Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute.
-AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType=The value of the 'type' attribute on an 'annotation' element was '{0}', which is incompatible with the '{1}' attribute.
-AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement=Encountered the attribute '{0}' on a non-empty 'annotation' element. If attribute value notation is used to specify the annotation's value, then there can be no body to the element.
-AtomInstanceAnnotation_MultipleAttributeValueNotationAttributes=Encountered an 'annotation' element with more than one attribute from following set: 'int', 'string', 'decimal', 'float', and 'bool'. Only one such attribute may appear on an 'annotation' element.
+InstanceAnnotation_MissingTermAttributeOnAnnotationElement=Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute.
+InstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType=The value of the 'type' attribute on an 'annotation' element was '{0}', which is incompatible with the '{1}' attribute.
+InstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement=Encountered the attribute '{0}' on a non-empty 'annotation' element. If attribute value notation is used to specify the annotation's value, then there can be no body to the element.
+InstanceAnnotation_MultipleAttributeValueNotationAttributes=Encountered an 'annotation' element with more than one attribute from following set: 'int', 'string', 'decimal', 'float', and 'bool'. Only one such attribute may appear on an 'annotation' element.
 
 AnnotationFilterPattern_InvalidPatternMissingDot=The pattern '{0}' is not a valid pattern to match an annotation. It must contain at least one '.' separating the namespace and the name segments of an annotation.
 AnnotationFilterPattern_InvalidPatternEmptySegment=The pattern '{0}' is not a valid pattern to match an annotation. It must not contain a namespace or name segment that is empty.

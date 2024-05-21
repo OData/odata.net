@@ -477,11 +477,11 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "Cannot convert a value of type '{0}' to the string representation of an Atom primitive value."
+        /// A string like "Cannot convert a value of type '{0}' to the string representation of a primitive value."
         /// </summary>
-        internal static string AtomValueUtils_CannotConvertValueToAtomPrimitive(object p0)
+        internal static string ValueUtils_CannotConvertValueToPrimitive(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomValueUtils_CannotConvertValueToAtomPrimitive, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ValueUtils_CannotConvertValueToPrimitive, p0);
         }
 
         /// <summary>
@@ -3573,25 +3573,25 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "A relative URI value '{0}' was specified in the payload, but no base URI for it was found. When the payload contains a relative URI, there must be an xml:base in the payload or else a base URI must specified in the reader settings."
         /// </summary>
-        internal static string ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified(object p0)
+        internal static string ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified, p0);
         }
 
         /// <summary>
         /// A string like "The element with name '{0}' is not a valid collection item. The name of the collection item element must be 'element' and it must belong to the '{1}' namespace."
         /// </summary>
-        internal static string ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement(object p0, object p1)
+        internal static string ODataPropertyAndValueDeserializer_InvalidCollectionElement(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueDeserializer_InvalidCollectionElement, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataPropertyAndValueDeserializer_InvalidCollectionElement, p0, p1);
         }
 
         /// <summary>
-        /// A string like "The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property. Navigation properties in ATOM must be represented as {{http://www.w3.org/2005/Atom}}:link elements."
+        /// A string like "The property '{0}' on type '{1}' was found in the {{http://docs.oasis-open.org/odata/ns/metadata}}:properties element, and it is declared as a navigation property."
         /// </summary>
-        internal static string ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties(object p0, object p1)
+        internal static string ODataPropertyAndValueDeserializer_NavigationPropertyInProperties(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomPropertyAndValueDeserializer_NavigationPropertyInProperties, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataPropertyAndValueDeserializer_NavigationPropertyInProperties, p0, p1);
         }
 
         /// <summary>
@@ -3637,25 +3637,25 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "The 'type' attribute on element {{http://www.w3.org/2005/Atom}}:content is either missing or has an invalid value '{0}'. Only 'application/xml' and 'application/atom+xml' are supported as the value of the 'type' attribute on the {{http://www.w3.org/2005/Atom}}:content element."
         /// </summary>
-        internal static string ODataAtomResourceDeserializer_ContentWithWrongType(object p0)
+        internal static string ODataXmlResourceDeserializer_ContentWithWrongType(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomResourceDeserializer_ContentWithWrongType, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataXmlResourceDeserializer_ContentWithWrongType, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in a top-level error value. In OData, the value of a top-level error value can have no more than one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element"
         /// </summary>
-        internal static string ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName(object p0)
+        internal static string ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName, p0);
         }
 
         /// <summary>
         /// A string like "Multiple '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' elements were found in an inner error value. In OData, the value of an inner error value can have at most one '{{http://docs.oasis-open.org/odata/ns/metadata}}:{0}' element."
         /// </summary>
-        internal static string ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName(object p0)
+        internal static string ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName, p0);
         }
 
         /// <summary>
@@ -5083,38 +5083,38 @@ namespace Microsoft.OData {
         /// <summary>
         /// A string like "Encountered an 'annotation' element without a 'term' attribute. All 'annotation' elements must have a 'term' attribute."
         /// </summary>
-        internal static string AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement
+        internal static string InstanceAnnotation_MissingTermAttributeOnAnnotationElement
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomInstanceAnnotation_MissingTermAttributeOnAnnotationElement);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.InstanceAnnotation_MissingTermAttributeOnAnnotationElement);
             }
         }
 
         /// <summary>
         /// A string like "The value of the 'type' attribute on an 'annotation' element was '{0}', which is incompatible with the '{1}' attribute."
         /// </summary>
-        internal static string AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType(object p0, object p1)
+        internal static string InstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType(object p0, object p1)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomInstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType, p0, p1);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.InstanceAnnotation_AttributeValueNotationUsedWithIncompatibleType, p0, p1);
         }
 
         /// <summary>
         /// A string like "Encountered the attribute '{0}' on a non-empty 'annotation' element. If attribute value notation is used to specify the annotation's value, then there can be no body to the element."
         /// </summary>
-        internal static string AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement(object p0)
+        internal static string InstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement(object p0)
         {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomInstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement, p0);
+            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.InstanceAnnotation_AttributeValueNotationUsedOnNonEmptyElement, p0);
         }
 
         /// <summary>
         /// A string like "Encountered an 'annotation' element with more than one attribute from following set: 'int', 'string', 'decimal', 'float', and 'bool'. Only one such attribute may appear on an 'annotation' element."
         /// </summary>
-        internal static string AtomInstanceAnnotation_MultipleAttributeValueNotationAttributes
+        internal static string InstanceAnnotation_MultipleAttributeValueNotationAttributes
         {
             get
             {
-                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.AtomInstanceAnnotation_MultipleAttributeValueNotationAttributes);
+                return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.InstanceAnnotation_MultipleAttributeValueNotationAttributes);
             }
         }
 
