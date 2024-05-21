@@ -56,13 +56,11 @@ namespace Microsoft.OData.MultipartMixed
         /// <returns>A running task for the created batch writer.</returns>
         /// <remarks>We don't plan to make this public!</remarks>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataBatchWriter> CreateODataBatchWriterAsync()
+        internal override ValueTask<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(
-                thisParam => thisParam.CreateODataBatchWriterImplementation(),
-                this);
+            return ValueTask.FromResult(this.CreateODataBatchWriterImplementation());
         }
 
         /// <summary>
