@@ -59,8 +59,6 @@ extends:
             mainDll3: 'Microsoft.Spatial.dll'	
             ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
             mainDll4: 'Microsoft.OData.Client.dll'	
-            ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(buildConfiguration)'	
-            mainDll5: 'Microsoft.OData.Service.Design.T4.dll'	
             NugetArtifactsDir: 'Nuget-Debug'	
         templateContext:	
           outputs:	
@@ -87,8 +85,6 @@ extends:
             mainDll3: 'Microsoft.Spatial.dll'
             ProductBinPath4: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
             mainDll4: 'Microsoft.OData.Client.dll'
-            ProductBinPath5: '$(Build.SourcesDirectory)\src\CodeGen\bin\$(buildConfiguration)'
-            mainDll5: 'Microsoft.OData.Service.Design.T4.dll'
             NugetArtifactsDir: 'Nuget-Release'
         templateContext:
           outputs:
