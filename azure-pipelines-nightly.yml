@@ -51,15 +51,15 @@ extends:
             snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'	
             snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'	
             gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'	
-            ProductBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
+            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'	
             mainDllEdm: 'Microsoft.OData.Edm.dll'	
-            ProductBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
+            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'	
             mainDllCore: 'Microsoft.OData.Core.dll'	
-            ProductBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
+            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'	
             mainDllSpatial: 'Microsoft.Spatial.dll'	
-            ProductBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
+            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'	
             mainDllClient: 'Microsoft.OData.Client.dll'	
-            NugetArtifactsDir: 'Nuget-Debug'	
+            nugetArtifactsDir: 'Nuget-Debug'	
         templateContext:	
           outputs:	
           - output: pipelineArtifact	
@@ -77,15 +77,15 @@ extends:
             snExe: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\sn.exe'
             snExe64: 'C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.8 Tools\x64\sn.exe'
             gacUtil: '$(Build.SourcesDirectory)\test\CommonAssemblies\Microsoft.VisualStudio.QualityTools.UnitTestFramework.dll'
-            ProductBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
+            productBinPathEdm: '$(Build.SourcesDirectory)\src\Microsoft.OData.Edm\bin\$(buildConfiguration)'
             mainDllEdm: 'Microsoft.OData.Edm.dll'
-            ProductBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
+            productBinPathCore: '$(Build.SourcesDirectory)\src\Microsoft.OData.Core\bin\$(buildConfiguration)'
             mainDllCore: 'Microsoft.OData.Core.dll'
-            ProductBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
+            productBinPathSpatial: '$(Build.SourcesDirectory)\src\Microsoft.Spatial\bin\$(buildConfiguration)'
             mainDllSpatial: 'Microsoft.Spatial.dll'
-            ProductBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
+            productBinPathClient: '$(Build.SourcesDirectory)\src\Microsoft.OData.Client\bin\$(buildConfiguration)'
             mainDllClient: 'Microsoft.OData.Client.dll'
-            NugetArtifactsDir: 'Nuget-Release'
+            nugetArtifactsDir: 'Nuget-Release'
         templateContext:
           outputs:
             - output: pipelineArtifact
