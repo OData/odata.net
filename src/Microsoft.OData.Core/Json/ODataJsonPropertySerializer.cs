@@ -934,7 +934,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes an <see cref="System.Text.Json.JsonElement"/> value.
         /// </summary>
         /// <param name="jsonElementvalue">The value to be written.</param>
-        private async Task WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementvalue)
+        private async ValueTask WriteJsonElementPropertyAsync(ODataJsonElementValue jsonElementvalue)
         {
             await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
@@ -951,7 +951,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The property name.</param>
         /// <param name="metadataBuilder">The metadata builder for the resource.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStreamValueAsync(
+        private async ValueTask WriteStreamValueAsync(
             IODataStreamReferenceInfo streamInfo,
             string propertyName,
             ODataResourceMetadataBuilder metadataBuilder)
@@ -972,7 +972,7 @@ namespace Microsoft.OData.Json
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <param name="isUndeclaredProperty">If writing an undeclared property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
+        private ValueTask WriteInstanceAnnotationAsync(ODataPropertyInfo property, bool isTopLevel, bool isUndeclaredProperty)
         {
             if (property.InstanceAnnotations.Count != 0)
             {
@@ -986,7 +986,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -995,7 +995,7 @@ namespace Microsoft.OData.Json
         /// <param name="property">The property to handle.</param>
         /// <param name="isTopLevel">If writing top level property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
+        private ValueTask WriteODataTypeAnnotationAsync(ODataPropertyInfo property, bool isTopLevel)
         {
             if (property.TypeAnnotation != null && property.TypeAnnotation.TypeName != null)
             {
@@ -1018,7 +1018,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -1027,7 +1027,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the stream property to write.</param>
         /// <param name="streamInfo">The stream reference value to be written</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStreamInfoAsync(string propertyName, IODataStreamReferenceInfo streamInfo)
+        private async ValueTask WriteStreamInfoAsync(string propertyName, IODataStreamReferenceInfo streamInfo)
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             Debug.Assert(streamInfo != null, "streamReferenceValue != null");
@@ -1074,7 +1074,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="property">The property to write out.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteNullPropertyAsync(
+        private async ValueTask WriteNullPropertyAsync(
             ODataPropertyInfo property)
         {
             this.WriterValidator.ValidateNullPropertyValue(
@@ -1118,7 +1118,7 @@ namespace Microsoft.OData.Json
         /// <param name="resourceValue">The resource value to be written</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteResourcePropertyAsync(
+        private async ValueTask WriteResourcePropertyAsync(
             ODataProperty property,
             ODataResourceValue resourceValue,
             bool isOpenPropertyType)
@@ -1144,7 +1144,7 @@ namespace Microsoft.OData.Json
         /// <param name="enumValue">The enum value to be written.</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEnumPropertyAsync(
+        private async ValueTask WriteEnumPropertyAsync(
             ODataEnumValue enumValue,
             bool isOpenPropertyType)
         {
@@ -1163,7 +1163,7 @@ namespace Microsoft.OData.Json
         /// <param name="collectionValue">The collection value to be written</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteCollectionPropertyAsync(
+        private async ValueTask WriteCollectionPropertyAsync(
             ODataCollectionValue collectionValue,
             bool isOpenPropertyType)
         {
@@ -1190,7 +1190,7 @@ namespace Microsoft.OData.Json
         /// <param name="streamValue">The stream value to be written</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStreamPropertyAsync(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
+        private async ValueTask WriteStreamPropertyAsync(ODataBinaryStreamValue streamValue, bool isOpenPropertyType)
         {
             await this.JsonWriter.WriteNameAsync(this.currentPropertyInfo.WireName)
                 .ConfigureAwait(false);
@@ -1204,7 +1204,7 @@ namespace Microsoft.OData.Json
         /// <param name="primitiveValue">The primitive value to be written</param>
         /// <param name="isOpenPropertyType">If the property is open.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePrimitivePropertyAsync(
+        private async ValueTask WritePrimitivePropertyAsync(
             ODataPrimitiveValue primitiveValue,
             bool isOpenPropertyType)
         {
@@ -1223,7 +1223,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes the type name on the wire.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WritePropertyTypeNameAsync()
+        private ValueTask WritePropertyTypeNameAsync()
         {
             string typeNameToWrite = this.currentPropertyInfo.TypeNameToWrite;
             if (typeNameToWrite != null)
@@ -1239,7 +1239,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
     }
 }

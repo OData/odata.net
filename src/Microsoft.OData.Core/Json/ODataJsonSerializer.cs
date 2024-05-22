@@ -262,7 +262,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the contextUrlInfo, 
         /// if the context URI was successfully written.</returns>
-        internal async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync(
+        internal ValueTask<ODataContextUrlInfo> WriteContextUriPropertyAsync(
             ODataPayloadKind payloadKind,
             Func<ODataContextUrlInfo> contextUrlInfoGen = null,
             ODataContextUrlInfo parentContextUrlInfo = null,
@@ -270,7 +270,7 @@ namespace Microsoft.OData.Json
         {
             if (IsJsonNoMetadataLevel())
             {
-                return null;
+                return ValueTask.FromResult<ODataContextUrlInfo>(null);
             }
 
             ODataContextUrlInfo contextUrlInfo = null;
@@ -280,11 +280,11 @@ namespace Microsoft.OData.Json
                 contextUrlInfo = contextUrlInfoGen();
             }
 
-            return await WriteContextUriPropertyImplementationAsync(
+            return WriteContextUriPropertyImplementationAsync(
                 payloadKind,
                 parentContextUrlInfo,
                 contextUrlInfo,
-                propertyName).ConfigureAwait(false);
+                propertyName);
         }
 
         /// <summary>
@@ -292,7 +292,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="payloadWriterFunc">The delegate that writes the actual JSON payload that is being wrapped.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteTopLevelPayloadAsync(Func<Task> payloadWriterFunc)
+        internal async ValueTask WriteTopLevelPayloadAsync(Func<Task> payloadWriterFunc)
         {
             Debug.Assert(payloadWriterFunc != null, "payloadWriterAction != null");
 
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Json
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WriteTopLevelErrorAsync(ODataError error, bool includeDebugInformation)
+        internal ValueTask WriteTopLevelErrorAsync(ODataError error, bool includeDebugInformation)
         {
             Debug.Assert(error != null, "error != null");
 
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
-        protected async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg>(
+        protected ValueTask<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg>(
             ODataPayloadKind payloadKind,
             Func<TArg, ODataContextUrlInfo> contextUrlInfoGen,
             TArg arg,
@@ -394,7 +394,7 @@ namespace Microsoft.OData.Json
         {
             if (IsJsonNoMetadataLevel())
             {
-                return null;
+                return ValueTask.FromResult<ODataContextUrlInfo>(null);
             }
 
             ODataContextUrlInfo contextUrlInfo = null;
@@ -404,11 +404,11 @@ namespace Microsoft.OData.Json
                 contextUrlInfo = contextUrlInfoGen(arg);
             }
 
-            return await WriteContextUriPropertyImplementationAsync(
+            return WriteContextUriPropertyImplementationAsync(
                 payloadKind,
                 parentContextUrlInfo,
                 contextUrlInfo,
-                propertyName).ConfigureAwait(false);
+                propertyName);
         }
 
         /// <summary>
@@ -425,7 +425,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
-        protected async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg1, TArg2>(
+        protected ValueTask<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg1, TArg2>(
             ODataPayloadKind payloadKind,
             Func<TArg1, TArg2, ODataContextUrlInfo> contextUrlInfoGen,
             TArg1 arg1,
@@ -435,7 +435,7 @@ namespace Microsoft.OData.Json
         {
             if (IsJsonNoMetadataLevel())
             {
-                return null;
+                return ValueTask.FromResult<ODataContextUrlInfo>(null);
             }
 
             ODataContextUrlInfo contextUrlInfo = null;
@@ -445,11 +445,11 @@ namespace Microsoft.OData.Json
                 contextUrlInfo = contextUrlInfoGen(arg1, arg2);
             }
 
-            return await WriteContextUriPropertyImplementationAsync(
+            return WriteContextUriPropertyImplementationAsync(
                 payloadKind,
                 parentContextUrlInfo,
                 contextUrlInfo,
-                propertyName).ConfigureAwait(false);
+                propertyName);
         }
 
         /// <summary>
@@ -468,7 +468,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation. 
         /// The value of the TResult parameter contains the <see cref="ODataContextUrlInfo"/> instance 
         /// if the context URI was successfully written.</returns>
-        protected async Task<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg1, TArg2, TArg3>(
+        protected ValueTask<ODataContextUrlInfo> WriteContextUriPropertyAsync<TArg1, TArg2, TArg3>(
             ODataPayloadKind payloadKind,
             Func<TArg1, TArg2, TArg3, ODataContextUrlInfo> contextUrlInfoGen,
             TArg1 arg1,
@@ -479,7 +479,7 @@ namespace Microsoft.OData.Json
         {
             if (IsJsonNoMetadataLevel())
             {
-                return null;
+                return ValueTask.FromResult<ODataContextUrlInfo>(null);
             }
 
             ODataContextUrlInfo contextUrlInfo = null;
@@ -489,11 +489,11 @@ namespace Microsoft.OData.Json
                 contextUrlInfo = contextUrlInfoGen(arg1, arg2, arg3);
             }
 
-            return await WriteContextUriPropertyImplementationAsync(
+            return WriteContextUriPropertyImplementationAsync(
                 payloadKind,
                 parentContextUrlInfo,
                 contextUrlInfo,
-                propertyName).ConfigureAwait(false);
+                propertyName);
         }
 
         /// <summary>
@@ -597,8 +597,8 @@ namespace Microsoft.OData.Json
         /// <param name="arg2">The second argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <param name="arg3">The third argument value provided to the <paramref name="payloadWriterFunc"/> delegate.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected async Task WriteTopLevelPayloadAsync<TArg1, TArg2, TArg3>(
-            Func<TArg1, TArg2, TArg3, Task> payloadWriterFunc,
+        protected async ValueTask WriteTopLevelPayloadAsync<TArg1, TArg2, TArg3>(
+            Func<TArg1, TArg2, TArg3, ValueTask> payloadWriterFunc,
             TArg1 arg1,
             TArg2 arg2,
             TArg3 arg3)

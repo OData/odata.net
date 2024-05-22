@@ -14,6 +14,12 @@ abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataR
 abstract Microsoft.OData.ODataFormat.CreateInputContextAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataInputContext>
 abstract Microsoft.OData.ODataFormat.CreateOutputContextAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataOutputContext>
 abstract Microsoft.OData.ODataFormat.DetectPayloadKindAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings settings) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKind>>
+abstract Microsoft.OData.ODataParameterWriter.CreateCollectionWriterAsync(string parameterName) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataCollectionWriter>
+abstract Microsoft.OData.ODataParameterWriter.CreateResourceSetWriterAsync(string parameterName) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataWriter>
+abstract Microsoft.OData.ODataParameterWriter.CreateResourceWriterAsync(string parameterName) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataWriter>
+abstract Microsoft.OData.ODataParameterWriter.WriteEndAsync() -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataParameterWriter.WriteStartAsync() -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataParameterWriter.WriteValueAsync(string parameterName, object parameterValue) -> System.Threading.Tasks.ValueTask
 Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions
 Microsoft.OData.IODataRequestMessageAsync.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 Microsoft.OData.IODataResponseMessageAsync.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
@@ -66,6 +72,7 @@ Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool
 Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.ValueTask
 Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 Microsoft.OData.ODataAsynchronousResponseMessage.ServiceProvider.get -> System.IServiceProvider
+Microsoft.OData.ODataAsynchronousWriter.CreateResponseMessageAsync() -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataAsynchronousResponseMessage>
 Microsoft.OData.ODataBatchOperationRequestMessage.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 Microsoft.OData.ODataBatchOperationRequestMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationResponseMessage.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
@@ -219,19 +226,13 @@ abstract Microsoft.OData.ODataParameterReader.ReadAsync() -> System.Threading.Ta
 abstract Microsoft.OData.ODataParameterReader.State.get -> Microsoft.OData.ODataParameterReaderState
 abstract Microsoft.OData.ODataParameterReader.Value.get -> object
 abstract Microsoft.OData.ODataParameterWriter.CreateCollectionWriter(string parameterName) -> Microsoft.OData.ODataCollectionWriter
-abstract Microsoft.OData.ODataParameterWriter.CreateCollectionWriterAsync(string parameterName) -> System.Threading.Tasks.Task<Microsoft.OData.ODataCollectionWriter>
 abstract Microsoft.OData.ODataParameterWriter.CreateResourceSetWriter(string parameterName) -> Microsoft.OData.ODataWriter
-abstract Microsoft.OData.ODataParameterWriter.CreateResourceSetWriterAsync(string parameterName) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 abstract Microsoft.OData.ODataParameterWriter.CreateResourceWriter(string parameterName) -> Microsoft.OData.ODataWriter
-abstract Microsoft.OData.ODataParameterWriter.CreateResourceWriterAsync(string parameterName) -> System.Threading.Tasks.Task<Microsoft.OData.ODataWriter>
 abstract Microsoft.OData.ODataParameterWriter.Flush() -> void
 abstract Microsoft.OData.ODataParameterWriter.FlushAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataParameterWriter.WriteEnd() -> void
-abstract Microsoft.OData.ODataParameterWriter.WriteEndAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataParameterWriter.WriteStart() -> void
-abstract Microsoft.OData.ODataParameterWriter.WriteStartAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataParameterWriter.WriteValue(string parameterName, object parameterValue) -> void
-abstract Microsoft.OData.ODataParameterWriter.WriteValueAsync(string parameterName, object parameterValue) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataReader.Item.get -> Microsoft.OData.ODataItem
 abstract Microsoft.OData.ODataReader.Read() -> bool
 abstract Microsoft.OData.ODataReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
@@ -387,7 +388,6 @@ Microsoft.OData.ODataAsynchronousResponseMessage.StatusCode.get -> int
 Microsoft.OData.ODataAsynchronousResponseMessage.StatusCode.set -> void
 Microsoft.OData.ODataAsynchronousWriter
 Microsoft.OData.ODataAsynchronousWriter.CreateResponseMessage() -> Microsoft.OData.ODataAsynchronousResponseMessage
-Microsoft.OData.ODataAsynchronousWriter.CreateResponseMessageAsync() -> System.Threading.Tasks.Task<Microsoft.OData.ODataAsynchronousResponseMessage>
 Microsoft.OData.ODataAsynchronousWriter.Flush() -> void
 Microsoft.OData.ODataAsynchronousWriter.FlushAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.ODataBatchOperationHeaders

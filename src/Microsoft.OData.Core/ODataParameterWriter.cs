@@ -20,7 +20,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously start writing a parameter payload.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteStartAsync();
+        public abstract ValueTask WriteStartAsync();
 
         /// <summary>Start writing a value parameter.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -31,7 +31,7 @@ namespace Microsoft.OData
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
-        public abstract Task WriteValueAsync(string parameterName, object parameterValue);
+        public abstract ValueTask WriteValueAsync(string parameterName, object parameterValue);
 
         /// <summary>Creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
         /// <returns>The newly created <see cref="Microsoft.OData.ODataCollectionWriter" />.</returns>
@@ -41,7 +41,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionWriter" /> to write the value of a collection parameter.</summary>
         /// <returns>The asynchronously created <see cref="Microsoft.OData.ODataCollectionWriter" />.</returns>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
-        public abstract Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName);
+        public abstract ValueTask<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName);
 
         /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -51,7 +51,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="Microsoft.OData.ODataWriter" />.</returns>
-        public abstract Task<ODataWriter> CreateResourceWriterAsync(string parameterName);
+        public abstract ValueTask<ODataWriter> CreateResourceWriterAsync(string parameterName);
 
         /// <summary> Creates an <see cref="Microsoft.OData.ODataWriter" /> to write a resource set. </summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
@@ -61,14 +61,14 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="Microsoft.OData.ODataWriter" />.</returns>
-        public abstract Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName);
+        public abstract ValueTask<ODataWriter> CreateResourceSetWriterAsync(string parameterName);
 
         /// <summary>Finish writing a parameter payload.</summary>
         public abstract void WriteEnd();
 
         /// <summary>Asynchronously finish writing a parameter payload.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteEndAsync();
+        public abstract ValueTask WriteEndAsync();
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();

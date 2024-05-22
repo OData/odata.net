@@ -24,45 +24,45 @@ namespace ExperimentsLib
         {
         }
 
-        public Task EndArrayScopeAsync()
+        public ValueTask EndArrayScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void EndObjectScope()
         {
         }
 
-        public Task EndObjectScopeAsync()
+        public ValueTask EndObjectScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void EndPaddingFunctionScope()
         {
         }
 
-        public Task EndPaddingFunctionScopeAsync()
+        public ValueTask EndPaddingFunctionScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void EndStreamValueScope()
         {
         }
 
-        public Task EndStreamValueScopeAsync()
+        public ValueTask EndStreamValueScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void EndTextWriterValueScope()
         {
         }
 
-        public Task EndTextWriterValueScopeAsync()
+        public ValueTask EndTextWriterValueScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void Flush()
@@ -78,27 +78,27 @@ namespace ExperimentsLib
         {
         }
 
-        public Task StartArrayScopeAsync()
+        public ValueTask StartArrayScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void StartObjectScope()
         {
         }
 
-        public Task StartObjectScopeAsync()
+        public ValueTask StartObjectScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void StartPaddingFunctionScope()
         {
         }
 
-        public Task StartPaddingFunctionScopeAsync()
+        public ValueTask StartPaddingFunctionScopeAsync()
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public Stream StartStreamValueScope()
@@ -106,7 +106,7 @@ namespace ExperimentsLib
             throw new NotImplementedException();
         }
 
-        public Task<Stream> StartStreamValueScopeAsync()
+        public ValueTask<Stream> StartStreamValueScopeAsync()
         {
             throw new NotImplementedException();
         }
@@ -116,7 +116,7 @@ namespace ExperimentsLib
             throw new NotImplementedException();
         }
 
-        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
+        public ValueTask<TextWriter> StartTextWriterValueScopeAsync(string contentType)
         {
             throw new NotImplementedException();
         }
@@ -125,27 +125,27 @@ namespace ExperimentsLib
         {
         }
 
-        public Task WriteNameAsync(string name)
+        public ValueTask WriteNameAsync(string name)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
         }
 
-        public Task WritePaddingFunctionNameAsync(string functionName)
+        public ValueTask WritePaddingFunctionNameAsync(string functionName)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void WriteRawValue(string rawValue)
         {
         }
 
-        public Task WriteRawValueAsync(string rawValue)
+        public ValueTask WriteRawValueAsync(string rawValue)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         public void WriteValue(bool value)
@@ -217,89 +217,89 @@ namespace ExperimentsLib
         {
         }
 
-        public Task WriteValueAsync(bool value)
+        public ValueTask WriteValueAsync(bool value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(int value)
+        public ValueTask WriteValueAsync(int value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(float value)
+        public ValueTask WriteValueAsync(float value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(short value)
+        public ValueTask WriteValueAsync(short value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(long value)
+        public ValueTask WriteValueAsync(long value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(double value)
+        public ValueTask WriteValueAsync(double value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(Guid value)
+        public ValueTask WriteValueAsync(Guid value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(decimal value)
+        public ValueTask WriteValueAsync(decimal value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(DateTimeOffset value)
+        public ValueTask WriteValueAsync(DateTimeOffset value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(TimeSpan value)
+        public ValueTask WriteValueAsync(TimeSpan value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(byte value)
+        public ValueTask WriteValueAsync(byte value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(sbyte value)
+        public ValueTask WriteValueAsync(sbyte value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(string value)
+        public ValueTask WriteValueAsync(string value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(byte[] value)
+        public ValueTask WriteValueAsync(byte[] value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(Date value)
+        public ValueTask WriteValueAsync(Date value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(TimeOfDay value)
+        public ValueTask WriteValueAsync(TimeOfDay value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
-        public Task WriteValueAsync(JsonElement value)
+        public ValueTask WriteValueAsync(JsonElement value)
         {
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
     }
 }

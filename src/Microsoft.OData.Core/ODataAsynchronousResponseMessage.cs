@@ -32,7 +32,7 @@ namespace Microsoft.OData
         private readonly Action<ODataAsynchronousResponseMessage> writeEnvelope;
 
         /// <summary>The action to write envelope for the inner message asynchronously before returning the stream.</summary>
-        private readonly Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync;
+        private readonly Func<ODataAsynchronousResponseMessage, ValueTask> writeEnvelopeAsync;
 
         /// <summary>The dependency injection container to get related services.</summary>
         private readonly IServiceProvider container;
@@ -104,7 +104,7 @@ namespace Microsoft.OData
             Stream stream,
             int statusCode,
             IDictionary<string, string> headers,
-            Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync,
+            Func<ODataAsynchronousResponseMessage, ValueTask> writeEnvelopeAsync,
             bool writing,
             IServiceProvider container)
             : this(stream, statusCode, headers, writing, container)
@@ -244,12 +244,12 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataAsynchronousResponseMessage"/>
         /// that can be used to write the response content.</returns>
-        internal static Task<ODataAsynchronousResponseMessage> CreateMessageForWritingAsync(
+        internal static ValueTask<ODataAsynchronousResponseMessage> CreateMessageForWritingAsync(
             Stream outputStream,
-            Func<ODataAsynchronousResponseMessage, Task> writeEnvelopeAsync,
+            Func<ODataAsynchronousResponseMessage, ValueTask> writeEnvelopeAsync,
             IServiceProvider container)
         {
-            return Task.FromResult(
+            return ValueTask.FromResult(
                 new ODataAsynchronousResponseMessage(outputStream, /*statusCode*/ 0, /*headers*/ null, writeEnvelopeAsync, /*writing*/ true, container));
         }
 

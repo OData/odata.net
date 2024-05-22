@@ -112,12 +112,12 @@ namespace Microsoft.OData
         /// Asynchronously flushes the write buffer to the underlying stream.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous operation.</returns>
-        public sealed override Task FlushAsync()
+        public async sealed override Task FlushAsync()
         {
             this.VerifyCanFlush(false /*synchronousCall*/);
 
             // make sure we switch to writer state Error if an exception is thrown during flushing.
-            return this.InterceptExceptionAsync((thisParam) => thisParam.FlushAsynchronously());
+            await this.InterceptExceptionAsync(async (thisParam) => await thisParam.FlushAsynchronously());
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Microsoft.OData
         /// Asynchronously start writing a parameter payload.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync()
+        public sealed override ValueTask WriteStartAsync()
         {
             this.VerifyCanWriteStart(false /*synchronousCall*/);
             return this.InterceptExceptionAsync(
@@ -163,7 +163,7 @@ namespace Microsoft.OData
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <param name="parameterValue">The value of the parameter to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteValueAsync(string parameterName, object parameterValue)
+        public sealed override ValueTask WriteValueAsync(string parameterName, object parameterValue)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference expectedTypeReference = this.VerifyCanWriteValueParameter(false /*synchronousCall*/, parameterName, parameterValue);
@@ -194,7 +194,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="parameterName">The name of the collection parameter to write.</param>
         /// <returns>A running task for the created writer.</returns>
-        public sealed override Task<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName)
+        public sealed override ValueTask<ODataCollectionWriter> CreateCollectionWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateCollectionWriter(false /*synchronousCall*/, parameterName);
@@ -222,7 +222,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="ODataWriter" /> to  write a resource.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="ODataWriter" />.</returns>
-        public sealed override Task<ODataWriter> CreateResourceWriterAsync(string parameterName)
+        public sealed override ValueTask<ODataWriter> CreateResourceWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceWriter(false /*synchronousCall*/, parameterName);
@@ -250,7 +250,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="ODataWriter" /> to  write a resource set.</summary>
         /// <param name="parameterName">The name of the parameter to write.</param>
         /// <returns>The asynchronously created <see cref="ODataWriter" />.</returns>
-        public sealed override Task<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
+        public sealed override ValueTask<ODataWriter> CreateResourceSetWriterAsync(string parameterName)
         {
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(parameterName, "parameterName");
             IEdmTypeReference itemTypeReference = this.VerifyCanCreateResourceSetWriter(false /*synchronousCall*/, parameterName);
@@ -279,7 +279,7 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a parameter payload.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteEndAsync()
+        public sealed override ValueTask WriteEndAsync()
         {
             this.VerifyCanWriteEnd(false /*synchronousCall*/);
             return this.InterceptExceptionAsync(
@@ -397,13 +397,13 @@ namespace Microsoft.OData
         /// Asynchronously start writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task StartPayloadAsync();
+        protected abstract ValueTask StartPayloadAsync();
 
         /// <summary>
         /// Asynchronously finish writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task EndPayloadAsync();
+        protected abstract ValueTask EndPayloadAsync();
 
         /// <summary>
         /// Asynchronously writes a value parameter (either primitive or complex).
@@ -412,7 +412,7 @@ namespace Microsoft.OData
         /// <param name="parameterValue">The value of the parameter to write.</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference);
+        protected abstract ValueTask WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference);
 
         /// <summary>
         /// Asynchronously creates a format specific <see cref="ODataCollectionWriter"/> to write the value of a collection parameter.
@@ -421,7 +421,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
-        protected abstract Task<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ValueTask<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
         /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource.
@@ -430,7 +430,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract Task<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ValueTask<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
         /// Asynchronously creates a format specific <see cref="ODataWriter"/> to write a resource set.
@@ -439,7 +439,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        protected abstract Task<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
+        protected abstract ValueTask<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType);
 
         /// <summary>
         /// Verifies that calling WriteStart is valid.
@@ -946,7 +946,7 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync(Func<ODataParameterWriterCore, Task> func)
+        private async ValueTask InterceptExceptionAsync(Func<ODataParameterWriterCore, ValueTask> func)
         {
             try
             {
@@ -976,8 +976,8 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync<TArg1, TArg2, TArg3>(
-            Func<ODataParameterWriterCore, TArg1, TArg2, TArg3, Task> func,
+        private async ValueTask InterceptExceptionAsync<TArg1, TArg2, TArg3>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, TArg3, ValueTask> func,
             TArg1 arg1,
             TArg2 arg2,
             TArg3 arg3)
@@ -1010,8 +1010,8 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task<T> InterceptExceptionAsync<T, TArg1, TArg2>(
-            Func<ODataParameterWriterCore, TArg1, TArg2, Task<T>> func,
+        private async ValueTask<T> InterceptExceptionAsync<T, TArg1, TArg2>(
+            Func<ODataParameterWriterCore, TArg1, TArg2, ValueTask<T>> func,
             TArg1 arg1,
             TArg2 arg2)
         {
@@ -1037,7 +1037,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
         /// </returns>
-        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataParameterWriterCore, Task<TResult>> action)
+        private async ValueTask<TResult> InterceptExceptionAsync<TResult>(Func<ODataParameterWriterCore, ValueTask<TResult>> action)
         {
             try
             {
@@ -1055,7 +1055,7 @@ namespace Microsoft.OData
         /// Asynchronously start writing a parameter payload - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStartImplementationAsync()
+        private async ValueTask WriteStartImplementationAsync()
         {
             Debug.Assert(this.State == ParameterWriterState.Start, "this.State == ParameterWriterState.Start");
 
@@ -1071,7 +1071,7 @@ namespace Microsoft.OData
         /// <param name="parameterValue">The value of the parameter to write (null/ODataEnumValue/primitiveClrValue).</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteValueImplementationAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
+        private ValueTask WriteValueImplementationAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
@@ -1095,7 +1095,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
-        private async Task<ODataCollectionWriter> CreateCollectionWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
+        private async ValueTask<ODataCollectionWriter> CreateCollectionWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
@@ -1112,7 +1112,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        private async Task<ODataWriter> CreateResourceWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
+        private async ValueTask<ODataWriter> CreateResourceWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
@@ -1130,7 +1130,7 @@ namespace Microsoft.OData
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        private async Task<ODataWriter> CreateResourceSetWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
+        private async ValueTask<ODataWriter> CreateResourceSetWriterImplementationAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(this.State == ParameterWriterState.CanWriteParameter, "this.State == ParameterWriterState.CanWriteParameter");
 
@@ -1145,7 +1145,7 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a parameter payload - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEndImplementationAsync()
+        private async ValueTask WriteEndImplementationAsync()
         {
             await this.InterceptExceptionAsync((thisParam) => thisParam.EndPayloadAsync())
                 .ConfigureAwait(false);
