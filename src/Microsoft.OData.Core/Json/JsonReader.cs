@@ -521,7 +521,7 @@ namespace Microsoft.OData.Json
         /// - Double if a number which doesn't fit into Int32 was found.
         /// If the last node is a Property this property returns a string which is the name of the property.
         /// </remarks>
-        public virtual async Task<object> GetValueAsync()
+        public virtual async ValueTask<object> GetValueAsync()
         {
             if (this.readingStream)
             {
@@ -559,16 +559,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// true if the current value can be streamed; otherwise false.</returns>
-        public Task<bool> CanStreamAsync()
+        public ValueTask<bool> CanStreamAsync()
         {
-            if (this.canStream)
-            {
-                return Task.FromResult(true);
-            }
-            else
-            {
-                return Task.FromResult(false);
-            }
+            return ValueTask.FromResult(this.canStream);
         }
 
         /// <summary>
@@ -578,7 +571,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a new node was found,
         /// or false if end of input was reached.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Not really feasible to extract code to methods without introducing unnecessary complexity.")]
-        public virtual async Task<bool> ReadAsync()
+        public virtual async ValueTask<bool> ReadAsync()
         {
             if (this.readingStream)
             {
@@ -755,7 +748,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading a base64 URL encoded binary value.</returns>
-        public async Task<Stream> CreateReadStreamAsync()
+        public async ValueTask<Stream> CreateReadStreamAsync()
         {
             if (!this.canStream)
             {
@@ -770,7 +763,7 @@ namespace Microsoft.OData.Json
                 this.scopes.Peek().ValueCount++;
                 await this.ReadAsync()
                     .ConfigureAwait(false);
-                return new ODataBinaryStreamReader((a, b, c) => { return Task.FromResult(0); });
+                return new ODataBinaryStreamReader((a, b, c) => { return ValueTask.FromResult(0); });
             }
 
             this.tokenStartIndex++;
@@ -783,7 +776,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading a text value.</returns>
-        public async Task<TextReader> CreateTextReaderAsync()
+        public async ValueTask<TextReader> CreateTextReaderAsync()
         {
             if (!this.canStream)
             {
@@ -802,7 +795,7 @@ namespace Microsoft.OData.Json
                 this.scopes.Peek().ValueCount++;
                 await this.ReadAsync()
                     .ConfigureAwait(false);
-                return new ODataTextStreamReader((a, b, c) => { return Task.FromResult(0); });
+                return new ODataTextStreamReader((a, b, c) => { return ValueTask.FromResult(0); });
             }
 
             // skip over the opening quote character for a string value
@@ -2028,7 +2021,7 @@ namespace Microsoft.OData.Json
         /// Note that the string parsing can never end with EndOfInput, since we're already seen the quote.
         /// So it can either return a string successfully or fail.</remarks>
         [SuppressMessage("Microsoft.Maintainability", "CA1502:AvoidExcessiveComplexity", Justification = "Splitting the function would make it hard to understand.")]
-        private async Task<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
+        private async ValueTask<int> ReadCharsAsync(char[] chars, int offset, int maxLength)
         {
             if (!readingStream)
             {

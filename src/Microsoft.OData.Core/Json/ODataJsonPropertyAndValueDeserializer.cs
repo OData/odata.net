@@ -76,7 +76,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>A task which returns an <see cref="ODataProperty"/> representing the read property.</returns>
-        internal async Task<ODataProperty> ReadTopLevelPropertyAsync(IEdmTypeReference expectedPropertyTypeReference)
+        internal async ValueTask<ODataProperty> ReadTopLevelPropertyAsync(IEdmTypeReference expectedPropertyTypeReference)
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();

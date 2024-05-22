@@ -113,7 +113,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>The stream for this message.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "Intentionally a method.")]
-        public abstract Task<Stream> GetStreamAsync();
+        public abstract ValueTask<Stream> GetStreamAsync();
 
         /// <summary>
         /// Queries the message for the specified interface type.
@@ -180,7 +180,7 @@ namespace Microsoft.OData
         /// <param name="streamFuncAsync">A function that returns a task for the stream backing the message.</param>
         /// <param name="isRequest">true if the message is a request message; false for a response message.</param>
         /// <returns>A task that when completed returns the stream backing the message.</returns>
-        protected internal Task<Stream> GetStreamAsync(Func<Task<Stream>> streamFuncAsync, bool isRequest)
+        protected internal ValueTask<Stream> GetStreamAsync(Func<ValueTask<Stream>> streamFuncAsync, bool isRequest)
         {
             // Check whether we have an existing buffering read stream when reading
             if (!this.writing)
@@ -190,16 +190,15 @@ namespace Microsoft.OData
                 if (existingBufferingReadStream != null)
                 {
                     Debug.Assert(this.useBufferingReadStream.HasValue, "UseBufferingReadStream must have been set.");
-                    return Task.FromResult(existingBufferingReadStream);
+                    return ValueTask.FromResult(existingBufferingReadStream);
                 }
             }
 
             return GetMessageStreamAsync(streamFuncAsync, isRequest);
 
-            async Task<Stream> GetMessageStreamAsync(Func<Task<Stream>> innerStreamFuncAsync, bool innerIsRequest)
+            async ValueTask<Stream> GetMessageStreamAsync(Func<ValueTask<Stream>> innerStreamFuncAsync, bool innerIsRequest)
             {
-                Task<Stream> messageStreamTask = innerStreamFuncAsync();
-                ValidateMessageStreamTask(messageStreamTask, innerIsRequest);
+                ValueTask<Stream> messageStreamTask = innerStreamFuncAsync();
 
                 // Wrap it in a non-disposing stream if requested
                 Stream messageStream = await messageStreamTask
@@ -270,22 +269,6 @@ namespace Microsoft.OData
                 string error = isRequest
                     ? Strings.ODataRequestMessage_MessageStreamIsNull
                     : Strings.ODataResponseMessage_MessageStreamIsNull;
-                throw new ODataException(error);
-            }
-        }
-
-        /// <summary>
-        /// Validates that a given task providing the message stream can be used.
-        /// </summary>
-        /// <param name="streamTask">The task to validate.</param>
-        /// <param name="isRequest">true if the message is a request message; false for a response message.</param>
-        private static void ValidateMessageStreamTask(Task<Stream> streamTask, bool isRequest)
-        {
-            if (streamTask == null)
-            {
-                string error = isRequest
-                    ? Strings.ODataRequestMessage_StreamTaskIsNull
-                    : Strings.ODataResponseMessage_StreamTaskIsNull;
                 throw new ODataException(error);
             }
         }

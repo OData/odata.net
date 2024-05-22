@@ -36,5 +36,5 @@ namespace Microsoft.OData
     /// or 0 if at the end of the stream and no data was read.
     /// The number will be less than or equal to the <paramref name="maxLength"/> parameter,
     /// depending on whether the data is available within the stream.</returns>
-    internal delegate Task<int> AsyncStreamReaderDelegate(char[] chars, int offset, int maxLength);
+    internal delegate ValueTask<int> AsyncStreamReaderDelegate(char[] chars, int offset, int maxLength);
 }

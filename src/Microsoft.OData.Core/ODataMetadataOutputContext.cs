@@ -101,16 +101,11 @@ namespace Microsoft.OData
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
-        internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal async override ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             this.AssertAsynchronous();
-
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
-                    return this.FlushAsync();
-                });
+            ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+            await this.FlushAsync();
         }
 
         /// <summary>
@@ -118,16 +113,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteMetadataDocumentAsync()
+        internal async override ValueTask WriteMetadataDocumentAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteMetadataDocumentImplementation();
-                    return this.FlushAsync();
-                });
+            this.WriteMetadataDocumentImplementation();
+            await this.FlushAsync();
         }
 
         /// <summary>

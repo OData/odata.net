@@ -341,7 +341,7 @@ namespace Microsoft.OData.Json
         /// <param name="expectedResourceTypeName">The expected resource type name of the items in the resource set.</param>
         /// <param name="isUndeclared">true if the resource set is for an undeclared property</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteResourceSetStartMetadataPropertiesAsync(
+        internal async ValueTask WriteResourceSetStartMetadataPropertiesAsync(
             ODataResourceSet resourceSet,
             string propertyName,
             string expectedResourceTypeName,
@@ -375,7 +375,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteResourceStartMetadataPropertiesAsync(IODataJsonWriterResourceState resourceState)
+        internal async ValueTask WriteResourceStartMetadataPropertiesAsync(IODataJsonWriterResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Json
         /// <remarks>
         /// This method will only write properties which were not written yet.
         /// </remarks>
-        internal async Task WriteResourceMetadataPropertiesAsync(IODataJsonWriterResourceState resourceState)
+        internal async ValueTask WriteResourceMetadataPropertiesAsync(IODataJsonWriterResourceState resourceState)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
 
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Json
         /// <param name="resourceState">The resource state for which to write the metadata properties.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteResourceEndMetadataPropertiesAsync(
+        internal async ValueTask WriteResourceEndMetadataPropertiesAsync(
             IODataJsonWriterResourceState resourceState,
             IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
@@ -567,7 +567,7 @@ namespace Microsoft.OData.Json
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        internal async ValueTask WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
@@ -599,7 +599,7 @@ namespace Microsoft.OData.Json
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="contextUrlInfo">The contextUrl information for current element.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal Task WriteNestedResourceInfoContextUrlAsync(ODataNestedResourceInfo nestedResourceInfo, ODataContextUrlInfo contextUrlInfo)
+        internal ValueTask<ODataContextUrlInfo> WriteNestedResourceInfoContextUrlAsync(ODataNestedResourceInfo nestedResourceInfo, ODataContextUrlInfo contextUrlInfo)
         {
             return this.WriteContextUriPropertyAsync(
                 ODataPayloadKind.Resource,
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Json
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <returns>A task that represents the asynchronous write operation. 
         /// The value of the TResult parameter contains the created context uri info.</returns>
-        internal Task<ODataContextUrlInfo> WriteDeltaContextUriAsync(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal ValueTask<ODataContextUrlInfo> WriteDeltaContextUriAsync(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonOutputContext.MessageWriterSettings.ODataUri;
 
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Json
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <returns>A task that represents the asynchronous write operation. 
         /// The value of the TResult parameter contains the created context uri info.</returns>
-        internal Task<ODataContextUrlInfo> WriteResourceContextUriAsync(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal ValueTask<ODataContextUrlInfo> WriteResourceContextUriAsync(ODataResourceTypeContext typeContext, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonOutputContext.MessageWriterSettings.ODataUri;
 
@@ -691,7 +691,7 @@ namespace Microsoft.OData.Json
         /// <param name="typeContext">The context object to answer basic questions regarding the type of the resource set.</param>
         /// <returns>A task that represents the asynchronous write operation. 
         /// The value of the TResult parameter contains the created context uri info.</returns>
-        internal Task<ODataContextUrlInfo> WriteResourceSetContextUriAsync(ODataResourceTypeContext typeContext)
+        internal ValueTask<ODataContextUrlInfo> WriteResourceSetContextUriAsync(ODataResourceTypeContext typeContext)
         {
             ODataUri odataUri = this.JsonOutputContext.MessageWriterSettings.ODataUri;
 

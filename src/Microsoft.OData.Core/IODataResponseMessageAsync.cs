@@ -20,6 +20,6 @@ namespace Microsoft.OData
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
         [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate", Justification = "This is intentionally a method.")]
-        Task<Stream> GetStreamAsync();
+        ValueTask<Stream> GetStreamAsync();
     }
 }

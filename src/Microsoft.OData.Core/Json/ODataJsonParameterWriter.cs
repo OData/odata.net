@@ -159,7 +159,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously start writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartPayloadAsync()
+        protected override async ValueTask StartPayloadAsync()
         {
             // NOTE: we are always writing a request payload here.
             await this.jsonValueSerializer.WritePayloadStartAsync()
@@ -172,7 +172,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task EndPayloadAsync()
+        protected override async ValueTask EndPayloadAsync()
         {
             // NOTE: we are always writing a request payload here.
             this.jsonValueSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Json
         /// <param name="parameterValue">The value of the parameter to write.</param>
         /// <param name="expectedTypeReference">The expected type reference of the parameter value.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
+        protected override async ValueTask WriteValueParameterAsync(string parameterName, object parameterValue, IEdmTypeReference expectedTypeReference)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Json
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataCollectionWriter"/>.</returns>
-        protected override async Task<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        protected override async ValueTask<ODataCollectionWriter> CreateFormatCollectionWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Json
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        protected async override Task<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        protected async override ValueTask<ODataWriter> CreateFormatResourceWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 
@@ -258,7 +258,7 @@ namespace Microsoft.OData.Json
         /// <param name="expectedItemType">The type reference of the expected item type or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the newly created <see cref="ODataWriter"/>.</returns>
-        protected override async Task<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
+        protected override async ValueTask<ODataWriter> CreateFormatResourceSetWriterAsync(string parameterName, IEdmTypeReference expectedItemType)
         {
             Debug.Assert(!string.IsNullOrEmpty(parameterName), "!string.IsNullOrEmpty(parameterName)");
 

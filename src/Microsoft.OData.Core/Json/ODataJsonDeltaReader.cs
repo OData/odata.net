@@ -175,7 +175,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains true if more items were read; otherwise false.
         /// </returns>
-        public override async Task<bool> ReadAsync()
+        public override async ValueTask<bool> ReadAsync()
         {
             bool result = await this.underlyingReader.ReadAsync()
                 .ConfigureAwait(false);

@@ -62,7 +62,7 @@ namespace Microsoft.OData
         /// Asynchronously creates a message for writing an async response.
         /// </summary>
         /// <returns>The message that can be used to write the async response.</returns>
-        public Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
+        public ValueTask<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
         {
             this.VerifyCanCreateResponseMessage(false);
 
@@ -102,7 +102,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             this.rawOutputContext.VerifyNotDisposed();
             await this.rawOutputContext.TextWriter.FlushAsync()
@@ -190,7 +190,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataAsynchronousResponseMessage"/>
         /// that can be used to write the response.</returns>
-        private async Task<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
+        private async ValueTask<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
         {
             var responseMessage = await ODataAsynchronousResponseMessage.CreateMessageForWritingAsync(
                 rawOutputContext.OutputStream,
@@ -235,7 +235,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="responseMessage">The response message to write the envelope.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteInnerEnvelopeAsync(ODataAsynchronousResponseMessage responseMessage)
+        private async ValueTask WriteInnerEnvelopeAsync(ODataAsynchronousResponseMessage responseMessage)
         {
             // Write response line.
             string statusMessage = HttpUtils.GetStatusMessage(responseMessage.StatusCode);

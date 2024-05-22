@@ -213,45 +213,45 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
         [Obsolete("This will be dropped in the 9.x release.")]
-        Task StartPaddingFunctionScopeAsync();
+        ValueTask StartPaddingFunctionScopeAsync();
 
         /// <summary>
         /// Asynchronously ends the padding function scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
         [Obsolete("This will be dropped in the 9.x release.")]
-        Task EndPaddingFunctionScopeAsync();
+        ValueTask EndPaddingFunctionScopeAsync();
 
         /// <summary>
         /// Asynchronously starts the object scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task StartObjectScopeAsync();
+        ValueTask StartObjectScopeAsync();
 
         /// <summary>
         /// Asynchronously ends the current object scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task EndObjectScopeAsync();
+        ValueTask EndObjectScopeAsync();
 
         /// <summary>
         /// Asynchronously starts the array scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task StartArrayScopeAsync();
+        ValueTask StartArrayScopeAsync();
 
         /// <summary>
         /// Asynchronously ends the current array scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task EndArrayScopeAsync();
+        ValueTask EndArrayScopeAsync();
 
         /// <summary>
         /// Asynchronously writes the name for the object property.
         /// </summary>
         /// <param name="name">Name of the object property.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteNameAsync(string name);
+        ValueTask WriteNameAsync(string name);
 
         /// <summary>
         /// Asynchronously writes a function name for JSON padding.
@@ -259,119 +259,119 @@ namespace Microsoft.OData.Json
         /// <param name="functionName">Name of the padding function to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         [Obsolete("This will be dropped in the 9.x release.")]
-        Task WritePaddingFunctionNameAsync(string functionName);
+        ValueTask WritePaddingFunctionNameAsync(string functionName);
 
         /// <summary>
         /// Asynchronously writes a boolean value.
         /// </summary>
         /// <param name="value">Boolean value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(bool value);
+        ValueTask WriteValueAsync(bool value);
 
         /// <summary>
         /// Asynchronously writes an integer value.
         /// </summary>
         /// <param name="value">Integer value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(int value);
+        ValueTask WriteValueAsync(int value);
 
         /// <summary>
         /// Asynchronously writes a float value.
         /// </summary>
         /// <param name="value">Float value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(float value);
+        ValueTask WriteValueAsync(float value);
 
         /// <summary>
         /// Asynchronously writes a short value.
         /// </summary>
         /// <param name="value">Short value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(short value);
+        ValueTask WriteValueAsync(short value);
 
         /// <summary>
         /// Asynchronously writes a long value.
         /// </summary>
         /// <param name="value">Long value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(long value);
+        ValueTask WriteValueAsync(long value);
 
         /// <summary>
         /// Asynchronously writes a double value.
         /// </summary>
         /// <param name="value">Double value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(double value);
+        ValueTask WriteValueAsync(double value);
 
         /// <summary>
         /// Asynchronously writes a Guid value.
         /// </summary>
         /// <param name="value">Guid value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(Guid value);
+        ValueTask WriteValueAsync(Guid value);
 
         /// <summary>
         /// Asynchronously writes a decimal value
         /// </summary>
         /// <param name="value">Decimal value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(decimal value);
+        ValueTask WriteValueAsync(decimal value);
 
         /// <summary>
         /// Asynchronously writes a DateTimeOffset value
         /// </summary>
         /// <param name="value">DateTimeOffset value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(DateTimeOffset value);
+        ValueTask WriteValueAsync(DateTimeOffset value);
 
         /// <summary>
         /// Asynchronously writes a TimeSpan value
         /// </summary>
         /// <param name="value">TimeSpan value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(TimeSpan value);
+        ValueTask WriteValueAsync(TimeSpan value);
 
         /// <summary>
         /// Asynchronously writes a byte value.
         /// </summary>
         /// <param name="value">Byte value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(byte value);
+        ValueTask WriteValueAsync(byte value);
 
         /// <summary>
         /// Asynchronously writes an sbyte value.
         /// </summary>
         /// <param name="value">SByte value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(sbyte value);
+        ValueTask WriteValueAsync(sbyte value);
 
         /// <summary>
         /// Asynchronously writes a string value.
         /// </summary>
         /// <param name="value">String value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(string value);
+        ValueTask WriteValueAsync(string value);
 
         /// <summary>
         /// Asynchronously writes a byte array.
         /// </summary>
         /// <param name="value">Byte array to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(byte[] value);
+        ValueTask WriteValueAsync(byte[] value);
 
         /// <summary>
         /// Asynchronously writes a Date value
         /// </summary>
         /// <param name="value">Date value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(Date value);
+        ValueTask WriteValueAsync(Date value);
 
         /// <summary>
         /// Asynchronously writes a TimeOfDay value
         /// </summary>
         /// <param name="value">TimeOfDay value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(TimeOfDay value);
+        ValueTask WriteValueAsync(TimeOfDay value);
 
 #if NETCOREAPP
 
@@ -380,7 +380,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">The <see cref="JsonElement"/> value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteValueAsync(JsonElement value);
+        ValueTask WriteValueAsync(JsonElement value);
 #endif
 
         /// <summary>
@@ -388,7 +388,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="rawValue">Raw value to be written.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        Task WriteRawValueAsync(string rawValue);
+        ValueTask WriteRawValueAsync(string rawValue);
 
         /// <summary>
         /// Asynchronously clears all buffers for the current writer.
@@ -401,7 +401,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the stream to write the property value to.</returns>
-        Task<Stream> StartStreamValueScopeAsync();
+        ValueTask<Stream> StartStreamValueScopeAsync();
 
         /// <summary>
         /// Asynchronously starts the TextWriter value scope.
@@ -409,18 +409,18 @@ namespace Microsoft.OData.Json
         /// <param name="contentType">ContentType of the string being written.</param>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the textwriter to write the text property value to.</returns>
-        Task<TextWriter> StartTextWriterValueScopeAsync(string contentType);
+        ValueTask<TextWriter> StartTextWriterValueScopeAsync(string contentType);
 
         /// <summary>
         /// Asynchronously ends the current stream property value scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task EndStreamValueScopeAsync();
+        ValueTask EndStreamValueScopeAsync();
 
         /// <summary>
         /// Asynchronously ends the TextWriter value scope.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task EndTextWriterValueScopeAsync();
+        ValueTask EndTextWriterValueScopeAsync();
     }
 }

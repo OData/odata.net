@@ -110,7 +110,7 @@ namespace Microsoft.OData
         /// The stream returned by GetMessageStream of <paramref name="messageInfo"/> could be used for reading for
         /// payload kind detection. Reading this stream won't affect later reading operations of payload processing.
         /// </remarks>
-        public abstract Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings);
+        public abstract ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings settings);
 
         /// <summary>
         /// Asynchronously creates an instance of the input context for this format.
@@ -118,7 +118,7 @@ namespace Microsoft.OData
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        public abstract Task<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings);
+        public abstract ValueTask<ODataInputContext> CreateInputContextAsync(ODataMessageInfo messageInfo, ODataMessageReaderSettings messageReaderSettings);
 
         /// <summary>
         /// Creates an instance of the output context for this format.
@@ -126,7 +126,7 @@ namespace Microsoft.OData
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        public abstract Task<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
+        public abstract ValueTask<ODataOutputContext> CreateOutputContextAsync(ODataMessageInfo messageInfo, ODataMessageWriterSettings messageWriterSettings);
 
         /// <summary>
         /// Returns the appropriate content-type for this format.

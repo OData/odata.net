@@ -3679,15 +3679,17 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously reads over the current property name if positioned on a property
         /// </summary>
-        /// <returns>A task that represents the asynchronous read operation.</returns>
-        private Task ReadOverPropertyNameAsync()
+        /// <returns>A task that represents the asynchronous read operation.
+        /// The value of the result is true if a property node was found,
+        /// or false if the node is not a property or the end of input was reached.</returns>
+        private ValueTask<bool> ReadOverPropertyNameAsync()
         {
             if (this.JsonReader.NodeType == JsonNodeType.Property)
             {
                 return this.JsonReader.ReadAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.FromResult(false);
         }
 
         /// <summary>
@@ -3702,7 +3704,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: JsonNodeType.Property:    the next property of the resource
         ///                 JsonNodeType.EndObject:   the end-object node of the resource
         /// </remarks>
-        private async Task ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
+        private async ValueTask ReadEntryDataPropertyAsync(IODataJsonReaderResourceState resourceState, IEdmProperty edmProperty, string propertyTypeName)
         {
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(edmProperty != null, "edmProperty != null");

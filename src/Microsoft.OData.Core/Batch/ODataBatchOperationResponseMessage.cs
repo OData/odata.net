@@ -132,7 +132,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
-        public Task<Stream> GetStreamAsync()
+        public ValueTask<Stream> GetStreamAsync()
         {
             return this.message.GetStreamAsync();
         }

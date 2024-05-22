@@ -191,7 +191,7 @@ namespace Microsoft.OData.Json
         ///                 when reading a resource:  the first node of the first nested resource info value, null for a null expanded link or an end object
         ///                                         node if there are no navigation links.
         /// </remarks>
-        protected override async Task<bool> ReadAtStartImplementationAsync()
+        protected override async ValueTask<bool> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataReaderState.Start, "this.State == ODataReaderState.Start");
             Debug.Assert(
@@ -247,7 +247,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
-        protected override Task<bool> ReadAtResourceSetStartImplementationAsync()
+        protected override ValueTask<bool> ReadAtResourceSetStartImplementationAsync()
         {
             return this.ReadAtResourceSetStartInternalImplementationAsync();
         }
@@ -283,7 +283,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
         ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
         /// </remarks>
-        protected override Task<bool> ReadAtResourceSetEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtResourceSetEndImplementationAsync()
         {
             return this.ReadAtResourceSetEndInternalImplementationAsync();
         }
@@ -328,9 +328,9 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        protected override Task<bool> ReadAtResourceStartImplementationAsync()
+        protected override ValueTask<bool> ReadAtResourceStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtResourceStartImplementation);
+            return ValueTask.FromResult(this.ReadAtResourceStartImplementation());
         }
 
         /// <summary>
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue (null)  end of null expanded resource
         /// Post-Condition: The reader is positioned on the first node after the resource's end-object node
         /// </remarks>
-        protected override Task<bool> ReadAtResourceEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtResourceEndImplementationAsync()
         {
             return this.ReadAtResourceEndInternalImplementationAsync();
         }
@@ -385,7 +385,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition:  JsonNodeType.PrimitiveValue         end of primitive value in a collection
         /// Post-Condition: The reader is positioned on the first node after the primitive value
         /// </remarks>
-        protected override async Task<bool> ReadAtPrimitiveImplementationAsync()
+        protected override async ValueTask<bool> ReadAtPrimitiveImplementationAsync()
         {
             Debug.Assert(
                 this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.PrimitiveValue,
@@ -433,7 +433,7 @@ namespace Microsoft.OData.Json
         /// Implementation of the reader logic when in state 'Stream'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected override async Task<bool> ReadAtStreamImplementationAsync()
+        protected override async ValueTask<bool> ReadAtStreamImplementationAsync()
         {
             this.PopScope(ODataReaderState.Stream);
 
@@ -478,7 +478,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
         /// </returns>
-        protected override Task<Stream> CreateReadStreamImplementationAsync()
+        protected override ValueTask<Stream> CreateReadStreamImplementationAsync()
         {
             return this.jsonInputContext.JsonReader.CreateReadStreamAsync();
         }
@@ -490,7 +490,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property.
         /// </returns>
-        protected override Task<TextReader> CreateTextReaderImplementationAsync()
+        protected override ValueTask<TextReader> CreateTextReaderImplementationAsync()
         {
             return this.jsonInputContext.JsonReader.CreateTextReaderAsync();
         }
@@ -535,7 +535,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               deferred link with more properties in owning resource
         ///                 JsonNodeType.EndObject              deferred link as last property of the owning resource
         /// </remarks>
-        protected override Task<bool> ReadAtNestedResourceInfoStartImplementationAsync()
+        protected override ValueTask<bool> ReadAtNestedResourceInfoStartImplementationAsync()
         {
             return this.ReadAtNestedResourceInfoStartInternalImplementationAsync();
         }
@@ -571,12 +571,11 @@ namespace Microsoft.OData.Json
         ///                 JsonNoteType.Property           property after deferred link or entity reference link
         ///                 JsonNodeType.EndObject          end of the parent resource
         /// </remarks>
-        protected override async Task<bool> ReadAtNestedResourceInfoEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtNestedResourceInfoEndImplementationAsync()
         {
             this.PopScope(ODataReaderState.NestedResourceInfoEnd);
 
-            return await this.ReadNextNestedInfoAsync()
-                .ConfigureAwait(false);
+            return this.ReadNextNestedInfoAsync();
         }
 
         #endregion NestedResourceInfo
@@ -613,7 +612,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property:          there are more properties after the expanded link property in the owning resource
         ///                 Any:                            expanded collection link - the node after the entity reference link.
         /// </remarks>
-        protected override async Task<bool> ReadAtEntityReferenceLinkAsync()
+        protected override async ValueTask<bool> ReadAtEntityReferenceLinkAsync()
         {
             this.PopScope(ODataReaderState.EntityReferenceLink);
             Debug.Assert(this.State == ODataReaderState.NestedResourceInfoStart,
@@ -654,7 +653,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
-        protected override Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
+        protected override ValueTask<bool> ReadAtDeltaResourceSetStartImplementationAsync()
         {
             return this.ReadAtResourceSetStartInternalImplementationAsync();
         }
@@ -691,7 +690,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
         ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
         /// </remarks>
-        protected override Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtDeltaResourceSetEndImplementationAsync()
         {
             // Logic is same as for ResourceSet
             return this.ReadAtResourceSetEndInternalImplementationAsync();
@@ -746,7 +745,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue (null)  end of null expanded resource
         /// Post-Condition: The reader is positioned on the first node after the deleted resource's end-object node
         /// </remarks>
-        protected override Task<bool> ReadAtDeletedResourceEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtDeletedResourceEndImplementationAsync()
         {
             // Same logic as ReadAtResourceEndImplementationAsync
             return this.ReadAtResourceEndInternalImplementationAsync();
@@ -783,7 +782,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        protected override Task<bool> ReadAtDeltaLinkImplementationAsync()
+        protected override ValueTask<bool> ReadAtDeltaLinkImplementationAsync()
         {
             return this.EndDeltaLinkAsync(ODataReaderState.DeltaLink);
         }
@@ -819,7 +818,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.Property               The next property after a deferred link or entity reference link
         ///                 JsonNodeType.EndObject              If no (more) properties exist in the resource's content
         /// </remarks>
-        protected override Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
+        protected override ValueTask<bool> ReadAtDeltaDeletedLinkImplementationAsync()
         {
             return this.EndDeltaLinkAsync(ODataReaderState.DeltaDeletedLink);
         }
@@ -2726,7 +2725,7 @@ namespace Microsoft.OData.Json
         /// Post-Condition: The reader is positioned over the StartObject node of the first resource in the resource set or
         ///                 on the node following the resource set end in case of an empty resource set
         /// </remarks>
-        private async Task<bool> ReadAtResourceSetStartInternalImplementationAsync()
+        private async ValueTask<bool> ReadAtResourceSetStartInternalImplementationAsync()
         {
             await this.ReadNextResourceSetItemAsync()
                 .ConfigureAwait(false);
@@ -2755,7 +2754,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.EndArray       end of expanded link in request, in this case the resource set doesn't actually own the array object and it won't read it.
         ///                 Any                         in case of expanded resource set in request, this might be the next item in the expanded array, which is not a resource
         /// </remarks>
-        private async Task<bool> ReadAtResourceSetEndInternalImplementationAsync()
+        private async ValueTask<bool> ReadAtResourceSetEndInternalImplementationAsync()
         {
             Debug.Assert(this.State == ODataReaderState.ResourceSetEnd || this.State == ODataReaderState.DeltaResourceSetEnd, "Not in (delta) resource set end state.");
             Debug.Assert(
@@ -2857,7 +2856,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue (null)  end of null expanded resource
         /// Post-Condition: The reader is positioned on the first node after the resource's end-object node
         /// </remarks>
-        private async Task<bool> ReadAtResourceEndInternalImplementationAsync()
+        private async ValueTask<bool> ReadAtResourceEndInternalImplementationAsync()
         {
             Debug.Assert(
                 this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.EndObject ||
@@ -2940,7 +2939,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.EndObject              deferred link as last property of the owning resource or
         ///                                                     reporting projected navigation links missing in the payload
         /// </remarks>
-        private async Task<bool> ReadAtNestedResourceInfoStartInternalImplementationAsync()
+        private async ValueTask<bool> ReadAtNestedResourceInfoStartInternalImplementationAsync()
         {
             Debug.Assert(
                 this.jsonResourceDeserializer.JsonReader.NodeType == JsonNodeType.Property ||
@@ -3046,7 +3045,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains true if more items can be read from the reader; otherwise false.
         /// </returns>
-        private async Task<bool> ReadNextNestedInfoAsync()
+        private async ValueTask<bool> ReadNextNestedInfoAsync()
         {
             this.jsonResourceDeserializer.AssertJsonCondition(
                 JsonNodeType.EndObject,
@@ -3086,7 +3085,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously reads the next item in a nested resource info content in a request payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task ReadNextNestedResourceInfoContentItemInRequestAsync()
+        private async ValueTask ReadNextNestedResourceInfoContentItemInRequestAsync()
         {
             Debug.Assert(
                 this.CurrentScope.State == ODataReaderState.NestedResourceInfoStart,
@@ -3135,7 +3134,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="state">The reader state to switch to.</param>
         /// <returns>A task that represents the asynchronous read operation.</returns>
-        private async Task StartDeltaLinkAsync(ODataReaderState state)
+        private async ValueTask StartDeltaLinkAsync(ODataReaderState state)
         {
             Debug.Assert(
                 state == ODataReaderState.DeltaLink || state == ODataReaderState.DeltaDeletedLink,
@@ -3685,7 +3684,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.EndObject              No more other annotation or property in the link.
         /// Post-Condition: The reader is positioned on the first node after the link's end-object node.
         /// </remarks>
-        private async Task<bool> EndDeltaLinkAsync(ODataReaderState readerState)
+        private async ValueTask<bool> EndDeltaLinkAsync(ODataReaderState readerState)
         {
             Debug.Assert(
                 readerState == ODataReaderState.DeltaLink || readerState == ODataReaderState.DeltaDeletedLink,

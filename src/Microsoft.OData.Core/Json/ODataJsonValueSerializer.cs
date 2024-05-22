@@ -400,7 +400,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes a null value to the writer.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteNullValueAsync()
+        public virtual ValueTask WriteNullValueAsync()
         {
             return this.JsonWriter.WriteValueAsync((string)null);
         }
@@ -411,7 +411,7 @@ namespace Microsoft.OData.Json
         /// <param name="value">enum value</param>
         /// <param name="expectedTypeReference">expected type reference</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteEnumValueAsync(
+        public virtual ValueTask WriteEnumValueAsync(
             ODataEnumValue value,
             IEdmTypeReference expectedTypeReference)
         {
@@ -711,7 +711,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="value">The untyped value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public virtual Task WriteUntypedValueAsync(
+        public virtual ValueTask WriteUntypedValueAsync(
             ODataUntypedValue value)
         {
             Debug.Assert(value != null, "value != null");

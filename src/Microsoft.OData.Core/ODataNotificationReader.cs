@@ -139,7 +139,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-                    this.listener.StreamDisposedAsync().Wait();
+                    this.listener.StreamDisposedAsync().AsTask().Wait();
                 }
             }
 

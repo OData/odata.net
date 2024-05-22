@@ -60,7 +60,7 @@ namespace Microsoft.OData.Json
         /// Read a set of top-level entity reference links.
         /// </summary>
         /// <returns>A task which returns an <see cref="ODataEntityReferenceLinks"/> representing the read links.</returns>
-        internal async Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
+        internal async ValueTask<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Json
         /// Reads a top-level entity reference link - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task which returns an <see cref="ODataEntityReferenceLink"/> representing the read entity reference link.</returns>
-        internal async Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
+        internal async ValueTask<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();

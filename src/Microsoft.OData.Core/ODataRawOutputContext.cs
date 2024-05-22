@@ -189,12 +189,11 @@ namespace Microsoft.OData
         /// the in-stream error is written.
         /// It is the responsibility of this method to flush the output before the task finishes.
         /// </remarks>
-        internal override async Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal override ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             if (this.outputInStreamErrorListener != null)
             {
-                await this.outputInStreamErrorListener.OnInStreamErrorAsync()
-                    .ConfigureAwait(false);
+                return this.outputInStreamErrorListener.OnInStreamErrorAsync();
             }
 
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);
@@ -217,11 +216,11 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal override Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        internal override ValueTask<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateODataAsynchronousWriterImplementation());
+            return ValueTask.FromResult(this.CreateODataAsynchronousWriterImplementation());
         }
 
         /// <summary>
@@ -243,7 +242,7 @@ namespace Microsoft.OData
         /// <param name="value">The value to write.</param>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override async Task WriteValueAsync(object value)
+        internal override async ValueTask WriteValueAsync(object value)
         {
             this.AssertAsynchronous();
 

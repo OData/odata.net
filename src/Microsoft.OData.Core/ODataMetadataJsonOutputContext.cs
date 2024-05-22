@@ -89,16 +89,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteMetadataDocumentAsync()
+        internal async override ValueTask WriteMetadataDocumentAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteMetadataDocumentImplementation();
-                    return this.FlushAsync();
-                });
+            this.WriteMetadataDocumentImplementation();
+            await this.FlushAsync();
         }
 
         /// <summary>

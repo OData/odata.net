@@ -178,7 +178,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="collection">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteStartAsync(ODataCollectionStart collection)
+        public sealed override ValueTask WriteStartAsync(ODataCollectionStart collection)
         {
             this.VerifyCanWriteStart(false, collection);
             return this.WriteStartImplementationAsync(collection);
@@ -199,7 +199,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="item">The collection item to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override Task WriteItemAsync(object item)
+        public sealed override ValueTask WriteItemAsync(object item)
         {
             this.VerifyCanWriteItem(false);
             return this.WriteItemImplementationAsync(item);
@@ -224,7 +224,7 @@ namespace Microsoft.OData
         /// Asynchronously finish writing a collection.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public sealed override async Task WriteEndAsync()
+        public sealed override async ValueTask WriteEndAsync()
         {
             this.VerifyCanWriteEnd(false);
             await this.WriteEndImplementationAsync()
@@ -261,7 +261,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             this.VerifyNotDisposed();
 
@@ -336,26 +336,26 @@ namespace Microsoft.OData
         /// Asynchronously start writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task StartPayloadAsync();
+        protected abstract ValueTask StartPayloadAsync();
 
         /// <summary>
         /// Asynchronously finish writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task EndPayloadAsync();
+        protected abstract ValueTask EndPayloadAsync();
 
         /// <summary>
         /// Asynchronously start writing a collection.
         /// </summary>
         /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task StartCollectionAsync(ODataCollectionStart collectionStart);
+        protected abstract ValueTask StartCollectionAsync(ODataCollectionStart collectionStart);
 
         /// <summary>
         /// Asynchronously finish writing a collection.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task EndCollectionAsync();
+        protected abstract ValueTask EndCollectionAsync();
 
         /// <summary>
         /// Asynchronously writes a collection item (either primitive or complex)
@@ -363,7 +363,7 @@ namespace Microsoft.OData
         /// <param name="item">The collection item to write.</param>
         /// <param name="expectedItemTypeReference">The expected type of the collection item or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected abstract Task WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemTypeReference);
+        protected abstract ValueTask WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemTypeReference);
 
         /// <summary>
         /// Verifies that calling WriteStart is valid.
@@ -695,7 +695,7 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync(Func<ODataCollectionWriterCore, Task> action)
+        private async ValueTask InterceptExceptionAsync(Func<ODataCollectionWriterCore, ValueTask> action)
         {
             try
             {
@@ -723,7 +723,7 @@ namespace Microsoft.OData
         /// Make sure to only use anonymous functions that don't capture state from the enclosing context, 
         /// so the compiler optimizes the code to avoid delegate and closure allocations on every call to this method.
         /// </remarks>
-        private async Task InterceptExceptionAsync<TArg0>(Func<ODataCollectionWriterCore, TArg0, Task> action, TArg0 arg0)
+        private async ValueTask InterceptExceptionAsync<TArg0>(Func<ODataCollectionWriterCore, TArg0, ValueTask> action, TArg0 arg0)
         {
             try
             {
@@ -744,7 +744,7 @@ namespace Microsoft.OData
         /// Asynchronously checks whether we are currently writing the first top-level element; if so call StartPayload
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task StartPayloadInStartStateAsync()
+        private ValueTask StartPayloadInStartStateAsync()
         {
             Scope current = this.scopes.Peek();
             if (current.State == CollectionWriterState.Start)
@@ -752,7 +752,7 @@ namespace Microsoft.OData
                 return this.InterceptExceptionAsync((thisParam) => thisParam.StartPayloadAsync());
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -760,7 +760,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStartImplementationAsync(ODataCollectionStart collectionStart)
+        private async ValueTask WriteStartImplementationAsync(ODataCollectionStart collectionStart)
         {
             await this.StartPayloadInStartStateAsync()
                 .ConfigureAwait(false);
@@ -783,7 +783,7 @@ namespace Microsoft.OData
         /// Asynchronously finishes writing a collection - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteEndImplementationAsync()
+        private ValueTask WriteEndImplementationAsync()
         {
             return this.InterceptExceptionAsync(async (thisParam) =>
             {
@@ -818,21 +818,21 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="item">The collection item to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteItemImplementationAsync(object item)
+        private ValueTask WriteItemImplementationAsync(object item)
         {
             if (this.scopes.Peek().State != CollectionWriterState.Item)
             {
                 this.EnterScope(CollectionWriterState.Item, item);
             }
 
-            await this.InterceptExceptionAsync(
+            return this.InterceptExceptionAsync(
                 async(thisParam, itemParam) =>
                 {
                     ValidationUtils.ValidateCollectionItem(itemParam, true /* isNullable */);
                     await thisParam.WriteCollectionItemAsync(itemParam, thisParam.expectedItemType)
                         .ConfigureAwait(false);
                 },
-                item).ConfigureAwait(false);
+                item);
         }
 
         /// <summary>
@@ -841,7 +841,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <remarks>Note that this method is never called once an error has been written or a fatal exception has been thrown.</remarks>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        private async Task LeaveScopeAsync()
+        private async ValueTask LeaveScopeAsync()
         {
             Debug.Assert(this.State != CollectionWriterState.Error, "this.State != WriterState.Error");
 

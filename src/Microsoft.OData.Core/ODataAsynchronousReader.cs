@@ -67,7 +67,7 @@ namespace Microsoft.OData
         /// Asynchronously returns a message for reading the content of an async response.
         /// </summary>
         /// <returns>A response message for reading the content of the async response.</returns>
-        public Task<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
+        public ValueTask<ODataAsynchronousResponseMessage> CreateResponseMessageAsync()
         {
             this.VerifyCanCreateResponseMessage(false);
 
@@ -312,9 +312,9 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the message that can be used to read the response.
         /// </returns>
-        private async Task<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
+        private async ValueTask<ODataAsynchronousResponseMessage> CreateResponseMessageImplementationAsync()
         {
-            Tuple<int, Dictionary<string, string>> readInnerEnvelopeResult = await this.ReadInnerEnvelopeAsync()
+            (int, Dictionary<string, string>) readInnerEnvelopeResult = await this.ReadInnerEnvelopeAsync()
                 .ConfigureAwait(false);
 
             int statusCode = readInnerEnvelopeResult.Item1;
@@ -332,7 +332,7 @@ namespace Microsoft.OData
         /// 1). The status code to use for the async response message.
         /// 2). The headers to use for the async response message.
         /// </returns>
-        private async Task<Tuple<int, Dictionary<string, string>>> ReadInnerEnvelopeAsync()
+        private async ValueTask<(int, Dictionary<string, string>)> ReadInnerEnvelopeAsync()
         {
             string responseLine = await this.ReadFirstNonEmptyLineAsync()
                 .ConfigureAwait(false);
@@ -342,7 +342,7 @@ namespace Microsoft.OData
             Dictionary<string, string>  headers = await this.ReadHeadersAsync()
                 .ConfigureAwait(false);
 
-            return Tuple.Create(statusCode, headers);
+            return (statusCode, headers);
         }
 
         /// <summary>

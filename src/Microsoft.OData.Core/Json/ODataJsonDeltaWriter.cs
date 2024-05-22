@@ -120,7 +120,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaResourceSet">Delta resource set/collection to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
+        public override ValueTask WriteStartAsync(ODataDeltaResourceSet deltaResourceSet)
         {
             return this.resourceWriter.WriteStartAsync(deltaResourceSet);
         }
@@ -137,7 +137,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing a delta resource set.
         /// </summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteEndAsync()
+        public override ValueTask WriteEndAsync()
         {
             return this.resourceWriter.WriteEndAsync();
         }
@@ -156,7 +156,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
+        public override ValueTask WriteStartAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             return this.resourceWriter.WriteStartAsync(nestedResourceInfo);
         }
@@ -175,7 +175,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="expandedResourceSet">The expanded resource set to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataResourceSet expandedResourceSet)
+        public override ValueTask WriteStartAsync(ODataResourceSet expandedResourceSet)
         {
             return this.resourceWriter.WriteStartAsync(expandedResourceSet);
         }
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaResource">The delta resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteStartAsync(ODataResource deltaResource)
+        public override ValueTask WriteStartAsync(ODataResource deltaResource)
         {
             return this.resourceWriter.WriteStartAsync(deltaResource);
         }
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaDeletedEntry">The delta deleted resource to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry)
+        public override ValueTask WriteDeltaDeletedEntryAsync(ODataDeltaDeletedEntry deltaDeletedEntry)
         {
             return this.resourceWriter.WriteStartAsync(ODataDeltaDeletedEntry.GetDeletedResource(deltaDeletedEntry));
         }
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
+        public override ValueTask WriteDeltaLinkAsync(ODataDeltaLink deltaLink)
         {
             return this.resourceWriter.WriteDeltaLinkAsync(deltaLink);
         }
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaDeletedLink">The delta deleted link to write.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public override Task WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
+        public override ValueTask WriteDeltaDeletedLinkAsync(ODataDeltaDeletedLink deltaDeletedLink)
         {
             return this.resourceWriter.WriteDeltaDeletedLinkAsync(deltaDeletedLink);
         }
@@ -287,7 +287,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             return this.inStreamErrorListener.OnInStreamErrorAsync();
         }

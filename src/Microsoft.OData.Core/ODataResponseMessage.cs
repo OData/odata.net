@@ -106,7 +106,7 @@ namespace Microsoft.OData
         /// Asynchronously get the stream backing this message.
         /// </summary>
         /// <returns>The stream for this message.</returns>
-        public override Task<Stream> GetStreamAsync()
+        public override ValueTask<Stream> GetStreamAsync()
         {
             IODataResponseMessageAsync asyncResponseMessage = this.responseMessage as IODataResponseMessageAsync;
             if (asyncResponseMessage == null)

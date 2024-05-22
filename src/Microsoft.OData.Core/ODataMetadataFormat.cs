@@ -118,14 +118,14 @@ namespace Microsoft.OData
         /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
-        public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
+        public override ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             return messageInfo.IsResponse
-                ? Task.FromResult(DetectPayloadKindImplementation(messageInfo, settings))
-                : Task.FromResult(Enumerable.Empty<ODataPayloadKind>());
+                ? ValueTask.FromResult(DetectPayloadKindImplementation(messageInfo, settings))
+                : ValueTask.FromResult(Enumerable.Empty<ODataPayloadKind>());
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Microsoft.OData
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        public override Task<ODataInputContext> CreateInputContextAsync(
+        public override ValueTask<ODataInputContext> CreateInputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings messageReaderSettings)
         {
@@ -150,7 +150,7 @@ namespace Microsoft.OData
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        public override Task<ODataOutputContext> CreateOutputContextAsync(
+        public override ValueTask<ODataOutputContext> CreateOutputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
         {
@@ -159,21 +159,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
-                return Task.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));
+                return ValueTask.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));
             }
 
-            return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#endif
+            return ValueTask.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
         }
 
         private static bool IsJsonMetadata(ODataMediaType contentType)

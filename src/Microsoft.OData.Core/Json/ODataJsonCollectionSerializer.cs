@@ -94,7 +94,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="collectionStart">The collection start to write.</param>
         /// <param name="itemTypeReference">The item type of the collection or null if no metadata is available.</param>
-        internal async Task WriteCollectionStartAsync(ODataCollectionStart collectionStart, IEdmTypeReference itemTypeReference)
+        internal async ValueTask WriteCollectionStartAsync(ODataCollectionStart collectionStart, IEdmTypeReference itemTypeReference)
         {
             Debug.Assert(collectionStart != null, "collectionStart != null");
 
@@ -145,7 +145,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Asynchronously writes the end of a collection.
         /// </summary>
-        internal async Task WriteCollectionEndAsync()
+        internal async ValueTask WriteCollectionEndAsync()
         {
             // Write the end of the array for the collection items
             // "]"

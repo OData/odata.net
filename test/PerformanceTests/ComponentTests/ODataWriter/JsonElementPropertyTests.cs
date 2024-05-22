@@ -12,6 +12,7 @@ using System.Text.Json;
 using System.Linq;
 using System.Xml;
 using Microsoft.OData.Json;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.OData.Performance.Writer
 {
@@ -73,10 +74,10 @@ namespace Microsoft.OData.Performance.Writer
             WriteParsedJsonWithoutJsonElementValues(ConfigureUtf8JsonWriter);
         }
 
-        private static void ConfigureUtf8JsonWriter(IContainerBuilder builder) =>
-            builder.AddService<IStreamBasedJsonWriterFactory>(ServiceLifetime.Singleton, _ => DefaultStreamBasedJsonWriterFactory.Default);
+        private static void ConfigureUtf8JsonWriter(IServiceCollection builder) =>
+            builder.AddSingleton<IJsonWriterFactory>(ODataUtf8JsonWriterFactory.Default);
 
-        private void WriteParsedJsonWithJsonElementValues(Action<IContainerBuilder> configureServices = null)
+        private void WriteParsedJsonWithJsonElementValues(Action<IServiceCollection> configureServices = null)
         {
             using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, enableValidation, configureServices))
             {
@@ -129,7 +130,7 @@ namespace Microsoft.OData.Performance.Writer
             }
         }
 
-        private void WriteParsedJsonWithoutJsonElementValues(Action<IContainerBuilder> configureServices = null)
+        private void WriteParsedJsonWithoutJsonElementValues(Action<IServiceCollection> configureServices = null)
         {
             using (var messageWriter = ODataMessageHelper.CreateMessageWriter(WriteStream, Model, ODataMessageKind.Response, enableValidation, configureServices))
             {

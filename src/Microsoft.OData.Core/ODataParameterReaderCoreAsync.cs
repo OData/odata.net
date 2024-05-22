@@ -42,7 +42,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override Task<ODataReader> CreateResourceReaderAsync()
+        public override ValueTask<ODataReader> CreateResourceReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.Resource);
             this.subReaderState = SubReaderState.Active;
@@ -64,7 +64,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override Task<ODataReader> CreateResourceSetReaderAsync()
+        public override ValueTask<ODataReader> CreateResourceSetReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.ResourceSet);
             this.subReaderState = SubReaderState.Active;
@@ -86,7 +86,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Collection, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public override Task<ODataCollectionReader> CreateCollectionReaderAsync()
+        public override ValueTask<ODataCollectionReader> CreateCollectionReaderAsync()
         {
             this.VerifyCanCreateSubReader(ODataParameterReaderState.Collection);
             this.subReaderState = SubReaderState.Active;
@@ -114,21 +114,21 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedResourceType">Expected entity type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
-        protected abstract Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType);
+        protected abstract ValueTask<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType);
 
         /// <summary>
         /// Creates an <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
-        protected abstract Task<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType);
+        protected abstract ValueTask<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType);
 
         /// <summary>
         /// Creates an <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.
         /// </summary>
         /// <param name="expectedItemTypeReference">Expected item type reference of the collection to read.</param>
         /// <returns>An <see cref="ODataCollectionReader"/> to read the collection with type <paramref name="expectedItemTypeReference"/>.</returns>
-        protected abstract Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference);
+        protected abstract ValueTask<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference);
 
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
@@ -136,7 +136,7 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        protected override async Task<bool> ReadAsynchronously()
+        protected override async ValueTask<bool> ReadAsynchronously()
         {
             bool result;
 

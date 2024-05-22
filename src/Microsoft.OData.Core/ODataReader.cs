@@ -47,20 +47,20 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously reads the next <see cref="Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public abstract Task<bool> ReadAsync();
+        public abstract ValueTask<bool> ReadAsync();
 
         /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
         /// <returns>A stream for reading the stream property.</returns>
-        public virtual Task<Stream> CreateReadStreamAsync()
+        public virtual ValueTask<Stream> CreateReadStreamAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateReadStream());
+            return ValueTask.FromResult(this.CreateReadStream());
         }
 
         /// <summary>Asynchronously creates a stream for reading an inline stream property. </summary>
         /// <returns>A stream for reading the stream property.</returns>
-        public virtual Task<TextReader> CreateTextReaderAsync()
+        public virtual ValueTask<TextReader> CreateTextReaderAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateTextReader());
+            return ValueTask.FromResult(this.CreateTextReader());
         }
     }
 }

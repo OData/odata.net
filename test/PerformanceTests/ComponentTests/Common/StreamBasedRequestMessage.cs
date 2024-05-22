@@ -15,7 +15,7 @@ namespace Microsoft.OData.Performance
     /// <summary>
     /// An OData Request Message backed by a Stream.
     /// </summary>
-    public class StreamBasedRequestMessage : IODataRequestMessageAsync, IContainerProvider
+    public class StreamBasedRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider
     {
         private readonly Stream _stream;
         private readonly IDictionary<string, string> _headers;
@@ -27,11 +27,9 @@ namespace Microsoft.OData.Performance
             _headers = new Dictionary<string, string>();
         }
 
-        public Task<Stream> GetStreamAsync()
+        public ValueTask<Stream> GetStreamAsync()
         {
-            var completionSource = new TaskCompletionSource<Stream>();
-            completionSource.SetResult(_stream);
-            return completionSource.Task;
+            return ValueTask.FromResult(_stream);
         }
 
         public Stream GetStream()
@@ -88,6 +86,6 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }

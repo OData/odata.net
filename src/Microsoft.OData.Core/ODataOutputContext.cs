@@ -210,7 +210,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
+        public virtual ValueTask<ODataWriter> CreateODataResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -235,7 +235,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
+        public virtual ValueTask<ODataWriter> CreateODataDeltaResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -260,7 +260,7 @@ namespace Microsoft.OData
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public virtual ValueTask<ODataWriter> CreateODataResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
@@ -283,7 +283,7 @@ namespace Microsoft.OData
         /// <param name="itemTypeReference">The item type of the collection being written or null if no metadata is available.</param>
         /// <returns>A running task for the created collection writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
+        public virtual ValueTask<ODataCollectionWriter> CreateODataCollectionWriterAsync(IEdmTypeReference itemTypeReference)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Collection);
         }
@@ -308,7 +308,7 @@ namespace Microsoft.OData
         /// <param name="resourceType">The structured type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public virtual ValueTask<ODataWriter> CreateODataUriParameterResourceWriterAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Resource);
         }
@@ -333,7 +333,7 @@ namespace Microsoft.OData
         /// <param name="resourceType">The resource type for the items in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
+        public virtual ValueTask<ODataWriter> CreateODataUriParameterResourceSetWriterAsync(IEdmEntitySetBase entitySet, IEdmStructuredType resourceType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -356,7 +356,7 @@ namespace Microsoft.OData
         /// <param name="operation">The operation whose parameters will be written.</param>
         /// <returns>A running task for the created parameter writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        public virtual Task<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
+        public virtual ValueTask<ODataParameterWriter> CreateODataParameterWriterAsync(IEdmOperation operation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -378,7 +378,7 @@ namespace Microsoft.OData
         /// <param name="odataProperty">The OData property to write</param>
         /// <returns>A task representing the asynchronous operation of writing the OData property.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WritePropertyAsync(ODataProperty odataProperty)
+        public virtual ValueTask WritePropertyAsync(ODataProperty odataProperty)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Property);
         }
@@ -408,7 +408,7 @@ namespace Microsoft.OData
         /// </param>
         /// <returns>A task representing the asynchronous operation of writing the error.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        public virtual Task WriteErrorAsync(ODataError odataError, bool includeDebugInformation)
+        public virtual ValueTask WriteErrorAsync(ODataError odataError, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -452,7 +452,7 @@ namespace Microsoft.OData
         /// the in-stream error is written.
         /// It is the responsibility of this method to flush the output before the task finishes.
         /// </remarks>
-        internal virtual Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal virtual ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Error);
         }
@@ -473,7 +473,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal virtual Task<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
+        internal virtual ValueTask<ODataAsynchronousWriter> CreateODataAsynchronousWriterAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Asynchronous);
         }
@@ -498,7 +498,7 @@ namespace Microsoft.OData
         /// <param name="entityType">The entity type for the entries in the resource set to be written (or null if the entity set base type should be used).</param>
         /// <returns>A running task for the created writer.</returns>
         /// <remarks>The write must flush the output when it's finished (inside the last Write call).</remarks>
-        internal virtual Task<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
+        internal virtual ValueTask<ODataDeltaWriter> CreateODataDeltaWriterAsync(IEdmEntitySetBase entitySet, IEdmEntityType entityType)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ResourceSet);
         }
@@ -527,7 +527,7 @@ namespace Microsoft.OData
         /// The write must flush the output when it's finished (inside the last Write call).
         /// Since we don't want to support batch format extensibility (at least not yet) this method should remain internal.
         /// </remarks>
-        internal virtual Task<ODataBatchWriter> CreateODataBatchWriterAsync()
+        internal virtual ValueTask<ODataBatchWriter> CreateODataBatchWriterAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Batch);
         }
@@ -551,7 +551,7 @@ namespace Microsoft.OData
         /// <param name="serviceDocument">The service document to write in the service document.</param>
         /// <returns>A task representing the asynchronous operation of writing the service document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal virtual Task WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
+        internal virtual ValueTask WriteServiceDocumentAsync(ODataServiceDocument serviceDocument)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.ServiceDocument);
         }
@@ -573,7 +573,7 @@ namespace Microsoft.OData
         /// <param name="links">The entity reference links to write as message payload.</param>
         /// <returns>A task representing the asynchronous writing of the entity reference links.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal virtual Task WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
+        internal virtual ValueTask WriteEntityReferenceLinksAsync(ODataEntityReferenceLinks links)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLinks);
         }
@@ -595,7 +595,7 @@ namespace Microsoft.OData
         /// <param name="link">The link result to write as message payload.</param>
         /// <returns>A running task representing the writing of the link.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal virtual Task WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
+        internal virtual ValueTask WriteEntityReferenceLinkAsync(ODataEntityReferenceLink link)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.EntityReferenceLink);
         }
@@ -617,7 +617,7 @@ namespace Microsoft.OData
         /// <param name="value">The value to write.</param>
         /// <returns>A running task representing the writing of the value.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal virtual Task WriteValueAsync(object value)
+        internal virtual ValueTask WriteValueAsync(object value)
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.Value);
         }
@@ -636,7 +636,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal virtual Task WriteMetadataDocumentAsync()
+        internal virtual ValueTask WriteMetadataDocumentAsync()
         {
             throw this.CreatePayloadKindNotSupportedException(ODataPayloadKind.MetadataDocument);
         }

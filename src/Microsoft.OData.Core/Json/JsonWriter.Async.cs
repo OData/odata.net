@@ -22,14 +22,14 @@ namespace Microsoft.OData.Json
     internal sealed partial class JsonWriter
     {
         /// <inheritdoc/>
-        public Task StartPaddingFunctionScopeAsync()
+        public ValueTask StartPaddingFunctionScopeAsync()
         {
             Debug.Assert(this.scopes.Count == 0, "Padding scope can only be the outer most scope.");
             return this.StartScopeAsync(ScopeType.Padding);
         }
 
         /// <inheritdoc/>
-        public async Task EndPaddingFunctionScopeAsync()
+        public async ValueTask EndPaddingFunctionScopeAsync()
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
@@ -43,13 +43,13 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public Task StartObjectScopeAsync()
+        public ValueTask StartObjectScopeAsync()
         {
             return this.StartScopeAsync(ScopeType.Object);
         }
 
         /// <inheritdoc/>
-        public async Task EndObjectScopeAsync()
+        public async ValueTask EndObjectScopeAsync()
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
@@ -63,13 +63,13 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public Task StartArrayScopeAsync()
+        public ValueTask StartArrayScopeAsync()
         {
             return this.StartScopeAsync(ScopeType.Array);
         }
 
         /// <inheritdoc/>
-        public async Task EndArrayScopeAsync()
+        public async ValueTask EndArrayScopeAsync()
         {
             Debug.Assert(this.scopes.Count > 0, "No scope to end.");
 
@@ -83,7 +83,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteNameAsync(string name)
+        public async ValueTask WriteNameAsync(string name)
         {
             Debug.Assert(!string.IsNullOrEmpty(name), "The name must be specified.");
             Debug.Assert(this.scopes.Count > 0, "There must be an active scope for name to be written.");
@@ -103,41 +103,41 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public Task WritePaddingFunctionNameAsync(string functionName)
+        public async ValueTask WritePaddingFunctionNameAsync(string functionName)
         {
-            return this.writer.WriteAsync(functionName);
+            await this.writer.WriteAsync(functionName);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(bool value)
-        {
-            await this.WriteValueSeparatorAsync().ConfigureAwait(false);
-            await this.writer.WriteValueAsync(value).ConfigureAwait(false);
-        }
-
-        /// <inheritdoc/>
-        public async Task WriteValueAsync(int value)
+        public async ValueTask WriteValueAsync(bool value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(float value)
+        public async ValueTask WriteValueAsync(int value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(short value)
+        public async ValueTask WriteValueAsync(float value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(long value)
+        public async ValueTask WriteValueAsync(short value)
+        {
+            await this.WriteValueSeparatorAsync().ConfigureAwait(false);
+            await this.writer.WriteValueAsync(value).ConfigureAwait(false);
+        }
+
+        /// <inheritdoc/>
+        public async ValueTask WriteValueAsync(long value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
 
@@ -154,21 +154,21 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(double value)
+        public async ValueTask WriteValueAsync(double value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(Guid value)
+        public async ValueTask WriteValueAsync(Guid value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(decimal value)
+        public async ValueTask WriteValueAsync(decimal value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
 
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(DateTimeOffset value)
+        public async ValueTask WriteValueAsync(DateTimeOffset value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value, ODataJsonDateTimeFormat.ISO8601DateTime)
@@ -193,42 +193,42 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(TimeSpan value)
+        public async ValueTask WriteValueAsync(TimeSpan value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(TimeOfDay value)
+        public async ValueTask WriteValueAsync(TimeOfDay value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(Date value)
+        public async ValueTask WriteValueAsync(Date value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(byte value)
+        public async ValueTask WriteValueAsync(byte value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(sbyte value)
+        public async ValueTask WriteValueAsync(sbyte value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value).ConfigureAwait(false);
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(string value)
+        public async ValueTask WriteValueAsync(string value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value, this.stringEscapeOption, this.wrappedBuffer, this.ArrayPool)
@@ -236,14 +236,14 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task WriteValueAsync(byte[] value)
+        public async ValueTask WriteValueAsync(byte[] value)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
 
 #if NETCOREAPP
-        public Task WriteValueAsync(JsonElement value)
+        public ValueTask WriteValueAsync(JsonElement value)
         {
             switch (value.ValueKind)
             {
@@ -265,11 +265,11 @@ namespace Microsoft.OData.Json
                     // we've exhausted all known JSON types, if we get
                     // to this point, then it's undefined behavior
                     Debug.Fail($"Unexpected JSON ValueKind {value.ValueKind}");
-                    return Task.CompletedTask;
+                    return ValueTask.CompletedTask;
             }
         }
 
-        private async Task WriteJsonElementArrayAsync(JsonElement value)
+        private async ValueTask WriteJsonElementArrayAsync(JsonElement value)
         {
             Debug.Assert(value.ValueKind == JsonValueKind.Array);
 
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Json
             await this.EndArrayScopeAsync().ConfigureAwait(false);
         }
 
-        private async Task WriteJsonElementObjectAsync(JsonElement value)
+        private async ValueTask WriteJsonElementObjectAsync(JsonElement value)
         {
             Debug.Assert(value.ValueKind == JsonValueKind.Object);
 
@@ -296,7 +296,7 @@ namespace Microsoft.OData.Json
             await this.EndObjectScopeAsync().ConfigureAwait(false);
         }
 
-        private Task WriteJsonElementNumberAsync(JsonElement value)
+        private ValueTask WriteJsonElementNumberAsync(JsonElement value)
         {
             Debug.Assert(value.ValueKind == JsonValueKind.Number);
 
@@ -356,12 +356,12 @@ namespace Microsoft.OData.Json
             }
 
             Debug.Fail($"Exhausted all known JSON number types and did not find match.");
-            return Task.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 #endif
 
         /// <inheritdoc/>
-        public async Task WriteRawValueAsync(string rawValue)
+        public async ValueTask WriteRawValueAsync(string rawValue)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteAsync(rawValue).ConfigureAwait(false);
@@ -398,7 +398,7 @@ namespace Microsoft.OData.Json
 #endif
 
         /// <inheritdoc/>
-        public async Task<Stream> StartStreamValueScopeAsync()
+        public async ValueTask<Stream> StartStreamValueScopeAsync()
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             await this.writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
@@ -414,7 +414,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task EndStreamValueScopeAsync()
+        public async ValueTask EndStreamValueScopeAsync()
         {
             await this.binaryValueStream.FlushAsync().ConfigureAwait(false);
 #if NETCOREAPP
@@ -428,7 +428,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public async Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
+        public async ValueTask<TextWriter> StartTextWriterValueScopeAsync(string contentType)
         {
             await this.WriteValueSeparatorAsync().ConfigureAwait(false);
             this.currentContentType = contentType;
@@ -446,14 +446,19 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        public Task EndTextWriterValueScopeAsync()
+        public ValueTask EndTextWriterValueScopeAsync()
         {
             if (!IsWritingJson)
             {
-                return this.writer.WriteAsync(JsonConstants.QuoteCharacter);
+                return WriteQuoteAsync();
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
+
+            async ValueTask WriteQuoteAsync()
+            {
+                await this.writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);
+            }
         }
 
         /// <summary>
@@ -485,7 +490,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="type">The scope type to start.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task StartScopeAsync(ScopeType type)
+        private async ValueTask StartScopeAsync(ScopeType type)
         {
             if (this.scopes.Count != 0 && this.scopes.Peek().Type != ScopeType.Padding)
             {

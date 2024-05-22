@@ -247,7 +247,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the node value of the last buffered read if buffering is on or off;
         /// otherwise the node value of the last unbuffered read.</returns>
-        public Task<object> GetValueAsync()
+        public ValueTask<object> GetValueAsync()
         {
             this.AssertAsynchronous();
 
@@ -256,11 +256,11 @@ namespace Microsoft.OData.Json
                 if (this.isBuffering)
                 {
                     Debug.Assert(this.currentBufferedNode != null, "this.currentBufferedNode != null");
-                    return Task.FromResult(this.currentBufferedNode.Value);
+                    return ValueTask.FromResult(this.currentBufferedNode.Value);
                 }
 
                 // In non-buffering mode if we have buffered nodes satisfy the request from the first node there
-                return Task.FromResult(this.bufferedNodesHead.Value);
+                return ValueTask.FromResult(this.bufferedNodesHead.Value);
             }
 
             return this.innerReader.GetValueAsync();
@@ -271,7 +271,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains true if a new node was found, or false if end of input was reached.</returns>
-        public Task<bool> ReadAsync()
+        public ValueTask<bool> ReadAsync()
         {
             Debug.Assert(!this.parsingInStreamError, "!this.parsingInStreamError");
             this.AssertAsynchronous();
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.
         /// true if the current value can be streamed; otherwise false.</returns>
-        public virtual async Task<bool> CanStreamAsync()
+        public virtual async ValueTask<bool> CanStreamAsync()
         {
             this.AssertAsynchronous();
 
@@ -306,7 +306,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        public virtual async Task<Stream> CreateReadStreamAsync()
+        public virtual async ValueTask<Stream> CreateReadStreamAsync()
         {
             this.AssertAsynchronous();
 
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the text value.</returns>
-        public virtual async Task<TextReader> CreateTextReaderAsync()
+        public virtual async ValueTask<TextReader> CreateTextReaderAsync()
         {
             this.AssertAsynchronous();
 
@@ -482,7 +482,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously puts the reader into the state where it buffers read nodes.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        internal async Task StartBufferingAsync()
+        internal async ValueTask StartBufferingAsync()
         {
             Debug.Assert(!this.isBuffering, "Buffering is already turned on. Must not call StartBuffering again.");
             this.AssertAsynchronous();
@@ -520,7 +520,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a tuple comprising of:
         /// 1). A value of true if the current value is an in-stream error value; otherwise false.
         /// 2). An <see cref="ODataError"/> instance that was read from the payload.</returns>
-        internal async Task<Tuple<bool, ODataError>> StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
+        internal async ValueTask<Tuple<bool, ODataError>> StartBufferingAndTryToReadInStreamErrorPropertyValueAsync()
         {
             this.AssertNotBuffering();
             this.AssertAsynchronous();
@@ -681,7 +681,7 @@ namespace Microsoft.OData.Json
         /// represents an in-stream error. If so, it throws an <see cref="ODataErrorException"/>. If false, this check will not happen.
         /// This parsingInStremError field is set to true when trying to parse an in-stream error; in normal operation it is false.
         /// </remarks>
-        protected async Task<bool> ReadInternalAsync()
+        protected async ValueTask<bool> ReadInternalAsync()
         {
             this.AssertAsynchronous();
 
@@ -754,7 +754,7 @@ namespace Microsoft.OData.Json
         /// once it returns the reader will be returned to the position before the method was called.
         /// The reader is always positioned on a start object when this method is called.
         /// </remarks>
-        protected virtual async Task ProcessObjectValueAsync()
+        protected virtual async ValueTask ProcessObjectValueAsync()
         {
             Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject, "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
             Debug.Assert(this.parsingInStreamError, "this.parsingInStreamError");

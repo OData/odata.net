@@ -166,7 +166,7 @@ namespace Microsoft.OData.Json
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public override async Task StreamRequestedAsync()
+        public override async ValueTask StreamRequestedAsync()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
             await this.StartBatchOperationContentAsync()
@@ -196,7 +196,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
         /// </summary>
-        public override async Task StreamDisposedAsync()
+        public override async ValueTask StreamDisposedAsync()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
 
@@ -227,7 +227,7 @@ namespace Microsoft.OData.Json
             throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
-        public override async Task OnInStreamErrorAsync()
+        public override async ValueTask OnInStreamErrorAsync()
         {
             this.JsonOutputContext.VerifyNotDisposed();
             this.SetState(BatchWriterState.Error);
@@ -464,7 +464,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously starts a new batch.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteStartBatchImplementationAsync()
+        protected override async ValueTask WriteStartBatchImplementationAsync()
         {
             await WriteBatchEnvelopeAsync()
                 .ConfigureAwait(false);
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends a batch.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteEndBatchImplementationAsync()
+        protected override async ValueTask WriteEndBatchImplementationAsync()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             await this.WritePendingMessageDataAsync(true)
@@ -498,7 +498,7 @@ namespace Microsoft.OData.Json
         /// <param name="groupId">The atomic group id of the changeset to start.
         /// If it is null for Json batch, an GUID will be generated and used as the atomic group id.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteStartChangesetImplementationAsync(string groupId)
+        protected override async ValueTask WriteStartChangesetImplementationAsync(string groupId)
         {
             Debug.Assert(groupId != null, "groupId != null");
 
@@ -516,7 +516,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends an active changeset.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteEndChangesetImplementationAsync()
+        protected override async ValueTask WriteEndChangesetImplementationAsync()
         {
             // write pending message data (headers, response line) for a previously unclosed message/request
             await this.WritePendingMessageDataAsync(true)
@@ -539,7 +539,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
         /// that can be used to write the request operation.</returns>
-        protected override async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
+        protected override async ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
             string method,
             Uri uri,
             string contentId,
@@ -620,7 +620,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
         /// that can be used to write the response operation.</returns>
-        protected override async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
+        protected override async ValueTask<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
         {
             await this.WritePendingMessageDataAsync(true)
                 .ConfigureAwait(false);
@@ -908,7 +908,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes the start boundary for an operation. This is Json start object.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteStartBoundaryForOperationAsync()
+        private ValueTask WriteStartBoundaryForOperationAsync()
         {
             // Start the individual message object
             return this.jsonWriter.StartObjectScopeAsync();
@@ -980,7 +980,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously closes preceding message Json object if any.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task EnsurePrecedingMessageIsClosedAsync()
+        private ValueTask EnsurePrecedingMessageIsClosedAsync()
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
@@ -992,7 +992,7 @@ namespace Microsoft.OData.Json
         /// Always sets the isBatchEnvelopeWritten flag to true before return.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteBatchEnvelopeAsync()
+        private async ValueTask WriteBatchEnvelopeAsync()
         {
             // Start the top level scope
             await this.jsonWriter.StartObjectScopeAsync()
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current request message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingRequestMessageDataAsync()
+        private async ValueTask WritePendingRequestMessageDataAsync()
         {
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
 
@@ -1038,7 +1038,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current response message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingResponseMessageDataAsync()
+        private async ValueTask WritePendingResponseMessageDataAsync()
         {
             Debug.Assert(this.JsonOutputContext.WritingResponse, "If the response message is available we must be writing response.");
             Debug.Assert(this.CurrentOperationResponseMessage != null, "this.CurrentOperationResponseMessage != null");
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Json
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
+        private async ValueTask WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
         {
             await this.jsonWriter.WriteNameAsync(PropertyUrl)
                 .ConfigureAwait(false);

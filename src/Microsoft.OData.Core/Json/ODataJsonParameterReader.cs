@@ -159,11 +159,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="expectedResourceType">Expected entity type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource value of type <paramref name="expectedResourceType"/>.</returns>
-        protected override Task<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType)
+        protected override ValueTask<ODataReader> CreateResourceReaderAsync(IEdmStructuredType expectedResourceType)
         {
             Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
 
-            return Task.FromResult<ODataReader>(
+            return ValueTask.FromResult<ODataReader>(
                 new ODataJsonReader(
                     this.jsonInputContext,
                     navigationSource: null,
@@ -189,11 +189,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="expectedResourceType">Expected resource set element type to read.</param>
         /// <returns>An <see cref="ODataReader"/> to read the resource set value of type <paramref name="expectedResourceType"/>.</returns>
-        protected override Task<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
+        protected override ValueTask<ODataReader> CreateResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
         {
             Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
 
-            return Task.FromResult<ODataReader>(
+            return ValueTask.FromResult<ODataReader>(
                 new ODataJsonReader(
                     this.jsonInputContext,
                     navigationSource: null,
@@ -229,12 +229,12 @@ namespace Microsoft.OData.Json
         /// Post-Condition: Any:    the reader should be on the start array node of the collection value; if it is not we let the collection reader fail.
         /// NOTE: this method does not move the reader.
         /// </remarks>
-        protected override Task<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
+        protected override ValueTask<ODataCollectionReader> CreateCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             Debug.Assert(this.jsonInputContext.Model.IsUserModel(), "Should have verified that we created the parameter reader with a user model.");
             Debug.Assert(expectedItemTypeReference != null, "expectedItemTypeReference != null");
 
-            return Task.FromResult<ODataCollectionReader>(
+            return ValueTask.FromResult<ODataCollectionReader>(
                 new ODataJsonCollectionReader(this.jsonInputContext, expectedItemTypeReference, listener: this));
         }
 

@@ -78,7 +78,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition:  JsonNodeType.None:      assumes that the JSON reader has not been used yet when not reading a nested payload.
         /// Post-Condition: The reader is positioned on the first node of the first item or the EndArray node of an empty item array
         /// </remarks>
-        protected override async Task<bool> ReadAtStartImplementationAsync()
+        protected override async ValueTask<bool> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataCollectionReaderState.Start, "this.State == ODataCollectionReaderState.Start");
             Debug.Assert(this.IsReadingNestedPayload || this.jsonCollectionDeserializer.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None when not reading a nested payload.");
@@ -126,7 +126,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue: for a primitive value as first item
         /// Post-Condition: The reader is positioned on the first node of the second item or an EndArray node if there are no items in the collection
         /// </remarks>
-        protected override Task<bool> ReadAtCollectionStartImplementationAsync()
+        protected override ValueTask<bool> ReadAtCollectionStartImplementationAsync()
         {
             return this.ReadAtCollectionStartImplementationAsynchronously();
         }
@@ -160,7 +160,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue: for a primitive item
         /// Post-Condition: The reader is positioned on the first node of the next item or an EndArray node if there are no items in the collection
         /// </remarks>
-        protected override Task<bool> ReadAtValueImplementationAsync()
+        protected override ValueTask<bool> ReadAtValueImplementationAsync()
         {
             return this.ReadAtValueImplementationAsynchronously();
         }
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition: JsonNodeType.EndArray        the end of the item array of the collection
         /// Post-Condition: JsonNodeType.EndOfInput     nothing else to read when not reading a nested payload
         /// </remarks>
-        protected override Task<bool> ReadAtCollectionEndImplementationAsync()
+        protected override ValueTask<bool> ReadAtCollectionEndImplementationAsync()
         {
             return this.ReadAtCollectionEndImplementationAsynchronously();
         }
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue: for a primitive value as first item
         /// Post-Condition: The reader is positioned on the first node of the second item or an EndArray node if there are no items in the collection
         /// </remarks>
-        private async Task<bool> ReadAtCollectionStartImplementationAsynchronously()
+        private async ValueTask<bool> ReadAtCollectionStartImplementationAsynchronously()
         {
             Debug.Assert(this.State == ODataCollectionReaderState.CollectionStart, "this.State == ODataCollectionReaderState.CollectionStart");
 
@@ -406,7 +406,7 @@ namespace Microsoft.OData.Json
         ///                 JsonNodeType.PrimitiveValue: for a primitive item
         /// Post-Condition: The reader is positioned on the first node of the next item or an EndArray node if there are no items in the collection
         /// </remarks>
-        private async Task<bool> ReadAtValueImplementationAsynchronously()
+        private async ValueTask<bool> ReadAtValueImplementationAsynchronously()
         {
             Debug.Assert(this.State == ODataCollectionReaderState.Value, "this.State == ODataCollectionReaderState.Value");
 
@@ -438,7 +438,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition: JsonNodeType.EndArray        the end of the item array of the collection
         /// Post-Condition: JsonNodeType.EndOfInput     nothing else to read when not reading a nested payload
         /// </remarks>
-        private async Task<bool> ReadAtCollectionEndImplementationAsynchronously()
+        private async ValueTask<bool> ReadAtCollectionEndImplementationAsynchronously()
         {
             Debug.Assert(this.State == ODataCollectionReaderState.CollectionEnd, "this.State == ODataCollectionReaderState.CollectionEnd");
             Debug.Assert(this.jsonCollectionDeserializer.JsonReader.NodeType == JsonNodeType.EndArray, "Pre-Condition: expected JsonNodeType.EndArray");

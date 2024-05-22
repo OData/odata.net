@@ -91,7 +91,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains a <see cref="Stream"/> used to read a stream value.
         /// </returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        public override async Task<Stream> CreateReadStreamAsync()
+        public override async ValueTask<Stream> CreateReadStreamAsync()
         {
             Stream result;
             object value = null;
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the text value.
         /// </returns>
-        public override async Task<TextReader> CreateTextReaderAsync()
+        public override async ValueTask<TextReader> CreateTextReaderAsync()
         {
             if (this.NodeType == JsonNodeType.Property)
             {
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if the current value can be streamed; otherwise false.
         /// </returns>
-        public override async Task<bool> CanStreamAsync()
+        public override async ValueTask<bool> CanStreamAsync()
         {
             object value = await this.GetValueAsync()
                 .ConfigureAwait(false);
@@ -269,7 +269,7 @@ namespace Microsoft.OData.Json
         /// once it returns the reader will be returned to the position before the method was called.
         /// The reader is always positioned on a start object when this method is called.
         /// </remarks>
-        protected override async Task ProcessObjectValueAsync()
+        protected override async ValueTask ProcessObjectValueAsync()
         {
             Debug.Assert(this.currentBufferedNode.NodeType == JsonNodeType.StartObject, "this.currentBufferedNode.NodeType == JsonNodeType.StartObject");
             this.AssertBuffering();

@@ -83,12 +83,12 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
-        public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
+        public override ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings settings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
-            return TaskUtils.GetTaskForSynchronousOperation(() => DetectPayloadKindImplementation(messageInfo.MediaType));
+            return ValueTask.FromResult(DetectPayloadKindImplementation(messageInfo.MediaType));
         }
 
         /// <summary>
@@ -97,14 +97,14 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        public override Task<ODataInputContext> CreateInputContextAsync(
+        public override ValueTask<ODataInputContext> CreateInputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings messageReaderSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return Task.FromResult<ODataInputContext>(
+            return ValueTask.FromResult<ODataInputContext>(
                 new ODataMultipartMixedBatchInputContext(this, messageInfo, messageReaderSettings));
         }
 
@@ -114,14 +114,14 @@ namespace Microsoft.OData.MultipartMixed
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        public override Task<ODataOutputContext> CreateOutputContextAsync(
+        public override ValueTask<ODataOutputContext> CreateOutputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return Task.FromResult<ODataOutputContext>(
+            return ValueTask.FromResult<ODataOutputContext>(
                 new ODataMultipartMixedBatchOutputContext(this, messageInfo, messageWriterSettings));
         }
 
