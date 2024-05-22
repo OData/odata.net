@@ -27,11 +27,9 @@ namespace Microsoft.OData.Performance
             _headers = new Dictionary<string, string>();
         }
 
-        public Task<Stream> GetStreamAsync()
+        public ValueTask<Stream> GetStreamAsync()
         {
-            var completionSource = new TaskCompletionSource<Stream>();
-            completionSource.SetResult(_stream);
-            return completionSource.Task;
+            return ValueTask.FromResult(_stream);
         }
 
         public Stream GetStream()

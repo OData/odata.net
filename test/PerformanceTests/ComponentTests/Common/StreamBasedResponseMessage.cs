@@ -44,11 +44,9 @@ namespace Microsoft.OData.Performance
             return value;
         }
 
-        public Task<Stream> GetStreamAsync()
+        public ValueTask<Stream> GetStreamAsync()
         {
-            var completionSource = new TaskCompletionSource<Stream>();
-            completionSource.SetResult(_stream);
-            return completionSource.Task;
+            return ValueTask.FromResult(_stream);
         }
 
         public void SetHeader(string headerName, string headerValue)
