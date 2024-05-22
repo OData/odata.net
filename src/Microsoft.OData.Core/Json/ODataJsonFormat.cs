@@ -79,7 +79,7 @@ namespace Microsoft.OData.Json
         /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>A task that when completed returns the set of <see cref="ODataPayloadKind"/>s
         /// that are supported with the specified payload.</returns>
-        public override Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
+        public override ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings settings)
         {
@@ -93,14 +93,14 @@ namespace Microsoft.OData.Json
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageReaderSettings">Configuration settings of the OData reader.</param>
         /// <returns>Task which when completed returned the newly created input context.</returns>
-        public override Task<ODataInputContext> CreateInputContextAsync(
+        public override ValueTask<ODataInputContext> CreateInputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings messageReaderSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageReaderSettings, "messageReaderSettings");
 
-            return Task.FromResult<ODataInputContext>(
+            return ValueTask.FromResult<ODataInputContext>(
                 new ODataJsonInputContext(messageInfo, messageReaderSettings));
         }
 
@@ -110,14 +110,14 @@ namespace Microsoft.OData.Json
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>Task which represents the pending create operation.</returns>
-        public override Task<ODataOutputContext> CreateOutputContextAsync(
+        public override ValueTask<ODataOutputContext> CreateOutputContextAsync(
             ODataMessageInfo messageInfo,
             ODataMessageWriterSettings messageWriterSettings)
         {
             ExceptionUtils.CheckArgumentNotNull(messageInfo, "messageInfo");
             ExceptionUtils.CheckArgumentNotNull(messageWriterSettings, "messageWriterSettings");
 
-            return Task.FromResult<ODataOutputContext>(
+            return ValueTask.FromResult<ODataOutputContext>(
                 new ODataJsonOutputContext(messageInfo, messageWriterSettings));
         }
 
@@ -145,18 +145,16 @@ namespace Microsoft.OData.Json
         /// <param name="messageInfo">The context information for the message.</param>
         /// <param name="settings">Configuration settings of the OData reader.</param>
         /// <returns>An enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        private static Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindImplementationAsync(
+        private static async ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindImplementationAsync(
             ODataMessageInfo messageInfo,
             ODataMessageReaderSettings settings)
         {
             var detectionInfo = new ODataPayloadKindDetectionInfo(messageInfo, settings);
             messageInfo.Encoding = detectionInfo.GetEncoding();
-            var jsonInputContext = new ODataJsonInputContext(messageInfo, settings);
-            return jsonInputContext.DetectPayloadKindAsync(detectionInfo)
-                .FollowAlwaysWith(t =>
-                    {
-                        jsonInputContext.Dispose();
-                    });
+            await using var jsonInputContext = new ODataJsonInputContext(messageInfo, settings);
+
+            IEnumerable<ODataPayloadKind> result = await jsonInputContext.DetectPayloadKindAsync(detectionInfo);
+            return result;
         }
     }
 }

@@ -67,7 +67,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="detectionInfo">Additional information available for the payload kind detection.</param>
         /// <returns>A task which returns an enumerable of zero, one or more payload kinds that were detected from looking at the payload in the message stream.</returns>
-        internal async Task<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
+        internal async ValueTask<IEnumerable<ODataPayloadKind>> DetectPayloadKindAsync(ODataPayloadKindDetectionInfo detectionInfo)
         {
             Debug.Assert(detectionInfo != null, "detectionInfo != null");
             Debug.Assert(this.ReadingResponse, "Payload kind detection is only supported in responses.");

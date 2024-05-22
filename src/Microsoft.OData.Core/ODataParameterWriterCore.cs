@@ -330,7 +330,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             // The parameter payload is written by the client and read by the server, we do not support
             // writing an in-stream error payload in this scenario.

@@ -287,7 +287,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <inheritdoc/>
-        Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             return this.inStreamErrorListener.OnInStreamErrorAsync();
         }

@@ -137,16 +137,16 @@ namespace Microsoft.OData
         /// Asynchronously get the stream backing this message.
         /// </summary>
         /// <returns>The stream for this message.</returns>
-        public override Task<Stream> GetStreamAsync()
+        public override ValueTask<Stream> GetStreamAsync()
         {
             this.VerifyNotCompleted();
 
             return GetStreamInnerAsync();
 
-            async Task<Stream> GetStreamInnerAsync()
+            async ValueTask<Stream> GetStreamInnerAsync()
             {
                 // notify the listener that the stream has been requested
-                Task listenerTask = this.operationListener.StreamRequestedAsync();
+                ValueTask listenerTask = this.operationListener.StreamRequestedAsync();
 
                 // now remember that we are done processing the part header data (and only the payload is missing)
                 Stream contentStream = this.contentStreamCreatorFunc();

@@ -256,34 +256,32 @@ namespace Microsoft.OData
         /// will always at most return a single result per payload kind.
         /// </remarks>
         [SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Need to a return a task of an enumerable.")]
-        public Task<IEnumerable<ODataPayloadKindDetectionResult>> DetectPayloadKindAsync()
+        public async ValueTask<IEnumerable<ODataPayloadKindDetectionResult>> DetectPayloadKindAsync()
         {
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType;
             if (this.TryGetSinglePayloadKindResultFromContentType(out payloadKindsFromContentType))
             {
-                return Task.FromResult(payloadKindsFromContentType);
+                return payloadKindsFromContentType;
             }
 
             // Otherwise we have to do sniffing
             List<ODataPayloadKindDetectionResult> detectedPayloadKinds = new List<ODataPayloadKindDetectionResult>();
 
-            // NOTE: this relies on the lazy eval of the enumerator
-            return Task.Factory.Iterate(this.GetPayloadKindDetectionTasks(payloadKindsFromContentType, detectedPayloadKinds))
-                .FollowAlwaysWith(
-                    t =>
-                    {
-                        // We are done sniffing; stop buffering.
-                        this.message.UseBufferingReadStream = false;
-                        this.message.BufferingReadStream.StopBuffering();
-                    })
-                .FollowOnSuccessWith(
-                    t =>
-                    {
-                        // Always sort by payload kind to guarantee stable order of results in case clients rely on it
-                        detectedPayloadKinds.Sort(this.ComparePayloadKindDetectionResult);
+            try
+            {
+                await this.GetPayloadKindDetectionTasks(payloadKindsFromContentType, detectedPayloadKinds)
+                    .ConfigureAwait(false);
+                // Always sort by payload kind to guarantee stable order of results in case clients rely on it
+                detectedPayloadKinds.Sort(this.ComparePayloadKindDetectionResult);
 
-                        return (IEnumerable<ODataPayloadKindDetectionResult>)detectedPayloadKinds;
-                    });
+                return detectedPayloadKinds;
+            }
+            finally
+            {
+                // We are done sniffing; stop buffering.
+                this.message.UseBufferingReadStream = false;
+                this.message.BufferingReadStream.StopBuffering();
+            }
         }
 
         /// <summary>Creates an <see cref="Microsoft.OData.ODataAsynchronousReader" /> to read an async response.</summary>
@@ -298,7 +296,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataAsynchronousReader" /> to read an async response.</summary>
         /// <returns>A running task for the created async reader.</returns>
-        public Task<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
+        public ValueTask<ODataAsynchronousReader> CreateODataAsynchronousReaderAsync()
         {
             this.VerifyCanCreateODataAsynchronousReader();
             return this.ReadFromInputAsync(
@@ -340,7 +338,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceSetReaderAsync()
+        public ValueTask<ODataReader> CreateODataResourceSetReaderAsync()
         {
             return this.CreateODataResourceSetReaderAsync(/*entitySet*/null, /*entityType*/null);
         }
@@ -350,7 +348,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
         {
             return this.CreateODataResourceSetReaderAsync(/*entitySet*/null, expectedResourceType);
         }
@@ -361,7 +359,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.VerifyCanCreateODataResourceSetReader(entitySet, expectedResourceType);
             expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(entitySet);
@@ -404,7 +402,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a delta resource set.</summary>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync()
+        public ValueTask<ODataReader> CreateODataDeltaResourceSetReaderAsync()
         {
             return this.CreateODataDeltaResourceSetReaderAsync(/*entitySet*/null, /*entityType*/null);
         }
@@ -414,7 +412,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmStructuredType expectedResourceType)
         {
             return this.CreateODataDeltaResourceSetReaderAsync(/*entitySet*/null, expectedResourceType);
         }
@@ -425,7 +423,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataDeltaResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.VerifyCanCreateODataResourceSetReader(entitySet, expectedResourceType);
             expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(entitySet);
@@ -468,7 +466,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataReader" /> to read a resource.</summary>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceReaderAsync()
+        public ValueTask<ODataReader> CreateODataResourceReaderAsync()
         {
             return this.CreateODataResourceReaderAsync(/*entitySet*/null, /*entityType*/null);
         }
@@ -478,7 +476,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="resourceType">The expected structured type for the resource to be read.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceReaderAsync(IEdmStructuredType resourceType)
+        public ValueTask<ODataReader> CreateODataResourceReaderAsync(IEdmStructuredType resourceType)
         {
             return this.CreateODataResourceReaderAsync(/*entitySet*/null, resourceType);
         }
@@ -489,7 +487,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="resourceType">The expected structured type for the resource to be read.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
+        public ValueTask<ODataReader> CreateODataResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType resourceType)
         {
             this.VerifyCanCreateODataResourceReader(navigationSource, resourceType);
             resourceType = resourceType ?? this.edmTypeResolver.GetElementType(navigationSource);
@@ -520,7 +518,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataCollectionReader" /> to read a collection of primitive or complex values (as result of a service operation invocation).</summary>
         /// <returns>A running task for the created collection reader.</returns>
-        public Task<ODataCollectionReader> CreateODataCollectionReaderAsync()
+        public ValueTask<ODataCollectionReader> CreateODataCollectionReaderAsync()
         {
             return this.CreateODataCollectionReaderAsync(null /*expectedItemTypeReference*/);
         }
@@ -530,7 +528,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedItemTypeReference">The expected type reference for the items in the collection.</param>
         /// <returns>A running task for the created collection reader.</returns>
-        public Task<ODataCollectionReader> CreateODataCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
+        public ValueTask<ODataCollectionReader> CreateODataCollectionReaderAsync(IEdmTypeReference expectedItemTypeReference)
         {
             this.VerifyCanCreateODataCollectionReader(expectedItemTypeReference);
             return this.ReadFromInputAsync(
@@ -551,7 +549,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataBatchReader" /> to read a batch of requests or responses.</summary>
         /// <returns>A running task for the created batch reader.</returns>
-        public Task<ODataBatchReader> CreateODataBatchReaderAsync()
+        public ValueTask<ODataBatchReader> CreateODataBatchReaderAsync()
         {
             this.VerifyCanCreateODataBatchReader();
             return this.ReadFromInputAsync(
@@ -580,7 +578,7 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source we are going to read resources for.</param>
         /// <param name="expectedResourceType">The expected structured type for the resource to be read.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataUriParameterResourceReaderAsync(IEdmNavigationSource navigationSource, IEdmStructuredType expectedResourceType)
         {
             this.VerifyCanCreateODataResourceReader(navigationSource, expectedResourceType);
             expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(navigationSource);
@@ -610,7 +608,7 @@ namespace Microsoft.OData
         /// <param name="entitySet">The entity set we are going to read entities for.</param>
         /// <param name="expectedResourceType">The expected type for the items in the resource set.</param>
         /// <returns>A running task for the created reader.</returns>
-        public Task<ODataReader> CreateODataUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
+        public ValueTask<ODataReader> CreateODataUriParameterResourceSetReaderAsync(IEdmEntitySetBase entitySet, IEdmStructuredType expectedResourceType)
         {
             this.VerifyCanCreateODataResourceSetReader(entitySet, expectedResourceType);
             expectedResourceType = expectedResourceType ?? this.edmTypeResolver.GetElementType(entitySet);
@@ -637,7 +635,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="operation">The operation whose parameters are being read.</param>
         /// <returns>A running task for the created parameter reader.</returns>
-        public Task<ODataParameterReader> CreateODataParameterReaderAsync(IEdmOperation operation)
+        public ValueTask<ODataParameterReader> CreateODataParameterReaderAsync(IEdmOperation operation)
         {
             this.VerifyCanCreateODataParameterReader(operation);
             return this.ReadFromInputAsync(
@@ -657,7 +655,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously reads a service document payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the service document.</returns>
-        public Task<ODataServiceDocument> ReadServiceDocumentAsync()
+        public ValueTask<ODataServiceDocument> ReadServiceDocumentAsync()
         {
             this.VerifyCanReadServiceDocument();
             return this.ReadFromInputAsync(
@@ -701,7 +699,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously reads an <see cref="Microsoft.OData.ODataProperty" /> as message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
-        public Task<ODataProperty> ReadPropertyAsync()
+        public ValueTask<ODataProperty> ReadPropertyAsync()
         {
             return this.ReadPropertyAsync((IEdmTypeReference)null);
         }
@@ -711,7 +709,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPropertyTypeReference">The expected type reference of the property to read.</param>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
-        public Task<ODataProperty> ReadPropertyAsync(IEdmTypeReference expectedPropertyTypeReference)
+        public ValueTask<ODataProperty> ReadPropertyAsync(IEdmTypeReference expectedPropertyTypeReference)
         {
             this.VerifyCanReadProperty(expectedPropertyTypeReference);
             return this.ReadFromInputAsync(
@@ -724,7 +722,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="property">The metadata of the property to read.</param>
         /// <returns>A task representing the asynchronous operation of reading the property.</returns>
-        public Task<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property)
+        public ValueTask<ODataProperty> ReadPropertyAsync(IEdmStructuralProperty property)
         {
             this.VerifyCanReadProperty(property);
             return this.ReadFromInputAsync(
@@ -746,7 +744,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously reads an <see cref="Microsoft.OData.ODataError" /> as the message payload.</summary>
         /// <returns>A task representing the asynchronous operation of reading the error.</returns>
-        public Task<ODataError> ReadErrorAsync()
+        public ValueTask<ODataError> ReadErrorAsync()
         {
             this.VerifyCanReadError();
             return this.ReadFromInputAsync(
@@ -767,7 +765,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously reads the result of a $ref query as the message payload.</summary>
         /// <returns>A task representing the asynchronous reading of the entity reference links.</returns>
-        public Task<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
+        public ValueTask<ODataEntityReferenceLinks> ReadEntityReferenceLinksAsync()
         {
             this.VerifyCanReadEntityReferenceLinks();
             return this.ReadFromInputAsync(
@@ -788,7 +786,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously reads a singleton result of a $ref query (entity reference link) as the message payload.</summary>
         /// <returns>A running task representing the reading of the entity reference link.</returns>
-        public Task<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
+        public ValueTask<ODataEntityReferenceLink> ReadEntityReferenceLinkAsync()
         {
             this.VerifyCanReadEntityReferenceLink();
             return this.ReadFromInputAsync(
@@ -816,7 +814,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedTypeReference">The expected type reference for the value to be read; null if no expected type is available.</param>
         /// <returns>A running task representing the reading of the value.</returns>
-        public Task<object> ReadValueAsync(IEdmTypeReference expectedTypeReference)
+        public ValueTask<object> ReadValueAsync(IEdmTypeReference expectedTypeReference)
         {
             ODataPayloadKind[] supportedPayloadKinds = this.VerifyCanReadValue(expectedTypeReference);
 
@@ -1393,7 +1391,7 @@ namespace Microsoft.OData
         /// <param name="payloadKindsFromContentType">All payload kinds for which we found matches in some format based on the content type.</param>
         /// <param name="detectionResults">The list of combined detection results after sniffing.</param>
         /// <returns>A lazy enumerable of tasks to get the supported payload kinds for all formats.</returns>
-        private IEnumerable<Task> GetPayloadKindDetectionTasks(
+        private async Task GetPayloadKindDetectionTasks(
             IEnumerable<ODataPayloadKindDetectionResult> payloadKindsFromContentType,
             List<ODataPayloadKindDetectionResult> detectionResults)
         {
@@ -1404,32 +1402,24 @@ namespace Microsoft.OData
 
             foreach (IGrouping<ODataFormat, ODataPayloadKindDetectionResult> payloadKindGroup in payloadKindFromContentTypeGroups)
             {
-                // Call the payload kind detection code on the format
-                Task<IEnumerable<ODataPayloadKind>> detectionResult =
-                    this.message.GetStreamAsync()
-                        .FollowOnSuccessWithTask(streamTask =>
-                            payloadKindGroup.Key.DetectPayloadKindAsync(
-                            this.GetOrCreateMessageInfo(streamTask.Result, true),
-                            this.settings));
 
-                yield return detectionResult
-                    .FollowOnSuccessWith(
-                    t =>
+                Stream stream = await this.message.GetStreamAsync().ConfigureAwait(false);
+                IEnumerable<ODataPayloadKind> detectionResult = await payloadKindGroup.Key.DetectPayloadKindAsync(
+                    this.GetOrCreateMessageInfo(stream, isAsync: true),
+                    this.settings).ConfigureAwait(false);
+
+                if (detectionResult != null)
+                {
+                    foreach (ODataPayloadKind kind in detectionResult)
                     {
-                        IEnumerable<ODataPayloadKind> result = t.Result;
-                        if (result != null)
+                        // Only include the payload kinds that we expect
+                        if (payloadKindsFromContentType.Any(pk => pk.PayloadKind == kind))
                         {
-                            foreach (ODataPayloadKind kind in result)
-                            {
-                                // Only include the payload kinds that we expect
-                                if (payloadKindsFromContentType.Any(pk => pk.PayloadKind == kind))
-                                {
-                                    Debug.Assert(!detectionResults.Any(dpk => dpk.PayloadKind == kind), "Each kind must appear at most once.");
-                                    detectionResults.Add(new ODataPayloadKindDetectionResult(kind, payloadKindGroup.Key));
-                                }
-                            }
+                            Debug.Assert(!detectionResults.Any(dpk => dpk.PayloadKind == kind), "Each kind must appear at most once.");
+                            detectionResults.Add(new ODataPayloadKindDetectionResult(kind, payloadKindGroup.Key));
                         }
-                    });
+                    }
+                }
             }
         }
 
@@ -1440,22 +1430,17 @@ namespace Microsoft.OData
         /// <param name="readFunc">The read function which will be called over the created input context.</param>
         /// <param name="payloadKinds">All possible kinds of payload to read.</param>
         /// <returns>A task which when completed return the read value from the input.</returns>
-        private Task<T> ReadFromInputAsync<T>(Func<ODataInputContext, Task<T>> readFunc, params ODataPayloadKind[] payloadKinds) where T : class
+        private async ValueTask<T> ReadFromInputAsync<T>(Func<ODataInputContext, ValueTask<T>> readFunc, params ODataPayloadKind[] payloadKinds) where T : class
         {
             this.ProcessContentType(payloadKinds);
             Debug.Assert(this.format != null, "By now we should have figured out which format to use.");
 
-            return this.message.GetStreamAsync()
-                .FollowOnSuccessWithTask(
-                    streamTask => this.format.CreateInputContextAsync(
-                        this.GetOrCreateMessageInfo(streamTask.Result, true),
-                        this.settings))
-                .FollowOnSuccessWithTask(
-                    createInputContextTask =>
-                    {
-                        this.inputContext = createInputContextTask.Result;
-                        return readFunc(this.inputContext);
-                    });
+            Stream stream = await this.message.GetStreamAsync();
+            this.inputContext = await this.format.CreateInputContextAsync(
+                this.GetOrCreateMessageInfo(stream, true),
+                this.settings);
+
+            return await readFunc(this.inputContext);
         }
     }
 }

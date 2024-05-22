@@ -457,11 +457,10 @@ namespace Microsoft.OData
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
         /// <returns>A task for method called when a stream is requested.</returns>
-        Task IODataStreamListener.StreamRequestedAsync()
+        ValueTask IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => ((IODataStreamListener)thisParam).StreamRequested(),
-                this);
+            ((IODataStreamListener)this).StreamRequested();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -480,11 +479,10 @@ namespace Microsoft.OData
         /// This method is called asynchronously when a stream is disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task IODataStreamListener.StreamDisposedAsync()
+        ValueTask IODataStreamListener.StreamDisposedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => ((IODataStreamListener)thisParam).StreamDisposed(),
-                this);
+            ((IODataStreamListener)this).StreamDisposed();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>

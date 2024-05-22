@@ -758,7 +758,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             this.VerifyNotDisposed();
 
@@ -785,9 +785,9 @@ namespace Microsoft.OData
         /// This method is called when an async stream is requested. It is a no-op.
         /// </summary>
         /// <returns>A task for method called when a stream is requested.</returns>
-        Task IODataStreamListener.StreamRequestedAsync()
+        ValueTask IODataStreamListener.StreamRequestedAsync()
         {
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -814,7 +814,7 @@ namespace Microsoft.OData
         /// This method is called asynchronously when a stream is disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        async Task IODataStreamListener.StreamDisposedAsync()
+        async ValueTask IODataStreamListener.StreamDisposedAsync()
         {
             Debug.Assert(this.State == WriterState.Stream || this.State == WriterState.String,
                 "Stream was disposed when not in WriterState.Stream state.");

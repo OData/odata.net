@@ -261,7 +261,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             this.VerifyNotDisposed();
 

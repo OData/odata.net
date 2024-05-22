@@ -214,10 +214,10 @@ namespace Microsoft.OData
         /// A task representing any action that is running as part of the status change of the reader;
         /// null if no such action exists.
         /// </returns>
-        Task IODataStreamListener.StreamRequestedAsync()
+        ValueTask IODataStreamListener.StreamRequestedAsync()
         {
             this.operationState = OperationState.StreamRequested;
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -232,10 +232,10 @@ namespace Microsoft.OData
         /// This method is called asynchronously to notify that the content stream of a batch operation has been disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task IODataStreamListener.StreamDisposedAsync()
+        ValueTask IODataStreamListener.StreamDisposedAsync()
         {
             this.operationState = OperationState.StreamDisposed;
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>

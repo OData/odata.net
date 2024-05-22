@@ -189,12 +189,11 @@ namespace Microsoft.OData
         /// the in-stream error is written.
         /// It is the responsibility of this method to flush the output before the task finishes.
         /// </remarks>
-        internal override async ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal override ValueTask WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             if (this.outputInStreamErrorListener != null)
             {
-                await this.outputInStreamErrorListener.OnInStreamErrorAsync()
-                    .ConfigureAwait(false);
+                return this.outputInStreamErrorListener.OnInStreamErrorAsync();
             }
 
             throw new ODataException(Strings.ODataMessageWriter_CannotWriteInStreamErrorForRawValues);

@@ -79,7 +79,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition:  JsonNodeType.None       - The reader must not have been used yet.
         /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
-        internal async Task<ODataError> ReadTopLevelErrorAsync()
+        internal async ValueTask<ODataError> ReadTopLevelErrorAsync()
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             Debug.Assert(!this.JsonReader.DisableInStreamErrorDetection, "!JsonReader.DisableInStreamErrorDetection");

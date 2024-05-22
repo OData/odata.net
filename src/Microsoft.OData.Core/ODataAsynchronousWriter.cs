@@ -102,7 +102,7 @@ namespace Microsoft.OData
         }
 
         /// <inheritdoc/>
-        async Task IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
+        async ValueTask IODataOutputInStreamErrorListener.OnInStreamErrorAsync()
         {
             this.rawOutputContext.VerifyNotDisposed();
             await this.rawOutputContext.TextWriter.FlushAsync()

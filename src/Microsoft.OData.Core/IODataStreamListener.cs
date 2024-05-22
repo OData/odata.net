@@ -29,7 +29,7 @@ namespace Microsoft.OData
         /// A task representing any async operation that is running in reaction to the
         /// status change (or null if no such action is required).
         /// </returns>
-        Task StreamRequestedAsync();
+        ValueTask StreamRequestedAsync();
 
         /// <summary>
         /// This method notifies the implementer of this interface that the content stream of a batch operation has been disposed.
@@ -40,6 +40,6 @@ namespace Microsoft.OData
         /// Asynchronously notifies the implementer of this interface that the content stream of an operation has been disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        Task StreamDisposedAsync();
+        ValueTask StreamDisposedAsync();
     }
 }

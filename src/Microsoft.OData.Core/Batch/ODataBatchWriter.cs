@@ -167,7 +167,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously starts a new batch; can be only called once and as first call.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public Task WriteStartBatchAsync()
+        public ValueTask WriteStartBatchAsync()
         {
             this.VerifyCanWriteStartBatch(false);
             return this.WriteStartBatchImplementationAsync();
@@ -185,7 +185,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously ends a batch; can only be called after WriteStartBatch has been called and if no other active change set or operation exist.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public async Task WriteEndBatchAsync()
+        public async ValueTask WriteEndBatchAsync()
         {
             this.VerifyCanWriteEndBatch(false);
             await this.WriteEndBatchImplementationAsync()
@@ -221,7 +221,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously starts a new change set without specifying group id;
         /// This can only be called after WriteStartBatch and if no other active operation or change set exists.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public Task WriteStartChangesetAsync()
+        public ValueTask WriteStartChangesetAsync()
         {
             return WriteStartChangesetAsync(Guid.NewGuid().ToString());
         }
@@ -232,7 +232,7 @@ namespace Microsoft.OData
         /// <param name="changesetId"> The change set Id of the batch request. Cannot be null.</param>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <exception cref="ODataException">Thrown if the <paramref name="changesetId"/> is null.</exception>
-        public async Task WriteStartChangesetAsync(string changesetId)
+        public async ValueTask WriteStartChangesetAsync(string changesetId)
         {
             ExceptionUtils.CheckArgumentNotNull(changesetId, "changesetId");
 
@@ -252,7 +252,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously ends an active change set; this can only be called after WriteStartChangeset and only once for each change set.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public async Task WriteEndChangesetAsync()
+        public async ValueTask WriteEndChangesetAsync()
         {
             this.VerifyCanWriteEndChangeset(false);
             await this.WriteEndChangesetImplementationAsync()
@@ -308,7 +308,7 @@ namespace Microsoft.OData
         /// <param name="contentId">
         /// The Content-ID value to write in ChangeSet header, would be ignored if <paramref name="method"/> is "GET".</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
+        public ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId)
         {
             return CreateOperationRequestMessageAsync(method, uri, contentId, BatchPayloadUriOption.AbsoluteUri);
         }
@@ -322,7 +322,7 @@ namespace Microsoft.OData
         /// <param name="payloadUriOption">
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
+        public ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(string method, Uri uri, string contentId,
             BatchPayloadUriOption payloadUriOption)
         {
             return CreateOperationRequestMessageAsync(method, uri, contentId, payloadUriOption, /*dependsOnIds*/null);
@@ -339,7 +339,7 @@ namespace Microsoft.OData
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.</param>
         /// <param name="dependsOnIds">The prerequisite request ids of this request.</param>
         /// <returns>A task that when completed returns the newly created operation request message.</returns>
-        public Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(
+        public ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageAsync(
             string method,
             Uri uri,
             string contentId,
@@ -363,7 +363,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously creates an <see cref="Microsoft.OData.ODataBatchOperationResponseMessage" /> for writing an operation of a batch response.</summary>
         /// <param name="contentId">The Content-ID value to write in ChangeSet head.</param>
         /// <returns>A task that when completed returns the newly created operation response message.</returns>
-        public Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
+        public ValueTask<ODataBatchOperationResponseMessage> CreateOperationResponseMessageAsync(string contentId)
         {
             this.VerifyCanCreateOperationResponseMessage(false);
             return this.CreateOperationResponseMessageImplementationAsync(contentId);
@@ -409,7 +409,7 @@ namespace Microsoft.OData
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public abstract Task StreamRequestedAsync();
+        public abstract ValueTask StreamRequestedAsync();
 
         /// <summary>
         /// This method is called to notify that the content stream of a batch operation has been disposed.
@@ -420,7 +420,7 @@ namespace Microsoft.OData
         /// This method is called asynchronously to notify that the content stream of a batch operation has been disposed.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        public virtual Task StreamDisposedAsync()
+        public virtual ValueTask StreamDisposedAsync()
         {
             // NOTE: ODataBatchWriter class is abstract and public. This method body is intended
             // to prevent a breaking change in subclasses that provide the implementation.
@@ -437,7 +437,7 @@ namespace Microsoft.OData
         public abstract void OnInStreamError();
 
         /// <inheritdoc/>
-        public virtual Task OnInStreamErrorAsync()
+        public virtual ValueTask OnInStreamErrorAsync()
         {
             // NOTE: ODataBatchWriter class is abstract and public. This method body is intended
             // to prevent a breaking change in subclasses that provide the implementation.
@@ -590,22 +590,20 @@ namespace Microsoft.OData
         /// Asnchronously starts a new batch.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected virtual Task WriteStartBatchImplementationAsync()
+        protected virtual ValueTask WriteStartBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteStartBatchImplementation(),
-                this);
+            this.WriteStartBatchImplementation();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
         /// Asynchronously ends a batch.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected virtual Task WriteEndBatchImplementationAsync()
+        protected virtual ValueTask WriteEndBatchImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEndBatchImplementation(),
-                this);
+            this.WriteEndBatchImplementation();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -613,23 +611,20 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="groupOrChangesetId">The atomic group id, aka changeset GUID of the batch request.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected virtual Task WriteStartChangesetImplementationAsync(string groupOrChangesetId)
+        protected virtual ValueTask WriteStartChangesetImplementationAsync(string groupOrChangesetId)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam, groupOrChangesetIdParam) => thisParam.WriteStartChangesetImplementation(groupOrChangesetIdParam),
-                this,
-                groupOrChangesetId);
+            this.WriteStartChangesetImplementation(groupOrChangesetId);
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
         /// Asynchronously ends an active changeset.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected virtual Task WriteEndChangesetImplementationAsync()
+        protected virtual ValueTask WriteEndChangesetImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                (thisParam) => thisParam.WriteEndChangesetImplementation(),
-                this);
+            this.WriteEndChangesetImplementation();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -644,15 +639,15 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
         /// that can be used to write the request operation.</returns>
-        protected virtual Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
+        protected virtual ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
             string method,
             Uri uri,
             string contentId,
             BatchPayloadUriOption payloadUriOption,
             IEnumerable<string> dependsOnIds)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.CreateOperationRequestMessageImplementation(
+            return ValueTask.FromResult(
+                this.CreateOperationRequestMessageImplementation(
                     method,
                     uri,
                     contentId,
@@ -667,10 +662,9 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
         /// that can be used to write the response operation.</returns>
-        protected virtual Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
+        protected virtual ValueTask<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                () => this.CreateOperationResponseMessageImplementation(contentId));
+            return ValueTask.FromResult(this.CreateOperationResponseMessageImplementation(contentId));
         }
 
         /// <summary>
@@ -862,7 +856,7 @@ namespace Microsoft.OData
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
         /// that can be used to write the request operation.</returns>
-        private async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageInternalAsync(
+        private async ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageInternalAsync(
             string method,
             Uri uri,
             string contentId,

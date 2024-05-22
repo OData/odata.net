@@ -74,7 +74,7 @@ namespace Microsoft.OData.Json
         /// Pre-Condition:  JsonNodeType.None:        assumes that the JSON reader has not been used yet.
         /// Post-Condition: JsonNodeType.EndOfInput
         /// </remarks>
-        internal async Task<ODataServiceDocument> ReadServiceDocumentAsync()
+        internal async ValueTask<ODataServiceDocument> ReadServiceDocumentAsync()
         {
             Debug.Assert(this.JsonReader.NodeType == JsonNodeType.None, "Pre-Condition: expected JsonNodeType.None, the reader must not have been used yet.");
             this.JsonReader.AssertNotBuffering();

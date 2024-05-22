@@ -115,7 +115,7 @@ namespace Microsoft.OData.MultipartMixed
         /// A task representing any action that is running as part of the status change of the operation;
         /// null if no such action exists.
         /// </returns>
-        public override async Task StreamRequestedAsync()
+        public override async ValueTask StreamRequestedAsync()
         {
             // Write any pending data and flush the batch writer to the async buffered stream
             await this.StartBatchOperationContentAsync()
@@ -146,11 +146,10 @@ namespace Microsoft.OData.MultipartMixed
             this.RawOutputContext.InitializeRawValueWriter();
         }
 
-        public override Task StreamDisposedAsync()
+        public override ValueTask StreamDisposedAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation(
-                thisParam => thisParam.StreamDisposed(),
-                this);
+            this.StreamDisposed();
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -172,7 +171,7 @@ namespace Microsoft.OData.MultipartMixed
             throw new ODataException(Strings.ODataBatchWriter_CannotWriteInStreamErrorForBatch);
         }
 
-        public override async Task OnInStreamErrorAsync()
+        public override async ValueTask OnInStreamErrorAsync()
         {
             this.RawOutputContext.VerifyNotDisposed();
             this.SetState(BatchWriterState.Error);
@@ -401,7 +400,7 @@ namespace Microsoft.OData.MultipartMixed
         /// Asynchronously ends a batch - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteEndBatchImplementationAsync()
+        protected override async ValueTask WriteEndBatchImplementationAsync()
         {
             Debug.Assert(
                 this.batchStartBoundaryWritten || this.CurrentOperationMessage == null,
@@ -430,7 +429,7 @@ namespace Microsoft.OData.MultipartMixed
         /// </summary>
         /// <param name="changesetId">The value for changeset boundary for multipart batch.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteStartChangesetImplementationAsync(string changesetId)
+        protected override async ValueTask WriteStartChangesetImplementationAsync(string changesetId)
         {
             Debug.Assert(changesetId != null, "changesetId != null");
 
@@ -463,7 +462,7 @@ namespace Microsoft.OData.MultipartMixed
         /// Asynchronously ends an active changeset - implementation of the actual functionality.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteEndChangesetImplementationAsync()
+        protected override async ValueTask WriteEndChangesetImplementationAsync()
         {
             // Write pending message data (headers, response line) for a previously unclosed message/request
             await this.WritePendingMessageDataAsync(true)
@@ -507,7 +506,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationRequestMessage"/>
         /// that can be used to write the request operation.</returns>
-        protected override async Task<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
+        protected override async ValueTask<ODataBatchOperationRequestMessage> CreateOperationRequestMessageImplementationAsync(
             string method, Uri uri, string contentId, BatchPayloadUriOption payloadUriOption,
             IEnumerable<string> dependsOnIds)
         {
@@ -555,7 +554,7 @@ namespace Microsoft.OData.MultipartMixed
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains an <see cref="ODataBatchOperationResponseMessage"/>
         /// that can be used to write the response operation.</returns>
-        protected override async Task<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
+        protected override async ValueTask<ODataBatchOperationResponseMessage> CreateOperationResponseMessageImplementationAsync(string contentId)
         {
             await this.WritePendingMessageDataAsync(true)
                 .ConfigureAwait(false);
@@ -673,7 +672,7 @@ namespace Microsoft.OData.MultipartMixed
         /// Asynchronously writes all the pending headers and prepares the writer to write a content of the operation.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task StartBatchOperationContentAsync()
+        private async ValueTask StartBatchOperationContentAsync()
         {
             Debug.Assert(this.CurrentOperationMessage != null, "Expected non-null operation message!");
             Debug.Assert(this.RawOutputContext.TextWriter != null, "Must have a batch writer!");
@@ -692,7 +691,7 @@ namespace Microsoft.OData.MultipartMixed
         /// Asynchronously writes the start boundary for an operation. This is either the batch or the changeset boundary.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteStartBoundaryForOperationAsync()
+        private async ValueTask WriteStartBoundaryForOperationAsync()
         {
             if (this.changeSetBoundary == null)
             {
@@ -719,7 +718,7 @@ namespace Microsoft.OData.MultipartMixed
         /// A flag to control whether after writing the pending data we report writing the message to be completed or not.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingMessageDataAsync(bool reportMessageCompleted)
+        private async ValueTask WritePendingMessageDataAsync(bool reportMessageCompleted)
         {
             if (this.CurrentOperationMessage != null)
             {

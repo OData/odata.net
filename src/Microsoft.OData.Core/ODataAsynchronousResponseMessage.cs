@@ -206,7 +206,7 @@ namespace Microsoft.OData
 
         /// <summary>Asynchronously get the stream backing for this message.</summary>
         /// <returns>The stream backing for this message.</returns>
-        public async Task<Stream> GetStreamAsync()
+        public async ValueTask<Stream> GetStreamAsync()
         {
             // If writing response, the envelope for the inner message should be written once and only once before returning the stream.
             if (this.writing && !this.envelopeWritten)

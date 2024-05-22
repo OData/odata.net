@@ -94,10 +94,10 @@ namespace Microsoft.OData
         /// Asynchronously create an <see cref="ODataAsynchronousReader"/>.
         /// </summary>
         /// <returns>Task which when completed returns the newly created <see cref="ODataAsynchronousReader"/>.</returns>
-        internal override Task<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
+        internal override ValueTask<ODataAsynchronousReader> CreateAsynchronousReaderAsync()
         {
             // Note that the reading is actually synchronous since we buffer the entire input when getting the stream from the message.
-            return TaskUtils.GetTaskForSynchronousOperation(() => this.CreateAsynchronousReaderImplementation());
+            return ValueTask.FromResult(this.CreateAsynchronousReaderImplementation());
         }
 
         /// <summary>
@@ -115,7 +115,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="expectedPrimitiveTypeReference">The expected type reference for the value to be read; null if no expected type is available.</param>
         /// <returns>Task which when completed returns an <see cref="object"/> representing the read value.</returns>
-        internal override Task<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        internal override ValueTask<object> ReadValueAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
             return this.ReadValueImplementationAsync(expectedPrimitiveTypeReference);
         }
@@ -246,7 +246,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains an object representing the read value.
         /// </returns>
-        private async Task<object> ReadValueImplementationAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
+        private async ValueTask<object> ReadValueImplementationAsync(IEdmPrimitiveTypeReference expectedPrimitiveTypeReference)
         {
             object value;
 
