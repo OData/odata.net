@@ -65,9 +65,9 @@ namespace ExperimentsLib
             }
         }
 
-        public Task<Stream> GetStreamAsync()
+        public ValueTask<Stream> GetStreamAsync()
         {
-            return Task.FromResult(Stream);
+            return ValueTask.FromResult(Stream);
         }
     }
 }
