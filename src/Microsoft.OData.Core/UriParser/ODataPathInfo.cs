@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser
             {
             }
 
-            previous = segs.Current;
+            previous = (odataPath.Count > 0) ? segs.Current : null;
             if (lastSegment != null)
             {
                 // use previous segment if the last one is Key or Count Segment
