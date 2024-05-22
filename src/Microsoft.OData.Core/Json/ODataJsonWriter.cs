@@ -1255,7 +1255,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously starts writing a payload (called exactly once before anything else)
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task StartPayloadAsync()
+        protected override ValueTask StartPayloadAsync()
         {
             return this.jsonResourceSerializer.WritePayloadStartAsync();
         }
@@ -1264,7 +1264,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends writing a payload (called exactly once after everything else in case of success)
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndPayloadAsync()
+        protected override ValueTask EndPayloadAsync()
         {
             return this.jsonResourceSerializer.WritePayloadEndAsync();
         }
@@ -1274,7 +1274,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartResourceAsync(ODataResource resource)
+        protected override async ValueTask StartResourceAsync(ODataResource resource)
         {
             ODataNestedResourceInfo parentNavLink = this.ParentNestedResourceInfo;
             if (parentNavLink != null)
@@ -1372,7 +1372,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task EndResourceAsync(ODataResource resource)
+        protected override async ValueTask EndResourceAsync(ODataResource resource)
         {
             if (resource == null)
             {
@@ -1407,7 +1407,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="property">The property info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task StartPropertyAsync(ODataPropertyInfo property)
+        protected override ValueTask StartPropertyAsync(ODataPropertyInfo property)
         {
             ResourceBaseScope scope = this.ParentScope as ResourceBaseScope;
             Debug.Assert(scope != null, "Writing a property and the parent scope is not a resource");
@@ -1440,9 +1440,9 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="property">The property to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndPropertyAsync(ODataPropertyInfo property)
+        protected override ValueTask EndPropertyAsync(ODataPropertyInfo property)
         {
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -1450,7 +1450,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resourceSet">The resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartResourceSetAsync(ODataResourceSet resourceSet)
+        protected override async ValueTask StartResourceSetAsync(ODataResourceSet resourceSet)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
@@ -1598,7 +1598,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resourceSet">The resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task EndResourceSetAsync(ODataResourceSet resourceSet)
+        protected override async ValueTask EndResourceSetAsync(ODataResourceSet resourceSet)
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
 
@@ -1668,7 +1668,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaResourceSet">The delta resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        protected override async ValueTask StartDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
         {
             Debug.Assert(deltaResourceSet != null, "resourceSet != null");
 
@@ -1738,7 +1738,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaResourceSet">The resource set to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
+        protected override ValueTask EndDeltaResourceSetAsync(ODataDeltaResourceSet deltaResourceSet)
         {
             Debug.Assert(deltaResourceSet != null, "deltaResourceSet != null");
 
@@ -1746,7 +1746,7 @@ namespace Microsoft.OData.Json
             {
                 return EndDeltaResourceSetInnerAsync(deltaResourceSet);
 
-                async Task EndDeltaResourceSetInnerAsync(ODataDeltaResourceSet innerDeltaResourceSet)
+                async ValueTask EndDeltaResourceSetInnerAsync(ODataDeltaResourceSet innerDeltaResourceSet)
                 {
                     // End the array which holds the entries in the resource set.
                     await this.jsonWriter.EndArrayScopeAsync()
@@ -1782,7 +1782,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartDeletedResourceAsync(ODataDeletedResource resource)
+        protected override async ValueTask StartDeletedResourceAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
             DeletedResourceScope resourceScope = this.CurrentDeletedResourceScope;
@@ -1856,11 +1856,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deletedResource">The resource to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndDeletedResourceAsync(ODataDeletedResource deletedResource)
+        protected override ValueTask EndDeletedResourceAsync(ODataDeletedResource deletedResource)
         {
             if (deletedResource == null)
             {
-                return TaskUtils.CompletedTask;
+                return ValueTask.CompletedTask;
             }
 
             // Close the object scope
@@ -1872,7 +1872,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task StartDeltaLinkAsync(ODataDeltaLinkBase link)
+        protected override async ValueTask StartDeltaLinkAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
 
@@ -1906,7 +1906,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation. 
         /// The value of the TResult parameter contains the <see cref="Stream"/> for writing the binary value.</returns>
-        protected override async Task<Stream> StartBinaryStreamAsync()
+        protected override async ValueTask<Stream> StartBinaryStreamAsync()
         {
             ODataPropertyInfo property;
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
@@ -1934,13 +1934,13 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing a stream value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override Task EndBinaryStreamAsync()
+        protected sealed override ValueTask EndBinaryStreamAsync()
         {
             if (this.jsonWriter == null)
             {
                 return EndBinaryStreamInnerAsync();
 
-                async Task EndBinaryStreamInnerAsync()
+                async ValueTask EndBinaryStreamInnerAsync()
                 {
                     await this.jsonWriter.WriteValueAsync(
                     this.jsonOutputContext.BinaryValueStream.ToArray()).ConfigureAwait(false);
@@ -1961,7 +1961,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <returns>A task that represents the asynchronous operation. 
         /// The value of the TResult parameter contains the <see cref="TextWriter"/> for writing a string value.</returns>
-        protected override async Task<TextWriter> StartTextWriterAsync()
+        protected override async ValueTask<TextWriter> StartTextWriterAsync()
         {
             ODataPropertyInfo property;
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
@@ -1988,7 +1988,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing a text value.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected sealed override Task EndTextWriterAsync()
+        protected sealed override ValueTask EndTextWriterAsync()
         {
             return this.jsonWriter.EndTextWriterValueScopeAsync();
         }
@@ -1998,7 +1998,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="primitiveValue">The primitive value to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WritePrimitiveValueAsync(ODataPrimitiveValue primitiveValue)
+        protected override async ValueTask WritePrimitiveValueAsync(ODataPrimitiveValue primitiveValue)
         {
             ODataPropertyInfo property;
             if ((property = this.ParentScope?.Item as ODataPropertyInfo) != null)
@@ -2024,7 +2024,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task WriteDeferredNestedResourceInfoAsync(ODataNestedResourceInfo nestedResourceInfo)
+        protected override ValueTask WriteDeferredNestedResourceInfoAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(this.writingResponse, "Deferred links are only supported in response, we should have verified this already.");
@@ -2040,7 +2040,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+        protected override ValueTask StartNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name),
@@ -2050,7 +2050,7 @@ namespace Microsoft.OData.Json
             {
                 return StartNestedResourceInfoWithContentInnerAsync(nestedResourceInfo);
 
-                async Task StartNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
+                async ValueTask StartNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
                 {
                     // Write @odata.context annotation for navigation property
                     IEdmContainedEntitySet containedEntitySet = this.CurrentScope.NavigationSource as IEdmContainedEntitySet;
@@ -2079,7 +2079,7 @@ namespace Microsoft.OData.Json
             {
                 this.WriterValidator.ValidateNestedResourceInfoHasCardinality(nestedResourceInfo);
 
-                return TaskUtils.CompletedTask;
+                return ValueTask.CompletedTask;
             }
         }
 
@@ -2088,7 +2088,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="nestedResourceInfo">The nested resource info to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
+        protected override ValueTask EndNestedResourceInfoWithContentAsync(ODataNestedResourceInfo nestedResourceInfo)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
 
@@ -2098,7 +2098,7 @@ namespace Microsoft.OData.Json
             {
                 return EndNestedResourceInfoWithContentInnerAsync(nestedResourceInfo);
 
-                async Task EndNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
+                async ValueTask EndNestedResourceInfoWithContentInnerAsync(ODataNestedResourceInfo innerNestedResourceInfo)
                 {
                     JsonNestedResourceInfoScope navigationLinkScope = (JsonNestedResourceInfoScope)this.CurrentScope;
 
@@ -2119,7 +2119,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2128,7 +2128,7 @@ namespace Microsoft.OData.Json
         /// <param name="parentNestedResourceInfo">The parent navigation link which is being written around the entity reference link.</param>
         /// <param name="entityReferenceLink">The entity reference link to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteEntityReferenceInNavigationLinkContentAsync(
+        protected override async ValueTask WriteEntityReferenceInNavigationLinkContentAsync(
             ODataNestedResourceInfo parentNestedResourceInfo,
             ODataEntityReferenceLink entityReferenceLink)
         {
@@ -2214,28 +2214,19 @@ namespace Microsoft.OData.Json
         /// <param name="writingResponse">True if writing response.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected override Task PrepareResourceForWriteStartAsync(
+        protected override ValueTask PrepareResourceForWriteStartAsync(
             ResourceScope resourceScope,
             ODataResource resource,
             bool writingResponse,
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                resourceScopeParam,
-                resourceParam,
-                writingResponseParam,
-                selectedPropertiesParam) => thisParam.PrepareResourceForWriteStart(
-                    resourceScopeParam,
-                    resourceParam,
-                    writingResponseParam,
-                    selectedPropertiesParam),
-                this,
+            this.PrepareResourceForWriteStart(
                 resourceScope,
                 resource,
                 writingResponse,
                 selectedProperties);
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2247,28 +2238,19 @@ namespace Microsoft.OData.Json
         /// <param name="writingResponse">True if writing response.</param>
         /// <param name="selectedProperties">The selected properties of this scope.</param>
         /// <returns>A task that represents the asynchronous operation.</returns>
-        protected override Task PrepareDeletedResourceForWriteStartAsync(
+        protected override ValueTask PrepareDeletedResourceForWriteStartAsync(
             DeletedResourceScope resourceScope,
             ODataDeletedResource deletedResource,
             bool writingResponse,
             SelectedPropertiesNode selectedProperties)
         {
             // Currently, no asynchronous operation is involved when preparing deleted resource for writing
-            return TaskUtils.GetTaskForSynchronousOperation((
-                thisParam,
-                resourceScopeParam,
-                deletedResourceParam,
-                writingResponseParam,
-                selectedPropertiesParam) => this.PrepareDeletedResourceForWriteStart(
-                    resourceScopeParam,
-                    deletedResourceParam,
-                    writingResponseParam,
-                    selectedPropertiesParam),
-                this,
+            this.PrepareDeletedResourceForWriteStart(
                 resourceScope,
                 deletedResource,
                 writingResponse,
                 selectedProperties);
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2625,7 +2607,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="entityReferenceLink">The OData entity reference link.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink entityReferenceLink)
+        private async ValueTask WriteEntityReferenceLinkImplementationAsync(ODataEntityReferenceLink entityReferenceLink)
         {
             Debug.Assert(entityReferenceLink != null, "entityReferenceLink != null");
 
@@ -2656,13 +2638,13 @@ namespace Microsoft.OData.Json
         /// <param name="count">The count to write for the resource set.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteResourceSetCountAsync(long? count, string propertyName)
+        private ValueTask WriteResourceSetCountAsync(long? count, string propertyName)
         {
             if (count.HasValue)
             {
                 return WriteResourceSetCountInnerAsync(count.Value, propertyName);
 
-                async Task WriteResourceSetCountInnerAsync(long innerCount, string innerPropertyName)
+                async ValueTask WriteResourceSetCountInnerAsync(long innerCount, string innerPropertyName)
                 {
                     if (innerPropertyName == null)
                     {
@@ -2681,7 +2663,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2690,7 +2672,7 @@ namespace Microsoft.OData.Json
         /// <param name="nextPageLink">The nextLink to write, if available.</param>
         /// <param name="propertyName">The name of the expanded nav property or null for a top-level resource set.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteResourceSetNextLinkAsync(Uri nextPageLink, string propertyName)
+        private ValueTask WriteResourceSetNextLinkAsync(Uri nextPageLink, string propertyName)
         {
             bool nextPageWritten = this.State == WriterState.ResourceSet ?
                 this.CurrentResourceSetScope.NextPageLinkWritten :
@@ -2700,7 +2682,7 @@ namespace Microsoft.OData.Json
             {
                 return WriteResourceSetNextLinkInnerAsync(nextPageLink, propertyName);
 
-                async Task WriteResourceSetNextLinkInnerAsync(Uri innerNextPageLink, string innerPropertyName)
+                async ValueTask WriteResourceSetNextLinkInnerAsync(Uri innerNextPageLink, string innerPropertyName)
                 {
                     if (innerPropertyName == null)
                     {
@@ -2728,7 +2710,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2737,11 +2719,11 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="deltaLink">The delta link to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteResourceSetDeltaLinkAsync(Uri deltaLink)
+        private ValueTask WriteResourceSetDeltaLinkAsync(Uri deltaLink)
         {
             if (deltaLink == null)
             {
-                return TaskUtils.CompletedTask;
+                return ValueTask.CompletedTask;
             }
 
             Debug.Assert(this.State == WriterState.ResourceSet || this.State == WriterState.DeltaResourceSet,
@@ -2755,7 +2737,7 @@ namespace Microsoft.OData.Json
             {
                 return WriteResourceSetDeltaLinkInnerAsync(deltaLink);
 
-                async Task WriteResourceSetDeltaLinkInnerAsync(Uri innerDeltaLink)
+                async ValueTask WriteResourceSetDeltaLinkInnerAsync(Uri innerDeltaLink)
                 {
                     await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                         ODataAnnotationNames.ODataDeltaLink).ConfigureAwait(false);
@@ -2773,7 +2755,7 @@ namespace Microsoft.OData.Json
                 }
             }
 
-            return TaskUtils.CompletedTask;
+            return ValueTask.CompletedTask;
         }
 
         /// <summary>
@@ -2781,7 +2763,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The deleted resource to write deleted entry contents for</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteV4DeletedEntryContentsAsync(ODataDeletedResource resource)
+        private async ValueTask WriteV4DeletedEntryContentsAsync(ODataDeletedResource resource)
         {
             await this.WriteDeletedResourceIdAsync(resource)
                 .ConfigureAwait(false);
@@ -2794,7 +2776,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The deleted resource to write deleted entry contents for</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeletedEntryContentsAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeletedEntryContentsAsync(ODataDeletedResource resource)
         {
             await this.odataAnnotationWriter.WriteInstanceAnnotationNameAsync(
                 ODataAnnotationNames.ODataRemoved).ConfigureAwait(false);
@@ -2831,7 +2813,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write the id for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeletedResourceIdAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeletedResourceIdAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
             if (this.Version == null || this.Version < ODataVersion.V401)
@@ -2885,7 +2867,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="resource">The resource to write the reason for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaResourceReasonAsync(ODataDeletedResource resource)
+        private async ValueTask WriteDeltaResourceReasonAsync(ODataDeletedResource resource)
         {
             Debug.Assert(resource != null, "resource != null");
 
@@ -2918,7 +2900,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="kind">The delta kind of link.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteDeltaLinkContextUriAsync(ODataDeltaKind kind)
+        private ValueTask<ODataContextUrlInfo> WriteDeltaLinkContextUriAsync(ODataDeltaKind kind)
         {
             Debug.Assert(kind == ODataDeltaKind.Link || kind == ODataDeltaKind.DeletedLink,
                 "kind must be either DeltaLink or DeltaDeletedLink.");
@@ -2931,7 +2913,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write source for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkSourceAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkSourceAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
@@ -2948,7 +2930,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write relationship for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkRelationshipAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,
@@ -2965,7 +2947,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="link">The link to write target for.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteDeltaLinkTargetAsync(ODataDeltaLinkBase link)
+        private async ValueTask WriteDeltaLinkTargetAsync(ODataDeltaLinkBase link)
         {
             Debug.Assert(link != null, "link != null");
             Debug.Assert(link is ODataDeltaLink || link is ODataDeltaDeletedLink,

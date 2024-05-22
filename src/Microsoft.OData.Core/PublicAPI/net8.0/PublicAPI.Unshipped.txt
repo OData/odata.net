@@ -1,4 +1,16 @@
 abstract Microsoft.OData.ODataBatchWriter.StreamRequestedAsync() -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataCollectionWriter.FlushAsync() -> System.Threading.Tasks.Task
+abstract Microsoft.OData.ODataCollectionWriter.WriteEndAsync() -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataCollectionWriter.WriteItemAsync(object item) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataCollectionWriter.WriteStartAsync(Microsoft.OData.ODataCollectionStart collectionStart) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedEntryAsync(Microsoft.OData.ODataDeltaDeletedEntry deltaDeletedEntry) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedLinkAsync(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaLinkAsync(Microsoft.OData.ODataDeltaLink deltaLink) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteEndAsync() -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataResource deltaResource) -> System.Threading.Tasks.ValueTask
+abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataResourceSet expandedResourceSet) -> System.Threading.Tasks.ValueTask
 abstract Microsoft.OData.ODataFormat.CreateInputContextAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataInputContext>
 abstract Microsoft.OData.ODataFormat.CreateOutputContextAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings) -> System.Threading.Tasks.ValueTask<Microsoft.OData.ODataOutputContext>
 abstract Microsoft.OData.ODataFormat.DetectPayloadKindAsync(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings settings) -> System.Threading.Tasks.ValueTask<System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKind>>
@@ -8,41 +20,40 @@ Microsoft.OData.IODataResponseMessageAsync.GetStreamAsync() -> System.Threading.
 Microsoft.OData.IServiceCollectionProvider
 Microsoft.OData.IServiceCollectionProvider.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.Json.DefaultJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
-Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.Json.IJsonWriter.EndStreamValueScope() -> void
-Microsoft.OData.Json.IJsonWriter.EndStreamValueScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndStreamValueScopeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.Json.IJsonWriter.EndTextWriterValueScope() -> void
-Microsoft.OData.Json.IJsonWriter.EndTextWriterValueScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.EndTextWriterValueScopeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.Json.IJsonWriter.FlushAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.StartArrayScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.StartObjectScopeAsync() -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.StartPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartArrayScopeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.StartObjectScopeAsync() -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.StartPaddingFunctionScopeAsync() -> System.Threading.Tasks.ValueTask
 Microsoft.OData.Json.IJsonWriter.StartStreamValueScope() -> System.IO.Stream
-Microsoft.OData.Json.IJsonWriter.StartStreamValueScopeAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+Microsoft.OData.Json.IJsonWriter.StartStreamValueScopeAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 Microsoft.OData.Json.IJsonWriter.StartTextWriterValueScope(string contentType) -> System.IO.TextWriter
-Microsoft.OData.Json.IJsonWriter.StartTextWriterValueScopeAsync(string contentType) -> System.Threading.Tasks.Task<System.IO.TextWriter>
-Microsoft.OData.Json.IJsonWriter.WriteNameAsync(string name) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WritePaddingFunctionNameAsync(string functionName) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteRawValueAsync(string rawValue) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(bool value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte[] value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(decimal value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(double value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(float value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(int value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(long value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.Date value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.TimeOfDay value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(sbyte value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(short value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(string value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateTimeOffset value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.Task
-Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.Task
+Microsoft.OData.Json.IJsonWriter.StartTextWriterValueScopeAsync(string contentType) -> System.Threading.Tasks.ValueTask<System.IO.TextWriter>
+Microsoft.OData.Json.IJsonWriter.WriteNameAsync(string name) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WritePaddingFunctionNameAsync(string functionName) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteRawValueAsync(string rawValue) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(bool value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(byte[] value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(decimal value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(double value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(float value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(int value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(long value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.Date value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(Microsoft.OData.Edm.TimeOfDay value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(sbyte value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(short value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(string value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.DateTimeOffset value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Guid value) -> System.Threading.Tasks.ValueTask
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.Text.Json.JsonElement value) -> System.Threading.Tasks.ValueTask
 Microsoft.OData.Json.IJsonReader.CanStream() -> bool
 Microsoft.OData.Json.IJsonReader.CanStreamAsync() -> System.Threading.Tasks.Task<bool>
 Microsoft.OData.Json.IJsonReader.CreateReadStream() -> System.IO.Stream
@@ -52,6 +63,7 @@ Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tas
 Microsoft.OData.Json.IJsonReader.GetValue() -> object
 Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
 Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
+Microsoft.OData.Json.IJsonWriter.WriteValueAsync(System.TimeSpan value) -> System.Threading.Tasks.ValueTask
 Microsoft.OData.ODataAsynchronousResponseMessage.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 Microsoft.OData.ODataAsynchronousResponseMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationRequestMessage.GetStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
@@ -177,13 +189,9 @@ abstract Microsoft.OData.ODataCollectionReader.Read() -> bool
 abstract Microsoft.OData.ODataCollectionReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
 abstract Microsoft.OData.ODataCollectionReader.State.get -> Microsoft.OData.ODataCollectionReaderState
 abstract Microsoft.OData.ODataCollectionWriter.Flush() -> void
-abstract Microsoft.OData.ODataCollectionWriter.FlushAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataCollectionWriter.WriteEnd() -> void
-abstract Microsoft.OData.ODataCollectionWriter.WriteEndAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataCollectionWriter.WriteItem(object item) -> void
-abstract Microsoft.OData.ODataCollectionWriter.WriteItemAsync(object item) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataCollectionWriter.WriteStart(Microsoft.OData.ODataCollectionStart collectionStart) -> void
-abstract Microsoft.OData.ODataCollectionWriter.WriteStartAsync(Microsoft.OData.ODataCollectionStart collectionStart) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaReader.Item.get -> Microsoft.OData.ODataItem
 abstract Microsoft.OData.ODataDeltaReader.Read() -> bool
 abstract Microsoft.OData.ODataDeltaReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
@@ -192,21 +200,13 @@ abstract Microsoft.OData.ODataDeltaReader.SubState.get -> Microsoft.OData.ODataR
 abstract Microsoft.OData.ODataDeltaWriter.Flush() -> void
 abstract Microsoft.OData.ODataDeltaWriter.FlushAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedEntry(Microsoft.OData.ODataDeltaDeletedEntry deltaDeletedEntry) -> void
-abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedEntryAsync(Microsoft.OData.ODataDeltaDeletedEntry deltaDeletedEntry) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedLink(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> void
-abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaDeletedLinkAsync(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaLink(Microsoft.OData.ODataDeltaLink deltaLink) -> void
-abstract Microsoft.OData.ODataDeltaWriter.WriteDeltaLinkAsync(Microsoft.OData.ODataDeltaLink deltaLink) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaWriter.WriteEnd() -> void
-abstract Microsoft.OData.ODataDeltaWriter.WriteEndAsync() -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataDeltaWriter.WriteStart(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> void
 abstract Microsoft.OData.ODataDeltaWriter.WriteStart(Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo) -> void
 abstract Microsoft.OData.ODataDeltaWriter.WriteStart(Microsoft.OData.ODataResource deltaResource) -> void
 abstract Microsoft.OData.ODataDeltaWriter.WriteStart(Microsoft.OData.ODataResourceSet expandedResourceSet) -> void
-abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> System.Threading.Tasks.Task
-abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo) -> System.Threading.Tasks.Task
-abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataResource deltaResource) -> System.Threading.Tasks.Task
-abstract Microsoft.OData.ODataDeltaWriter.WriteStartAsync(Microsoft.OData.ODataResourceSet expandedResourceSet) -> System.Threading.Tasks.Task
 abstract Microsoft.OData.ODataFormat.CreateInputContext(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings messageReaderSettings) -> Microsoft.OData.ODataInputContext
 abstract Microsoft.OData.ODataFormat.CreateOutputContext(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageWriterSettings messageWriterSettings) -> Microsoft.OData.ODataOutputContext
 abstract Microsoft.OData.ODataFormat.DetectPayloadKind(Microsoft.OData.ODataMessageInfo messageInfo, Microsoft.OData.ODataMessageReaderSettings settings) -> System.Collections.Generic.IEnumerable<Microsoft.OData.ODataPayloadKind>
@@ -2363,27 +2363,27 @@ virtual Microsoft.OData.ODataReader.CreateReadStreamAsync() -> System.Threading.
 virtual Microsoft.OData.ODataReader.CreateTextReader() -> System.IO.TextReader
 virtual Microsoft.OData.ODataReader.CreateTextReaderAsync() -> System.Threading.Tasks.Task<System.IO.TextReader>
 virtual Microsoft.OData.ODataWriter.CreateBinaryWriteStream() -> System.IO.Stream
-virtual Microsoft.OData.ODataWriter.CreateBinaryWriteStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
+virtual Microsoft.OData.ODataWriter.CreateBinaryWriteStreamAsync() -> System.Threading.Tasks.ValueTask<System.IO.Stream>
 virtual Microsoft.OData.ODataWriter.CreateTextWriter() -> System.IO.TextWriter
-virtual Microsoft.OData.ODataWriter.CreateTextWriterAsync() -> System.Threading.Tasks.Task<System.IO.TextWriter>
+virtual Microsoft.OData.ODataWriter.CreateTextWriterAsync() -> System.Threading.Tasks.ValueTask<System.IO.TextWriter>
 virtual Microsoft.OData.ODataWriter.FlushAsync() -> System.Threading.Tasks.Task
 virtual Microsoft.OData.ODataWriter.WriteDeltaDeletedLink(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> void
-virtual Microsoft.OData.ODataWriter.WriteDeltaDeletedLinkAsync(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> System.Threading.Tasks.Task
+virtual Microsoft.OData.ODataWriter.WriteDeltaDeletedLinkAsync(Microsoft.OData.ODataDeltaDeletedLink deltaDeletedLink) -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.ODataWriter.WriteDeltaLink(Microsoft.OData.ODataDeltaLink deltaLink) -> void
-virtual Microsoft.OData.ODataWriter.WriteDeltaLinkAsync(Microsoft.OData.ODataDeltaLink deltaLink) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteEndAsync() -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteEntityReferenceLinkAsync(Microsoft.OData.ODataEntityReferenceLink entityReferenceLink) -> System.Threading.Tasks.Task
+virtual Microsoft.OData.ODataWriter.WriteDeltaLinkAsync(Microsoft.OData.ODataDeltaLink deltaLink) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteEndAsync() -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteEntityReferenceLinkAsync(Microsoft.OData.ODataEntityReferenceLink entityReferenceLink) -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.ODataWriter.WritePrimitive(Microsoft.OData.ODataPrimitiveValue primitiveValue) -> void
-virtual Microsoft.OData.ODataWriter.WritePrimitiveAsync(Microsoft.OData.ODataPrimitiveValue primitiveValue) -> System.Threading.Tasks.Task
+virtual Microsoft.OData.ODataWriter.WritePrimitiveAsync(Microsoft.OData.ODataPrimitiveValue primitiveValue) -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.ODataWriter.WriteStart(Microsoft.OData.ODataDeletedResource deletedResource) -> void
 virtual Microsoft.OData.ODataWriter.WriteStart(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> void
 virtual Microsoft.OData.ODataWriter.WriteStart(Microsoft.OData.ODataPropertyInfo primitiveProperty) -> void
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataDeletedResource deletedResource) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataPropertyInfo primitiveProperty) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataResource resource) -> System.Threading.Tasks.Task
-virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataResourceSet resourceSet) -> System.Threading.Tasks.Task
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataDeletedResource deletedResource) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataDeltaResourceSet deltaResourceSet) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataNestedResourceInfo nestedResourceInfo) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataPropertyInfo primitiveProperty) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataResource resource) -> System.Threading.Tasks.ValueTask
+virtual Microsoft.OData.ODataWriter.WriteStartAsync(Microsoft.OData.ODataResourceSet resourceSet) -> System.Threading.Tasks.ValueTask
 virtual Microsoft.OData.UriParser.ODataUriResolver.EnableCaseInsensitive.get -> bool
 virtual Microsoft.OData.UriParser.ODataUriResolver.EnableCaseInsensitive.set -> void
 virtual Microsoft.OData.UriParser.ODataUriResolver.EnableNoDollarQueryOptions.get -> bool

@@ -58,7 +58,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously starts a scope for writing a stream value.
         /// </summary>
         /// <returns>A task representing the asynchronous operation. The task result contains a stream for writing the stream value.</returns>
-        public async Task<Stream> StartStreamValueScopeAsync()
+        public async ValueTask<Stream> StartStreamValueScopeAsync()
         {
             this.WriteSeparatorIfNecessary();
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously ends a scope for writing a stream value.
         /// </summary>
         /// <returns>A task representing the asynchronous operation.</returns>
-        public async Task EndStreamValueScopeAsync()
+        public async ValueTask EndStreamValueScopeAsync()
         {
             if (this.binaryValueStream != null)
             {

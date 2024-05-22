@@ -23,7 +23,7 @@ namespace Microsoft.OData
         /// <summary>Asynchronously start writing a collection.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="collectionStart">The <see cref="Microsoft.OData.ODataCollectionStart" /> representing the collection.</param>
-        public abstract Task WriteStartAsync(ODataCollectionStart collectionStart);
+        public abstract ValueTask WriteStartAsync(ODataCollectionStart collectionStart);
 
         /// <summary>Write a collection item.</summary>
         /// <param name="item">The collection item to write.</param>
@@ -32,14 +32,14 @@ namespace Microsoft.OData
         /// <summary>Asynchronously write a collection item.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
         /// <param name="item">The collection item to write.</param>
-        public abstract Task WriteItemAsync(object item);
+        public abstract ValueTask WriteItemAsync(object item);
 
         /// <summary>Finishes writing a collection.</summary>
         public abstract void WriteEnd();
 
         /// <summary>Asynchronously finish writing a collection.</summary>
         /// <returns>A task instance that represents the asynchronous write operation.</returns>
-        public abstract Task WriteEndAsync();
+        public abstract ValueTask WriteEndAsync();
 
         /// <summary>Flushes the write buffer to the underlying stream.</summary>
         public abstract void Flush();

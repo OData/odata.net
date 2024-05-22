@@ -170,7 +170,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously start writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task StartPayloadAsync()
+        protected override ValueTask StartPayloadAsync()
         {
             return this.jsonCollectionSerializer.WritePayloadStartAsync();
         }
@@ -179,7 +179,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing an OData payload.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndPayloadAsync()
+        protected override ValueTask EndPayloadAsync()
         {
             return this.jsonCollectionSerializer.WritePayloadEndAsync();
         }
@@ -189,7 +189,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="collectionStart">The <see cref="ODataCollectionStart"/> representing the collection.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task StartCollectionAsync(ODataCollectionStart collectionStart)
+        protected override ValueTask StartCollectionAsync(ODataCollectionStart collectionStart)
         {
             return this.jsonCollectionSerializer.WriteCollectionStartAsync(collectionStart, this.ItemTypeReference);
         }
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously finish writing a collection.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override Task EndCollectionAsync()
+        protected override ValueTask EndCollectionAsync()
         {
             this.jsonCollectionSerializer.ReturnDuplicatePropertyNameChecker(this.DuplicatePropertyNameChecker);
 
@@ -211,7 +211,7 @@ namespace Microsoft.OData.Json
         /// <param name="item">The collection item to write.</param>
         /// <param name="expectedItemTypeReference">The expected type of the collection item or null if no expected item type exists.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        protected override async Task WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemType)
+        protected override async ValueTask WriteCollectionItemAsync(object item, IEdmTypeReference expectedItemType)
         {
             if (item == null)
             {

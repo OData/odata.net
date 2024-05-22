@@ -172,7 +172,7 @@ namespace Microsoft.OData.Json
         /// <param name="propertyName">The name of the property to annotate.</param>
         /// <param name="annotationName">The name of the annotation to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public Task WritePropertyAnnotationNameAsync(string propertyName, string annotationName)
+        public ValueTask WritePropertyAnnotationNameAsync(string propertyName, string annotationName)
         {
             Debug.Assert(this.jsonWriter != null, "this.jsonWriter != null");
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
@@ -188,7 +188,7 @@ namespace Microsoft.OData.Json
         /// </summary>
         /// <param name="annotationName">The name of the instance annotation to write.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        public Task WriteInstanceAnnotationNameAsync(string annotationName)
+        public ValueTask WriteInstanceAnnotationNameAsync(string annotationName)
         {
             Debug.Assert(this.jsonWriter != null, "this.jsonWriter != null");
             Debug.Assert(!string.IsNullOrEmpty(annotationName), "!string.IsNullOrEmpty(annotationName)");

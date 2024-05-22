@@ -350,7 +350,7 @@ namespace Microsoft.OData.Json
         /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         [SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Splitting the code would make the logic harder to understand; class coupling is only slightly above threshold.")]
-        internal async Task WritePropertyAsync(
+        internal async ValueTask WritePropertyAsync(
             ODataProperty property,
             IEdmStructuredType owningType,
             bool isTopLevel,
@@ -440,14 +440,12 @@ namespace Microsoft.OData.Json
                 return;
             }
 
-#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 await this.WriteJsonElementPropertyAsync(jsonElementValue)
                     .ConfigureAwait(false);
                 return;
             }
-#endif
         }
 
 
@@ -460,7 +458,7 @@ namespace Microsoft.OData.Json
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <param name="metadataBuilder">The metadatabuilder for the resource</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WritePropertyInfoAsync(
+        internal async ValueTask WritePropertyInfoAsync(
             ODataPropertyInfo propertyInfo,
             IEdmStructuredType owningType,
             bool isTopLevel,

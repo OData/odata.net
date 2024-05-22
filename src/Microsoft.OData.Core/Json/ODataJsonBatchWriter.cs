@@ -908,7 +908,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes the start boundary for an operation. This is Json start object.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task WriteStartBoundaryForOperationAsync()
+        private ValueTask WriteStartBoundaryForOperationAsync()
         {
             // Start the individual message object
             return this.jsonWriter.StartObjectScopeAsync();
@@ -980,7 +980,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously closes preceding message Json object if any.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private Task EnsurePrecedingMessageIsClosedAsync()
+        private ValueTask EnsurePrecedingMessageIsClosedAsync()
         {
             // There shouldn't be any pending message object.
             Debug.Assert(this.CurrentOperationMessage == null, "this.CurrentOperationMessage == null");
@@ -992,7 +992,7 @@ namespace Microsoft.OData.Json
         /// Always sets the isBatchEnvelopeWritten flag to true before return.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteBatchEnvelopeAsync()
+        private async ValueTask WriteBatchEnvelopeAsync()
         {
             // Start the top level scope
             await this.jsonWriter.StartObjectScopeAsync()
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current request message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingRequestMessageDataAsync()
+        private async ValueTask WritePendingRequestMessageDataAsync()
         {
             Debug.Assert(this.CurrentOperationRequestMessage != null, "this.CurrentOperationRequestMessage != null");
 
@@ -1038,7 +1038,7 @@ namespace Microsoft.OData.Json
         /// Asynchronously writes pending data for the current response message.
         /// </summary>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WritePendingResponseMessageDataAsync()
+        private async ValueTask WritePendingResponseMessageDataAsync()
         {
             Debug.Assert(this.JsonOutputContext.WritingResponse, "If the response message is available we must be writing response.");
             Debug.Assert(this.CurrentOperationResponseMessage != null, "this.CurrentOperationResponseMessage != null");
@@ -1093,7 +1093,7 @@ namespace Microsoft.OData.Json
         /// The format of operation Request-URI, which could be AbsoluteUri, AbsoluteResourcePathAndHost, or RelativeResourcePath.
         /// </param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private async Task WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
+        private async ValueTask WriteRequestUriAsync(Uri uri, BatchPayloadUriOption payloadUriOption)
         {
             await this.jsonWriter.WriteNameAsync(PropertyUrl)
                 .ConfigureAwait(false);

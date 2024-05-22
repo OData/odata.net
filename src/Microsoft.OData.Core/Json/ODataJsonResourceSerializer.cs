@@ -567,7 +567,7 @@ namespace Microsoft.OData.Json
         /// <param name="nestedResourceInfo">The navigation link to write the metadata for.</param>
         /// <param name="duplicatePropertyNameChecker">The DuplicatePropertyNameChecker to use.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        internal async Task WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
+        internal async ValueTask WriteNavigationLinkMetadataAsync(ODataNestedResourceInfo nestedResourceInfo, IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
             Debug.Assert(nestedResourceInfo != null, "nestedResourceInfo != null");
             Debug.Assert(!string.IsNullOrEmpty(nestedResourceInfo.Name), "The nested resource info Name should have been validated by now.");
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Json
         /// <param name="parentContextUrlInfo">The parent contextUrlInfo.</param>
         /// <returns>A task that represents the asynchronous write operation. 
         /// The value of the TResult parameter contains the created context uri info.</returns>
-        internal Task<ODataContextUrlInfo> WriteDeltaContextUriAsync(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
+        internal ValueTask<ODataContextUrlInfo> WriteDeltaContextUriAsync(ODataResourceTypeContext typeContext, ODataDeltaKind kind, ODataContextUrlInfo parentContextUrlInfo = null)
         {
             ODataUri odataUri = this.JsonOutputContext.MessageWriterSettings.ODataUri;
 
