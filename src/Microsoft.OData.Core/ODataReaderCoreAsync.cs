@@ -40,135 +40,135 @@ namespace Microsoft.OData
         /// Implementation of the reader logic when in state 'Start'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtResourceSetStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtResourceSetStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'ResourceSetEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtResourceSetEndImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtResourceSetEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtResourceStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtResourceStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntryEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtResourceEndImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtResourceEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtDeletedResourceEndImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtDeletedResourceEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Primitive'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtPrimitiveImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtPrimitiveImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtPrimitiveImplementation);
+            return ValueTask.FromResult(this.ReadAtPrimitiveImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'PropertyInfo'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtNestedPropertyInfoImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtNestedPropertyInfoImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtNestedPropertyInfoImplementation);
+            return ValueTask.FromResult(this.ReadAtNestedPropertyInfoImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Stream'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtStreamImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtStreamImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtStreamImplementation);
+            return ValueTask.FromResult(this.ReadAtStreamImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtNestedResourceInfoStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtNestedResourceInfoStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'NestedResourceInfoEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtNestedResourceInfoEndImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtNestedResourceInfoEndImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'EntityReferenceLink'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtEntityReferenceLinkAsync();
+        protected abstract ValueTask<bool> ReadAtEntityReferenceLinkAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaResourceSetStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtDeltaResourceSetStartImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtDeltaResourceSetStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetStartImplementation);
+            return ValueTask.FromResult(this.ReadAtDeltaResourceSetStartImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaResourceSetEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtDeltaResourceSetEndImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtDeltaResourceSetEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaResourceSetEndImplementation);
+            return ValueTask.FromResult(this.ReadAtDeltaResourceSetEndImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeletedResourceStart'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtDeletedResourceStartImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtDeletedResourceStartImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceStartImplementation);
+            return ValueTask.FromResult(this.ReadAtDeletedResourceStartImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeletedResourceEnd'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadDeletedResourceEndImplementationAsync()
+        protected virtual ValueTask<bool> ReadDeletedResourceEndImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeletedResourceEndImplementation);
+            return ValueTask.FromResult(this.ReadAtDeletedResourceEndImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaLink'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtDeltaLinkImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtDeltaLinkImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaLinkImplementation);
+            return ValueTask.FromResult(this.ReadAtDeltaLinkImplementation());
         }
 
         /// <summary>
         /// Implementation of the reader logic when in state 'DeltaDeletedLink'.
         /// </summary>
         /// <returns>A task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected virtual Task<bool> ReadAtDeltaDeletedLinkImplementationAsync()
+        protected virtual ValueTask<bool> ReadAtDeltaDeletedLinkImplementationAsync()
         {
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadAtDeltaDeletedLinkImplementation);
+            return ValueTask.FromResult(this.ReadAtDeltaDeletedLinkImplementation());
         }
 
         /// <summary>
@@ -177,111 +177,74 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        protected override async Task<bool> ReadAsynchronously()
+        protected override ValueTask<bool> ReadAsynchronously()
         {
-            bool result;
-
             switch (this.State)
             {
                 case ODataReaderState.Start:
-                    result = await this.ReadAtStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtStartImplementationAsync();
 
                 case ODataReaderState.ResourceSetStart:
-                    result = await this.ReadAtResourceSetStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtResourceSetStartImplementationAsync();
 
                 case ODataReaderState.ResourceSetEnd:
-                    result = await this.ReadAtResourceSetEndImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtResourceSetEndImplementationAsync();
 
                 case ODataReaderState.ResourceStart:
                     this.IncreaseResourceDepth();
-                    result = await this.ReadAtResourceStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtResourceStartImplementationAsync();
 
                 case ODataReaderState.ResourceEnd:
                     this.DecreaseResourceDepth();
-                    result = await this.ReadAtResourceEndImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtResourceEndImplementationAsync();
 
                 case ODataReaderState.Primitive:
-                    result = await this.ReadAtPrimitiveImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtPrimitiveImplementationAsync();
 
                 case ODataReaderState.Stream:
-                    result = await this.ReadAtStreamImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtStreamImplementationAsync();
 
                 case ODataReaderState.NestedProperty:
-                    result = await this.ReadAtNestedPropertyInfoImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtNestedPropertyInfoImplementationAsync();
 
                 case ODataReaderState.NestedResourceInfoStart:
-                    result = await this.ReadAtNestedResourceInfoStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtNestedResourceInfoStartImplementationAsync();
 
                 case ODataReaderState.NestedResourceInfoEnd:
-                    result = await this.ReadAtNestedResourceInfoEndImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtNestedResourceInfoEndImplementationAsync();
 
                 case ODataReaderState.EntityReferenceLink:
-                    result = await this.ReadAtEntityReferenceLinkAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtEntityReferenceLinkAsync();
 
                 case ODataReaderState.DeltaResourceSetStart:
-                    result = await this.ReadAtDeltaResourceSetStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeltaResourceSetStartImplementationAsync();
 
                 case ODataReaderState.DeltaResourceSetEnd:
-                    result = await this.ReadAtDeltaResourceSetEndImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeltaResourceSetEndImplementationAsync();
 
                 case ODataReaderState.DeletedResourceStart:
                     this.IncreaseResourceDepth();
-                    result = await this.ReadAtDeletedResourceStartImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeletedResourceStartImplementationAsync();
 
                 case ODataReaderState.DeletedResourceEnd:
                     this.DecreaseResourceDepth();
-                    result = await this.ReadAtDeletedResourceEndImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeletedResourceEndImplementationAsync();
 
                 case ODataReaderState.DeltaLink:
-                    result = await this.ReadAtDeltaLinkImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeltaLinkImplementationAsync();
 
                 case ODataReaderState.DeltaDeletedLink:
-                    result = await this.ReadAtDeltaDeletedLinkImplementationAsync()
-                        .ConfigureAwait(false);
-                    break;
+                    return this.ReadAtDeltaDeletedLinkImplementationAsync();
 
                 case ODataReaderState.Exception:    // fall through
                 case ODataReaderState.Completed:
-                    throw new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State));
+                    return ValueTask.FromException<bool>(new ODataException(Strings.ODataReaderCore_NoReadCallsAllowed(this.State)));
 
                 default:
                     Debug.Assert(false, "Unsupported reader state " + this.State + " detected.");
-                    throw new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously));
+                    return ValueTask.FromException<bool>(
+                        new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataReaderCoreAsync_ReadAsynchronously)));
             }
-
-            return result;
         }
 
         /// <summary>
@@ -292,7 +255,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
         /// </returns>
-        protected virtual Task<Stream> CreateReadStreamImplementationAsync()
+        protected virtual ValueTask<Stream> CreateReadStreamImplementationAsync()
         {
             throw new NotImplementedException();
         }
@@ -305,7 +268,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property..
         /// </returns>
-        protected virtual Task<TextReader> CreateTextReaderImplementationAsync()
+        protected virtual ValueTask<TextReader> CreateTextReaderImplementationAsync()
         {
             throw new NotImplementedException();
         }
@@ -315,7 +278,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="Stream"/> for reading the stream property.
         /// </returns>
-        public override async Task<Stream> CreateReadStreamAsync()
+        public override async ValueTask<Stream> CreateReadStreamAsync()
         {
             if (this.State != ODataReaderState.Stream)
             {
@@ -341,7 +304,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains a <see cref="TextReader"/> for reading the string property.
         /// </returns>
-        public override async Task<TextReader> CreateTextReaderAsync()
+        public override async ValueTask<TextReader> CreateTextReaderAsync()
         {
             if (this.State != ODataReaderState.Stream)
             {
@@ -372,7 +335,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
         /// </returns>
-        private async Task<TResult> InterceptExceptionAsync<TResult>(Func<ODataReaderCoreAsync, Task<TResult>> action)
+        private async ValueTask<TResult> InterceptExceptionAsync<TResult>(Func<ODataReaderCoreAsync, ValueTask<TResult>> action)
         {
             try
             {

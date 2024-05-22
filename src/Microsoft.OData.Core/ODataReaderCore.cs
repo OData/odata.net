@@ -394,7 +394,7 @@ namespace Microsoft.OData
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public override sealed Task<bool> ReadAsync()
+        public override sealed ValueTask<bool> ReadAsync()
         {
             this.VerifyCanRead(false);
             return this.InterceptExceptionAsync(thisParam => thisParam.ReadAsynchronously());
@@ -803,12 +803,12 @@ namespace Microsoft.OData
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
         /// </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        protected virtual Task<bool> ReadAsynchronously()
+        protected virtual ValueTask<bool> ReadAsynchronously()
         {
             // We are reading from the fully buffered read stream here; thus it is ok
             // to use synchronous reads and then return a completed task
             // NOTE: once we switch to fully async reading this will have to change
-            return TaskUtils.GetTaskForSynchronousOperation<bool>(this.ReadImplementation);
+            return ValueTask.FromResult(this.ReadImplementation());
         }
 
         /// <summary>
@@ -959,7 +959,7 @@ namespace Microsoft.OData
         /// A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains the result of executing the <paramref name="action"/>.
         /// </returns>
-        private async Task<T> InterceptExceptionAsync<T>(Func<ODataReaderCore, Task<T>> action)
+        private async ValueTask<T> InterceptExceptionAsync<T>(Func<ODataReaderCore, ValueTask<T>> action)
         {
             try
             {

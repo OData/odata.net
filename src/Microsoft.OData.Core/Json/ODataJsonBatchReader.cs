@@ -370,7 +370,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the batch reader state after the read.
         /// </returns>
-        protected override async Task<ODataBatchReaderState> ReadAtStartImplementationAsync()
+        protected override async ValueTask<ODataBatchReaderState> ReadAtStartImplementationAsync()
         {
             Debug.Assert(this.State == ODataBatchReaderState.Initial, $"{nameof(this.State)} == {nameof(ODataBatchReaderState.Initial)}");
 
@@ -417,7 +417,7 @@ namespace Microsoft.OData.Json
         /// A task that represents the asynchronous read operation.
         /// The value of the TResult parameter contains the batch reader state after the read.
         /// </returns>
-        protected override async Task<ODataBatchReaderState> ReadAtOperationImplementationAsync()
+        protected override async ValueTask<ODataBatchReaderState> ReadAtOperationImplementationAsync()
         {
             if (this.JsonInputContext.JsonReader.NodeType != JsonNodeType.StartObject)
             {

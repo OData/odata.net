@@ -39,6 +39,6 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously reads the next <see cref="Microsoft.OData.ODataItem" /> from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public abstract Task<bool> ReadAsync();
+        public abstract ValueTask<bool> ReadAsync();
     }
 }

@@ -36,25 +36,25 @@ namespace Microsoft.OData
         /// Implementation of the collection reader logic when in state 'Start'.
         /// </summary>
         /// <returns>Task which returns true if more items can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionStart'.
         /// </summary>
         /// <returns>Task which returns true if more nodes can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtCollectionStartImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtCollectionStartImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'Value'.
         /// </summary>
         /// <returns>Task which returns true if more nodes can be read from the reader; otherwise false.</returns>
-        protected abstract Task<bool> ReadAtValueImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtValueImplementationAsync();
 
         /// <summary>
         /// Implementation of the reader logic when in state 'CollectionEnd'.
         /// </summary>
         /// <returns>Task which should return false since no more nodes can be read from the reader after the collection ends.</returns>
-        protected abstract Task<bool> ReadAtCollectionEndImplementationAsync();
+        protected abstract ValueTask<bool> ReadAtCollectionEndImplementationAsync();
 
         /// <summary>
         /// Asynchronously reads the next <see cref="ODataItem"/> from the message payload.
@@ -62,7 +62,7 @@ namespace Microsoft.OData
         /// <returns>A task that when completed indicates whether more items were read.</returns>
         /// <remarks>The base class already implements this but only for fully synchronous readers, the implementation here
         /// allows fully asynchronous readers.</remarks>
-        protected override Task<bool> ReadAsynchronously()
+        protected override ValueTask<bool> ReadAsynchronously()
         {
             switch (this.State)
             {
@@ -80,7 +80,7 @@ namespace Microsoft.OData
 
                 default:
                     Debug.Assert(false, "Unsupported collection reader state " + this.State + " detected.");
-                    return TaskUtils.GetFaultedTask<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
+                    return ValueTask.FromException<bool>(new ODataException(Strings.General_InternalError(InternalErrorCodes.ODataCollectionReaderCoreAsync_ReadAsynchronously)));
             }
         }
     }

@@ -75,7 +75,7 @@ namespace Microsoft.OData
 
         /// <summary> Asynchronously reads the next item from the message payload. </summary>
         /// <returns>A task that when completed indicates whether more items were read.</returns>
-        public abstract Task<bool> ReadAsync();
+        public abstract ValueTask<bool> ReadAsync();
 
         /// <summary>
         /// This method asynchronously creates an <see cref="ODataReader"/> to read the resource value when the state is ODataParameterReaderState.Resource.
@@ -88,7 +88,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Resource, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public virtual Task<ODataReader> CreateResourceReaderAsync()
+        public virtual ValueTask<ODataReader> CreateResourceReaderAsync()
         {
             throw new NotImplementedException();
         }
@@ -104,7 +104,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.ResourceSet, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public virtual Task<ODataReader> CreateResourceSetReaderAsync()
+        public virtual ValueTask<ODataReader> CreateResourceSetReaderAsync()
         {
             throw new NotImplementedException();
         }
@@ -120,7 +120,7 @@ namespace Microsoft.OData
         /// When the state is ODataParameterReaderState.Collection, the Name property of the <see cref="ODataParameterReader"/> returns the name of the parameter
         /// and the Value property of the <see cref="ODataParameterReader"/> returns null. Calling this method in any other state will cause an ODataException to be thrown.
         /// </remarks>
-        public virtual Task<ODataCollectionReader> CreateCollectionReaderAsync()
+        public virtual ValueTask<ODataCollectionReader> CreateCollectionReaderAsync()
         {
             throw new NotImplementedException();
         }
