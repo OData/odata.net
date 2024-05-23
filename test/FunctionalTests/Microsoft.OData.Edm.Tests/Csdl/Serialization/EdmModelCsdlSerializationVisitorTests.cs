@@ -6,7 +6,7 @@
 
 using System;
 using System.IO;
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
 using System.Text.Json;
 using System.Text.Encodings.Web;
 #endif
@@ -1666,7 +1666,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, new EdmFloatingConstant(3.14f));
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
                 @"<Annotation Term=""UI.FloatWidth"" Float=""3.140000104904175"" />");
@@ -2052,7 +2052,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
         internal void VisitAndVerifyJson(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true, bool wrapper = true)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
             Version edmxVersion = this.model.GetEdmxVersion();
 
             using (MemoryStream memStream = new MemoryStream())

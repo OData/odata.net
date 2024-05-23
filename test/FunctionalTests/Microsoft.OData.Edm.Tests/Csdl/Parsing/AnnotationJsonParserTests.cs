@@ -4,7 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing;

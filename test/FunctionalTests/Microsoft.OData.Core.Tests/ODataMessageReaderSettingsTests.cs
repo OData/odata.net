@@ -154,7 +154,7 @@ namespace Microsoft.OData.Tests
             copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
         }
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void ODataMessageReaderSettingsErrorTest()
         {

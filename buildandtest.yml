@@ -4,10 +4,12 @@ steps:
     versionSpec: '6.5.0'
 
 - task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 1.0.4'
   inputs:
     version: '1.0.4'
     
 - task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 2.1.3'
   inputs:
     version: '2.1.3'
  
@@ -22,13 +24,14 @@ steps:
       $publish.GacInstall("$(gacUtil)")
 
 - task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 2.1.x'
   inputs:
     version: '2.1.x'
 
 - task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 3.1.x'
   inputs:
     version: '3.1.x'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
@@ -54,3 +57,16 @@ steps:
     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
+
+- task: UseDotNet@2
+  displayName: 'Use .NET Core SDK 8.x'
+  inputs:
+    version: '8.x'
+
+- task: DotNetCoreCLI@2
+  displayName: 'Microsoft.OData.Core.Tests for NET 8.0'
+  inputs:
+    command: 'test'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    projects: |      
+      $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.Net8.csproj

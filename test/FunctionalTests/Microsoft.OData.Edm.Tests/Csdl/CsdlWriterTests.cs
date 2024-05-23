@@ -10,7 +10,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
 using System.Text.Encodings.Web;
 using System.Text.Json;
 #endif
@@ -2853,7 +2853,7 @@ var v40Json =
 
         internal void WriteAndVerifyJson(IEdmModel model, string expected, bool indented = true, bool isIeee754Compatible = false)
         {
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
             using (MemoryStream memStream = new MemoryStream())
             {
                 JsonWriterOptions options = new JsonWriterOptions

@@ -887,7 +887,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParsePath("Pet4Set(102m)/").LastSegment.ShouldBeKeySegment(new KeyValuePair<string, object>("ID", 102M));
         }
 
-#if !NETCOREAPP3_1
+#if !NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void EntitySetKeyWithUnmatchType()
         {
@@ -950,7 +950,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             PathFunctionalTestsUtil.RunParsePath("GetPet3(id=1.0099999904632568)").LastSegment.ShouldBeOperationImportSegment(HardCodedTestModel.GetFunctionImportForGetPet3()).ShouldHaveParameterCount(1).ShouldHaveConstantParameter("id", 1.0099999904632568D);
         }
 
-#if !NETCOREAPP3_1
+#if !NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void FunctionParameterSinglePrecision()
         {
