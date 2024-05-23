@@ -213,7 +213,8 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyOpenAddress/City))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
+
 
             ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
