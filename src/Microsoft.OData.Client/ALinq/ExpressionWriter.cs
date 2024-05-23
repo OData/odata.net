@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
             this.builder = new StringBuilder();
             this.expressionStack = new Stack<Expression>();
             this.expressionStack.Push(null);
-            this.uriVersion = Util.ODataVersion4;
+            this.uriVersion = context.MaxProtocolVersionAsVersion;
             this.scopeCount = 0;
             this.writingFunctionsInQuery = false;
         }
