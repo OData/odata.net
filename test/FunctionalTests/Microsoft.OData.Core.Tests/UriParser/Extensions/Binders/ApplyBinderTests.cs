@@ -104,8 +104,8 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         public void BindApplyWithAggregateAndFilterShouldReturnApplyClause()
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("aggregate(StockQuantity with sum as TotalPrice)/filter(TotalPrice eq 100)");
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -185,9 +185,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/City))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -216,7 +216,7 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -242,9 +242,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/FastestOwner/FirstName))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -274,9 +274,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/NextHome/City))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -307,9 +307,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyFavoritePainting/ArtistAddress/City))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -340,9 +340,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/PostBoxPainting/Artist))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -373,9 +373,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyDog/LionWhoAteMe/LionHeartbeat/Frequency))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -410,9 +410,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/NextHome/PostBoxPainting/Artist))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -447,9 +447,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyAddress/PostBoxPainting/Owner/MyAddress/City))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -488,9 +488,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
         {
             IEnumerable<QueryToken> tokens = _parser.ParseApply("groupby((MyFavoritePainting/ArtistAddress/NextHome/PostBoxPainting/Artist))");
 
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -580,9 +580,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             var tokens = _parser.ParseApply("groupby((ID, SSN), aggregate(LifeTime with sum as TotalLife))/compute(TotalLife as TotalLife2)");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             var actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -600,9 +600,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
             var tokens = _parser.ParseApply("groupby((MyDog/Color, MyDog/Breed))/groupby((MyDog/Color), aggregate(MyDog/Breed with max as MaxBreed))");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             var actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -619,9 +619,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "groupby((ID, SSN, LifeTime))/aggregate(LifeTime with sum as TotalLife)/groupby((TotalLife))/aggregate(TotalLife with sum as TotalTotalLife)");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -668,9 +668,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "groupby((LifeTime),aggregate(MyPaintings($count as Count)))");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -693,9 +693,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "aggregate(MyPaintings(Value with sum as TotalValue))");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -715,9 +715,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "expand(MyPaintings, filter(FrameColor eq 'Red'))/groupby((LifeTime),aggregate(MyPaintings($count as Count)))");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -746,9 +746,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "expand(MyPaintings, filter(FrameColor eq 'Red'), expand(Owner, filter(Name eq 'Me')))");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState, V4configuration, new ODataPathInfo(HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
@@ -773,9 +773,9 @@ namespace Microsoft.OData.Tests.UriParser.Extensions.Binders
                     "groupby((ID))/aggregate($count as Count)");
 
             BindingState state = new BindingState(_configuration);
-            MetadataBinder metadataBiner = new MetadataBinder(_bindingState);
+            MetadataBinder metadataBinder = new MetadataBinder(_bindingState);
 
-            ApplyBinder binder = new ApplyBinder(metadataBiner.Bind, _bindingState);
+            ApplyBinder binder = new ApplyBinder(metadataBinder.Bind, _bindingState);
             ApplyClause actual = binder.BindApply(tokens);
 
             Assert.NotNull(actual);
