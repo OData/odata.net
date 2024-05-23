@@ -3,7 +3,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <AssemblyName>Microsoft.OData.Core.Tests</AssemblyName>
-    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1</TargetFrameworks>
+    <TargetFrameworks>net452;netcoreapp1.1;netcoreapp2.1;netcoreapp3.1;net8.0</TargetFrameworks>
     <FileUpgradeFlags>40</FileUpgradeFlags>
     <OldToolsVersion>2.0</OldToolsVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -20,11 +20,11 @@
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1'">
-    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP;NETCOREAPP3_1</DefineConstants>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net8.0'">
+    <DefineConstants>$(DefineConstants);NETCOREAPP3_1_OR_GREATER;NETCOREAPP</DefineConstants>
   </PropertyGroup>
   
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp2.1' or '$(TargetFramework)' == 'netcoreapp3.1' or '$(TargetFramework)' == 'net8.0'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
   </ItemGroup>
 
