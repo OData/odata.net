@@ -5,12 +5,8 @@ steps:
 
 - task: UseDotNet@2
   inputs:
-    version: '1.0.4'
-    
-- task: UseDotNet@2
-  inputs:
-    version: '2.1.3'
- 
+    version: '8.x'
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -20,23 +16,22 @@ steps:
       [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
+- task: UseDotNet@2
+  inputs:
+    version: '8.x'
 
+# .NET Core App 2.1 is required to run the ESRP code signing task
 - task: UseDotNet@2
   inputs:
     version: '2.1.x'
-
-- task: UseDotNet@2
-  inputs:
-    version: '3.1.x'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
   inputs:
     command: 'build'
-    arguments: '--configuration $(buildConfiguration) --no-incremental'
+    arguments: '--configuration $(BuildConfiguration) --no-incremental'
     projects: |
-     $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
+     $(Build.SourcesDirectory)\sln\OData.sln
 
 # TODO: the original pipeline tested against OData.Pipeline.sln, which includes e2e tests.
 # e2e tests failed to run after changes to the solution to support and retargetting to .net8.0 and .net48.
@@ -45,7 +40,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.sln
 
