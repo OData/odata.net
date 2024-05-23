@@ -17,21 +17,25 @@ namespace Microsoft.OData.UriParser
 
         public ODataPathInfo(ODataPath odataPath)
         {
-            ODataPathSegment targetSegment = odataPath.LastSegment;
-
-            if (targetSegment != null)
+            ODataPathSegment lastSegment = odataPath.LastSegment;
+            ODataPathSegment previous = null;
+            var segs = odataPath.GetEnumerator();
+            int count = 0;
+            while (++count < odataPath.Count && segs.MoveNext())
             {
-                // use next to last segment if the last one is Key or Count Segment
-                if (targetSegment is KeySegment || targetSegment is CountSegment)
+            }
+
+            previous = segs.Current;
+            if (lastSegment != null)
+            {
+                // use previous segment if the last one is Key or Count Segment
+                if (lastSegment is KeySegment || lastSegment is CountSegment)
                 {
-                    if (odataPath.Count > 1)
-                    {
-                        targetSegment = odataPath.Segments[odataPath.Count - 2];
-                    }
+                    lastSegment = previous;
                 }
 
-                this.targetNavigationSource = targetSegment.TargetEdmNavigationSource;
-                this.targetEdmType = targetSegment.EdmType;
+                this.targetNavigationSource = lastSegment.TargetEdmNavigationSource;
+                this.targetEdmType = lastSegment.EdmType;
                 if (this.targetEdmType != null)
                 {
                     IEdmCollectionType collectionType = this.targetEdmType as IEdmCollectionType;
