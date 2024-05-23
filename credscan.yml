@@ -23,9 +23,9 @@ steps:
   inputs:
     InputType: Basic
     AnalyzeTarget: |
-      $(ProductBinPath1)\**\$(mainDll1)
+      $(productBinPathEdm)\**\$(mainDllEdm)
     AnalyzeSymPath: |
-      $(ProductBinPath1)
+      $(productBinPathEdm)
     AnalyzeVerbose: true
     AnalyzeHashes: true
     AnalyzeEnvironment: true
@@ -35,9 +35,9 @@ steps:
   inputs:
     InputType: Basic
     AnalyzeTarget: |
-      $(ProductBinPath2)\**\$(mainDll2)
+      $(productBinPathCore)\**\$(mainDllCore)
     AnalyzeSymPath: |
-      $(ProductBinPath2)
+      $(productBinPathCore)
     AnalyzeVerbose: true
     AnalyzeHashes: true
     AnalyzeEnvironment: true
@@ -47,9 +47,9 @@ steps:
   inputs:
     InputType: Basic
     AnalyzeTarget: |
-      $(ProductBinPath3)\**\$(mainDll3)
+      $(productBinPathSpatial)\**\$(mainDllSpatial)
     AnalyzeSymPath: |
-      $(ProductBinPath3)
+      $(productBinPathSpatial)
     AnalyzeVerbose: true
     AnalyzeHashes: true
     AnalyzeEnvironment: true
@@ -59,9 +59,9 @@ steps:
   inputs:
     InputType: Basic
     AnalyzeTarget: |
-      $(ProductBinPath4)\**\$(mainDll4)
+      $(productBinPathClient)\**\$(mainDllClient)
     AnalyzeSymPath: |
-      $(ProductBinPath4)
+      $(productBinPathClient)
     AnalyzeVerbose: true
     AnalyzeHashes: true
     AnalyzeEnvironment: true

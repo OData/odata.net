@@ -218,7 +218,7 @@ namespace Microsoft.OData.Edm
 
             if (elementEdmType != null)
             {
-                return schemaType.AsElementType().IsOrInheritsFrom(elementEdmType);
+                return schemaType.AsElementType().IsOrInheritsFrom(elementEdmType.AsElementType());
             }
 
             return false;
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Edm
 
             IEdmTypeReference typeReference = edmProperty.Type;
 
-            IEdmType edmType = typeReference.Definition;
+            IEdmType edmType = typeReference.Definition.AsElementType();
 
             if (edmType is IEdmStructuredType structuredType)
             {

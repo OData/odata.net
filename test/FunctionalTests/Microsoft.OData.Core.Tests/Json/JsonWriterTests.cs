@@ -365,6 +365,125 @@ namespace Microsoft.OData.Tests.Json
                 (jsonWriter) => jsonWriter.WriteValue("foo\tbar"));
         }
 
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreams_NonAsciiCharacters_ToOutput(string contentType)
+        {
+            string input = "😊😊😊😊😊😊😊😊";
+            string expectedOutput = "😊😊😊😊😊😊😊😊";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8) as IJsonStreamWriter;
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteSpecialCharsInChunksOfOddStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStringsWithSpecialCharactersToOutput(string contentType)
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength);
+
+            // Append special characters to the input string
+            input += "U+1F600";
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8) as IJsonStreamWriter;
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteLargeStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{input}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStrings_WithOnlySpecialCharacters_ToOutput(string contentType)
+        {
+            string input = "\n\n\n\n\"\"\n\n\n\n\"\"";
+            string expectedOutput = "\\n\\n\\n\\n\\\"\\\"\\n\\n\\n\\n\\\"\\\"";
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8) as IJsonStreamWriter;
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteSpecialCharsInChunksOfOddStringInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("text/plain")]
+        [InlineData("text/html")]
+        public void CorrectlyStreamsLargeStringsToOutput(string contentType)
+        {
+            int inputLength = 1024 * 1024; // 1MB
+            string input = new string('a', inputLength);
+            string expectedOutput = ExpectedOutPutStringWithSpecialCharacters(input);
+
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8) as IJsonStreamWriter;
+
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+
+                WriteLargeStringsWithSpecialCharactersInChunks(tw, input);
+
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal($"\"{expectedOutput}\"", rawOutput);
+                }
+            }
+        }
+
         private void SetupJsonWriterRunTestAndVerifyRent(Action<JsonWriter> action)
         {
             var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);

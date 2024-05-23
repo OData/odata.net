@@ -6,7 +6,7 @@
     <tags>wcf data services odata odatalib edmlib spatial ado.net ef entity framework open protocol wcfds wcfdataservices dataservices</tags>
     <version>$VersionFullSemantic$-Nightly$NightlyBuildVersion$</version>
     <authors>Microsoft</authors>
-    <licenseUrl>http://go.microsoft.com/fwlink/?linkid=833178</licenseUrl>
+    <license type="expression">MIT</license>
     <projectUrl>http://odata.github.io/</projectUrl>
     <iconUrl>http://static.tumblr.com/hgchgxz/9ualgdf98/icon.png</iconUrl>
     <requireLicenseAcceptance>true</requireLicenseAcceptance>
@@ -23,6 +23,7 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
         <dependency id="Microsoft.Spatial" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
         <dependency id="Microsoft.OData.Edm" version="[$VersionFullSemantic$-Nightly$NightlyBuildVersion$]" />
         <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" />
+        <dependency id="Microsoft.Extensions.ObjectPool" version="6.0.3" />
       </group>
     </dependencies>
   </metadata>

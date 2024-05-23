@@ -157,15 +157,25 @@ namespace System.Data.Test.Astoria
 
         private static string FindEnlistmentRootHeuristically()
         {
-            // First use environment variable if defined by user.
-            string result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
+
+            // First, use environment variable defined in build agents
+            // See: https://learn.microsoft.com/en-us/azure/devops/pipelines/build/variables
+            string result = Environment.GetEnvironmentVariable("BUILD_SOURCESDIRECTORY");
             if (!string.IsNullOrEmpty(result))
             {
                 return result;
             }
 
-            // Second use current assembly location to determine.
+            // Second use environment variable if defined by user.
+            result = Environment.GetEnvironmentVariable("ENLISTMENT_ROOT");
+            if (!string.IsNullOrEmpty(result))
+            {
+                return result;
+            }
+
+            // Third use current assembly location to determine.
             string assemblyPath = Path.GetDirectoryName(Directory.GetCurrentDirectory());
+
             if (string.IsNullOrEmpty(assemblyPath))
             {
                 return null;
@@ -191,8 +201,6 @@ namespace System.Data.Test.Astoria
                 }
             }
 
-            
-
             if (string.IsNullOrEmpty(result))
             {
                 // Unable to determine ENLISTMENT_ROOT from these traits folders.
@@ -208,7 +216,7 @@ namespace System.Data.Test.Astoria
                     // The result seems not be a valid enlistment root containing some necessary subfolders.
                     return null;
                 }
-                
+
             }
 
             // At last we find ENLISTMENT_ROOT.
