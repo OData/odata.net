@@ -50,7 +50,7 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
