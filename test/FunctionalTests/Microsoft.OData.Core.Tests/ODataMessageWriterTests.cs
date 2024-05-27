@@ -125,7 +125,7 @@ namespace Microsoft.OData.Tests
             {
                 IServiceProvider container = CreateTestServiceContainer(services =>
                 {
-                    services.AddSingleton(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                    services.AddSingleton(sp => new ODataJsonWriterFactory(stringEscapeOption.Value));
                 });
 
                 request.ServiceProvider = container;
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Tests
         {
             var settings = new ODataMessageWriterSettings();
             IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
-            services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
+            services.AddSingleton<IJsonWriterFactory>(sp => new ODataJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);

@@ -11,26 +11,26 @@ using System.Text;
 namespace Microsoft.OData.Json
 {
     /// <summary>
-    /// Default JSON writer factory
+    /// JSON writer factory
     /// </summary>
     [CLSCompliant(false)]
-    public sealed class DefaultJsonWriterFactory : IJsonWriterFactory
+    public sealed class ODataJsonWriterFactory : IJsonWriterFactory
     {
         private ODataStringEscapeOption stringEscapeOption;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultJsonWriterFactory" />.
+        /// Initializes a new instance of the <see cref="ODataJsonWriterFactory" />.
         /// </summary>
-        public DefaultJsonWriterFactory()
+        public ODataJsonWriterFactory()
             : this(ODataStringEscapeOption.EscapeNonAscii)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="DefaultJsonWriterFactory" />.
+        /// Initializes a new instance of the <see cref="ODataJsonWriterFactory" />.
         /// </summary>
         /// <param name="stringEscapeOption">The string escape option.</param>
-        public DefaultJsonWriterFactory(ODataStringEscapeOption stringEscapeOption)
+        public ODataJsonWriterFactory(ODataStringEscapeOption stringEscapeOption)
         {
             this.stringEscapeOption = stringEscapeOption;
         }

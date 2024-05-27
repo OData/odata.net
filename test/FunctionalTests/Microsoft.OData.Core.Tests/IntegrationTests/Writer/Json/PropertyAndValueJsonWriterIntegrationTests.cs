@@ -566,7 +566,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             if (stringEscapeOption != null)
             {
                 IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
-                services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                services.AddSingleton<IJsonWriterFactory>(sp => new ODataJsonWriterFactory(stringEscapeOption.Value));
                 message.ServiceProvider = services.BuildServiceProvider();
             }
 

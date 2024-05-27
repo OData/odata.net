@@ -555,7 +555,7 @@ namespace Microsoft.OData.Tests.Json
             var messageInfo = CreateMessageInfo(this.model, /*synchronous*/ true, /*writingResponse*/ true);
             messageInfo.ServiceProvider = ServiceProviderHelper.BuildServiceProvider(builder =>
             {
-                builder.AddSingleton<IJsonWriterFactory>(_ => new DefaultJsonWriterFactory());
+                builder.AddSingleton<IJsonWriterFactory>(_ => new ODataJsonWriterFactory());
             });
 
             var jsonOutputContext = new ODataJsonOutputContext(messageInfo, this.messageWriterSettings);
