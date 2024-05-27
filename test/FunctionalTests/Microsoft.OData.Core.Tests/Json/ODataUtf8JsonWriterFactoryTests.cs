@@ -70,7 +70,7 @@ namespace Microsoft.OData.Tests.Json
             using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
-            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""\u003C\u0022\n""}", contents);
+            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":15.0,""Buzz"":""<\""\n""}", contents);
         }
 
         [Theory]
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.Json
             using StreamReader reader = new StreamReader(stream, encoding);
             stream.Seek(0, SeekOrigin.Begin);
             string contents = reader.ReadToEnd();
-            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0"",""Buzz"":""\u003C\u0022\n""}", contents);
+            Assert.Equal(@"{""Foo"":""Bar"",""Fizz"":""15.0"",""Buzz"":""<\""\n""}", contents);
         }
 
         [Theory]

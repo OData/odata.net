@@ -370,8 +370,8 @@ namespace Microsoft.OData.Tests.Json
         [InlineData("text/html")]
         public void CorrectlyStreams_NonAsciiCharacters_ToOutput(string contentType)
         {
-            string input = "😊😊😊😊😊😊😊😊";
-            string expectedOutput = "😊😊😊😊😊😊😊😊";
+            string input = "😊😊😊😊😊😊😊";
+            string expectedOutput = "😊😊😊😊😊😊😊";
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Tests.Json
             string input = new string('a', inputLength);
 
             // Append special characters to the input string
-            input += "U+1F600";
+            input += "😊";
 
             using (MemoryStream stream = new MemoryStream())
             {

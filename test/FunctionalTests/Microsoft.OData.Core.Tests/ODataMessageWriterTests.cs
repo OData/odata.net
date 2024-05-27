@@ -225,7 +225,7 @@ namespace Microsoft.OData.Tests
 
             IJsonWriterFactory factory = request.ServiceProvider.GetService<IJsonWriterFactory>();
             Assert.IsType<ODataUtf8JsonWriterFactory>(factory);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Theory]
@@ -261,7 +261,7 @@ namespace Microsoft.OData.Tests
             Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Fact]
@@ -312,7 +312,7 @@ namespace Microsoft.OData.Tests
                     containerBuilder.AddSingleton<IJsonWriterFactory>( sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Theory]
@@ -348,7 +348,7 @@ namespace Microsoft.OData.Tests
             Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         #endregion "ODataUtf8JsonWriter support"

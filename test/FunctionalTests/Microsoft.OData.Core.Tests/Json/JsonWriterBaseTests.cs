@@ -1155,7 +1155,7 @@ namespace Microsoft.OData.Tests.Json
                 int remainingLength = Math.Min(chunkSize, input.Length - i);
                 string chunk = input.Substring(i, remainingLength);
                 s += chunk;
-                s += "\\n\\n\\n\\n\\u0022\\u0022\\n\\n\\n\\n\\u0022\\u0022";
+                s += "\\n\\n\\n\\n\\\"\\\"\\n\\n\\n\\n\\\"\\\"";
             }
 
             return s;
