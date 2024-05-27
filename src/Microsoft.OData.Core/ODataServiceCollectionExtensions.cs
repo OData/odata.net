@@ -42,7 +42,7 @@ namespace Microsoft.Extensions.DependencyInjection
 
             // Start by registering services that do not require execution state.
             services.AddSingleton<IJsonReaderFactory, DefaultJsonReaderFactory>();
-            services.AddSingleton<IJsonWriterFactory, DefaultJsonWriterFactory>();
+            services.AddSingleton<IJsonWriterFactory, ODataUtf8JsonWriterFactory>();
             services.AddSingleton(sp => ODataMediaTypeResolver.GetMediaTypeResolver(null));
             services.AddSingleton(sp => ODataPayloadValueConverter.GetPayloadValueConverter(null));
             services.AddSingleton<IEdmModel>(sp => EdmCoreModel.Instance);
