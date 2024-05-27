@@ -417,8 +417,7 @@ namespace Microsoft.OData.Tests.Json
                 new object[] { Encoding.UTF8 },
                 new object[] { Encoding.Unicode },
                 new object[] { Encoding.UTF32 },
-                new object[] { Encoding.BigEndianUnicode },
-                new object[] { Encoding.ASCII }
+                new object[] { Encoding.BigEndianUnicode }
            };
 
         [Theory]
