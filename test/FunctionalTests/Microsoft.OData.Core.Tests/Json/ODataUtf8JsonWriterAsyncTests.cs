@@ -449,7 +449,7 @@ namespace Microsoft.OData.Tests.Json
 
             this.writer = new ODataUtf8JsonWriter(this.stream, false, encoding);
             await this.writer.WriteODataValueAsync(collectionValue);
-            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
+            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 ä\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
         }
 
         #endregion Support for other Encodings

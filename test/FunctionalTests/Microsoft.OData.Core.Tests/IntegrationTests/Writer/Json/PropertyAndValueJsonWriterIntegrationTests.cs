@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Text.Encodings.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OData.Core;
@@ -467,24 +468,24 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             };
 
             // 1. without string escape option
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, stringEscapeOption: null);
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, encoder: null);
 
             const string expectedEscapedNonAsciiPayload =
                 "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
                 "\"Id\":1," +
-                "\"Name\":\"\\u0438\\n\\u044f\"" +
+                "\"Name\":\"\\u0438\\n\\u044F\"" +
                 "}";
             Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
 
             // 2. With EscapeNonAscii escape option
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, ODataStringEscapeOption.EscapeNonAscii);
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, JavaScriptEncoder.Default);
 
             Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
 
             // 3. With EscapeOnlyControls escape option
             outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
-                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+                false, null, JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
 
             const string expectedEscapedOnlyControlPayload =
                 "{" +
@@ -520,7 +521,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             };
 
             string outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
-                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+                false, null, JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
 
             const string expectedMinimalPayload =
                 "{" +
@@ -560,13 +561,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType,
-            bool fullMetadata = false, Action<ODataWriter> writeAction = null, ODataStringEscapeOption? stringEscapeOption = null)
+            bool fullMetadata = false, Action<ODataWriter> writeAction = null, JavaScriptEncoder encoder = null)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
-            if (stringEscapeOption != null)
+            if (encoder != null)
             {
                 IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
-                services.AddSingleton<IJsonWriterFactory>(sp => new ODataJsonWriterFactory(stringEscapeOption.Value));
+                services.AddSingleton<IJsonWriterFactory>(sp => new ODataUtf8JsonWriterFactory(encoder));
                 message.ServiceProvider = services.BuildServiceProvider();
             }
 
