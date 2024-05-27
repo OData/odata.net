@@ -2228,7 +2228,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             model.AddElements(new IEdmSchemaElement[] { complex, term1, term2, term3 });
 
             // annotation with value
-            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complex, term1, new EdmAnnotationPathExpression("abc/efg"));
+            IEdmVocabularyAnnotation annotation = term1.CreateVocabularyAnnotation(complex, new EdmAnnotationPathExpression("abc/efg"));
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             model.SetVocabularyAnnotation(annotation);
 

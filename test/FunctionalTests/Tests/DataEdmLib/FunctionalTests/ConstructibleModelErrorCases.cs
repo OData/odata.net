@@ -529,5 +529,11 @@ namespace EdmLibTests.FunctionalTests
             get;
             set;
         }
+
+        public bool UsesDefault
+        {
+            get;
+            set;
+        }
     }
 }

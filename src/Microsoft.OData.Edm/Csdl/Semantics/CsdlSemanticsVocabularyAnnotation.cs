@@ -120,9 +120,9 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         }
 
         /// <summary>
-        /// Gets whether the annotation uses a default value
+        /// Checks if the annotation uses a default value.
         /// </summary>
-        internal bool UseDefault
+        public bool UsesDefault
         {
             get { return this.Annotation.Expression == null; }
         }
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmExpression ComputeValue()
         {
-            if (this.UseDefault)
+            if (this.UsesDefault)
             {
                 return Term.GetDefaultValueExpression();
             }

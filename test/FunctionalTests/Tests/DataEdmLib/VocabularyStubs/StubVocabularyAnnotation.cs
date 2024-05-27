@@ -10,7 +10,7 @@ namespace EdmLibTests.VocabularyStubs
     using Microsoft.OData.Edm.Vocabularies;
     using EdmLibTests.StubEdm;
 
-    public class StubVocabularyAnnotation : StubEdmElement, IEdmVocabularyAnnotation 
+    public class StubVocabularyAnnotation : StubEdmElement, IEdmVocabularyAnnotation
     {
         public string Qualifier { get; set; }
 
@@ -19,5 +19,7 @@ namespace EdmLibTests.VocabularyStubs
         public IEdmVocabularyAnnotatable Target { get; set; }
 
         public IEdmExpression Value { get; set; }
+
+        public bool UsesDefault { get; set; }
     }
 }

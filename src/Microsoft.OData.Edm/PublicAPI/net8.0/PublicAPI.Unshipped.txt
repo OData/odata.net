@@ -1283,6 +1283,8 @@ Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.EdmVocabularyAnnotation
 Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.Qualifier.get -> string
 Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.Target.get -> Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable
 Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.Term.get -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.UsesDefault.get -> bool
+Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.UsesDefault.set -> void
 Microsoft.OData.Edm.Vocabularies.EdmVocabularyAnnotation.Value.get -> Microsoft.OData.Edm.IEdmExpression
 Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression
 Microsoft.OData.Edm.Vocabularies.IEdmApplyExpression.AppliedFunction.get -> Microsoft.OData.Edm.IEdmFunction
@@ -1389,6 +1391,7 @@ Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
 Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation.Qualifier.get -> string
 Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation.Target.get -> Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable
 Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation.Term.get -> Microsoft.OData.Edm.Vocabularies.IEdmTerm
+Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation.UsesDefault.get -> bool
 Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation.Value.get -> Microsoft.OData.Edm.IEdmExpression
 Microsoft.OData.Edm.Vocabularies.Measures.V1.MeasuresVocabularyModel
 Microsoft.OData.Edm.Vocabularies.TryCreateObjectInstance
@@ -1783,6 +1786,7 @@ static Microsoft.OData.Edm.Validation.ValidationRuleSet.GetEdmModelRuleSet(Syste
 static Microsoft.OData.Edm.Vocabularies.EdmExpressionEvaluator.FindEdmType(string edmTypeName, Microsoft.OData.Edm.IEdmModel edmModel) -> Microsoft.OData.Edm.IEdmType
 static Microsoft.OData.Edm.Vocabularies.EdmNullExpression.Instance -> Microsoft.OData.Edm.Vocabularies.EdmNullExpression
 static Microsoft.OData.Edm.Vocabularies.IEdmTermExtensions.CreateVocabularyAnnotation(this Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target) -> Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
+static Microsoft.OData.Edm.Vocabularies.IEdmTermExtensions.CreateVocabularyAnnotation(this Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.IEdmExpression value, string qualifier = null) -> Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
 static Microsoft.OData.Edm.Vocabularies.IEdmTermExtensions.CreateVocabularyAnnotation(this Microsoft.OData.Edm.Vocabularies.IEdmTerm term, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target, string qualifier) -> Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotation
 static Microsoft.OData.Edm.Vocabularies.V1.VocabularyAnnotationExtensions.GetVocabularyStringCollection(this Microsoft.OData.Edm.IEdmModel model, Microsoft.OData.Edm.Vocabularies.IEdmVocabularyAnnotatable target, Microsoft.OData.Edm.Vocabularies.IEdmTerm term) -> System.Collections.Generic.IEnumerable<string>
 static readonly Microsoft.OData.Edm.Csdl.CsdlConstants.EdmxVersion4 -> System.Version

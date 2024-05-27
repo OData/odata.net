@@ -45,8 +45,25 @@ namespace Microsoft.OData.Edm.Vocabularies
 
             return new EdmVocabularyAnnotation(target, term, qualifier, value)
             {
-                UseDefault = true
+                UsesDefault = true
             };
+        }
+
+        /// <summary>
+        /// Creates an <see cref="IEdmVocabularyAnnotation"/> when the annotation value is provided.
+        /// </summary>
+        /// <param name="term">Term bound by the annotation.</param>
+        /// <param name="target">Element the annotation applies to.</param>
+        /// <param name="value">Expression producing the value of the annotation.</param>
+        /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
+        /// <returns>The <see cref="IEdmVocabularyAnnotation"/> built.</returns>
+        public static IEdmVocabularyAnnotation CreateVocabularyAnnotation(this IEdmTerm term, IEdmVocabularyAnnotatable target, IEdmExpression value, string qualifier = null)
+        {
+            EdmUtil.CheckArgumentNull(target, "target");
+            EdmUtil.CheckArgumentNull(term, "term");
+            EdmUtil.CheckArgumentNull(value, "value");
+
+            return new EdmVocabularyAnnotation(target, term, qualifier, value);
         }
 
         /// <summary>
