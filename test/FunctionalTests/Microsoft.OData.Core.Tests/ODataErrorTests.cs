@@ -4,15 +4,15 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
-using Microsoft.Spatial;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
+using Microsoft.Spatial;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -79,34 +79,60 @@ namespace Microsoft.OData.Tests
             [
                 [
                     new ODataInnerError(),
-                    "{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\"}"
+                    "{}"
                 ],
                 [
-                    new ODataInnerError { Message = "OIEM1" },
-                    "{\"message\":\"OIEM1\",\"type\":\"\",\"stacktrace\":\"\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") }
+                    }),
+                    "{\"message\":\"OIEM1\"}"
                 ],
                 [
-                    new ODataInnerError { TypeName = "OIET1" },
-                    "{\"message\":\"\",\"type\":\"OIET1\",\"stacktrace\":\"\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") }
+                    }),
+                    "{\"type\":\"OIET1\"}"
                 ],
                 [
-                    new ODataInnerError { StackTrace = "OIES1" },
-                    "{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"OIES1\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    }),
+                    "{\"stacktrace\":\"OIES1\"}"
                 ],
                 [
-                    new ODataInnerError { Message = "OIEM1", TypeName = "OIET1" },
-                    "{\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") }
+                    }),
+                    "{\"message\":\"OIEM1\",\"type\":\"OIET1\"}"
                 ],
                 [
-                    new ODataInnerError { Message = "OIEM1", StackTrace = "OIES1" },
-                    "{\"message\":\"OIEM1\",\"type\":\"\",\"stacktrace\":\"OIES1\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    }),
+                    "{\"message\":\"OIEM1\",\"stacktrace\":\"OIES1\"}"
                 ],
                 [
-                    new ODataInnerError { TypeName = "OIET1", StackTrace = "OIES1" },
-                    "{\"message\":\"\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}"
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    }),
+                    "{\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}"
                 ],
                 [
-                    new ODataInnerError { Message = "OIEM1", TypeName = "OIET1", StackTrace = "OIES1" },
+                    new ODataInnerError(new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    }),
                     "{\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}"
                 ],
                 [
@@ -115,34 +141,30 @@ namespace Microsoft.OData.Tests
                         {
                             { "p1", new ODataPrimitiveValue(1) },
                             { "p2", new ODataPrimitiveValue("SP") }
-                        })
-                    {
-                        Message = "OIEM1",
-                        TypeName = "OIET1",
-                        StackTrace = "OIES1"
-                    },
-                    "{\"p1\":1,\"p2\":\"SP\",\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}"
+                        }),
+                    "{\"p1\":1,\"p2\":\"SP\"}"
                 ],
                 [
                     new ODataInnerError
                     {
-                        Message = "OIEM1",
-                        TypeName = "OIET1",
-                        StackTrace = "OIES1",
                         InnerError = new ODataInnerError()
                     },
-                    "{\"message\":\"OIEM1\"," +
-                    "\"type\":\"OIET1\"," +
-                    "\"stacktrace\":\"OIES1\"," +
-                    "\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\"}}"
+                    "{\"innererror\":{}}"
                 ],
                 [
-                    new ODataInnerError
+                    new ODataInnerError(new Dictionary<string, ODataValue>
                     {
-                        Message = "OIEM1",
-                        TypeName = "OIET1",
-                        StackTrace = "OIES1",
-                        InnerError = new ODataInnerError { Message = "OIEM2", TypeName = "OIET2", StackTrace = "OIES2" }
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    })
+                    {
+                        InnerError = new ODataInnerError(new Dictionary<string, ODataValue>
+                        {
+                            { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                            { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                            { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
+                        })
                     },
                     "{\"message\":\"OIEM1\"," +
                     "\"type\":\"OIET1\"," +
@@ -154,13 +176,18 @@ namespace Microsoft.OData.Tests
                         new Dictionary<string, ODataValue>
                         {
                             { "p1", new ODataPrimitiveValue(1) },
-                            { "p2", new ODataPrimitiveValue("SP") }
+                            { "p2", new ODataPrimitiveValue("SP") },
+                            { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                            { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                            { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
                         })
                     {
-                        Message = "OIEM1",
-                        TypeName = "OIET1",
-                        StackTrace = "OIES1",
-                        InnerError = new ODataInnerError { Message = "OIEM2", TypeName = "OIET2", StackTrace = "OIES2" }
+                        InnerError = new ODataInnerError(new Dictionary<string, ODataValue>
+                        {
+                            { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                            { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                            { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
+                        })
                     },
                     "{\"p1\":1," +
                     "\"p2\":\"SP\"," +
@@ -170,17 +197,26 @@ namespace Microsoft.OData.Tests
                     "\"innererror\":{\"message\":\"OIEM2\",\"type\":\"OIET2\",\"stacktrace\":\"OIES2\"}}"
                 ],
                 [
-                    new ODataInnerError
+                    new ODataInnerError(new Dictionary<string, ODataValue>
                     {
-                        Message = "OIEM1",
-                        TypeName = "OIET1",
-                        StackTrace = "OIES1",
-                        InnerError = new ODataInnerError
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                    })
+                    {
+                        InnerError = new ODataInnerError(new Dictionary<string, ODataValue>
                         {
-                            Message = "OIEM2",
-                            TypeName = "OIET2",
-                            StackTrace = "OIES2",
-                            InnerError = new ODataInnerError { Message = "OIEM3", TypeName = "OIET3", StackTrace = "OIES3" }
+                            { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                            { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                            { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
+                        })
+                        {
+                            InnerError = new ODataInnerError(new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM3") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET3") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES3") }
+                            })
                         }
                     },
                     "{\"message\":\"OIEM1\"," +
@@ -276,10 +312,7 @@ namespace Microsoft.OData.Tests
                             "\"p2\":\"The value of type 'Microsoft.OData.ODataUntypedValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"p3\":\"The value of type 'Microsoft.OData.ODataBinaryStreamValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"p4\":\"The value of type 'Microsoft.OData.ODataStreamReferenceValue' is not supported and cannot be converted to a JSON representation.\"," +
-                            "\"p5\":\"The value of type 'Microsoft.OData.ODataJsonElementValue' is not supported and cannot be converted to a JSON representation.\"," +
-                            "\"message\":\"\"," +
-                            "\"type\":\"\"," +
-                            "\"stacktrace\":\"\"}",
+                            "\"p5\":\"The value of type 'Microsoft.OData.ODataJsonElementValue' is not supported and cannot be converted to a JSON representation.\"}",
                             jsonString);
                     }
                 }
@@ -294,23 +327,14 @@ namespace Microsoft.OData.Tests
                 new Dictionary<string, ODataValue>
                 {
                     { "p1", new ODataPrimitiveValue(GeographyPoint.Create(22.2, 22.2)) },
-                })
-            {
-                Message = "OIEM1",
-                TypeName = "OIET1",
-                StackTrace = "OIES1"
-            };
+                });
 
             // Act
             var jsonString = odataInnerError.ToJsonString();
 
             // Assert
             Assert.Equal(
-                "{" +
-                "\"p1\":\"The value of type 'Microsoft.Spatial.GeographyPointImplementation' is not supported and cannot be converted to a JSON representation.\"," +
-                "\"message\":\"OIEM1\"," +
-                "\"type\":\"OIET1\"," +
-                "\"stacktrace\":\"OIES1\"}",
+                "{\"p1\":\"The value of type 'Microsoft.Spatial.GeographyPointImplementation' is not supported and cannot be converted to a JSON representation.\"}",
                 jsonString);
         }
 
@@ -360,10 +384,7 @@ namespace Microsoft.OData.Tests
                             "\"prop2\":\"The value of type 'Microsoft.OData.ODataUntypedValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"prop3\":\"The value of type 'Microsoft.OData.ODataBinaryStreamValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"prop4\":\"The value of type 'Microsoft.OData.ODataStreamReferenceValue' is not supported and cannot be converted to a JSON representation.\"," +
-                            "\"prop5\":\"The value of type 'Microsoft.OData.ODataJsonElementValue' is not supported and cannot be converted to a JSON representation.\"}," +
-                            "\"message\":\"\"," +
-                            "\"type\":\"\"," +
-                            "\"stacktrace\":\"\"}",
+                            "\"prop5\":\"The value of type 'Microsoft.OData.ODataJsonElementValue' is not supported and cannot be converted to a JSON representation.\"}}",
                             jsonString);
                     }
                 }
@@ -420,10 +441,7 @@ namespace Microsoft.OData.Tests
                             "\"The value of type 'Microsoft.OData.ODataStreamReferenceValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"The value of type 'Microsoft.OData.ODataJsonElementValue' is not supported and cannot be converted to a JSON representation.\"," +
                             "\"The value of type 'System.Decimal' is not supported and cannot be converted to a JSON representation.\"," +
-                            "\"The value of type 'System.Object' is not supported and cannot be converted to a JSON representation.\"]," +
-                            "\"message\":\"\"," +
-                            "\"type\":\"\"," +
-                            "\"stacktrace\":\"\"}",
+                            "\"The value of type 'System.Object' is not supported and cannot be converted to a JSON representation.\"]}",
                             jsonString);
                     }
                 }
@@ -470,7 +488,7 @@ namespace Microsoft.OData.Tests
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\"}}}"
+                    "\"innererror\":{}}}"
                 ],
                 [
                     new ODataError
@@ -478,13 +496,17 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { Message = "OIEM1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"OIEM1\",\"type\":\"\",\"stacktrace\":\"\"}}}"
+                    "\"innererror\":{\"message\":\"OIEM1\"}}}"
                 ],
                 [
                     new ODataError
@@ -492,13 +514,17 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { TypeName = "OIET1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"\",\"type\":\"OIET1\",\"stacktrace\":\"\"}}}"
+                    "\"innererror\":{\"type\":\"OIET1\"}}}"
                 ],
                 [
                     new ODataError
@@ -506,13 +532,17 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { StackTrace = "OIES1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"OIES1\"}}}"
+                    "\"innererror\":{\"stacktrace\":\"OIES1\"}}}"
                 ],
                 [
                     new ODataError
@@ -520,13 +550,18 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { Message = "OIEM1", TypeName = "OIET1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"\"}}}"
+                    "\"innererror\":{\"message\":\"OIEM1\",\"type\":\"OIET1\"}}}"
                 ],
                 [
                     new ODataError
@@ -534,13 +569,18 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { Message = "OIEM1", StackTrace = "OIES1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"OIEM1\",\"type\":\"\",\"stacktrace\":\"OIES1\"}}}"
+                    "\"innererror\":{\"message\":\"OIEM1\",\"stacktrace\":\"OIES1\"}}}"
                 ],
                 [
                     new ODataError
@@ -548,13 +588,18 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError { TypeName = "OIET1", StackTrace = "OIES1" }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"message\":\"\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}}}"
+                    "\"innererror\":{\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}}}"
                 ],
                 [
                     new ODataError
@@ -562,12 +607,13 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1"
-                        }
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            })
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
@@ -584,33 +630,18 @@ namespace Microsoft.OData.Tests
                         InnerError = new ODataInnerError(
                             new Dictionary<string, ODataValue>
                             {
-                                { "p1", new ODataPrimitiveValue(1) },
-                                { "p2", new ODataPrimitiveValue("SP") }
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
                             })
                         {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1"
-                        }
-                    },
-                    "{\"error\":{" +
-                    "\"code\":\"OEC1\"," +
-                    "\"message\":\"OEM1\"," +
-                    "\"target\":\"OET1\"," +
-                    "\"innererror\":{\"p1\":1,\"p2\":\"SP\",\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}}}"
-                ],
-                [
-                    new ODataError
-                    {
-                        Code = "OEC1",
-                        Message = "OEM1",
-                        Target = "OET1",
-                        InnerError = new ODataInnerError
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1",
-                            InnerError = new ODataInnerError { Message = "OIEM2", TypeName = "OIET2", StackTrace = "OIES2" }
+                            InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
+                            })
                         }
                     },
                     "{\"error\":{" +
@@ -629,17 +660,30 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1",
-                            InnerError = new ODataInnerError
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
                             {
-                                Message = "OIEM2",
-                                TypeName = "OIET2",
-                                StackTrace = "OIES2",
-                                InnerError = new ODataInnerError { Message = "OIEM3", TypeName = "OIET3", StackTrace = "OIES3" }
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            })
+                        {
+                            InnerError = new ODataInnerError(
+                                new Dictionary<string, ODataValue>
+                                {
+                                    { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                                    { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                                    { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
+                                })
+                            {
+                                InnerError = new ODataInnerError(
+                                    new Dictionary<string, ODataValue>
+                                    {
+                                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM3") },
+                                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET3") },
+                                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES3") }
+
+                                    })
                             }
                         }
                     },
@@ -667,26 +711,17 @@ namespace Microsoft.OData.Tests
                             new Dictionary<string, ODataValue>
                             {
                                 { "p1", new ODataPrimitiveValue(1) },
-                                { "p2", new ODataPrimitiveValue("SP") }
+                                { "p2", new ODataPrimitiveValue("SP") },
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
                             })
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1",
-                            InnerError = new ODataInnerError { Message = "OIEM2", TypeName = "OIET2", StackTrace = "OIES2" }
-                        }
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +
                     "\"message\":\"OEM1\"," +
                     "\"target\":\"OET1\"," +
-                    "\"innererror\":{" +
-                    "\"p1\":1," +
-                    "\"p2\":\"SP\"," +
-                    "\"message\":\"OIEM1\"," +
-                    "\"type\":\"OIET1\"," +
-                    "\"stacktrace\":\"OIES1\"," +
-                    "\"innererror\":{\"message\":\"OIEM2\",\"type\":\"OIET2\",\"stacktrace\":\"OIES2\"}}}}"
+                    "\"innererror\":{\"p1\":1,\"p2\":\"SP\",\"message\":\"OIEM1\",\"type\":\"OIET1\",\"stacktrace\":\"OIES1\"}}}"
                 ],
                 [
                     new ODataError
@@ -751,12 +786,13 @@ namespace Microsoft.OData.Tests
                         Code = "OEC1",
                         Message = "OEM1",
                         Target = "OET1",
-                        InnerError = new ODataInnerError
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1"
-                        },
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
+                            }),
                         Details = new Collection<ODataErrorDetail>
                         {
                             new ODataErrorDetail { Code = "OEDC1", Message = "OEDM1", Target = "OEDT1" }
@@ -779,23 +815,21 @@ namespace Microsoft.OData.Tests
                             new Dictionary<string, ODataValue>
                             {
                                 { "p1", new ODataPrimitiveValue(1) },
-                                { "p2", new ODataPrimitiveValue("SP") }
+                                { "p2", new ODataPrimitiveValue("SP") },
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
                             })
                         {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1",
                             InnerError = new ODataInnerError(
                                 new Dictionary<string, ODataValue>
                                 {
                                     { "p3", new ODataPrimitiveValue(13M) },
-                                    { "p4", new ODataPrimitiveValue(new DateTimeOffset(2024, 5, 2, 13, 27, 30, TimeSpan.Zero)) }
+                                    { "p4", new ODataPrimitiveValue(new DateTimeOffset(2024, 5, 2, 13, 27, 30, TimeSpan.Zero)) },
+                                    { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM2") },
+                                    { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET2") },
+                                    { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES2") }
                                 })
-                            {
-                                Message = "OIEM2",
-                                TypeName = "OIET2",
-                                StackTrace = "OIES2",
-                            }
                         },
                         Details = new Collection<ODataErrorDetail>
                         {
@@ -889,13 +923,11 @@ namespace Microsoft.OData.Tests
                                 { "p28", new ODataPrimitiveValue((Guid?)Guid.Parse("6693ceb2-5d47-45c7-b928-900ebdebe898")) },
                                 { "p29", new ODataPrimitiveValue((TimeSpan?)new TimeSpan(1, 12, 0)) },
                                 { "p30", new ODataPrimitiveValue((Date?)new Date(2024, 5, 2)) },
-                                { "p31", new ODataPrimitiveValue((TimeOfDay?)new TimeOfDay(12, 42, 30, 100)) }
+                                { "p31", new ODataPrimitiveValue((TimeOfDay?)new TimeOfDay(12, 42, 30, 100)) },
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("OIEM1") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("OIET1") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("OIES1") }
                             })
-                        {
-                            Message = "OIEM1",
-                            TypeName = "OIET1",
-                            StackTrace = "OIES1"
-                        }
                     },
                     "{\"error\":{" +
                     "\"code\":\"OEC1\"," +

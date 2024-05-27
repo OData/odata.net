@@ -40,8 +40,7 @@ namespace Microsoft.OData
         DoNotThrowExceptionForTopLevelNullProperty = 1 << 3,
 
         /// <summary>
-        /// When enabled, OData inner error is serialized with "message", "type", and "stacktrace" properties irrespective of whether
-        /// they are null or empty. Also, nested inner error is serialized with property name as "internalexception".
+        /// When enabled, OData nested inner error is serialized with property name as "internalexception".
         /// </summary>
         UseLegacyODataInnerErrorSerialization = 1 << 4,
 

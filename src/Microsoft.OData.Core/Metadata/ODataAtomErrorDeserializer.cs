@@ -241,7 +241,10 @@ namespace Microsoft.OData.Metadata
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.Message,
                                             ODataMetadataConstants.ODataInnerErrorMessageElementName);
-                                        innerError.Message = xmlReader.ReadElementValue();
+
+                                        innerError.Properties.Add(
+                                            ODataMetadataConstants.ODataInnerErrorMessageElementName,
+                                            new ODataPrimitiveValue(xmlReader.ReadElementValue()));
                                         continue;
 
                                     // <m:type>
@@ -250,7 +253,10 @@ namespace Microsoft.OData.Metadata
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.TypeName,
                                             ODataMetadataConstants.ODataInnerErrorTypeElementName);
-                                        innerError.TypeName = xmlReader.ReadElementValue();
+
+                                        innerError.Properties.Add(
+                                            ODataMetadataConstants.ODataInnerErrorTypeElementName,
+                                            new ODataPrimitiveValue(xmlReader.ReadElementValue()));
                                         continue;
 
                                     // <m:stacktrace>
@@ -259,11 +265,16 @@ namespace Microsoft.OData.Metadata
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.StackTrace,
                                             ODataMetadataConstants.ODataInnerErrorStackTraceElementName);
-                                        innerError.StackTrace = xmlReader.ReadElementValue();
+
+                                        innerError.Properties.Add(
+                                            ODataMetadataConstants.ODataInnerErrorStackTraceElementName,
+                                            new ODataPrimitiveValue(xmlReader.ReadElementValue()));
                                         continue;
 
                                     // <m:internalexception>
                                     case ODataMetadataConstants.ODataInnerErrorInnerErrorElementName:
+                                    // <m:innererror>
+                                    case ODataMetadataConstants.ODataInnerErrorElementName:
                                         VerifyInnerErrorElementNotFound(
                                             ref elementsReadBitmask,
                                             DuplicateInnerErrorElementPropertyBitMask.InternalException,

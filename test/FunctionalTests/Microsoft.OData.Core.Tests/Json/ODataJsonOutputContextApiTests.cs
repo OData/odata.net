@@ -2568,11 +2568,14 @@ POST http://tempuri.org/Customers HTTP/1.1
                 Code = "badRequest",
                 Message = "Object reference not set to an instance of an object",
                 Target = "ConApp",
-                InnerError = new ODataInnerError
+                InnerError = new ODataInnerError(
+                    new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("Exception thrown due to attempt to access a member on a variable that currently holds a null reference") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("System.NullReferenceException") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("   at ConApp.Program.Main(String[] args) in C:\\Projects\\ConApp\\ConApp\\Program.cs:line 10") },
+                    })
                 {
-                    TypeName = "System.NullReferenceException",
-                    Message = "Exception thrown due to attempt to access a member on a variable that currently holds a null reference",
-                    StackTrace = "   at ConApp.Program.Main(String[] args) in C:\\Projects\\ConApp\\ConApp\\Program.cs:line 10",
                     InnerError = new ODataInnerError()
                 },
                 InstanceAnnotations = new List<ODataInstanceAnnotation>
@@ -2619,7 +2622,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 "\"message\":\"Exception thrown due to attempt to access a member on a variable that currently holds a null reference\"," +
                 "\"type\":\"System.NullReferenceException\"," +
                 "\"stacktrace\":\"   at ConApp.Program.Main(String[] args) in C:\\\\Projects\\\\ConApp\\\\ConApp\\\\Program.cs:line 10\"," +
-                $"\"{nestedInnerErrorPropertyName}\":{{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\"}}}}," +
+                $"\"{nestedInnerErrorPropertyName}\":{{}}}}," +
                 "\"@Is.Error\":true}}";
 
             Assert.Equal(expected, asyncResult);

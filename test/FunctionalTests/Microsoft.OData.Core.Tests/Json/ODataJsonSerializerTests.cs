@@ -393,10 +393,13 @@ namespace Microsoft.OData.Tests.Json
                         {
                             new ODataErrorDetail { Code = "insufficientPrivileges", Message = "You don't have the required privileges"}
                         },
-                        InnerError = new ODataInnerError
-                        {
-                            Message = "Contact administrator"
-                        },
+                        InnerError = new ODataInnerError(
+                            new Dictionary<string, ODataValue>
+                            {
+                                { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("Contact administrator") },
+                                { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("") },
+                                { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("") }
+                            }),
                         InstanceAnnotations = new Collection<ODataInstanceAnnotation>
                         {
                             new ODataInstanceAnnotation("ns.workloadId", new ODataPrimitiveValue(new Guid("5a3c4b92-f401-416f-bf88-106cb03efaf4")))

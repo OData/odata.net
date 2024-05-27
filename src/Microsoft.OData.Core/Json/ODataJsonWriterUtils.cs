@@ -325,25 +325,11 @@ namespace Microsoft.OData.Json
             jsonWriter.WriteName(innerErrorPropertyName);
             jsonWriter.StartObjectScope();
 
-            if (innerError.Properties != null)
+            foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
             {
-                foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
-                {
-                    jsonWriter.WriteName(pair.Key);
+                jsonWriter.WriteName(pair.Key);
 
-                    if (pair.Value is ODataNullValue &&
-                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
-                    {
-                        // Write empty string for null values in stacktrace, type and message properties of inner error.
-                        jsonWriter.WriteODataValue(new ODataPrimitiveValue(string.Empty));
-                    }
-                    else
-                    {
-                        jsonWriter.WriteODataValue(pair.Value);
-                    }
-                }
+                jsonWriter.WriteODataValue(pair.Value);
             }
 
             if (innerError.InnerError != null)
@@ -567,25 +553,11 @@ namespace Microsoft.OData.Json
             await jsonWriter.WriteNameAsync(innerErrorPropertyName).ConfigureAwait(false);
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
-            if (innerError.Properties != null)
+            foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
             {
-                foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
-                {
-                    await jsonWriter.WriteNameAsync(pair.Key).ConfigureAwait(false);
+                await jsonWriter.WriteNameAsync(pair.Key).ConfigureAwait(false);
 
-                    if (pair.Value is ODataNullValue &&
-                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
-                    {
-                        // Write empty string for null values in stacktrace, type and message properties of inner error.
-                        await jsonWriter.WriteODataValueAsync(new ODataPrimitiveValue(string.Empty)).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await jsonWriter.WriteODataValueAsync(pair.Value).ConfigureAwait(false);
-                    }
-                }
+                await jsonWriter.WriteODataValueAsync(pair.Value).ConfigureAwait(false);
             }
 
             if (innerError.InnerError != null)

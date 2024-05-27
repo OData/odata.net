@@ -12,6 +12,7 @@ using System.Xml;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.Edm;
 using Xunit;
+using Microsoft.OData.Json;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Reader
 {
@@ -136,8 +137,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             test.Throws<ODataException>(Strings.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName("code"));
         }
 
-        [Fact]
-        public void ReadInnerErrorMetadataDocumentThrows()
+        [Theory]
+        [InlineData(JsonConstants.ODataErrorInnerErrorInnerErrorName)]
+        [InlineData(JsonConstants.ODataErrorInnerErrorName)]
+        public void ReadInnerErrorMetadataDocumentThrows(string nestedInnerErrorName)
         {
             string payload =
 @"<?xml version=""1.0"" encoding=""utf-8""?>
@@ -147,9 +150,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
   <m:innererror>
     <m:message>some inner error</m:message>
     <m:type></m:type>
-    <m:stacktrace></m:stacktrace>
-    <m:internalexception></m:internalexception>
-  </m:innererror>
+    <m:stacktrace></m:stacktrace>" +
+    $"    <m:{nestedInnerErrorName}></m:{nestedInnerErrorName}>" +
+@"  </m:innererror>
 </m:error>";
 
             Dictionary<string, string> map = new Dictionary<string, string>()
@@ -163,7 +166,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             Assert.Equal("An error was read from the payload. See the 'Error' property for more details.", exception.Message);
             Assert.Equal("code42", exception.Error.Code);
             Assert.Equal("message text", exception.Error.Message);
-            Assert.Equal("some inner error", exception.Error.InnerError.Message);
+            Assert.True(exception.Error.InnerError.Properties.TryGetValue(JsonConstants.ODataErrorInnerErrorMessageName, out ODataValue innerErrorMessage));
+            Assert.Equal("some inner error", Assert.IsType<ODataPrimitiveValue>(innerErrorMessage).Value);
+            Assert.NotNull(exception.Error.InnerError.InnerError);
+            Assert.Empty(exception.Error.InnerError.InnerError.Properties);
         }
 
         [Fact]

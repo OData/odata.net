@@ -564,16 +564,9 @@ Microsoft.OData.ODataFunctionImportInfo.ODataFunctionImportInfo() -> void
 Microsoft.OData.ODataInnerError
 Microsoft.OData.ODataInnerError.InnerError.get -> Microsoft.OData.ODataInnerError
 Microsoft.OData.ODataInnerError.InnerError.set -> void
-Microsoft.OData.ODataInnerError.Message.get -> string
-Microsoft.OData.ODataInnerError.Message.set -> void
 Microsoft.OData.ODataInnerError.ODataInnerError() -> void
 Microsoft.OData.ODataInnerError.ODataInnerError(System.Collections.Generic.IDictionary<string, Microsoft.OData.ODataValue> properties) -> void
-Microsoft.OData.ODataInnerError.ODataInnerError(System.Exception exception) -> void
 Microsoft.OData.ODataInnerError.Properties.get -> System.Collections.Generic.IDictionary<string, Microsoft.OData.ODataValue>
-Microsoft.OData.ODataInnerError.StackTrace.get -> string
-Microsoft.OData.ODataInnerError.StackTrace.set -> void
-Microsoft.OData.ODataInnerError.TypeName.get -> string
-Microsoft.OData.ODataInnerError.TypeName.set -> void
 Microsoft.OData.ODataInputContext
 Microsoft.OData.ODataInputContext.Dispose() -> void
 Microsoft.OData.ODataInputContext.MessageReaderSettings.get -> Microsoft.OData.ODataMessageReaderSettings

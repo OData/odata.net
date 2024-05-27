@@ -160,8 +160,8 @@ namespace Microsoft.OData.Tests.Json
                                           "}" +
                                      "}," +
                                      $"\"{nestedInnerErrorPropertyName}\":{{" +
-                                            "\"nested\":null" +
-                                      "}" +
+                                         "\"nested\":null" +
+                                     "}" +
                                   "}" +
                                 "}" +
                                 "}", result);
@@ -216,18 +216,30 @@ namespace Microsoft.OData.Tests.Json
                                "}", result);
         }
 
-        [Fact]
-        public void WriteError_InnerErrorWithEmptyStringProperties()
+        [Theory]
+        [InlineData(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization)]
+        [InlineData(ODataLibraryCompatibility.None)]
+        public void WriteError_InnerErrorWithEmptyStringProperties(ODataLibraryCompatibility libraryCompatibility)
         {
             var error = new ODataError
             {
                 Target = "any target",
                 Details =
                     new[] { new ODataErrorDetail { Code = "500", Target = "any target", Message = "any msg" } },
-                InnerError = new ODataInnerError() { Message = "The other properties on the inner error object should serialize as empty strings because of using this constructor."}
+                InnerError = new ODataInnerError(
+                    new Dictionary<string, ODataValue>
+                    {
+                        {
+                            JsonConstants.ODataErrorInnerErrorMessageName,
+                            new ODataPrimitiveValue("The other properties on the inner error object should serialize as empty strings because of using this constructor.")
+                        },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("") }
+                    })
             };
 
             this.messageWriterSettings.MessageQuotas.MaxNestingDepth = 5;
+            this.messageWriterSettings.LibraryCompatibility |= libraryCompatibility;
             ODataJsonWriterUtils.WriteError(
                 jsonWriter,
                 enumerable => { },
@@ -249,11 +261,19 @@ namespace Microsoft.OData.Tests.Json
                                "}", result);
         }
 
-        [Fact]
-        public void WriteError_InnerErrorWithCollectionAndNulls()
+        [Theory]
+        [InlineData(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization)]
+        [InlineData(ODataLibraryCompatibility.None)]
+        public void WriteError_InnerErrorWithCollectionAndNulls(ODataLibraryCompatibility libraryCompatibility)
         {
-            ODataInnerError innerError = new ODataInnerError();
-            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new ODataProperty[] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty() { Name = "NullProperty", Value = new ODataNullValue() } } });
+            ODataInnerError innerError = new ODataInnerError(
+                new Dictionary<string, ODataValue>
+                {
+                    { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("") },
+                    { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("") },
+                    { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("") }
+                });
+            innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new [] { new ODataProperty() { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty() { Name = "NullProperty", Value = new ODataNullValue() } } });
             innerError.Properties.Add("NullProperty", new ODataNullValue());
             innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
 
@@ -266,6 +286,7 @@ namespace Microsoft.OData.Tests.Json
             };
 
             this.messageWriterSettings.MessageQuotas.MaxNestingDepth = 5;
+            this.messageWriterSettings.LibraryCompatibility |= libraryCompatibility;
             ODataJsonWriterUtils.WriteError(
                 jsonWriter,
                 enumerable => { },
@@ -300,7 +321,9 @@ namespace Microsoft.OData.Tests.Json
             innerError.Properties.Add("ResourceValue", new ODataResourceValue() { Properties = new[] { new ODataProperty { Name = "PropertyName", Value = "PropertyValue" }, new ODataProperty { Name = "NullProperty", Value = new ODataNullValue() } } });
             innerError.Properties.Add("NullProperty", new ODataNullValue());
             innerError.Properties.Add("CollectionValue", new ODataCollectionValue() { Items = new List<object>() { new ODataNullValue(), new ODataPrimitiveValue("CollectionValue"), new ODataPrimitiveValue(1) } });
-
+            innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue(""));
+            innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue(""));
+            innerError.Properties.Add(JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue(""));
             string result = innerError.ToJsonString();
 
             Assert.Equal("{\"ResourceValue\":{" +
