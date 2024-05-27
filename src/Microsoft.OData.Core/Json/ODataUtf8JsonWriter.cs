@@ -123,7 +123,7 @@ namespace Microsoft.OData.Json
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
             this.outputEncoding = encoding;
-            this.encoder = encoder ?? JavaScriptEncoder.Default;
+            this.encoder = encoder ?? JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
 
             if (this.outputEncoding.CodePage == Encoding.UTF8.CodePage)
             {
