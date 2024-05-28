@@ -131,6 +131,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueFloatNaN()
+        {
+            this.VerifyWritePrimitiveValue(float.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueFloatPositiveInfinity()
+        {
+            this.VerifyWritePrimitiveValue(float.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueFloatNegativeInfinity()
+        {
+            this.VerifyWritePrimitiveValue(float.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public void WritePrimitiveValueInt16()
         {
             this.VerifyWritePrimitiveValue((short)876, "876");

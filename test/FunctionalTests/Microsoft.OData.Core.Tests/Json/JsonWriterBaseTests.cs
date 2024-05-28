@@ -1017,7 +1017,99 @@ namespace Microsoft.OData.Tests.Json
                 }
             }
         }
-        
+
+        [Theory]
+        [InlineData("application/json", 'a', "a")]
+        [InlineData("text/html", 'a', "\"a\"")]
+        [InlineData("text/plain", 'a', "\"a\"")]
+        // JSON special char
+        [InlineData("application/json", '"', "\"")]
+        [InlineData("text/html", '"', "\"\\\"\"")]
+        [InlineData("text/plain", '"', "\"\\\"\"")]
+        // non-ascii
+        [InlineData("application/json", '你', "你")]
+        [InlineData("text/html", '你', "\"你\"")]
+        [InlineData("text/plain", '你', "\"你\"")]
+        public void TextWriter_CorrectlyWritesSingleCharacter(string contentType, char value, string expectedOutput)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8) as IJsonStreamWriter;
+                var tw = jsonWriter.StartTextWriterValueScope(contentType);
+                tw.Write(value);
+                jsonWriter.EndTextWriterValueScope();
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(124.45, "124.45")]
+        // We write the .0 for doubles without a fractional part
+        // for consistency with the original JsonWriter implementation
+        // and with previous versions. However, it's not a hard requirement.
+        // Clients should not rely on the .0 to decide whether a value
+        // is an integer or double.
+        // In the future we can consider relaxing the need to add a .0 (possibly behind a feature flag).
+        [InlineData(124.0, "124.0")]
+        [InlineData(1.123456789012345, "1.123456789012345")]
+        [InlineData(1.245E+24, "1.245E+24")]
+        [InlineData(1.245E-24, "1.245E-24")]
+        [InlineData(double.PositiveInfinity, "\"INF\"")]
+        [InlineData(double.NegativeInfinity, "\"-INF\"")]
+        [InlineData(double.NaN, "\"NaN\"")]
+        public void WriteDouble(double value, string expectedOutput)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+                jsonWriter.WriteValue(value);
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData(124.45f, "124.45")]
+        [InlineData(124.0f, "124")]
+        [InlineData(1.123456f, "1.123456")]
+        [InlineData(1.245E+10f, "1.245E+10")]
+        [InlineData(1.245E-10f, "1.245E-10")]
+        [InlineData(float.PositiveInfinity, "\"INF\"")]
+        [InlineData(float.NegativeInfinity, "\"-INF\"")]
+        [InlineData(float.NaN, "\"NaN\"")]
+        public void WriteFloat(float value, string expectedOutput)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+                jsonWriter.WriteValue(value);
+                jsonWriter.Flush();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = reader.ReadToEnd();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
+        }
+
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make
