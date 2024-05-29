@@ -71,41 +71,36 @@ namespace Microsoft.OData.Client.Tests.ALinq
         [Fact]
         public void FirstPredicate()
         {
-            // Test behaviour with one match:
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'John'&$top=1");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "]");
             Customer customer = _ctx.Customers.First(c => c.Name != "John");
             Assert.Equal("ALFKI", customer.Id);
             Assert.Equal("Maria Anders", customer.Name);
             Assert.Equal("Berlin", customer.City);
+        }
 
-            // Test behaviour with no match:
-            bool expectedExceptionThrown = false;
-            try
-            {
-                _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=1");
-                _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-                _ctx.Customers.First(c => c.Name == "thisdoesntexist");
-            }
-            catch (InvalidOperationException)
-            {
-                expectedExceptionThrown = true;
-            }
-            Assert.True(expectedExceptionThrown);
+        [Fact]
+        public void FirstPredicate_ThrowsException_WhenNoMatchExists()
+        {
+            _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=1");
+            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.First(c => c.Name == "thisdoesntexist"));
         }
 
         [Fact]
         public void FirstOrDefaultPredicate()
         {
-            // Test behaviour with one match:
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'John'&$top=1");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "]");
             Customer customer = _ctx.Customers.FirstOrDefault(c => c.Name != "John");
             Assert.Equal("ALFKI", customer.Id);
             Assert.Equal("Maria Anders", customer.Name);
             Assert.Equal("Berlin", customer.City);
+        }
 
-            // Test behaviour with no match:
+        [Fact]
+        public void FirstOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
+        {
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName eq 'John'&$top=1");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
             Assert.Null(_ctx.Customers.FirstOrDefault(c => c.Name == "John"));
@@ -114,74 +109,55 @@ namespace Microsoft.OData.Client.Tests.ALinq
         [Fact]
         public void SinglePredicate()
         {
-            // Test behaviour with one match:
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer2 + "]");
             Customer customer = _ctx.Customers.Single(c => c.Id == "CHOPS");
             Assert.Equal("CHOPS", customer.Id);
             Assert.Equal("Yang Wang", customer.Name);
             Assert.Equal("Bern", customer.City);
+        }
 
-            bool expectedExceptionThrown;
+        [Fact]
+        public void SinglePredicate_ThrowsException_WhenNoMatchExists()
+        {
+            _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=2");
+            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.Single(c => c.Name == "thisdoesntexist"));
+        }
 
-            // Test behaviour with no match:
-            try
-            {
-                expectedExceptionThrown = false;
-                _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=2");
-                _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-                _ctx.Customers.Single(c => c.Name == "thisdoesntexist");
-            }
-            catch (InvalidOperationException)
-            {
-                expectedExceptionThrown = true;
-            }
-            Assert.True(expectedExceptionThrown);
-
-            // Test behaviour with more than one match:
-            try
-            {
-                expectedExceptionThrown = false;
-                _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
-                _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
-                _ctx.Customers.Single(c => c.Name != "thisdoesntexist");
-            }
-            catch (InvalidOperationException)
-            {
-                expectedExceptionThrown = true;
-            }
-            Assert.True(expectedExceptionThrown);
+        [Fact]
+        public void SinglePredicate_ThrowsException_WhenMoreThanOneMatchExists()
+        {
+            _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
+            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
+            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.Single(c => c.Name != "thisdoesntexist"));
         }
 
         [Fact]
         public void SingleOrDefaultPredicate()
         {
-            // Test behaviour with one match:
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer2 + "]");
             Customer customer = _ctx.Customers.SingleOrDefault(c => c.Id == "CHOPS");
             Assert.Equal("CHOPS", customer.Id);
             Assert.Equal("Yang Wang", customer.Name);
             Assert.Equal("Bern", customer.City);
+        }
 
-            // Test behaviour with no match:
+        [Fact]
+        public void SingleOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
+        {
             _ctx.InterceptRequestAndAssertUri("/Customers?$filter=CustomerID eq '234111'&$top=2");
             _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
             Assert.Null(_ctx.Customers.SingleOrDefault(c => c.Id == "234111"));
+        }
 
-            // Test behaviour with more than one match:
-            bool expectedExceptionThrown = false;
-            try
-            {
-                _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
-                _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
-                _ctx.Customers.SingleOrDefault(c => c.Name != "thisdoesntexist");
-            }
-            catch (InvalidOperationException)
-            {
-                expectedExceptionThrown = true;
-            }
-            Assert.True(expectedExceptionThrown);
+        [Fact]
+        public void SingleOrDefaultPredicate_ThrowsException_WhenMoreThanOneMatchExists()
+        {
+            _ctx.InterceptRequestAndAssertUri("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
+            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
+            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.SingleOrDefault(c => c.Name != "thisdoesntexist"));
         }
     }
 
