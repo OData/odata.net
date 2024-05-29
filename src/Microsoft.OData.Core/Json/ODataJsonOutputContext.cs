@@ -74,32 +74,11 @@ namespace Microsoft.OData.Json
 
                 bool isIeee754Compatible = messageInfo.MediaType.HasIeee754CompatibleSetToTrue();
 
-                IJsonWriterFactory jsonWriterFactory = this.Container?.GetService<IJsonWriterFactory>();
-
-#if NETCOREAPP
-                if (jsonWriterFactory is ODataUtf8JsonWriterFactory)
-                {
-                    // When using ODataUtf8JsonWriterFactory, we do not wrap the ouput stream in a buffered stream.
-                    // The default ODataUtf8JsonWriter will be used, and that writer handles
-                    // its own buffering (more efficiently). It leads to too many byte[] array allocations if we have
-                    // both the BufferedStream and ODataUtf8JsonWriter allocating buffers unnecessarily.
-                    this.asynchronousOutputStream = this.messageOutputStream;
-                    this.jsonWriter = CreateJsonWriter(
+                this.jsonWriter = this.CreateJsonWriter(
                         this.Container,
-                        this.messageOutputStream,
                         isIeee754Compatible,
                         messageWriterSettings,
                         messageInfo.Encoding);
-                }
-#endif
-
-                // Fallback if not using ODataUtf8JsonWriterFactory
-                if (this.jsonWriter == null)
-                {
-                    Stream outputStream = InitializeOutputStream();
-
-                    this.jsonWriter = CreateJsonWriter(this.Container, outputStream, isIeee754Compatible, messageWriterSettings, messageInfo.Encoding);
-                }
             }
             catch (Exception e)
             {
@@ -135,7 +114,8 @@ namespace Microsoft.OData.Json
             Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             bool ieee754CompatibleSetToTrue = (messageInfo.MediaType != null) ? messageInfo.MediaType.HasIeee754CompatibleSetToTrue() : false;
-            this.jsonWriter = CreateJsonWriter(messageInfo.ServiceProvider, stream, ieee754CompatibleSetToTrue, messageWriterSettings, messageInfo.Encoding);
+            this.messageOutputStream = stream;
+            this.jsonWriter = this.CreateJsonWriter(messageInfo.ServiceProvider, ieee754CompatibleSetToTrue, messageWriterSettings, messageInfo.Encoding);
 
             this.metadataLevel = new JsonMinimalMetadataLevel();
             this.propertyCacheHandler = new PropertyCacheHandler();
@@ -891,24 +871,32 @@ namespace Microsoft.OData.Json
         /// <param name="writerSettings">Configuration settings for the OData writer.</param>
         /// <param name="encoding">The character encoding to use.</param>
         /// <returns>An <see cref="IJsonWriter"/> instance.</returns>
-        private static IJsonWriter CreateJsonWriter(
+        private IJsonWriter CreateJsonWriter(
             IServiceProvider container,
-            Stream stream,
             bool isIeee754Compatible,
             ODataMessageWriterSettings writerSettings,
             Encoding encoding)
         {
             IJsonWriter jsonWriter;
+            Stream writeStream = this.messageOutputStream;
+            this.asynchronousOutputStream = this.messageOutputStream;
             if (container == null)
             {
-                TextWriter textWriter = new StreamWriter(stream, encoding);
-
-                jsonWriter = new JsonWriter(textWriter, isIeee754Compatible);
+                jsonWriter = ODataUtf8JsonWriterFactory.Default.CreateJsonWriter(writeStream, isIeee754Compatible, encoding);
             }
             else
             {
                 IJsonWriterFactory jsonWriterFactory = container.GetRequiredService<IJsonWriterFactory>();
-                jsonWriter = jsonWriterFactory.CreateJsonWriter(stream, isIeee754Compatible, encoding);
+
+                // If we're dealing with the legacy ODataJsonWriterFactory, let's wrap
+                // the stream with a BufferedStream
+                if (jsonWriterFactory is ODataJsonWriterFactory)
+                {
+
+                    writeStream = this.InitializeOutputStream();
+                }
+
+                jsonWriter = jsonWriterFactory.CreateJsonWriter(writeStream, isIeee754Compatible, encoding);
 
                 if (jsonWriter == null)
                 {
