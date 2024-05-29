@@ -202,6 +202,24 @@ namespace Microsoft.OData.Json
             }
 
             /// <summary>
+            /// Writes the specifid character to the ODataUtf8JsonWriter.
+            /// </summary>
+            /// <param name="value">The character to write.</param>
+            public override void Write(char value)
+            {
+                if (!this.jsonWriter.isWritingJson)
+                {
+                    ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
+                    this.WriteCharsInChunks(charToWrite);
+                }
+                else
+                {
+                    ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
+                    this.WriteCharsInChunksWithoutEscaping(charToWrite);
+                }
+            }
+
+            /// <summary>
             /// Writes a specified number of characters from the given character array to the ODataUtf8JsonWriter.
             /// </summary>
             /// <param name="value">The character array from which to write characters.</param>
