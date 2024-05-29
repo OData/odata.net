@@ -60,9 +60,11 @@ namespace Microsoft.OData.Json
         /// <returns>A task representing the asynchronous operation. The task result contains a stream for writing the stream value.</returns>
         public async Task<Stream> StartStreamValueScopeAsync()
         {
-            this.WriteSeparatorIfNecessary();
+            this.CommitUtf8JsonWriterContentsToBuffer();
+
+            this.WriteItemWithSeparatorIfNeeded();
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.FlushAsync().ConfigureAwait(false);
 
             this.binaryValueStream = new ODataUtf8JsonWriteStream(this);
 
