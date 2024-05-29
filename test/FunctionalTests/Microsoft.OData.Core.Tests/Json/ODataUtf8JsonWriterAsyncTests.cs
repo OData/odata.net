@@ -127,6 +127,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNaN()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatPositiveInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNegativeInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public async Task WritePrimitiveValueAsync_Int16()
         {
             await this.VerifyWritePrimitiveValueAsync((short)876, "876");

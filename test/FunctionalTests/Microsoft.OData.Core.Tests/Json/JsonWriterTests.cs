@@ -484,6 +484,27 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
+        [Theory]
+        [InlineData("application/json", "🐂")]
+        [InlineData("text/html", "\"🐂\"")]
+        [InlineData("text/plain", "\"🐂\"")]
+        public void TextWriter_CorrectlyHandlesSurrogatePairs(string contentType, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = jsonWriter.StartTextWriterValueScope(contentType);
+            tw.Write('\ud83d');
+            tw.Write('\udc02');
+            jsonWriter.EndTextWriterValueScope();
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
+        }
+
         private void SetupJsonWriterRunTestAndVerifyRent(Action<JsonWriter> action)
         {
             var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);

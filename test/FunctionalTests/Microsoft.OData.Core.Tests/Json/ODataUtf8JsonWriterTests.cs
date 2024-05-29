@@ -131,6 +131,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueFloatNaN()
+        {
+            this.VerifyWritePrimitiveValue(float.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueFloatPositiveInfinity()
+        {
+            this.VerifyWritePrimitiveValue(float.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueFloatNegativeInfinity()
+        {
+            this.VerifyWritePrimitiveValue(float.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public void WritePrimitiveValueInt16()
         {
             this.VerifyWritePrimitiveValue((short)876, "876");
@@ -764,6 +782,30 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal(expectedOutput, rawOutput);
                 }
             }
+        }
+
+
+        [Theory]
+        // both the escaped and non-escaped versions are valid
+        // and compliant JSON parsers should be able to handle both
+        [InlineData("application/json", "🐂")]
+        [InlineData("text/html", "\"\\uD83D\\uDC02\"")]
+        [InlineData("text/plain", "\"\\uD83D\\uDC02\"")]
+        public void TextWriter_CorrectlyHandlesSurrogatePairs(string contentType, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = jsonWriter.StartTextWriterValueScope(contentType);
+            tw.Write('\ud83d');
+            tw.Write('\udc02');
+            jsonWriter.EndTextWriterValueScope();
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
         }
 
         /// <summary>

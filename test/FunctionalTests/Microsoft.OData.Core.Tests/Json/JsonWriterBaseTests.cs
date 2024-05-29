@@ -4,6 +4,8 @@ using System;
 using System.IO;
 using System.Text;
 using Xunit;
+using System.Net.Mime;
+
 #if NETCOREAPP
 using System.Text.Json;
 using System.Buffers.Text;
@@ -1016,7 +1018,35 @@ namespace Microsoft.OData.Tests.Json
                 }
             }
         }
-        
+
+        [Theory]
+        [InlineData("application/json", 'a', "a")]
+        [InlineData("text/html", 'a', "\"a\"")]
+        [InlineData("text/plain", 'a', "\"a\"")]
+        // JSON special char
+        [InlineData("application/json", '"', "\"")]
+        [InlineData("text/html", '"', "\"\\\"\"")]
+        [InlineData("text/plain", '"', "\"\\\"\"")]
+        // non-ascii
+        [InlineData("application/json", '你', "你")]
+        [InlineData("text/html", '你', "\"你\"")]
+        [InlineData("text/plain", '你', "\"你\"")]
+        public void TextWriter_CorrectlyWritesSingleCharacter(string contentType, char value, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = jsonWriter.StartTextWriterValueScope(contentType);
+            tw.Write(value);
+            jsonWriter.EndTextWriterValueScope();
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
+        }
+
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make

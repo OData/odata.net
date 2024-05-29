@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     FunctionImports = new ODataFunctionImportInfo[] {new ODataFunctionImportInfo() {Name = "name1", Url = new Uri("http://Service/FunctionImport")}}
                 },
-                @"﻿{""value"":[{""name"":""name1"",""kind"":""FunctionImport"",""url"":""http://service/FunctionImport""}]}");
+                @"{""value"":[{""name"":""name1"",""kind"":""FunctionImport"",""url"":""http://service/FunctionImport""}]}");
         }
 
         [Fact]
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Tests.Json
                         new ODataFunctionImportInfo() { Name = "name1", Url = new Uri("http://Service/FunctionImport") }
                     }
                 },
-                @"﻿{""value"":[{""name"":""name1"",""kind"":""FunctionImport"",""url"":""http://service/FunctionImport""}]}");
+                @"{""value"":[{""name"":""name1"",""kind"":""FunctionImport"",""url"":""http://service/FunctionImport""}]}");
         }
 
         [Fact]
@@ -51,7 +51,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Singletons = new[] { new ODataSingletonInfo { Name = "singleton", Url = new Uri("http://Service/Singleton"), Title = "Some Singleton" } }
                 },
-                @"﻿{""value"":[{""name"":""singleton"",""title"":""Some Singleton"",""kind"":""Singleton"",""url"":""http://service/Singleton""}]}");
+                @"{""value"":[{""name"":""singleton"",""title"":""Some Singleton"",""kind"":""Singleton"",""url"":""http://service/Singleton""}]}");
         }
 
         [Fact]
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     EntitySets = new[] { new ODataEntitySetInfo { Name = "entityset", Url = new Uri("http://Service/EntitySet"), Title = "Some EntitySet" } }
                 },
-                @"﻿{""value"":[{""name"":""entityset"",""title"":""Some EntitySet"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
+                @"{""value"":[{""name"":""entityset"",""title"":""Some EntitySet"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
         }
 
         [Fact]
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     Singletons = new[] { new ODataSingletonInfo { Name = "someSingleton", Url = new Uri("http://Service/Singleton"), Title = "someSingleton" } }
                 },
-                @"﻿{""value"":[{""name"":""someSingleton"",""kind"":""Singleton"",""url"":""http://service/Singleton""}]}");
+                @"{""value"":[{""name"":""someSingleton"",""kind"":""Singleton"",""url"":""http://service/Singleton""}]}");
         }
 
         [Fact]
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     EntitySets = new[] { new ODataEntitySetInfo { Name = "entityset", Url = new Uri("http://Service/EntitySet"), Title = null } }
                 },
-                @"﻿{""value"":[{""name"":""entityset"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
+                @"{""value"":[{""name"":""entityset"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
         }
 
         [Fact]
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.Json
                 {
                     EntitySets = new[] { new ODataEntitySetInfo { Name = "entityset", Url = new Uri("http://Service/EntitySet"), Title = "" } }
                 },
-                @"﻿{""value"":[{""name"":""entityset"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
+                @"{""value"":[{""name"":""entityset"",""kind"":""EntitySet"",""url"":""http://service/EntitySet""}]}");
         }
 
         [Fact]
