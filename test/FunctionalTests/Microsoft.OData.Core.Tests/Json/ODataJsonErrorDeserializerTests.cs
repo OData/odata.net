@@ -34,7 +34,7 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
             var detail = error.Details.Single();
-            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("500", detail.Code);
             Assert.Equal("another target", detail.Target);
             Assert.Equal("any msg", detail.Message);
         }
@@ -134,20 +134,19 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("any target", error.Target);
             Assert.Equal(1, error.Details.Count);
             var detail = error.Details.Single();
-            Assert.Equal("500", detail.ErrorCode);
+            Assert.Equal("500", detail.Code);
             Assert.Equal("any target", detail.Target);
             Assert.Equal("any msg", detail.Message);
 
             //Assert Inner Error properties
             Assert.NotNull(error.InnerError);
-            Assert.True(error.InnerError.Properties.ContainsKey("innererror"));
-            var objectValue =
-                (error.InnerError.Properties["innererror"] as ODataResourceValue).Properties
-                .FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
-            Assert.NotNull(objectValue);
+            var nestedInnerError = error.InnerError.InnerError;
+            Assert.NotNull(nestedInnerError);
+            ODataValue myNewObjectValue;
+            Assert.True(nestedInnerError.Properties.TryGetValue("MyNewObject", out myNewObjectValue));
+            Assert.NotNull(myNewObjectValue);
 
-            ODataResourceValue nestedInnerObject = error.InnerError.Properties["innererror"] as ODataResourceValue;
-            ODataResourceValue nestedMyNewObject = nestedInnerObject.Properties.FirstOrDefault(p => p.Name == "MyNewObject").ODataValue as ODataResourceValue;
+            ODataResourceValue nestedMyNewObject = Assert.IsType<ODataResourceValue>(myNewObjectValue);
 
             Assert.Equal(5, nestedMyNewObject.Properties.Count());
             Assert.Equal("StringProperty", nestedMyNewObject.Properties.ElementAt(0).Name);
@@ -194,8 +193,10 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(3, (error.InnerError.Properties["CollectionValue"] as ODataCollectionValue).Items.Count());
         }
 
-        [Fact]
-        public async Task ReadTopLevelErrorAsync()
+        [Theory]
+        [InlineData(JsonConstants.ODataErrorInnerErrorInnerErrorName)]
+        [InlineData(JsonConstants.ODataErrorInnerErrorName)]
+        public async Task ReadTopLevelErrorAsync(string nestedInnerErrorName)
         {
             var payload = "{\"error\":{" +
                 "\"code\":\"forbidden\"," +
@@ -207,7 +208,7 @@ namespace Microsoft.OData.Tests.Json
                     "\"type\":\"\"," +
                     "\"stacktrace\":\"\"," +
                     "\"correlationId\":\"4784efae-d1c4-4f1f-baba-e811b3b0826c\"," +
-                    "\"internalexception\":{}}," +
+                    $"\"{nestedInnerErrorName}\":{{}}}}," +
                 "\"ns.workloadId@odata.type\":\"#Guid\"," +
                 "\"@ns.workloadId\":\"5a3c4b92-f401-416f-bf88-106cb03efaf4\"}}";
 
@@ -218,20 +219,23 @@ namespace Microsoft.OData.Tests.Json
                     var error = await jsonErrorDeserializer.ReadTopLevelErrorAsync();
 
                     Assert.NotNull(error);
-                    Assert.Equal("forbidden", error.ErrorCode);
+                    Assert.Equal("forbidden", error.Code);
                     Assert.Equal("Access to the resource is forbidden", error.Message);
                     Assert.Equal("Resource", error.Target);
                     Assert.NotNull(error.InnerError);
-                    Assert.Equal("Contact administrator", error.InnerError.Message);
-                    Assert.Equal("", error.InnerError.TypeName);
-                    Assert.Equal("", error.InnerError.StackTrace);
+                    Assert.True(error.InnerError.Properties.TryGetValue(JsonConstants.ODataErrorInnerErrorMessageName, out ODataValue innerErrorMessage));
+                    Assert.Equal("Contact administrator", Assert.IsType<ODataPrimitiveValue>(innerErrorMessage).Value);
+                    Assert.True(error.InnerError.Properties.TryGetValue(JsonConstants.ODataErrorInnerErrorTypeNameName, out ODataValue innerErrorTypeName));
+                    Assert.Equal("", Assert.IsType<ODataPrimitiveValue>(innerErrorTypeName).Value);
+                    Assert.True(error.InnerError.Properties.TryGetValue(JsonConstants.ODataErrorInnerErrorStackTraceName, out ODataValue innerErrorStackTrace));
+                    Assert.Equal("", Assert.IsType<ODataPrimitiveValue>(innerErrorStackTrace).Value);
                     Assert.NotNull(error.InnerError.InnerError);
                     Assert.True(error.InnerError.Properties.TryGetValue("correlationId", out ODataValue correlationIdValue));
                     var correlationId = Assert.IsType<ODataPrimitiveValue>(correlationIdValue);
                     Assert.Equal("4784efae-d1c4-4f1f-baba-e811b3b0826c", correlationId.Value);
                     Assert.NotNull(error.Details);
                     var errorDetail = Assert.Single(error.Details);
-                    Assert.Equal("insufficientPrivileges", errorDetail.ErrorCode);
+                    Assert.Equal("insufficientPrivileges", errorDetail.Code);
                     Assert.Equal("You don't have the required privileges", errorDetail.Message);
                     Assert.Equal("", errorDetail.Target);
                     var nsWorkloadIdAnnotation = Assert.Single(error.GetInstanceAnnotations());

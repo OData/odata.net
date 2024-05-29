@@ -4,9 +4,9 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using System.Diagnostics;
 using System.Xml;
+using Microsoft.OData.Json;
 using Microsoft.OData.Metadata;
 
 namespace Microsoft.OData
@@ -33,7 +33,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(error != null, "error != null");
 
-            code = error.ErrorCode ?? string.Empty;
+            code = error.Code ?? string.Empty;
             message = error.Message ?? string.Empty;
         }
 
@@ -43,8 +43,12 @@ namespace Microsoft.OData
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        internal static void WriteXmlError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
+        internal static void WriteXmlError(
+            XmlWriter writer,
+            ODataError error,
+            bool includeDebugInformation,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(error != null, "error != null");
@@ -53,7 +57,7 @@ namespace Microsoft.OData
             ErrorUtils.GetErrorDetails(error, out code, out message);
 
             ODataInnerError innerError = includeDebugInformation ? error.InnerError : null;
-            WriteXmlError(writer, code, message, innerError, maxInnerErrorDepth);
+            WriteXmlError(writer, code, message, innerError, messageWriterSettings);
         }
 
         /// <summary>
@@ -63,8 +67,13 @@ namespace Microsoft.OData
         /// <param name="code">The code of the error.</param>
         /// <param name="message">The message of the error.</param>
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        private static void WriteXmlError(XmlWriter writer, string code, string message, ODataInnerError innerError, int maxInnerErrorDepth)
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
+        private static void WriteXmlError(
+            XmlWriter writer,
+            string code,
+            string message,
+            ODataInnerError innerError,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(writer != null, "writer != null");
             Debug.Assert(code != null, "code != null");
@@ -81,7 +90,7 @@ namespace Microsoft.OData
 
             if (innerError != null)
             {
-                WriteXmlInnerError(writer, innerError, ODataMetadataConstants.ODataInnerErrorElementName, /* recursionDepth */ 0, maxInnerErrorDepth);
+                WriteXmlInnerError(writer, innerError, ODataMetadataConstants.ODataInnerErrorElementName, recursionDepth: 0, messageWriterSettings);
             }
 
             // </m:error>
@@ -95,11 +104,17 @@ namespace Microsoft.OData
         /// <param name="innerError">The inner error to write.</param>
         /// <param name="innerErrorElementName">The local name of the element representing the inner error.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
-        private static void WriteXmlInnerError(XmlWriter writer, ODataInnerError innerError, string innerErrorElementName, int recursionDepth, int maxInnerErrorDepth)
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
+        private static void WriteXmlInnerError(
+            XmlWriter writer,
+            ODataInnerError innerError,
+            string innerErrorElementName,
+            int recursionDepth,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(writer != null, "writer != null");
 
+            int maxInnerErrorDepth = messageWriterSettings.MessageQuotas.MaxNestingDepth;
             recursionDepth++;
             if (recursionDepth > maxInnerErrorDepth)
             {
@@ -113,30 +128,48 @@ namespace Microsoft.OData
             // <m:innererror> or <m:internalexception>
             writer.WriteStartElement(ODataMetadataConstants.ODataMetadataNamespacePrefix, innerErrorElementName, ODataMetadataConstants.ODataMetadataNamespace);
 
-            //// NOTE: we add empty elements if no information is provided for the message, error type and stack trace
-            ////       to stay compatible with Astoria.
+            ODataValue propertyValue = null;
 
             // <m:message>...</m:message>
-            string errorMessage = innerError.Message ?? String.Empty;
-            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorMessageElementName, ODataMetadataConstants.ODataMetadataNamespace);
-            writer.WriteString(errorMessage);
-            writer.WriteEndElement();
+            if (innerError.Properties.TryGetValue(ODataMetadataConstants.ODataInnerErrorMessageElementName, out propertyValue)
+                && propertyValue is ODataPrimitiveValue innerErrorMessage)
+            {
+                writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorMessageElementName, ODataMetadataConstants.ODataMetadataNamespace);
+                writer.WriteString((string)innerErrorMessage.Value);
+                writer.WriteEndElement();
+            }
 
             // <m:type>...</m:type>
-            string errorType = innerError.TypeName ?? string.Empty;
-            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorTypeElementName, ODataMetadataConstants.ODataMetadataNamespace);
-            writer.WriteString(errorType);
-            writer.WriteEndElement();
+            if (innerError.Properties.TryGetValue(ODataMetadataConstants.ODataInnerErrorTypeElementName, out propertyValue)
+                && propertyValue is ODataPrimitiveValue innerErrorTypeName)
+            {
+                writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorTypeElementName, ODataMetadataConstants.ODataMetadataNamespace);
+                writer.WriteString((string)innerErrorTypeName.Value);
+                writer.WriteEndElement();
+            }
 
             // <m:stacktrace>...</m:stacktrace>
-            string errorStackTrace = innerError.StackTrace ?? String.Empty;
-            writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorStackTraceElementName, ODataMetadataConstants.ODataMetadataNamespace);
-            writer.WriteString(errorStackTrace);
-            writer.WriteEndElement();
+            if (innerError.Properties.TryGetValue(ODataMetadataConstants.ODataInnerErrorTypeElementName, out propertyValue)
+                && propertyValue is ODataPrimitiveValue innerErrorStackTrace)
+            {
+                writer.WriteStartElement(ODataMetadataConstants.ODataInnerErrorStackTraceElementName, ODataMetadataConstants.ODataMetadataNamespace);
+                writer.WriteString((string)innerErrorStackTrace.Value);
+                writer.WriteEndElement();
+            }
 
             if (innerError.InnerError != null)
             {
-                WriteXmlInnerError(writer, innerError.InnerError, ODataMetadataConstants.ODataInnerErrorInnerErrorElementName, recursionDepth, maxInnerErrorDepth);
+                string nestedInnerErrorPropertyName;
+                if (messageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization))
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorInnerErrorName;
+                }
+                else
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorName;
+                }
+
+                WriteXmlInnerError(writer, innerError.InnerError, nestedInnerErrorPropertyName, recursionDepth, messageWriterSettings);
             }
 
             // </m:innererror> or </m:internalexception>

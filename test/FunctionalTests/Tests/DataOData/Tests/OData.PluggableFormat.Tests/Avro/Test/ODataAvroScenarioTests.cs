@@ -592,7 +592,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro.Test
         {
             ODataError odataError = new ODataError()
             {
-                ErrorCode = "404",
+                Code = "404",
                 Message = "Not Found",
             };
 

@@ -56,7 +56,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new
                 {
                     Json = "{{ \"{0}\": {{ \"code\": \"my-error-code\" }} }}",
-                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { ErrorCode = "my-error-code" }) 
+                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { Code = "my-error-code" }) 
                 },
                 new
                 {
@@ -66,12 +66,12 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new
                 {
                     Json = "{{ \"{0}\": {{ \"code\": \"my-error-code\", \"message\": \"my-error-message\" }} }}",
-                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { ErrorCode = "my-error-code", Message = "my-error-message" }) 
+                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { Code = "my-error-code", Message = "my-error-message" }) 
                 },
                 new
                 {
                     Json = "{{ \"{0}\": {{ \"code\": \"my-error-code\", \"innererror\": {{ \"message\": \"my-inner-error\" }} }} }}",
-                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { ErrorCode = "my-error-code", InnerError = new ODataInnerError { Message = "my-inner-error" }}) 
+                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { Code = "my-error-code", InnerError = new ODataInnerError { Message = "my-inner-error" }}) 
                 },
                 new
                 {
@@ -86,7 +86,7 @@ namespace Microsoft.Test.Taupo.OData.Reader.Tests.Json
                 new
                 {
                     Json = "{{ \"{0}\": {{ \"code\": \"my-error-code\", \"message\": \"my-error-message\", \"innererror\": {{ \"message\": \"my-inner-error\" }} }} }}",
-                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { ErrorCode = "my-error-code", Message = "my-error-message", InnerError = new ODataInnerError { Message = "my-inner-error" }}) 
+                    ExpectedException = ODataExpectedExceptions.ODataErrorException(new ODataError { Code = "my-error-code", Message = "my-error-message", InnerError = new ODataInnerError { Message = "my-inner-error" }}) 
                 },
             };
 

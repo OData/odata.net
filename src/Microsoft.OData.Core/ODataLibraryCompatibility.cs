@@ -40,13 +40,18 @@ namespace Microsoft.OData
         DoNotThrowExceptionForTopLevelNullProperty = 1 << 3,
 
         /// <summary>
+        /// When enabled, OData nested inner error is serialized with property name as "internalexception".
+        /// </summary>
+        UseLegacyODataInnerErrorSerialization = 1 << 4,
+
+        /// <summary>
         /// Version 6.x
         /// </summary>
-        Version6 = UseLegacyVariableCasing | WriteTopLevelODataNullAnnotation | WriteODataContextAnnotationForNavProperty | DoNotThrowExceptionForTopLevelNullProperty,
+        Version6 = UseLegacyVariableCasing | WriteTopLevelODataNullAnnotation | WriteODataContextAnnotationForNavProperty | DoNotThrowExceptionForTopLevelNullProperty | UseLegacyODataInnerErrorSerialization,
 
         /// <summary>
         /// Version 7.x
         /// </summary>
-        Version7 = UseLegacyVariableCasing
+        Version7 = UseLegacyVariableCasing | UseLegacyODataInnerErrorSerialization
     }
 }

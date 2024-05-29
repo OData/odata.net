@@ -593,7 +593,7 @@ namespace Microsoft.Test.Taupo.OData.Common
             ExceptionUtilities.Assert(this.items.Count == 0, "Error should only be top level");
             var error = new ODataError()
             {
-                ErrorCode = payloadElement.Code,
+                Code = payloadElement.Code,
                 Message = payloadElement.Message
             };
 

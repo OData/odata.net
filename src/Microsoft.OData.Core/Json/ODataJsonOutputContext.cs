@@ -1033,7 +1033,11 @@ namespace Microsoft.OData.Json
             }
 
             JsonInstanceAnnotationWriter instanceAnnotationWriter = new JsonInstanceAnnotationWriter(new ODataJsonValueSerializer(this), this.TypeNameOracle);
-            ODataJsonWriterUtils.WriteError(this.JsonWriter, instanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+            ODataJsonWriterUtils.WriteError(
+                this.JsonWriter,
+                instanceAnnotationWriter.WriteInstanceAnnotationsForError,
+                error, includeDebugInformation,
+                this.MessageWriterSettings);
         }
 
         /// <summary>
@@ -1059,7 +1063,7 @@ namespace Microsoft.OData.Json
                 instanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
                 error,
                 includeDebugInformation,
-                this.MessageWriterSettings.MessageQuotas.MaxNestingDepth).ConfigureAwait(false);
+                this.MessageWriterSettings).ConfigureAwait(false);
         }
 
         /// <summary>

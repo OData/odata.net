@@ -75,7 +75,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
 
             return new ODataError
             {
-                ErrorCode = record.ErrorCode,
+                Code = record.ErrorCode,
                 Message = record.Message,
             };
         }

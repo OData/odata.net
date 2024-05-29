@@ -13,6 +13,7 @@ namespace Microsoft.OData.Json
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
     #endregion Namespaces
 
@@ -28,13 +29,13 @@ namespace Microsoft.OData.Json
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         internal static void WriteError(
             IJsonWriter jsonWriter,
             Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
-            int maxInnerErrorDepth)
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
@@ -53,7 +54,7 @@ namespace Microsoft.OData.Json
                 innerError,
                 error.GetInstanceAnnotations(),
                 writeInstanceAnnotationsDelegate,
-                maxInnerErrorDepth);
+                messageWriterSettings);
         }
 
         /// <summary>
@@ -94,32 +95,52 @@ namespace Microsoft.OData.Json
             if (value == null || value is ODataNullValue)
             {
                 sb.Append("null");
+                return;
             }
 
-            ODataCollectionValue collectionValue = value as ODataCollectionValue;
-            if (collectionValue != null)
+            if (value is ODataCollectionValue collectionValue)
             {
                 ODataCollectionValueToString(sb, collectionValue);
+                return;
             }
 
-            ODataResourceValue resourceValue = value as ODataResourceValue;
-            if (resourceValue != null)
+            if (value is ODataResourceValue resourceValue)
             {
                 ODataResourceValueToString(sb, resourceValue);
+                return;
             }
 
-            ODataPrimitiveValue primitiveValue = value as ODataPrimitiveValue;
-            if (primitiveValue != null)
+            if (value is ODataPrimitiveValue primitiveValue)
             {
-                if (primitiveValue.FromODataValue() is string)
+                object valueAsObject = primitiveValue.FromODataValue();
+                string valueAsString;
+                if (ODataRawValueUtils.TryConvertPrimitiveToString(valueAsObject, out valueAsString))
                 {
-                    sb.Append(string.Concat("\"", JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()), "\""));
+                    if (valueAsObject is string)
+                    {
+                        valueAsString = JsonValueUtils.GetEscapedJsonString(valueAsString);
+                        sb.Append('"').Append(valueAsString).Append('"');
+                    }
+                    else if (valueAsObject is byte[] || valueAsObject is DateTimeOffset || valueAsObject is Guid || valueAsObject is TimeSpan | valueAsObject is Date || valueAsObject is TimeOfDay)
+                    {
+                        sb.Append('"').Append(valueAsString).Append('"');
+                    }
+                    else
+                    {
+                        sb.Append(valueAsString);
+                    }
                 }
                 else
                 {
-                    sb.Append(JsonValueUtils.GetEscapedJsonString(value.FromODataValue()?.ToString()));
+                    // For unsupported primitive values (e.g. spatial values)
+                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(valueAsObject.GetType().FullName))).Append('"');
                 }
+
+                return;
             }
+
+            // Subclasses of ODataValue that are not supported in ODataInnerError.Properties dictionary
+            sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(value.GetType().FullName))).Append('"');
         }
 
         /// <summary>
@@ -129,14 +150,14 @@ namespace Microsoft.OData.Json
         /// <param name="writeInstanceAnnotationsDelegate">Delegate to write the instance annotations.</param>
         /// <param name="error">The error instance to write.</param>
         /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         internal static Task WriteErrorAsync(
             IJsonWriter jsonWriter,
             Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
             ODataError error,
             bool includeDebugInformation,
-            int maxInnerErrorDepth)
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(error != null, "error != null");
@@ -157,7 +178,7 @@ namespace Microsoft.OData.Json
                 innerError,
                 error.GetInstanceAnnotations(),
                 writeInstanceAnnotationsDelegate,
-                maxInnerErrorDepth);
+                messageWriterSettings);
         }
 
         /// <summary>
@@ -171,7 +192,7 @@ namespace Microsoft.OData.Json
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Action to write the instance annotations.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         private static void WriteError(
             IJsonWriter jsonWriter,
             string code,
@@ -181,7 +202,7 @@ namespace Microsoft.OData.Json
             ODataInnerError innerError,
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             Action<ICollection<ODataInstanceAnnotation>> writeInstanceAnnotationsDelegate,
-            int maxInnerErrorDepth)
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
@@ -223,7 +244,12 @@ namespace Microsoft.OData.Json
 
             if (innerError != null)
             {
-                WriteInnerError(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName, /* recursionDepth */ 0, maxInnerErrorDepth);
+                WriteInnerError(
+                    jsonWriter,
+                    innerError,
+                    JsonConstants.ODataErrorInnerErrorName,
+                    recursionDepth: 0,
+                    messageWriterSettings);
             }
 
             Debug.Assert(writeInstanceAnnotationsDelegate != null, "writeInstanceAnnotationsDelegate != null");
@@ -254,7 +280,11 @@ namespace Microsoft.OData.Json
 
                 // "code": "301",
                 jsonWriter.WriteName(JsonConstants.ODataErrorCodeName);
-                jsonWriter.WriteValue(detail.ErrorCode ?? string.Empty);
+                jsonWriter.WriteValue(detail.Code ?? string.Empty);
+
+                // "message": "$search query option not supported",
+                jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
+                jsonWriter.WriteValue(detail.Message ?? string.Empty);
 
                 if (detail.Target != null)
                 {
@@ -262,10 +292,6 @@ namespace Microsoft.OData.Json
                     jsonWriter.WriteName(JsonConstants.ODataErrorTargetName);
                     jsonWriter.WriteValue(detail.Target);
                 }
-
-                // "message": "$search query option not supported",
-                jsonWriter.WriteName(JsonConstants.ODataErrorMessageName);
-                jsonWriter.WriteValue(detail.Message ?? string.Empty);
 
                 // }
                 jsonWriter.EndObjectScope();
@@ -282,48 +308,44 @@ namespace Microsoft.OData.Json
         /// <param name="innerError">Inner error details.</param>
         /// <param name="innerErrorPropertyName">The property name for the inner error property.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         private static void WriteInnerError(
             IJsonWriter jsonWriter,
             ODataInnerError innerError,
             string innerErrorPropertyName,
             int recursionDepth,
-            int maxInnerErrorDepth)
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(innerErrorPropertyName != null, "innerErrorPropertyName != null");
 
-            ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, maxInnerErrorDepth);
+            ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, messageWriterSettings.MessageQuotas.MaxNestingDepth);
 
             // "innererror":
             jsonWriter.WriteName(innerErrorPropertyName);
             jsonWriter.StartObjectScope();
 
-            if (innerError.Properties != null)
+            foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
             {
-                foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
-                {
-                    jsonWriter.WriteName(pair.Key);
+                jsonWriter.WriteName(pair.Key);
 
-                    if (pair.Value is ODataNullValue &&
-                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
-                    {
-                        // Write empty string for null values in stacktrace, type and message properties of inner error.
-                        jsonWriter.WriteODataValue(new ODataPrimitiveValue(string.Empty));
-                    }
-                    else
-                    {
-                        jsonWriter.WriteODataValue(pair.Value);
-                    }
-                }
+                jsonWriter.WriteODataValue(pair.Value);
             }
 
             if (innerError.InnerError != null)
             {
-                // "internalexception": { <nested inner error> }
-                WriteInnerError(jsonWriter, innerError.InnerError, JsonConstants.ODataErrorInnerErrorInnerErrorName, recursionDepth, maxInnerErrorDepth);
+                string nestedInnerErrorPropertyName;
+                if (messageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization))
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorInnerErrorName;
+                }
+                else
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorName;
+                }
+
+                // "internalexception": { <nested inner error> } or "innererror": { <nested inner error> }
+                WriteInnerError(jsonWriter, innerError.InnerError, nestedInnerErrorPropertyName, recursionDepth, messageWriterSettings);
             }
 
             // }
@@ -333,7 +355,7 @@ namespace Microsoft.OData.Json
         private static void ODataCollectionValueToString(StringBuilder sb, ODataCollectionValue value)
         {
             bool isFirst = true;
-            sb.Append("[");
+            sb.Append('[');
             foreach (object item in value.Items)
             {
                 if (isFirst)
@@ -342,43 +364,42 @@ namespace Microsoft.OData.Json
                 }
                 else
                 {
-                    sb.Append(",");
+                    sb.Append(',');
                 }
 
-                ODataValue odataValue = item as ODataValue;
-                if (odataValue != null)
+                if (item is ODataValue odataValue)
                 {
                     ODataValueToString(sb, odataValue);
                 }
                 else
                 {
-                    throw new ODataException(ODataErrorStrings.ODataJsonWriter_UnsupportedValueInCollection);
+                    sb.Append('"').Append(JsonValueUtils.GetEscapedJsonString(ODataErrorStrings.ODataJsonWriter_UnsupportedValueType(item.GetType().FullName))).Append('"');
                 }
             }
 
-            sb.Append("]");
+            sb.Append(']');
         }
 
         private static void ODataResourceValueToString(StringBuilder sb, ODataResourceValue value)
         {
-            bool isFirst = true;
-            sb.Append("{");
+            bool firstProperty = true;
+            sb.Append('{');
             foreach (ODataProperty property in value.Properties)
             {
-                if (isFirst)
+                if (firstProperty)
                 {
-                    isFirst = false;
+                    firstProperty = false;
                 }
                 else
                 {
-                    sb.Append(",");
+                    sb.Append(',');
                 }
 
-                sb.Append("\"").Append(property.Name).Append("\"").Append(":");
+                sb.Append("\"").Append(property.Name).Append("\"").Append(':');
                 ODataValueToString(sb, property.ODataValue);
             }
 
-            sb.Append("}");
+            sb.Append('}');
         }
 
         /// <summary>
@@ -392,7 +413,7 @@ namespace Microsoft.OData.Json
         /// <param name="innerError">Inner error details that will be included in debug mode (if present).</param>
         /// <param name="instanceAnnotations">Instance annotations for this error.</param>
         /// <param name="writeInstanceAnnotationsDelegate">Delegate to write the instance annotations.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
         private static async Task WriteErrorAsync(
             IJsonWriter jsonWriter,
@@ -403,12 +424,13 @@ namespace Microsoft.OData.Json
             ODataInnerError innerError,
             ICollection<ODataInstanceAnnotation> instanceAnnotations,
             Func<ICollection<ODataInstanceAnnotation>, Task> writeInstanceAnnotationsDelegate,
-            int maxInnerErrorDepth)
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(code != null, "code != null");
             Debug.Assert(message != null, "message != null");
             Debug.Assert(instanceAnnotations != null, "instanceAnnotations != null");
+            Debug.Assert(messageWriterSettings != null, "messageWriterSettings != null");
 
             ExceptionUtils.CheckArgumentNotNull(writeInstanceAnnotationsDelegate, "writeInstanceAnnotationsDelegate");
 
@@ -445,8 +467,12 @@ namespace Microsoft.OData.Json
 
             if (innerError != null)
             {
-                await WriteInnerErrorAsync(jsonWriter, innerError, JsonConstants.ODataErrorInnerErrorName,
-                    /* recursionDepth */ 0, maxInnerErrorDepth).ConfigureAwait(false);
+                await WriteInnerErrorAsync(
+                    jsonWriter,
+                    innerError,
+                    JsonConstants.ODataErrorInnerErrorName,
+                    recursionDepth: 0,
+                    messageWriterSettings).ConfigureAwait(false);
             }
 
             await writeInstanceAnnotationsDelegate(instanceAnnotations).ConfigureAwait(false);
@@ -481,7 +507,11 @@ namespace Microsoft.OData.Json
 
                 // "code": "301",
                 await jsonWriter.WriteNameAsync(JsonConstants.ODataErrorCodeName).ConfigureAwait(false);
-                await jsonWriter.WriteValueAsync(detail.ErrorCode ?? string.Empty).ConfigureAwait(false);
+                await jsonWriter.WriteValueAsync(detail.Code ?? string.Empty).ConfigureAwait(false);
+
+                // "message": "$search query option not supported",
+                await jsonWriter.WriteNameAsync(JsonConstants.ODataErrorMessageName).ConfigureAwait(false);
+                await jsonWriter.WriteValueAsync(detail.Message ?? string.Empty).ConfigureAwait(false);
 
                 if (detail.Target != null)
                 {
@@ -489,10 +519,6 @@ namespace Microsoft.OData.Json
                     await jsonWriter.WriteNameAsync(JsonConstants.ODataErrorTargetName).ConfigureAwait(false);
                     await jsonWriter.WriteValueAsync(detail.Target).ConfigureAwait(false);
                 }
-
-                // "message": "$search query option not supported",
-                await jsonWriter.WriteNameAsync(JsonConstants.ODataErrorMessageName).ConfigureAwait(false);
-                await jsonWriter.WriteValueAsync(detail.Message ?? string.Empty).ConfigureAwait(false);
 
                 // }
                 await jsonWriter.EndObjectScopeAsync().ConfigureAwait(false);
@@ -509,46 +535,50 @@ namespace Microsoft.OData.Json
         /// <param name="innerError">Inner error details.</param>
         /// <param name="innerErrorPropertyName">The property name for the inner error property.</param>
         /// <param name="recursionDepth">The number of times this method has been called recursively.</param>
-        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        /// <param name="messageWriterSettings">Configuration settings of the OData writer.</param>
         /// <returns>A task that represents the asynchronous write operation.</returns>
-        private static async Task WriteInnerErrorAsync(IJsonWriter jsonWriter, ODataInnerError innerError,
-            string innerErrorPropertyName, int recursionDepth, int maxInnerErrorDepth)
+        private static async Task WriteInnerErrorAsync(
+            IJsonWriter jsonWriter,
+            ODataInnerError innerError,
+            string innerErrorPropertyName,
+            int recursionDepth,
+            ODataMessageWriterSettings messageWriterSettings)
         {
             Debug.Assert(jsonWriter != null, "jsonWriter != null");
             Debug.Assert(innerErrorPropertyName != null, "innerErrorPropertyName != null");
 
-            ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, maxInnerErrorDepth);
+            ValidationUtils.IncreaseAndValidateRecursionDepth(ref recursionDepth, messageWriterSettings.MessageQuotas.MaxNestingDepth);
 
             // "innererror":
             await jsonWriter.WriteNameAsync(innerErrorPropertyName).ConfigureAwait(false);
             await jsonWriter.StartObjectScopeAsync().ConfigureAwait(false);
 
-            if (innerError.Properties != null)
+            foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
             {
-                foreach (KeyValuePair<string, ODataValue> pair in innerError.Properties)
-                {
-                    await jsonWriter.WriteNameAsync(pair.Key).ConfigureAwait(false);
+                await jsonWriter.WriteNameAsync(pair.Key).ConfigureAwait(false);
 
-                    if (pair.Value is ODataNullValue &&
-                        (pair.Key == JsonConstants.ODataErrorInnerErrorMessageName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorStackTraceName ||
-                        pair.Key == JsonConstants.ODataErrorInnerErrorTypeNameName))
-                    {
-                        // Write empty string for null values in stacktrace, type and message properties of inner error.
-                        await jsonWriter.WriteODataValueAsync(new ODataPrimitiveValue(string.Empty)).ConfigureAwait(false);
-                    }
-                    else
-                    {
-                        await jsonWriter.WriteODataValueAsync(pair.Value).ConfigureAwait(false);
-                    }
-                }
+                await jsonWriter.WriteODataValueAsync(pair.Value).ConfigureAwait(false);
             }
 
             if (innerError.InnerError != null)
             {
-                // "internalexception": { <nested inner error> }
-                await WriteInnerErrorAsync(jsonWriter, innerError.InnerError, JsonConstants.ODataErrorInnerErrorInnerErrorName,
-                    recursionDepth, maxInnerErrorDepth).ConfigureAwait(false);
+                string nestedInnerErrorPropertyName;
+                if (messageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization))
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorInnerErrorName;
+                }
+                else
+                {
+                    nestedInnerErrorPropertyName = JsonConstants.ODataErrorInnerErrorName;
+                }
+
+                // "internalexception": { <nested inner error> } or "innererror": { <nested inner error> }
+                await WriteInnerErrorAsync(
+                    jsonWriter,
+                    innerError.InnerError,
+                    nestedInnerErrorPropertyName,
+                    recursionDepth,
+                    messageWriterSettings).ConfigureAwait(false);
             }
 
             // }

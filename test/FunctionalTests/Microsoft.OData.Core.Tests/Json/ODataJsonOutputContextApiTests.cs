@@ -2558,19 +2558,24 @@ POST http://tempuri.org/Customers HTTP/1.1
             Assert.Equal(expected, syncResult);
         }
 
-        [Fact]
-        public async Task WriteError_APIsShouldYieldSameResult()
+        [Theory]
+        [InlineData(ODataLibraryCompatibility.UseLegacyODataInnerErrorSerialization, JsonConstants.ODataErrorInnerErrorInnerErrorName)]
+        [InlineData(ODataLibraryCompatibility.None, JsonConstants.ODataErrorInnerErrorName)]
+        public async Task WriteError_APIsShouldYieldSameResult(ODataLibraryCompatibility libraryCompatibility, string nestedInnerErrorPropertyName)
         {
             var nullReferenceError = new ODataError
             {
-                ErrorCode = "badRequest",
+                Code = "badRequest",
                 Message = "Object reference not set to an instance of an object",
                 Target = "ConApp",
-                InnerError = new ODataInnerError
+                InnerError = new ODataInnerError(
+                    new Dictionary<string, ODataValue>
+                    {
+                        { JsonConstants.ODataErrorInnerErrorMessageName, new ODataPrimitiveValue("Exception thrown due to attempt to access a member on a variable that currently holds a null reference") },
+                        { JsonConstants.ODataErrorInnerErrorTypeNameName, new ODataPrimitiveValue("System.NullReferenceException") },
+                        { JsonConstants.ODataErrorInnerErrorStackTraceName, new ODataPrimitiveValue("   at ConApp.Program.Main(String[] args) in C:\\Projects\\ConApp\\ConApp\\Program.cs:line 10") },
+                    })
                 {
-                    TypeName = "System.NullReferenceException",
-                    Message = "Exception thrown due to attempt to access a member on a variable that currently holds a null reference",
-                    StackTrace = "   at ConApp.Program.Main(String[] args) in C:\\Projects\\ConApp\\ConApp\\Program.cs:line 10",
                     InnerError = new ODataInnerError()
                 },
                 InstanceAnnotations = new List<ODataInstanceAnnotation>
@@ -2579,6 +2584,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 }
             };
 
+            this.writerSettings.LibraryCompatibility |= libraryCompatibility;
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
 #if NETCOREAPP
@@ -2616,7 +2622,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 "\"message\":\"Exception thrown due to attempt to access a member on a variable that currently holds a null reference\"," +
                 "\"type\":\"System.NullReferenceException\"," +
                 "\"stacktrace\":\"   at ConApp.Program.Main(String[] args) in C:\\\\Projects\\\\ConApp\\\\ConApp\\\\Program.cs:line 10\"," +
-                "\"internalexception\":{\"message\":\"\",\"type\":\"\",\"stacktrace\":\"\"}}," +
+                $"\"{nestedInnerErrorPropertyName}\":{{}}}}," +
                 "\"@Is.Error\":true}}";
 
             Assert.Equal(expected, asyncResult);

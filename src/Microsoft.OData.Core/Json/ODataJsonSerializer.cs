@@ -215,7 +215,11 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(error != null, "error != null");
 
-            this.WriteTopLevelPayload(() => ODataJsonWriterUtils.WriteError(this.JsonOutputContext.JsonWriter, this.InstanceAnnotationWriter.WriteInstanceAnnotationsForError, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth));
+            this.WriteTopLevelPayload(() => ODataJsonWriterUtils.WriteError(
+                this.JsonOutputContext.JsonWriter,
+                this.InstanceAnnotationWriter.WriteInstanceAnnotationsForError,
+                error, includeDebugInformation,
+                this.MessageWriterSettings));
         }
 
         /// <summary>
@@ -321,7 +325,7 @@ namespace Microsoft.OData.Json
                     thisParam.InstanceAnnotationWriter.WriteInstanceAnnotationsForErrorAsync,
                     errorParam,
                     includeDebugInformationParam,
-                    thisParam.MessageWriterSettings.MessageQuotas.MaxNestingDepth),
+                    thisParam.MessageWriterSettings),
                 this,
                 error,
                 includeDebugInformation);

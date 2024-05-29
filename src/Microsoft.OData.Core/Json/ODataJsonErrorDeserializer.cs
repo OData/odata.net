@@ -307,18 +307,31 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorInnerErrorMessageName:
-                    innerError.Message = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorMessageName);
+                    string innerErrorMessage = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorMessageName);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorMessageName,
+                        new ODataPrimitiveValue(innerErrorMessage));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorTypeNameName:
-                    innerError.TypeName = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName);
+                    string innerErrorTypeName = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorTypeNameName);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorTypeNameName,
+                        new ODataPrimitiveValue(innerErrorTypeName));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorStackTraceName:
-                    innerError.StackTrace = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName);
+                    string innerErrorStackTrace = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorInnerErrorStackTraceName);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorStackTraceName,
+                        new ODataPrimitiveValue(innerErrorStackTrace));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorInnerErrorName:
+                case JsonConstants.ODataErrorInnerErrorName:
                     innerError.InnerError = this.ReadInnerError(recursionDepth);
                     break;
 
@@ -354,7 +367,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    error.ErrorCode = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
+                    error.Code = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
                     break;
 
                 case JsonConstants.ODataErrorMessageName:
@@ -441,7 +454,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    detail.ErrorCode = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
+                    detail.Code = this.JsonReader.ReadStringValue(JsonConstants.ODataErrorCodeName);
                     break;
 
                 case JsonConstants.ODataErrorMessageName:
@@ -686,21 +699,34 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorInnerErrorMessageName:
-                    innerError.Message = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorMessageName)
+                    string innerErrorMessage = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorMessageName)
                         .ConfigureAwait(false);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorMessageName,
+                        new ODataPrimitiveValue(innerErrorMessage));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorTypeNameName:
-                    innerError.TypeName = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorTypeNameName)
+                    string innerErrorTypeName = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorTypeNameName)
                         .ConfigureAwait(false);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorTypeNameName,
+                        new ODataPrimitiveValue(innerErrorTypeName));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorStackTraceName:
-                    innerError.StackTrace = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorStackTraceName)
+                    string innerErrorStackTrace = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorInnerErrorStackTraceName)
                         .ConfigureAwait(false);
+
+                    innerError.Properties.Add(
+                        JsonConstants.ODataErrorInnerErrorStackTraceName,
+                        new ODataPrimitiveValue(innerErrorStackTrace));
                     break;
 
                 case JsonConstants.ODataErrorInnerErrorInnerErrorName:
+                case JsonConstants.ODataErrorInnerErrorName:
                     innerError.InnerError = await this.ReadInnerErrorAsync(recursionDepth)
                         .ConfigureAwait(false);
                     break;
@@ -739,7 +765,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    error.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                    error.Code = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
                         .ConfigureAwait(false);
                     break;
 
@@ -835,7 +861,7 @@ namespace Microsoft.OData.Json
             switch (propertyName)
             {
                 case JsonConstants.ODataErrorCodeName:
-                    errorDetail.ErrorCode = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
+                    errorDetail.Code = await this.JsonReader.ReadStringValueAsync(JsonConstants.ODataErrorCodeName)
                         .ConfigureAwait(false);
                     break;
 

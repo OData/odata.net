@@ -233,7 +233,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     }
 
                     await messageWriter.WriteErrorAsync(
-                        new ODataError { ErrorCode = "NRE", Message = "Object reference not set to an instance of an object." },
+                        new ODataError { Code = "NRE", Message = "Object reference not set to an instance of an object." },
                         /*includeDebugInformation*/ true);
                 }
             });
@@ -259,7 +259,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                         }
 
                         messageWriter.WriteError(
-                            new ODataError { ErrorCode = "NRE", Message = "Object reference not set to an instance of an object." },
+                            new ODataError { Code = "NRE", Message = "Object reference not set to an instance of an object." },
                             /*includeDebugInformation*/ true);
                     }
                 }));

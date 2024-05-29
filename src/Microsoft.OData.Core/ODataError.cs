@@ -7,24 +7,23 @@
 namespace Microsoft.OData
 {
     #region Namespaces
-    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
-    using System.Globalization;
     using System.Linq;
+    using System.Text;
     using Microsoft.OData.Json;
     #endregion Namespaces
 
     /// <summary>
     /// Class representing an error payload.
     /// </summary>
-    [DebuggerDisplay("{ErrorCode}: {Message}")]
+    [DebuggerDisplay("{Code}: {Message}")]
     public sealed class ODataError : ODataAnnotatable
     {
         /// <summary>Gets or sets the error code to be used in payloads.</summary>
         /// <returns>The error code to be used in payloads.</returns>
-        public string ErrorCode
+        public string Code
         {
             get;
             set;
@@ -73,19 +72,39 @@ namespace Microsoft.OData
         /// <returns>The string in Json format.</returns>
         public override string ToString()
         {
-            return string.Format(CultureInfo.InvariantCulture,
-                "{{\"error\":{{" +
-                "\"code\":\"{0}\"," +
-                "\"message\":\"{1}\"," +
-                "\"target\":\"{2}\"," +
-                "\"details\":{3}," +
-                "\"innererror\":{4}" +
-                " }}}}",
-                this.ErrorCode == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.ErrorCode),
-                this.Message  == null ? ""  : JsonValueUtils.GetEscapedJsonString(this.Message),
-                this.Target == null ? "" : JsonValueUtils.GetEscapedJsonString(this.Target),
-                this.Details == null ? "{}" : GetJsonStringForDetails(),
-                this.InnerError == null ? "{}" : this.InnerError.ToJson());
+            StringBuilder builder = new StringBuilder();
+
+            // `code` and `message` must be included
+            string code = this.Code == null ? string.Empty : JsonValueUtils.GetEscapedJsonString(this.Code);
+            string message = this.Message == null ? string.Empty : JsonValueUtils.GetEscapedJsonString(this.Message);
+
+            builder.Append("{\"error\":{");
+            builder.Append('"').Append(JsonConstants.ODataErrorCodeName).Append("\":");
+            builder.Append('"').Append(code).Append('"');
+            builder.Append(",\"").Append(JsonConstants.ODataErrorMessageName).Append("\":");
+            builder.Append('"').Append(message).Append('"');
+
+            if (this.Target != null)
+            {
+                builder.Append(",\"").Append(JsonConstants.ODataErrorTargetName).Append("\":");
+                builder.Append('"').Append(JsonValueUtils.GetEscapedJsonString(this.Target)).Append('"');
+            }
+
+            if (this.Details != null)
+            {
+                builder.Append(",\"").Append(JsonConstants.ODataErrorDetailsName).Append("\":");
+                builder.Append(GetJsonStringForDetails());
+            }
+
+            if (this.InnerError != null)
+            {
+                builder.Append(",\"").Append(JsonConstants.ODataErrorInnerErrorName).Append("\":");
+                builder.Append(this.InnerError.ToJsonString());
+            }
+
+            builder.Append("}}");
+
+            return builder.ToString();
         }
 
         /// <summary>
@@ -94,7 +113,15 @@ namespace Microsoft.OData
         /// <returns>Json format string representing collection.</returns>
         private string GetJsonStringForDetails()
         {
-            return "[" + String.Join(",", this.Details.Select(i => i.ToJson()).ToArray()) + "]";
+            Debug.Assert(this.Details != null, "this.Details != null");
+
+            StringBuilder builder = new StringBuilder();
+
+            builder.Append('[');
+            builder.AppendJoin(',', this.Details.Where(d => d != null).Select(d => d.ToJsonString()));
+            builder.Append(']');
+
+            return builder.ToString();
         }
 }
 }

@@ -108,7 +108,7 @@ namespace Microsoft.OData
             return TaskUtils.GetTaskForSynchronousOperationReturningTask(
                 () =>
                 {
-                    ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+                    ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings);
                     return this.FlushAsync();
                 });
         }
@@ -161,7 +161,7 @@ namespace Microsoft.OData
         {
             this.AssertSynchronous();
 
-            ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
+            ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings);
             this.Flush();
         }
 

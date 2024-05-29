@@ -51,7 +51,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
             if (error != null)
             {
                 var record = new AvroRecord(schema);
-                record["ErrorCode"] = error.ErrorCode;
+                record["ErrorCode"] = error.Code;
                 record["Message"] = error.Message;
                 return record;
             }
