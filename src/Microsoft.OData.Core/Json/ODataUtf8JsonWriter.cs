@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
 using System.Text.Unicode;
 using System.Buffers.Text;
+using System.Xml;
 
 namespace Microsoft.OData.Json
 {
@@ -311,7 +312,13 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                this.utf8JsonWriter.WriteNumberValue(value);
+                // We write doubles like 100 as 100.0 (with .0 decimal point) to distinguish from ints when round-tripping.
+                // double.ToString() supports a max scale of 14,
+                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
+                // to use XmlConvert in all other cases, except infinity
+                string valueToWrite = XmlConvert.ToString(value);
+                bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
+                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: false);
             }
 
             this.FlushIfBufferThresholdReached();
