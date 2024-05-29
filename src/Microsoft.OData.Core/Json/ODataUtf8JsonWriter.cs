@@ -312,11 +312,16 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                // We write doubles like 100 as 100.0 (with .0 decimal point) to distinguish from ints when round-tripping.
-                // double.ToString() supports a max scale of 14,
                 // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
                 // to use XmlConvert in all other cases, except infinity
                 string valueToWrite = XmlConvert.ToString(value);
+
+                // We write doubles like 100 as 100.0 (with .0 decimal point).
+                // We do this to retain consistency with the legacy JsonWriter and with older
+                // versions. However, it's not a hard requirement. Clients should not rely on the .0
+                // to decide whether a value is an integer or double. We should consider
+                // dropping this in the future (potentially behind a compatibility flag) to avoid
+                // the cost of converting to a string and checking whether a decimal point is needed.
                 bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
                 this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: false);
             }
