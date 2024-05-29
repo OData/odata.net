@@ -51,6 +51,82 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
+        /// Splits the parenthesis expression into two parts (if apply)
+        /// One is the function parameter, the other is key in parenthesis (if exists)
+        /// Be noted, the input expression doesn't contain the beginning "(" and the ending ")"
+        /// </summary>
+        /// <param name="parenthesisExpression">the input expression</param>
+        /// <param name="parameters">the output for parameter part</param>
+        /// <param name="parenthesisKey">the output for key in parenthesis part</param>
+        internal static void SplitOperationParametersAndParenthesisKey(string parenthesisExpression, out string parameters, out string parenthesisKey)
+        {
+            // Be noted, the input expression doesn't contain the first '(' and last ')'.
+            // for example
+            // "degree=')')('fawn'"
+            // ")('fawn'"              ==> empty parameter with a key in parenthesis
+            parameters = parenthesisExpression;
+            parenthesisKey = null;
+
+            if (string.IsNullOrEmpty(parenthesisExpression))
+            {
+                return;
+            }
+
+            Stack<ExpressionTokenKind> stack = new Stack<ExpressionTokenKind>();
+            stack.Push(ExpressionTokenKind.OpenParen);
+            ExpressionLexer lexer = new ExpressionLexer(parenthesisExpression, true /*moveToFirstToken*/, false /*useSemicolonDelimiter*/, true /*parsingFunctionParameters*/);
+            bool paramertersFound = false;
+            bool parenthesisKeyFound = false;
+            int parenthesisKeyStartPosition = 0;
+            ExpressionToken currentToken = lexer.CurrentToken;
+            while (true)
+            {
+                if (currentToken.Kind == ExpressionTokenKind.OpenParen)
+                {
+                    if (stack.Count == 0)
+                    {
+                        parenthesisKeyStartPosition = currentToken.Position;
+                    }
+
+                    stack.Push(ExpressionTokenKind.OpenParen);
+                }
+                else if (currentToken.Kind == ExpressionTokenKind.CloseParen || currentToken.Kind == ExpressionTokenKind.End)
+                {
+                    if (stack.Count == 1) // It's a top level
+                    {
+                        if (!paramertersFound)
+                        {
+                            parameters = parenthesisExpression.Substring(0, currentToken.Position);
+                            paramertersFound = true;
+                        }
+                        else if (!parenthesisKeyFound)
+                        {
+                            parenthesisKeyFound = true;
+                        }
+                        else
+                        {
+                            throw new ODataException(ODataErrorStrings.ExpressionLexer_SyntaxError(currentToken.Position, parenthesisExpression));
+                        }
+                    }
+
+                    stack.Pop(); // match an embeded '()'
+                }
+
+                if (currentToken.Kind == ExpressionTokenKind.End)
+                {
+                    break;
+                }
+
+                currentToken = lexer.NextToken();
+            }
+
+            if (parenthesisKeyFound)
+            {
+                parenthesisKey = parenthesisExpression.Substring(parenthesisKeyStartPosition + 1);// +1 means to remove the leading '('
+            }
+        }
+
+        /// <summary>
         /// Tries to parse a collection of function parameters. Allows path and filter to share the core algorithm while representing parameters differently.
         /// </summary>
         /// <param name="parser">The UriQueryExpressionParser to read from.</param>
