@@ -127,6 +127,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNaN()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatPositiveInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNegativeInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public async Task WritePrimitiveValueAsync_Int16()
         {
             await this.VerifyWritePrimitiveValueAsync((short)876, "876");
@@ -247,6 +265,39 @@ namespace Microsoft.OData.Tests.Json
             this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible, Encoding.UTF8);
             await this.writer.WritePrimitiveValueAsync(parameter);
             Assert.Equal(expected, await this.ReadStreamAsync());
+        }
+
+        [Theory]
+        [InlineData(124.45, "124.45")]
+        // We write the .0 for doubles without a fractional part
+        // for consistency with the original JsonWriter implementation
+        // and with previous versions. However, it's not a hard requirement.
+        // Clients should not rely on the .0 to decide whether a value
+        // is an integer or double.
+        // In the future we can consider relaxing the need to add a .0 (possibly behind a feature flag).
+        [InlineData(124.0, "124")]
+        [InlineData(1.123456789012345, "1.123456789012345")]
+        [InlineData(1.245E+24, "1.245E+24")]
+        [InlineData(1.245E-24, "1.245E-24")]
+        [InlineData(double.PositiveInfinity, "\"INF\"")]
+        [InlineData(double.NegativeInfinity, "\"-INF\"")]
+        [InlineData(double.NaN, "\"NaN\"")]
+        public async Task WriteDoubleAsync(double value, string expectedOutput)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
+                await jsonWriter.WriteValueAsync(value);
+                await jsonWriter.FlushAsync();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
         }
 
         #endregion
@@ -664,6 +715,38 @@ namespace Microsoft.OData.Tests.Json
 
                 await WriteSpecialCharsInChunksOfOddStringInChunksAsync(tw, input);
 
+                await jsonWriter.EndTextWriterValueScopeAsync();
+                await jsonWriter.FlushAsync();
+
+                stream.Seek(0, SeekOrigin.Begin);
+
+                using (StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8))
+                {
+                    string rawOutput = await reader.ReadToEndAsync();
+                    Assert.Equal(expectedOutput, rawOutput);
+                }
+            }
+        }
+
+        [Theory]
+        [InlineData("application/json", 'a', "a")]
+        [InlineData("text/html", 'a', "\"a\"")]
+        [InlineData("text/plain", 'a', "\"a\"")]
+        // JSON special char
+        [InlineData("application/json", '"', "\"")]
+        [InlineData("text/html", '"', "\"\\u0022\"")]
+        [InlineData("text/plain", '"', "\"\\u0022\"")]
+        // non-ascii
+        [InlineData("application/json", '你', "你")]
+        [InlineData("text/html", '你', "\"\\u4F60\"")]
+        [InlineData("text/plain", '你', "\"\\u4F60\"")]
+        public async Task TextWriter_CorrectlyWritesSingleCharacterAsync(string contentType, char value, string expectedOutput)
+        {
+            using (MemoryStream stream = new MemoryStream())
+            {
+                IJsonStreamWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8) as IJsonStreamWriterAsync;
+                var tw = await jsonWriter.StartTextWriterValueScopeAsync(contentType);
+                await tw.WriteAsync(value);
                 await jsonWriter.EndTextWriterValueScopeAsync();
                 await jsonWriter.FlushAsync();
 
