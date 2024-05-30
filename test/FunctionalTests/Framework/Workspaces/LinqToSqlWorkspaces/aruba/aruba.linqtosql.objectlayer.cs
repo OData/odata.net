@@ -15,7 +15,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 /*command line to generate file
- * sqlmetal /server:{serverName} /database:{dbname} /user:oledb /password:1Password! 
+ * sqlmetal /server:{serverName} /database:{dbname} /user:{username} /password:{password} 
  * /code:Aruba.LinqToSql.ObjectLayer.cs /namespace:Aruba 
  * /entitybase:System.Data.Test.AstoriaTestLinqToSqlEntityBase /context:ArubaDataContext
  */

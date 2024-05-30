@@ -3,14 +3,10 @@ steps:
   inputs:
     versionSpec: '6.5.0'
 
-  
-
-
-    
 - task: UseDotNet@2
   inputs:
     version: '8.x'
- 
+
 - task: PowerShell@2
   inputs:
     targetType: 'inline'
@@ -20,8 +16,6 @@ steps:
       [System.Reflection.Assembly]::Load("System.EnterpriseServices, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a")
       $publish = New-Object System.EnterpriseServices.Internal.Publish
       $publish.GacInstall("$(gacUtil)")
-
-
 - task: UseDotNet@2
   inputs:
     version: '8.x'
@@ -30,7 +24,6 @@ steps:
 - task: UseDotNet@2
   inputs:
     version: '2.1.x'
-
 
 - task: DotNetCoreCLI@2
   displayName: 'Build'  
@@ -54,10 +47,10 @@ steps:
 # TODO: e2e tests fail to run. We should fix/rewrite e2e tests to support the new target frameworks.
 # See: https://github.com/OData/odata.net/issues/2852
 # - task: DotNetCoreCLI@2
-#   condition: eq(variables.BuildConfiguration, 'Release')
+#   condition: eq(variables.buildConfiguration, 'Release')
 #   displayName: 'Test'
 #   inputs:
 #     command: 'test'
-#     arguments: '--configuration $(BuildConfiguration) --collect "Code coverage"'
+#     arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
 #     projects: |      
 #       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
