@@ -418,7 +418,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
                 if (targetSegmentsCount == 3)
                 {
-                    // The only valid target with three segments is a function parameter, or an operation return.
+                    // First try the case of three segments being a function parameter, or an operation return.
                     string containerName = targetSegments[0];
                     string operationName = targetSegments[1];
                     string parameterName = targetSegments[2];
@@ -449,6 +449,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                             return new UnresolvedParameter(operationImport.Operation, parameterName, this.Location);
                         }
 
+                        // Failing the above special cases, fallback to standard targetPath parsing.
                         IEdmTargetPath targetPath = model.GetTargetPath(target);
 
                         if (targetPath != null)
