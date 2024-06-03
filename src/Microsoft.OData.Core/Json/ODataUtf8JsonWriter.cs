@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
 using System.Text.Unicode;
 using System.Buffers.Text;
+using System.Xml;
 
 namespace Microsoft.OData.Json
 {
@@ -252,7 +253,24 @@ namespace Microsoft.OData.Json
         public void WriteValue(float value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+
+            if (float.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (float.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (float.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -936,7 +954,23 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(float value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (float.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (float.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (float.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
