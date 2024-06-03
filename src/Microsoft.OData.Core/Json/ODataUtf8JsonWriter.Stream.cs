@@ -64,7 +64,7 @@ namespace Microsoft.OData.Json
             this.WriteItemWithSeparatorIfNeeded();
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
 
-            await this.FlushAsync().ConfigureAwait(false);
+            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
 
             this.binaryValueStream = new ODataUtf8JsonWriteStream(this);
 
