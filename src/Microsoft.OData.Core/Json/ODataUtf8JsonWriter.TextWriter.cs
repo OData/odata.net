@@ -142,14 +142,20 @@ namespace Microsoft.OData.Json
         internal sealed class ODataUtf8JsonTextWriter : TextWriter
         {
             private readonly ODataUtf8JsonWriter jsonWriter = null;
-            // Buffer used to store chars that were could not be encoded due to
-            // insufficient data in the input buffer. The chars will be prepended
-            // to the next chunk of input.
+            /// <summary>
+            /// Buffer used to store characters that could not be encoded due to
+            /// insufficient data in the input buffer. These characters will be prepended
+            /// to the next chunk of input.
+            /// </summary>
             private char[] buffer;
-            // Number of chars in the buffer that are left over frevious chunk.
+            /// <summary>
+            /// Number of characters in the buffer that are left over from the previous chunk.
+            /// </summary>
             private int numOfCharsNotWrittenFromPreviousChunk = 0;
-            // This buffer is used to by Write(char) to store the char so
-            // that we can re-use our Write(char[], ...) method.
+            /// <summary>
+            /// This buffer is used by the Write(char) method to store a single character,
+            /// that we can reuse the methods for writing chars in chunks.
+            /// </summary>
             private char[] singleCharBuffer;
 
             public ODataUtf8JsonTextWriter(ODataUtf8JsonWriter jsonWriter)
@@ -219,7 +225,7 @@ namespace Microsoft.OData.Json
             }
 
             /// <summary>
-            /// Writes the specifid character to the ODataUtf8JsonWriter.
+            /// Writes the specified character to the ODataUtf8JsonWriter.
             /// </summary>
             /// <param name="value">The character to write.</param>
             public override void Write(char value)
@@ -237,7 +243,7 @@ namespace Microsoft.OData.Json
             }
 
             /// <summary>
-            /// Writes the specifid character to the ODataUtf8JsonWriter.
+            /// Asynchronously writes the specified character to the ODataUtf8JsonWriter.
             /// </summary>
             /// <param name="value">The character to write.</param>
             public override async Task WriteAsync(char value)

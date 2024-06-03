@@ -269,12 +269,6 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         [InlineData(124.45, "124.45")]
-        // We write the .0 for doubles without a fractional part
-        // for consistency with the original JsonWriter implementation
-        // and with previous versions. However, it's not a hard requirement.
-        // Clients should not rely on the .0 to decide whether a value
-        // is an integer or double.
-        // In the future we can consider relaxing the need to add a .0 (possibly behind a feature flag).
         [InlineData(124.0, "124")]
         [InlineData(1.123456789012345, "1.123456789012345")]
         [InlineData(1.245E+24, "1.245E+24")]
