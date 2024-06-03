@@ -1,8 +1,8 @@
 ﻿﻿﻿# OData .NET Libraries
  Build  | Status
 --------|---------
-Rolling | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/422/badge"/>
-Nightly | <img src="https://identitydivision.visualstudio.com/_apis/public/build/definitions/2cfe7ec3-b94f-4ab9-85ab-2ebff928f3fd/107/badge"/>
+Rolling | [![Build Status](https://identitydivision.visualstudio.com/OData/_apis/build/status%2FOData.net%2FOData-main-rolling-1ES?repoName=OData%2Fodata.net&branchName=refs%2Fpull%2F2985%2Fmerge)](https://identitydivision.visualstudio.com/OData/_build/latest?definitionId=2422&repoName=OData%2Fodata.net&branchName=refs%2Fpull%2F2985%2Fmerge)
+Nightly | [![Build Status](https://identitydivision.visualstudio.com/OData/_apis/build/status%2FOData.net%2FOData-main-nightly-1ES?repoName=OData%2Fodata.net&branchName=dev-8.x)](https://identitydivision.visualstudio.com/OData/_build/latest?definitionId=2423&repoName=OData%2Fodata.net&branchName=dev-8.x)
 
 ## 1. Introduction
 
