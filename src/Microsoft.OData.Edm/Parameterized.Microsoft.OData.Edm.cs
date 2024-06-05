@@ -512,11 +512,11 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The types of all properties in the dependent role of a referential constraint must be the same as the corresponding property types in the principal role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint '{4}'."
+        /// A string like "The types of all properties in the dependent role of a referential constraint must be the same as the corresponding property types in the principal role. The type of property '{0}' on entity '{1}' does not match the type of property '{2}' on entity '{3}' in the referential constraint."
         /// </summary>
-        internal static string EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(object p0, object p1, object p2, object p3, object p4)
+        internal static string EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(object p0, object p1, object p2, object p3)
         {
-            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint, p0, p1, p2, p3, p4);
+            return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint, p0, p1, p2, p3);
         }
 
         /// <summary>
