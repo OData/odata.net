@@ -74,36 +74,61 @@ namespace Microsoft.OData.UriParser
         /// anything and simply provides the raw text of both the identifier and parenthetical expression.
         /// </summary>
         /// <remarks>Internal only so it can be called from tests. Should not be used outside <see cref="ODataPathParser"/>.</remarks>
+        /// <param name="enableKeyAsSegment">Whether key-as-segment is enabled.</param>
         /// <param name="segmentText">The segment text.</param>
         /// <param name="identifier">The identifier that was found.</param>
         /// <param name="parenthesisExpression">The query portion that was found. Will be null after the call if no query portion was present.</param>
-        internal static void ExtractSegmentIdentifierAndParenthesisExpression(string segmentText, out string identifier, out string parenthesisExpression)
+        internal static void ExtractSegmentIdentifierAndParenthesisExpression(
+            bool enableKeyAsSegment,
+            string segmentText,
+            out string identifier,
+            out string parenthesisExpression)
         {
             Debug.Assert(segmentText != null, "segment != null");
 
+            // We allow a single trailing '/', which results in an empty segment.
+            // However System.Uri removes it, so any empty segment we see is a 404 error.
+            if (segmentText.Length == 0)
+            {
+                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+            }
+
             int parenthesisStart = segmentText.IndexOf('(');
-            if (parenthesisStart < 0)
+
+            bool containsOpenParenthesis = parenthesisStart >= 0;
+            bool endsWithCloseParenthesis = segmentText[segmentText.Length - 1] == ')';
+
+            if (containsOpenParenthesis != endsWithCloseParenthesis && !enableKeyAsSegment)
+            {
+                // If the parenthesis are not in the expected state fail with a syntax error. We do not do this for key-as-segment
+                // because in that case the segment text is potentially still a valid key value.
+                throw ExceptionUtil.CreateSyntaxError();
+            }
+            else if (containsOpenParenthesis && endsWithCloseParenthesis)
+            {
+                // Split the string to grab the identifier and remove the parentheses.
+                identifier = segmentText.Substring(0, parenthesisStart);
+                parenthesisExpression = segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
+            }
+            else
             {
                 identifier = segmentText;
                 parenthesisExpression = null;
             }
-            else
-            {
-                if (segmentText[segmentText.Length - 1] != ')')
-                {
-                    throw ExceptionUtil.CreateSyntaxError();
-                }
 
-                // split the string to grab the identifier and remove the parentheses
-                identifier = segmentText.Substring(0, parenthesisStart);
-                parenthesisExpression = segmentText.Substring(parenthesisStart + 1, segmentText.Length - identifier.Length - 2);
-            }
-
-            // We allow a single trailing '/', which results in an empty segment.
-            // However System.Uri removes it, so any empty segment we see is a 404 error.
             if (identifier.Length == 0)
             {
-                throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+                if (enableKeyAsSegment)
+                {
+                    // We already know that the segment itself is non-zero and so if the identifier is empty and we've enabled
+                    // key-as-segment we'll treat the entire segment as the identifier.
+                    identifier = segmentText;
+                    parenthesisExpression = null;
+                }
+                else
+                {
+                    throw ExceptionUtil.ResourceNotFoundError(ODataErrorStrings.RequestUriProcessor_EmptySegmentInRequestUrl);
+                }
             }
         }
 
@@ -835,9 +860,12 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
+                segmentText,
+                out string identifier,
+                out string parenthesisExpression);
             Debug.Assert(identifier != null, "identifier != null");
 
             // Look for well-known system resource points.
@@ -923,9 +951,12 @@ namespace Microsoft.OData.UriParser
         /// <returns>boolean value.</returns>
         private bool BindSegmentBeforeEscapeFunction(string segmentText)
         {
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(segmentText, out identifier, out parenthesisExpression);
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
+                segmentText,
+                out string identifier,
+                out string parenthesisExpression);
 
             if (this.parsedSegments.Count == 0)
             {
@@ -966,7 +997,7 @@ namespace Microsoft.OData.UriParser
                 }
 
                 // For KeyAsSegment, try to handle as key segment
-                if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
+                if (enableKeyAsSegment && this.TryHandleAsKeySegment(segmentText))
                 {
                     return true;
                 }
@@ -1178,9 +1209,12 @@ namespace Microsoft.OData.UriParser
                 return;
             }
 
-            string identifier;
-            string parenthesisExpression;
-            ExtractSegmentIdentifierAndParenthesisExpression(text, out identifier, out parenthesisExpression);
+            bool enableKeyAsSegment = this.configuration.UrlKeyDelimiter.EnableKeyAsSegment;
+            ODataPathParser.ExtractSegmentIdentifierAndParenthesisExpression(
+                enableKeyAsSegment,
+                text,
+                out string identifier,
+                out string parenthesisExpression);
             /*
              * For Non-KeyAsSegment, try to handle it as a key property value, unless it was preceded by an escape - marker segment('$').
              * For KeyAsSegment, the following precedence rules should be supported[ODATA - 799]:
@@ -1247,7 +1281,7 @@ namespace Microsoft.OData.UriParser
             }
 
             // For KeyAsSegment, try to handle as key segment
-            if (this.configuration.UrlKeyDelimiter.EnableKeyAsSegment && this.TryHandleAsKeySegment(text))
+            if (enableKeyAsSegment && this.TryHandleAsKeySegment(text))
             {
                 return;
             }
