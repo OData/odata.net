@@ -1451,16 +1451,7 @@ namespace Microsoft.OData.Json
                 Name = propertyName,
             };
 
-            AttachODataAnnotations(resourceState, propertyName, propertyInfo);
-
-            IEnumerable<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
-            foreach (KeyValuePair<string, object> annotation in customAnnotations)
-            {
-                 // annotation.Value == null indicates that this annotation should be skipped?
-                 propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-            }
-
-            resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(propertyInfo);
+            AddResourceProperty(resourceState, propertyName, propertyInfo);
 
             return new ODataJsonReaderNestedPropertyInfo(propertyInfo, property, false);
         }

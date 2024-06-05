@@ -1005,32 +1005,43 @@ namespace Microsoft.OData.Json
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
             ODataProperty property = new ODataProperty { Name = propertyName, Value = propertyValue };
-            AttachODataAnnotations(resourceState, propertyName, property);
-            foreach (KeyValuePair<string, object> annotation
-                     in resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName))
-            {
-                if (annotation.Value != null)
-                {
-                    // annotation.Value == null indicates that this annotation should be skipped.
-                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                }
-            }
+            AddResourceProperty(resourceState, propertyName, property);
 
-            // Debug.Assert(property.InstanceAnnotations.GroupBy(s => s.Name).Where(s => s.Count() > 1).Count() <= 0,
-            //    "No annotation name should have been added into the InstanceAnnotations collection twice.");
+            return property;
+        }
+
+        /// <summary>
+        /// Adds a new property to a resource.
+        /// </summary>
+        /// <param name="resourceState">The resource state for the resource to add the property to.</param>
+        /// <param name="propertyName">The name of the property to add.</param>
+        /// <param name="property">The property to add.</param>
+        protected static void AddResourceProperty(IODataJsonReaderResourceState resourceState, string propertyName, ODataPropertyInfo property)
+        {
+            Debug.Assert(resourceState != null, "resourceState != null");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
+
+            AttachODataAnnotations(resourceState.PropertyAndAnnotationCollector, propertyName, property);
+            AttachCustomAnnotations(resourceState.PropertyAndAnnotationCollector, propertyName, property);
+
             resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
             ODataResourceBase resource = resourceState.Resource;
             Debug.Assert(resource != null, "resource != null");
             resource.Properties = resource.Properties.ConcatToReadOnlyEnumerable("Properties", property);
-            return property;
         }
 
-        protected static void AttachODataAnnotations(IODataJsonReaderResourceState resourceState, string propertyName, ODataPropertyInfo property)
+        /// <summary>
+        /// Attaches OData annotations to the property.
+        /// </summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="property">The property.</param>
+        protected static void AttachODataAnnotations(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, ODataPropertyInfo property)
         {
             foreach (KeyValuePair<string, object> annotation
                      in propertyName.Length == 0
-                        ? resourceState.PropertyAndAnnotationCollector.GetODataScopeAnnotation()
-                        : resourceState.PropertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
+                        ? propertyAndAnnotationCollector.GetODataScopeAnnotation()
+                        : propertyAndAnnotationCollector.GetODataPropertyAnnotations(propertyName))
             {
                 Debug.Assert(annotation.Value != null);
                 if (String.Equals(annotation.Key, ODataAnnotationNames.ODataType, StringComparison.Ordinal)
@@ -1046,6 +1057,24 @@ namespace Microsoft.OData.Json
                                         ? new ODataPrimitiveValue(uri.OriginalString)
                                         : annotation.Value.ToODataValue();
                     property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, val, true));
+                }
+            }
+        }
+
+        /// <summary>
+        /// Attaches custom annotations to the property.
+        /// </summary>
+        /// <param name="propertyAndAnnotationCollector">The duplicate property names checker.</param>
+        /// <param name="propertyName">The property name.</param>
+        /// <param name="property">The property.</param>
+        protected static void AttachCustomAnnotations(PropertyAndAnnotationCollector propertyAndAnnotationCollector, string propertyName, ODataPropertyInfo property)
+        {
+            foreach (KeyValuePair<string, object> annotation in propertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName))
+            {
+                if (annotation.Value != null)
+                {
+                    // annotation.Value == null indicates that this annotation should be skipped.
+                    property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
                 }
             }
         }
@@ -1771,18 +1800,7 @@ namespace Microsoft.OData.Json
                                 {
                                     propertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
                                     property.Value = propertyValue;
-                                    IEnumerable<KeyValuePair<string, object>> propertyAnnotations = propertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
-                                    if (propertyAnnotations != null)
-                                    {
-                                        foreach (KeyValuePair<string, object> annotation in propertyAnnotations)
-                                        {
-                                            if (annotation.Value != null)
-                                            {
-                                                // annotation.Value == null indicates that this annotation should be skipped.
-                                                property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                                            }
-                                        }
-                                    }
+                                    AttachCustomAnnotations(propertyAndAnnotationCollector, propertyName, property);
 
                                     properties.Add(property);
                                 }
@@ -3110,18 +3128,7 @@ namespace Microsoft.OData.Json
                                 {
                                     propertyAndAnnotationCollector.CheckForDuplicatePropertyNames(property);
                                     property.Value = propertyValue;
-                                    IEnumerable<KeyValuePair<string, object>> propertyAnnotations = propertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
-                                    if (propertyAnnotations != null)
-                                    {
-                                        foreach (KeyValuePair<string, object> annotation in propertyAnnotations)
-                                        {
-                                            if (annotation.Value != null)
-                                            {
-                                                // annotation.Value == null indicates that this annotation should be skipped.
-                                                property.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
-                                            }
-                                        }
-                                    }
+                                    AttachCustomAnnotations(propertyAndAnnotationCollector, propertyName, property);
 
                                     properties.Add(property);
                                 }
