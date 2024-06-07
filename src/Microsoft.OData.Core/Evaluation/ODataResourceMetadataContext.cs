@@ -229,22 +229,22 @@ namespace Microsoft.OData.Evaluation
         {
             Debug.Assert(resource != null, "resource != null");
 
-            ODataProperty property = null;
+            ODataPropertyInfo propertyInfo = null;
             if (resource.NonComputedProperties != null)
             {
                 // We use a manual loop instead of a for-loop to avoid
                 // closure allocations given how frequently this method is called.
-                foreach (ODataProperty item in resource.NonComputedProperties)
+                foreach (ODataPropertyInfo item in resource.NonComputedProperties)
                 {
                     if (item.Name == propertyName)
                     {
-                        property = item;
+                        propertyInfo = item;
                         break;
                     }
                 }
             }
 
-            if (property == null)
+            if (propertyInfo == null)
             {
                 if (isRequired)
                 {
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Evaluation
                 }
             }
 
-            value = GetPrimitiveOrEnumPropertyValue(resource, entityType, property, isRequired);
+            value = GetPrimitiveOrEnumPropertyValue(resource, entityType, propertyInfo, isRequired);
             return true;
         }
 
@@ -266,15 +266,15 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="resource">The resource from which the property was retrieved.</param>
         /// <param name="entityType">The entity type used to get the property value.</param>
-        /// <param name="property">The ODataProperty to get the value from.</param>
+        /// <param name="propertyInfo">The ODataProperty to get the value from.</param>
         /// <param name="validateNotNull">true if property must not be null, false otherwise.</param>
         /// <returns>The value of the property.</returns>
-        private static object GetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, IEdmStructuredType entityType, ODataProperty property, bool validateNotNull)
+        private static object GetPrimitiveOrEnumPropertyValue(ODataResourceBase resource, IEdmStructuredType entityType, ODataPropertyInfo propertyInfo, bool validateNotNull)
         {
-            object propertyValue = property.Value;
+            object propertyValue = (propertyInfo as ODataProperty)?.Value;
             if (propertyValue == null && validateNotNull)
             {
-                throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(property.Name, GetResourceTypeName(resource, entityType)));
+                throw new ODataException(Strings.ODataResourceMetadataContext_NullKeyValue(propertyInfo.Name, GetResourceTypeName(resource, entityType)));
             }
 
             if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
@@ -285,7 +285,7 @@ namespace Microsoft.OData.Evaluation
                     return propertyValue;
                 }
 #endif
-                throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(property.Name, GetResourceTypeName(resource, entityType)));
+                throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(propertyInfo.Name, GetResourceTypeName(resource, entityType)));
             }
 
             return propertyValue;
@@ -347,11 +347,11 @@ namespace Microsoft.OData.Evaluation
             List<KeyValuePair<string, object>> properties = new List<KeyValuePair<string, object>>();
             if (resource.NonComputedProperties != null)
             {
-                foreach(ODataProperty property in resource.NonComputedProperties)
+                foreach(ODataPropertyInfo propertyInfo in resource.NonComputedProperties)
                 {
-                    if(property.SerializationInfo != null && property.SerializationInfo.PropertyKind == propertyKind)
+                    if(propertyInfo.SerializationInfo != null && propertyInfo.SerializationInfo.PropertyKind == propertyKind)
                     {
-                        properties.Add(new KeyValuePair<string, object>(property.Name, GetPrimitiveOrEnumPropertyValue(resource, actualEntityType, property, false)));
+                        properties.Add(new KeyValuePair<string, object>(propertyInfo.Name, GetPrimitiveOrEnumPropertyValue(resource, actualEntityType, propertyInfo, false)));
                     }
                 }                
             }

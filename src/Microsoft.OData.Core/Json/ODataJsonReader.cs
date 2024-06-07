@@ -1503,7 +1503,6 @@ namespace Microsoft.OData.Json
             return this.ReadNextNestedInfo();
         }
 
-
         /// <summary>
         /// Implementation of the reader logic when in state 'PropertyInfo'.
         /// </summary>

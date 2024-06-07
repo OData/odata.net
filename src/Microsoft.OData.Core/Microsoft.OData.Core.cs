@@ -503,7 +503,6 @@ namespace Microsoft.OData
         internal const string ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet = "ODataJsonResourceDeserializer_InvalidPropertyAnnotationInTopLevelResourceSet";
         internal const string ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet = "ODataJsonResourceDeserializer_InvalidPropertyInTopLevelResourceSet";
         internal const string ODataJsonResourceDeserializer_PropertyWithoutValueWithWrongType = "ODataJsonResourceDeserializer_PropertyWithoutValueWithWrongType";
-        internal const string ODataJsonResourceDeserializer_OpenPropertyWithoutValue = "ODataJsonResourceDeserializer_OpenPropertyWithoutValue";
         internal const string ODataJsonResourceDeserializer_StreamPropertyInRequest = "ODataJsonResourceDeserializer_StreamPropertyInRequest";
         internal const string ODataJsonResourceDeserializer_UnexpectedStreamPropertyAnnotation = "ODataJsonResourceDeserializer_UnexpectedStreamPropertyAnnotation";
         internal const string ODataJsonResourceDeserializer_StreamPropertyWithValue = "ODataJsonResourceDeserializer_StreamPropertyWithValue";

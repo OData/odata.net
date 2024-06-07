@@ -104,7 +104,7 @@ namespace Microsoft.OData.Tests.Json
 
             foreach (Variant variant in GetVariants(null))
             {
-                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                int expectedPropertyCount = variant.IsRequest ? 3 : 4;
                 ODataResource resource = null;
                 ODataPropertyInfo nestedPropertyInfo = null;
 

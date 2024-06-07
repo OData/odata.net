@@ -4398,14 +4398,6 @@ namespace Microsoft.OData {
         }
 
         /// <summary>
-        /// A string like "A property '{0}' which only has property annotations in the payload but no property value is an open property. In OData, open property must be represented as a property with value."
-        /// </summary>
-        internal static string ODataJsonResourceDeserializer_OpenPropertyWithoutValue(object p0)
-        {
-            return Microsoft.OData.TextRes.GetString(Microsoft.OData.TextRes.ODataJsonResourceDeserializer_OpenPropertyWithoutValue, p0);
-        }
-
-        /// <summary>
         /// A string like "A stream property {0} was found in a Json request payload. Stream properties are only supported in responses."
         /// </summary>
         internal static string ODataJsonResourceDeserializer_StreamPropertyInRequest(object p0)

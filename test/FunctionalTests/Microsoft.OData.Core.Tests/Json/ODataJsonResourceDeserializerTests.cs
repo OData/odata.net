@@ -363,9 +363,12 @@ namespace Microsoft.OData.Tests.Json
                 {
                     var resource = resourceState.Resource;
                     Assert.NotNull(resource);
-                    var idProperty = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
+                    Assert.Equal(2, resource.Properties.Count());
+                    var idProperty = Assert.IsType<ODataProperty>(resource.Properties.ElementAt(0));
+                    var nameProperty = Assert.IsType<ODataPropertyInfo>(resource.Properties.ElementAt(1));
                     Assert.Equal("Id", idProperty.Name);
                     Assert.Equal(41, idProperty.Value);
+                    Assert.Equal("Name", nameProperty.Name);
 
                     var customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations("Name");
                     Assert.Contains(new KeyValuePair<string, object>("custom.instance", "Food"), customAnnotations);
@@ -1495,26 +1498,6 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.Equal(
                 ErrorStrings.ODataJsonResourceDeserializer_EmptyBindArray("odata.bind"),
-                exception.Message);
-        }
-
-        [Fact]
-        public async Task ReadResourceContentAsync_ThrowsExceptionForUndeclaredNonExpandedComplexProperty()
-        {
-            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Categories/$entity\"," +
-                "\"Id\":1," +
-                "\"Name\":\"Food\"," +
-                "\"WarehouseAddress@odata.type\":\"#NS.Address\"}";
-
-            var exception = await Assert.ThrowsAsync<ODataException>(
-                () => SetupJsonResourceSerializerAndRunReadResourceContextTestAsync(
-                    payload,
-                    this.categoriesEntitySet,
-                    this.categoryEntityType,
-                    (resourceState) => { }));
-
-            Assert.Equal(
-                ErrorStrings.ODataJsonResourceDeserializer_OpenPropertyWithoutValue("WarehouseAddress"),
                 exception.Message);
         }
 
