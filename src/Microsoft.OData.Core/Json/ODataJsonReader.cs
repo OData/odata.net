@@ -416,6 +416,17 @@ namespace Microsoft.OData.Json
             return this.ReadAtNestedPropertyInfoSynchronously();
         }
 
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'PropertyInfo'.
+        /// </summary>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains true if more items can be read from the reader; otherwise false
+        /// </returns>
+        protected override Task<bool> ReadAtNestedPropertyInfoImplementationAsync()
+        {
+            return this.ReadAtNestedPropertyInfoAsynchronously();
+        }
+
         #endregion
 
         #region Stream
@@ -1527,6 +1538,54 @@ namespace Microsoft.OData.Json
 
                 // We are reading a next nested info.
                 return this.ReadNextNestedInfo();
+            }
+            else
+            {
+                this.StartNestedStreamInfo(
+                   new ODataJsonReaderStreamInfo(propertyInfo.PrimitiveTypeKind));
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Asynchronous implementation of the reader logic when in state 'PropertyInfo'.
+        /// </summary>
+        /// <returns>
+        /// A task that represents the asynchronous read operation.
+        /// The value of the TResult parameter contains true if more items can be read from the reader; otherwise false
+        /// </returns>
+        /// <remarks>
+        /// Pre-Condition:  JsonNodeType.Property:          there are more properties after the nested resource info in the owning resource
+        /// Post-Condition: JsonNodeType.StartObject        start of the expanded resource nested resource info to read next
+        ///                 JsonNodeType.StartArray         start of the expanded resource set nested resource info to read next
+        ///                 JsonNoteType.Primitive (null)   expanded null resource nested resource info to read next
+        ///                 JsonNoteType.Property           property after deferred link or entity reference link
+        ///                 JsonNodeType.EndObject          end of the parent resource
+        /// </remarks>
+        private async Task<bool> ReadAtNestedPropertyInfoAsynchronously()
+        {
+            Debug.Assert(this.CurrentScope.State == ODataReaderState.NestedProperty, "Must be on 'NestedProperty' scope.");
+            JsonNestedPropertyInfoScope nestedPropertyInfoScope = (JsonNestedPropertyInfoScope)this.CurrentScope;
+            ODataJsonReaderNestedPropertyInfo nestedPropertyInfo = nestedPropertyInfoScope.ReaderNestedPropertyInfo;
+            Debug.Assert(nestedPropertyInfo != null);
+
+            ODataPropertyInfo propertyInfo = this.CurrentScope.Item as ODataPropertyInfo;
+            Debug.Assert(propertyInfo != null, "Reading Nested Property Without an ODataPropertyInfo");
+
+            ODataStreamPropertyInfo streamPropertyInfo = propertyInfo as ODataStreamPropertyInfo;
+            if (streamPropertyInfo != null && !String.IsNullOrEmpty(streamPropertyInfo.ContentType))
+            {
+                this.StartNestedStreamInfo(new ODataJsonReaderStreamInfo(streamPropertyInfo.PrimitiveTypeKind, streamPropertyInfo.ContentType));
+            }
+            else if (!nestedPropertyInfo.WithValue)
+            {
+                // It's a nested non-stream property
+                this.PopScope(ODataReaderState.NestedProperty);
+
+                // We are reading a next nested info.
+                return await this.ReadNextNestedInfoAsync()
+                    .ConfigureAwait(false);
             }
             else
             {
