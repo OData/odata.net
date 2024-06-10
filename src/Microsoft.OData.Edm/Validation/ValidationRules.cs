@@ -1568,7 +1568,7 @@ namespace Microsoft.OData.Edm.Validation
                               var principalType = principalProperties.ElementAtOrDefault(i).Type.Definition;
                               if (!(dependentType is BadType) && !(principalType is BadType) && !dependentType.IsEquivalentTo(principalType))
                               {
-                                  string errorMessage = Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(navigationProperty.DependentProperties().ToList()[i].Name, navigationProperty.DeclaringEntityType().FullName(), principalProperties.ToList()[i].Name, principalEntityType.Name, "Fred");
+                                  string errorMessage = Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint(navigationProperty.DependentProperties().ToList()[i].Name, navigationProperty.DeclaringEntityType().FullName(), principalProperties.ToList()[i].Name, principalEntityType.Name);
 
                                   context.AddError(navigationProperty.Location(), EdmErrorCode.TypeMismatchRelationshipConstraint, errorMessage);
                               }
