@@ -1003,7 +1003,7 @@ namespace Microsoft.OData.Edm.Tests.Validation
                 ValidationRules.NavigationPropertyTypeMismatchRelationshipConstraint,
                 navProp,
                 EdmErrorCode.TypeMismatchRelationshipConstraint,
-                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("foreignKey", "ns.type2", "Id1", "type1", "Fred"));
+                Strings.EdmModel_Validator_Semantic_TypeMismatchRelationshipConstraint("foreignKey", "ns.type2", "Id1", "type1"));
         }
 
         [Fact]
