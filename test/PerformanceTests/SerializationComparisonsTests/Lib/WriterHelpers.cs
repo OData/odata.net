@@ -20,30 +20,30 @@ namespace ExperimentsLib
         public static IJsonWriter CreateODataJsonWriter(this Stream stream, Encoding encoding = null)
         {
             return jsonWriterFactory.CreateJsonWriter(
-                stream, false, encoding ?? Encoding.UTF8);
+                stream, isIeee754Compatible: false, encoding: encoding ?? Encoding.UTF8);
         }
 
         public static IJsonWriter CreateODataJsonWriterAsync(this Stream stream, Encoding encoding = null)
         {
             return jsonWriterFactory.CreateJsonWriter(
-                stream, false, encoding ?? Encoding.UTF8);
+                stream, isIeee754Compatible: false, encoding: encoding ?? Encoding.UTF8);
         }
 
         public static IJsonWriter CreateODataUtf8JsonWriter(this Stream stream, Encoding encoding = null)
         {
             ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
-            return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
+            return factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding ?? Encoding.UTF8);;
         }
 
         public static IJsonWriter CreateODataUtf8JsonWriterAsync(this Stream stream, Encoding encoding = null)
         {
             ODataUtf8JsonWriterFactory factory = ODataUtf8JsonWriterFactory.Default;
-            return factory.CreateJsonWriter(stream, false, encoding ?? Encoding.UTF8);
+            return factory.CreateJsonWriter(stream, isIeee754Compatible: false, encoding: encoding ?? Encoding.UTF8);
         }
 
         public static IODataResponseMessage CreateJsonWriterMessage(this Stream stream, string charset = "UTF-8")
         {
-            return stream.CreateODataMessage(null, charset);
+            return stream.CreateODataMessage(configure: null, charset: charset);
         }
 
         public static IODataResponseMessage CreateNoopMessage(this Stream stream)
