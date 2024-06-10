@@ -1642,6 +1642,112 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task ReadResourceWithNestedPropertyInfoAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
+                "\"Id\":1," +
+                "\"Amount\":130," +
+                "\"ShippingAddress@odata.type\":\"#NS.Address\"}";
+
+            ODataResource orderResource = null;
+            ODataPropertyInfo shippingAddressPropertyInfo = null;
+
+            await SetupJsonReaderAndRunTestAsync(
+                payload,
+                this.orderEntitySet,
+                this.orderEntityType,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        orderResource = resource;
+                    },
+                    verifyNestedPropertyInfoAction: (nestedPropertyInfo) =>
+                    {
+                        shippingAddressPropertyInfo = nestedPropertyInfo;
+                    }));
+
+            Assert.NotNull(orderResource);
+            Assert.Equal("NS.Order", orderResource.TypeName);
+            Assert.Equal(2, orderResource.Properties.Count());
+
+            var idProperty = orderResource.Properties.ElementAt(0);
+            var amountProperty = orderResource.Properties.ElementAt(1);
+
+            Assert.Equal("Id", idProperty.Name);
+            Assert.Equal(1, idProperty.Value);
+            Assert.Equal("Amount", amountProperty.Name);
+            Assert.Equal(130M, amountProperty.Value);
+
+            Assert.NotNull(shippingAddressPropertyInfo);
+            Assert.Equal("ShippingAddress", shippingAddressPropertyInfo.Name);
+        }
+
+        [Fact]
+        public async Task ReadResourceWithStreamPropertyContentTypeUnspecifiedAsync()
+        {
+            var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"Sue\"," +
+                "\"Photo@odata.mediaEditLink\":\"http://tempuri.org/Customers(1)/Photo/Edit\"," +
+                "\"Photo@odata.mediaReadLink\":\"http://tempuri.org/Customers(1)/Photo\"," +
+                "\"Photo@odata.mediaEtag\":\"media-etag\"," +
+                "\"Photo\":\"AQIDBAUGBwgJAA==\"}";
+
+            ODataResource customerResource = null;
+            ODataPropertyInfo photoPropertyInfo = null;
+            byte[] photoBuffer = null;
+            int bytesRead = 0;
+
+            await SetupJsonReaderAndRunTestAsync(
+                payload,
+                this.customerEntitySet,
+                this.customerEntityType,
+                (jsonReader) => DoReadAsync(
+                    jsonReader,
+                    verifyResourceAction: (resource) =>
+                    {
+                        customerResource = resource;
+                    },
+                    verifyNestedPropertyInfoAction: (nestedPropertyInfo) =>
+                    {
+                        photoPropertyInfo = nestedPropertyInfo;
+                    },
+                    verifyBinaryStreamAction: async (binaryStream) =>
+                    {
+                        var maxLength = 10;
+                        photoBuffer = new byte[maxLength];
+                        bytesRead = await binaryStream.ReadAsync(photoBuffer, 0, maxLength);
+                    }));
+
+            Assert.NotNull(customerResource);
+            Assert.Equal("NS.Customer", customerResource.TypeName);
+            Assert.Equal(3, customerResource.Properties.Count());
+
+            var idProperty = customerResource.Properties.ElementAt(0);
+            var nameProperty = customerResource.Properties.ElementAt(1);
+            var photoProperty = customerResource.Properties.ElementAt(2);
+
+            Assert.Equal("Id", idProperty.Name);
+            Assert.Equal(1, idProperty.Value);
+            Assert.Equal("Name", nameProperty.Name);
+            Assert.Equal("Sue", nameProperty.Value);
+            Assert.Equal("Photo", photoProperty.Name);
+
+            Assert.Equal(10, bytesRead);
+            Assert.NotNull(photoBuffer);
+            Assert.Equal(new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 }, photoBuffer);
+
+            Assert.NotNull(photoPropertyInfo);
+            var photoStreamInfoProperty = Assert.IsType<ODataStreamPropertyInfo>(photoPropertyInfo);
+            Assert.Equal("Photo", photoStreamInfoProperty.Name);
+            Assert.Equal("http://tempuri.org/Customers(1)/Photo", photoStreamInfoProperty.ReadLink.OriginalString);
+            Assert.Equal("http://tempuri.org/Customers(1)/Photo/Edit", photoStreamInfoProperty.EditLink.OriginalString);
+            Assert.Null(photoStreamInfoProperty.ContentType);
+            Assert.Equal("media-etag", photoStreamInfoProperty.ETag);
+        }
+
+        [Fact]
         public async Task ReadNestedResourceSetAsync_ThrowsExceptionForInvalidItemsInResourceSet()
         {
             var payload = "{\"@odata.context\":\"http://tempuri.org/$metadata#Customers/$entity\"," +
@@ -1714,7 +1820,7 @@ namespace Microsoft.OData.Tests.Json
             Action<ODataDeletedResource> verifyDeletedResourceAction = null,
             Action<ODataDeltaLinkBase> verifyDeltaLinkAction = null,
             Action<ODataEntityReferenceLink> verifyEntityReferenceLinkAction = null,
-            Action<ODataItem> verifyNestedPropertyInfoAction = null,
+            Action<ODataPropertyInfo> verifyNestedPropertyInfoAction = null,
             Action<Stream> verifyBinaryStreamAction = null,
             Action<TextReader> verifyTextStreamAction = null,
             Action<ODataPrimitiveValue> verifyPrimitiveAction = null)
@@ -1823,9 +1929,12 @@ namespace Microsoft.OData.Tests.Json
 
                         break;
                     case ODataReaderState.NestedProperty:
+                        var nestedPropertyInfo = jsonReader.Item as ODataPropertyInfo;
+                        Assert.NotNull(nestedPropertyInfo);
+
                         if (verifyNestedPropertyInfoAction != null)
                         {
-                            verifyNestedPropertyInfoAction(jsonReader.Item);
+                            verifyNestedPropertyInfoAction(nestedPropertyInfo);
                         }
 
                         break;
