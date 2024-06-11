@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.IO;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
@@ -17,7 +18,7 @@ namespace ExperimentsLib
     /// It does not write any output. It's meant to help evaluate
     /// the overhead of higher-level libraries without the cost of JsonWriter.
     /// </summary>
-    public class NoopJsonWriter : IJsonWriter, IJsonWriterAsync
+    public class NoopJsonWriter : IJsonWriter
     {
         public void EndArrayScope()
         {
@@ -42,6 +43,24 @@ namespace ExperimentsLib
         }
 
         public Task EndPaddingFunctionScopeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        public void EndStreamValueScope()
+        {
+        }
+
+        public Task EndStreamValueScopeAsync()
+        {
+            return Task.CompletedTask;
+        }
+
+        public void EndTextWriterValueScope()
+        {
+        }
+
+        public Task EndTextWriterValueScopeAsync()
         {
             return Task.CompletedTask;
         }
@@ -80,6 +99,26 @@ namespace ExperimentsLib
         public Task StartPaddingFunctionScopeAsync()
         {
             return Task.CompletedTask;
+        }
+
+        public Stream StartStreamValueScope()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Stream> StartStreamValueScopeAsync()
+        {
+            throw new NotImplementedException();
+        }
+
+        public TextWriter StartTextWriterValueScope(string contentType)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<TextWriter> StartTextWriterValueScopeAsync(string contentType)
+        {
+            throw new NotImplementedException();
         }
 
         public void WriteName(string name)

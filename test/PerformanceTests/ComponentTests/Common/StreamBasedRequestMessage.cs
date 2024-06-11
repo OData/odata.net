@@ -15,7 +15,7 @@ namespace Microsoft.OData.Performance
     /// <summary>
     /// An OData Request Message backed by a Stream.
     /// </summary>
-    public class StreamBasedRequestMessage : IODataRequestMessageAsync, IContainerProvider
+    public class StreamBasedRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider
     {
         private readonly Stream _stream;
         private readonly IDictionary<string, string> _headers;
@@ -88,6 +88,6 @@ namespace Microsoft.OData.Performance
             }
         }
 
-        public IServiceProvider Container { get; set; }
+        public IServiceProvider ServiceProvider { get; set; }
     }
 }
