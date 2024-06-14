@@ -19,7 +19,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 {
     public class KeyGenerationPinningTest
     {
-#if !NETCOREAPP3_1
+#if !NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void DoublePinning()
         {

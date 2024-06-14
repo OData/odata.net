@@ -25,7 +25,7 @@ namespace Microsoft.OData.Tests.JsonLight
             .Where(f => f.FieldType == typeof(string))
             .Select(f => (string)f.GetValue(null)).ToArray();
 
-#if !NETCOREAPP1_1 && !NETCOREAPP2_1&& !NETCOREAPP3_1
+#if !NETCOREAPP1_1 && !NETCOREAPP2_1&& !NETCOREAPP3_1_OR_GREATER
         // Not applicable to .NET Core due to changes in framework
         [Fact]
         public void ReservedODataAnnotationNamesHashSetShouldContainAllODataAnnotationNamesSpecialToODataLib()
