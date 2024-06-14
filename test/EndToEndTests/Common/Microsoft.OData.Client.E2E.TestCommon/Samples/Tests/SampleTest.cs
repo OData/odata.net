@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Samples.Tests
                 services.ConfigureControllers(typeof(SampleController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
-                    .AddRouteComponents("actionresult", SampleEdmModel.GetEdmModel()));
+                    .AddRouteComponents("sample", SampleEdmModel.GetEdmModel()));
             }
         }
         public SampleTest(TestWebApplicationFactory<TestsStartup> fixture)
@@ -32,10 +32,10 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Samples.Tests
         [Fact]
         public void ExampleTest()
         {
-            Uri uri = new Uri(Client.BaseAddress, "actionresult");
+            Uri uri = new Uri(Client.BaseAddress, "sample");
             var context = new Default.Container(uri);
             context.HttpClientFactory = HttpClientFactory;
-            var product = context?.Products.Execute().FirstOrDefault(a=>a.ProductId == -10);
+            var product = context.Products.Execute().FirstOrDefault(a=>a.ProductId == -10);
 
             Assert.NotNull(product);
         }

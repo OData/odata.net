@@ -11,7 +11,6 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Samples.Server
 {
     public class Product
     {
-        [EfKey]
         public int ProductId { get; set; }
         public string? Description { get; set; }
         public string? BaseConcurrency { get; set; }

@@ -18,10 +18,6 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Samples.Server
             builder.EntitySet<Product>("Products");
             builder.EntitySet<OrderLine>("OrderLines");
 
-            builder.Function("RetrieveProduct").Returns<int>();
-            builder.Function("RetrieveProductWithOrderLine").Returns<int>().Parameter<OrderLine>("orderLine");
-            builder.Function("RetrieveProductWithProduct").Returns<int>().Parameter<Product>("product");
-
             return builder.GetEdmModel();
         }
     }
