@@ -20,36 +20,37 @@ namespace Microsoft.OData.Client.Tests.ALinq
     /// </summary>
     public class PreserveTypesAndAttributesTests
     {
-        private readonly TestContext ctx;
+        private const string CustomersEntitySetName = "Customers";
+
+        private const string BaseUriStr = "https://mock.odata.service";
+
+        private readonly DataServiceContext _ctx;
 
         public PreserveTypesAndAttributesTests()
         {
-            this.ctx = new TestContext();
-        }
-
-        private static void AssertEqualRequestUri(IQueryable query1, IQueryable query2)
-        {
-            var dsq1 = query1 as DataServiceQuery;
-            var dsq2 = query2 as DataServiceQuery;
-            Assert.Equal(dsq1.RequestUri, dsq2.RequestUri);
+            _ctx = new DataServiceContext(new Uri(BaseUriStr));
+            _ctx.Format.UseJson(BuildEdmModel());
+            _ctx.MergeOption = MergeOption.NoTracking;
         }
 
         [Fact]
-        public void OneLevelCase1()
+        public void OneLevelOfInheritaceClassQuery_UsesRightPropertyNames_WhenCastedToInterface()
         {
-            IQueryable<ICustomer> query1 = ctx.OneLevelCustomers1;
-            query1 = query1.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(2);
+            var customersQuery = _ctx.CreateQuery<OneLevelCustomer1>(CustomersEntitySetName);
 
-            IQueryable<OneLevelCustomer1> query2 = ctx.OneLevelCustomers1;
-            query2 = query2.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(2);
+            IQueryable<ICustomer> queryWithInterface = customersQuery;
+            queryWithInterface = queryWithInterface.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(2);
 
-            AssertEqualRequestUri(query1, query2);
+            IQueryable<OneLevelCustomer1> queryWithClass = customersQuery;
+            queryWithClass = queryWithClass.Where(c => c.CorporationName != "").OrderBy(c => c.Id).Take(2);
 
-            string resp = "[{\"CustomerID\":\"ALFoKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"City\":\"Berlin\",\"Region\":null},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"City\":\"M\\u00e9xico D.F.\",\"Region\":null}]";
-            ctx.InterceptRequestAndMockResponseValue("Customers", resp);
+            Assert.Equal(GetRequestUri(queryWithClass), GetRequestUri(queryWithInterface));
 
-            var result1 = query1.ToList();
-            var result2 = query2.ToList();
+            string resp = "[{\"CustomerID\":\"ALFoKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"City\":\"Berlin\"},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"City\":\"M\\u00e9xico D.F.\"}]";
+            InterceptRequestAndMockResponseValue(CustomersEntitySetName, resp);
+
+            var result1 = queryWithInterface.ToList();
+            var result2 = queryWithClass.ToList();
 
             Assert.Equal(result1.Count, result2.Count);
             for (var i = 0; i < result1.Count; i++)
@@ -62,20 +63,23 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
-        public void OneLevelCase2()
+        public void OneLevelOfInheritaceClassQuery_UsesRightPropertyNames_WhenCastedToBaseClass()
         {
-            IQueryable<BaseCustomer> query1 = ctx.OneLevelCustomers2;
-            var query1s = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(2);
+            var customersQuery = _ctx.CreateQuery<OneLevelCustomer2>(CustomersEntitySetName);
 
-            IQueryable<OneLevelCustomer2> query2 = ctx.OneLevelCustomers2;
-            var query2s = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(2);
+            IQueryable<BaseCustomer> queryWithBaseClass = customersQuery;
+            var query1select = queryWithBaseClass.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(2);
 
-            AssertEqualRequestUri(query1s, query2s);
+            IQueryable<OneLevelCustomer2> queryWithClass = customersQuery;
+            var query2select = queryWithClass.Where(c => c.Id != "").OrderBy(c => c.Id).Select(c => new { c.Id }).Take(2);
+
+            Assert.Equal(GetRequestUri(query2select), GetRequestUri(query1select));
+
             string resp = "[{\"CustomerID\":\"ALFKI\"},{\"CustomerID\":\"ANATR\"}]";
-            ctx.InterceptRequestAndMockResponseValue("Customers(CustomerID)", resp);
+            InterceptRequestAndMockResponseValue(CustomersEntitySetName + "(CustomerID)", resp);
 
-            var result1 = query1s.ToList();
-            var result2 = query2s.ToList();
+            var result1 = query1select.ToList();
+            var result2 = query2select.ToList();
 
             Assert.Equal(result1.Count, result2.Count);
             for (var i = 0; i < result1.Count; i++)
@@ -85,29 +89,31 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
-        public void MoreThanOneLevelLevelCase1()
+        public void MoreThanOneLevelOfInheritaceClassQuery_UsesRightPropertyNames_WhenCastedToInterfaceOrAbstractClass()
         {
-            IQueryable<ICustomer> query1 = ctx.TwoLevelCustomers1;
-            query1 = query1.Where(c => c.Name.Contains("a"));
-            query1 = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            var customersQuery = _ctx.CreateQuery<TwoLevelCustomer1>(CustomersEntitySetName);
 
-            IQueryable<ACustomer> query2 = ctx.TwoLevelCustomers1;
-            query2 = query2.Where(c => c.Name.Contains("a"));
-            query2 = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            IQueryable<ICustomer> queryWithInterface = customersQuery;
+            queryWithInterface = queryWithInterface.Where(c => c.Name.Contains("a"));
+            queryWithInterface = queryWithInterface.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            IQueryable<TwoLevelCustomer1> query3 = ctx.TwoLevelCustomers1;
-            query3 = query3.Where(c => c.Name.Contains("a"));
-            query3 = query3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            IQueryable<ACustomer> queryWithAbstractClass = customersQuery;
+            queryWithAbstractClass = queryWithAbstractClass.Where(c => c.Name.Contains("a"));
+            queryWithAbstractClass = queryWithAbstractClass.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            AssertEqualRequestUri(query1, query2);
-            AssertEqualRequestUri(query2, query3);
+            IQueryable<TwoLevelCustomer1> queryWithClass = customersQuery;
+            queryWithClass = queryWithClass.Where(c => c.Name.Contains("a"));
+            queryWithClass = queryWithClass.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            string resp = "[{\"CustomerID\":\"ALFKY\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"City\":\"Berlin\",\"Region\":null},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"City\":\"M\\u00e9xico D.F.\",\"Region\":null}]";
-            ctx.InterceptRequestAndMockResponseValue("Customers", resp);
+            Assert.Equal(GetRequestUri(queryWithClass), GetRequestUri(queryWithInterface));
+            Assert.Equal(GetRequestUri(queryWithClass), GetRequestUri(queryWithAbstractClass));
 
-            var result1 = query1.ToList();
-            var result2 = query2.ToList();
-            var result3 = query3.ToList();
+            string resp = "[{\"CustomerID\":\"ALFKY\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"City\":\"Berlin\"},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"City\":\"M\\u00e9xico D.F.\"}]";
+            InterceptRequestAndMockResponseValue(CustomersEntitySetName, resp);
+
+            var result1 = queryWithInterface.ToList();
+            var result2 = queryWithAbstractClass.ToList();
+            var result3 = queryWithClass.ToList();
 
             Assert.Equal(result1.Count, result2.Count);
             for (var i = 0; i < result1.Count; i++)
@@ -128,29 +134,31 @@ namespace Microsoft.OData.Client.Tests.ALinq
         }
 
         [Fact]
-        public void MoreThanOneLevelLevelCase2()
+        public void MoreThanOneLevelOfInheritaceClassQuery_UsesRightPropertyNames_WhenCastedToInterfaceWithExpandibleProperties()
         {
-            IQueryable<ICustomer> query1 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            query1 = query1.Where(c => c.Name.Contains("a"));
-            query1 = query1.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            var customersQuery = _ctx.CreateQuery<TwoLevelCustomer2>(CustomersEntitySetName);
 
-            IQueryable<ICustomer2> query2 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            query2 = query2.Where(c => c.Name.Contains("a"));
-            query2 = query2.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            IQueryable<ICustomer> queryWithInterface = customersQuery.Expand(c => c.OrdersList);
+            queryWithInterface = queryWithInterface.Where(c => c.Name.Contains("a"));
+            queryWithInterface = queryWithInterface.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            IQueryable<TwoLevelCustomer2> query3 = ctx.TwoLevelCustomers2.Expand(c => c.OrdersList);
-            query3 = query3.Where(c => c.Name.Contains("a"));
-            query3 = query3.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
+            IQueryable<ICustomer2> queryWithInterfaceExpand = customersQuery.Expand(c => c.OrdersList);
+            queryWithInterfaceExpand = queryWithInterfaceExpand.Where(c => c.Name.Contains("a"));
+            queryWithInterfaceExpand = queryWithInterfaceExpand.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            AssertEqualRequestUri(query1, query2);
-            AssertEqualRequestUri(query2, query3);
+            IQueryable<TwoLevelCustomer2> queryWithClass = customersQuery.Expand(c => c.OrdersList);
+            queryWithClass = queryWithClass.Where(c => c.Name.Contains("a"));
+            queryWithClass = queryWithClass.Where(c => c.Id != "").OrderBy(c => c.Id).Take(2);
 
-            string resp = "[{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"ContactTitle\":\"Sales Representative\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\",\"Region\":null,\"PostalCode\":\"12209\",\"Country\":\"Germany\",\"Phone\":\"030-0074321\",\"Fax\":\"030-0076545\",\"Orders\":[{\"OrderID\":10643,\"CustomerID\":\"ALFKI\",\"EmployeeID\":6,\"OrderDate\":\"1997-08-25T00:00:00Z\",\"RequiredDate\":\"1997-09-22T00:00:00Z\",\"ShippedDate\":\"1997-09-02T00:00:00Z\",\"ShipVia\":1,\"Freight\":29.4600,\"ShipName\":\"Alfreds Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"},{\"OrderID\":10692,\"CustomerID\":\"ALFKI\",\"EmployeeID\":4,\"OrderDate\":\"1997-10-03T00:00:00Z\",\"RequiredDate\":\"1997-10-31T00:00:00Z\",\"ShippedDate\":\"1997-10-13T00:00:00Z\",\"ShipVia\":2,\"Freight\":61.0200,\"ShipName\":\"Alfred's Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"},{\"OrderID\":10702,\"CustomerID\":\"ALFKI\",\"EmployeeID\":4,\"OrderDate\":\"1997-10-13T00:00:00Z\",\"RequiredDate\":\"1997-11-24T00:00:00Z\",\"ShippedDate\":\"1997-10-21T00:00:00Z\",\"ShipVia\":1,\"Freight\":23.9400,\"ShipName\":\"Alfred's Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"},{\"OrderID\":10835,\"CustomerID\":\"ALFKI\",\"EmployeeID\":1,\"OrderDate\":\"1998-01-15T00:00:00Z\",\"RequiredDate\":\"1998-02-12T00:00:00Z\",\"ShippedDate\":\"1998-01-21T00:00:00Z\",\"ShipVia\":3,\"Freight\":69.5300,\"ShipName\":\"Alfred's Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"},{\"OrderID\":10952,\"CustomerID\":\"ALFKI\",\"EmployeeID\":1,\"OrderDate\":\"1998-03-16T00:00:00Z\",\"RequiredDate\":\"1998-04-27T00:00:00Z\",\"ShippedDate\":\"1998-03-24T00:00:00Z\",\"ShipVia\":1,\"Freight\":40.4200,\"ShipName\":\"Alfred's Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"},{\"OrderID\":11011,\"CustomerID\":\"ALFKI\",\"EmployeeID\":3,\"OrderDate\":\"1998-04-09T00:00:00Z\",\"RequiredDate\":\"1998-05-07T00:00:00Z\",\"ShippedDate\":\"1998-04-13T00:00:00Z\",\"ShipVia\":1,\"Freight\":1.2100,\"ShipName\":\"Alfred's Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipRegion\":null,\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"}]},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"ContactTitle\":\"Owner\",\"Address\":\"Avda. de la Constituci\\u00f3n 2222\",\"City\":\"M\\u00e9xico D.F.\",\"Region\":null,\"PostalCode\":\"05021\",\"Country\":\"Mexico\",\"Phone\":\"(5) 555-4729\",\"Fax\":\"(5) 555-3745\",\"Orders\":[{\"OrderID\":10308,\"CustomerID\":\"ANATR\",\"EmployeeID\":7,\"OrderDate\":\"1996-09-18T00:00:00Z\",\"RequiredDate\":\"1996-10-16T00:00:00Z\",\"ShippedDate\":\"1996-09-24T00:00:00Z\",\"ShipVia\":3,\"Freight\":1.6100,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipRegion\":null,\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"},{\"OrderID\":10625,\"CustomerID\":\"ANATR\",\"EmployeeID\":3,\"OrderDate\":\"1997-08-08T00:00:00Z\",\"RequiredDate\":\"1997-09-05T00:00:00Z\",\"ShippedDate\":\"1997-08-14T00:00:00Z\",\"ShipVia\":1,\"Freight\":43.9000,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipRegion\":null,\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"},{\"OrderID\":10759,\"CustomerID\":\"ANATR\",\"EmployeeID\":3,\"OrderDate\":\"1997-11-28T00:00:00Z\",\"RequiredDate\":\"1997-12-26T00:00:00Z\",\"ShippedDate\":\"1997-12-12T00:00:00Z\",\"ShipVia\":3,\"Freight\":11.9900,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipRegion\":null,\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"},{\"OrderID\":10926,\"CustomerID\":\"ANATR\",\"EmployeeID\":4,\"OrderDate\":\"1998-03-04T00:00:00Z\",\"RequiredDate\":\"1998-04-01T00:00:00Z\",\"ShippedDate\":\"1998-03-11T00:00:00Z\",\"ShipVia\":3,\"Freight\":39.9200,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipRegion\":null,\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"}]}]";
-            ctx.InterceptRequestAndMockResponseValue("Customers", resp);
+            Assert.Equal(GetRequestUri(queryWithClass), GetRequestUri(queryWithInterface));
+            Assert.Equal(GetRequestUri(queryWithClass), GetRequestUri(queryWithInterfaceExpand));
 
-            var result1 = query1.ToList();
-            var result2 = query2.ToList();
-            var result3 = query3.ToList();
+            string resp = "[{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"ContactTitle\":\"Sales Representative\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\",\"PostalCode\":\"12209\",\"Country\":\"Germany\",\"Phone\":\"030-0074321\",\"Orders\":[{\"OrderID\":10643,\"CustomerID\":\"ALFKI\",\"OrderDate\":\"1997-08-25T00:00:00Z\",\"ShipVia\":1,\"Freight\":29.4600,\"ShipName\":\"Alfreds Futterkiste\",\"ShipAddress\":\"Obere Str. 57\",\"ShipCity\":\"Berlin\",\"ShipPostalCode\":\"12209\",\"ShipCountry\":\"Germany\"}]},{\"CustomerID\":\"ANATR\",\"CompanyName\":\"Ana Trujillo Emparedados y helados\",\"ContactName\":\"Ana Trujillo\",\"ContactTitle\":\"Owner\",\"Address\":\"Avda. de la Constituci\\u00f3n 2222\",\"City\":\"M\\u00e9xico D.F.\",\"PostalCode\":\"05021\",\"Country\":\"Mexico\",\"Phone\":\"(5) 555-4729\",\"Orders\":[{\"OrderID\":10308,\"CustomerID\":\"ANATR\",\"OrderDate\":\"1996-09-18T00:00:00Z\",\"ShipVia\":3,\"Freight\":1.6100,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"},{\"OrderID\":10625,\"CustomerID\":\"ANATR\",\"OrderDate\":\"1997-08-08T00:00:00Z\",\"ShipVia\":1,\"Freight\":43.9000,\"ShipName\":\"Ana Trujillo Emparedados y helados\",\"ShipAddress\":\"Avda. de la Constituci\\u00f3n 2222\",\"ShipCity\":\"M\\u00e9xico D.F.\",\"ShipPostalCode\":\"05021\",\"ShipCountry\":\"Mexico\"}]}]";
+            InterceptRequestAndMockResponseValue(CustomersEntitySetName, resp);
+
+            var result1 = queryWithInterface.ToList();
+            var result2 = queryWithInterfaceExpand.ToList();
+            var result3 = queryWithClass.ToList();
 
             Assert.Equal(result1.Count, result2.Count);
             for (var i = 0; i < result1.Count; i++)
@@ -169,143 +177,18 @@ namespace Microsoft.OData.Client.Tests.ALinq
                 Assert.Equal(result3[i].Name, result2[i].Name);
             }
         }
-    }
 
-
-    // One level of inheritance classes
-
-    public interface ICustomer
-    {
-        string Id { get; set; }
-        string City { get; set; }
-        string CorporationName { get; set; }
-        string Name { get; set; }
-    }
-
-    [Key("CustomerID")]
-    public class OneLevelCustomer1 : ICustomer
-    {
-        [OriginalName("CustomerID")]
-        public string Id { get; set; }
-
-        public string City { get; set; }
-
-        [OriginalName("CompanyName")]
-        public string CorporationName { get; set; }
-
-        [OriginalName("ContactName")]
-        public string Name { get; set; }
-    }
-
-    [Key("CustomerID")]
-    public class BaseCustomer
-    {
-        [OriginalName("CustomerID")]
-        public string Id { get; set; }
-    }
-
-    public class OneLevelCustomer2 : BaseCustomer
-    {
-        public string City { get; set; }
-
-        [OriginalName("CompanyName")]
-        public string CorporationName { get; set; }
-
-        [OriginalName("ContactName")]
-        public string Name { get; set; }
-    }
-
-
-    // More than one level of inheritance classes
-
-    public abstract class ACustomer : ICustomer
-    {
-        public virtual string Id { get; set; }
-        public virtual string City { get; set; }
-        public virtual string CorporationName { get; set; }
-        public virtual string Name { get; set; }
-    }
-
-    [Key("CustomerID")]
-    public class TwoLevelCustomer1 : ACustomer
-    {
-        [OriginalName("CustomerID")]
-        public override string Id { get; set; }
-
-        public override string City { get; set; }
-
-        [OriginalName("CompanyName")]
-        public override string CorporationName { get; set; }
-
-        [OriginalName("ContactName")]
-        public override string Name { get; set; }
-    }
-
-    public interface ICustomer2 : ICustomer
-    {
-        List<Order> OrdersList { get; set; }
-    }
-
-    [Key("CustomerID")]
-    public class TwoLevelCustomer2 : ICustomer2
-    {
-        [OriginalName("CustomerID")]
-        public string Id { get; set; }
-
-        public string City { get; set; }
-
-        [OriginalName("CompanyName")]
-        public string CorporationName { get; set; }
-
-        [OriginalName("ContactName")]
-        public string Name { get; set; }
-
-        [OriginalName("Orders")]
-        public List<Order> OrdersList { get; set; }
-    }
-
-    [Key("OrderID")]
-    public class Order
-    {
-        public int OrderID { get; set; }
-        public decimal Freight { get; set; }
-    }
-
-
-    public class TestContext
-    {
-        public DataServiceQuery<OneLevelCustomer1> OneLevelCustomers1;
-        public DataServiceQuery<TwoLevelCustomer1> TwoLevelCustomers1;
-        public DataServiceQuery<OneLevelCustomer2> OneLevelCustomers2;
-        public DataServiceQuery<TwoLevelCustomer2> TwoLevelCustomers2;
-
-        // We have to create multiple DataServiceContext because the entitySetName is the same for every DataServiceQuery
-        private readonly DataServiceContext _ctx1;
-        private readonly DataServiceContext _ctx2;
-        private readonly DataServiceContext _ctx3;
-        private readonly DataServiceContext _ctx4;
-
-        private readonly string _uriStr;
-
-        public TestContext()
+        private static string GetRequestUri(IQueryable query)
         {
-            _uriStr = "https://mock.odata.service";
-            Uri uri = new Uri(_uriStr);
-
-            _ctx1 = new DataServiceContext(uri);
-            _ctx2 = new DataServiceContext(uri);
-            _ctx3 = new DataServiceContext(uri);
-            _ctx4 = new DataServiceContext(uri);
-            OneLevelCustomers1 = _ctx1.CreateQuery<OneLevelCustomer1>("Customers");
-            TwoLevelCustomers1 = _ctx2.CreateQuery<TwoLevelCustomer1>("Customers");
-            OneLevelCustomers2 = _ctx3.CreateQuery<OneLevelCustomer2>("Customers");
-            TwoLevelCustomers2 = _ctx4.CreateQuery<TwoLevelCustomer2>("Customers");
+            var dsq = query as DataServiceQuery;
+            return dsq.RequestUri.ToString();
         }
 
-        private void InterceptRequestAndMockResponse(DataServiceContext ctx, string mockResponse)
+        private void InterceptRequestAndMockResponseValue(string entitySetName, string mockResponseValue)
         {
-            ctx.ResolveName = (type) => $"NS.{type.Name}";
-            ctx.Configurations.RequestPipeline.OnMessageCreating = (args) =>
+            string mockResponse = "{\"@odata.context\":\"" + BaseUriStr + "/$metadata#" + entitySetName + "\",\"value\":" + mockResponseValue + "}";
+            _ctx.ResolveName = (type) => $"NS.{type.Name}";
+            _ctx.Configurations.RequestPipeline.OnMessageCreating = (args) =>
             {
                 var contentTypeHeader = "application/json;odata.metadata=minimal;odata.streaming=true;IEEE754Compatible=false;charset=utf-8";
                 var odataVersionHeader = "4.0";
@@ -318,20 +201,6 @@ namespace Microsoft.OData.Client.Tests.ALinq
                     },
                     () => new MemoryStream(Encoding.UTF8.GetBytes(mockResponse)));
             };
-        }
-
-        public void InterceptRequestAndMockResponseValue(string entitySetName, string mockResponseValue)
-        {
-            string mockResponse = "{\"@odata.context\":\"" + _uriStr + "/$metadata#" + entitySetName + "\",\"value\":" + mockResponseValue + "}";
-
-            EdmModel model = BuildEdmModel();
-            var contexts = new List<DataServiceContext>() { _ctx1, _ctx2, _ctx3, _ctx4 };
-            foreach (var ctx in contexts)
-            {
-                ctx.MergeOption = MergeOption.NoTracking;
-                ctx.Format.UseJson(model);
-                InterceptRequestAndMockResponse(ctx, mockResponse);
-            }
         }
 
         private static EdmModel BuildEdmModel()
@@ -382,7 +251,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             model.AddElement(container);
 
             // Create Entity Sets
-            var customersEntitySet = container.AddEntitySet("Customers", customerType);
+            var customersEntitySet = container.AddEntitySet(CustomersEntitySetName, customerType);
             var ordersEntitySet = container.AddEntitySet("Orders", orderType);
 
             // Bind Navigation Properties
@@ -390,6 +259,106 @@ namespace Microsoft.OData.Client.Tests.ALinq
             ordersEntitySet.AddNavigationTarget(customerNavProperty, customersEntitySet);
 
             return model;
+        }
+
+
+        // One level of inheritance classes
+
+        public interface ICustomer
+        {
+            string Id { get; set; }
+            string City { get; set; }
+            string CorporationName { get; set; }
+            string Name { get; set; }
+        }
+
+        [Key("CustomerID")]
+        public class OneLevelCustomer1 : ICustomer
+        {
+            [OriginalName("CustomerID")]
+            public string Id { get; set; }
+
+            public string City { get; set; }
+
+            [OriginalName("CompanyName")]
+            public string CorporationName { get; set; }
+
+            [OriginalName("ContactName")]
+            public string Name { get; set; }
+        }
+
+        [Key("CustomerID")]
+        public class BaseCustomer
+        {
+            [OriginalName("CustomerID")]
+            public string Id { get; set; }
+        }
+
+        public class OneLevelCustomer2 : BaseCustomer
+        {
+            public string City { get; set; }
+
+            [OriginalName("CompanyName")]
+            public string CorporationName { get; set; }
+
+            [OriginalName("ContactName")]
+            public string Name { get; set; }
+        }
+
+
+        // More than one level of inheritance classes
+
+        public abstract class ACustomer : ICustomer
+        {
+            public virtual string Id { get; set; }
+            public virtual string City { get; set; }
+            public virtual string CorporationName { get; set; }
+            public virtual string Name { get; set; }
+        }
+
+        [Key("CustomerID")]
+        public class TwoLevelCustomer1 : ACustomer
+        {
+            [OriginalName("CustomerID")]
+            public override string Id { get; set; }
+
+            public override string City { get; set; }
+
+            [OriginalName("CompanyName")]
+            public override string CorporationName { get; set; }
+
+            [OriginalName("ContactName")]
+            public override string Name { get; set; }
+        }
+
+        public interface ICustomer2 : ICustomer
+        {
+            List<Order> OrdersList { get; set; }
+        }
+
+        [Key("CustomerID")]
+        public class TwoLevelCustomer2 : ICustomer2
+        {
+            [OriginalName("CustomerID")]
+            public string Id { get; set; }
+
+            public string City { get; set; }
+
+            [OriginalName("CompanyName")]
+            public string CorporationName { get; set; }
+
+            [OriginalName("ContactName")]
+            public string Name { get; set; }
+
+            [OriginalName("Orders")]
+            public List<Order> OrdersList { get; set; }
+        }
+
+        [Key("OrderID")]
+        public class Order
+        {
+            public int OrderID { get; set; }
+            public decimal Freight { get; set; }
         }
     }
 }
