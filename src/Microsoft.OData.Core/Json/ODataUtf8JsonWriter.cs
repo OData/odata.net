@@ -323,7 +323,7 @@ namespace Microsoft.OData.Json
                 // dropping this in the future (potentially behind a compatibility flag) to avoid
                 // the cost of converting to a string and checking whether a decimal point is needed.
                 bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
-                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: false);
+                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
             }
 
             this.FlushIfBufferThresholdReached();
@@ -1034,7 +1034,7 @@ namespace Microsoft.OData.Json
                 // dropping this in the future (potentially behind a compatibility flag) to avoid
                 // the cost of converting to a string and checking whether a decimal point is needed.
                 bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
-                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: false);
+                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
             }
 
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);

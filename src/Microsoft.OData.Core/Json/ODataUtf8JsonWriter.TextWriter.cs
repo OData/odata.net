@@ -9,12 +9,10 @@ namespace Microsoft.OData.Json
 {
     using System;
     using System.Buffers;
-    using System.Diagnostics;
     using System.IO;
     using System.Text;
     using System.Text.Unicode;
     using System.Threading.Tasks;
-    using static System.Net.Mime.MediaTypeNames;
 
     internal sealed partial class ODataUtf8JsonWriter
     {
