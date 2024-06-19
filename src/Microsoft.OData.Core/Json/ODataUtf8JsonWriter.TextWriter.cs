@@ -140,13 +140,13 @@ namespace Microsoft.OData.Json
         internal sealed class ODataUtf8JsonTextWriter : TextWriter
         {
             private readonly ODataUtf8JsonWriter jsonWriter = null;
-            // Buffer used to store chars that were could not be encoded due to
+            // Buffer used to store chars that could not be encoded due to
             // insufficient data in the input buffer. The chars will be prepended
             // to the next chunk of input.
             private char[] buffer;
-            // Number of chars in the buffer that are left over frevious chunk.
+            // Number of chars in the buffer that are left over from the previous chunk.
             private int numOfCharsNotWrittenFromPreviousChunk = 0;
-            // This buffer is used to by Write(char) to store the char so
+            // This buffer is used by Write(char) to store the char so
             // that we can re-use our Write(char[], ...) method.
             private char[] singleCharBuffer;
 
@@ -217,19 +217,18 @@ namespace Microsoft.OData.Json
             }
 
             /// <summary>
-            /// Writes the specifid character to the ODataUtf8JsonWriter.
+            /// Writes the specified character to the ODataUtf8JsonWriter.
             /// </summary>
             /// <param name="value">The character to write.</param>
             public override void Write(char value)
             {
+                ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
                 if (!this.jsonWriter.isWritingJson)
                 {
-                    ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
                     this.WriteCharsInChunks(charToWrite);
                 }
                 else
                 {
-                    ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
                     this.WriteCharsInChunksWithoutEscaping(charToWrite);
                 }
             }
@@ -246,7 +245,6 @@ namespace Microsoft.OData.Json
 
                 if (!this.jsonWriter.isWritingJson)
                 {
-                
                     await this.WriteCharsInChunksAsync(input).ConfigureAwait(false);
                 }
                 else
