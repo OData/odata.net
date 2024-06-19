@@ -1471,7 +1471,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="operation"></param>
         /// <param name="writeElementAction"></param>
         /// <returns></returns>
-        private async Task ProcessOperationAsync<TOperation>(TOperation operation, Action<TOperation> writeElementAction) where TOperation : IEdmOperation
+        private async Task ProcessOperationAsync<TOperation>(TOperation operation, Func<TOperation, Task> writeElementAction) where TOperation : IEdmOperation
         {
             await this.BeginElementAsync(operation, writeElementAction);
 
@@ -1772,15 +1772,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="elementHeaderWriter"></param>
         /// <param name="additionalAttributeWriters"></param>
         /// <returns></returns>
-        private async Task BeginElementAsync<TElement>(TElement element, Action<TElement> elementHeaderWriter, params Action<TElement>[] additionalAttributeWriters)
+        private async Task BeginElementAsync<TElement>(TElement element, Func<TElement, Task> elementHeaderWriter, params Func<TElement, Task>[] additionalAttributeWriters)
             where TElement : IEdmElement
         {
-            elementHeaderWriter(element);
+            await elementHeaderWriter(element);
             if (additionalAttributeWriters != null)
             {
-                foreach (Action<TElement> action in additionalAttributeWriters)
+                foreach (Func<TElement, Task> action in additionalAttributeWriters)
                 {
-                    action(element);
+                    await action(element);
                 }
             }
 
@@ -1807,7 +1807,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="element"></param>
         /// <param name="elementEndWriter"></param>
         /// <returns></returns>
-        private async Task EndElementAsync<TElement>(TElement element, Action<TElement> elementEndWriter) where TElement : IEdmElement
+        private async Task EndElementAsync<TElement>(TElement element, Func<TElement, Task> elementEndWriter) where TElement : IEdmElement
         {
             await this.VisitPrimitiveElementAnnotationsAsync(this.Model.DirectValueAnnotations(element));
 
@@ -1817,7 +1817,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     .Where(a => a.IsInline(this.Model)));
             }
 
-            elementEndWriter(element);
+            await elementEndWriter(element);
         }
 
         private void EndElement(IEdmElement element)

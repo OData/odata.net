@@ -53,7 +53,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override async Task WriteReferenceElementHeaderAsync(IEdmReference reference)
         {
             // e.g. <edmx:Reference Uri="http://host/schema/VipCustomer.xml">
-            await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Reference, null);
+            await this.xmlWriter.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Reference, this.edmxNamespace);
             await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Uri, reference.Uri, EdmValueWriter.UriAsXml);
         }
 
@@ -88,7 +88,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override async Task WritIncludeElementHeaderAsync(IEdmInclude include)
         {
             // e.g. <edmx:Include Namespace="NS.Ref1" Alias="VPCT" />
-            await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_Include, null);
+            await this.xmlWriter.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Include, this.edmxNamespace);
             await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Namespace, include.Namespace, EdmValueWriter.StringAsXml);
             await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Alias, include.Alias, EdmValueWriter.StringAsXml);
         }
