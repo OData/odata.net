@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm.Csdl.Serialization;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -55,6 +56,23 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Write the JSON CSDL asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        protected override async Task WriteCsdlAsync()
+        {
+            await WriteCsdlStartAsync();
+
+            // The CSDL JSON Document object MAY contain the member $Reference to reference other CSDL documents.
+            await WriteReferenceElementsAsync();
+
+            // It also MAY contain members for schemas.
+            await WriteSchemataAsync();
+
+            await WriteCsdlEndAsync();
+        }
+
+        /// <summary>
         /// CSDL JSON Document Object
         /// </summary>
         private void WriteCsdlStart()
@@ -73,6 +91,27 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// CSDL JSON Document Object asynchronously
+        /// </summary>
+        /// <returns></returns>
+        private Task WriteCsdlStartAsync()
+        {
+            // A CSDL JSON document consists of a single JSON object.
+            this.jsonWriter.WriteStartObject();
+
+            // This document object MUST contain the member $Version.
+            this.jsonWriter.WriteRequiredProperty("$Version", GetVersionString(edmxVersion));
+
+            // If the CSDL JSON document is the metadata document of an OData service, the document object MUST contain the member $EntityContainer.
+            if (model.EntityContainer != null)
+            {
+                this.jsonWriter.WriteRequiredProperty("$EntityContainer", model.EntityContainer.FullName());
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
         /// $Reference Object
         /// </summary>
         private void WriteReferenceElements()
@@ -81,6 +120,17 @@ namespace Microsoft.OData.Edm.Csdl
                 = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
 
             visitor.VisitEdmReferences(this.model);
+        }
+
+        /// <summary>
+        /// $Reference Object asynchronously
+        /// </summary>
+        /// <returns></returns>
+        private async Task WriteReferenceElementsAsync()
+        {
+            var visitor = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
+
+            await visitor.VisitEdmReferencesAsync(this.model);
         }
 
         /// <summary>
@@ -100,12 +150,42 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        /// <summary>
+        /// Schema Object asynchronously
+        /// </summary>
+        /// <returns></returns>
+        private async Task WriteSchemataAsync()
+        {
+            // A schema is represented as a member of the document object whose name is the schema namespace.
+            // Its value is an object that MAY contain the members $Alias and $Annotations.
+            EdmModelCsdlSerializationVisitor visitor;
+            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
+            foreach (EdmSchema schema in this.schemas)
+            {
+                EdmModelCsdlSchemaWriter writer = new EdmModelCsdlSchemaJsonWriter(model, jsonWriter, edmVersion, settings);
+                visitor = new EdmModelCsdlSerializationVisitor(this.model, writer);
+                await visitor.VisitEdmSchemaAsync(schema, this.model.GetNamespacePrefixMappings());
+            }
+        }
+
         private void WriteCsdlEnd()
         {
             // End of the CSDL JSON document.
             this.jsonWriter.WriteEndObject();
 
             this.jsonWriter.Flush();
+        }
+
+        /// <summary>
+        /// Write the end of the CSDL JSON document asynchronously.
+        /// </summary>
+        /// <returns></returns>
+        private async Task WriteCsdlEndAsync()
+        {
+            // End of the CSDL JSON document.
+            this.jsonWriter.WriteEndObject();
+
+            await this.jsonWriter.FlushAsync();
         }
     }
 }

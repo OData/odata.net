@@ -8,8 +8,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text;
+
 #if NETCOREAPP
 using System.Text.Json;
+using System.Threading.Tasks;
+
 #endif
 
 using System.Xml;
@@ -57,6 +61,17 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Async Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="writer"></param>
+        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
+        {
+            return await TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
+        }
+
+        /// <summary>
         /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
         /// </summary>
         /// <param name="model">The Edm model to be written.</param>
@@ -82,6 +97,31 @@ namespace Microsoft.OData.Edm.Csdl
             errors = Enumerable.Empty<EdmError>();
             return true;
         }
+
+        /// <summary>
+        /// Async - Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="writer"></param>
+        /// <param name="settings"></param>
+        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer, CsdlJsonWriterSettings settings)
+        {
+            EdmUtil.CheckArgumentNull(model, nameof(model));
+            EdmUtil.CheckArgumentNull(writer, nameof(writer));
+            EdmUtil.CheckArgumentNull(settings, nameof(settings));
+
+            Version edmxVersion;
+            if (!VerifyAndGetVersion(model, out edmxVersion, out IEnumerable<EdmError> errors))
+            {
+                return (false, errors);
+            }
+
+            CsdlWriter csdlWriter = new CsdlJsonWriter(model, writer, settings, edmxVersion);
+            await csdlWriter.WriteCsdlAsync();
+
+            return (true, Enumerable.Empty<EdmError>());
+        }
 #endif
 
         /// <summary>
@@ -95,6 +135,17 @@ namespace Microsoft.OData.Edm.Csdl
         public static bool TryWriteCsdl(IEdmModel model, XmlWriter writer, CsdlTarget target, out IEnumerable<EdmError> errors)
         {
             return TryWriteCsdl(model, writer, target, new CsdlXmlWriterSettings(), out errors);
+        }
+
+        /// <summary>
+        /// Async Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="writer"></param>
+        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
+        {
+            return await TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
         }
 
         /// <summary>
@@ -125,11 +176,45 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Async - Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        /// <param name="writer"></param>
+        /// <param name="target"></param>
+        /// <param name="writerSettings"></param>
+        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target, CsdlXmlWriterSettings writerSettings)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(writer, "writer");
+
+            Version edmxVersion;
+            if (!VerifyAndGetVersion(model, out edmxVersion, out IEnumerable<EdmError> errors))
+            {
+                return (false, errors);
+            }
+
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target, writerSettings);
+            await csdlWriter.WriteCsdlAsync();
+
+            return (true, Enumerable.Empty<EdmError>());
+        }
+
+        /// <summary>
         /// Write CSDL output.
         /// </summary>
         protected virtual void WriteCsdl()
         {
             // nothing here
+        }
+
+        /// <summary>
+        /// Async - Write CSDL output.
+        /// </summary>
+        /// <returns></returns>
+        protected virtual Task WriteCsdlAsync()
+        {
+            return Task.CompletedTask;
         }
 
         /// <summary>
