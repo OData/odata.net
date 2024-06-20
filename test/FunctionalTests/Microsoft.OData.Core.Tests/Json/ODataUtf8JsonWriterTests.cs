@@ -12,6 +12,7 @@ using System.Net.Mime;
 using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Unicode;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
@@ -481,6 +482,38 @@ namespace Microsoft.OData.Tests.Json
             this.writer = new ODataUtf8JsonWriter(this.stream, false, encoding);
             this.writer.WriteODataValue(collectionValue);
             Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 ä\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.ReadStream(encoding));
+        }
+
+        [Fact]
+        public void SupportsAsciiEncodingWhenEscaped()
+        {
+            var collectionValue = new ODataCollectionValue
+            {
+                Items = new List<ODataResourceValue>
+                {
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Sue\uD800\udc05 \u00e4" },
+                            new ODataProperty { Name = "Age", Value = 19 }
+                        }
+                    },
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Joe" },
+                            new ODataProperty { Name = "Age", Value = 23 }
+                        }
+                    }
+                }
+            };
+
+            Encoding encoding = Encoding.ASCII;
+            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible: false, encoding: encoding, encoder: JavaScriptEncoder.Default);
+            this.writer.WriteODataValue(collectionValue);
+            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", this.ReadStream(encoding));
         }
 
         #endregion Support for other Encodings

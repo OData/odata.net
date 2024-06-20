@@ -470,6 +470,38 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 ä\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
         }
 
+        [Fact]
+        public async Task SupportsAsciiEncodingWhenEscaped()
+        {
+            var collectionValue = new ODataCollectionValue
+            {
+                Items = new List<ODataResourceValue>
+                {
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Sue\uD800\udc05 \u00e4" },
+                            new ODataProperty { Name = "Age", Value = 19 }
+                        }
+                    },
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Joe" },
+                            new ODataProperty { Name = "Age", Value = 23 }
+                        }
+                    }
+                }
+            };
+
+            Encoding encoding = Encoding.ASCII;
+            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible: false, encoding: encoding, encoder: JavaScriptEncoder.Default);
+            await this.writer.WriteODataValueAsync(collectionValue);
+            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
+        }
+
         #endregion Support for other Encodings
 
         #region Custom JavaScriptEncoder
