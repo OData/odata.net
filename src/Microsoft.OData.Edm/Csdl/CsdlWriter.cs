@@ -61,7 +61,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Async Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
+        /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> Asynchronously.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="writer"></param>
@@ -138,7 +138,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Async Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
+        /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> Asynchronously.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="writer"></param>
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Async - Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
+        /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/> Asynchronously.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="writer"></param>

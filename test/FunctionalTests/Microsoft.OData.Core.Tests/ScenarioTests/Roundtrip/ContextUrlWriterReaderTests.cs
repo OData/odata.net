@@ -17,6 +17,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Xunit;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 {
@@ -889,6 +890,64 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             {
                 IEnumerable<EdmError> errors;
                 CsdlWriter.TryWriteCsdl(this.model, writer, CsdlTarget.OData, out errors);
+            }
+
+            string modelAsString = stringBuilder.ToString();
+
+            foreach (ODataFormat mimeType in mimeTypes)
+            {
+                string payload, contentType;
+                this.WriteAndValidateContextUri(mimeType, model, omWriter =>
+                {
+                    var selectExpandClause = new ODataQueryOptionParser(this.model, this.employeeType, this.employeeSet, new Dictionary<string, string> { { "$expand", "AssociatedCompany" }, { "$select", "AssociatedCompany" } }).ParseSelectAndExpand();
+
+                    omWriter.Settings.ODataUri = new ODataUri()
+                    {
+                        ServiceRoot = this.testServiceRootUri,
+                        SelectAndExpand = selectExpandClause
+                    };
+                    var writer = omWriter.CreateODataResourceWriter(this.employeeSet, this.employeeType);
+                    writer.WriteStart(entry);
+                    writer.WriteEnd();
+                },
+                string.Format("\"{0}$metadata#Employees(AssociatedCompany,AssociatedCompany())/$entity\"", TestBaseUri),
+                out payload, out contentType);
+
+                this.ReadPayload(payload, contentType, model, omReader =>
+                {
+                    var reader = omReader.CreateODataResourceReader(this.employeeSet, this.employeeType);
+                    while (reader.Read()) { }
+                    Assert.Equal(ODataReaderState.Completed, reader.State);
+                });
+            }
+        }
+
+        [Fact]
+        public async Task ExpandedEntity_Async()
+        {
+            ODataResource entry = new ODataResource()
+            {
+                TypeName = TestNameSpace + ".Employee",
+                Properties = new[]
+                {
+                    new ODataProperty {Name = "PersonId", Value = 1},
+                    new ODataProperty {Name = "Name", Value = "Test1"},
+                    new ODataProperty {Name = "Age", Value = 20},
+                    new ODataProperty {Name = "HomeAddress", Value = null},
+                    new ODataProperty {Name = "DateHired", Value = null},
+                },
+            };
+
+            StringBuilder stringBuilder = new StringBuilder();
+            StringWriter stringWriter = new StringWriter(stringBuilder);
+
+            using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Async = true }))
+            {
+                var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.model, writer, CsdlTarget.OData);
+                if(!success)
+                {
+                    Assert.True(false, "Serialization was unsuccessful");
+                }
             }
 
             string modelAsString = stringBuilder.ToString();

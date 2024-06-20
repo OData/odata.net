@@ -200,7 +200,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="term">The Edm Term</param>
         /// <param name="inlineType">Is inline type or not.</param>
-        internal override Task WriteTermElementHeaderAsync(IEdmTerm term, bool inlineType)
+        internal override async Task WriteTermElementHeaderAsync(IEdmTerm term, bool inlineType)
         {
             // A term is represented as a member of the schema object whose name is the unqualified name of the term.
             this.jsonWriter.WritePropertyName(term.Name);
@@ -214,7 +214,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the members $Type, $Collection.
             if (inlineType && term.Type is not null)
             {
-                WriteTypeReferenceAsync(term.Type);
+                await WriteTypeReferenceAsync(term.Type);
             }
 
             // A term MAY specialize another term in scope by specifying it as its base term.
@@ -238,8 +238,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the members $DefaultValue.
             // The value of $DefaultValue is the type-specific JSON representation of the default value of the term
             this.jsonWriter.WriteOptionalProperty("$DefaultValue", term.DefaultValue);
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -446,7 +444,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="property"></param>
         /// <returns></returns>
-        internal override Task WriteNavigationPropertyElementHeaderAsync(IEdmNavigationProperty property)
+        internal override async Task WriteNavigationPropertyElementHeaderAsync(IEdmNavigationProperty property)
         {
             // Navigation properties are represented as members of the object representing a structured type. The member name is the property name.
             this.jsonWriter.WritePropertyName(property.Name);
@@ -459,7 +457,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             // It MUST contain the member $Type (because the navigation property type never be Edm.String)
             // It MAY contain the members $Collection.
-            WriteTypeReferenceAsync(property.Type);
+            await WriteTypeReferenceAsync(property.Type);
 
             // It MAY contain the members $Partner.
             // A navigation property of an entity type MAY specify a partner navigation property. Navigation properties of complex types MUST NOT specify a partner.
@@ -476,8 +474,6 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the members $Collection, $Nullable, $Partner, $ContainsTarget
             // The value of $ContainsTarget is one of the Boolean literals true or false. Absence of the member means false.
             this.jsonWriter.WriteOptionalProperty("$ContainsTarget", property.ContainsTarget, CsdlConstants.Default_ContainsTarget);
-
-            return Task.CompletedTask;
         }
 
         internal override void WriteReferentialConstraintBegin(IEdmReferentialConstraint referentialConstraint)
@@ -720,7 +716,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="property">The Edm structural property.</param>
         /// <param name="inlineType">Is line type or not.</param>
-        internal override Task WriteStructuralPropertyElementHeaderAsync(IEdmStructuralProperty property, bool inlineType)
+        internal override async Task WriteStructuralPropertyElementHeaderAsync(IEdmStructuralProperty property, bool inlineType)
         {
             // Structural properties are represented as members of the object representing a structured type. The member name is the property name.
             this.jsonWriter.WritePropertyName(property.Name);
@@ -734,14 +730,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the member $Type & $Collection
             if (inlineType)
             {
-                WriteTypeReferenceAsync(property.Type);
+                await WriteTypeReferenceAsync(property.Type);
             }
 
             // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
             // So far, it only includes the string format.
             this.jsonWriter.WriteOptionalProperty("$DefaultValue", property.DefaultValueString);
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -816,12 +810,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Async - Write enumeration type object end
         /// </summary>
         /// <param name="enumType">The given enumeration type.</param>
-        internal override Task WriteEnumTypeElementEndAsync(IEdmEnumType enumType)
+        internal override async Task WriteEnumTypeElementEndAsync(IEdmEnumType enumType)
         {
-            WriteEndElementAsync();
+            await WriteEndElementAsync();
             this.isInEnumTypeWriting = false;
-
-            return Task.CompletedTask;
         }
 
         /// <summary>
@@ -1107,7 +1099,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal override Task WriteAnnotationStringElementAsync(IEdmDirectValueAnnotation annotation)
         {
             var edmValue = (IEdmPrimitiveValue)annotation.Value;
-            if (edmValue is not null)
+            if (edmValue != null)
             {
                 this.jsonWriter.WriteStringValue(((IEdmStringValue)edmValue).Value);
             }
@@ -1385,7 +1377,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // The entity container object MAY contain the member $Extends, so far it only supports in Csdl Semantics.
             CsdlSemanticsEntityContainer tmp = container as CsdlSemanticsEntityContainer;
             CsdlEntityContainer csdlContainer;
-            if (tmp is not null && (csdlContainer = tmp.Element as CsdlEntityContainer) is not null)
+            if (tmp != null && (csdlContainer = tmp.Element as CsdlEntityContainer) != null)
             {
                 this.jsonWriter.WriteOptionalProperty("$Extends", csdlContainer.Extends);
             }
@@ -1602,7 +1594,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="parameter"></param>
         /// <param name="inlineType"></param>
         /// <returns></returns>
-        internal override Task WriteOperationParameterElementHeaderAsync(IEdmOperationParameter parameter, bool inlineType)
+        internal override async Task WriteOperationParameterElementHeaderAsync(IEdmOperationParameter parameter, bool inlineType)
         {
             this.jsonWriter.WriteStartObject();
 
@@ -1611,10 +1603,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (inlineType)
             {
-                return WriteTypeReferenceAsync(parameter.Type);
+                await WriteTypeReferenceAsync(parameter.Type);
             }
-
-            return Task.CompletedTask;
         }
 
         internal void WriteTypeReference(IEdmTypeReference type, string defaultTypeName = "Edm.String")
@@ -1707,9 +1697,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 await this.WriteVocabularyAnnotationElementHeaderAsync(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false);
 
-                if (!String.IsNullOrEmpty(defaultValue))
+                if (!string.IsNullOrEmpty(defaultValue))
                 {
-                    EdmPropertyConstructor property = new EdmPropertyConstructor(CsdlConstants.Attribute_DefaultValue, new EdmStringConstant(defaultValue));
+                    var property = new EdmPropertyConstructor(CsdlConstants.Attribute_DefaultValue, new EdmStringConstant(defaultValue));
                     await this.WriteRecordExpressionElementHeaderAsync(optionalValue);
                     await this.WritePropertyValueElementHeaderAsync(property, true);
                     await this.WriteEndElementAsync();
