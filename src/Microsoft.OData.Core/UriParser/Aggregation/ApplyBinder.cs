@@ -277,7 +277,8 @@ namespace Microsoft.OData.UriParser.Aggregation
         {
             return node.Kind == QueryNodeKind.SingleValuePropertyAccess ||
                    node.Kind == QueryNodeKind.SingleComplexNode ||
-                   node.Kind == QueryNodeKind.SingleNavigationNode;
+                   node.Kind == QueryNodeKind.SingleNavigationNode ||
+                   node.Kind == QueryNodeKind.SingleResourceCast;
         }
 
         private static Stack<SingleValueNode> ReversePropertyPath(SingleValueNode node)
@@ -285,6 +286,12 @@ namespace Microsoft.OData.UriParser.Aggregation
             Stack<SingleValueNode> result = new Stack<SingleValueNode>();
             do
             {
+                if (node.Kind == QueryNodeKind.SingleResourceCast)
+                {
+                    node = ((SingleResourceCastNode)node).Source;
+                    continue;
+                }
+
                 result.Push(node);
                 if (node.Kind == QueryNodeKind.SingleValuePropertyAccess)
                 {
