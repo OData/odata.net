@@ -278,8 +278,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             settings.Encoding = System.Text.Encoding.UTF8;
 
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            var (_, errors) = await this._authorizationModel.TryWriteSchemaAsync(xw);
-            await xw.FlushAsync();
+            var (_, errors) = await this._authorizationModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            await xw.FlushAsync().ConfigureAwait(false);
 
 #if NETCOREAPP1_1
             xw.Dispose();

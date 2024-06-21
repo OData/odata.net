@@ -144,7 +144,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -379,7 +379,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -650,7 +650,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -801,7 +801,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -840,7 +840,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
     }
 }

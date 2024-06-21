@@ -164,7 +164,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<Annotation Term=\"Core.LongDescription\" String=\"EdmReference Description.\" />" +
               "</edmx:Reference>" +
               "<edmx:DataServices />" +
-            "</edmx:Edmx>");
+            "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -209,7 +209,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""@Core.LongDescription"": ""EdmReference Description.""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
         #endregion
 
@@ -352,7 +352,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "</EntityContainer>" +
                     "</Schema>" +
                   "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -386,7 +386,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -667,7 +667,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 "<EntitySet Name=\"CountryOrRegion\" EntityType=\"DefaultNs.CountryOrRegion\" />" +
                 "</EntityContainer></Schema>" +
                 "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -744,7 +744,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -930,7 +930,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                       "</EntityContainer>" +
                     "</Schema>" +
                   "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -980,7 +980,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -1208,7 +1208,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityContainer>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -1264,7 +1264,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -1545,7 +1545,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                             "</ComplexType>" +
                         "</Schema>" +
                     "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -1624,7 +1624,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -1807,7 +1807,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                             "</EntityType>" +
                         "</Schema>" +
                     "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -1862,7 +1862,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         private static void SetComputedAnnotation(EdmModel model, IEdmProperty target)
@@ -2001,7 +2001,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                   "</EntityContainer>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>");
+            "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2037,7 +2037,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2188,7 +2188,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                  "</Annotations>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>");
+            "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2223,7 +2223,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2335,7 +2335,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                  "</Annotations>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>");
+            "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2361,7 +2361,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         #endregion
@@ -2434,7 +2434,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Function>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2453,7 +2453,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     ]
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2530,7 +2530,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2553,7 +2553,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         private IEdmModel GetReturnTypeModel(EdmVocabularyAnnotationSerializationLocation location)
@@ -2646,7 +2646,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2666,7 +2666,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2752,7 +2752,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2772,7 +2772,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2850,7 +2850,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<Term Name=\"MyTerm\" Type=\"NS.SelectType\" />" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2874,7 +2874,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$Nullable"": true
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -2940,7 +2940,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityContainer>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -2954,7 +2954,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3019,7 +3019,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityContainer>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3034,7 +3034,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3106,7 +3106,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3122,7 +3122,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3216,7 +3216,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3242,7 +3242,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3307,7 +3307,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<ComplexType Name=\"Address\" BaseType=\"Edm.ComplexType\" />" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3322,7 +3322,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$BaseType"": ""Edm.ComplexType""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3377,7 +3377,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "<TypeDefinition Name=\"MyType\" UnderlyingType=\"Edm.PrimitiveType\" />" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3388,7 +3388,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$UnderlyingType"": ""Edm.PrimitiveType""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3472,7 +3472,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Function>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3498,7 +3498,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     ]
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3638,7 +3638,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3666,7 +3666,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -3746,7 +3746,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</ComplexType>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -3764,7 +3764,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4022,7 +4022,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityContainer>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -4090,7 +4090,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4206,7 +4206,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Function>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -4244,7 +4244,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     ]
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4342,7 +4342,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "<Term Name=\"MyNavigationPathTerm\" Type=\"Edm.NavigationPropertyPath\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -4362,7 +4362,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$Type"": ""Edm.NavigationPropertyPath""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4488,7 +4488,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "<Term Name=\"MyDefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -4520,7 +4520,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$DefaultValue"": ""true""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4761,7 +4761,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                  "<Term Name=\"DefaultDateTerm\" Type=\"Edm.Date\" DefaultValue=\"2000-12-10\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -4850,7 +4850,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$DefaultValue"": ""2000-12-10""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -4924,7 +4924,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(validated);
 
             // Act & Assert for Reserialized XML
-            await WriteAndVerifyXmlAsync(model, csdlTemplate, writerSettings);
+            await WriteAndVerifyXmlAsync(model, csdlTemplate, writerSettings).ConfigureAwait(false);
         }
 
         [Fact]
@@ -4988,7 +4988,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(validated);
 
             // Act & Assert for Reserialized XML
-            await WriteAndVerifyXmlAsync(model, csdlTemplate);
+            await WriteAndVerifyXmlAsync(model, csdlTemplate).ConfigureAwait(false);
         }
 
         [Fact]
@@ -5235,7 +5235,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</EntityContainer>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -5300,7 +5300,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
@@ -5581,18 +5581,18 @@ var v40Json =
                             "</EntitySet>";
 
             // Act & Assert for XML 4.0
-            await WriteAndVerifyXmlAsync(model, String.Format(xmlResult, "4.0", v40EntitySet));
+            await WriteAndVerifyXmlAsync(model, String.Format(xmlResult, "4.0", v40EntitySet)).ConfigureAwait(false);
 
             // Act & Assert for JSON 4.0
-            await WriteAndVerifyJsonAsync(model, v40Json);
+            await WriteAndVerifyJsonAsync(model, v40Json).ConfigureAwait(false);
 
             model.SetEdmVersion(Version.Parse("4.01"));
 
             // Act & Assert for XML 4.1
-            await WriteAndVerifyXmlAsync(model, String.Format(xmlResult, "4.01", v401EntitySet));
+            await WriteAndVerifyXmlAsync(model, String.Format(xmlResult, "4.01", v401EntitySet)).ConfigureAwait(false);
 
             // Act & Assert for JSON 4.1
-            await WriteAndVerifyJsonAsync(model, v40Json.Replace("4.0", "4.01"));
+            await WriteAndVerifyJsonAsync(model, v40Json.Replace("4.0", "4.01")).ConfigureAwait(false);
         }
 
         [Fact]
@@ -5677,7 +5677,7 @@ var v40Json =
                       "</EntityType>" +
                     "</Schema>" +
                   "</edmx:DataServices>" +
-                "</edmx:Edmx>");
+                "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -5702,7 +5702,7 @@ var v40Json =
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Theory]
@@ -5731,10 +5731,10 @@ var v40Json =
             edmModel.SetEdmVersion(odataVersion == "4.0" ? EdmConstants.EdmVersion4 : EdmConstants.EdmVersion401);
 
             // XML
-            await WriteAndVerifyXmlAsync(edmModel, "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>");
+            await WriteAndVerifyXmlAsync(edmModel, "<?xml version=\"1.0\" encoding=\"utf-16\"?><edmx:Edmx Version=\"" + odataVersion + "\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\"><edmx:DataServices /></edmx:Edmx>").ConfigureAwait(false);
 
             // JSON
-            await WriteAndVerifyJsonAsync(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false);
+            await WriteAndVerifyJsonAsync(edmModel, "{\"$Version\":\"" + odataVersion + "\"}", false).ConfigureAwait(false);
         }
 
         internal static void WriteAndVerifyXml(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
@@ -5768,8 +5768,8 @@ var v40Json =
 
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
-                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target);
-                    await xw.FlushAsync();
+                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target).ConfigureAwait(false);
+                    await xw.FlushAsync().ConfigureAwait(false);
                 }
 
                 string actual = sw.ToString();
@@ -5808,8 +5808,8 @@ var v40Json =
 
                 using (XmlWriter xw = XmlWriter.Create(sw, settings))
                 {
-                    var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target, csdlXmlWriterSettings);
-                    await xw.FlushAsync();
+                    var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(model, xw, target, csdlXmlWriterSettings).ConfigureAwait(false);
+                    await xw.FlushAsync().ConfigureAwait(false);
                 }
 
                 string actual = sw.ToString();
@@ -5863,8 +5863,8 @@ var v40Json =
                     CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
                     settings.IsIeee754Compatible = isIeee754Compatible;
                     IEnumerable<EdmError> errors;
-                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, jsonWriter, settings);
-                    jsonWriter.FlushAsync();
+                    var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, jsonWriter, settings).ConfigureAwait(false);
+                    await jsonWriter.FlushAsync().ConfigureAwait(false);
                     Assert.True(ok);
                 }
 
@@ -5996,7 +5996,7 @@ var v40Json =
                   "</EntityContainer>" +
                 "</Schema>" +
               "</edmx:DataServices>" +
-            "</edmx:Edmx>");
+            "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -6032,7 +6032,7 @@ var v40Json =
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Theory]
@@ -6092,7 +6092,7 @@ var v40Json =
             var builder = new StringBuilder();
             using (var writer = XmlWriter.Create(builder, new XmlWriterSettings { Encoding = Encoding.UTF8, Async = true }))
             {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(model, writer, csdlTarget);
+                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(model, writer, csdlTarget).ConfigureAwait(false);
                 if (!result)
                 {
                     Assert.True(false, "Serialization was unsuccessful");

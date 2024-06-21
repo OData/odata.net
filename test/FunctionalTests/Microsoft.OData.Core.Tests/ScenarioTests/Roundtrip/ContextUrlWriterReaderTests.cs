@@ -943,7 +943,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             using (var writer = XmlWriter.Create(stringWriter, new XmlWriterSettings() { Async = true }))
             {
-                var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.model, writer, CsdlTarget.OData);
+                var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.model, writer, CsdlTarget.OData).ConfigureAwait(false);
                 if(!success)
                 {
                     Assert.True(false, "Serialization was unsuccessful");

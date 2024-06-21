@@ -60,7 +60,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             IEnumerable<EdmError> errors;
             using (var xw = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8, Async = true }))
             {
-                var (result, errorsAsync) = await model.TryWriteSchemaAsync(xw);
+                var (result, errorsAsync) = await model.TryWriteSchemaAsync(xw).ConfigureAwait(false);
                 Assert.True(result);
 
                 errors = errorsAsync;

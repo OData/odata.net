@@ -139,7 +139,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "<Term Name=\"MyDefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
             await WriteAndVerifyJsonAsync(model, @"{
@@ -171,7 +171,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$DefaultValue"": ""true""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
     }

@@ -909,8 +909,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             };
 
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            var (_, errors) = await coreVocModel.TryWriteSchemaAsync(xw);
-            await xw.FlushAsync();
+            var (_, errors) = await coreVocModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            await xw.FlushAsync().ConfigureAwait(false);
 #if NETCOREAPP1_1
             xw.Dispose();
 #else
