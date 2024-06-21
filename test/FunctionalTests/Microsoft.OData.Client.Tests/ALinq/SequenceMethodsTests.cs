@@ -19,254 +19,25 @@ namespace Microsoft.OData.Client.Tests.ALinq
     /// </summary>
     public class SequenceMethodsTests
     {
-        private readonly TestContext _ctx;
+        private const string MockCustomer1 = "{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\"}";
 
-        public SequenceMethodsTests()
-        {
-            _ctx = new TestContext();
-        }
+        private const string MockCustomer2 = "{\"CustomerID\":\"CHOPS\",\"CompanyName\":\"Chop-suey Chinese\",\"ContactName\":\"Yang Wang\",\"Address\":\"Hauptstr. 29\",\"City\":\"Bern\"}";
 
-        [Fact]
-        public void Any()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("91");
-            Assert.True(_ctx.Customers.Any());
-        }
-
-        [Fact]
-        public void Any_ReturnsFalse_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'thisdoesntexist')");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("0");
-            Assert.False(_ctx.Customers.Where(c => c.Name.Contains("thisdoesntexist")).Any());
-        }
-
-        [Fact]
-        public void AnyPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("6");
-            Assert.True(_ctx.Customers.Any(c => c.Name.Contains("ab")));
-        }
-
-        [Fact]
-        public void AnyPredicate_ReturnsFalse_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'thisdoesntexist')");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("0");
-            Assert.False(_ctx.Customers.Any(c => c.Name.Contains("thisdoesntexist")));
-        }
-
-        [Fact]
-        public void CountPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("6");
-            int count = _ctx.Customers.Count(c => c.Name.Contains("ab"));
-            Assert.Equal(6, count);
-        }
-
-        [Fact]
-        public void LongCountPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponse("6");
-            long count = _ctx.Customers.LongCount(c => c.Name.Contains("ab"));
-            Assert.Equal(6, count);
-        }
-
-        [Fact]
-        public void FirstPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName ne 'John'&$top=1");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "]");
-            Customer customer = _ctx.Customers.First(c => c.Name != "John");
-            Assert.Equal("ALFKI", customer.Id);
-            Assert.Equal("Maria Anders", customer.Name);
-            Assert.Equal("Berlin", customer.City);
-        }
-
-        [Fact]
-        public void FirstPredicate_ThrowsException_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=1");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.First(c => c.Name == "thisdoesntexist"));
-        }
-
-        [Fact]
-        public void FirstOrDefaultPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName ne 'John'&$top=1");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "]");
-            Customer customer = _ctx.Customers.FirstOrDefault(c => c.Name != "John");
-            Assert.Equal("ALFKI", customer.Id);
-            Assert.Equal("Maria Anders", customer.Name);
-            Assert.Equal("Berlin", customer.City);
-        }
-
-        [Fact]
-        public void FirstOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName eq 'John'&$top=1");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-            Assert.Null(_ctx.Customers.FirstOrDefault(c => c.Name == "John"));
-        }
-
-        [Fact]
-        public void SinglePredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer2 + "]");
-            Customer customer = _ctx.Customers.Single(c => c.Id == "CHOPS");
-            Assert.Equal("CHOPS", customer.Id);
-            Assert.Equal("Yang Wang", customer.Name);
-            Assert.Equal("Bern", customer.City);
-        }
-
-        [Fact]
-        public void SinglePredicate_ThrowsException_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.Single(c => c.Name == "thisdoesntexist"));
-        }
-
-        [Fact]
-        public void SinglePredicate_ThrowsException_WhenMoreThanOneMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
-            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.Single(c => c.Name != "thisdoesntexist"));
-        }
-
-        [Fact]
-        public void SingleOrDefaultPredicate()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer2 + "]");
-            Customer customer = _ctx.Customers.SingleOrDefault(c => c.Id == "CHOPS");
-            Assert.Equal("CHOPS", customer.Id);
-            Assert.Equal("Yang Wang", customer.Name);
-            Assert.Equal("Bern", customer.City);
-        }
-
-        [Fact]
-        public void SingleOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=CustomerID eq '234111'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[]");
-            Assert.Null(_ctx.Customers.SingleOrDefault(c => c.Id == "234111"));
-        }
-
-        [Fact]
-        public void SingleOrDefaultPredicate_ThrowsException_WhenMoreThanOneMatchExists()
-        {
-            _ctx.OnRequestUriBuilt = (string builtUri) =>
-            {
-                string expectedUri = _ctx.BuildUriFromPath("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
-                Assert.Equal(expectedUri, builtUri);
-            };
-            _ctx.InterceptRequestAndMockResponseValue("Customers", "[" + TestContext.MockCustomer1 + "," + TestContext.MockCustomer2 + "]");
-            Assert.Throws<InvalidOperationException>(() => _ctx.Customers.SingleOrDefault(c => c.Name != "thisdoesntexist"));
-        }
-    }
-
-
-    [Key("CustomerID")]
-    public class Customer
-    {
-        [OriginalName("CustomerID")]
-        public string Id { get; set; }
-
-        public string City { get; set; }
-
-        [OriginalName("ContactName")]
-        public string Name { get; set; }
-    }
-
-    public class TestContext
-    {
-        public const string MockCustomer1 = "{\"CustomerID\":\"ALFKI\",\"CompanyName\":\"Alfreds Futterkiste\",\"ContactName\":\"Maria Anders\",\"Address\":\"Obere Str. 57\",\"City\":\"Berlin\"}";
-
-        public const string MockCustomer2 = "{\"CustomerID\":\"CHOPS\",\"CompanyName\":\"Chop-suey Chinese\",\"ContactName\":\"Yang Wang\",\"Address\":\"Hauptstr. 29\",\"City\":\"Bern\"}";
-
-        public readonly DataServiceQuery<Customer> Customers;
+        private readonly DataServiceQuery<Customer> _customers;
 
         private readonly DataServiceContext _ctx;
 
         private readonly string _rootUriStr;
 
-        public Action<string> OnRequestUriBuilt = null;
+        private Action<string> _onRequestUriBuilt = null;
 
-        public TestContext()
+        public SequenceMethodsTests()
         {
             _rootUriStr = "https://mock.odata.service";
             Uri uri = new Uri(_rootUriStr);
 
             _ctx = new DataServiceContext(uri);
-            Customers = _ctx.CreateQuery<Customer>("Customers");
+            _customers = _ctx.CreateQuery<Customer>("Customers");
 
             EdmModel model = BuildEdmModel();
             _ctx.Format.UseJson(model);
@@ -275,18 +46,224 @@ namespace Microsoft.OData.Client.Tests.ALinq
 
             _ctx.BuildingRequest += (obj, args) =>
             {
-                if (OnRequestUriBuilt == null) return;
-                string actualUri = args.RequestUri.ToString();
-                OnRequestUriBuilt(actualUri);
+                if (_onRequestUriBuilt == null) return;
+                string actualUri = args.RequestUri.OriginalString;
+                _onRequestUriBuilt(actualUri);
             };
         }
 
-        public string BuildUriFromPath(string uriPath)
+        [Fact]
+        public void Any()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("91");
+            Assert.True(_customers.Any());
+        }
+
+        [Fact]
+        public void Any_ReturnsFalse_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'thisdoesntexist')");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("0");
+            Assert.False(_customers.Where(c => c.Name.Contains("thisdoesntexist")).Any());
+        }
+
+        [Fact]
+        public void AnyPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("6");
+            Assert.True(_customers.Any(c => c.Name.Contains("ab")));
+        }
+
+        [Fact]
+        public void AnyPredicate_ReturnsFalse_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'thisdoesntexist')");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("0");
+            Assert.False(_customers.Any(c => c.Name.Contains("thisdoesntexist")));
+        }
+
+        [Fact]
+        public void CountPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("6");
+            int count = _customers.Count(c => c.Name.Contains("ab"));
+            Assert.Equal(6, count);
+        }
+
+        [Fact]
+        public void LongCountPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers/$count?$filter=contains(ContactName,'ab')");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponse("6");
+            long count = _customers.LongCount(c => c.Name.Contains("ab"));
+            Assert.Equal(6, count);
+        }
+
+        [Fact]
+        public void FirstPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName ne 'John'&$top=1");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer1 + "]");
+            Customer customer = _customers.First(c => c.Name != "John");
+            Assert.Equal("ALFKI", customer.Id);
+            Assert.Equal("Maria Anders", customer.Name);
+            Assert.Equal("Berlin", customer.City);
+        }
+
+        [Fact]
+        public void FirstPredicate_ThrowsException_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=1");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Throws<InvalidOperationException>(() => _customers.First(c => c.Name == "thisdoesntexist"));
+        }
+
+        [Fact]
+        public void FirstOrDefaultPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName ne 'John'&$top=1");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer1 + "]");
+            Customer customer = _customers.FirstOrDefault(c => c.Name != "John");
+            Assert.Equal("ALFKI", customer.Id);
+            Assert.Equal("Maria Anders", customer.Name);
+            Assert.Equal("Berlin", customer.City);
+        }
+
+        [Fact]
+        public void FirstOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName eq 'John'&$top=1");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Null(_customers.FirstOrDefault(c => c.Name == "John"));
+        }
+
+        [Fact]
+        public void SinglePredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.Single(c => c.Id == "CHOPS");
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+        }
+
+        [Fact]
+        public void SinglePredicate_ThrowsException_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName eq 'thisdoesntexist'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Throws<InvalidOperationException>(() => _customers.Single(c => c.Name == "thisdoesntexist"));
+        }
+
+        [Fact]
+        public void SinglePredicate_ThrowsException_WhenMoreThanOneMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer1 + "," + MockCustomer2 + "]");
+            Assert.Throws<InvalidOperationException>(() => _customers.Single(c => c.Name != "thisdoesntexist"));
+        }
+
+        [Fact]
+        public void SingleOrDefaultPredicate()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq 'CHOPS'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer2 + "]");
+            Customer customer = _customers.SingleOrDefault(c => c.Id == "CHOPS");
+            Assert.Equal("CHOPS", customer.Id);
+            Assert.Equal("Yang Wang", customer.Name);
+            Assert.Equal("Bern", customer.City);
+        }
+
+        [Fact]
+        public void SingleOrDefaultPredicate_ReturnsNull_WhenNoMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=CustomerID eq '234111'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[]");
+            Assert.Null(_customers.SingleOrDefault(c => c.Id == "234111"));
+        }
+
+        [Fact]
+        public void SingleOrDefaultPredicate_ThrowsException_WhenMoreThanOneMatchExists()
+        {
+            _onRequestUriBuilt = (string builtUri) =>
+            {
+                string expectedUri = BuildUriFromPath("/Customers?$filter=ContactName ne 'thisdoesntexist'&$top=2");
+                Assert.Equal(expectedUri, builtUri);
+            };
+            InterceptRequestAndMockResponseValue("Customers", "[" + MockCustomer1 + "," + MockCustomer2 + "]");
+            Assert.Throws<InvalidOperationException>(() => _customers.SingleOrDefault(c => c.Name != "thisdoesntexist"));
+        }
+
+        private string BuildUriFromPath(string uriPath)
         {
             return _rootUriStr + uriPath;
         }
 
-        public void InterceptRequestAndMockResponse(string mockResponse)
+        private void InterceptRequestAndMockResponse(string mockResponse)
         {
             _ctx.Configurations.RequestPipeline.OnMessageCreating = (args) =>
             {
@@ -303,7 +280,7 @@ namespace Microsoft.OData.Client.Tests.ALinq
             };
         }
 
-        public void InterceptRequestAndMockResponseValue(string entitySetName, string mockResponseValue)
+        private void InterceptRequestAndMockResponseValue(string entitySetName, string mockResponseValue)
         {
             string mockResponse = "{\"@odata.context\":\"" + _rootUriStr + "/$metadata#" + entitySetName + "\",\"value\":" + mockResponseValue + "}";
 
@@ -331,6 +308,18 @@ namespace Microsoft.OData.Client.Tests.ALinq
             container.AddEntitySet("Customers", customerType);
 
             return model;
+        }
+
+        [Key("CustomerID")]
+        public class Customer
+        {
+            [OriginalName("CustomerID")]
+            public string Id { get; set; }
+
+            public string City { get; set; }
+
+            [OriginalName("ContactName")]
+            public string Name { get; set; }
         }
     }
 }
