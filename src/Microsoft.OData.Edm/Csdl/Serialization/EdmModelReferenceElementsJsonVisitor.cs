@@ -71,15 +71,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 foreach (IEdmReference refence in references)
                 {
-                    await this.schemaWriter.WriteReferenceElementHeaderAsync(refence);
+                    await this.schemaWriter.WriteReferenceElementHeaderAsync(refence).ConfigureAwait(false);
 
-                    await WriteIncludesAsync(model, refence.Includes);
+                    await WriteIncludesAsync(model, refence.Includes).ConfigureAwait(false);
 
-                    await WriteIncludeAnnotationsAsync(refence.IncludeAnnotations);
+                    await WriteIncludeAnnotationsAsync(refence.IncludeAnnotations).ConfigureAwait(false);
 
-                    await WriteAnnotationsAsync(model, refence);
+                    await WriteAnnotationsAsync(model, refence).ConfigureAwait(false);
 
-                    await this.schemaWriter.WriteReferenceElementEndAsync(refence);
+                    await this.schemaWriter.WriteReferenceElementEndAsync(refence).ConfigureAwait(false);
                 }
 
                 // End of $Reference
@@ -135,11 +135,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             foreach (IEdmInclude include in includes)
             {
                 // Array items are objects.
-                await this.schemaWriter.WritIncludeElementHeaderAsync(include);
+                await this.schemaWriter.WritIncludeElementHeaderAsync(include).ConfigureAwait(false);
 
-                await WriteAnnotationsAsync(model, include);
+                await WriteAnnotationsAsync(model, include).ConfigureAwait(false);
 
-                await this.schemaWriter.WriteIncludeElementEndAsync(include);
+                await this.schemaWriter.WriteIncludeElementEndAsync(include).ConfigureAwait(false);
             }
 
             this.jsonWriter.WriteEndArray();
@@ -242,8 +242,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             var annotations = model.FindDeclaredVocabularyAnnotations(target);
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
-                await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(annotation, true);
-                await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, true);
+                await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(annotation, true).ConfigureAwait(false);
+                await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, true).ConfigureAwait(false);
             }
         }
     }

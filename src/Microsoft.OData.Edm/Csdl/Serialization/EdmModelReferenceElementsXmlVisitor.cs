@@ -55,17 +55,17 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal async Task VisitEdmReferencesAsync(IEdmModel model, IEdmReference reference)
         {
-            await this.schemaWriter.WriteReferenceElementHeaderAsync(reference);
+            await this.schemaWriter.WriteReferenceElementHeaderAsync(reference).ConfigureAwait(false);
 
             if (reference.Includes != null)
             {
                 foreach (IEdmInclude include in reference.Includes)
                 {
-                    await this.schemaWriter.WritIncludeElementHeaderAsync(include);
+                    await this.schemaWriter.WritIncludeElementHeaderAsync(include).ConfigureAwait(false);
 
-                    await WriteAnnotationsAsync(model, include);
+                    await WriteAnnotationsAsync(model, include).ConfigureAwait(false);
 
-                    await this.schemaWriter.WriteIncludeElementEndAsync(include);
+                    await this.schemaWriter.WriteIncludeElementEndAsync(include).ConfigureAwait(false);
                 }
             }
 
@@ -73,12 +73,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 foreach (IEdmIncludeAnnotations includeAnnotations in reference.IncludeAnnotations)
                 {
-                    await this.schemaWriter.WriteIncludeAnnotationsElementAsync(includeAnnotations);
+                    await this.schemaWriter.WriteIncludeAnnotationsElementAsync(includeAnnotations).ConfigureAwait(false);
                 }
             }
 
-            await WriteAnnotationsAsync(model, reference);
-            await this.schemaWriter.WriteReferenceElementEndAsync(reference);
+            await WriteAnnotationsAsync(model, reference).ConfigureAwait(false);
+            await this.schemaWriter.WriteReferenceElementEndAsync(reference).ConfigureAwait(false);
 
         }
 
@@ -97,8 +97,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             var annotations = model.FindDeclaredVocabularyAnnotations(target);
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
-                await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(annotation, true);
-                await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, true);
+                await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(annotation, true).ConfigureAwait(false);
+                await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, true).ConfigureAwait(false);
             }
         }
 

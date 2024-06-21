@@ -61,15 +61,15 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns></returns>
         protected override async Task WriteCsdlAsync()
         {
-            await WriteCsdlStartAsync();
+            await WriteCsdlStartAsync().ConfigureAwait(false);
 
             // The CSDL JSON Document object MAY contain the member $Reference to reference other CSDL documents.
-            await WriteReferenceElementsAsync();
+            await WriteReferenceElementsAsync().ConfigureAwait(false);
 
             // It also MAY contain members for schemas.
-            await WriteSchemataAsync();
+            await WriteSchemataAsync().ConfigureAwait(false);
 
-            await WriteCsdlEndAsync();
+            await WriteCsdlEndAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -126,11 +126,11 @@ namespace Microsoft.OData.Edm.Csdl
         /// $Reference Object asynchronously
         /// </summary>
         /// <returns></returns>
-        private async Task WriteReferenceElementsAsync()
+        private Task WriteReferenceElementsAsync()
         {
             var visitor = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
 
-            await visitor.VisitEdmReferencesAsync(this.model);
+            return visitor.VisitEdmReferencesAsync(this.model);
         }
 
         /// <summary>
@@ -164,7 +164,7 @@ namespace Microsoft.OData.Edm.Csdl
             {
                 EdmModelCsdlSchemaWriter writer = new EdmModelCsdlSchemaJsonWriter(model, jsonWriter, edmVersion, settings);
                 visitor = new EdmModelCsdlSerializationVisitor(this.model, writer);
-                await visitor.VisitEdmSchemaAsync(schema, this.model.GetNamespacePrefixMappings());
+                await visitor.VisitEdmSchemaAsync(schema, this.model.GetNamespacePrefixMappings()).ConfigureAwait(false);
             }
         }
 
@@ -180,12 +180,12 @@ namespace Microsoft.OData.Edm.Csdl
         /// Write the end of the CSDL JSON document asynchronously.
         /// </summary>
         /// <returns></returns>
-        private async Task WriteCsdlEndAsync()
+        private Task WriteCsdlEndAsync()
         {
             // End of the CSDL JSON document.
             this.jsonWriter.WriteEndObject();
 
-            await this.jsonWriter.FlushAsync();
+            return this.jsonWriter.FlushAsync();
         }
     }
 }

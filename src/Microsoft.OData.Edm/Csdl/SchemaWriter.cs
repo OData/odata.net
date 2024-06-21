@@ -119,7 +119,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return (false, errors);
             }
 
-            await WriteSchemasAsync(model, schemas, writerProvider);
+            await WriteSchemasAsync(model, schemas, writerProvider).ConfigureAwait(false);
 
             errors = Enumerable.Empty<EdmError>();
             return (true, errors);
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Edm.Csdl
                 {
                     var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, writer, edmVersion, new CsdlXmlWriterSettings());
                     visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
-                    await visitor.VisitEdmSchemaAsync(schema, model.GetNamespacePrefixMappings());
+                    await visitor.VisitEdmSchemaAsync(schema, model.GetNamespacePrefixMappings()).ConfigureAwait(false);
                 }
             }
         }

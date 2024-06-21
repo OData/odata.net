@@ -808,7 +808,7 @@ namespace Microsoft.OData.Tests
     }
   }
 }", payload);
-        }
+    }
 #endif
 
         [Fact]

@@ -66,9 +66,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model"></param>
         /// <param name="writer"></param>
         /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
-        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
         {
-            return await TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
+            return TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
         }
 
         /// <summary>
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Edm.Csdl
             }
 
             CsdlWriter csdlWriter = new CsdlJsonWriter(model, writer, settings, edmxVersion);
-            await csdlWriter.WriteCsdlAsync();
+            await csdlWriter.WriteCsdlAsync().ConfigureAwait(false);
 
             return (true, Enumerable.Empty<EdmError>());
         }
@@ -143,9 +143,9 @@ namespace Microsoft.OData.Edm.Csdl
         /// <param name="model"></param>
         /// <param name="writer"></param>
         /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
-        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
         {
-            return await TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
+            return TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
         }
 
         /// <summary>
@@ -195,7 +195,7 @@ namespace Microsoft.OData.Edm.Csdl
             }
 
             CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target, writerSettings);
-            await csdlWriter.WriteCsdlAsync();
+            await csdlWriter.WriteCsdlAsync().ConfigureAwait(false);
 
             return (true, Enumerable.Empty<EdmError>());
         }

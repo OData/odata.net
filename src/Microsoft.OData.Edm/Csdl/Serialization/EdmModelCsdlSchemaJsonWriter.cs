@@ -214,7 +214,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the members $Type, $Collection.
             if (inlineType && term.Type is not null)
             {
-                await WriteTypeReferenceAsync(term.Type);
+                await WriteTypeReferenceAsync(term.Type).ConfigureAwait(false);
             }
 
             // A term MAY specialize another term in scope by specifying it as its base term.
@@ -457,7 +457,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             // It MUST contain the member $Type (because the navigation property type never be Edm.String)
             // It MAY contain the members $Collection.
-            await WriteTypeReferenceAsync(property.Type);
+            await WriteTypeReferenceAsync(property.Type).ConfigureAwait(false);
 
             // It MAY contain the members $Partner.
             // A navigation property of an entity type MAY specify a partner navigation property. Navigation properties of complex types MUST NOT specify a partner.
@@ -730,7 +730,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // It MAY contain the member $Type & $Collection
             if (inlineType)
             {
-                await WriteTypeReferenceAsync(property.Type);
+                await WriteTypeReferenceAsync(property.Type).ConfigureAwait(false);
             }
 
             // The value of $DefaultValue is the type-specific JSON representation of the default value of the property.
@@ -812,7 +812,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="enumType">The given enumeration type.</param>
         internal override async Task WriteEnumTypeElementEndAsync(IEdmEnumType enumType)
         {
-            await WriteEndElementAsync();
+            await WriteEndElementAsync().ConfigureAwait(false);
             this.isInEnumTypeWriting = false;
         }
 
@@ -901,23 +901,23 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (actualTypeReference.IsBinary())
             {
-                await this.WriteBinaryTypeAttributesAsync(actualTypeReference.AsBinary());
+                await this.WriteBinaryTypeAttributesAsync(actualTypeReference.AsBinary()).ConfigureAwait(false);
             }
             else if (actualTypeReference.IsString())
             {
-                await this.WriteStringTypeAttributesAsync(actualTypeReference.AsString());
+                await this.WriteStringTypeAttributesAsync(actualTypeReference.AsString()).ConfigureAwait(false);
             }
             else if (actualTypeReference.IsTemporal())
             {
-                await this.WriteTemporalTypeAttributesAsync(actualTypeReference.AsTemporal());
+                await this.WriteTemporalTypeAttributesAsync(actualTypeReference.AsTemporal()).ConfigureAwait(false);
             }
             else if (actualTypeReference.IsDecimal())
             {
-                await this.WriteDecimalTypeAttributesAsync(actualTypeReference.AsDecimal());
+                await this.WriteDecimalTypeAttributesAsync(actualTypeReference.AsDecimal()).ConfigureAwait(false);
             }
             else if (actualTypeReference.IsSpatial())
             {
-                await this.WriteSpatialTypeAttributesAsync(actualTypeReference.AsSpatial());
+                await this.WriteSpatialTypeAttributesAsync(actualTypeReference.AsSpatial()).ConfigureAwait(false);
             }
         }
 
@@ -1173,7 +1173,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // The action overload object MUST contain the member $Kind with a string value of Action.
             this.jsonWriter.WriteRequiredProperty("$Kind", CsdlConstants.Element_Action);
 
-            await this.WriteOperationElementAttributesAsync(action);
+            await this.WriteOperationElementAttributesAsync(action).ConfigureAwait(false);
         }
 
         internal override void WriteFunctionElementHeader(IEdmFunction function)
@@ -1203,7 +1203,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // The action overload object MUST contain the member $Kind with a string value of Action.
             this.jsonWriter.WriteRequiredProperty("$Kind", CsdlConstants.Element_Function);
 
-            await this.WriteOperationElementAttributesAsync(function);
+            await this.WriteOperationElementAttributesAsync(function).ConfigureAwait(false);
 
             if (function.IsComposable)
             {
@@ -1515,7 +1515,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteRequiredProperty("$Action", actionImport.Operation.FullName());
 
             // The action import object MAY contain the member $EntitySet.
-            await this.WriteOperationImportAttributesAsync(actionImport, CsdlConstants.Attribute_Action);
+            await this.WriteOperationImportAttributesAsync(actionImport, CsdlConstants.Attribute_Action).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1566,7 +1566,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.jsonWriter.WriteRequiredProperty("$Function", functionImport.Operation.FullName());
 
             // The function import object MAY contain the member $EntitySet.
-            await this.WriteOperationImportAttributesAsync(functionImport, CsdlConstants.Attribute_Function);
+            await this.WriteOperationImportAttributesAsync(functionImport, CsdlConstants.Attribute_Function).ConfigureAwait(false);
 
             // The value of $IncludeInServiceDocument is one of the Boolean literals true or false. Absence of the member means false.
             if (functionImport.IncludeInServiceDocument)
@@ -1603,7 +1603,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (inlineType)
             {
-                await WriteTypeReferenceAsync(parameter.Type);
+                await WriteTypeReferenceAsync(parameter.Type).ConfigureAwait(false);
             }
         }
 
@@ -1695,14 +1695,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 string defaultValue = optionalParameter.DefaultValueString;
                 EdmRecordExpression optionalValue = new EdmRecordExpression();
 
-                await this.WriteVocabularyAnnotationElementHeaderAsync(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false);
+                await this.WriteVocabularyAnnotationElementHeaderAsync(new EdmVocabularyAnnotation(parameter, CoreVocabularyModel.OptionalParameterTerm, optionalValue), false).ConfigureAwait(false);
 
                 if (!string.IsNullOrEmpty(defaultValue))
                 {
                     var property = new EdmPropertyConstructor(CsdlConstants.Attribute_DefaultValue, new EdmStringConstant(defaultValue));
-                    await this.WriteRecordExpressionElementHeaderAsync(optionalValue);
-                    await this.WritePropertyValueElementHeaderAsync(property, true);
-                    await this.WriteEndElementAsync();
+                    await this.WriteRecordExpressionElementHeaderAsync(optionalValue).ConfigureAwait(false);
+                    await this.WritePropertyValueElementHeaderAsync(property, true).ConfigureAwait(false);
+                    await this.WriteEndElementAsync().ConfigureAwait(false);
                 }
                 else
                 {
@@ -1711,7 +1711,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 }
             }
 
-            await this.WriteEndElementAsync();
+            await this.WriteEndElementAsync().ConfigureAwait(false);
         }
 
         internal override void WriteCollectionTypeElementHeader(IEdmCollectionType collectionType, bool inlineType)
@@ -1855,7 +1855,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             if (isInline)
             {
                 // In JSON, we always write the annotation value.
-                await this.WriteInlineExpressionAsync(annotation.Value);
+                await this.WriteInlineExpressionAsync(annotation.Value).ConfigureAwait(false);
             }
         }
 
@@ -1897,7 +1897,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (isInline)
             {
-                await this.WriteInlineExpressionAsync(value.Value);
+                await this.WriteInlineExpressionAsync(value.Value).ConfigureAwait(false);
             }
         }
 
@@ -1960,7 +1960,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (isInline)
             {
-                await this.WriteInlineExpressionAsync(constructor.Value);
+                await this.WriteInlineExpressionAsync(constructor.Value).ConfigureAwait(false);
             }
 
             // Annotations for record members are prefixed with the member name. It's not supported now.
