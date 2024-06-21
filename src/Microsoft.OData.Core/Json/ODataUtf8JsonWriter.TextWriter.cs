@@ -9,12 +9,10 @@ namespace Microsoft.OData.Json
 {
     using System;
     using System.Buffers;
-    using System.Diagnostics;
     using System.IO;
     using System.Text;
     using System.Text.Unicode;
     using System.Threading.Tasks;
-    using static System.Net.Mime.MediaTypeNames;
 
     internal sealed partial class ODataUtf8JsonWriter
     {
@@ -142,8 +140,15 @@ namespace Microsoft.OData.Json
         internal sealed class ODataUtf8JsonTextWriter : TextWriter
         {
             private readonly ODataUtf8JsonWriter jsonWriter = null;
+            // Buffer used to store chars that could not be encoded due to
+            // insufficient data in the input buffer. The chars will be prepended
+            // to the next chunk of input.
             private char[] buffer;
+            // Number of chars in the buffer that are left over from the previous chunk.
             private int numOfCharsNotWrittenFromPreviousChunk = 0;
+            // This buffer is used by Write(char) to store the char so
+            // that we can re-use our Write(char[], ...) method.
+            private char[] singleCharBuffer;
 
             public ODataUtf8JsonTextWriter(ODataUtf8JsonWriter jsonWriter)
             {
@@ -183,6 +188,11 @@ namespace Microsoft.OData.Json
                     ArrayPool<char>.Shared.Return(this.buffer);
                 }
 
+                if (this.singleCharBuffer != null)
+                {
+                    ArrayPool<char>.Shared.Return(this.singleCharBuffer);
+                }
+
                 this.Flush();
                 base.Dispose(disposing);
             }
@@ -198,7 +208,49 @@ namespace Microsoft.OData.Json
                     ArrayPool<char>.Shared.Return(this.buffer);
                 }
 
+                if (this.singleCharBuffer != null)
+                {
+                    ArrayPool<char>.Shared.Return(this.singleCharBuffer);
+                }
+
                 await this.FlushAsync().ConfigureAwait(false);
+            }
+
+            /// <summary>
+            /// Writes the specified character to the ODataUtf8JsonWriter.
+            /// </summary>
+            /// <param name="value">The character to write.</param>
+            public override void Write(char value)
+            {
+                ReadOnlySpan<char> charToWrite = stackalloc char[1] { value };
+                if (!this.jsonWriter.isWritingJson)
+                {
+                    this.WriteCharsInChunks(charToWrite);
+                }
+                else
+                {
+                    this.WriteCharsInChunksWithoutEscaping(charToWrite);
+                }
+            }
+
+            /// <summary>
+            /// Writes the specifid character to the ODataUtf8JsonWriter.
+            /// </summary>
+            /// <param name="value">The character to write.</param>
+            public override async Task WriteAsync(char value)
+            {
+                this.singleCharBuffer ??= ArrayPool<char>.Shared.Rent(1);
+                this.singleCharBuffer[0] = value;
+                ReadOnlyMemory<char> input = this.singleCharBuffer.AsMemory().Slice(0, 1);
+
+                if (!this.jsonWriter.isWritingJson)
+                {
+                    await this.WriteCharsInChunksAsync(input).ConfigureAwait(false);
+                }
+                else
+                {
+                    await this.WriteCharsInChunksWithoutEscapingAsync(input).ConfigureAwait(false);
+                }
             }
 
             /// <summary>

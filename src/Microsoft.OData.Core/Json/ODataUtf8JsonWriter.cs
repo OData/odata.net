@@ -18,6 +18,7 @@ using System.Runtime.CompilerServices;
 using Microsoft.OData.Edm;
 using System.Text.Unicode;
 using System.Buffers.Text;
+using System.Xml;
 
 namespace Microsoft.OData.Json
 {
@@ -123,7 +124,7 @@ namespace Microsoft.OData.Json
             this.bufferFlushThreshold = 0.9f * this.bufferSize;
             this.leaveStreamOpen = leaveStreamOpen;
             this.outputEncoding = encoding;
-            this.encoder = encoder ?? JavaScriptEncoder.Default;
+            this.encoder = encoder ?? JavaScriptEncoder.UnsafeRelaxedJsonEscaping;
 
             if (this.outputEncoding.CodePage == Encoding.UTF8.CodePage)
             {
@@ -252,7 +253,23 @@ namespace Microsoft.OData.Json
         public void WriteValue(float value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (float.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (float.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (float.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             this.FlushIfBufferThresholdReached();
         }
 
@@ -295,7 +312,18 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                this.utf8JsonWriter.WriteNumberValue(value);
+                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
+                // to use XmlConvert in all other cases, except infinity
+                string valueToWrite = XmlConvert.ToString(value);
+
+                // We write doubles like 100 as 100.0 (with .0 decimal point).
+                // We do this to retain consistency with the legacy JsonWriter and with older
+                // versions. However, it's not a hard requirement. Clients should not rely on the .0
+                // to decide whether a value is an integer or double. We should consider
+                // dropping this in the future (potentially behind a compatibility flag) to avoid
+                // the cost of converting to a string and checking whether a decimal point is needed.
+                bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
+                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
             }
 
             this.FlushIfBufferThresholdReached();
@@ -936,7 +964,23 @@ namespace Microsoft.OData.Json
         public async Task WriteValueAsync(float value)
         {
             this.WriteSeparatorIfNecessary();
-            this.utf8JsonWriter.WriteNumberValue(value);
+            if (float.IsNaN(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(nanValue.Span);
+            }
+            else if (float.IsPositiveInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(positiveInfinityValue.Span);
+            }
+            else if (float.IsNegativeInfinity(value))
+            {
+                this.utf8JsonWriter.WriteStringValue(negativeInfinityValue.Span);
+            }
+            else
+            {
+                this.utf8JsonWriter.WriteNumberValue(value);
+            }
+
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
         }
 
@@ -979,7 +1023,18 @@ namespace Microsoft.OData.Json
             }
             else
             {
-                this.utf8JsonWriter.WriteNumberValue(value);
+                // whereas double.MinValue and double.MaxValue have 16 digits scale. Hence we need
+                // to use XmlConvert in all other cases, except infinity
+                string valueToWrite = XmlConvert.ToString(value);
+
+                // We write doubles like 100 as 100.0 (with .0 decimal point).
+                // We do this to retain consistency with the legacy JsonWriter and with older
+                // versions. However, it's not a hard requirement. Clients should not rely on the .0
+                // to decide whether a value is an integer or double. We should consider
+                // dropping this in the future (potentially behind a compatibility flag) to avoid
+                // the cost of converting to a string and checking whether a decimal point is needed.
+                bool needsFractionalPart = valueToWrite.IndexOfAny(JsonValueUtils.DoubleIndicatingCharacters) == -1;
+                this.utf8JsonWriter.WriteRawValue(needsFractionalPart ? $"{valueToWrite}.0" : valueToWrite, skipInputValidation: true);
             }
 
             await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);

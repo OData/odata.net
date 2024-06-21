@@ -382,7 +382,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             var property = new ODataProperty { Name = "OpenStringProperty", Value = new ODataPrimitiveValue(String.Empty + "K\uFFFF") };
             property.SetSerializationInfo(new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Open });
             var entry = new ODataResource { TypeName = "NS.MyDerivedEntityType", Properties = new[] { property } };
-            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\",\"OpenStringProperty\":\"K\\uffff\"}";
+            const string expectedPayload = "{\"@odata.context\":\"http://odata.org/test/$metadata#MySet/NS.MyDerivedEntityType/$entity\",\"OpenStringProperty\":\"K\\uFFFF\"}";
             this.WriteNestedItemsAndValidatePayload(entitySetFullName: "MySet", derivedEntityTypeFullName: "NS.MyDerivedEntityType", nestedItemToWrite: new[] { entry }, expectedPayload: expectedPayload, writingResponse: true);
         }
 

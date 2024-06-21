@@ -46,7 +46,7 @@ namespace Microsoft.OData.Json
         /// <summary>
         /// Characters which, if found inside a number, indicate that the number is a double when no other type information is available.
         /// </summary>
-        private static readonly char[] DoubleIndicatingCharacters = new char[] { '.', 'e', 'E' };
+        internal static readonly char[] DoubleIndicatingCharacters = new char[] { '.', 'e', 'E' };
 
         /// <summary>
         /// Map of special characters to strings.

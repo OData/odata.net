@@ -400,6 +400,28 @@ namespace Microsoft.OData.Tests.Json
                 (jsonWriter) => jsonWriter.WriteValueAsync("foo\tbar"));
         }
 
+
+        [Theory]
+        [InlineData("application/json", "🐂")]
+        [InlineData("text/html", "\"🐂\"")]
+        [InlineData("text/plain", "\"🐂\"")]
+        public async Task TextWriter_CorrectlyHandlesSurrogatePairsAsync(string contentType, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = await jsonWriter.StartTextWriterValueScopeAsync(contentType);
+            await tw.WriteAsync('\ud83d');
+            await tw.WriteAsync('\udc02');
+            await jsonWriter.EndTextWriterValueScopeAsync();
+            await jsonWriter.FlushAsync();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
+        }
+
         private async Task SetupJsonWriterRunTestAndVerifyRentAsync(Func<JsonWriter, Task> func)
         {
             var jsonWriter = new JsonWriter(new StringWriter(builder), isIeee754Compatible: true);

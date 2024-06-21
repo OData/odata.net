@@ -113,23 +113,20 @@ namespace Microsoft.OData.Tests
         }
 
         [Theory]
-        [InlineData(null)]
-        [InlineData(ODataStringEscapeOption.EscapeNonAscii)]
-        public void WriteTopLevelStringPropertyWithStringEscapeOptionShouldWork(ODataStringEscapeOption? stringEscapeOption)
+        [InlineData(ODataStringEscapeOption.EscapeOnlyControls, "\"ия\"")]
+        [InlineData(ODataStringEscapeOption.EscapeNonAscii, "\"\\u0438\\u044f\"")]
+        public void WriteTopLevelStringPropertyWithODataJsonWriterFactoryStringEscapeOptionShouldWork(ODataStringEscapeOption stringEscapeOption, string expectedValue)
         {
             ODataMessageWriterSettings settings = new ODataMessageWriterSettings();
 
             var request = new InMemoryMessage() { Stream = new MemoryStream() };
 
-            if (stringEscapeOption != null)
+            IServiceProvider container = CreateTestServiceContainer(services =>
             {
-                IServiceProvider container = CreateTestServiceContainer(services =>
-                {
-                    services.AddSingleton(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
-                });
+                services.AddSingleton<IJsonWriterFactory>(sp => new ODataJsonWriterFactory(stringEscapeOption));
+            });
 
-                request.ServiceProvider = container;
-            }
+            request.ServiceProvider = container;
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);
@@ -144,7 +141,7 @@ namespace Microsoft.OData.Tests
             request.GetStream().Position = 0;
             var reader = new StreamReader(request.GetStream());
             string output = reader.ReadToEnd();
-            Assert.Equal("{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":\"\\u0438\\u044f\"}", output);
+            Assert.Equal($"{{\"@odata.context\":\"http://host/service/$metadata#Edm.String\",\"value\":{expectedValue}}}", output);
         }
 
         [Fact]
@@ -152,7 +149,7 @@ namespace Microsoft.OData.Tests
         {
             var settings = new ODataMessageWriterSettings();
             IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
-            services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
+            services.AddSingleton<IJsonWriterFactory>(sp => new ODataJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
 
             settings.ODataUri.ServiceRoot = new Uri("http://host/service");
             settings.SetContentType(ODataFormat.Json);
@@ -225,7 +222,7 @@ namespace Microsoft.OData.Tests
 
             IJsonWriterFactory factory = request.ServiceProvider.GetService<IJsonWriterFactory>();
             Assert.IsType<ODataUtf8JsonWriterFactory>(factory);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Theory]
@@ -261,7 +258,7 @@ namespace Microsoft.OData.Tests
             Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Fact]
@@ -312,7 +309,7 @@ namespace Microsoft.OData.Tests
                     containerBuilder.AddSingleton<IJsonWriterFactory>( sp => ODataUtf8JsonWriterFactory.Default);
                 });
 
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         [Theory]
@@ -348,7 +345,7 @@ namespace Microsoft.OData.Tests
             Assert.IsType<ODataUtf8JsonWriter>(writerFactory.CreatedWriter);
             Assert.Equal(encodingCharset, writerFactory.Encoding.WebName);
             Assert.Equal(1, writerFactory.NumCalls);
-            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test \\u0438\\u044F\"}", output);
+            Assert.Equal("{\"@odata.context\":\"http://www.example.com/$metadata#Edm.String\",\"value\":\"This is a test ия\"}", output);
         }
 
         #endregion "ODataUtf8JsonWriter support"

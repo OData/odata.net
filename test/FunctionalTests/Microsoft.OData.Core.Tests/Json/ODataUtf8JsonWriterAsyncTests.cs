@@ -127,6 +127,24 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNaN()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NaN, "\"NaN\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatPositiveInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.PositiveInfinity, "\"INF\"");
+        }
+
+        [Fact]
+        public async Task WritePrimitiveValueAsyncFloatNegativeInfinity()
+        {
+            await this.VerifyWritePrimitiveValueAsync(float.NegativeInfinity, "\"-INF\"");
+        }
+
+        [Fact]
         public async Task WritePrimitiveValueAsync_Int16()
         {
             await this.VerifyWritePrimitiveValueAsync((short)876, "876");
@@ -177,13 +195,29 @@ namespace Microsoft.OData.Tests.Json
 
         [Theory]
         // Utf8JsonWriter uses uppercase character in unicode literals, i.e. uD800 instead of ud800
-        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\uD800\\uDC05 \\u00E4\"")]
-        // Utf8JsonWriter escapes double-quotes using \u0022
-        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\u0022Baz\\u0022\"")]
-        [InlineData("Foo ия", "\"Foo \\u0438\\u044F\"")]
-        [InlineData("<script>", "\"\\u003Cscript\\u003E\"")]
+        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\uD800\\uDC05 ä\"")]
+        // The relaxed JavaScriptEncoder does not escape double quotes
+        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\\"Baz\\\"\"")]
+        [InlineData("Foo ия", "\"Foo ия\"")]
+        // The relaxed JavaScriptEncoder does not escape HTML special characters
+        [InlineData("<script>", "\"<script>\"")]
         public async Task WritePrimitiveValueAsync_String_EscapesStrings(string input, string expectedOutput)
         {
+            await this.VerifyWritePrimitiveValueAsync(input, expectedOutput);
+        }
+
+        [Theory]
+        // JavaScriptEncoder.Default uses uppercase character in unicode literals, i.e. uD800 instead of ud800
+        [InlineData("Foo \uD800\udc05 \u00e4", "\"Foo \\uD800\\uDC05 \\u00E4\"")]
+        // JavaScriptEncoder.Default escapes double-quotes using \u0022
+        [InlineData("Foo \nBar\t\"Baz\"", "\"Foo \\nBar\\t\\u0022Baz\\u0022\"")]
+        // JavaScriptEncoder.Default escapes non-ASCII characters
+        [InlineData("Foo ия", "\"Foo \\u0438\\u044F\"")]
+        // JavaScriptEncoder.Default encodes HTML special characters
+        [InlineData("<script>", "\"\\u003Cscript\\u003E\"")]
+        public async Task WritePrimitiveValueAsync_String_EscapesStrings_WithDefaultJavascriptEncoder(string input, string expectedOutput)
+        {
+            this.writer = new ODataUtf8JsonWriter(stream, isIeee754Compatible: true, encoding: Encoding.UTF8, encoder: JavaScriptEncoder.Default, leaveStreamOpen: true);
             await this.VerifyWritePrimitiveValueAsync(input, expectedOutput);
         }
 
@@ -401,8 +435,7 @@ namespace Microsoft.OData.Tests.Json
                 new object[] { Encoding.UTF8 },
                 new object[] { Encoding.Unicode },
                 new object[] { Encoding.UTF32 },
-                new object[] { Encoding.BigEndianUnicode },
-                new object[] { Encoding.ASCII }
+                new object[] { Encoding.BigEndianUnicode }
            };
 
         [Theory]
@@ -434,6 +467,38 @@ namespace Microsoft.OData.Tests.Json
 
             this.writer = new ODataUtf8JsonWriter(this.stream, false, encoding);
             await this.writer.WriteODataValueAsync(collectionValue);
+            Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 ä\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
+        }
+
+        [Fact]
+        public async Task SupportsAsciiEncodingWhenEscaped()
+        {
+            var collectionValue = new ODataCollectionValue
+            {
+                Items = new List<ODataResourceValue>
+                {
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Sue\uD800\udc05 \u00e4" },
+                            new ODataProperty { Name = "Age", Value = 19 }
+                        }
+                    },
+                    new ODataResourceValue
+                    {
+                        Properties = new List<ODataProperty>
+                        {
+                            new ODataProperty { Name = "Name", Value = "Joe" },
+                            new ODataProperty { Name = "Age", Value = 23 }
+                        }
+                    }
+                }
+            };
+
+            Encoding encoding = Encoding.ASCII;
+            this.writer = new ODataUtf8JsonWriter(this.stream, isIeee754Compatible: false, encoding: encoding, encoder: JavaScriptEncoder.Default);
+            await this.writer.WriteODataValueAsync(collectionValue);
             Assert.Equal("[{\"Name\":\"Sue\\uD800\\uDC05 \\u00E4\",\"Age\":19},{\"Name\":\"Joe\",\"Age\":23}]", await this.ReadStreamAsync(encoding));
         }
 
@@ -445,9 +510,9 @@ namespace Microsoft.OData.Tests.Json
         public async Task AllowsCustomJavaScriptEncoder()
         {
             string input = "test<>\"ия\n\t";
-            string expected = "\"test<>\\\"ия\\n\\t\"";
+            string expected = "\"test\\u003C\\u003E\\u0022\\u0438\\u044F\\n\\t\"";
 
-            this.writer = new ODataUtf8JsonWriter(this.stream, false, Encoding.UTF8, encoder: JavaScriptEncoder.UnsafeRelaxedJsonEscaping);
+            this.writer = new ODataUtf8JsonWriter(this.stream, false, Encoding.UTF8, encoder: JavaScriptEncoder.Default);
             await this.writer.WritePrimitiveValueAsync(input);
 
             Assert.Equal(expected, await this.ReadStreamAsync());
@@ -460,7 +525,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task WritesLargeStringsWithEscapingCorrectly()
         {
             string baseString = "Foo 𐀅 ä Foo \nBar\t\"Baz\" Foo ия <script>";
-            string baseExpectedString = "Foo \\uD800\\uDC05 \\u00E4 Foo \\nBar\\t\\u0022Baz\\u0022 Foo \\u0438\\u044F \\u003Cscript\\u003E";
+            string baseExpectedString = "Foo \\uD800\\uDC05 ä Foo \\nBar\\t\\\"Baz\\\" Foo ия <script>";
             var inputBuilder = new StringBuilder();
             var expectedBuilder = new StringBuilder();
 
@@ -599,7 +664,7 @@ namespace Microsoft.OData.Tests.Json
         public async Task CorrectlyStreamsLargeStrings_WithOnlySpecialCharacters_ToOutput(string contentType)
         {
             string input = "\n\n\n\n\"\"\n\n\n\n\"\"";
-            string expectedOutput = "\\n\\n\\n\\n\\u0022\\u0022\\n\\n\\n\\n\\u0022\\u0022";
+            string expectedOutput = "\\n\\n\\n\\n\\\"\\\"\\n\\n\\n\\n\\\"\\\"";
             using (MemoryStream stream = new MemoryStream())
             {
                 IJsonWriter jsonWriter = CreateJsonWriter(stream, false, Encoding.UTF8);
@@ -675,6 +740,29 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal(expectedOutput, rawOutput);
                 }
             }
+        }
+
+        [Theory]
+        // both the escaped and non-escaped versions are valid
+        // and compliant JSON parsers should be able to handle both
+        [InlineData("application/json", "🐂")]
+        [InlineData("text/html", "\"\\uD83D\\uDC02\"")]
+        [InlineData("text/plain", "\"\\uD83D\\uDC02\"")]
+        public async Task TextWriter_CorrectlyHandlesSurrogatePairsAsync(string contentType, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = await jsonWriter.StartTextWriterValueScopeAsync(contentType);
+            await tw.WriteAsync('\ud83d');
+            await tw.WriteAsync('\udc02');
+            await jsonWriter.EndTextWriterValueScopeAsync();
+            await jsonWriter.FlushAsync();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
         }
 
         /// <summary>

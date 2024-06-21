@@ -6,6 +6,7 @@
 
 using System;
 using System.IO;
+using System.Text.Encodings.Web;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.OData.Core;
@@ -450,6 +451,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             EdmEntityType entityType = new EdmEntityType("NS", "Person");
             entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
             entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("Amount", EdmPrimitiveTypeKind.Double);
             model.AddElement(entityType);
 
             EdmEntityContainer container = new EdmEntityContainer("Ns", "MyContainer");
@@ -462,35 +464,95 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 Properties = new[]
                 {
                     new ODataProperty { Name = "Id", Value = 1 },
-                    new ODataProperty { Name = "Name", Value = "и\nя" }
+                    new ODataProperty { Name = "Name", Value = "и\nя" },
+                    new ODataProperty { Name = "Amount", Value = 300.0 }
                 }
             };
 
-            // 1. without string escape option
-            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, stringEscapeOption: null);
-
-            const string expectedEscapedNonAsciiPayload =
-                "{" +
-                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
-                "\"Id\":1," +
-                "\"Name\":\"\\u0438\\n\\u044f\"" +
-                "}";
-            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
-
-            // 2. With EscapeNonAscii escape option
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, ODataStringEscapeOption.EscapeNonAscii);
-
-            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
-
-            // 3. With EscapeOnlyControls escape option
-            outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
-                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+            // 1. without specifying JavaScriptEncoder
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, jsonWriterFactory: null);
 
             const string expectedEscapedOnlyControlPayload =
                 "{" +
                 "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
                 "\"Id\":1," +
-                "\"Name\":\"и\\nя\"" +
+                "\"Name\":\"и\\nя\"," +
+                "\"Amount\":300.0" +
+                "}";
+            Assert.Equal(expectedEscapedOnlyControlPayload, outputPayload);
+
+
+            // 2. With JavaScriptEncoder.Default (escapes non-ascii character)
+            const string expectedEscapedNonAsciiPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"\\u0438\\n\\u044F\"," +
+                "\"Amount\":300.0" +
+                "}";
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, new ODataUtf8JsonWriterFactory(JavaScriptEncoder.Default));
+
+            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
+
+            // 3. With JavaScriptEncoder.UnsafeRelaxedJsonEscaping, escapes control control characters
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
+                false, null, new ODataUtf8JsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping));
+            Assert.Equal(expectedEscapedOnlyControlPayload, outputPayload);
+        }
+
+        [Fact]
+        public void WriteEntryWithStringEscapeOptionShouldWorkUsingODataJsonWriterFactory()
+        {
+            EdmModel model = new EdmModel();
+
+            EdmEntityType entityType = new EdmEntityType("NS", "Person");
+            entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+            entityType.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String);
+            entityType.AddStructuralProperty("Amount", EdmPrimitiveTypeKind.Double);
+            model.AddElement(entityType);
+
+            EdmEntityContainer container = new EdmEntityContainer("Ns", "MyContainer");
+            EdmEntitySet entitySet = container.AddEntitySet("People", entityType);
+            model.AddElement(container);
+
+            ODataResource entry = new ODataResource()
+            {
+                TypeName = "NS.Person",
+                Properties = new[]
+                {
+                    new ODataProperty { Name = "Id", Value = 1 },
+                    new ODataProperty { Name = "Name", Value = "и\nя" },
+                    new ODataProperty { Name = "Amount", Value = 300.0 }
+                }
+            };
+
+            // 1. without string escape option
+            string outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, new ODataJsonWriterFactory());
+
+            const string expectedEscapedNonAsciiPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"\\u0438\\n\\u044f\"," +
+                "\"Amount\":300.0" +
+                "}";
+            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
+
+            // 2. With EscapeNonAscii escape option
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType, false, null, new ODataJsonWriterFactory(ODataStringEscapeOption.EscapeNonAscii));
+
+            Assert.Equal(expectedEscapedNonAsciiPayload, outputPayload);
+
+            // 3. With EscapeOnlyControls escape option
+            outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
+                false, null, new ODataJsonWriterFactory(ODataStringEscapeOption.EscapeOnlyControls));
+
+            const string expectedEscapedOnlyControlPayload =
+                "{" +
+                "\"@odata.context\":\"http://www.example.com/$metadata#People/$entity\"," +
+                "\"Id\":1," +
+                "\"Name\":\"и\\nя\"," +
+                 "\"Amount\":300.0" +
                 "}";
             Assert.Equal(expectedEscapedOnlyControlPayload, outputPayload);
         }
@@ -520,7 +582,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
             };
 
             string outputPayload = this.WriterEntry(model, entry, entitySet, entityType,
-                false, null, ODataStringEscapeOption.EscapeOnlyControls);
+                false, null, new ODataUtf8JsonWriterFactory(JavaScriptEncoder.UnsafeRelaxedJsonEscaping));
 
             const string expectedMinimalPayload =
                 "{" +
@@ -560,13 +622,13 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         private string WriterEntry(IEdmModel userModel, ODataResource entry, EdmEntitySet entitySet, IEdmEntityType entityType,
-            bool fullMetadata = false, Action<ODataWriter> writeAction = null, ODataStringEscapeOption? stringEscapeOption = null)
+            bool fullMetadata = false, Action<ODataWriter> writeAction = null, IJsonWriterFactory jsonWriterFactory = null)
         {
             var message = new InMemoryMessage() { Stream = new MemoryStream() };
-            if (stringEscapeOption != null)
+            if (jsonWriterFactory != null)
             {
                 IServiceCollection services = new ServiceCollection().AddDefaultODataServices();
-                services.AddSingleton<IJsonWriterFactory>(sp => new DefaultJsonWriterFactory(stringEscapeOption.Value));
+                services.AddSingleton<IJsonWriterFactory>(sp => jsonWriterFactory);
                 message.ServiceProvider = services.BuildServiceProvider();
             }
 

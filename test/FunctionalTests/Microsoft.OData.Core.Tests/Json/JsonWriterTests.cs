@@ -370,8 +370,8 @@ namespace Microsoft.OData.Tests.Json
         [InlineData("text/html")]
         public void CorrectlyStreams_NonAsciiCharacters_ToOutput(string contentType)
         {
-            string input = "😊😊😊😊😊😊😊😊";
-            string expectedOutput = "😊😊😊😊😊😊😊😊";
+            string input = "😊😊😊😊😊😊😊";
+            string expectedOutput = "😊😊😊😊😊😊😊";
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Tests.Json
             string input = new string('a', inputLength);
 
             // Append special characters to the input string
-            input += "U+1F600";
+            input += "😊";
 
             using (MemoryStream stream = new MemoryStream())
             {
@@ -482,6 +482,27 @@ namespace Microsoft.OData.Tests.Json
                     Assert.Equal($"\"{expectedOutput}\"", rawOutput);
                 }
             }
+        }
+
+        [Theory]
+        [InlineData("application/json", "🐂")]
+        [InlineData("text/html", "\"🐂\"")]
+        [InlineData("text/plain", "\"🐂\"")]
+        public void TextWriter_CorrectlyHandlesSurrogatePairs(string contentType, string expectedOutput)
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            var tw = jsonWriter.StartTextWriterValueScope(contentType);
+            tw.Write('\ud83d');
+            tw.Write('\udc02');
+            jsonWriter.EndTextWriterValueScope();
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal(expectedOutput, rawOutput);
         }
 
         private void SetupJsonWriterRunTestAndVerifyRent(Action<JsonWriter> action)

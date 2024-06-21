@@ -1,7 +1,6 @@
 Microsoft.Extensions.DependencyInjection.ODataServiceCollectionExtensions
 Microsoft.OData.IServiceCollectionProvider
 Microsoft.OData.IServiceCollectionProvider.ServiceProvider.get -> System.IServiceProvider
-Microsoft.OData.Json.DefaultJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
 Microsoft.OData.Json.IJsonWriter.EndArrayScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndObjectScopeAsync() -> System.Threading.Tasks.Task
 Microsoft.OData.Json.IJsonWriter.EndPaddingFunctionScopeAsync() -> System.Threading.Tasks.Task
@@ -46,6 +45,10 @@ Microsoft.OData.Json.IJsonReader.CreateTextReaderAsync() -> System.Threading.Tas
 Microsoft.OData.Json.IJsonReader.GetValue() -> object
 Microsoft.OData.Json.IJsonReader.GetValueAsync() -> System.Threading.Tasks.Task<object>
 Microsoft.OData.Json.IJsonReader.ReadAsync() -> System.Threading.Tasks.Task<bool>
+Microsoft.OData.Json.ODataJsonWriterFactory
+Microsoft.OData.Json.ODataJsonWriterFactory.CreateJsonWriter(System.IO.Stream stream, bool isIeee754Compatible, System.Text.Encoding encoding) -> Microsoft.OData.Json.IJsonWriter
+Microsoft.OData.Json.ODataJsonWriterFactory.ODataJsonWriterFactory() -> void
+Microsoft.OData.Json.ODataJsonWriterFactory.ODataJsonWriterFactory(Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption) -> void
 Microsoft.OData.ODataAsynchronousResponseMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationRequestMessage.ServiceProvider.get -> System.IServiceProvider
 Microsoft.OData.ODataBatchOperationResponseMessage.ServiceProvider.get -> System.IServiceProvider
@@ -264,9 +267,6 @@ Microsoft.OData.IODataResponseMessage.StatusCode.get -> int
 Microsoft.OData.IODataResponseMessage.StatusCode.set -> void
 Microsoft.OData.IODataResponseMessageAsync
 Microsoft.OData.IODataResponseMessageAsync.GetStreamAsync() -> System.Threading.Tasks.Task<System.IO.Stream>
-Microsoft.OData.Json.DefaultJsonWriterFactory
-Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory() -> void
-Microsoft.OData.Json.DefaultJsonWriterFactory.DefaultJsonWriterFactory(Microsoft.OData.Json.ODataStringEscapeOption stringEscapeOption) -> void
 Microsoft.OData.Json.IJsonReader
 Microsoft.OData.Json.IJsonReader.IsIeee754Compatible.get -> bool
 Microsoft.OData.Json.IJsonReader.NodeType.get -> Microsoft.OData.Json.JsonNodeType
