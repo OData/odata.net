@@ -226,7 +226,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                     if (jsonReader.State == ODataReaderState.ResourceEnd)
                     {
                         ODataResource entryOut = jsonReader.Item as ODataResource;
-                        actualValue = entryOut.Properties.Single(p => p.Name == propertyName).ODataValue;
+                        actualValue = Assert.IsType<ODataProperty>(entryOut.Properties.Single(p => p.Name == propertyName)).ODataValue;
                     }
                 }
             }

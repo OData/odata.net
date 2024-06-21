@@ -92,7 +92,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsynchronousTests
             {
                 if (args.Entry.TypeName.EndsWith("ConcurrencyInfo"))
                 {
-                    Assert.Equal("UpdatedToken", args.Entry.Properties.Single(p => p.Name == "Token").Value);
+                    Assert.Equal("UpdatedToken", Assert.IsType<ODataProperty>(args.Entry.Properties.Single(p => p.Name == "Token")).Value);
                 }
             };
             context.Configurations.RequestPipeline.OnEntryEnding(onEntryEnding1);

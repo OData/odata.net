@@ -149,8 +149,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
-                Assert.Equal("021", resources.First().Properties.Last().Value);
+                Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(resources.First().Properties.First()).Value);
+                Assert.Equal("021", Assert.IsType<ODataProperty>(resources.First().Properties.Last()).Value);
                 Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
@@ -170,8 +170,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
-                Assert.Equal("021", resources.First().Properties.Last().Value);
+                Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(resources.First().Properties.First()).Value);
+                Assert.Equal("021", Assert.IsType<ODataProperty>(resources.First().Properties.Last()).Value);
                 Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
                 Assert.Equal("City", nestedResourceInfos.First().Name);
             });
@@ -193,8 +193,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             Exception ex = Assert.Throws<ODataException>(() =>
                 ReadAndValidate(payload, null, true, (resources, nestedResourceInfos, resourceSets) =>
                 {
-                    Assert.Equal("Shanghai", resources.First().Properties.First().Value);
-                    Assert.Equal("021", resources.First().Properties.Last().Value);
+                    Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(resources.First().Properties.First()).Value);
+                    Assert.Equal("021", Assert.IsType<ODataProperty>(resources.First().Properties.Last()).Value);
                     Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
                     Assert.Equal("City", nestedResourceInfos.First().Name);
                 }));
@@ -217,9 +217,9 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
-                Assert.Equal("Shanghai", resources.First().Properties.First().Value);
-                Assert.Equal("021", resources.First().Properties.Last().Value);
-                Assert.Equal("MS", resources.Last().Properties.Single().Value);
+                Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(resources.First().Properties.First()).Value);
+                Assert.Equal("021", Assert.IsType<ODataProperty>(resources.First().Properties.Last()).Value);
+                Assert.Equal("MS", Assert.IsType<ODataProperty>(resources.Last().Properties.Single()).Value);
                 Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             {
                 Assert.Equal("NS.City", resources.First().TypeName);
                 Assert.Equal(2, resources.First().Properties.Count());
-                Assert.Equal(180, resources.Last().Properties.Single().Value);
+                Assert.Equal(180, Assert.IsType<ODataProperty>(resources.Last().Properties.Single()).Value);
                 Assert.Equal("City", nestedResourceInfos.First().Name);
             });
         }
@@ -260,7 +260,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
             ReadAndValidate(payload, addressT, true, (resources, nestedResourceInfos, resourceSets) =>
             {
                 Assert.Null(resources.First());
-                Assert.Null(resources.Last().Properties.Single().Value);
+                Assert.Null(Assert.IsType<ODataProperty>(resources.Last().Properties.Single()).Value);
                 Assert.Equal("NS.CompanyAddress", resources.Last().TypeName);
             });
         }
@@ -418,12 +418,12 @@ namespace Microsoft.OData.Tests.IntegrationTests.Reader.Json
 
                 Assert.Single(resourceSets);
                 Assert.Equal("BillingAddresses", nestedResourceInfos.ElementAt(4).Name);
-                Assert.Null(resources.ElementAt(5).Properties.Single().Value);
+                Assert.Null(Assert.IsType<ODataProperty>(resources.ElementAt(5).Properties.Single()).Value);
 
                 Assert.Equal("Address", nestedResourceInfos.ElementAt(6).Name);
                 Assert.Equal("NS.Address", resources.ElementAt(7).TypeName);
 
-                Assert.Equal(0, resources.ElementAt(8).Properties.Single().Value);
+                Assert.Equal(0, Assert.IsType<ODataProperty>(resources.ElementAt(8).Properties.Single()).Value);
             });
         }
 

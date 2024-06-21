@@ -297,7 +297,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                             if (!isUpsert && Utility.IsReadOnly(propertyInfo)) continue;
                                         }
 
-                                        this.DataSource.UpdateProvider.Update(newInstance, property.Name, property.Value);
+                                        if (!(property is ODataProperty)) continue;
+                                        this.DataSource.UpdateProvider.Update(newInstance, property.Name, ((ODataProperty)property).Value);
                                     }
 
                                     var boundNavPropAnnotation = odataItemStack.Pop().GetAnnotation<BoundNavigationPropertyAnnotation>();

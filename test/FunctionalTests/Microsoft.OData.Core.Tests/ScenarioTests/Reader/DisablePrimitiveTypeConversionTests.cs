@@ -76,7 +76,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         {
             var payload = CreateJsonPayload(propertyName, propertyValue, typeName);
             var property = this.ReadPropertyOfEntry(payload, propertyName, settings, "application/json;odata.metadata=minimal");
-            return property.Value;
+            
+            return Assert.IsType<ODataProperty>(property).Value;
         }
 
         private static string CreateJsonPayload(string propertyName, string value, string type)
@@ -91,7 +92,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
         }
 
 
-        private ODataProperty ReadPropertyOfEntry(string payload, string propertyName, ODataMessageReaderSettings settings, string contentType)
+        private ODataPropertyInfo ReadPropertyOfEntry(string payload, string propertyName, ODataMessageReaderSettings settings, string contentType)
         {
             var message = new InMemoryMessage { Stream = new MemoryStream(Encoding.UTF8.GetBytes(payload)) };
             message.SetHeader("Content-Type", contentType);
@@ -105,6 +106,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
 
             Assert.Contains(resource.Properties, p => p.Name == propertyName);
             var property = resource.Properties.Single(p => p.Name == propertyName);
+            
             return property;
         }
     }

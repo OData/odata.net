@@ -57,7 +57,7 @@ namespace Microsoft.OData
         {
             return new ODataResource
             {
-                Properties = new ReadOnlyEnumerable<ODataProperty>()
+                Properties = new ReadOnlyEnumerable<ODataPropertyInfo>()
             };
         }
 
@@ -72,7 +72,7 @@ namespace Microsoft.OData
         {
             return new ODataDeletedResource(id, reason)
             {
-                Properties = new ReadOnlyEnumerable<ODataProperty>()
+                Properties = new ReadOnlyEnumerable<ODataPropertyInfo>()
             };
         }
 

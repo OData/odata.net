@@ -79,10 +79,11 @@ namespace Microsoft.OData.Tests.Json
                 Assert.Null(nestedPropertyInfo); // Make sure there's no extra nested property info created for stream property?
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", properties.FirstOrDefault(p => p.Name == "name").Value);
 
-                ODataProperty streamProperty = resource.Properties.FirstOrDefault(p => p.Name == "stream");
+                ODataProperty streamProperty = properties.FirstOrDefault(p => p.Name == "stream");
                 Assert.NotNull(streamProperty);
                 ODataInstanceAnnotation annotation = Assert.Single(streamProperty.InstanceAnnotations);
                 Assert.Equal("Custom.ComplexAnnotation", annotation.Name);
@@ -103,7 +104,7 @@ namespace Microsoft.OData.Tests.Json
 
             foreach (Variant variant in GetVariants(null))
             {
-                int expectedPropertyCount = variant.IsRequest ? 2 : 3;
+                int expectedPropertyCount = variant.IsRequest ? 3 : 4;
                 ODataResource resource = null;
                 ODataPropertyInfo nestedPropertyInfo = null;
 
@@ -124,8 +125,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", properties.FirstOrDefault(p => p.Name == "name").Value);
                 Assert.NotNull(nestedPropertyInfo);
                 Assert.Equal("age", nestedPropertyInfo.Name);
                 Assert.Equal(2, nestedPropertyInfo.InstanceAnnotations.Count);
@@ -171,8 +173,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                Assert.Equal("sam", resource.Properties.FirstOrDefault(p => p.Name == "name").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal("sam", properties.FirstOrDefault(p => p.Name == "name").Value);
                 Assert.NotNull(nested1PropertyInfo);
                 Assert.Equal("aDynamic1", nested1PropertyInfo.Name);
                 ODataInstanceAnnotation annotation1 = Assert.Single(nested1PropertyInfo.InstanceAnnotations);
@@ -212,8 +215,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue;
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                var comments = Assert.IsType<ODataCollectionValue>(properties.FirstOrDefault(p => p.Name == "comments").ODataValue);
                 Assert.NotNull(comments);
                 List<object> collection = comments.Items.ToList();
                 Assert.Equal(3, collection.Count());
@@ -368,7 +372,7 @@ namespace Microsoft.OData.Tests.Json
                     ODataResource currentResource = null;
                     Stack<ODataResource> resources = new Stack<ODataResource>();
                     ODataPropertyInfo currentProperty = null;
-                    Stack<List<ODataProperty>> nestedProperties = new Stack<List<ODataProperty>>();
+                    Stack<List<ODataPropertyInfo>> nestedProperties = new Stack<List<ODataPropertyInfo>>();
                     ODataReader reader = CreateODataReader(payload, variant);
 
                     while (reader.Read())
@@ -382,13 +386,13 @@ namespace Microsoft.OData.Tests.Json
                                     collectionValues.Add(reader.Item);
                                 }
                                 resources.Push(currentResource);
-                                nestedProperties.Push(new List<ODataProperty>());
+                                nestedProperties.Push(new List<ODataPropertyInfo>());
 
                                 break;
 
                             case ODataReaderState.ResourceEnd:
                                 currentResource = resources.Pop();
-                                List<ODataProperty> properties = nestedProperties.Pop();
+                                List<ODataPropertyInfo> properties = nestedProperties.Pop();
                                 if (currentResource != null)
                                 {
                                     properties.AddRange(currentResource.NonComputedProperties);
@@ -460,11 +464,10 @@ namespace Microsoft.OData.Tests.Json
 
         private void ValidateProperty(ODataResource resource, string propertyName, object expectedValue)
         {
-            ODataProperty property = resource.Properties.FirstOrDefault(p => p.Name == propertyName);
-            if (property != null)
-            {
-                Assert.Equal(expectedValue, property.Value);
-            }
+            ODataPropertyInfo property = resource.Properties.FirstOrDefault(p => p.Name == propertyName);
+
+            Assert.NotNull(property);
+            Assert.Equal(expectedValue, Assert.IsType<ODataProperty>(property).Value);
         }
 
         [Fact]
@@ -518,9 +521,10 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
                 Assert.Equal(2, numberOfTimesCalled);
-                var comments = resource.Properties.FirstOrDefault(p => p.Name == "comments").ODataValue as ODataCollectionValue;
+                var comments = Assert.IsType<ODataCollectionValue>(properties.FirstOrDefault(p => p.Name == "comments").ODataValue);
                 Assert.NotNull(comments);
                 Assert.Single(propertyValues);
                 Assert.Equal("Thor", propertyValues[0]);
@@ -660,8 +664,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                ODataStreamReferenceValue undeclaredStreamProperty = resource.Properties.FirstOrDefault(p => p.Name == "undeclaredStream").Value as ODataStreamReferenceValue;
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                ODataStreamReferenceValue undeclaredStreamProperty = Assert.IsType<ODataStreamReferenceValue>(properties.FirstOrDefault(p => p.Name == "undeclaredStream").Value);
                 Assert.NotNull(undeclaredStreamProperty);
                 Assert.Equal("text/plain", undeclaredStreamProperty.ContentType);
             }
@@ -937,8 +942,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(2, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                ODataStreamReferenceValue streamReference = Assert.IsType<ODataStreamReferenceValue>(properties.FirstOrDefault(p => p.Name == "stream").Value);
                 Assert.NotNull(streamReference);
                 Assert.Equal("application/json", streamReference.ContentType);
                 Assert.Equal(jsonString, jsonStream);
@@ -990,8 +996,9 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                ODataStreamReferenceValue streamReference = resource.Properties.FirstOrDefault(p => p.Name == "jsonStream").Value as ODataStreamReferenceValue;
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                ODataStreamReferenceValue streamReference = Assert.IsType<ODataStreamReferenceValue>(properties.FirstOrDefault(p => p.Name == "jsonStream").Value);
                 Assert.NotNull(streamReference);
                 Assert.Equal("application/json", streamReference.ContentType);
                 Assert.Equal(jsonString, jsonStream);
@@ -1096,7 +1103,8 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(2, resource.Properties.Count());
-                ODataStreamReferenceValue propertyInfo = resource.Properties.FirstOrDefault(p => p.Name == "stream").Value as ODataStreamReferenceValue;
+                var properties = resource.Properties.OfType<ODataProperty>();
+                ODataStreamReferenceValue propertyInfo = Assert.IsType<ODataStreamReferenceValue>(properties.FirstOrDefault(p => p.Name == "stream").Value);
                 Assert.NotNull(propertyInfo);
                 Assert.Equal("text/plain", propertyInfo.ContentType);
             }
@@ -1243,10 +1251,11 @@ namespace Microsoft.OData.Tests.Json
 
                 Assert.NotNull(resource);
                 Assert.Equal(expectedPropertyCount, resource.Properties.Count());
-                Assert.NotNull(resource.Properties.FirstOrDefault(p => p.Name == "id"));
-                Assert.Equal(true, resource.Properties.FirstOrDefault(p => p.Name == "isMarvel").Value);
-                Assert.Equal("male", ((ODataEnumValue)resource.Properties.FirstOrDefault(p => p.Name == "gender").Value).Value);
-                Assert.Equal(4000, resource.Properties.FirstOrDefault(p => p.Name == "age").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.NotNull(properties.FirstOrDefault(p => p.Name == "id"));
+                Assert.Equal(true, properties.FirstOrDefault(p => p.Name == "isMarvel").Value);
+                Assert.Equal("male", ((ODataEnumValue)properties.FirstOrDefault(p => p.Name == "gender").Value).Value);
+                Assert.Equal(4000, properties.FirstOrDefault(p => p.Name == "age").Value);
                 Assert.Equal(2, propertyValues.Count);
                 Assert.Equal("Thor", propertyValues[0]);
                 Assert.Equal("", propertyValues[1]);

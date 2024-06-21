@@ -159,7 +159,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 {
                     if (args.Entry.TypeName.EndsWith("Message"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataPropertyInfo> properties = args.Entry.Properties.ToList();
                         properties.Add(new ODataProperty() { Name = "Body", Value = "ModifyMessageEntry_Reading" });
                         args.Entry.Properties = properties.Where(p => p.Name != "ToUsername");
                     }
@@ -179,7 +179,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     if (args.Entry.TypeName.EndsWith("Computer") || args.Entry.TypeName.EndsWith("Machine"))
                     {
                         args.Entry.TypeName = args.Entry.TypeName.Replace("Computer", "Machine");
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty property = properties.Single(p => p.Name == "Name");
                         string value = property.Value == null ? string.Empty : (string)property.Value;
                         property.Value = value + "ModifyTypeName_Reading";
@@ -200,7 +200,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     if (args.Entry.TypeName.EndsWith("Computer") || args.Entry.TypeName.EndsWith("Machine"))
                     {
                         args.Entry.TypeName = args.Entry.TypeName.Replace("Machine", "Computer");
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty property = properties.Single(p => p.Name == "Name");
                         string value = property.Value == null ? string.Empty : (string)property.Value;
                         property.Value = value + "ModifyTypeName_Writing";
@@ -295,7 +295,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 {
                     if (args.Entry != null && args.Entry.TypeName.EndsWith("SpecialEmployee"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataPropertyInfo> properties = args.Entry.Properties.ToList();
                         properties.Add(new ODataProperty() { Name = "CarsLicensePlate", Value = "AddRemovePropertySpecialEmployeeEntry_Reading" });
                         args.Entry.Properties = properties.AsEnumerable();
 
@@ -319,7 +319,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 {
                     if (args.Entry != null && args.Entry.TypeName.EndsWith("Customer"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty property = properties.Single(p => p.Name == "Auditing");
                         property.Value = null;
                     }
@@ -395,7 +395,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     var propertyValue = "UpdatedODataEntryPropertyValue";
                     if (args.Entry.TypeName.EndsWith("Customer"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty propertyName = properties.Where(p => p.Name == "Name").Single();
                         propertyName.Value = ((string)propertyName.Value) + propertyValue;
 
@@ -411,13 +411,13 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
 
                     if (args.Entry.TypeName.EndsWith("ContactDetails"))
                     {
-                        var propertyEmailBag = args.Entry.Properties.Single(p => p.Name == "EmailBag");
+                        var propertyEmailBag = args.Entry.Properties.Single(p => p.Name == "EmailBag") as ODataProperty;
                         (propertyEmailBag.Value as ODataCollectionValue).Items = new string[] { propertyValue };
                     }
 
                     if (args.Entry.TypeName.EndsWith("AuditInfo"))
                     {
-                        args.Entry.Properties.Single(p => p.Name == "ModifiedBy").Value = propertyValue;
+                        (args.Entry.Properties.Single(p => p.Name == "ModifiedBy") as ODataProperty).Value = propertyValue;
                     }
                 };
             }
@@ -434,7 +434,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 {
                     if (args.Entry.TypeName.EndsWith("Customer"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty property = properties.Where(p => p.Name == "Name").Single();
                         property.Value = ((string)property.Value) + "ModifyPropertyValueCustomerEntry_Writing";
                         args.Entry.Properties = properties.AsEnumerable();
@@ -526,7 +526,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                 {
                     if (args.Entry.TypeName.EndsWith("Car"))
                     {
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataProperty> properties = args.Entry.Properties.OfType<ODataProperty>().ToList();
                         ODataProperty property = properties.Where(p => p.Name == "Description").Single();
                         property.Value = ((string)property.Value) + "ModifyPropertyValueCarEntry_Writing";
                         args.Entry.Properties = properties.AsEnumerable();
@@ -575,7 +575,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     if (args.Entry.TypeName.EndsWith("Login"))
                     {
                         ODataProperty property = new ODataProperty() { Name = "Logs", Value = new ODataCollectionValue() { TypeName = "Collection(Edm.String)", Items = new[] { "a", "b" } } };
-                        List<ODataProperty> properties = args.Entry.Properties.ToList();
+                        List<ODataPropertyInfo> properties = args.Entry.Properties.ToList();
                         properties.Add(property);
                         args.Entry.Properties = properties.AsEnumerable();
                     }
@@ -595,7 +595,7 @@ namespace Microsoft.Test.OData.Tests.Client.PipelineEventsTests
                     if (args.Entry.TypeName.EndsWith("Computer"))
                     {
                         ODataProperty property = new ODataProperty() { Name = "Name", Value = new ODataCollectionValue() { TypeName = "Collection(Edm.String)", Items = new[] { "a", "b" } } };
-                        List<ODataProperty> properties = args.Entry.Properties.Where(p => p.Name != "Name").ToList();
+                        List<ODataPropertyInfo> properties = args.Entry.Properties.Where(p => p.Name != "Name").ToList();
                         properties.Add(property);
                         args.Entry.Properties = properties.AsEnumerable();
                     }

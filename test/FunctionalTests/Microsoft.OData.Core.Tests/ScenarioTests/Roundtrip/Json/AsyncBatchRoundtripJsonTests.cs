@@ -1267,8 +1267,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
                                         if (reader.State == ODataReaderState.ResourceEnd)
                                         {
                                             ODataResource entry = reader.Item as ODataResource;
-                                            Assert.Equal("ALFKI", entry.Properties.Single(p => p.Name == "Id").Value);
-                                            Assert.Equal("John", entry.Properties.Single(p => p.Name == "Name").Value);
+                                            Assert.Equal("ALFKI", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Id")).Value);
+                                            Assert.Equal("John", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Name")).Value);
                                         }
                                     }
                                 }

@@ -69,7 +69,7 @@ namespace Microsoft.OData
         private ODataStreamReferenceValue mediaResource;
 
         /// <summary>The resource properties provided by the user or seen on the wire (never computed).</summary>
-        private IEnumerable<ODataProperty> properties;
+        private IEnumerable<ODataPropertyInfo> properties;
 
         /// <summary>The resource actions provided by the user or seen on the wire (never computed).</summary>
         private List<ODataAction> actions = new List<ODataAction>();
@@ -190,13 +190,12 @@ namespace Microsoft.OData
         /// <remarks>
         /// Non-property content goes to annotations.
         /// </remarks>
-        public IEnumerable<ODataProperty> Properties
+        public IEnumerable<ODataPropertyInfo> Properties
         {
             get
             {
                 return this.MetadataBuilder.GetProperties(this.properties);
             }
-
             set
             {
                 if (!this.SkipPropertyVerification)
@@ -346,7 +345,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>Returns the entity properties that has been set directly and was not computed using the metadata builder.</summary>
-        internal IEnumerable<ODataProperty> NonComputedProperties
+        internal IEnumerable<ODataPropertyInfo> NonComputedProperties
         {
             get
             {
@@ -414,13 +413,18 @@ namespace Microsoft.OData
             }
         }
 
-        private static void VerifyProperties(IEnumerable<ODataProperty> properties)
+        private static void VerifyProperties(IEnumerable<ODataPropertyInfo> properties)
         {
             if (properties != null)
             {
                 ODataCollectionValue collection = null;
-                foreach (var property in properties)
+                foreach (ODataPropertyInfo propertyInfo in properties)
                 {
+                    if (propertyInfo is not ODataProperty property)
+                    {
+                        continue;
+                    }
+
                     if (property.Value is ODataResourceValue)
                     {
                         throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));

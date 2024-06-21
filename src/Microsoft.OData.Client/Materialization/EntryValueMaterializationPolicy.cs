@@ -11,7 +11,6 @@ namespace Microsoft.OData.Client.Materialization
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Reflection;
     using Microsoft.OData;
     using Microsoft.OData.Client;
     using Microsoft.OData.Client.Metadata;
@@ -649,19 +648,21 @@ namespace Microsoft.OData.Client.Materialization
                 }
             }
 
-            foreach (var e in entry.Properties)
+            foreach (ODataPropertyInfo propertyInfo in entry.Properties)
             {
-                if (e.Value is ODataStreamReferenceValue)
+                // Property without value or stream property
+                if (propertyInfo is not ODataProperty odataProperty
+                    || odataProperty.Value is ODataStreamReferenceValue)
                 {
                     continue;
                 }
 
-                var prop = actualType.GetProperty(e.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
+                var prop = actualType.GetProperty(odataProperty.Name, this.MaterializerContext.UndeclaredPropertyBehavior);
                 if (prop == null)
                 {
                     if (entry.ShouldUpdateFromPayload)
                     {
-                        this.MaterializeDynamicProperty(e, entry.ResolvedObject);
+                        this.MaterializeDynamicProperty(odataProperty, entry.ResolvedObject);
                     }
 
                     continue;
@@ -669,9 +670,9 @@ namespace Microsoft.OData.Client.Materialization
 
                 if (entry.ShouldUpdateFromPayload)
                 {
-                    ValidatePropertyMatch(prop, e, this.MaterializerContext.Model, true /*performEntityCheck*/);
+                    ValidatePropertyMatch(prop, odataProperty, this.MaterializerContext.Model, true /*performEntityCheck*/);
 
-                    this.ApplyDataValue(actualType, e, entry.ResolvedObject);
+                    this.ApplyDataValue(actualType, odataProperty, entry.ResolvedObject);
                 }
             }
 

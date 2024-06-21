@@ -857,11 +857,11 @@ namespace Microsoft.OData.Core.Tests.Json
                     },
                 },
             };
-            var expectedResponsePayload = 
+            var expectedResponsePayload =
                 "{" +
                     "\"@odata.context\":\"http://tempuri.org/$metadata#orders('1')/products/$entity\"," +
                     "\"id\":\"1\"," +
-                    "\"name\":\"somename\"" + 
+                    "\"name\":\"somename\"" +
                 "}";
 
             // load the CSDL from the embedded resources
@@ -1201,7 +1201,7 @@ namespace Microsoft.OData.Core.Tests.Json
                         await textWriter.WriteAsync("The quick brown fox jumps over the lazy dog");
                         await textWriter.FlushAsync();
                     }
-                    
+
                     await jsonWriter.WriteEndAsync();
                     await jsonWriter.WriteEndAsync();
                 },
@@ -1710,6 +1710,164 @@ namespace Microsoft.OData.Core.Tests.Json
 
             Assert.Equal(
                 "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"@odata.id\":null,\"ShippingAddress\":{\"City\":\"Redmond\"}}",
+                result);
+        }
+
+        [Fact]
+        public async Task WriteResourceWithPropertyWithoutValueAsync()
+        {
+            var orderResource = new ODataResource
+            {
+                TypeName = "NS.Order",
+                Properties = new List<ODataPropertyInfo>
+                {
+                    new ODataProperty
+                    {
+                        Name = "Id",
+                        Value = 1,
+                        SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key }
+                    },
+                    new ODataPropertyInfo
+                    {
+                        Name = "Amount",
+                        InstanceAnnotations = new List<ODataInstanceAnnotation>
+                        {
+                            new ODataInstanceAnnotation("Has.Value", new ODataPrimitiveValue(false))
+                        }
+                    }
+                },
+                SerializationInfo = CreateOrderResourceSerializationInfo()
+            };
+
+            var result = await SetupJsonWriterAndRunTestAsync(
+                async (jsonWriter) =>
+                {
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteEndAsync();
+                },
+                this.orderEntitySet,
+                this.orderEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"Id\":1,\"Amount@Has.Value\":false}",
+                result);
+        }
+
+        [Fact]
+        public async Task WriteResourceWithUndeclaredPropertyWithoutValueAsync()
+        {
+            var orderResource = CreateOrderResource();
+            var addressNestedResourceInfo = CreateAddressNestedResourceInfo();
+            var addressResource = CreateAddressResource();
+            var stateProperty = new ODataPropertyInfo
+            {
+                Name = "State",
+                InstanceAnnotations = new List<ODataInstanceAnnotation>
+                {
+                    new ODataInstanceAnnotation("Has.Value", new ODataPrimitiveValue(false))
+                }
+            };
+
+            var result = await SetupJsonWriterAndRunTestAsync(
+                async (jsonWriter) =>
+                {
+                    await jsonWriter.WriteStartAsync(orderResource);
+                    await jsonWriter.WriteStartAsync(addressNestedResourceInfo);
+                    await jsonWriter.WriteStartAsync(addressResource);
+                    await jsonWriter.WriteStartAsync(stateProperty);
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                    await jsonWriter.WriteEndAsync();
+                },
+                this.orderEntitySet,
+                this.orderEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
+                "\"Id\":1," +
+                "\"CustomerId\":1," +
+                "\"Amount\":100," +
+                "\"ShippingAddress\":{\"Street\":\"One Microsoft Way\",\"City\":\"Redmond\",\"State@Has.Value\":false}}",
+                result);
+        }
+
+        [Fact]
+        public void WriteResourceWithPropertyWithoutValue()
+        {
+            var orderResource = new ODataResource
+            {
+                TypeName = "NS.Order",
+                Properties = new List<ODataPropertyInfo>
+                {
+                    new ODataProperty
+                    {
+                        Name = "Id",
+                        Value = 1,
+                        SerializationInfo = new ODataPropertySerializationInfo { PropertyKind = ODataPropertyKind.Key }
+                    },
+                    new ODataPropertyInfo
+                    {
+                        Name = "Amount",
+                        InstanceAnnotations = new List<ODataInstanceAnnotation>
+                        {
+                            new ODataInstanceAnnotation("Has.Value", new ODataPrimitiveValue(false))
+                        }
+                    }
+                },
+                SerializationInfo = CreateOrderResourceSerializationInfo()
+            };
+
+            var result = SetupJsonWriterAndRunTest(
+                (jsonWriter) =>
+                {
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteEnd();
+                },
+                this.orderEntitySet,
+                this.orderEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\",\"Id\":1,\"Amount@Has.Value\":false}",
+                result);
+        }
+
+        [Fact]
+        public void WriteResourceWithUndeclaredPropertyWithoutValue()
+        {
+            var orderResource = CreateOrderResource();
+            var addressNestedResourceInfo = CreateAddressNestedResourceInfo();
+            var addressResource = CreateAddressResource();
+            var stateProperty = new ODataPropertyInfo
+            {
+                Name = "State",
+                InstanceAnnotations = new List<ODataInstanceAnnotation>
+                {
+                    new ODataInstanceAnnotation("Has.Value", new ODataPrimitiveValue(false))
+                }
+            };
+
+            var result = SetupJsonWriterAndRunTest(
+                (jsonWriter) =>
+                {
+                    jsonWriter.WriteStart(orderResource);
+                    jsonWriter.WriteStart(addressNestedResourceInfo);
+                    jsonWriter.WriteStart(addressResource);
+                    jsonWriter.WriteStart(stateProperty);
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
+                    jsonWriter.WriteEnd();
+                },
+                this.orderEntitySet,
+                this.orderEntityType);
+
+            Assert.Equal(
+                "{\"@odata.context\":\"http://tempuri.org/$metadata#Orders/$entity\"," +
+                "\"Id\":1," +
+                "\"CustomerId\":1," +
+                "\"Amount\":100," +
+                "\"ShippingAddress\":{\"Street\":\"One Microsoft Way\",\"City\":\"Redmond\",\"State@Has.Value\":false}}",
                 result);
         }
 

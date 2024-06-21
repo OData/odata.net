@@ -86,8 +86,8 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                             Assert.Equal(ODataReaderState.Completed, feedReader.State);
                             Assert.Equal(5, entries.Count);
 
-                            Assert.Equal("Bob", entries[0].Properties.Single(p => p.Name == "FirstName").Value);
-                            Assert.Equal("Peter", entries[4].Properties.Single(p => p.Name == "FirstName").Value);
+                            Assert.Equal("Bob", Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "FirstName")).Value);
+                            Assert.Equal("Peter", Assert.IsType<ODataProperty>(entries[4].Properties.Single(p => p.Name == "FirstName")).Value);
                         }
 
                     }
@@ -210,7 +210,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
 
                             Assert.Equal(ODataReaderState.Completed, entryReader.State);
                             Assert.Equal(2, entries.Count);
-                            Assert.Equal(110, entries[1].Properties.Single(p => p.Name == "AccountID").Value);
+                            Assert.Equal(110, Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "AccountID")).Value);
                         }
 
                     }
@@ -378,7 +378,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                         }
                                         Assert.Equal(ODataReaderState.Completed, entryReader.State);
                                         Assert.Single(pis);
-                                        Assert.Equal(102910, pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID").Value);
+                                        Assert.Equal(102910, Assert.IsType<ODataProperty>(pis[0].Properties.Single(p => p.Name == "PaymentInstrumentID")).Value);
                                     }
                                     else if (batchOperationId == 2)
                                     {
@@ -400,7 +400,7 @@ namespace Microsoft.Test.OData.Tests.Client.AsyncRequestTests
                                         }
                                         Assert.Equal(ODataReaderState.Completed, entryReader.State);
                                         Assert.Single(statements);
-                                        Assert.Equal(103901001, statements[0].Properties.Single(p => p.Name == "StatementID").Value);
+                                        Assert.Equal(103901001, Assert.IsType<ODataProperty>(statements[0].Properties.Single(p => p.Name == "StatementID")).Value);
                                     }
                                 }
                                 batchOperationId++;

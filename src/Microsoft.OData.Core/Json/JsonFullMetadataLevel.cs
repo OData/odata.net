@@ -144,8 +144,13 @@ namespace Microsoft.OData.Json
             // Inject to named stream property values
             if (resource.NonComputedProperties != null)
             {
-                foreach (ODataProperty property in resource.NonComputedProperties)
+                foreach (ODataPropertyInfo propertyInfo in resource.NonComputedProperties)
                 {
+                    if (propertyInfo is not ODataProperty property)
+                    {
+                        continue;
+                    }
+
                     var streamReferenceValue = property.ODataValue as ODataStreamReferenceValue;
                     if (streamReferenceValue != null)
                     {

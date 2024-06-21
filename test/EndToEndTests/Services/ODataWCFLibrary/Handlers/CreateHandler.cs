@@ -181,7 +181,8 @@ namespace Microsoft.Test.OData.Services.ODataWCFService.Handlers
                                 foreach (var property in entry.Properties)
                                 {
                                     if (Utility.IsETagProperty(newInstance, property.Name)) continue;
-                                    this.DataSource.UpdateProvider.Update(newInstance, property.Name, property.Value);
+                                    if (!(property is ODataProperty)) continue;
+                                    this.DataSource.UpdateProvider.Update(newInstance, property.Name, ((ODataProperty)property).Value);
                                 }
 
                                 var boundNavPropAnnotation = odataItemStack.Pop().GetAnnotation<BoundNavigationPropertyAnnotation>();

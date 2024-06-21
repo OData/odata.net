@@ -37,7 +37,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.NotNull(entry);
-                    Assert.Equal("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Bob", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FirstName")).Value);
                 }
             }
         }
@@ -65,8 +65,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal("Zixing Road", address.Properties.Single(p => p.Name == "Road").Value);
-                    Assert.Equal("Shanghai", address.Properties.Single(p => p.Name == "City").Value);
+                    Assert.Equal("Zixing Road", Assert.IsType<ODataProperty>(address.Properties.Single(p => p.Name == "Road")).Value);
+                    Assert.Equal("Shanghai", Assert.IsType<ODataProperty>(address.Properties.Single(p => p.Name == "City")).Value);
                 }
             }
         }
@@ -118,7 +118,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     Assert.Equal(4, entries.Count);
                     foreach (var entry in entries)
                     {
-                        Assert.NotEqual("Bob", entry.Properties.Single(p => p.Name == "FirstName").Value);
+                        Assert.NotEqual("Bob", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FirstName")).Value);
                     }
                 }
             }
@@ -136,7 +136,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                     Assert.Equal(5, entries.Count);
                     foreach (var entry in entries)
                     {
-                        Assert.NotNull(entry.Properties.Single(p => p.Name == "FirstName").Value);
+                        Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FirstName")).Value);
                     }
                 }
             }
@@ -232,8 +232,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             // verify the insert
             Assert.Equal(201, responseMessage.StatusCode);
             entry = this.QueryEntry("People(101)", MimeTypes.ApplicationJson);
-            Assert.Equal(101, entry.Properties.Single(p => p.Name == "PersonId").Value);
-            Assert.Equal("Zhang", entry.Properties.Single(p => p.Name == "LastName").Value);
+            Assert.Equal(101, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "PersonId")).Value);
+            Assert.Equal("Zhang", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "LastName")).Value);
         }
 
         [Fact]
@@ -247,23 +247,23 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 {
                     Assert.Equal(5, entries.Count);
 
-                    var productid = entries[0].Properties.Single(p => p.Name == "ProductId").Value;
-                    var quantity = entries[0].Properties.Single(p => p.Name == "Quantity").Value;
-                    var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    var productid = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "ProductId")).Value;
+                    var quantity = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "Quantity")).Value;
+                    var lifetime = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal((UInt16)11, productid);
                     Assert.Equal(100u, quantity);
                     Assert.Equal(3600ul, lifetime);
 
-                    productid = entries[1].Properties.Single(p => p.Name == "ProductId").Value;
-                    quantity = entries[1].Properties.Single(p => p.Name == "Quantity").Value;
-                    lifetime = entries[1].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    productid = Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "ProductId")).Value;
+                    quantity = Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "Quantity")).Value;
+                    lifetime = Assert.IsType<ODataProperty>(entries[1].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal((UInt16)12, productid);
                     Assert.Equal(UInt32.MaxValue, quantity);
                     Assert.Equal(UInt64.MaxValue, lifetime);
 
-                    productid = entries[2].Properties.Single(p => p.Name == "ProductId").Value;
-                    quantity = entries[2].Properties.Single(p => p.Name == "Quantity").Value;
-                    lifetime = entries[2].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    productid = Assert.IsType<ODataProperty>(entries[2].Properties.Single(p => p.Name == "ProductId")).Value;
+                    quantity = Assert.IsType<ODataProperty>(entries[2].Properties.Single(p => p.Name == "Quantity")).Value;
+                    lifetime = Assert.IsType<ODataProperty>(entries[2].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal((UInt16)13, productid);
                     Assert.Equal(UInt32.MinValue, quantity);
                     Assert.Equal(UInt64.MinValue, lifetime);
@@ -299,9 +299,9 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal((UInt16)80, combo.Properties.Single(p => p.Name == "Small").Value);
-                    Assert.Equal((UInt32)196, combo.Properties.Single(p => p.Name == "Middle").Value);
-                    Assert.Equal((UInt64)3, combo.Properties.Single(p => p.Name == "Large").Value);
+                    Assert.Equal((UInt16)80, Assert.IsType<ODataProperty>(combo.Properties.Single(p => p.Name == "Small")).Value);
+                    Assert.Equal((UInt32)196, Assert.IsType<ODataProperty>(combo.Properties.Single(p => p.Name == "Middle")).Value);
+                    Assert.Equal((UInt64)3, Assert.IsType<ODataProperty>(combo.Properties.Single(p => p.Name == "Large")).Value);
                 }
             }
         }
@@ -419,8 +419,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
             Assert.Equal(201, responseMessage.StatusCode);
 
             var createdEntry = this.QueryEntry("Products(101)", MimeTypes.ApplicationJson);
-            Assert.Equal((UInt16)101, createdEntry.Properties.Single(p => p.Name == "ProductId").Value);
-            Assert.Equal(86ul, createdEntry.Properties.Single(p => p.Name == "LifeTimeInSeconds").Value);
+            Assert.Equal((UInt16)101, Assert.IsType<ODataProperty>(createdEntry.Properties.Single(p => p.Name == "ProductId")).Value);
+            Assert.Equal(86ul, Assert.IsType<ODataProperty>(createdEntry.Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value);
         }
 
         [Fact]
@@ -466,8 +466,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(1, entries.Count);
-                    var quantity = entries[0].Properties.Single(p => p.Name == "Quantity").Value;
+                    Assert.Single(entries);
+                    var quantity = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "Quantity")).Value;
                     Assert.Equal(100u, quantity);
                 }
 
@@ -475,8 +475,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
 
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
-                    Assert.Equal(1, entries.Count);
-                    var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    Assert.Single(entries);
+                    var lifetime = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal(UInt64.MaxValue, lifetime);
                 }
 
@@ -485,8 +485,8 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 if (!mimeType.Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     Assert.Equal(2, entries.Count);
-                    var nullable = entries[0].Properties.Single(p => p.Name == "NullableUInt32").Value;
-                    Assert.Equal(null, nullable);
+                    var nullable = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "NullableUInt32")).Value;
+                    Assert.Null(nullable);
                 }
             }
         }
@@ -502,7 +502,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 {
                     Assert.Equal(5, entries.Count);
 
-                    var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    var lifetime = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal(UInt64.MaxValue, lifetime);
                 }
             }
@@ -519,7 +519,7 @@ namespace Microsoft.Test.OData.Tests.Client.TypeDefinitionTests
                 {
                     Assert.Equal(5, entries.Count);
 
-                    var lifetime = entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds").Value;
+                    var lifetime = Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "LifeTimeInSeconds")).Value;
                     Assert.Equal(3600ul, lifetime);
                 }
             }

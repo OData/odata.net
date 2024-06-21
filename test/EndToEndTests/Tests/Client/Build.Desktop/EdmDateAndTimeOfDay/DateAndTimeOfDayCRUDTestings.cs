@@ -52,8 +52,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                         }
 
                         // Verify Date Property
-                        Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                        Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                        Assert.Equal(new Date(2014, 8, 31), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipDate")).Value);
+                        Assert.Equal(new TimeOfDay(12, 40, 5, 50), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipTime")).Value);
                         Assert.Equal(ODataReaderState.Completed, reader.State);
                     }
                 }
@@ -150,8 +150,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 if (entry != null && entry.TypeName.EndsWith("Order"))
                                 {
                                     // Verify Date Property
-                                    Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(new Date(2014, 8, 31), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipDate")).Value);
+                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipTime")).Value);
                                 }
                             }
                         }
@@ -187,8 +187,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 if (entry != null)
                                 {
                                     // Verify Date Property
-                                    Assert.Equal(new Date(2014, 8, 31), entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(new Date(2014, 8, 31), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipDate")).Value);
+                                    Assert.Equal(new TimeOfDay(12, 40, 5, 50), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipTime")).Value);
                                 }
                             }
                         }
@@ -226,8 +226,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 {
                                     foreach (ODataResource pre in list)
                                     {
-                                        Date entryDate = (Date)entry.Properties.Single(p => p.Name == "ShipDate").Value;
-                                        Date preDate = (Date)pre.Properties.Single(p => p.Name == "ShipDate").Value;
+                                        Date entryDate = Assert.IsType<Date>(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipDate")).Value);
+                                        Date preDate = Assert.IsType<Date>(Assert.IsType<ODataProperty>(pre.Properties.Single(p => p.Name == "ShipDate")).Value);
                                         Assert.True(preDate > entryDate);
                                     }
 
@@ -269,8 +269,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 {
                                     foreach (ODataResource pre in list)
                                     {
-                                        TimeOfDay entryTimeOfDay = (TimeOfDay)entry.Properties.Single(p => p.Name == "ShipTime").Value;
-                                        TimeOfDay preTimeOfDay = (TimeOfDay)pre.Properties.Single(p => p.Name == "ShipTime").Value;
+                                        TimeOfDay entryTimeOfDay = Assert.IsType<TimeOfDay>(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipTime")).Value);
+                                        TimeOfDay preTimeOfDay = Assert.IsType<TimeOfDay>(Assert.IsType<ODataProperty>(pre.Properties.Single(p => p.Name == "ShipTime")).Value);
                                         Assert.True(preTimeOfDay > entryTimeOfDay);
                                     }
 
@@ -376,7 +376,7 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                             {
                                 ODataResource entry = reader.Item as ODataResource;
                                 // Verify Date Property
-                                Assert.Equal(new Date(2015, 11, 11), entry.Properties.Single(p => p.Name == "Day").Value);
+                                Assert.Equal(new Date(2015, 11, 11), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Day")).Value);
                             }
                         }
                         Assert.Equal(ODataReaderState.Completed, reader.State);
@@ -428,8 +428,8 @@ namespace Microsoft.Test.OData.Tests.Client.EdmDateAndTimeOfDay
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null)
                                 {
-                                    Assert.Equal(Date.MinValue, entry.Properties.Single(p => p.Name == "ShipDate").Value);
-                                    Assert.Equal(TimeOfDay.MinValue, entry.Properties.Single(p => p.Name == "ShipTime").Value);
+                                    Assert.Equal(Date.MinValue, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipDate")).Value);
+                                    Assert.Equal(TimeOfDay.MinValue, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "ShipTime")).Value);
                                 }
                             }
                         }

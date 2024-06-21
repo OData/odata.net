@@ -538,8 +538,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             Assert.True(entryReader.Read());
             var entryReaded = entryReader.Item as ODataResource;
 
-            var propertiesReaded = entryReaded.Properties.ToList();
-            var propertiesGiven = entry.Properties.ToList();
+            var propertiesReaded = entryReaded.Properties.OfType<ODataProperty>().ToList();
+            var propertiesGiven = entry.Properties.OfType<ODataProperty>().ToList();
             Assert.Equal(propertiesReaded.Count, propertiesGiven.Count);
             for (int i = 0; i < propertiesReaded.Count; ++i)
             {

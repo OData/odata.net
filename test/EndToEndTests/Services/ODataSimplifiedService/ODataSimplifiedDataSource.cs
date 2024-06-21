@@ -6,11 +6,11 @@
 
 namespace Microsoft.Test.OData.Services.ODataWCFService.DataSource
 {
-    using Microsoft.OData.Edm;
-    using Microsoft.OData.SampleService.Models.ODataSimplified;
     using System;
     using System.Collections.Generic;
     using System.Collections.ObjectModel;
+    using Microsoft.OData.Edm;
+    using Microsoft.OData.SampleService.Models.ODataSimplified;
 
     public class ODataSimplifiedDataSource : ODataReflectionDataSource
     {

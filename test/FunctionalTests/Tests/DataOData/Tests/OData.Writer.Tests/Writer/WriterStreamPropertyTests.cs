@@ -208,7 +208,7 @@ namespace Microsoft.Test.Taupo.OData.Writer.Tests.Writer
                     if (testConfiguration.IsRequest)
                     {
                         ODataResource payloadEntry = (ODataResource)testDescriptor.PayloadItems[0];
-                        ODataProperty firstStreamProperty = payloadEntry.Properties.Where(p => p.Value is ODataStreamReferenceValue).FirstOrDefault();
+                        ODataProperty firstStreamProperty = payloadEntry.Properties.OfType<ODataProperty>().Where(p => p.Value is ODataStreamReferenceValue).FirstOrDefault();
                         this.Assert.IsNotNull(firstStreamProperty, "firstStreamProperty != null");
 
                         testDescriptor = new PayloadWriterTestDescriptor<ODataItem>(testDescriptor)

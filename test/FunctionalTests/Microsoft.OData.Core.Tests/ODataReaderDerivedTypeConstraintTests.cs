@@ -83,8 +83,9 @@ namespace Microsoft.OData.Tests
                 var item = Assert.Single(s);
                 ODataResource resource = item as ODataResource;
                 Assert.NotNull(resource);
-                Assert.Equal("Id", resource.Properties.Single().Name);
-                Assert.Equal(7, resource.Properties.Single().Value);
+                var property = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
+                Assert.Equal("Id", property.Name);
+                Assert.Equal(7, property.Value);
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Me"",""Id"":7}";
@@ -109,8 +110,9 @@ namespace Microsoft.OData.Tests
                 ODataResource resource = item as ODataResource;
                 Assert.NotNull(resource);
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
-                Assert.Equal(8, resource.Properties.Single(c => c.Name == "Id").Value);
-                Assert.Equal("Boss", resource.Properties.Single(c => c.Name == "Vip").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.Equal(8, properties.Single(c => c.Name == "Id").Value);
+                Assert.Equal("Boss", properties.Single(c => c.Name == "Vip").Value);
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Me"",""@odata.type"":""#NS.VipCustomer"",""Id"":8,""Vip"":""Boss""}";
@@ -156,9 +158,9 @@ namespace Microsoft.OData.Tests
                 Assert.Equal(3, ms.Count());
                 Assert.IsType<ODataResourceSet>(ms.Pop()); // toplevel resource set
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // second resource
-                Assert.Equal(17, resource.Properties.Single(c => c.Name == "Id").Value);
+                Assert.Equal(17, Assert.IsType<ODataProperty>(resource.Properties.Single(c => c.Name == "Id")).Value);
                 resource = Assert.IsType<ODataResource>(ms.Pop());
-                Assert.Equal(6, resource.Properties.Single(c => c.Name == "Id").Value); // first resource
+                Assert.Equal(6, Assert.IsType<ODataProperty>(resource.Properties.Single(c => c.Name == "Id")).Value); // first resource
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Customers"",""value"":[{""Id"":6},{""Id"":17}]}";
@@ -182,10 +184,10 @@ namespace Microsoft.OData.Tests
                 Assert.Equal(3, ms.Count());
                 Assert.IsType<ODataResourceSet>(ms.Pop()); // toplevel resource set
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // second resource
-                Assert.Equal(17, resource.Properties.Single(c => c.Name == "Id").Value);
+                Assert.Equal(17, resource.Properties.OfType<ODataProperty>().Single(c => c.Name == "Id").Value);
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
                 resource = Assert.IsType<ODataResource>(ms.Pop());
-                Assert.Equal(6, resource.Properties.Single(c => c.Name == "Id").Value); // first resource
+                Assert.Equal(6, resource.Properties.OfType<ODataProperty>().Single(c => c.Name == "Id").Value); // first resource
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Customers"",""value"":[{""Id"":6},{""@odata.type"":""#NS.VipCustomer"",""Id"":17}]}";
@@ -229,7 +231,8 @@ namespace Microsoft.OData.Tests
                 var item = Assert.Single(s);
                 ODataResource resource = item as ODataResource;
                 Assert.NotNull(resource);
-                Assert.Equal(7, resource.Properties.Single().Value);
+                var property = Assert.IsType<ODataProperty>(Assert.Single(resource.Properties));
+                Assert.Equal(7, property.Value);
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Customers/$entity"",""Id"":7}";
@@ -254,8 +257,9 @@ namespace Microsoft.OData.Tests
                 ODataResource resource = item as ODataResource;
                 Assert.NotNull(resource);
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
-                Assert.Equal(8, resource.Properties.Single(c => c.Name == "Id").Value);
-                Assert.Equal("Boss", resource.Properties.Single(c => c.Name == "Vip").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.Equal(8, properties.Single(c => c.Name == "Id").Value);
+                Assert.Equal("Boss", properties.Single(c => c.Name == "Vip").Value);
             };
 
             string payload = @"{""@odata.context"":""http://example.com/$metadata#Customers/$entity"",""@odata.type"":""#NS.VipCustomer"",""Id"":8,""Vip"":""Boss""}";
@@ -306,14 +310,14 @@ namespace Microsoft.OData.Tests
                 Assert.NotNull(ms);
                 Assert.Equal(4, ms.Count);
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // top level resource (id=7)
-                Assert.Equal(7, resource.Properties.Single().Value);
+                Assert.Equal(7, Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
 
                 ODataNestedResourceInfo nestedLink = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Navigation Link
                 Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer"), nestedLink.Url);
                 Assert.Equal("FriendCustomer", nestedLink.Name);
 
                 resource = Assert.IsType<ODataResource>(ms.Pop()); // nested resource (id=5)
-                Assert.Equal(5, resource.Properties.Single().Value);
+                Assert.Equal(5, resource.Properties.OfType<ODataProperty>().Single().Value);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
                 Assert.Throws<ODataException>(() => nestedResourceInfo.Url);
@@ -349,14 +353,14 @@ namespace Microsoft.OData.Tests
                 Assert.NotNull(ms);
                 Assert.Equal(4, ms.Count);
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // top level resource (id=7)
-                Assert.Equal(7, resource.Properties.Single().Value);
+                Assert.Equal(7, Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
 
                 ODataNestedResourceInfo nestedLink = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Navigation Link
                 Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer"), nestedLink.Url);
                 Assert.Equal("FriendCustomer", nestedLink.Name);
 
                 resource = Assert.IsType<ODataResource>(ms.Pop()); // nested resource (id=8)
-                Assert.Equal(8, resource.Properties.Single().Value);
+                Assert.Equal(8, Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
@@ -442,14 +446,14 @@ namespace Microsoft.OData.Tests
                 Assert.NotNull(ms);
                 Assert.Equal(3, ms.Count);
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // top level resource (id=7)
-                Assert.Equal(7, resource.Properties.Single().Value);
+                Assert.Equal(7, Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // Location Nested resource info
                 Assert.Null(nestedResourceInfo.Url);
                 Assert.Equal("Location", nestedResourceInfo.Name);
 
                 resource = Assert.IsType<ODataResource>(ms.Pop()); // nested complex resource (id=8)
-                Assert.Equal("Way", resource.Properties.Single().Value);
+                Assert.Equal("Way", Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
             };
 
             string payload = "{\"@odata.context\":\"http://example.com/$metadata#Customers/$entity\",\"Id\":7,\"Location\":{\"Street\":\"Way\"}}";
@@ -476,7 +480,7 @@ namespace Microsoft.OData.Tests
                 Assert.NotNull(ms);
                 Assert.Equal(3, ms.Count);
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // top level resource (id=7)
-                Assert.Equal(7, resource.Properties.Single().Value);
+                Assert.Equal(7, Assert.IsType<ODataProperty>(Assert.Single(resource.Properties)).Value);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // Location Nested resource info
                 Assert.Null(nestedResourceInfo.Url);
@@ -484,8 +488,9 @@ namespace Microsoft.OData.Tests
 
                 resource = Assert.IsType<ODataResource>(ms.Pop()); // nested complex resource (id=8)
                 Assert.Equal("NS.UsAddress", resource.TypeName);
-                Assert.Equal("RedWay", resource.Properties.Single(c => c.Name == "Street").Value);
-                Assert.Equal(98052, resource.Properties.Single(c => c.Name == "ZipCode").Value);
+                var properties = resource.Properties.OfType<ODataProperty>();
+                Assert.Equal("RedWay", properties.Single(c => c.Name == "Street").Value);
+                Assert.Equal(98052, properties.Single(c => c.Name == "ZipCode").Value);
             };
 
             string payload = "{\"@odata.context\":\"http://example.com/$metadata#Me\",\"Id\":7,\"Location\":{\"@odata.type\":\"#NS.UsAddress\",\"Street\":\"RedWay\",\"ZipCode\":98052}}";
@@ -556,8 +561,8 @@ namespace Microsoft.OData.Tests
                 Assert.NotNull(ms);
                 Assert.Single(ms);
                 ODataResource resource = Assert.IsType<ODataResource>(ms.Pop()); // top level resource (id=7)
-                Assert.Equal(7, resource.Properties.Single(c => c.Name == "Id").Value);
-                Assert.Equal(false, resource.Properties.Single(c => c.Name == "Data").Value);
+                Assert.Equal(7, Assert.IsType<ODataProperty>(resource.Properties.Single(c => c.Name == "Id")).Value);
+                Assert.Equal(false, Assert.IsType<ODataProperty>(resource.Properties.Single(c => c.Name == "Data")).Value);
             };
 
             string payload = "{\"@odata.context\":\"http://example.com/$metadata#Customers/$entity\",\"Id\":7,\"Data@odata.type\":\"#Boolean\",\"Data\":false}";

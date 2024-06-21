@@ -58,7 +58,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 // Verify Created
                 Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("VehicleGPSSet('000')") as ODataResource;
-                Assert.Equal("000", entry.Properties.Single(p => p.Name == "Key").Value);
+                Assert.Equal("000", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
 
                 // Delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "VehicleGPSSet('000')"));
@@ -105,7 +105,7 @@ namespace Microsoft.Test.OData.Tests.Client.ModelReferenceTests
                 // Verify Created
                 Assert.Equal(201, responseMessage.StatusCode);
                 ODataResource entry = this.QueryEntityItem("VehicleGPSSetInGPS('000')") as ODataResource;
-                Assert.Equal("000", entry.Properties.Single(p => p.Name == "Key").Value);
+                Assert.Equal("000", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Key")).Value);
 
                 // Delete the entry
                 var deleteRequestMessage = new HttpWebRequestMessage(new Uri(ServiceBaseUri + "VehicleGPSSetInGPS('000')"));

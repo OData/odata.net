@@ -1949,8 +1949,8 @@ namespace Microsoft.OData.Tests.Json
                     var property = await jsonDeserializer.ReadTopLevelPropertyAsync(edmProperty.Type);
 
                     var resource = Assert.IsType<ODataResourceValue>(property.ODataValue);
+                    Assert.Equal(2, resource.Properties.Count());
                     var properties = resource.Properties.ToList();
-                    Assert.Equal(2, properties.Count);
                     Assert.Equal("Street", properties[0].Name);
                     Assert.Equal("S2", properties[0].Value);
                     Assert.Equal("City", properties[1].Name);

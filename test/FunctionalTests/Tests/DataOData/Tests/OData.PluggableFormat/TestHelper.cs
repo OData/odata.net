@@ -195,41 +195,67 @@ namespace Microsoft.Test.OData.PluggableFormat
             return PropertiesEqual(a.Properties, b.Properties);
         }
 
-        private static bool PropertiesEqual(IEnumerable<ODataProperty> a, IEnumerable<ODataProperty> b)
+        private static bool PropertiesEqual(IEnumerable<ODataPropertyInfo> collection1, IEnumerable<ODataPropertyInfo> collection2)
         {
-            if (a == null || b == null)
+            if (collection1 == null || collection2 == null)
             {
                 return false;
             }
 
-            int ca = a.Count();
-            if (ca != b.Count()) return false;
-
-            foreach (var aProp in a)
+            if (collection1.Count() != collection2.Count())
             {
-                var bProps = b.Where(p => p.Name == aProp.Name).ToList();
-                if (bProps.Count != 1) return false;
+                return false;
+            }
 
-                var bProp = bProps.First();
-                if (aProp.Value is float)
+            foreach (var collection1PropertyInfo in collection1)
+            {
+                var matchedProperties = collection2.Where(p => p.Name == collection1PropertyInfo.Name);
+                
+                if (matchedProperties.Count() != 1)
                 {
-                    if (!(bProp.Value is float)
-                        || !FloatEqual((float)aProp.Value, (float)bProp.Value))
-                        return false;
+                    return false;
                 }
-                else if (aProp.Value is byte[])
+
+                var collection2PropertyInfo = matchedProperties.First();
+
+                if (!collection1PropertyInfo.GetType().Equals(collection2PropertyInfo.GetType()))
                 {
-                    if (!(bProp.Value is byte[])
-                        || !((byte[])aProp.Value).SequenceEqual((byte[])bProp.Value))
-                        return false;
+                    return false;
                 }
-                else if (aProp.Value is ODataCollectionValue)
+
+                var collection1Property = collection1PropertyInfo as ODataProperty;
+                var collection2Property = collection2PropertyInfo as ODataProperty;
+
+                if (collection1Property == null || collection2Property == null)
                 {
-                    if (!(bProp.Value is ODataCollectionValue)
-                        || !CollectionValueEqual((ODataCollectionValue)aProp.Value, (ODataCollectionValue)bProp.Value))
-                        return false;
+                    continue;
                 }
-                else if (!object.Equals(aProp.Value, bProp.Value))
+
+                if (collection1Property.Value is float)
+                {
+                    if (!(collection2Property.Value is float)
+                        || !FloatEqual((float)collection1Property.Value, (float)collection2Property.Value))
+                    {
+                        return false;
+                    }
+                }
+                else if (collection1Property.Value is byte[])
+                {
+                    if (!(collection2Property.Value is byte[])
+                        || !((byte[])collection1Property.Value).SequenceEqual((byte[])collection2Property.Value))
+                    {
+                        return false;
+                    }
+                }
+                else if (collection1Property.Value is ODataCollectionValue)
+                {
+                    if (!(collection2Property.Value is ODataCollectionValue)
+                        || !CollectionValueEqual((ODataCollectionValue)collection1Property.Value, (ODataCollectionValue)collection2Property.Value))
+                    {
+                        return false;
+                    }
+                }
+                else if (!Equals(collection1Property.Value, collection2Property.Value))
                 {
                     return false;
                 }

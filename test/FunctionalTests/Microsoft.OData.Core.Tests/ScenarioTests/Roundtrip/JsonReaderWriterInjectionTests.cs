@@ -53,7 +53,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
             "\"Address\":{" +
                 "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
 
-            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
+            Assert.Equal("Redmond", Assert.IsType<ODataProperty>(resDict["DefaultNs.SubAddress"].ToList()[0]).Value);
         }
         
         [Fact]
@@ -66,8 +66,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 "\"Address\":{" +
                 "\"City\":{\"ZipCode\":98052}}}");
 
-            Assert.Equal(10001, resDict["DefaultNs.PersonCity"].ToList()[0].Value);
-            Assert.Equal(98052, resDict["DefaultNs.City"].ToList()[0].Value);
+            Assert.Equal(10001, Assert.IsType<ODataProperty>(resDict["DefaultNs.PersonCity"].ToList()[0]).Value);
+            Assert.Equal(98052, Assert.IsType<ODataProperty>(resDict["DefaultNs.City"].ToList()[0]).Value);
         }
 
         [Fact]
@@ -80,8 +80,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 "\"SubAddress\":{\"SubRoad\":\"Redmond\"},"+
               "\"City\":{\"ZipCode\":98052}}}");
 
-            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
-            Assert.Equal(98052, resDict["DefaultNs.City"].ToList()[0].Value);
+            Assert.Equal("Redmond", Assert.IsType<ODataProperty>(resDict["DefaultNs.SubAddress"].ToList()[0]).Value);
+            Assert.Equal(98052, Assert.IsType<ODataProperty>(resDict["DefaultNs.City"].ToList()[0]).Value);
         }
       
         [Fact]
@@ -93,7 +93,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
           "\"Address\":{" +
               "\"SubAddress\":{\"SubRoad\":\"Redmond\"}}}");
 
-            Assert.Equal("Redmond", resDict["DefaultNs.SubAddress"].ToList()[0].Value);
+            Assert.Equal("Redmond", Assert.IsType<ODataProperty>(resDict["DefaultNs.SubAddress"].ToList()[0]).Value);
         }
 
         [Fact]
@@ -135,14 +135,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             var resource = GetReadedResource(messageContent, model, entitySet, entityType, serviceProvider, readerSettings);
 
-            var propertyList = resource.Properties.ToList();
+            var propertyList = resource.Properties.OfType<ODataProperty>().ToList();
             Assert.Equal("PersonId", propertyList[0].Name);
             Assert.Equal(999, propertyList[0].Value);
             Assert.Equal("Name", propertyList[1].Name);
             Assert.Equal("Jack", propertyList[1].Value);
         }
 
-        private static Dictionary<string, IEnumerable<ODataProperty>> RunComplexReaderTest(Action<IServiceCollection> action, string messageContent)
+        private static Dictionary<string, IEnumerable<ODataPropertyInfo>> RunComplexReaderTest(Action<IServiceCollection> action, string messageContent)
         {
             var model = GetModel();
             var entitySet = model.FindDeclaredEntitySet("People");
@@ -153,7 +153,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             var resource = GetReadedResourceWithNestedInfo(messageContent, model, entitySet, entityType, serviceProvider);
 
-            var resourceDict = new Dictionary<string, IEnumerable<ODataProperty>>();
+            var resourceDict = new Dictionary<string, IEnumerable<ODataPropertyInfo>>();
 
             foreach(var res in resource)
             {

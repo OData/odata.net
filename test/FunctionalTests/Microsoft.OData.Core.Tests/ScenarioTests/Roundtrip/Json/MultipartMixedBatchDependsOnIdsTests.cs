@@ -392,8 +392,8 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                                         if (reader.State == ODataReaderState.ResourceEnd)
                                         {
                                             ODataResource entry = reader.Item as ODataResource;
-                                            Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
-                                            Assert.Equal("WebSingleton", entry.Properties.Single(p => p.Name == "Name").Value);
+                                            Assert.Equal(10, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "WebId")).Value);
+                                            Assert.Equal("WebSingleton", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Name")).Value);
                                         }
                                     }
                                 }

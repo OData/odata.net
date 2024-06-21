@@ -94,7 +94,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             }
 
             Assert.NotNull(resource);
-            Assert.Equal("Name1", resource.Properties.Single(p => p.Name == "N").Value);
+            Assert.Equal("Name1", Assert.IsType<ODataProperty>(resource.Properties.Single(p => p.Name == "N")).Value);
         }
 
         [Fact]

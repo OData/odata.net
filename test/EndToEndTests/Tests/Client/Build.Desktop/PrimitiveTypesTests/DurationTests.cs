@@ -54,7 +54,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.NotNull(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.NotNull(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders")).Value);
                                 }
                             }
                         }
@@ -88,7 +88,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.Equal(new TimeSpan(1), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.Equal(new TimeSpan(1), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders")).Value);
                                 }
                             }
                         }
@@ -152,7 +152,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
                                 ODataResource entry = reader.Item as ODataResource;
                                 if (entry != null && entry.TypeName.EndsWith("Customer"))
                                 {
-                                    Assert.Equal(new TimeSpan(2), entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders").Value);
+                                    Assert.Equal(new TimeSpan(2), Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "TimeBetweenLastTwoOrders")).Value);
                                 }
                             }
                         }
@@ -185,7 +185,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
         {
             TimeSpan timespan = new TimeSpan((new Random()).Next());
             var queryable = TestClientContext.Orders.Where(c => c.ShelfLife == timespan) as ODataClient.DataServiceQuery<Order>;
-            Assert.True(queryable.RequestUri.OriginalString.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", StringComparison.Ordinal));
+            Assert.EndsWith("/Orders?$filter=ShelfLife eq duration'" + XmlConvert.ToString(timespan) + "'", queryable.RequestUri.OriginalString, StringComparison.Ordinal);
 
             var result1 = queryable.ToList();
             Assert.True(result1.Count == 0);
@@ -205,7 +205,7 @@ namespace Microsoft.Test.OData.Tests.Client.PrimitiveTypes
 
             // query and verify
             var result2 = queryable.ToList();
-            Assert.Equal(1, result2.Count);
+            Assert.Single(result2);
             Assert.Equal(orderID, result2[0].OrderID);
 
             // update the Duration properties

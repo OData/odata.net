@@ -46,7 +46,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                     var entries = resources.Where(e => e != null && e.Id != null);
                     Assert.Equal(20, entries.Count());
-                    Assert.Equal("Russell", entries.ElementAt(0).Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Russell", Assert.IsType<ODataProperty>(entries.ElementAt(0).Properties.Single(p => p.Name == "FirstName")).Value);
                 }
             }
         }
@@ -63,7 +63,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
 
                     Assert.NotNull(entry);
-                    Assert.Equal("Russell", entry.Properties.Single(p => p.Name == "FirstName").Value);
+                    Assert.Equal("Russell", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "FirstName")).Value);
                 }
             }
         }
@@ -80,7 +80,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
 
                     Assert.Equal(3, entries.Count);
-                    Assert.Equal(0, entries[0].Properties.Single(p => p.Name == "TripId").Value);
+                    Assert.Equal(0, Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "TripId")).Value);
                 }
             }
         }
@@ -98,7 +98,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                     var entries = resources.Where(e => e != null && e.Id != null);
                     Assert.Equal(4, entries.Count());
-                    Assert.Equal("scottketchum", entries.ElementAt(0).Properties.Single(p => p.Name == "UserName").Value);
+                    Assert.Equal("scottketchum", Assert.IsType<ODataProperty>(entries.ElementAt(0).Properties.Single(p => p.Name == "UserName")).Value);
                 }
             }
         }
@@ -114,7 +114,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.NotNull(entry);
-                    Assert.Equal("AA", entry.Properties.Single(p => p.Name == "AirlineCode").Value);
+                    Assert.Equal("AA", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "AirlineCode")).Value);
                 }
             }
         }
@@ -145,7 +145,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }.Execute();
 
                     Assert.Equal(2, count);// russellwhyte and marshallgaray
-                    Assert.Equal("russellwhyte", entries[0].Properties.Single(p => p.Name == "UserName").Value);
+                    Assert.Equal("russellwhyte", Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "UserName")).Value);
                 }
             }
         }
@@ -189,8 +189,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 if (!mimeTypes[i].Contains(MimeTypes.ODataParameterNoMetadata))
                 {
                     entry = new QueryEntryHelper(this) { RequestUri = string.Format("People('{0}')", userNames[i]), MimeType = mimeTypes[i], IfMatch = "*" }.Execute();
-                    var nickName = entry.Properties.Single(p => p.Name == "NickName").Value;
-                    Assert.Equal("\"NickName\"", (entry.Properties.Single(p => p.Name == "NickName").Value as ODataUntypedValue).RawValue);
+                    var nickName = Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "NickName")).Value;
+                    Assert.Equal("\"NickName\"", Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "NickName")).Value).RawValue);
                 }
             }
         }
@@ -244,7 +244,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                             {
                                 if (argument.Entry.TypeName.EndsWith("EventLocation"))
                                 {
-                                    Assert.Equal("" + (100 + i), (argument.Entry.Properties.Single(p => p.Name == "RoomNumber").Value as ODataUntypedValue).RawValue);
+                                    Assert.Equal("" + (100 + i), Assert.IsType<ODataUntypedValue>(Assert.IsType<ODataProperty>(argument.Entry.Properties.Single(p => p.Name == "RoomNumber")).Value).RawValue);
                                 }
                             }
                     }.Execute();
@@ -344,7 +344,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
             // verify the insert
             Assert.Equal(201, responseMessage.StatusCode);
             var entry = new QueryEntryHelper(this) { RequestUri = "People('VincentZhao')", MimeType = mimeType, IfMatch = "*" }.Execute();
-            Assert.Equal("VincentZhao", entry.Properties.Single(p => p.Name == "UserName").Value);
+            Assert.Equal("VincentZhao", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "UserName")).Value);
         }
 
         [Fact]
@@ -389,8 +389,8 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     }.Execute();
 
                     Assert.Equal(2, entries.Where(e => e != null && e.Id != null).Count());
-                    Assert.NotNull(entries.SingleOrDefault(e => (string)e.Properties.Single(p => p.Name == "UserName").Value == "russellwhyte"));
-                    Assert.NotNull(entries.SingleOrDefault(e => (string)e.Properties.Single(p => p.Name == "UserName").Value == "ronaldmundy"));
+                    Assert.NotNull(entries.SingleOrDefault(e => (string)Assert.IsType<ODataProperty>(e.Properties.Single(p => p.Name == "UserName")).Value == "russellwhyte"));
+                    Assert.NotNull(entries.SingleOrDefault(e => (string)Assert.IsType<ODataProperty>(e.Properties.Single(p => p.Name == "UserName")).Value == "ronaldmundy"));
                 }
             }
         }
@@ -503,7 +503,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.NotNull(entry);
-                    Assert.Equal("AA", entry.Properties.Single(p => p.Name == "AirlineCode").Value);
+                    Assert.Equal("AA", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "AirlineCode")).Value);
                 }
             }
         }
@@ -521,7 +521,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
 
                     var entries = resources.Where(e => e != null && e.Id != null);
                     Assert.Equal(2, entries.Count());
-                    Assert.Equal("scottketchum", entries.ElementAt(1).Properties.Single(p => p.Name == "UserName").Value);
+                    Assert.Equal("scottketchum", Assert.IsType<ODataProperty>(entries.ElementAt(1).Properties.Single(p => p.Name == "UserName")).Value);
                 }
             }
         }
@@ -538,7 +538,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                     var entries = new QueryFeedHelper(this) { RequestUri = uri, MimeType = mimeType }.Execute();
 
                     Assert.Equal(1, entries.Count);
-                    Assert.Equal(new Guid("dd6a09c0-e59b-4745-8612-f4499b676c47"), entries[0].Properties.Single(p => p.Name == "ShareId").Value);
+                    Assert.Equal(new Guid("dd6a09c0-e59b-4745-8612-f4499b676c47"), Assert.IsType<ODataProperty>(entries[0].Properties.Single(p => p.Name == "ShareId")).Value);
                 }
             }
         }
@@ -554,7 +554,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.NotNull(entry);
-                    Assert.Equal("KLAX", entry.Properties.Single(p => p.Name == "IcaoCode").Value);
+                    Assert.Equal("KLAX", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "IcaoCode")).Value);
                 }
 
                 uri = "GetNearestAirport(lat = 37, lon =-122)";
@@ -563,7 +563,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 {
                     ODataResource entry = new QueryEntryHelper(this) { RequestUri = uri, MimeType = mimeType, IfMatch = "*" }.Execute();
                     Assert.NotNull(entry);
-                    Assert.Equal("KSFO", entry.Properties.Single(p => p.Name == "IcaoCode").Value);
+                    Assert.Equal("KSFO", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "IcaoCode")).Value);
                 }
             }
         }
@@ -577,7 +577,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             var predicate = new Func<IEnumerable<ODataResource>, string, bool>((entries, icaoCode) =>
             {
-                return entries.Count(entry => entry.Properties.Count(p => p.Name == "IcaoCode" && object.Equals(p.Value, icaoCode)) == 1) == 1;
+                return entries.Count(entry => entry.Properties.Count(p =>
+                {
+                    var prop = Assert.IsType<ODataProperty>(p);
+                    return prop.Name == "IcaoCode" && Equals(prop.Value, icaoCode);
+                }) == 1) == 1;
             });
 
             foreach (var mimeType in mimeTypes)
@@ -601,7 +605,11 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
         {
             var predicate = new Func<IEnumerable<ODataResource>, string, bool>((entries, userName) =>
             {
-                return entries.Count(entry => entry.Properties.Count(p => p.Name == "UserName" && object.Equals(p.Value, userName)) == 1) == 1;
+                return entries.Count(entry => entry.Properties.Count(p =>
+                {
+                    var prop = Assert.IsType<ODataProperty>(p);
+                    return prop.Name == "UserName" && Equals(prop.Value, userName);
+                }) == 1) == 1;
             });
 
             {
@@ -1788,7 +1796,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 MimeType = MimeTypes.ApplicationJson,
             }.Execute();
             Assert.NotNull(entry);
-            Assert.Equal("New Photo", entry.Properties.Single(p => p.Name == "Name").Value);
+            Assert.Equal("New Photo", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Name")).Value);
         }
 
         [Fact]
@@ -1967,7 +1975,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 ExpectedStatusCode = 200,
             }.Execute();
 
-            Assert.Equal("russellwhyte", entry.Properties.Single(p => p.Name == "UserName").Value);
+            Assert.Equal("russellwhyte", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "UserName")).Value);
         }
 
         #endregion
@@ -2003,7 +2011,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 ExpectedStatusCode = 200,
             }.Execute();
 
-            Assert.Equal("SFO", entry.Properties.Single(p => p.Name == "IataCode").Value);
+            Assert.Equal("SFO", Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "IataCode")).Value);
         }
 
         #endregion
@@ -2040,7 +2048,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 ExpectedStatusCode = 200,
             }.Execute();
 
-            Assert.NotEqual(long.MinValue, entry.Properties.Single(p => p.Name == "Concurrency").Value);
+            Assert.NotEqual(long.MinValue, Assert.IsType<ODataProperty>(entry.Properties.Single(p => p.Name == "Concurrency")).Value);
         }
 
         #endregion
@@ -2092,7 +2100,7 @@ namespace Microsoft.Test.OData.Tests.Client.ODataWCFServiceTests
                 MimeType = MimeTypes.ApplicationJson + MimeTypes.ODataParameterFullMetadata,
             }.Execute();
             var friends = resources.Where(r => r.Id != null);
-            target = friends.SingleOrDefault(friend => object.Equals(friend.Properties.Single(p => p.Name == "UserName").Value, "russellwhyte"));
+            target = friends.SingleOrDefault(friend => Equals(Assert.IsType<ODataProperty>(friend.Properties.Single(p => p.Name == "UserName")).Value, "russellwhyte"));
             Assert.Null(target);
 
             target = new QueryEntryHelper(this)

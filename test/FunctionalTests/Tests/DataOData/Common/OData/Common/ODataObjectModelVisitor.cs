@@ -53,7 +53,7 @@ namespace Microsoft.Test.Taupo.OData.Common
                 return;
             }
 
-            ODataProperty property = objectModelItem as ODataProperty;
+            ODataPropertyInfo property = objectModelItem as ODataPropertyInfo;
             if (property != null)
             {
                 this.VisitProperty(property);
@@ -254,9 +254,12 @@ namespace Microsoft.Test.Taupo.OData.Common
         /// Visits a property item.
         /// </summary>
         /// <param name="property">The property to visit.</param>
-        protected virtual void VisitProperty(ODataProperty property)
+        protected virtual void VisitProperty(ODataPropertyInfo property)
         {
-            this.Visit(property.Value);
+            if (property is ODataProperty odataProperty)
+            {
+                this.Visit(odataProperty.Value);
+            }
         }
 
         /// <summary>

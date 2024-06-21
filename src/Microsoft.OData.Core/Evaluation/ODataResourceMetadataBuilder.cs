@@ -123,24 +123,34 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="nonComputedProperties">Non-computed properties from the entity.</param>
         /// <returns>The the computed and non-computed entity properties.</returns>
-        internal virtual IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
+        internal virtual IEnumerable<ODataPropertyInfo> GetProperties(IEnumerable<ODataPropertyInfo> nonComputedProperties)
         {
             return nonComputedProperties == null ? null : nonComputedProperties.Where(p =>
             {
-                if (p.ODataValue is ODataStreamReferenceValue)
+                if (p.GetType().Equals(typeof(ODataPropertyInfo)))
+                {
+                    return true;
+                }
+
+                if (p is not ODataProperty property)
                 {
                     return false;
                 }
 
-                if (p.ODataValue is ODataResourceValue)
+                if (property.ODataValue is ODataStreamReferenceValue)
                 {
-                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(p.Name));
+                    return false;
                 }
 
-                ODataCollectionValue collectionValue = p.ODataValue as ODataCollectionValue;
+                if (property.ODataValue is ODataResourceValue)
+                {
+                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
+                }
+
+                ODataCollectionValue collectionValue = property.ODataValue as ODataCollectionValue;
                 if (collectionValue != null && collectionValue.Items != null && collectionValue.Items.Any(t => t is ODataResourceValue))
                 {
-                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(p.Name));
+                    throw new ODataException(Strings.ODataResource_PropertyValueCannotBeODataResourceValue(property.Name));
                 }
 
                 return true;

@@ -78,7 +78,7 @@ namespace Microsoft.Test.Taupo.OData.WCFService
                                 var targetEntitySet = entry.GetAnnotation<TargetEntitySetAnnotation>().TargetEntitySet;
                                 object newInstance = this.DataContext.CreateNewItem(targetEntitySet);
 
-                                foreach (var property in entry.Properties)
+                                foreach (var property in entry.Properties.OfType<ODataProperty>())
                                 {
                                     DataContext.UpdatePropertyValue(newInstance, property.Name, property.Value);
                                 }

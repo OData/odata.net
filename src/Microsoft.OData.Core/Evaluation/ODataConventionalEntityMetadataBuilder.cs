@@ -255,7 +255,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="nonComputedProperties">Non-computed properties from the entity.</param>
         /// <returns>The the computed and non-computed entity properties.</returns>
-        internal override IEnumerable<ODataProperty> GetProperties(IEnumerable<ODataProperty> nonComputedProperties)
+        internal override IEnumerable<ODataPropertyInfo> GetProperties(IEnumerable<ODataPropertyInfo> nonComputedProperties)
         {
             if (!isResourceEnd)
             {
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Evaluation
         /// </summary>
         /// <param name="nonComputedProperties">Non-computed properties from the entity.</param>
         /// <returns>The the computed stream properties for the resource.</returns>
-        private IEnumerable<ODataProperty> GetComputedStreamProperties(IEnumerable<ODataProperty> nonComputedProperties)
+        private IEnumerable<ODataPropertyInfo> GetComputedStreamProperties(IEnumerable<ODataPropertyInfo> nonComputedProperties)
         {
             if (this.computedStreamProperties == null)
             {
@@ -427,7 +427,7 @@ namespace Microsoft.OData.Evaluation
                 IDictionary<string, IEdmStructuralProperty> projectedStreamProperties = this.ResourceMetadataContext.SelectedStreamProperties;
                 if (nonComputedProperties != null)
                 {
-                    foreach (ODataProperty payloadProperty in nonComputedProperties)
+                    foreach (ODataPropertyInfo payloadProperty in nonComputedProperties)
                     {
                         projectedStreamProperties.Remove(payloadProperty.Name);
                     }

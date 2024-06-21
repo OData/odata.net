@@ -986,53 +986,54 @@ namespace Microsoft.OData.Json
             ODataJsonReaderNestedInfo readerNestedInfo = null;
             IEdmStructuredType resourceType = resourceState.ResourceType;
             IEdmProperty edmProperty = this.ReaderValidator.ValidatePropertyDefined(propertyName, resourceType);
-            if (edmProperty != null && !edmProperty.Type.IsUntyped())
+            if (edmProperty == null || edmProperty.Type.IsUntyped())
             {
-                // Declared property - read it.
-                ODataJsonReaderNestedResourceInfo readerNestedResourceInfo;
-                IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
-                if (navigationProperty != null)
+                // Undeclared property - we need to run detection algorithm here.
+                readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, propertyWithValue: false);
+
+                this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
+                return readerNestedInfo;
+            }
+
+            // Declared property - read it.
+            ODataJsonReaderNestedResourceInfo readerNestedResourceInfo;
+            IEdmNavigationProperty navigationProperty = edmProperty as IEdmNavigationProperty;
+            if (navigationProperty != null)
+            {
+                if (this.ReadingResponse)
                 {
-                    if (this.ReadingResponse)
-                    {
-                        // Deferred link
-                        readerNestedResourceInfo = ReadDeferredNestedResourceInfo(resourceState, propertyName, navigationProperty);
-                    }
-                    else
-                    {
-                        // Entity reference link or links
-                        readerNestedResourceInfo = navigationProperty.Type.IsCollection()
-                            ? ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ false)
-                            : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, propertyName, /*isExpanded*/ false);
-
-                        if (!readerNestedResourceInfo.HasEntityReferenceLink)
-                        {
-                            throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(propertyName, ODataAnnotationNames.ODataBind));
-                        }
-                    }
-
-                    resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
-                    readerNestedInfo = readerNestedResourceInfo;
+                    // Deferred link
+                    readerNestedResourceInfo = ReadDeferredNestedResourceInfo(resourceState, propertyName, navigationProperty);
                 }
                 else
                 {
-                    IEdmTypeReference propertyTypeReference = edmProperty.Type;
-                    if (propertyTypeReference.IsStream())
+                    // Entity reference link or links
+                    readerNestedResourceInfo = navigationProperty.Type.IsCollection()
+                        ? ReadEntityReferenceLinksForCollectionNavigationLinkInRequest(resourceState, navigationProperty, propertyName, isExpanded: false)
+                        : ReadEntityReferenceLinkForSingletonNavigationLinkInRequest(resourceState, navigationProperty, propertyName, isExpanded: false);
+
+                    if (!readerNestedResourceInfo.HasEntityReferenceLink)
                     {
-                        Debug.Assert(propertyName == edmProperty.Name, "propertyName == edmProperty.Name");
-                        ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
-                        AddResourceProperty(resourceState, edmProperty.Name, streamPropertyValue);
-                    }
-                    else
-                    {
-                        readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
+                        throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_NavigationPropertyWithoutValueAndEntityReferenceLink(propertyName, ODataAnnotationNames.ODataBind));
                     }
                 }
+
+                resourceState.PropertyAndAnnotationCollector.ValidatePropertyUniquenessOnNestedResourceInfoStart(readerNestedResourceInfo.NestedResourceInfo);
+                readerNestedInfo = readerNestedResourceInfo;
             }
             else
             {
-                // Undeclared property - we need to run detection algorithm here.
-                readerNestedInfo = this.ReadUndeclaredProperty(resourceState, propertyName, /*propertyWithValue*/ false);
+                IEdmTypeReference propertyTypeReference = edmProperty.Type;
+                if (propertyTypeReference.IsStream())
+                {
+                    Debug.Assert(propertyName == edmProperty.Name, "propertyName == edmProperty.Name");
+                    ODataStreamReferenceValue streamPropertyValue = this.ReadStreamPropertyValue(resourceState, propertyName);
+                    AddResourceProperty(resourceState, edmProperty.Name, streamPropertyValue);
+                }
+                else
+                {
+                    readerNestedInfo = ReadNestedPropertyInfoWithoutValue(resourceState, edmProperty.Name, edmProperty);
+                }
             }
 
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
@@ -1451,16 +1452,18 @@ namespace Microsoft.OData.Json
                 Name = propertyName,
             };
 
-            AttachODataAnnotations(resourceState, propertyName, propertyInfo);
-
-            IEnumerable<KeyValuePair<string, object>> customAnnotations = resourceState.PropertyAndAnnotationCollector.GetCustomPropertyAnnotations(propertyName);
-            foreach (KeyValuePair<string, object> annotation in customAnnotations)
+            if (primitiveType != null)
             {
-                 // annotation.Value == null indicates that this annotation should be skipped?
-                 propertyInfo.InstanceAnnotations.Add(new ODataInstanceAnnotation(annotation.Key, annotation.Value.ToODataValue()));
+                AddResourceProperty(resourceState, propertyName, propertyInfo);
             }
+            else
+            {
+                // Complex and complex collection property
+                AttachODataAnnotations(resourceState.PropertyAndAnnotationCollector, propertyName, propertyInfo);
+                AttachCustomAnnotations(resourceState.PropertyAndAnnotationCollector, propertyName, propertyInfo);
 
-            resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(propertyInfo);
+                resourceState.PropertyAndAnnotationCollector.CheckForDuplicatePropertyNames(propertyInfo);
+            }
 
             return new ODataJsonReaderNestedPropertyInfo(propertyInfo, property, false);
         }
@@ -1538,7 +1541,6 @@ namespace Microsoft.OData.Json
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.JsonReader.AssertNotBuffering();
 
-            // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
                 return ReadNestedPropertyInfoWithoutValue(resourceState, propertyName, null);
@@ -3761,10 +3763,9 @@ namespace Microsoft.OData.Json
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
             this.JsonReader.AssertNotBuffering();
 
-            // Property without a value can't be ignored if we don't know what it is.
             if (!propertyWithValue)
             {
-                throw new ODataException(ODataErrorStrings.ODataJsonResourceDeserializer_OpenPropertyWithoutValue(propertyName));
+                return ReadNestedPropertyInfoWithoutValue(resourceState, propertyName, null);
             }
 
             object propertyValue = null;

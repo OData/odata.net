@@ -37,7 +37,7 @@ namespace Microsoft.Test.OData.PluggableFormat.Avro
                 }
 
                 var record = new AvroRecord(recordSchema);
-                foreach (var property in entry.Properties)
+                foreach (var property in entry.Properties.OfType<ODataProperty>())
                 {
                     RecordField field;
                     recordSchema.TryGetField(property.Name, out field);
