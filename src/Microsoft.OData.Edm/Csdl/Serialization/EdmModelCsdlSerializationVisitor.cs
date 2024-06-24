@@ -225,7 +225,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessEntityContainerAsync(IEdmEntityContainer element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteEntityContainerElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteEntityContainerElementHeaderAsync).ConfigureAwait(false);
             await base.ProcessEntityContainerAsync(element).ConfigureAwait(false);
             await this.EndElementAsync(element).ConfigureAwait(false);
         }
@@ -248,7 +248,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessEntitySetAsync(IEdmEntitySet element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteEntitySetElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteEntitySetElementHeaderAsync).ConfigureAwait(false);
 
             await base.ProcessEntitySetAsync(element).ConfigureAwait(false);
 
@@ -275,7 +275,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessSingletonAsync(IEdmSingleton element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteSingletonElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteSingletonElementHeaderAsync).ConfigureAwait(false);
 
             await base.ProcessSingletonAsync(element).ConfigureAwait(false);
 
@@ -304,7 +304,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessEntityTypeAsync(IEdmEntityType element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteEntityTypeElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteEntityTypeElementHeaderAsync).ConfigureAwait(false);
             if (element.DeclaredKey != null && element.DeclaredKey.Any())
             {
                 await this.VisitEntityTypeDeclaredKeyAsync(element.DeclaredKey).ConfigureAwait(false);
@@ -335,11 +335,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessStructuralPropertyAsync(IEdmStructuralProperty element)
         {
             bool inlineType = IsInlineType(element.Type);
-            await this.BeginElementAsync(
-                    element, 
-                    async (IEdmStructuralProperty t) => { await this.schemaWriter.WriteStructuralPropertyElementHeaderAsync(t, inlineType).ConfigureAwait(false); }, 
-                    async e => { await this.ProcessFacetsAsync(e.Type, inlineType).ConfigureAwait(false); }
-                ).ConfigureAwait(false);
+            await this.BeginElementAsync(element, (IEdmStructuralProperty t) =>  this.schemaWriter.WriteStructuralPropertyElementHeaderAsync(t, inlineType), e =>  this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
             if (!inlineType)
             {
                 VisitTypeReference(element.Type);
@@ -463,7 +459,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessNavigationPropertyAsync(IEdmNavigationProperty element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteNavigationPropertyElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteNavigationPropertyElementHeaderAsync).ConfigureAwait(false);
 
             // From 4.0.1 spec says:
             // "OnDelete" has "None, Cascade, SetNull, SetDefault" values defined in 4.01.
@@ -493,7 +489,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessComplexTypeAsync(IEdmComplexType element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteComplexTypeElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteComplexTypeElementHeaderAsync).ConfigureAwait(false);
             await base.ProcessComplexTypeAsync(element).ConfigureAwait(false);
             await this.EndElementAsync(element).ConfigureAwait(false);
         }
@@ -512,9 +508,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessEnumTypeAsync(IEdmEnumType element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteEnumTypeElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteEnumTypeElementHeaderAsync).ConfigureAwait(false);
             await base.ProcessEnumTypeAsync(element).ConfigureAwait(false);
-            await this.EndElementAsync(element, async (element) => await this.schemaWriter.WriteEnumTypeElementEndAsync(element).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(element, this.schemaWriter.WriteEnumTypeElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessEnumMember(IEdmEnumMember element)
@@ -530,8 +526,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessEnumMemberAsync(IEdmEnumMember element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteEnumMemberElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
-            await this.EndElementAsync(element, async (e) => await this.schemaWriter.WriteEnumMemberElementEndAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteEnumMemberElementHeaderAsync).ConfigureAwait(false);
+            await this.EndElementAsync(element, this.schemaWriter.WriteEnumMemberElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessTypeDefinition(IEdmTypeDefinition element)
@@ -548,7 +544,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessTypeDefinitionAsync(IEdmTypeDefinition element)
         {
-            await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteTypeDefinitionElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(element, this.schemaWriter.WriteTypeDefinitionElementHeaderAsync).ConfigureAwait(false);
             await base.ProcessTypeDefinitionAsync(element).ConfigureAwait(false);
             await this.EndElementAsync(element).ConfigureAwait(false);
         }
@@ -576,11 +572,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessTermAsync(IEdmTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
-            await this.BeginElementAsync(
-                    term, 
-                    async (IEdmTerm t) => { await this.schemaWriter.WriteTermElementHeaderAsync(t, inlineType).ConfigureAwait(false); }, 
-                    async (e) => { await this.ProcessFacetsAsync(e.Type, inlineType).ConfigureAwait(false); }
-                ).ConfigureAwait(false);
+            await this.BeginElementAsync(term, (IEdmTerm t) => this.schemaWriter.WriteTermElementHeaderAsync(t, inlineType), e => this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
             if (!inlineType)
             {
                 if (term.Type != null)
@@ -604,7 +596,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override Task ProcessActionAsync(IEdmAction action)
         {
-            return this.ProcessOperationAsync(action, async (a) => await this.schemaWriter.WriteActionElementHeaderAsync(a).ConfigureAwait(false));
+            return this.ProcessOperationAsync(action, this.schemaWriter.WriteActionElementHeaderAsync);
         }
 
         protected override void ProcessFunction(IEdmFunction function)
@@ -619,7 +611,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override Task ProcessFunctionAsync(IEdmFunction function)
         {
-            return this.ProcessOperationAsync(function, async (f) => await this.schemaWriter.WriteFunctionElementHeaderAsync(f).ConfigureAwait(false));
+            return this.ProcessOperationAsync(function, this.schemaWriter.WriteFunctionElementHeaderAsync);
         }
 
         protected override void ProcessOperationParameter(IEdmOperationParameter element)
@@ -654,8 +646,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             bool inlineType = IsInlineType(element.Type);
             await this.BeginElementAsync(
                     element,
-                    async (IEdmOperationParameter t) => { await this.schemaWriter.WriteOperationParameterElementHeaderAsync(t, inlineType).ConfigureAwait(false); },
-                    async e => { await this.ProcessFacetsAsync(e.Type, inlineType).ConfigureAwait(false); }
+                    (IEdmOperationParameter t) => this.schemaWriter.WriteOperationParameterElementHeaderAsync(t, inlineType),
+                    e =>  this.ProcessFacetsAsync(e.Type, inlineType)
                 ).ConfigureAwait(false);
             if (!inlineType)
             {
@@ -712,7 +704,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             bool inlineType = IsInlineType(operationReturn.Type);
             await this.BeginElementAsync(
                 operationReturn.Type,
-                async type => await this.schemaWriter.WriteReturnTypeElementHeaderAsync(operationReturn).ConfigureAwait(false),
+                type => this.schemaWriter.WriteReturnTypeElementHeaderAsync(operationReturn),
                 async type =>
                 {
                     if (inlineType)
@@ -748,8 +740,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             bool inlineType = IsInlineType(element.ElementType);
             await this.BeginElementAsync(
                     element,
-                    async (IEdmCollectionType t) => await this.schemaWriter.WriteCollectionTypeElementHeaderAsync(t, inlineType).ConfigureAwait(false),
-                    async e => await this.ProcessFacetsAsync(e.ElementType, inlineType).ConfigureAwait(false)
+                    (IEdmCollectionType t) => this.schemaWriter.WriteCollectionTypeElementHeaderAsync(t, inlineType),
+                    e => this.ProcessFacetsAsync(e.ElementType, inlineType)
                 ).ConfigureAwait(false);
             if (!inlineType)
             {
@@ -772,7 +764,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessActionImportAsync(IEdmActionImport actionImport)
         {
-            await this.BeginElementAsync(actionImport, async (a) => await this.schemaWriter.WriteActionImportElementHeaderAsync(a).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(actionImport, this.schemaWriter.WriteActionImportElementHeaderAsync).ConfigureAwait(false);
             await this.EndElementAsync(actionImport).ConfigureAwait(false);
         }
 
@@ -789,7 +781,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessFunctionImportAsync(IEdmFunctionImport functionImport)
         {
-            await this.BeginElementAsync(functionImport, async (f) => await this.schemaWriter.WriteFunctionImportElementHeaderAsync(f).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(functionImport, this.schemaWriter.WriteFunctionImportElementHeaderAsync).ConfigureAwait(false);
             await this.EndElementAsync(functionImport).ConfigureAwait(false);
         }
 
@@ -815,13 +807,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessAnnotationAsync(IEdmVocabularyAnnotation annotation)
         {
             bool isInline = IsInlineExpression(annotation.Value);
-            await this.BeginElementAsync(annotation, async t => await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(t, isInline).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(annotation, t => this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(t, isInline)).ConfigureAwait(false);
             if (!isInline)
             {
                 await base.ProcessAnnotationAsync(annotation).ConfigureAwait(false);
             }
 
-            await this.EndElementAsync(annotation, async t => await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, isInline).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(annotation, t => this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, isInline)).ConfigureAwait(false);
         }
 
         #endregion
@@ -872,7 +864,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessRecordExpressionAsync(IEdmRecordExpression expression)
         {
-            await this.BeginElementAsync(expression, async (e) => await this.schemaWriter.WriteRecordExpressionElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteRecordExpressionElementHeaderAsync).ConfigureAwait(false);
             this.VisitPropertyConstructors(expression.Properties);
             await this.EndElementAsync(expression).ConfigureAwait(false);
         }
@@ -904,7 +896,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
             else
             {
-                await this.BeginElementAsync(element, async (e) => await this.schemaWriter.WriteLabeledElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+                await this.BeginElementAsync(element, this.schemaWriter.WriteLabeledElementHeaderAsync).ConfigureAwait(false);
                 await base.ProcessLabeledExpressionAsync(element).ConfigureAwait(false);
                 await this.EndElementAsync(element).ConfigureAwait(false);
             }
@@ -945,13 +937,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         protected override async Task ProcessPropertyConstructorAsync(IEdmPropertyConstructor constructor)
         {
             bool isInline = IsInlineExpression(constructor.Value);
-            await this.BeginElementAsync(constructor, async t => await this.schemaWriter.WritePropertyConstructorElementHeaderAsync(t, isInline).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(constructor, t => this.schemaWriter.WritePropertyConstructorElementHeaderAsync(t, isInline)).ConfigureAwait(false);
             if (!isInline)
             {
                 await base.ProcessPropertyConstructorAsync(constructor).ConfigureAwait(false);
             }
 
-            await this.EndElementAsync(constructor, async (c) => await this.schemaWriter.WritePropertyConstructorElementEndAsync(c).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(constructor, this.schemaWriter.WritePropertyConstructorElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessPathExpression(IEdmPathExpression expression)
@@ -1028,9 +1020,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessCollectionExpressionAsync(IEdmCollectionExpression expression)
         {
-            await this.BeginElementAsync(expression, async (e) => await this.schemaWriter.WriteCollectionExpressionElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteCollectionExpressionElementHeaderAsync).ConfigureAwait(false);
             this.VisitExpressions(expression.Elements);
-            await this.EndElementAsync(expression, async (e) => await this.schemaWriter.WriteCollectionExpressionElementEndAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(expression, this.schemaWriter.WriteCollectionExpressionElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessIsTypeExpression(IEdmIsTypeExpression expression)
@@ -1069,11 +1061,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (this.isXml)
             {
-                await this.BeginElementAsync(
-                        expression, 
-                        async (IEdmIsTypeExpression t) => { await this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType).ConfigureAwait(false); }, 
-                        async (e) => { await this.ProcessFacetsAsync(e.Type, inlineType).ConfigureAwait(false); }
-                    ).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmIsTypeExpression t) => this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType), e => this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
 
                 if (!inlineType)
                 {
@@ -1085,10 +1073,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
             else
             {
-                await this.BeginElementAsync(
-                        expression, 
-                        async (IEdmIsTypeExpression t) => { await this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType).ConfigureAwait(false); }
-                    ).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmIsTypeExpression t) => this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType)).ConfigureAwait(false);
                 this.VisitExpression(expression.Operand);
                 await this.schemaWriter.WriteIsOfExpressionTypeAsync(expression, inlineType).ConfigureAwait(false);
                 await this.ProcessFacetsAsync(expression.Type, inlineType).ConfigureAwait(false);
@@ -1125,9 +1110,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessIfExpressionAsync(IEdmIfExpression expression)
         {
-            await this.BeginElementAsync(expression, async (e) => await this.schemaWriter.WriteIfExpressionElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteIfExpressionElementHeaderAsync).ConfigureAwait(false);
             await base.ProcessIfExpressionAsync(expression).ConfigureAwait(false);
-            await this.EndElementAsync(expression, async (e) => await this.schemaWriter.WriteIfExpressionElementEndAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(expression, this.schemaWriter.WriteIfExpressionElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessFunctionApplicationExpression(IEdmApplyExpression expression)
@@ -1144,9 +1129,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <returns></returns>
         protected override async Task ProcessFunctionApplicationExpressionAsync(IEdmApplyExpression expression)
         {
-            await this.BeginElementAsync(expression, async (e) => await this.schemaWriter.WriteFunctionApplicationElementHeaderAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.BeginElementAsync(expression, this.schemaWriter.WriteFunctionApplicationElementHeaderAsync).ConfigureAwait(false);
             this.VisitExpressions(expression.Arguments);
-            await this.EndElementAsync(expression, async (e) => await this.schemaWriter.WriteFunctionApplicationElementEndAsync(e).ConfigureAwait(false)).ConfigureAwait(false);
+            await this.EndElementAsync(expression, this.schemaWriter.WriteFunctionApplicationElementEndAsync).ConfigureAwait(false);
         }
 
         protected override void ProcessFloatingConstantExpression(IEdmFloatingConstantExpression expression)
@@ -1338,11 +1323,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (this.isXml)
             {
-                await this.BeginElementAsync(
-                        expression, 
-                        async (IEdmCastExpression t) => { await this.schemaWriter.WriteCastExpressionElementHeaderAsync(t, inlineType).ConfigureAwait(false); }, 
-                        async (e) => { await this.ProcessFacetsAsync(e.Type, inlineType).ConfigureAwait(false); }
-                    ).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmCastExpression t) => this.schemaWriter.WriteCastExpressionElementHeaderAsync(t, inlineType), e => this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
 
                 if (!inlineType)
                 {
@@ -1354,20 +1335,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
             else
             {
-                await this.BeginElementAsync(
-                        expression, 
-                        async (IEdmCastExpression t) => { await this.schemaWriter.WriteCastExpressionElementHeaderAsync(t, inlineType).ConfigureAwait(false); }
-                    ).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmCastExpression t) => this.schemaWriter.WriteCastExpressionElementHeaderAsync(t, inlineType)).ConfigureAwait(false);
 
                 this.VisitExpression(expression.Operand);
 
                 await this.schemaWriter.WriteCastExpressionTypeAsync(expression, inlineType).ConfigureAwait(false);
                 await this.ProcessFacetsAsync(expression.Type, inlineType).ConfigureAwait(false);
 
-                await this.EndElementAsync(
-                        expression, 
-                        async (t) => await this.schemaWriter.WriteCastExpressionElementEndAsync(t, inlineType).ConfigureAwait(false)
-                    ).ConfigureAwait(false);
+                await this.EndElementAsync(expression, t => this.schemaWriter.WriteCastExpressionElementEndAsync(t, inlineType)).ConfigureAwait(false);
             }
         }
 
@@ -1787,7 +1762,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             where TElement : IEdmElement
         {
             await elementHeaderWriter(element).ConfigureAwait(false);
-            if (additionalAttributeWriters != null)
+            if (additionalAttributeWriters != null && additionalAttributeWriters.Length > 0)
             {
                 foreach (Func<TElement, Task> action in additionalAttributeWriters)
                 {
