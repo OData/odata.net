@@ -355,12 +355,12 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="entityDescriptor">entity descriptor whose response is getting materialized.</param>
         /// <param name="responseInfo">information about the response to be materialized.</param>
-        /// <returns>an instance of MaterializeAtom, that can be used to materialize the response.</returns>
-        protected override MaterializeAtom GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
+        /// <returns>an instance of ObjectMaterializer, that can be used to materialize the response.</returns>
+        protected override ObjectMaterializer GetMaterializer(EntityDescriptor entityDescriptor, ResponseInfo responseInfo)
         {
             Debug.Assert(this.cachedResponse.Exception == null && this.cachedResponse.MaterializerEntry != null, "this.cachedResponse.Exception == null && this.cachedResponse.Entry != null");
             ODataResource entry = this.cachedResponse.MaterializerEntry == null ? null : this.cachedResponse.MaterializerEntry.Entry;
-            return new MaterializeAtom(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format, base.MaterializerCache);
+            return new ObjectMaterializer(responseInfo, new[] { entry }, entityDescriptor.Entity.GetType(), this.cachedResponse.MaterializerEntry.Format, base.MaterializerCache);
         }
 
         /// <summary>
@@ -969,7 +969,7 @@ namespace Microsoft.OData.Client
             /// <param name="headers">headers</param>
             /// <param name="statusCode">status code</param>
             /// <param name="responseVersion">Parsed response OData-Version header.</param>
-            /// <param name="entry">atom entry, if there is a non-error response payload.</param>
+            /// <param name="entry">entry, if there is a non-error response payload.</param>
             /// <param name="exception">exception, if the request threw an exception.</param>
             internal CachedResponse(Descriptor descriptor, HeaderCollection headers, HttpStatusCode statusCode, Version responseVersion, MaterializerEntry entry, Exception exception)
             {

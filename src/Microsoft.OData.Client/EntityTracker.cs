@@ -394,7 +394,7 @@ namespace Microsoft.OData.Client
             }
 
             trackedEntityDescriptor.Identity = entityDescriptorFromMaterializer.Identity; // always attach the identity
-            AtomMaterializerLog.MergeEntityDescriptorInfo(trackedEntityDescriptor, entityDescriptorFromMaterializer, true /*mergeInfo*/, metadataMergeOption);
+            ObjectMaterializerLog.MergeEntityDescriptorInfo(trackedEntityDescriptor, entityDescriptorFromMaterializer, true /*mergeInfo*/, metadataMergeOption);
             trackedEntityDescriptor.State = EntityStates.Unchanged;
             trackedEntityDescriptor.PropertiesToSerialize.Clear();
 

@@ -86,7 +86,7 @@ namespace Microsoft.OData.Client.Materialization
         {
             get
             {
-                throw new InvalidOperationException(DSClient.Strings.MaterializeFromAtom_CountNotPresent);
+                throw new InvalidOperationException(DSClient.Strings.MaterializeFromObject_CountNotPresent);
             }
         }
 

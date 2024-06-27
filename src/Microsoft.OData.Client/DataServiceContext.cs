@@ -464,7 +464,7 @@ namespace Microsoft.OData.Client
         /// This enables the client to perform custom mapping between the type name
         /// provided in a response from the server and a type on the client.
         /// This method enables one to override the entity name that is serialized
-        /// to the target representation (ATOM,JSON, etc) for the specified type.
+        /// to the target representation (JSON) for the specified type.
         /// </remarks>
         public virtual Func<Type, string> ResolveName
         {
@@ -3875,7 +3875,7 @@ namespace Microsoft.OData.Client
             {
                 if (mediaLink)
                 {
-                    // special case for requesting the "media" value of an ATOM media link entry
+                    // special case for requesting the "media" value of a media link entry
                     Uri relativeUri = UriUtil.CreateUri(XmlConstants.UriValueSegment, UriKind.Relative);
                     requestUri = UriUtil.CreateUri(box.GetResourceUri(this.BaseUriResolver, true /*queryLink*/), relativeUri);
                 }

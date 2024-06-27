@@ -66,7 +66,7 @@ namespace Microsoft.OData.Client
 #endif
 
         /// <summary>Runs this plan.</summary>
-        /// <param name="materializer">Materializer under which materialization should happen.</param>
+        /// <param name="materializer">ObjectMaterializer under which materialization should happen.</param>
         /// <param name="entry">Root entry to materialize.</param>
         /// <param name="expectedType">Expected type for the <paramref name="entry"/>.</param>
         /// <returns>The materialized object.</returns>

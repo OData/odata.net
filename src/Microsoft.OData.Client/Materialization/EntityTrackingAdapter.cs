@@ -31,7 +31,7 @@ namespace Microsoft.OData.Client.Materialization
 
         internal EntityTrackingAdapter(EntityTrackerBase entityTracker, MergeOption mergeOption, ClientEdmModel model, DataServiceContext context, IODataMaterializerContext materializerContext)
         {
-            this.MaterializationLog = new AtomMaterializerLog(mergeOption, model, entityTracker, materializerContext);
+            this.MaterializationLog = new ObjectMaterializerLog(mergeOption, model, entityTracker, materializerContext);
             this.MergeOption = mergeOption;
             this.EntityTracker = entityTracker;
             this.Model = model;
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Gets the materialization log.
         /// </summary>
-        internal AtomMaterializerLog MaterializationLog { get; private set; }
+        internal ObjectMaterializerLog MaterializationLog { get; private set; }
 
         /// <summary>
         /// Gets the entity tracker.

@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Materialization
     #endregion
 
     /// <summary>
-    /// Materializer for LoadProperty API call for navigation properties.
+    /// ObjectMaterializer for LoadProperty API call for navigation properties.
     /// </summary>
     internal class ODataLoadNavigationPropertyMaterializer : ODataReaderEntityMaterializer
     {

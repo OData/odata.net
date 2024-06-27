@@ -18,7 +18,7 @@ namespace Microsoft.OData
         /// </summary>
         private ODataCollectionStartSerializationInfo serializationInfo;
 
-        /// <summary>Gets or sets the name of the collection (ATOM only).</summary>
+        /// <summary>Gets or sets the name of the collection.</summary>
         /// <returns>The name of the collection.</returns>
         public string Name
         {

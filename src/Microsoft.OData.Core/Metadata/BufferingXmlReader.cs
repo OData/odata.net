@@ -454,7 +454,7 @@ namespace Microsoft.OData.Metadata
                                 if (this.documentBaseUri == null)
                                 {
                                     // If there's no document base URI we need to fail since there's no way to create an absolute URI now.
-                                    throw new ODataException(Strings.ODataAtomDeserializer_RelativeUriUsedWithoutBaseUriSpecified(xmlBaseAttributeValue));
+                                    throw new ODataException(Strings.ODataXmlDeserializer_RelativeUriUsedWithoutBaseUriSpecified(xmlBaseAttributeValue));
                                 }
 
                                 newBaseUri = UriUtils.UriToAbsoluteUri(this.documentBaseUri, newBaseUri);
@@ -970,7 +970,7 @@ namespace Microsoft.OData.Metadata
             {
                 // If we find an element m:error node we detected an in-stream error.
                 // We read the in-stream error and report it.
-                ODataError inStreamError = ODataAtomErrorDeserializer.ReadErrorElement(this, this.maxInnerErrorDepth);
+                ODataError inStreamError = ODataXmlErrorDeserializer.ReadErrorElement(this, this.maxInnerErrorDepth);
                 Debug.Assert(inStreamError != null, "inStreamError != null");
                 throw new ODataErrorException(inStreamError);
             }

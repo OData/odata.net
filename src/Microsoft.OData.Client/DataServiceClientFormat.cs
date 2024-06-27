@@ -62,7 +62,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Gets the current format. Defaults to Atom if nothing else has been specified.
+        /// Gets the current format.
         /// </summary>
         public ODataFormat ODataFormat { get; private set; }
 
@@ -193,7 +193,6 @@ namespace Microsoft.OData.Client
         /// <param name="headers">Dictionary of request headers.</param>
         internal void SetRequestContentTypeForOperationParameters(HeaderCollection headers)
         {
-            // Note: There has never been an atom or xml format for parameters.
             this.SetRequestContentTypeHeader(headers, MimeApplicationJsonOData);
         }
 
@@ -350,7 +349,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Chooses between using JSON and the context-dependent media type for when Atom is selected based on the user-selected format.
+        /// Chooses between using JSON and the context-dependent media type for when entry is selected based on the user-selected format.
         /// </summary>
         /// <param name="hasSelectQueryOption">
         ///   Whether or not the select query option is present in the request URI.

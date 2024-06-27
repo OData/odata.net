@@ -50,7 +50,7 @@ namespace Microsoft.OData.Client.Materialization
                     return this.links.Count.Value;
                 }
 
-                throw new InvalidOperationException(DSClient.Strings.MaterializeFromAtom_CountNotPresent);
+                throw new InvalidOperationException(DSClient.Strings.MaterializeFromObject_CountNotPresent);
             }
         }
 
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Client.Materialization
             // this is a breaking change from V1/V2 where we allowed materialization of entities into non-entities and vice versa
             if (targetType.IsEntityType)
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_InvalidEntityType(targetType.ElementTypeName));
+                throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_InvalidEntityType(targetType.ElementTypeName));
             }
             else
             {

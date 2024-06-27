@@ -105,7 +105,6 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>The base URI used in payload.</returns>
         /// <remarks>
-        /// This URI will be used in ATOM format only, it would be overridden by &lt;xml:base /&gt; element in ATOM payload.
         /// If the URI does not end with a slash, a slash would be appended automatically.
         /// </remarks>
         public Uri BaseUri

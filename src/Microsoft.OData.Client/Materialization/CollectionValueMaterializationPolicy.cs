@@ -65,9 +65,9 @@ namespace Microsoft.OData.Client.Materialization
         /// <summary>
         /// Creates Collection instance of store Collection items.
         /// </summary>
-        /// <param name="collectionProperty">ODataProperty instance representing the Collection as seen in the atom payload.</param>
+        /// <param name="collectionProperty">ODataProperty instance representing the collection as seen in the payload.</param>
         /// <param name="userCollectionType">CLR type of the Collection as defined by the user.</param>
-        /// <returns>Newly created Collection instance. Never null.</returns>
+        /// <returns>Newly created collection instance. Never null.</returns>
         internal object CreateCollectionPropertyInstance(ODataProperty collectionProperty, Type userCollectionType)
         {
             Debug.Assert(collectionProperty != null, "collectionProperty != null");
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Client.Materialization
             // get a ClientType instance for the Collection property. This determines what type will be used later when creating the actual Collection instance
             ClientTypeAnnotation collectionClientType = this.materializerContext.ResolveTypeForMaterialization(userCollectionType, collectionValue.TypeName);
 
-            return this.CreateCollectionInstance(collectionClientType.EdmTypeReference as IEdmCollectionTypeReference, collectionClientType.ElementType, () => DSClient.Strings.AtomMaterializer_NoParameterlessCtorForCollectionProperty(collectionProperty.Name, collectionClientType.ElementTypeName));
+            return this.CreateCollectionInstance(collectionClientType.EdmTypeReference as IEdmCollectionTypeReference, collectionClientType.ElementType, () => DSClient.Strings.Materializer_NoParameterlessCtorForCollectionProperty(collectionProperty.Name, collectionClientType.ElementTypeName));
         }
 
         /// <summary>
@@ -97,13 +97,13 @@ namespace Microsoft.OData.Client.Materialization
         {
             Debug.Assert(edmCollectionTypeReference != null, "edmCollectionTypeReference!=null");
             Debug.Assert(clientCollectionType != null, "clientCollectionType!=null");
-            return CreateCollectionInstance(edmCollectionTypeReference, clientCollectionType, () => DSClient.Strings.AtomMaterializer_MaterializationTypeError(clientCollectionType.FullName));
+            return CreateCollectionInstance(edmCollectionTypeReference, clientCollectionType, () => DSClient.Strings.Materializer_MaterializationTypeError(clientCollectionType.FullName));
         }
 
         /// <summary>
         /// Applies collectionValue item to the provided <paramref name="collectionInstance"/>.
         /// </summary>
-        /// <param name="collectionProperty">Atom property containing materialized Collection items.</param>
+        /// <param name="collectionProperty">Property containing materialized collection items.</param>
         /// <param name="collectionInstance">Collection instance. Must implement ICollection&lt;T&gt; where T is either primitive or complex type (not an entity).</param>
         /// <param name="collectionItemType">Type of items in the Collection. Note: this could be calculated from collectionInstance but we already have it in upstream methods.</param>
         /// <param name="addValueToBackingICollectionInstance">Action called actually add a Collection item to <paramref name="collectionInstance" /></param>
@@ -225,7 +225,7 @@ namespace Microsoft.OData.Client.Materialization
             // DataServiceCollection cannot track non-entity types so it should not be used for storing primitive or complex types
             if (ClientTypeUtil.IsDataServiceCollection(clientCollectionType))
             {
-                throw DSClient.Error.InvalidOperation(DSClient.Strings.AtomMaterializer_DataServiceCollectionNotSupportedForNonEntities);
+                throw DSClient.Error.InvalidOperation(DSClient.Strings.Materializer_DataServiceCollectionNotSupportedForNonEntities);
             }
 
             try
@@ -242,7 +242,7 @@ namespace Microsoft.OData.Client.Materialization
         /// Tries to create a collection instance and apply the materialized collection values.
         /// </summary>
         /// <param name="collectionItemType">Type of the collection item.</param>
-        /// <param name="collectionProperty">Atom property containing materialized collection items.</param>
+        /// <param name="collectionProperty">Property containing materialized collection items.</param>
         /// <param name="collectionInstance">The collection instance.</param>
         /// <returns>true if successful</returns>
         internal bool TryMaterializeODataCollectionValue(Type collectionItemType, ODataProperty collectionProperty, out object collectionInstance)

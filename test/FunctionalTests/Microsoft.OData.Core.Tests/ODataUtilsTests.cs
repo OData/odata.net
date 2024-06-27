@@ -74,16 +74,6 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void MediaTypeOfNonJsonShouldNotHaveDefaultValues()
-        {
-            ODataMediaType mediaTypeObject = GetAppendedMediaTypeObject(MimeConstants.MimeApplicationAtomXml);
-
-            string test = mediaTypeObject.ToText();
-            Assert.DoesNotContain(MimeConstants.MimeStreamingParameterName, test);
-            Assert.DoesNotContain(MimeConstants.MimeIeee754CompatibleParameterName, test);
-        }
-
-        [Fact]
         public void NonMediaTypeShouldNotHaveDefaultValues()
         {
             const string headerName = "Some-Header";

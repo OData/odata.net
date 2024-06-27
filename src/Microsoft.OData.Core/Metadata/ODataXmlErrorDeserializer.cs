@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="ODataAtomErrorDeserializer.cs" company="Microsoft">
+// <copyright file="ODataXmlErrorDeserializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,9 +13,9 @@ namespace Microsoft.OData.Metadata
     #endregion Namespaces
 
     /// <summary>
-    /// OData ATOM deserializer for error payloads.
+    /// OData Xml deserializer for error payloads.
     /// </summary>
-    internal sealed class ODataAtomErrorDeserializer
+    internal sealed class ODataXmlErrorDeserializer
     {
         /// <summary>
         /// An enumeration of the various kinds of elements in an m:error element.
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Metadata
 
             if ((elementsFoundBitField & elementFoundBitMask) == elementFoundBitMask)
             {
-                throw new ODataException(Strings.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName(elementName));
+                throw new ODataException(Strings.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName(elementName));
             }
 
             elementsFoundBitField |= elementFoundBitMask;
@@ -185,7 +185,7 @@ namespace Microsoft.OData.Metadata
 
             if ((elementsFoundBitField & elementFoundBitMask) == elementFoundBitMask)
             {
-                throw new ODataException(Strings.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName(elementName));
+                throw new ODataException(Strings.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName(elementName));
             }
 
             elementsFoundBitField |= elementFoundBitMask;

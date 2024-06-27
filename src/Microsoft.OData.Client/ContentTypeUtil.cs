@@ -41,8 +41,7 @@ namespace Microsoft.OData.Service
         /// </summary>
         private static readonly string[] MediaTypesForEntityOrFeedV2 = new string[]
             {
-                XmlConstants.MimeApplicationJson,
-                XmlConstants.MimeApplicationAtom,
+                XmlConstants.MimeApplicationJson
             };
 
         /// <summary>
@@ -61,7 +60,6 @@ namespace Microsoft.OData.Service
         private static readonly string[] MediaTypesForEntityOrFeedV3 = new string[]
             {
                 XmlConstants.MimeApplicationJson,
-                XmlConstants.MimeApplicationAtom,
                 XmlConstants.MimeApplicationJsonODataMinimalMetadata,
                 XmlConstants.MimeApplicationJsonODataFullMetadata,
                 XmlConstants.MimeApplicationJsonODataNoMetadata,

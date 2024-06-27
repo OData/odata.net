@@ -611,7 +611,7 @@ namespace Microsoft.OData.Client
             {
                 Debug.Assert(queryOperationResponse.Results != null, "Got QueryOperationResponse without valid results.");
                 DataServiceContext context = queryOperationResponse.Results.Context;
-                Debug.Assert(context != null, "Materializer must always have valid context.");
+                Debug.Assert(context != null, "ObjectMaterializer must always have valid context.");
                 return context;
             }
 

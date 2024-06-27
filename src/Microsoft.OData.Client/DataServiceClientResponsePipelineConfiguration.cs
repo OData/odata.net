@@ -53,7 +53,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Creates a Data service client response pipeline class
         /// </summary>
-        /// <param name="sender"> The sender for the Reading Atom event.</param>
+        /// <param name="sender"> The sender for the Reading event.</param>
         internal DataServiceClientResponsePipelineConfiguration(object sender)
         {
             Debug.Assert(sender != null, "sender!= null");

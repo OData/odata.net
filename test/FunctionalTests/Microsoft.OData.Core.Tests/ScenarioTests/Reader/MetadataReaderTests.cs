@@ -134,7 +134,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.Throws<ODataException>(Strings.ODataAtomErrorDeserializer_MultipleErrorElementsWithSameName("code"));
+            test.Throws<ODataException>(Strings.ODataXmlErrorDeserializer_MultipleErrorElementsWithSameName("code"));
         }
 
         [Theory]
@@ -194,7 +194,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader
             };
 
             Action test = () => this.ReadMetadataDocument(map, "main");
-            test.Throws<ODataException>(Strings.ODataAtomErrorDeserializer_MultipleInnerErrorElementsWithSameName("stacktrace"));
+            test.Throws<ODataException>(Strings.ODataXmlErrorDeserializer_MultipleInnerErrorElementsWithSameName("stacktrace"));
         }
 
         private IEdmModel ReadMetadataDocument(Dictionary<string, string> map, string mainUrl)

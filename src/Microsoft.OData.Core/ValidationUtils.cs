@@ -449,7 +449,7 @@ namespace Microsoft.OData
         /// <returns>true if the property name is valid, otherwise false.</returns>
         internal static bool IsValidPropertyName(string propertyName)
         {
-            Debug.Assert(!string.IsNullOrEmpty(propertyName), "The ATOM or JSON reader should have verified that the property name is not null or empty.");
+            Debug.Assert(!string.IsNullOrEmpty(propertyName), "The JSON reader should have verified that the property name is not null or empty.");
 
             return propertyName.IndexOfAny(ValidationUtils.InvalidCharactersInPropertyNames) < 0;
         }

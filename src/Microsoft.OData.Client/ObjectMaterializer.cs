@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="MaterializeFromAtom.cs" company="Microsoft">
+// <copyright file="ObjectMaterializer.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -21,9 +21,9 @@ namespace Microsoft.OData.Client
     #endregion Namespaces
 
     /// <summary>
-    /// Use this class to materialize objects from an application/atom+xml stream.
+    /// Use this class to materialize objects from a stream.
     /// </summary>
-    internal class MaterializeAtom : IDisposable, IEnumerable, IEnumerator
+    internal class ObjectMaterializer : IDisposable, IEnumerable, IEnumerator
     {
         #region Private fields
 
@@ -37,7 +37,7 @@ namespace Microsoft.OData.Client
         /// <remarks>&lt;property&gt; text-value &lt;/property&gt;</remarks>
         private readonly bool expectingPrimitiveValue;
 
-        /// <summary>Materializer from which instances are read.</summary>
+        /// <summary>ObjectMaterializer from which instances are read.</summary>
         /// <remarks>
         /// The log for the materializer stores all changes for the
         /// associated data context.
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Client
         #endregion Private fields
 
         /// <summary>
-        /// constructor
+        /// Initializes a new instance of the <see cref="ObjectMaterializer" /> class.
         /// </summary>
         /// <param name="responseInfo">originating context</param>
         /// <param name="queryComponents">Query components (projection, expected type)</param>
@@ -75,7 +75,7 @@ namespace Microsoft.OData.Client
         /// <param name="responseMessage">responseMessage</param>
         /// <param name="payloadKind">The kind of the payload to materialize.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
-        internal MaterializeAtom(
+        internal ObjectMaterializer(
             ResponseInfo responseInfo,
             QueryComponents queryComponents,
             ProjectionPlan plan,
@@ -89,7 +89,7 @@ namespace Microsoft.OData.Client
             this.elementType = queryComponents.LastSegmentType;
             this.expectingPrimitiveValue = PrimitiveType.IsKnownNullableType(elementType);
 
-            Debug.Assert(responseMessage != null, "Response message is null! Did you mean to use Materializer.ResultsWrapper/EmptyResults?");
+            Debug.Assert(responseMessage != null, "Response message is null! Did you mean to use ObjectMaterializer.ResultsWrapper/EmptyResults?");
 
             Type implementationType;
             Type materializerType = GetTypeForMaterializer(this.expectingPrimitiveValue, this.elementType, responseInfo.Model, out implementationType);
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// constructor
+        /// Initializes a new instance of the <see cref="ObjectMaterializer" /> class.
         /// </summary>
         /// <param name="responseInfo">originating context</param>
         /// <param name="entries">entries that needs to be materialized.</param>
@@ -105,7 +105,7 @@ namespace Microsoft.OData.Client
         /// <param name="format">The format of the response being materialized from.</param>
         /// <param name="materializerCache">Cache used to store temporary metadata used for materialization of OData items.</param>
         /// <param name="includeLinks">Whether to include navigation properties when materializing an entry.</param>
-        internal MaterializeAtom(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache, bool includeLinks = true)
+        internal ObjectMaterializer(ResponseInfo responseInfo, IEnumerable<ODataResource> entries, Type elementType, ODataFormat format, MaterializerCache materializerCache, bool includeLinks = true)
         {
             this.responseInfo = responseInfo;
             this.elementType = elementType;
@@ -122,7 +122,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Private internal constructor used for creating empty wrapper.
         /// </summary>
-        private MaterializeAtom()
+        private ObjectMaterializer()
         {
         }
 
@@ -147,7 +147,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// A materializer for empty results
         /// </summary>
-        internal static MaterializeAtom EmptyResults
+        internal static ObjectMaterializer EmptyResults
         {
             get
             {
@@ -243,7 +243,7 @@ namespace Microsoft.OData.Client
         /// <param name="implementationType">The actual type that implements ICollection&lt;&gt;</param>
         /// <returns>Type of the instances that will be returned by materializer.</returns>
         /// <remarks>
-        /// For collection navigation properties (i.e. ICollection&lt;T&gt; where T is an entity the method returns T. Materializer will
+        /// For collection navigation properties (i.e. ICollection&lt;T&gt; where T is an entity the method returns T. ObjectMaterializer will
         /// return single entity each time MoveNext() is called. However for collection properties we need the whole property instead of just a
         /// single collection item.
         /// </remarks>
@@ -381,7 +381,7 @@ namespace Microsoft.OData.Client
         /// <param name="context">Context of expression to analyze.</param>
         /// <param name="results">the results to wrap</param>
         /// <returns>a new materializer</returns>
-        internal static MaterializeAtom CreateWrapper(DataServiceContext context, IEnumerable results)
+        internal static ObjectMaterializer CreateWrapper(DataServiceContext context, IEnumerable results)
         {
             return new ResultsWrapper(context, results, null);
         }
@@ -391,7 +391,7 @@ namespace Microsoft.OData.Client
         /// <param name="results">The current page of results</param>
         /// <param name="continuation">The continuation for the results.</param>
         /// <returns>A new materializer.</returns>
-        internal static MaterializeAtom CreateWrapper(DataServiceContext context, IEnumerable results, DataServiceQueryContinuation continuation)
+        internal static ObjectMaterializer CreateWrapper(DataServiceContext context, IEnumerable results, DataServiceQueryContinuation continuation)
         {
             return new ResultsWrapper(context, results, continuation);
         }
@@ -420,7 +420,7 @@ namespace Microsoft.OData.Client
         /// <returns>An Uri pointing to the next page for the collection</returns>
         internal virtual DataServiceQueryContinuation GetContinuation(IEnumerable key)
         {
-            Debug.Assert(this.materializer != null, "Materializer is null!");
+            Debug.Assert(this.materializer != null, "ObjectMaterializer is null!");
 
             DataServiceQueryContinuation result;
             if (key == null)
@@ -429,7 +429,7 @@ namespace Microsoft.OData.Client
                 {
                     // expectingSingleValue && !moved : haven't started parsing single value (single value should not have next link anyway)
                     // !expectingSingleValue && !IsEndOfStream : collection type feed did not finish parsing yet
-                    throw new InvalidOperationException(Strings.MaterializeFromAtom_TopLevelLinkNotAvailable);
+                    throw new InvalidOperationException(Strings.MaterializeFromObject_TopLevelLinkNotAvailable);
                 }
 
                 // we have already moved to the end of stream
@@ -451,7 +451,7 @@ namespace Microsoft.OData.Client
                 if (!this.materializer.NextLinkTable.TryGetValue(key, out result))
                 {
                     // someone has asked for a collection that's "out of scope" or doesn't exist
-                    throw new ArgumentException(Strings.MaterializeFromAtom_CollectionKeyNotPresentInLinkTable);
+                    throw new ArgumentException(Strings.MaterializeFromObject_CollectionKeyNotPresentInLinkTable);
                 }
             }
 
@@ -521,7 +521,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Private type to wrap partial (paged) results and make it look like standard materialized results.
         /// </summary>
-        private class ResultsWrapper : MaterializeAtom
+        private class ResultsWrapper : ObjectMaterializer
         {
             #region Private fields
 
@@ -573,7 +573,7 @@ namespace Microsoft.OData.Client
                 }
                 else
                 {
-                    throw new InvalidOperationException(Strings.MaterializeFromAtom_GetNestLinkForFlatCollection);
+                    throw new InvalidOperationException(Strings.MaterializeFromObject_GetNestLinkForFlatCollection);
                 }
             }
 

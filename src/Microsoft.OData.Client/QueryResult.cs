@@ -145,7 +145,7 @@ namespace Microsoft.OData.Client
                 response = asyncResult as QueryResult;
                 Debug.Assert(response != null, "response != null, BaseAsyncResult.EndExecute() would have thrown a different exception otherwise.");
 
-                QueryOperationResponse operationResponse = response.GetResponse<TElement>(MaterializeAtom.EmptyResults);
+                QueryOperationResponse operationResponse = response.GetResponse<TElement>(ObjectMaterializer.EmptyResults);
                 if (operationResponse != null)
                 {
                     operationResponse.Error = ex;
@@ -290,7 +290,7 @@ namespace Microsoft.OData.Client
         /// <param name="results">materialized results for the request.</param>
         /// <typeparam name="TElement">element type of the results.</typeparam>
         /// <returns>returns the instance of QueryOperationResponse containing the response.</returns>
-        internal QueryOperationResponse<TElement> GetResponse<TElement>(MaterializeAtom results)
+        internal QueryOperationResponse<TElement> GetResponse<TElement>(ObjectMaterializer results)
         {
             if (this.responseMessage != null)
             {
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Client
         /// <param name="results">materialized results for the request.</param>
         /// <param name="elementType">element type of the results.</param>
         /// <returns>returns the instance of QueryOperationResponse containing the response.</returns>
-        internal QueryOperationResponse GetResponseWithType(MaterializeAtom results, Type elementType)
+        internal QueryOperationResponse GetResponseWithType(ObjectMaterializer results, Type elementType)
         {
             if (this.responseMessage != null)
             {
@@ -327,11 +327,11 @@ namespace Microsoft.OData.Client
         /// </summary>
         /// <param name="plan">Precompiled projection plan (possibly null).</param>
         /// <returns>A materializer instance ready to deserialize the result</returns>
-        internal MaterializeAtom GetMaterializer(ProjectionPlan plan)
+        internal ObjectMaterializer GetMaterializer(ProjectionPlan plan)
         {
             Debug.Assert(this.IsCompletedInternally, "request hasn't completed yet");
 
-            MaterializeAtom materializer;
+            ObjectMaterializer materializer;
             if (HttpStatusCode.NoContent != this.StatusCode)
             {
                 Debug.Assert(this.responseInfo != null, "The request didn't complete yet, we don't have a response info for it.");
@@ -339,7 +339,7 @@ namespace Microsoft.OData.Client
             }
             else
             {
-                materializer = MaterializeAtom.EmptyResults;
+                materializer = ObjectMaterializer.EmptyResults;
             }
 
             return materializer;
@@ -354,12 +354,12 @@ namespace Microsoft.OData.Client
         internal QueryOperationResponse<TElement> ProcessResult<TElement>(ProjectionPlan plan)
         {
             Debug.Assert(this.responseInfo != null, "The request didn't complete yet, we don't have a response info for it.");
-            MaterializeAtom materializeAtom = this.CreateMaterializer(plan, this.ServiceRequest.PayloadKind);
-            var response = this.GetResponse<TElement>(materializeAtom);
+            ObjectMaterializer materializeObject = this.CreateMaterializer(plan, this.ServiceRequest.PayloadKind);
+            var response = this.GetResponse<TElement>(materializeObject);
 
             // When query feed, the instance annotation can be materialized only when enumerating the feed.
             // So we register this action which will be called when enumerating the feed.
-            materializeAtom.SetInstanceAnnotations = (instanceAnnotations) =>
+            materializeObject.SetInstanceAnnotations = (instanceAnnotations) =>
             {
                 if (!this.responseInfo.Context.InstanceAnnotations.ContainsKey(response)
                     && instanceAnnotations != null && instanceAnnotations.Count > 0)
@@ -681,12 +681,12 @@ namespace Microsoft.OData.Client
         }
 
         /// <summary>
-        /// Creates an instance of <see cref="MaterializeAtom"/> for the given plan.
+        /// Creates an instance of <see cref="ObjectMaterializer"/> for the given plan.
         /// </summary>
         /// <param name="plan">The projection plan.</param>
         /// <param name="payloadKind">expected payload kind.</param>
         /// <returns>A new materializer instance</returns>
-        private MaterializeAtom CreateMaterializer(ProjectionPlan plan, ODataPayloadKind payloadKind)
+        private ObjectMaterializer CreateMaterializer(ProjectionPlan plan, ODataPayloadKind payloadKind)
         {
             QueryComponents queryComponents = this.ServiceRequest.QueryComponents(this.responseInfo.Model);
 

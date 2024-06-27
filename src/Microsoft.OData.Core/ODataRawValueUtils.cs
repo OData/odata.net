@@ -21,9 +21,9 @@ namespace Microsoft.OData
         /// <summary>The characters that are considered to be whitespace by XmlConvert.</summary>
         private static readonly char[] XmlWhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
 
-        /// <summary>Converts the specified value to a serializable string in ATOM format.</summary>
+        /// <summary>Converts the specified value to a serializable string.</summary>
         /// <param name="value">Non-null value to convert.</param>
-        /// <param name="result">The specified value converted to an ATOM string.</param>
+        /// <param name="result">The specified value converted to a string.</param>
         /// <returns>boolean value indicating conversion successful conversion</returns>
         internal static bool TryConvertPrimitiveToString(object value, out string result)
         {

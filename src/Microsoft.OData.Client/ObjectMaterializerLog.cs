@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AtomMaterializerLog.cs" company="Microsoft">
+// <copyright file="ObjectMaterializerLog.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -21,7 +21,7 @@ namespace Microsoft.OData.Client
     /// <summary>
     /// Use this class to keep a log of changes done by the materializer.
     /// </summary>
-    internal class AtomMaterializerLog
+    internal class ObjectMaterializerLog
     {
         #region Private fields
 
@@ -56,7 +56,7 @@ namespace Microsoft.OData.Client
         #region Constructors
 
         /// <summary>
-        /// Initializes a new <see cref="AtomMaterializerLog"/> instance.
+        /// Initializes a new <see cref="ObjectMaterializerLog"/> instance.
         /// </summary>
         /// <param name="mergeOption">The merge option for the log.</param>
         /// <param name="model">The model for the log.</param>
@@ -65,7 +65,7 @@ namespace Microsoft.OData.Client
         /// <remarks>
         /// Note that the merge option can't be changed.
         /// </remarks>
-        internal AtomMaterializerLog(MergeOption mergeOption, ClientEdmModel model, EntityTrackerBase entityTracker, IODataMaterializerContext materializerContext)
+        internal ObjectMaterializerLog(MergeOption mergeOption, ClientEdmModel model, EntityTrackerBase entityTracker, IODataMaterializerContext materializerContext)
         {
             Debug.Assert(model != null, "model != null");
             Debug.Assert(entityTracker != null, "entityTracker != null");
@@ -195,11 +195,11 @@ namespace Microsoft.OData.Client
 
                 // Whenever we merge the data, only at those times will be merge the links also
                 EntityDescriptor descriptor = this.entityTracker.InternalAttachEntityDescriptor(entry.EntityDescriptor, false /*failIfDuplicated*/);
-                AtomMaterializerLog.MergeEntityDescriptorInfo(descriptor, entry.EntityDescriptor, mergeEntityDescriptorInfo, this.mergeOption);
+                ObjectMaterializerLog.MergeEntityDescriptorInfo(descriptor, entry.EntityDescriptor, mergeEntityDescriptorInfo, this.mergeOption);
 
                 if (mergeEntityDescriptorInfo)
                 {
-                    // In AtomMaterializer.TryResolveFromContext, we set AtomEntry.ShouldUpdateFromPayload to true
+                    // In ObjectMaterializer.TryResolveFromContext, we set ObjectEntry.ShouldUpdateFromPayload to true
                     // when even MergeOption is PreserveChanges and entityState is Deleted. But in that case, we cannot
                     // set the entity state to Unchanged, hence need to workaround that one scenario
                     if (this.mergeOption != MergeOption.PreserveChanges || descriptor.State != EntityStates.Deleted)
