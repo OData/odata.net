@@ -63,8 +63,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="writer"></param>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
         /// <returns>A Task with a tuple with a value indicating whether serialization was successful and EdmError if any</returns>
         public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
         {

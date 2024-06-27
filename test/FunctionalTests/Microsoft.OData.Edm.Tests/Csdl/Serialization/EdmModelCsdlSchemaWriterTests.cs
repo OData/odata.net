@@ -166,7 +166,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             XmlWriter writer = null;
             MemoryStream memoryStream = null;
 
-            return CreateEdmModelCsdlSchemaWriterForAsync(out writer, out memoryStream);
+            return CreateEdmModelCsdlSchemaWriter(out writer, out memoryStream);
         }
 
         private static EdmModelCsdlSchemaWriter CreateEdmModelCsdlSchemaWriter(out XmlWriter xmlWriter, out MemoryStream memoryStream)

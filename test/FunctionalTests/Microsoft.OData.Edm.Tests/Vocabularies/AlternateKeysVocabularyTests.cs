@@ -64,3 +64,4 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
     }
 }
+

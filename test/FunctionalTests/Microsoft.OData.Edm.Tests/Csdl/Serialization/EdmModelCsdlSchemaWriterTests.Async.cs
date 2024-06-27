@@ -86,7 +86,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         {
             EdmActionImport actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmIntegerConstant(EdmCoreModel.Instance.GetInt32(true), 1));
 
-            var csdlSchemaWriter = CreateEdmModelCsdlSchemaWriterForErrorTest();
+            var csdlSchemaWriter = CreateEdmModelCsdlSchemaWriterForErrorTestForAsync();
             async Task errorTest() => await csdlSchemaWriter.WriteActionImportElementHeaderAsync(actionImport).ConfigureAwait(false);
 
             var exception = await Assert.ThrowsAsync<InvalidOperationException>(errorTest).ConfigureAwait(false);
@@ -157,6 +157,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             // Removing xml header to make the baseline's more compact and focused on the test at hand.
             string result = reader.ReadToEnd().Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", string.Empty);
             Assert.Equal(expectedPayload, result);
+        }
+
+        private static EdmModelCsdlSchemaWriter CreateEdmModelCsdlSchemaWriterForErrorTestForAsync()
+        {
+            XmlWriter writer = null;
+            MemoryStream memoryStream = null;
+
+            return CreateEdmModelCsdlSchemaWriterForAsync(out writer, out memoryStream);
         }
 
         private static EdmModelCsdlSchemaWriter CreateEdmModelCsdlSchemaWriterForAsync(out XmlWriter xmlWriter, out MemoryStream memoryStream)

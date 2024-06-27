@@ -2728,8 +2728,8 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(model.Validate(out errors));
             Assert.Empty(errors);
 
-            var v40Json =
-            @"{
+var v40Json = 
+@"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.MyApi"",
   ""NS"": {
