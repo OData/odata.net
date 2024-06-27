@@ -28,6 +28,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.schemaWriter = new EdmModelCsdlSchemaJsonWriter(model, writer, edmVersion);
         }
 
+        /// <summary>
+        /// Visits Edm references and Write includes and annotations.
+        /// </summary>
+        /// <param name="model">The Edm Model.</param>
         internal void VisitEdmReferences(IEdmModel model)
         {
             IEnumerable<IEdmReference> references = model.GetEdmReferences();
@@ -56,10 +60,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Visit Edm references and Write includes and annotations asynchronously.
+        /// Asynchronously Visits Edm references and Write includes and annotations.
         /// </summary>
-        /// <param name="model"></param>
-        /// <returns></returns>
+        /// <param name="model">The Edm Model.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
         internal async Task VisitEdmReferencesAsync(IEdmModel model)
         {
             IEnumerable<IEdmReference> references = model.GetEdmReferences();
@@ -87,6 +91,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        /// <summary>
+        /// Writes Includes
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="includes">Collection of Edm includes.</param>
         private void WriteIncludes(IEdmModel model, IEnumerable<IEdmInclude> includes)
         {
             if (includes == null || !includes.Any())
@@ -114,11 +123,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Write Includes Async
+        /// Asynchronously Writes Includes
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="includes"></param>
-        /// <returns></returns>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="includes">Collection of Edm includes.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
         private async Task WriteIncludesAsync(IEdmModel model, IEnumerable<IEdmInclude> includes)
         {
             if (includes == null || !includes.Any())
@@ -146,7 +155,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// $IncludeAnnotations Array.
+        /// Wrties $IncludeAnnotations Array.
         /// </summary>
         private void WriteIncludeAnnotations(IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
         {
@@ -182,10 +191,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Async - $IncludeAnnotations Array
+        /// Asynchronously Writes $IncludeAnnotations Array
         /// </summary>
-        /// <param name="includeAnnotations"></param>
-        /// <returns></returns>
+        /// <param name="includeAnnotations">Collection of Edm include annotations.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         private Task WriteIncludeAnnotationsAsync(IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
         {
             if (includeAnnotations == null || !includeAnnotations.Any())
@@ -221,6 +230,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// Writes Annotations
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="target">The Edm vocabulary annotations.</param>
         private void WriteAnnotations(IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             var annotations = model.FindDeclaredVocabularyAnnotations(target);
@@ -232,11 +246,11 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Write Annotations Async
+        /// Asynchronously Writes Annotations
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="target"></param>
-        /// <returns></returns>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="target">The Edm vocabulary annotations.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         private async Task WriteAnnotationsAsync(IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             var annotations = model.FindDeclaredVocabularyAnnotations(target);

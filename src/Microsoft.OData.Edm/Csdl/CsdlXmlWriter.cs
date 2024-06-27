@@ -166,6 +166,10 @@ namespace Microsoft.OData.Edm.Csdl
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
         }
 
+        /// <summary>
+        /// Asynchronously write the ConceptualModels element.
+        /// </summary>
+        /// <returns>The task represents the asynchronous operation.</returns>
         private Task WriteConceptualModelsElementAsync()
         {
             return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);

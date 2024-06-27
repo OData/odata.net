@@ -61,11 +61,11 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> Asynchronously.
+        /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
         /// </summary>
         /// <param name="model"></param>
         /// <param name="writer"></param>
-        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        /// <returns>A Task with a tuple with a value indicating whether serialization was successful and EdmError if any</returns>
         public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
         {
             return TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
@@ -99,12 +99,12 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Async - Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
+        /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="writer"></param>
-        /// <param name="settings"></param>
-        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
+        /// <param name="settings">The CSDL writer settings.</param>
+        /// <returns>A Task with tuple with a value indicating whether serialization was successful and EdmError if any</returns>
         public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer, CsdlJsonWriterSettings settings)
         {
             EdmUtil.CheckArgumentNull(model, nameof(model));
@@ -138,11 +138,11 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> Asynchronously.
+        /// Asynchronously Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="writer"></param>
-        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">Xmlwriter the generated CSDL will be written to.</param>
+        /// <returns>A task with tuple with a value indicating whether serialization was successful and EdmError if any</returns>
         public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
         {
             return TryWriteCsdlAsync(model, writer, target, new CsdlXmlWriterSettings());
@@ -176,13 +176,13 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/> Asynchronously.
+        /// Asynchronously Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
         /// </summary>
-        /// <param name="model"></param>
-        /// <param name="writer"></param>
-        /// <param name="target"></param>
-        /// <param name="writerSettings"></param>
-        /// <returns>A tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="target">Target implementation of the CSDL being generated.</param>
+        /// <param name="writerSettings">The CSDL xml writer settings.</param>
+        /// <returns>A task with a value indicating whether serialization was successful.</returns>
         public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target, CsdlXmlWriterSettings writerSettings)
         {
             EdmUtil.CheckArgumentNull(model, "model");
@@ -209,9 +209,9 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Async - Write CSDL output.
+        /// Asynchronously Writes CSDL output.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         protected virtual Task WriteCsdlAsync()
         {
             return Task.CompletedTask;

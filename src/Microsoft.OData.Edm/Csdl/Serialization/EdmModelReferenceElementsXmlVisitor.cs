@@ -53,6 +53,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         }
 
+        /// <summary>
+        /// Asynchronously visit Edm references and Write includes and annotations.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="reference">The Edm reference.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
         internal async Task VisitEdmReferencesAsync(IEdmModel model, IEdmReference reference)
         {
             await this.schemaWriter.WriteReferenceElementHeaderAsync(reference).ConfigureAwait(false);
@@ -92,6 +98,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
+        /// <summary>
+        /// Asynchronously write annotations.
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="target">The Edm vocabulary annotations.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
         private async Task WriteAnnotationsAsync(IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             var annotations = model.FindDeclaredVocabularyAnnotations(target);

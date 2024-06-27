@@ -76,8 +76,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the elements of the entity container.
         /// </summary>
-        /// <param name="elements"></param>
-        /// <returns></returns>
+        /// <param name="elements">Collection of Edm Entity container elements.</param>
         /// <exception cref="InvalidOperationException"></exception>
         public override async Task VisitEntityContainerElementsAsync(IEnumerable<IEdmEntityContainerElement> elements)
         {
@@ -169,9 +168,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits Edm Schema.
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="mappings"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm Schema.</param>
+        /// <param name="mappings">Collection of prefix mappings.</param>
         internal async Task VisitEdmSchemaAsync(EdmSchema element, IEnumerable<KeyValuePair<string, string>> mappings)
         {
             string alias = null;
@@ -221,8 +219,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the entity container.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm entity container.</param>
         protected override async Task ProcessEntityContainerAsync(IEdmEntityContainer element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEntityContainerElementHeaderAsync).ConfigureAwait(false);
@@ -244,8 +241,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the entity set.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm Entity set.</param>
         protected override async Task ProcessEntitySetAsync(IEdmEntitySet element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEntitySetElementHeaderAsync).ConfigureAwait(false);
@@ -271,8 +267,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the singleton.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm Singleton</param>
         protected override async Task ProcessSingletonAsync(IEdmSingleton element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteSingletonElementHeaderAsync).ConfigureAwait(false);
@@ -300,8 +295,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the entity type.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm entity type.</param>
         protected override async Task ProcessEntityTypeAsync(IEdmEntityType element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEntityTypeElementHeaderAsync).ConfigureAwait(false);
@@ -330,8 +324,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the structural property.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm structural property.</param>
         protected override async Task ProcessStructuralPropertyAsync(IEdmStructuralProperty element)
         {
             bool inlineType = IsInlineType(element.Type);
@@ -352,8 +345,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the type definition reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm Type definition reference.</param>
         protected override Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference element)
         {
             return this.schemaWriter.WriteTypeDefinitionAttributesAsync(element);
@@ -367,8 +359,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the binary type reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm binary type reference.</param>
         protected override Task ProcessBinaryTypeReferenceAsync(IEdmBinaryTypeReference element)
         {
             return this.schemaWriter.WriteBinaryTypeAttributesAsync(element);
@@ -382,8 +373,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the decimal type reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm Decimal type reference.</param>
         protected override Task ProcessDecimalTypeReferenceAsync(IEdmDecimalTypeReference element)
         {
             return this.schemaWriter.WriteDecimalTypeAttributesAsync(element);
@@ -397,8 +387,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the spatial type reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm spatial type reference.</param>
         protected override Task ProcessSpatialTypeReferenceAsync(IEdmSpatialTypeReference element)
         {
             return this.schemaWriter.WriteSpatialTypeAttributesAsync(element);
@@ -412,8 +401,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the string type reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm string type reference.</param>
         protected override Task ProcessStringTypeReferenceAsync(IEdmStringTypeReference element)
         {
             return this.schemaWriter.WriteStringTypeAttributesAsync(element);
@@ -427,8 +415,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the temporal type reference.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm temporal type reference.</param>
         protected override Task ProcessTemporalTypeReferenceAsync(IEdmTemporalTypeReference element)
         {
             return this.schemaWriter.WriteTemporalTypeAttributesAsync(element);
@@ -455,8 +442,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the navigation property.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm navigation property.</param>
         protected override async Task ProcessNavigationPropertyAsync(IEdmNavigationProperty element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteNavigationPropertyElementHeaderAsync).ConfigureAwait(false);
@@ -485,8 +471,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the complex type.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm complex type.</param>
         protected override async Task ProcessComplexTypeAsync(IEdmComplexType element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteComplexTypeElementHeaderAsync).ConfigureAwait(false);
@@ -504,8 +489,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the enum type.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm enumeration type.</param>
         protected override async Task ProcessEnumTypeAsync(IEdmEnumType element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEnumTypeElementHeaderAsync).ConfigureAwait(false);
@@ -522,8 +506,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the enum member.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm enumeration member.</param>
         protected override async Task ProcessEnumMemberAsync(IEdmEnumMember element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteEnumMemberElementHeaderAsync).ConfigureAwait(false);
@@ -540,8 +523,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the type definition.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm type definition.</param>
         protected override async Task ProcessTypeDefinitionAsync(IEdmTypeDefinition element)
         {
             await this.BeginElementAsync(element, this.schemaWriter.WriteTypeDefinitionElementHeaderAsync).ConfigureAwait(false);
@@ -567,8 +549,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the term.
         /// </summary>
-        /// <param name="term"></param>
-        /// <returns></returns>
+        /// <param name="term">The Edm term.</param>
         protected override async Task ProcessTermAsync(IEdmTerm term)
         {
             bool inlineType = term.Type != null && IsInlineType(term.Type);
@@ -592,8 +573,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the action.
         /// </summary>
-        /// <param name="action"></param>
-        /// <returns></returns>
+        /// <param name="action">The Edm action.</param>
         protected override Task ProcessActionAsync(IEdmAction action)
         {
             return this.ProcessOperationAsync(action, this.schemaWriter.WriteActionElementHeaderAsync);
@@ -607,8 +587,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the function.
         /// </summary>
-        /// <param name="function"></param>
-        /// <returns></returns>
+        /// <param name="function">The Edm function.</param>
         protected override Task ProcessFunctionAsync(IEdmFunction function)
         {
             return this.ProcessOperationAsync(function, this.schemaWriter.WriteFunctionElementHeaderAsync);
@@ -639,8 +618,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the operation parameter.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm operation parameter.</param>
         protected override async Task ProcessOperationParameterAsync(IEdmOperationParameter element)
         {
             bool inlineType = IsInlineType(element.Type);
@@ -692,8 +670,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the operation return.
         /// </summary>
-        /// <param name="operationReturn"></param>
-        /// <returns></returns>
+        /// <param name="operationReturn">The Edm operation return.</param>
         protected override async Task ProcessOperationReturnAsync(IEdmOperationReturn operationReturn)
         {
             if (operationReturn == null)
@@ -735,6 +712,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             this.EndElement(element);
         }
 
+        /// <summary>
+        /// Asynchronously process collection type.
+        /// </summary>
+        /// <param name="element">The Edm collection type.</param>
         protected override async Task ProcessCollectionTypeAsync(IEdmCollectionType element)
         {
             bool inlineType = IsInlineType(element.ElementType);
@@ -760,8 +741,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the action import.
         /// </summary>
-        /// <param name="actionImport"></param>
-        /// <returns></returns>
+        /// <param name="actionImport">The Edm action import.</param>
         protected override async Task ProcessActionImportAsync(IEdmActionImport actionImport)
         {
             await this.BeginElementAsync(actionImport, this.schemaWriter.WriteActionImportElementHeaderAsync).ConfigureAwait(false);
@@ -777,8 +757,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the function import.
         /// </summary>
-        /// <param name="functionImport"></param>
-        /// <returns></returns>
+        /// <param name="functionImport">The Edm function import.</param>
         protected override async Task ProcessFunctionImportAsync(IEdmFunctionImport functionImport)
         {
             await this.BeginElementAsync(functionImport, this.schemaWriter.WriteFunctionImportElementHeaderAsync).ConfigureAwait(false);
@@ -802,8 +781,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the annotation.
         /// </summary>
-        /// <param name="annotation"></param>
-        /// <returns></returns>
+        /// <param name="annotation">The Edm vocabulary annotation.</param>
         protected override async Task ProcessAnnotationAsync(IEdmVocabularyAnnotation annotation)
         {
             bool isInline = IsInlineExpression(annotation.Value);
@@ -828,8 +806,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the string constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm string constant expression.</param>
         protected override Task ProcessStringConstantExpressionAsync(IEdmStringConstantExpression expression)
         {
             return this.schemaWriter.WriteStringConstantExpressionElementAsync(expression);
@@ -843,8 +820,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the binary constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm binary constant expression.</param>
         protected override Task ProcessBinaryConstantExpressionAsync(IEdmBinaryConstantExpression expression)
         {
             return this.schemaWriter.WriteBinaryConstantExpressionElementAsync(expression);
@@ -860,8 +836,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the record expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm record expression.</param>
         protected override async Task ProcessRecordExpressionAsync(IEdmRecordExpression expression)
         {
             await this.BeginElementAsync(expression, this.schemaWriter.WriteRecordExpressionElementHeaderAsync).ConfigureAwait(false);
@@ -886,8 +861,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the labeled expression.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm labeled expression.</param>
         protected override async Task ProcessLabeledExpressionAsync(IEdmLabeledExpression element)
         {
             if (element.Name == null)
@@ -910,8 +884,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the labeled expression reference expression.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm labeled expression reference.</param>
         protected override Task ProcessLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression element)
         {
             return this.schemaWriter.WriteLabeledExpressionReferenceExpressionAsync(element);
@@ -932,8 +905,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the property constructor.
         /// </summary>
-        /// <param name="constructor"></param>
-        /// <returns></returns>
+        /// <param name="constructor">The Edm property constructor.</param>
         protected override async Task ProcessPropertyConstructorAsync(IEdmPropertyConstructor constructor)
         {
             bool isInline = IsInlineExpression(constructor.Value);
@@ -954,8 +926,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the path expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm path expression.</param>
         protected override Task ProcessPathExpressionAsync(IEdmPathExpression expression)
         {
             return this.schemaWriter.WritePathExpressionElementAsync(expression);
@@ -969,8 +940,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the property path expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm path expression.</param>
         protected override Task ProcessPropertyPathExpressionAsync(IEdmPathExpression expression)
         {
             return this.schemaWriter.WritePropertyPathExpressionElementAsync(expression);
@@ -984,8 +954,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the navigation property path expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm path expression.</param>
         protected override Task ProcessNavigationPropertyPathExpressionAsync(IEdmPathExpression expression)
         {
             return this.schemaWriter.WriteNavigationPropertyPathExpressionElementAsync(expression);
@@ -999,8 +968,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the annotation path expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm path expression.</param>
         protected override Task ProcessAnnotationPathExpressionAsync(IEdmPathExpression expression)
         {
             return this.schemaWriter.WriteAnnotationPathExpressionElementAsync(expression);
@@ -1016,8 +984,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the collection expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm collection expression.</param>
         protected override async Task ProcessCollectionExpressionAsync(IEdmCollectionExpression expression)
         {
             await this.BeginElementAsync(expression, this.schemaWriter.WriteCollectionExpressionElementHeaderAsync).ConfigureAwait(false);
@@ -1053,8 +1020,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the is type expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm IsType expression.</param>
         protected override async Task ProcessIsTypeExpressionAsync(IEdmIsTypeExpression expression)
         {
             bool inlineType = IsInlineType(expression.Type);
@@ -1089,8 +1055,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the integer constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm integer constant expression.</param>
         protected override Task ProcessIntegerConstantExpressionAsync(IEdmIntegerConstantExpression expression)
         {
             return this.schemaWriter.WriteIntegerConstantExpressionElementAsync(expression);
@@ -1106,8 +1071,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the if expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm If expression.</param>
         protected override async Task ProcessIfExpressionAsync(IEdmIfExpression expression)
         {
             await this.BeginElementAsync(expression, this.schemaWriter.WriteIfExpressionElementHeaderAsync).ConfigureAwait(false);
@@ -1125,8 +1089,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the function application expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm Apply expression.</param>
         protected override async Task ProcessFunctionApplicationExpressionAsync(IEdmApplyExpression expression)
         {
             await this.BeginElementAsync(expression, this.schemaWriter.WriteFunctionApplicationElementHeaderAsync).ConfigureAwait(false);
@@ -1142,8 +1105,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the floating constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm floating constant expression.</param>
         protected override Task ProcessFloatingConstantExpressionAsync(IEdmFloatingConstantExpression expression)
         {
             return this.schemaWriter.WriteFloatingConstantExpressionElementAsync(expression);
@@ -1157,8 +1119,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the guid constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm Guid constant expression.</param>
         protected override Task ProcessGuidConstantExpressionAsync(IEdmGuidConstantExpression expression)
         {
             return this.schemaWriter.WriteGuidConstantExpressionElementAsync(expression);
@@ -1172,8 +1133,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the enum member expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm enumeration member.</param>
         protected override Task ProcessEnumMemberExpressionAsync(IEdmEnumMemberExpression expression)
         {
             return this.schemaWriter.WriteEnumMemberExpressionElementAsync(expression);
@@ -1187,8 +1147,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the decimal constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm decimal constant expression.</param>
         protected override Task ProcessDecimalConstantExpressionAsync(IEdmDecimalConstantExpression expression)
         {
             return this.schemaWriter.WriteDecimalConstantExpressionElementAsync(expression);
@@ -1202,8 +1161,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the date constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm date constant expression.</param>
         protected override Task ProcessDateConstantExpressionAsync(IEdmDateConstantExpression expression)
         {
             return this.schemaWriter.WriteDateConstantExpressionElementAsync(expression);
@@ -1217,8 +1175,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the date time offset constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm DateTimeOffset constant expression.</param>
         protected override Task ProcessDateTimeOffsetConstantExpressionAsync(IEdmDateTimeOffsetConstantExpression expression)
         {
             return this.schemaWriter.WriteDateTimeOffsetConstantExpressionElementAsync(expression);
@@ -1232,8 +1189,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the duration constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm duration constant expression.</param>
         protected override Task ProcessDurationConstantExpressionAsync(IEdmDurationConstantExpression expression)
         {
             return this.schemaWriter.WriteDurationConstantExpressionElementAsync(expression);
@@ -1247,8 +1203,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the time of day constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm TimeOfDay constant expression.</param>
         protected override Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
         {
             return this.schemaWriter.WriteTimeOfDayConstantExpressionElementAsync(expression);
@@ -1262,8 +1217,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the boolean constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm boolean constant expression.</param>
         protected override Task ProcessBooleanConstantExpressionAsync(IEdmBooleanConstantExpression expression)
         {
             return this.schemaWriter.WriteBooleanConstantExpressionElementAsync(expression);
@@ -1277,8 +1231,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the null constant expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm Null expression.</param>
         protected override Task ProcessNullConstantExpressionAsync(IEdmNullExpression expression)
         {
             return this.schemaWriter.WriteNullConstantExpressionElementAsync(expression);
@@ -1315,8 +1268,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the cast expression.
         /// </summary>
-        /// <param name="expression"></param>
-        /// <returns></returns>
+        /// <param name="expression">The Edm cast expression.</param>
         protected override async Task ProcessCastExpressionAsync(IEdmCastExpression expression)
         {
             bool inlineType = IsInlineType(expression.Type);
@@ -1366,8 +1318,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the navigation property bindings.
         /// </summary>
-        /// <param name="navigationSource"></param>
-        /// <returns></returns>
+        /// <param name="navigationSource">The Edm navigation source.</param>
         private async Task ProcessNavigationPropertyBindingsAsync(IEdmNavigationSource navigationSource)
         {
             if (navigationSource != null && navigationSource.NavigationPropertyBindings.Any())
@@ -1454,9 +1405,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously processes the operation.
         /// </summary>
         /// <typeparam name="TOperation"></typeparam>
-        /// <param name="operation"></param>
-        /// <param name="writeElementAction"></param>
-        /// <returns></returns>
+        /// <param name="operation">Operation.</param>
+        /// <param name="writeElementAction">Write Element action.</param>
         private async Task ProcessOperationAsync<TOperation>(TOperation operation, Func<TOperation, Task> writeElementAction) where TOperation : IEdmOperation
         {
             await this.BeginElementAsync(operation, writeElementAction).ConfigureAwait(false);
@@ -1488,8 +1438,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the referential constraint.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm referential constraint.</param>
         private async Task ProcessReferentialConstraintAsync(IEdmReferentialConstraint element)
         {
             if (element != null)
@@ -1534,9 +1483,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the facets.
         /// </summary>
-        /// <param name="element"></param>
-        /// <param name="inlineType"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm type reference.</param>
+        /// <param name="inlineType">Is inline type or not.</param>
         private async Task ProcessFacetsAsync(IEdmTypeReference element, bool inlineType)
         {
             if (element != null)
@@ -1574,8 +1522,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the entity type declared key.
         /// </summary>
-        /// <param name="keyProperties"></param>
-        /// <returns></returns>
+        /// <param name="keyProperties">Collection of Edm structural properties.</param>
         private async Task VisitEntityTypeDeclaredKeyAsync(IEnumerable<IEdmStructuralProperty> keyProperties)
         {
             await this.schemaWriter.WriteDeclaredKeyPropertiesElementHeaderAsync().ConfigureAwait(false);
@@ -1594,8 +1541,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the property references.
         /// </summary>
-        /// <param name="properties"></param>
-        /// <returns></returns>
+        /// <param name="properties">Collection of Edm structural properties.</param>
         private async Task VisitPropertyRefsAsync(IEnumerable<IEdmStructuralProperty> properties)
         {
             foreach (IEdmStructuralProperty property in properties)
@@ -1628,8 +1574,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the attribute annotations.
         /// </summary>
-        /// <param name="annotations"></param>
-        /// <returns></returns>
+        /// <param name="annotations">Collection of Edm direct value annotations.</param>
         private async Task VisitAttributeAnnotationsAsync(IEnumerable<IEdmDirectValueAnnotation> annotations)
         {
             foreach (IEdmDirectValueAnnotation annotation in annotations)
@@ -1668,8 +1613,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the primitive element annotations.
         /// </summary>
-        /// <param name="annotations"></param>
-        /// <returns></returns>
+        /// <param name="annotations">Collection of Edm direct value annotations.</param>
         private async Task VisitPrimitiveElementAnnotationsAsync(IEnumerable<IEdmDirectValueAnnotation> annotations)
         {
             foreach (IEdmDirectValueAnnotation annotation in annotations)
@@ -1692,8 +1636,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the attribute annotation.
         /// </summary>
-        /// <param name="annotation"></param>
-        /// <returns></returns>
+        /// <param name="annotation">The Edm direct value annotation.</param>
         private Task ProcessAttributeAnnotationAsync(IEdmDirectValueAnnotation annotation)
         {
             return this.schemaWriter.WriteAnnotationStringAttributeAsync(annotation);
@@ -1707,8 +1650,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously processes the element annotation.
         /// </summary>
-        /// <param name="annotation"></param>
-        /// <returns></returns>
+        /// <param name="annotation">The Edm Direct value annotation.</param>
         private Task ProcessElementAnnotationAsync(IEdmDirectValueAnnotation annotation)
         {
             return this.schemaWriter.WriteAnnotationStringElementAsync(annotation);
@@ -1725,8 +1667,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously visits the element vocabulary annotations.
         /// </summary>
-        /// <param name="annotations"></param>
-        /// <returns></returns>
+        /// <param name="annotations">Collection of Edm vocabulary annotation.</param>
         private async Task VisitElementVocabularyAnnotationsAsync(IEnumerable<IEdmVocabularyAnnotation> annotations)
         {
             foreach (IEdmVocabularyAnnotation annotation in annotations)
@@ -1754,10 +1695,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously begins the element.
         /// </summary>
         /// <typeparam name="TElement"></typeparam>
-        /// <param name="element"></param>
-        /// <param name="elementHeaderWriter"></param>
-        /// <param name="additionalAttributeWriters"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm element.</param>
+        /// <param name="elementHeaderWriter">The Edm element Header writer.</param>
+        /// <param name="additionalAttributeWriters">Collection of additional attribute writers.</param>
         private async Task BeginElementAsync<TElement>(TElement element, Func<TElement, Task> elementHeaderWriter, params Func<TElement, Task>[] additionalAttributeWriters)
             where TElement : IEdmElement
         {
@@ -1790,9 +1730,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// Asynchronously ends the element.
         /// </summary>
         /// <typeparam name="TElement"></typeparam>
-        /// <param name="element"></param>
-        /// <param name="elementEndWriter"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm element.</param>
+        /// <param name="elementEndWriter">The Edm element end writer.</param>
         private async Task EndElementAsync<TElement>(TElement element, Func<TElement, Task> elementEndWriter) where TElement : IEdmElement
         {
             await this.VisitPrimitiveElementAnnotationsAsync(this.Model.DirectValueAnnotations(element)).ConfigureAwait(false);
@@ -1820,8 +1759,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously ends the element.
         /// </summary>
-        /// <param name="element"></param>
-        /// <returns></returns>
+        /// <param name="element">The Edm element.</param>
         private async Task EndElementAsync(IEdmElement element)
         {
             await this.VisitPrimitiveElementAnnotationsAsync(this.Model.DirectValueAnnotations(element)).ConfigureAwait(false);
