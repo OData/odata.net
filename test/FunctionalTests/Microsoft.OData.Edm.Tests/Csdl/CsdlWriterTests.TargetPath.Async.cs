@@ -4,21 +4,20 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Vocabularies;
+using System.Linq;
+using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
 {
     public partial class CsdlWriterTests
     {
+
+
         [Fact]
-        public void ShouldWriteAnnotationForEntitySetProperty()
+        public async Task ShouldWriteAnnotationForEntitySetProperty_Async()
         {
             // Arrange
             EdmModel model = new EdmModel();
@@ -42,7 +41,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            await WriteAndVerifyXmlAsync(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
               "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -62,10 +61,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            WriteAndVerifyJson(model, @"{
+            await WriteAndVerifyJsonAsync(model, @"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.Default"",
   ""NS"": {
@@ -96,41 +95,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
-        public void WriteInlineAnnotationForTargetPathThrows()
-        {
-            // Arrange
-            EdmModel model = new EdmModel();
-            EdmEntityType customer = new EdmEntityType("NS", "Customer");
-            customer.AddKeys(customer.AddStructuralProperty("Id", EdmCoreModel.Instance.GetInt32(false)));
-            customer.AddStructuralProperty("Name", EdmPrimitiveTypeKind.String, isNullable: false);
-            model.AddElement(customer);
-
-            EdmEntityContainer container = new EdmEntityContainer("NS", "Default");
-            EdmEntitySet entitySet = new EdmEntitySet(container, "Customers", customer);
-            container.AddElement(entitySet);
-            model.AddElement(container);
-
-            IEdmProperty nameProperty = customer.DeclaredProperties.Where(x => x.Name == "Name").FirstOrDefault();
-
-            EdmTargetPath targetPath = new EdmTargetPath(container, entitySet, nameProperty);
-
-            EdmTerm term = new EdmTerm("NS", "MyTerm", EdmCoreModel.Instance.GetString(true));
-            model.AddElement(term);
-            EdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(targetPath, term, new EdmStringConstant("Name OutOfLine MyTerm Value"));
-
-            // Act & Assert
-            Action action = () => annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
-
-            InvalidOperationException exception = Assert.Throws<InvalidOperationException>(action);
-            Assert.Equal(Strings.EdmVocabularyAnnotations_InvalidLocationForTargetPathAnnotation(annotation.TargetString()), exception.Message);
-        }
-
-        [Fact]
-        public void ShouldWriteAnnotationForEntitySetComplexTypeProperty()
+        public async Task ShouldWriteAnnotationForEntitySetComplexTypeProperty_Async()
         {
             // Arrange
             EdmModel model = new EdmModel();
@@ -163,7 +132,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            await WriteAndVerifyXmlAsync(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
               "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -189,10 +158,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            WriteAndVerifyJson(model, @"{
+            await WriteAndVerifyJsonAsync(model, @"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.Default"",
   ""NS"": {
@@ -234,11 +203,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
-        public void ShouldWriteAnnotationForSingletonComplexTypeProperty()
+        public async Task ShouldWriteAnnotationForSingletonComplexTypeProperty_Async()
         {
             // Arrange
             EdmModel model = new EdmModel();
@@ -272,7 +241,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            await WriteAndVerifyXmlAsync(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
               "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -299,10 +268,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            WriteAndVerifyJson(model, @"{
+            await WriteAndVerifyJsonAsync(model, @"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.Default"",
   ""NS"": {
@@ -347,11 +316,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
 
         [Fact]
-        public void ShouldWriteAnnotationForEntitySetDerivedTypeProperty()
+        public async Task ShouldWriteAnnotationForEntitySetDerivedTypeProperty_Async()
         {
             // Arrange
             EdmModel model = new EdmModel();
@@ -380,7 +349,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.OutOfLine);
             model.SetVocabularyAnnotation(annotation);
 
-            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            await WriteAndVerifyXmlAsync(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
               "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                 "<edmx:DataServices>" +
                   "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -403,10 +372,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                     "</Annotations>" +
                   "</Schema>" +
                 "</edmx:DataServices>" +
-              "</edmx:Edmx>");
+              "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            WriteAndVerifyJson(model, @"{
+            await WriteAndVerifyJsonAsync(model, @"{
   ""$Version"": ""4.0"",
   ""$EntityContainer"": ""NS.Default"",
   ""NS"": {
@@ -442,7 +411,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       }
     }
   }
-}");
+}").ConfigureAwait(false);
         }
     }
 }

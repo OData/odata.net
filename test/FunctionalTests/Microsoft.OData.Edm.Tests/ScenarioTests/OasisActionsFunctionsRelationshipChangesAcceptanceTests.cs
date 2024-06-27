@@ -8,7 +8,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -17,7 +16,7 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public class OasisActionsFunctionsRelationshipChangesAcceptanceTest
+    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTest
     {
         private static DefaultTestModel Model;
 
@@ -409,25 +408,6 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 Assert.True(CsdlWriter.TryWriteCsdl(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData, out errors));
                 Assert.Empty(errors);
                 writer.Flush();
-            }
-
-            string actual = builder.ToString();
-            var actualXml = XElement.Parse(actual);
-            var actualNormalized = actualXml.ToString();
-
-            Assert.Equal(DefaultTestModel.RepresentativeEdmxDocument, actualNormalized);
-        }
-
-        [Fact]
-        public async Task VerifyRepresentativeModelWrittenOutCorrectly_Async()
-        {
-            var builder = new StringBuilder();
-            using (var writer = XmlWriter.Create(builder, new XmlWriterSettings() { Async = true }))
-            {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.TestModel.RepresentativeModel, writer, CsdlTarget.OData).ConfigureAwait(false);
-                Assert.True(result);
-                Assert.Empty(errors);
-                await writer.FlushAsync().ConfigureAwait(false);
             }
 
             string actual = builder.ToString();

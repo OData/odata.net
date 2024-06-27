@@ -4,29 +4,21 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
+using Microsoft.OData.Edm.Csdl;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
-    /// <summary>
-    /// Test validation vocabulary
-    /// </summary>
     public partial class ValidationVocabularyTests
     {
-        private readonly IEdmModel _validationModel = ValidationVocabularyModel.Instance;
-
         [Fact]
-        public void TestValidationVocabularyModel()
+        public async Task TestValidationVocabularyModel_Async()
         {
+            #region Expected Text
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Validation.V1"" Alias=""Validation"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <TypeDefinition Name=""SingleOrCollectionType"" UnderlyingType=""Edm.String"">
@@ -118,16 +110,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""The annotated collection must have at least the specified number of items."" />
   </Term>
 </Schema>";
+            #endregion
 
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.Encoding = System.Text.Encoding.UTF8;
+            var sw = new StringWriter();
+            var settings = new XmlWriterSettings()
+            {
+                Indent = true,
+                Encoding = System.Text.Encoding.UTF8,
+                Async = true
+            };
 
-            IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            this._validationModel.TryWriteSchema(xw, out errors);
-            xw.Flush();
+            var (_, errors) = await this._validationModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            await xw.FlushAsync().ConfigureAwait(false);
 #if NETCOREAPP1_1
             xw.Dispose();
 #else
@@ -137,101 +132,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.True(!errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
-        }
-
-        [Fact]
-        public void TestOpenTypePropertyConstraint() 
-        {
-            var modelCsdl = @"
-<edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">
-	<edmx:DataServices>
-		<Schema xmlns=""http://docs.oasis-open.org/odata/ns/edm"" Namespace=""my.model"" Alias=""model"">
-			<EntityType Name=""OpenType"">
-		        <Annotation Term=""Org.OData.Validation.V1.OpenPropertyTypeConstraint"">
-                  <Collection>
-					  <String>model.OpenPropertyType</String>  
-                  </Collection>
-                </Annotation>
-			</EntityType>
-			<EntityType Name=""OpenPropertyType""/>
-		</Schema>
-	</edmx:DataServices>
-</edmx:Edmx>";
-
-            IEdmModel model;
-            IEnumerable<EdmError> errors;
-            XmlReader reader = XmlReader.Create(new StringReader(modelCsdl));
-            Assert.True(CsdlReader.TryParse(reader, out model, out errors), "Failed to parse model with OpenPropertyTypeConstraint.");
-            Assert.Empty(errors);
-            Assert.True(model.Validate(out errors));
-            Assert.Empty(errors);
-
-            var openType = model.FindType("model.OpenType");
-            var annotations = openType.VocabularyAnnotations(model);
-            Assert.Single(annotations);
-            var annotation = annotations.Single();
-            Assert.Equal("Org.OData.Validation.V1.OpenPropertyTypeConstraint", annotation.Term.FullName());
-            var expression = annotation.Value as IEdmCollectionExpression;
-            Assert.NotNull(expression);
-            var elements = expression.Elements;
-            Assert.Single(elements);
-            var element = elements.Single() as IEdmStringConstantExpression;
-            Assert.NotNull(element);
-            Assert.Equal("model.OpenPropertyType", element.Value);
-        }
-
-        [Theory]
-        [InlineData("Pattern", "Edm.String", "Property Parameter Term")]
-        [InlineData("Minimum", "Edm.PrimitiveType", "Property Parameter Term")]
-        [InlineData("Maximum", "Edm.PrimitiveType", "Property Parameter Term")]
-        [InlineData("Exclusive", "Org.OData.Core.V1.Tag", "Annotation")]
-        [InlineData("AllowedValues", "Collection(Org.OData.Validation.V1.AllowedValue)", "Property Parameter TypeDefinition")]
-        [InlineData("MultipleOf", "Edm.Decimal", "Property Parameter Term")]
-        [InlineData("Constraint", "Org.OData.Validation.V1.ConstraintType", "Property EntityType ComplexType")]
-        [InlineData("ItemsOf", "Collection(Org.OData.Validation.V1.ItemsOfType)", "EntityType ComplexType")]
-        [InlineData("OpenPropertyTypeConstraint", "Collection(Org.OData.Validation.V1.SingleOrCollectionType)", "ComplexType EntityType")]
-        [InlineData("DerivedTypeConstraint", "Collection(Org.OData.Validation.V1.SingleOrCollectionType)",
-            "EntitySet Singleton NavigationProperty Property TypeDefinition Parameter ReturnType")]
-        [InlineData("AllowedTerms", "Collection(Org.OData.Core.V1.QualifiedTermName)", "Term Property")]
-        [InlineData("MaxItems", "Edm.Int64", "Collection")]
-        [InlineData("MinItems", "Edm.Int64", "Collection")]
-        [InlineData("ApplicableTerms", "Collection(Org.OData.Core.V1.QualifiedTermName)", null)]
-        public void TestValidationVocabularyTermType(string termName, string typeName, string appliesTo)
-        {
-            var termType = this._validationModel.FindDeclaredTerm("Org.OData.Validation.V1." + termName);
-            Assert.NotNull(termType);
-
-            Assert.Equal(typeName, termType.Type.FullName());
-
-            if (appliesTo != null)
-            {
-                Assert.Equal(appliesTo, termType.AppliesTo);
-            }
-            else
-            {
-                Assert.Null(termType.AppliesTo);
-            }
-        }
-
-        [Theory]
-        [InlineData("AllowedValue", "Value")]
-        [InlineData("ConstraintType", "FailureMessage|Condition")]
-        [InlineData("ItemsOfType", "path|target")]
-        public void TestValidationVocabularyComplexType(string typeName, string properties)
-        {
-            var schemaType = this._validationModel.FindDeclaredType("Org.OData.Validation.V1." + typeName);
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.Complex, schemaType.TypeKind);
-            IEdmComplexType complex = (IEdmComplexType)(schemaType);
-
-            Assert.False(complex.IsAbstract);
-            Assert.False(complex.IsOpen);
-            Assert.Null(complex.BaseType);
-
-            Assert.NotEmpty(complex.DeclaredProperties);
-            Assert.Equal(properties, string.Join("|", complex.DeclaredProperties.Select(e => e.Name)));
-            Assert.Empty(complex.DeclaredNavigationProperties());
         }
     }
 }

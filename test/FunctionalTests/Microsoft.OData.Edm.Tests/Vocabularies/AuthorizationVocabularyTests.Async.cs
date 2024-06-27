@@ -4,26 +4,19 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
-    /// <summary>
-    /// Test authorization vocabulary
-    /// </summary>
     public partial class AuthorizationVocabularyTests
     {
-        private readonly IEdmModel _authorizationModel = AuthorizationVocabularyModel.Instance;
-
         [Fact]
-        public void TestAuthorizationVocabularyModel()
+        public async Task TestAuthorizationVocabularyModel_Async()
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Authorization.V1"" Alias=""Auth"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -136,15 +129,14 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
 </Schema>";
 
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
+            var sw = new StringWriter();
+            XmlWriterSettings settings = new XmlWriterSettings() { Async = true };
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
 
-            IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            this._authorizationModel.TryWriteSchema(xw, out errors);
-            xw.Flush();
+            var (_, errors) = await this._authorizationModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            await xw.FlushAsync().ConfigureAwait(false);
 
 #if NETCOREAPP1_1
             xw.Dispose();
@@ -155,116 +147,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             Assert.True(!errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
-        }
-
-        [Fact]
-        public void TestAuthorizationVocabularyDependsOnCoreVocabulary()
-        {
-            var referencedModels = this._authorizationModel.ReferencedModels;
-
-            Assert.NotNull(referencedModels);
-
-            Assert.Equal(2, referencedModels.Count());
-
-            Assert.Contains(EdmCoreModel.Instance, referencedModels);
-            Assert.Contains(CoreVocabularyModel.Instance, referencedModels);
-        }
-
-        [Fact]
-        public void TestAuthorizationVocabularyAuthorizationsTerm()
-        {
-            var term = this._authorizationModel.FindDeclaredTerm("Org.OData.Authorization.V1.Authorizations");
-            Assert.NotNull(term);
-
-            Assert.NotNull(term.Type);
-            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
-            Assert.Equal("Collection(Org.OData.Authorization.V1.Authorization)", term.Type.Definition.FullTypeName());
-
-            Assert.Equal("EntityContainer", term.AppliesTo);
-        }
-
-        [Fact]
-        public void TestAuthorizationVocabularySecuritySchemesTerm()
-        {
-            var term = this._authorizationModel.FindDeclaredTerm("Org.OData.Authorization.V1.SecuritySchemes");
-            Assert.NotNull(term);
-
-            Assert.NotNull(term.Type);
-            Assert.Equal(EdmTypeKind.Collection, term.Type.Definition.TypeKind);
-            Assert.Equal("Collection(Org.OData.Authorization.V1.SecurityScheme)", term.Type.Definition.FullTypeName());
-
-            Assert.Equal("EntityContainer", term.AppliesTo);
-        }
-
-        [Theory]
-        [InlineData("Authorization", null, "Name|Description", true)]
-        [InlineData("OpenIDConnect", "Authorization", "IssuerUrl", false)]
-        [InlineData("Http", "Authorization", "Scheme|BearerFormat", false)]
-        [InlineData("OAuthAuthorization", "Authorization", "Scopes|RefreshUrl", true)]
-        [InlineData("OAuth2ClientCredentials", "OAuthAuthorization", "TokenUrl", false)]
-        [InlineData("OAuth2Implicit", "OAuthAuthorization", "AuthorizationUrl", false)]
-        [InlineData("OAuth2Password", "OAuthAuthorization", "TokenUrl", false)]
-        [InlineData("OAuth2AuthCode", "OAuthAuthorization", "AuthorizationUrl|TokenUrl", false)]
-        [InlineData("AuthorizationScope", null, "Scope|Grant|Description", false)]
-        [InlineData("ApiKey", "Authorization", "KeyName|Location", false)]
-        [InlineData("SecurityScheme", null, "Authorization|RequiredScopes", false)]
-        public void TestAuthorizationVocabularyComplexType(string typeName, string baseName, string properties,
-            bool isAbstract)
-        {
-            var schemaType = this._authorizationModel.FindDeclaredType("Org.OData.Authorization.V1." + typeName);
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.Complex, schemaType.TypeKind);
-            IEdmComplexType complex = (IEdmComplexType) (schemaType);
-
-            Assert.Equal(isAbstract, complex.IsAbstract);
-            Assert.False(complex.IsOpen);
-
-            if (baseName != null)
-            {
-                Assert.NotNull(complex.BaseType);
-                var baseType = this._authorizationModel.FindDeclaredType("Org.OData.Authorization.V1." + baseName);
-                Assert.NotNull(baseType);
-                Assert.Same(baseType, complex.BaseType);
-            }
-            else
-            {
-                Assert.Null(complex.BaseType);
-            }
-
-            Assert.NotEmpty(complex.DeclaredProperties);
-            Assert.Equal(properties, string.Join("|", complex.DeclaredProperties.Select(e => e.Name)));
-            Assert.Empty(complex.DeclaredNavigationProperties());
-        }
-
-        [Fact]
-        public void TestAuthorizationVocabularyKeyLocationEnumType()
-        {
-            var schemaType = this._authorizationModel.FindDeclaredType("Org.OData.Authorization.V1.KeyLocation");
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.Enum, schemaType.TypeKind);
-            IEdmEnumType enumType = (IEdmEnumType)(schemaType);
-            Assert.NotNull(enumType);
-            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Int32), enumType.UnderlyingType);
-
-            Assert.Equal("Header|QueryOption|Cookie", string.Join("|", enumType.Members.Select(e => e.Name)));
-        }
-
-        [Fact]
-        public void TestAuthorizationVocabularySchemeNameTypeDefinition()
-        {
-            var schemaType = this._authorizationModel.FindDeclaredType("Org.OData.Authorization.V1.SchemeName");
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.TypeDefinition, schemaType.TypeKind);
-            IEdmTypeDefinition schemeName = schemaType as IEdmTypeDefinition;
-            Assert.NotNull(schemeName);
-            Assert.Same(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.String), schemeName.UnderlyingType);
-
-            string description = this._authorizationModel.GetDescriptionAnnotation(schemeName);
-
-            Assert.Equal("The name of the authorization scheme.", description);
         }
     }
 }

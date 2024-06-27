@@ -7,7 +7,6 @@
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
-using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Xunit;
@@ -17,7 +16,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
     public partial class CsdlWriterTests
     {
         [Fact]
-        public void CanWriteAnnotationWithoutSpecifiedValue_UsingCustomIEdmVocabularyImplementation()
+        public async Task CanWriteAnnotationWithoutSpecifiedValue_UsingCustomIEdmVocabularyImplementation_Async()
         {
             // Arrange
             EdmModel model = new EdmModel();
@@ -46,7 +45,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.True(model.Validate(out errors));
 
             // Act & Assert for XML
-            WriteAndVerifyXml(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+            await WriteAndVerifyXmlAsync(model, "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
              "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
                "<edmx:DataServices>" +
                  "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
@@ -60,10 +59,10 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                    "<Term Name=\"MyDefaultBoolTerm\" Type=\"Edm.Boolean\" DefaultValue=\"true\" AppliesTo=\"Property Term\" Nullable=\"false\" />" +
                  "</Schema>" +
                "</edmx:DataServices>" +
-             "</edmx:Edmx>");
+             "</edmx:Edmx>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            WriteAndVerifyJson(model, @"{
+            await WriteAndVerifyJsonAsync(model, @"{
   ""$Version"": ""4.0"",
   ""NS"": {
     ""Complex"": {
@@ -92,93 +91,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
       ""$DefaultValue"": ""true""
     }
   }
-}");
+}").ConfigureAwait(false);
         }
-    }
-
-    internal class CustomEdmVocabularyAnnotation : EdmElement, IEdmVocabularyAnnotation
-    {
-        private readonly IEdmVocabularyAnnotatable target;
-        private readonly IEdmTerm term;
-        private readonly string qualifier;
-        private readonly IEdmExpression value;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class.
-        /// </summary>
-        /// <param name="target">Element the annotation applies to.</param>
-        /// <param name="term">Term bound by the annotation.</param>
-        /// <param name="value">Expression producing the value of the annotation.</param>
-        public CustomEdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, IEdmExpression value)
-            : this(target, term, null, value)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EdmVocabularyAnnotation"/> class.
-        /// </summary>
-        /// <param name="target">Element the annotation applies to.</param>
-        /// <param name="term">Term bound by the annotation.</param>
-        /// <param name="qualifier">Qualifier used to discriminate between multiple bindings of the same property or type.</param>
-        /// <param name="value">Expression producing the value of the annotation.</param>
-        public CustomEdmVocabularyAnnotation(IEdmVocabularyAnnotatable target, IEdmTerm term, string qualifier, IEdmExpression value)
-        {
-            EdmUtil.CheckArgumentNull(target, "target");
-            EdmUtil.CheckArgumentNull(term, "term");
-
-            this.target = target;
-            this.term = term;
-            this.qualifier = qualifier;
-            this.value = value;
-            UsesDefault = false;
-
-            if (value == null)
-            {
-                this.value = term.GetDefaultValueExpression();
-                if (this.value == null)
-                {
-                    throw new InvalidOperationException(Strings.EdmVocabularyAnnotations_DidNotFindDefaultValue(term.Type));
-                }
-
-                UsesDefault = true;
-            }
-        }
-
-        /// <summary>
-        /// Gets the element the annotation applies to.
-        /// </summary>
-        public IEdmVocabularyAnnotatable Target
-        {
-            get { return this.target; }
-        }
-
-        /// <summary>
-        /// Gets the term bound by the annotation.
-        /// </summary>
-        public IEdmTerm Term
-        {
-            get { return this.term; }
-        }
-
-        /// <summary>
-        /// Gets the qualifier used to discriminate between multiple bindings of the same property or type.
-        /// </summary>
-        public string Qualifier
-        {
-            get { return this.qualifier; }
-        }
-
-        /// <summary>
-        /// Gets the expression producing the value of the annotation.
-        /// </summary>
-        public IEdmExpression Value
-        {
-            get { return this.value; }
-        }
-
-        /// <summary>
-        /// Checks if the annotation uses a default value. </param>
-        /// </summary>
-        public bool UsesDefault { get; set; }
     }
 }

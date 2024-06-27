@@ -17,7 +17,7 @@ using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public class OasisRelationshipChangesAcceptanceTests
+    public partial class OasisRelationshipChangesAcceptanceTests
     {
         private const string RepresentativeEdmxDocument = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>
@@ -215,25 +215,6 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
                 Assert.True(result);
                 Assert.Empty(errors);
                 writer.Flush();
-            }
-
-            string actual = builder.ToString();
-            var actualXml = XElement.Parse(actual);
-            var actualNormalized = actualXml.ToString();
-
-            Assert.Equal(RepresentativeEdmxDocument, actualNormalized);
-        }
-
-        [Fact]
-        public async Task WriterShouldContinueToWork_Async()
-        {
-            var builder = new StringBuilder();
-            using (var writer = XmlWriter.Create(builder, new XmlWriterSettings() { Async = true }))
-            {
-                var (result, errors) = await CsdlWriter.TryWriteCsdlAsync(this.representativeModel, writer, CsdlTarget.OData).ConfigureAwait(false);
-                Assert.True(result);
-                Assert.Empty(errors);
-                await writer.FlushAsync().ConfigureAwait(false);
             }
 
             string actual = builder.ToString();
