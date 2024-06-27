@@ -1276,7 +1276,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
             Assert.NotNull(collectionExpression);
             Assert.Equal(2, collectionExpression.Elements.Count());
-            foreach(var item in collectionExpression.Elements)
+            foreach (var item in collectionExpression.Elements)
             {
                 IEdmRecordExpression recordExpress = item as IEdmRecordExpression;
                 Assert.NotNull(recordExpress);

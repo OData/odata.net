@@ -8,6 +8,7 @@ using System;
 using System.IO;
 using System.Threading.Tasks;
 using System.Xml;
+using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.Serialization;
 using Microsoft.OData.Edm.Vocabularies;
 using Xunit;
@@ -144,7 +145,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         {
             XmlWriter xmlWriter;
             MemoryStream memoryStream;
-            EdmModelCsdlSchemaWriter schemaWriter = CreateEdmModelCsdlSchemaWriter(out xmlWriter, out memoryStream);
+            EdmModelCsdlSchemaWriter schemaWriter = CreateEdmModelCsdlSchemaWriterForAsync(out xmlWriter, out memoryStream);
 
             await testAction(schemaWriter).ConfigureAwait(false);
 
@@ -156,6 +157,17 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             // Removing xml header to make the baseline's more compact and focused on the test at hand.
             string result = reader.ReadToEnd().Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", string.Empty);
             Assert.Equal(expectedPayload, result);
+        }
+
+        private static EdmModelCsdlSchemaWriter CreateEdmModelCsdlSchemaWriterForAsync(out XmlWriter xmlWriter, out MemoryStream memoryStream)
+        {
+            memoryStream = new MemoryStream();
+            IEdmModel model = new EdmModel();
+            model.SetEdmxVersion(new Version(4, 0));
+            var namespaceAliasMappings = model.GetNamespaceAliases();
+            Version edmxVersion = model.GetEdmxVersion();
+            xmlWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings() { Async = true });
+            return new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, new CsdlXmlWriterSettings());
         }
         #endregion
     }

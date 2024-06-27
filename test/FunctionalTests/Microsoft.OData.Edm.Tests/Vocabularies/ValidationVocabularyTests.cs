@@ -140,7 +140,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
 
         [Fact]
-        public void TestOpenTypePropertyConstraint() 
+        public void TestOpenTypePropertyConstraint()
         {
             var modelCsdl = @"
 <edmx:Edmx xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"" Version=""4.0"">

@@ -166,7 +166,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             XmlWriter writer = null;
             MemoryStream memoryStream = null;
 
-            return CreateEdmModelCsdlSchemaWriter(out writer, out memoryStream);
+            return CreateEdmModelCsdlSchemaWriterForAsync(out writer, out memoryStream);
         }
 
         private static EdmModelCsdlSchemaWriter CreateEdmModelCsdlSchemaWriter(out XmlWriter xmlWriter, out MemoryStream memoryStream)
@@ -176,7 +176,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             model.SetEdmxVersion(new Version(4, 0));
             var namespaceAliasMappings = model.GetNamespaceAliases();
             Version edmxVersion = model.GetEdmxVersion();
-            xmlWriter = XmlWriter.Create(memoryStream, new XmlWriterSettings() { Async = true });
+            xmlWriter = XmlWriter.Create(memoryStream);
             return new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, new CsdlXmlWriterSettings());
         }
     }

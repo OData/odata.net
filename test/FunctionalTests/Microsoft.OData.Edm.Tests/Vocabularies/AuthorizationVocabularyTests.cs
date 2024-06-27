@@ -215,7 +215,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.NotNull(schemaType);
 
             Assert.Equal(EdmTypeKind.Complex, schemaType.TypeKind);
-            IEdmComplexType complex = (IEdmComplexType) (schemaType);
+            IEdmComplexType complex = (IEdmComplexType)(schemaType);
 
             Assert.Equal(isAbstract, complex.IsAbstract);
             Assert.False(complex.IsOpen);

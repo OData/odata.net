@@ -9,7 +9,6 @@ using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl
@@ -94,6 +93,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
   }
 }");
         }
+
     }
 
     internal class CustomEdmVocabularyAnnotation : EdmElement, IEdmVocabularyAnnotation
