@@ -7,29 +7,9 @@
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {
-    public partial class Row
-    {
-        public bool? OpenBoolean { get; set; }
-        public ContactDetails? OpenComplex { get; set; }
-        public DateTimeOffset? OpenDateTimeOffset { get; set; }
-        public decimal? OpenDecimal { get; set; }
-        public double? OpenDouble { get; set; }
-        public float? OpenFloat { get; set; }
-        public Guid? OpenGuid { get; set; }
-        public Int16? OpenInt16 { get; set; }
-        public Int64? OpenInt64 { get; set; }
-        public string? OpenString { get; set; }
-        public TimeSpan? OpenTime { get; set; }
-        public IDictionary<string, object>? DynamicProperties { get; set; }
-    }
-
-    public partial class RowIndex
-    {
-        public string? IndexComments { get; set; }
-    }
-
     public class ContactDetails
     {
+        public byte[]? FirstContacted { get; set; }
         public DateTimeOffset LastContacted { get; set; }
         public DateTimeOffset Contacted { get; set; }
         public Guid GUID { get; set; }
@@ -41,5 +21,22 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         public short Short { get; set; }
         public int Int { get; set; }
         public long Long { get; set; }
+    }
+
+    public class Row
+    {
+        public Guid Id { get; set; }
+        public Dictionary<string, object>? DynamicProperties { get; set; }
+    }
+
+    public class IndexedRow : Row
+    {
+    }
+
+    public class RowIndex
+    {
+        public int Id { get; set; }
+        public ICollection<IndexedRow>? Rows { get; set; }
+        public Dictionary<string, object>? DynamicProperties { get; set; }
     }
 }
