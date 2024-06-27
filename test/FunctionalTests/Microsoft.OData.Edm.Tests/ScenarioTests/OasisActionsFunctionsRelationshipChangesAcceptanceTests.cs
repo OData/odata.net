@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
             public IEdmFunctionImport Get2FunctionImport { get; private set; }
 
             public IEdmFunctionImport Get3FunctionImportWithOneParam { get; private set; }
-
+            
             public IEdmFunctionImport Get3FunctionImportWithNoParams { get; private set; }
 
             public IEdmEntityType PersonType { get; private set; }
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Edm.Tests.ScenarioTests
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>";
-
+            
             var model = CsdlReader.Parse(XElement.Parse(errorDocument).CreateReader());
             IEnumerable<EdmError> errors = null;
             model.Validate(out errors);

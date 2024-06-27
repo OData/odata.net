@@ -2050,7 +2050,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             xmlWriter.Flush();
             memStream.Seek(0, SeekOrigin.Begin);
             StreamReader reader = new StreamReader(memStream);
-
+            
             // Remove extra xml header text as its not needed.
             string result = reader.ReadToEnd().Replace(@"<?xml version=""1.0"" encoding=""utf-8""?>", string.Empty);
             Assert.Equal(expected, result);
