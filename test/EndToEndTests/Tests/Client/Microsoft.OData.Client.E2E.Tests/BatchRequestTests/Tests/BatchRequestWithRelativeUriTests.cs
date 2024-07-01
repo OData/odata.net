@@ -12,7 +12,9 @@ using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Server;
+using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
 using Microsoft.OData.Client.E2E.Tests.Common.Server;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
@@ -51,7 +53,7 @@ namespace Microsoft.OData.Client.E2E.Tests.BatchRequestTests.Tests
         [Fact]
         public void BatchRequestWithAbsoluteUriTest()
         {
-            WriteModelToCsdl(DefaultEdmModel.GetEdmModel(), "csdl.xml");
+            WriteModelToCsdl(CommonEndToEndEdmModel.GetEdmModel(), "csdl.xml");
             //BatchRequestWithPayloadUriWritingOption(BatchPayloadUriOption.AbsoluteUri);
         }
 

@@ -9,8 +9,8 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Default;
+using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
 using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests

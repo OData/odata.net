@@ -6,11 +6,13 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.AspNetCore.OData;
+using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.TestCommon.Common;
-using Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Client.Default;
 using Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server;
+using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Xunit;
 
@@ -21,12 +23,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         private readonly Uri _baseUri;
         private readonly Container _context;
         private IEdmModel _model = null;
-        public const string PersonTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.Person";
-        public const string EmployeeTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.Employee";
-        public const string SpecialEmployeeTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.SpecialEmployee";
-        public const string ContractorTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.Contractor";
-        public const string ProductTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.Product";
-        public const string OrderLineTypeName = "Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server.OrderLine";
+        public const string PersonTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person";
+        public const string EmployeeTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee";
+        public const string SpecialEmployeeTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee";
+        public const string ContractorTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Contractor";
+        public const string ProductTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Product";
+        public const string OrderLineTypeName = "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.OrderLine";
         public const string MetadataPrefix = "$metadata#Default.";
         public const string ContainerPrefix = "#Default.";
 
@@ -34,10 +36,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(ProductsController), typeof(OrderLinesController), typeof(PeopleController));
+                services.ConfigureControllers(typeof(ProductsController), typeof(OrderLinesController), typeof(PeopleController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
-                    .AddRouteComponents("odata", ActionOverloadingEdmModel.GetEdmModel()));
+                    .AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel()));
             }
         }
 
@@ -47,7 +49,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _context = new Container(_baseUri);
             _context.HttpClientFactory = HttpClientFactory;
-            _model = ActionOverloadingEdmModel.GetEdmModel();
+            _model = CommonEndToEndEdmModel.GetEdmModel();
         }
 
         /// <summary>
@@ -89,6 +91,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             string retrieveProductName = "Default.RetrieveProduct";
             string increaseEmployeeSalary = "IncreaseEmployeeSalary";
             string increaseEmployeeSalaryName = "Default.IncreaseEmployeeSalary";
+            string sack = "Sack";
+            string sackName = "Default.Sack";
 
             foreach (string mimeType in mimeTypes)
             {
@@ -101,6 +105,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                     new Tuple<string, string>(MetadataPrefix + updatePersonInfo, "People(0)/" + updatePersonInfoName),
                     new Tuple<string, string>(MetadataPrefix + updatePersonInfo, "People(0)/" + EmployeeTypeName + "/" + updatePersonInfoName),
                     new Tuple<string, string>(MetadataPrefix + increaseEmployeeSalary, "People(0)/" + EmployeeTypeName + "/" + increaseEmployeeSalaryName),
+                    new Tuple<string, string>(MetadataPrefix + sack, "People(0)/" + EmployeeTypeName + "/" + sackName),
                 };
                 List<Tuple<string, string>> expectedActionsOnSpecialEmployee = new List<Tuple<string, string>>
                 {
@@ -109,6 +114,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                     new Tuple<string, string>(MetadataPrefix + updatePersonInfo, "People(-7)/" + SpecialEmployeeTypeName + "/" + updatePersonInfoName),
                     new Tuple<string, string>(MetadataPrefix + increaseEmployeeSalary, "People(-7)/" + SpecialEmployeeTypeName + "/" + increaseEmployeeSalaryName),
                     new Tuple<string, string>(MetadataPrefix + increaseEmployeeSalary, "People(-7)/" + EmployeeTypeName + "/" + increaseEmployeeSalaryName),
+                    new Tuple<string, string>(MetadataPrefix + sack, "People(-7)/" + EmployeeTypeName + "/" + sackName),
                 };
                 List<Tuple<string, string>> expectedActionsOnContractor = new List<Tuple<string, string>>
                 {
@@ -130,6 +136,55 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                 this.VerifyActionInEntityPayload("People(1)", expectedActionsOnContractor, mimeType);
                 this.VerifyActionInEntityPayload("Products(-10)", expectedActionsOnProduct, mimeType);
                 this.VerifyActionInEntityPayload("OrderLines(OrderId=-10,ProductId=-10)", expectedActionsOnOrderLine, mimeType);
+            }
+        }
+
+        [Fact]
+        public void QueryEntryJsonLightTest()
+        {
+            List<string> mimeTypes = new List<string>()
+            {
+                MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata,
+                MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
+            };
+
+            string updatePersonInfo = "UpdatePersonInfo";
+            string retrieveProduct = "RetrieveProduct";
+            string increaseEmployeeSalary = "IncreaseEmployeeSalary";
+
+            foreach (string mimeType in mimeTypes)
+            {
+                List<string> expectedActionsOnPerson = new List<string>()
+                {
+                    "\"" + ContainerPrefix + updatePersonInfo,
+                };
+                List<string> expectedActionsOnEmployee = new List<string>()
+                {
+                    "\"" + ContainerPrefix + updatePersonInfo,
+                    "\"" + ContainerPrefix + increaseEmployeeSalary,
+                };
+                List<string> expectedActionsOnSpecialEmployee = new List<string>()
+                {
+                    "\"" + ContainerPrefix + updatePersonInfo,
+                    "\"" + ContainerPrefix + increaseEmployeeSalary,
+                };
+
+                List<string> expectedActionsOnContractor = new List<string>()
+                {
+                    "\"" + ContainerPrefix + updatePersonInfo,
+                };
+
+                List<string> expectedRetrieveProductAction = new List<string>()
+                {
+                    "\"" + ContainerPrefix + retrieveProduct,
+                };
+
+                this.VerifyActionInJsonLightPayload("People(-1)", expectedActionsOnPerson, mimeType);
+                this.VerifyActionInJsonLightPayload("People(0)", expectedActionsOnEmployee, mimeType);
+                this.VerifyActionInJsonLightPayload("People(-7)", expectedActionsOnSpecialEmployee, mimeType);
+                this.VerifyActionInJsonLightPayload("People(1)", expectedActionsOnContractor, mimeType);
+                this.VerifyActionInJsonLightPayload("Products(-10)", expectedRetrieveProductAction, mimeType);
+                this.VerifyActionInJsonLightPayload("OrderLines(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
             }
         }
 
@@ -205,6 +260,42 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                     }
                 }
                 Assert.True(matched);
+            }
+        }
+
+        private void VerifyActionInJsonLightPayload(string queryUri, List<string> expectedActionPayload, string acceptMimeType)
+        {
+            var verifyActionNotInPayload = (acceptMimeType == MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata);
+
+            var args = new DataServiceClientRequestMessageArgs(
+                "GET",
+                new Uri(_baseUri.AbsoluteUri + queryUri, UriKind.Absolute),
+                usePostTunneling: false,
+                new Dictionary<string, string>(),
+                HttpClientFactory);
+
+            var requestMessage = new HttpClientRequestMessage(args);
+            requestMessage.SetHeader("Accept", acceptMimeType);
+
+            var responseMessage = requestMessage.GetResponse();
+            string responseString = string.Empty;
+
+            using (StreamReader reader = new StreamReader(responseMessage.GetStream()))
+            {
+                responseString = reader.ReadToEnd();
+            }
+
+            // Since ODL does not read nometadata payload and minimalmetadata action payload is the same as nometadata, we verify that the expected action payload exists (or does not exist) in the response string.
+            foreach (string action in expectedActionPayload)
+            {
+                if (verifyActionNotInPayload)
+                {
+                    Assert.False(responseString.Contains(action));
+                }
+                else
+                {
+                    Assert.True(responseString.Contains(action));
+                }
             }
         }
     }

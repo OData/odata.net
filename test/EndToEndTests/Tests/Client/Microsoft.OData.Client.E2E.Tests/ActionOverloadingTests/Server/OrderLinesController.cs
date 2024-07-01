@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 
 namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
 {
@@ -21,14 +22,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [EnableQuery]
         public IActionResult Get()
         {
-            var products = ActionOverloadingDataSource.OrderLines;
+            var products = CommonEndToEndDataSource.OrderLines;
             return Ok(products);
         }
 
         [EnableQuery]
         public IActionResult Get([FromRoute] int keyOrderId, [FromRoute] int keyProductId)
         {
-            var orderLine = ActionOverloadingDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId);
+            var orderLine = CommonEndToEndDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId);
             return Ok(orderLine);
         }
 
@@ -40,7 +41,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
                 return BadRequest();
             }
 
-            var productId = ActionOverloadingDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId)?.ProductId;
+            var productId = CommonEndToEndDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId)?.ProductId;
 
             return Ok(productId);
         }
