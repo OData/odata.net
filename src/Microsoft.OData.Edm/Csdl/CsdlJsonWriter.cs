@@ -58,6 +58,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Asynchronously Writes the JSON CSDL.
         /// </summary>
+        /// <returns>Task that represents the asynchronous operation.</returns>
         protected override async Task WriteCsdlAsync()
         {
             await WriteCsdlStartAsync().ConfigureAwait(false);
