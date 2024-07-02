@@ -16,7 +16,7 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public class OasisActionsFunctionsRelationshipChangesAcceptanceTest
+    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTest
     {
         private static DefaultTestModel Model;
 

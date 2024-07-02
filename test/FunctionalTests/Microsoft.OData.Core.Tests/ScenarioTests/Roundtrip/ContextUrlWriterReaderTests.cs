@@ -58,7 +58,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
         ReadWrite = 3
     }
 
-    public class ContextUrlWriterReaderTests
+    public partial class ContextUrlWriterReaderTests
     {
         private static readonly ODataVersion[] Versions = new ODataVersion[] { ODataVersion.V4, ODataVersion.V401 };
 

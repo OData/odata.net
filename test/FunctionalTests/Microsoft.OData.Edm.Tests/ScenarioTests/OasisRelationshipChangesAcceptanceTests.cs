@@ -16,7 +16,7 @@ using ErrorStrings = Microsoft.OData.Edm.Strings;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public class OasisRelationshipChangesAcceptanceTests
+    public partial class OasisRelationshipChangesAcceptanceTests
     {
         private const string RepresentativeEdmxDocument = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
   <edmx:DataServices>

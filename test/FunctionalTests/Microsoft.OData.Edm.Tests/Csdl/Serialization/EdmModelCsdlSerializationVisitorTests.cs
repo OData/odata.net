@@ -23,7 +23,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
     /// <summary>
     /// Unit tests of EdmModelCsdlSerializationVisitor. Aiming for whitebox coverage of these methods.
     /// </summary>
-    public class EdmModelCsdlSerializationVisitorTests
+    public partial class EdmModelCsdlSerializationVisitorTests
     {
         private EdmModel model = new EdmModel();
 
