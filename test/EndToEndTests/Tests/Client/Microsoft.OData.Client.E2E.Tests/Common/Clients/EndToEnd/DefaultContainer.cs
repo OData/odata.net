@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/28/2024 5:28:02 PM
+// Generation date: 7/1/2024 8:09:40 PM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
 {
     /// <summary>
@@ -3048,9 +3048,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
     /// There are no comments for Message in the schema.
     /// </summary>
     /// <KeyProperties>
+    /// FromUsername
     /// MessageId
     /// </KeyProperties>
-    [global::Microsoft.OData.Client.Key("MessageId")]
+    [global::Microsoft.OData.Client.Key("FromUsername", "MessageId")]
     [global::Microsoft.OData.Client.OriginalNameAttribute("Message")]
     public partial class Message : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
@@ -3058,13 +3059,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// Create a new Message object.
         /// </summary>
         /// <param name="messageId">Initial value of MessageId.</param>
+        /// <param name="fromUsername">Initial value of FromUsername.</param>
         /// <param name="sent">Initial value of Sent.</param>
         /// <param name="isRead">Initial value of IsRead.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static Message CreateMessage(int messageId, global::System.DateTimeOffset sent, bool isRead)
+        public static Message CreateMessage(int messageId, string fromUsername, global::System.DateTimeOffset sent, bool isRead)
         {
             Message message = new Message();
             message.MessageId = messageId;
+            message.FromUsername = fromUsername;
             message.Sent = sent;
             message.IsRead = isRead;
             return message;
@@ -3098,6 +3101,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("FromUsername")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "FromUsername is required.")]
         public virtual string FromUsername
         {
             get
@@ -8046,12 +8050,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
+        /// <param name="fromUsername">The value of fromUsername</param>
         /// <param name="messageId">The value of messageId</param>
         public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _source,
+            string fromUsername,
             int messageId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
+                { "FromUsername", fromUsername },
                 { "MessageId", messageId }
             };
             return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
@@ -9536,19 +9543,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for IncreaseEmployeeSalary in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseEmployeeSalary")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source, int n)
-        {
-            if (!_source.IsComposable)
-            {
-                throw new global::System.NotSupportedException("The previous function is not composable.");
-            }
-
-            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool>(_source.Context, _source.AppendRequestUri("Default.IncreaseEmployeeSalary"), new global::Microsoft.OData.Client.BodyOperationParameter("n", n));
-        }
-        /// <summary>
-        /// There are no comments for IncreaseEmployeeSalary in the schema.
-        /// </summary>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseEmployeeSalary")]
         public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source)
         {
             if (!_source.IsComposable)
@@ -9557,6 +9551,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
             }
 
             return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<int>(_source.Context, _source.AppendRequestUri("Default.IncreaseEmployeeSalary"));
+        }
+        /// <summary>
+        /// There are no comments for IncreaseEmployeeSalary in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseEmployeeSalary")]
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source, int n)
+        {
+            if (!_source.IsComposable)
+            {
+                throw new global::System.NotSupportedException("The previous function is not composable.");
+            }
+
+            return new global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool>(_source.Context, _source.AppendRequestUri("Default.IncreaseEmployeeSalary"), new global::Microsoft.OData.Client.BodyOperationParameter("n", n));
         }
         /// <summary>
         /// There are no comments for IncreaseSalaries in the schema.

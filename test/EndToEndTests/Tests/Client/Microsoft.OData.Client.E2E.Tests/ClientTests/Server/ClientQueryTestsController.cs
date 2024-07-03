@@ -49,10 +49,17 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 
         [EnableQuery]
         [HttpGet("odata/Logins({key})/SentMessages(FromUsername={FromUsername},MessageId={MessageId})")]
-        public IActionResult GetLoginSentMessages([FromODataUri]string key, [FromODataUri] string FromUsername)
+        public IActionResult GetLoginSentMessages([FromODataUri]string key, [FromODataUri] string FromUsername, [FromODataUri] int MessageId)
         {
-            var loginSentMessages = CommonEndToEndDataSource.Logins?.FirstOrDefault(a => a.Username == key).SentMessages;
-            return Ok(loginSentMessages);
+            var sentMessage = CommonEndToEndDataSource.Logins?.SingleOrDefault(a => a.Username == key).SentMessages.SingleOrDefault(a=>a.FromUsername == FromUsername && a.MessageId == MessageId);
+            return Ok(sentMessage);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/Logins({key})/SentMessages({MessageId})")]
+        public IActionResult GetLoginSentMessagesId([FromODataUri] string key, [FromODataUri] int MessageId)
+        {
+            return BadRequest();
         }
 
         [EnableQuery]

@@ -148,10 +148,11 @@
       </EntityType>
       <EntityType Name="Message">
         <Key>
+          <PropertyRef Name="FromUsername" />
           <PropertyRef Name="MessageId" />
         </Key>
         <Property Name="MessageId" Type="Edm.Int32" Nullable="false" />
-        <Property Name="FromUsername" Type="Edm.String" />
+        <Property Name="FromUsername" Type="Edm.String" Nullable="false" />
         <Property Name="ToUsername" Type="Edm.String" />
         <Property Name="Sent" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="Subject" Type="Edm.String" />
@@ -394,13 +395,13 @@
         <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Contractor" />
       </Action>
       <Action Name="IncreaseEmployeeSalary" IsBound="true">
+        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee" />
+        <ReturnType Type="Edm.Int32" Nullable="false" />
+      </Action>
+      <Action Name="IncreaseEmployeeSalary" IsBound="true">
         <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee" />
         <Parameter Name="n" Type="Edm.Int32" Nullable="false" />
         <ReturnType Type="Edm.Boolean" Nullable="false" />
-      </Action>
-      <Action Name="IncreaseEmployeeSalary" IsBound="true">
-        <Parameter Name="bindingParameter" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee" />
-        <ReturnType Type="Edm.Int32" Nullable="false" />
       </Action>
       <Action Name="IncreaseSalaries" IsBound="true">
         <Parameter Name="bindingParameter" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee)" />

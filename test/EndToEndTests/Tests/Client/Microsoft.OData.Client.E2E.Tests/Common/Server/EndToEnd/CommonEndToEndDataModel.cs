@@ -94,7 +94,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
 
     public class Message
     {
+        [EfKey]
         public int MessageId { get; set; }
+        [EfKey]
         public string? FromUsername { get; set; }
         public string? ToUsername { get; set; }
         public DateTimeOffset Sent { get; set; }

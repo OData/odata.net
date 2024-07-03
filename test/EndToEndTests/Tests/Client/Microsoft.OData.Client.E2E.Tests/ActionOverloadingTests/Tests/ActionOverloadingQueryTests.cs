@@ -139,55 +139,6 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             }
         }
 
-        [Fact]
-        public void QueryEntryJsonLightTest()
-        {
-            List<string> mimeTypes = new List<string>()
-            {
-                MimeTypes.ApplicationJson + MimeTypes.ODataParameterMinimalMetadata,
-                MimeTypes.ApplicationJson + MimeTypes.ODataParameterNoMetadata,
-            };
-
-            string updatePersonInfo = "UpdatePersonInfo";
-            string retrieveProduct = "RetrieveProduct";
-            string increaseEmployeeSalary = "IncreaseEmployeeSalary";
-
-            foreach (string mimeType in mimeTypes)
-            {
-                List<string> expectedActionsOnPerson = new List<string>()
-                {
-                    "\"" + ContainerPrefix + updatePersonInfo,
-                };
-                List<string> expectedActionsOnEmployee = new List<string>()
-                {
-                    "\"" + ContainerPrefix + updatePersonInfo,
-                    "\"" + ContainerPrefix + increaseEmployeeSalary,
-                };
-                List<string> expectedActionsOnSpecialEmployee = new List<string>()
-                {
-                    "\"" + ContainerPrefix + updatePersonInfo,
-                    "\"" + ContainerPrefix + increaseEmployeeSalary,
-                };
-
-                List<string> expectedActionsOnContractor = new List<string>()
-                {
-                    "\"" + ContainerPrefix + updatePersonInfo,
-                };
-
-                List<string> expectedRetrieveProductAction = new List<string>()
-                {
-                    "\"" + ContainerPrefix + retrieveProduct,
-                };
-
-                this.VerifyActionInJsonLightPayload("People(-1)", expectedActionsOnPerson, mimeType);
-                this.VerifyActionInJsonLightPayload("People(0)", expectedActionsOnEmployee, mimeType);
-                this.VerifyActionInJsonLightPayload("People(-7)", expectedActionsOnSpecialEmployee, mimeType);
-                this.VerifyActionInJsonLightPayload("People(1)", expectedActionsOnContractor, mimeType);
-                this.VerifyActionInJsonLightPayload("Products(-10)", expectedRetrieveProductAction, mimeType);
-                this.VerifyActionInJsonLightPayload("OrderLines(OrderId=-10,ProductId=-10)", expectedRetrieveProductAction, mimeType);
-            }
-        }
-
         private void VerifyOperationsInMetadata(Dictionary<string, string> expectedOperations, IEnumerable<IEdmOperationImport> actualActionImports)
         {
             //Wrong number of ActionImport

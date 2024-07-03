@@ -975,6 +975,12 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 if (loginDictionary.TryGetValue(message.FromUsername, out var senderLogin))
                 {
                     message.Sender = senderLogin;
+
+                    if (senderLogin.SentMessages == null)
+                    {
+                        senderLogin.SentMessages = new List<Message>();
+                    }
+
                     senderLogin.SentMessages.Add(message);
                 }
             }
