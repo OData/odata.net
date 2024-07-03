@@ -753,10 +753,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_MaxLength, CsdlConstants.Value_Max, EdmValueWriter.StringAsXml);
             }
-            else
-            {
-                return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_MaxLength, reference.MaxLength, EdmValueWriter.IntAsXml);
-            }
+
+            return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_MaxLength, reference.MaxLength, EdmValueWriter.IntAsXml);
         }
 
         /// <summary>
@@ -812,7 +810,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeographySrid, SridAsXml);
             }
-            else if (reference.IsGeometry())
+            
+            if (reference.IsGeometry())
             {
                 return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeometrySrid, SridAsXml);
             }
