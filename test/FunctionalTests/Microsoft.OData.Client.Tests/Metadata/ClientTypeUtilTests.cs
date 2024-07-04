@@ -87,9 +87,11 @@ namespace Microsoft.OData.Client.Tests.Metadata
 
             //Act
             var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            var key = keyProperties.Single(k => k.Name == "EmpType");
 
             //Assert
-            Assert.Equal("EmpType", keyProperties.Single(k => k.PropertyType == typeof(EmployeeType)).Name);
+            Assert.True(key.PropertyType.IsEnum());
+            Assert.True(key.PropertyType == typeof(EmployeeType));
         }
 
         [Fact]
@@ -101,21 +103,12 @@ namespace Microsoft.OData.Client.Tests.Metadata
             //Act
             var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
 
+            var empNumKey = keyProperties.Single(k => k.Name == "EmpNumber");
+            var deptNumKey = keyProperties.Single(k => k.Name == "DeptNumber");
+
             //Assert
-            foreach (var keyProperty in keyProperties)
-            {
-                if (PrimitiveType.IsKnownType(keyProperty.PropertyType))
-                {
-                    if (keyProperty.PropertyType == typeof(int))
-                    {
-                        Assert.Equal("EmpNumber", keyProperty.Name);
-                    }
-                    else if (keyProperty.PropertyType == typeof(string))
-                    {
-                        Assert.Equal("DeptNumber", keyProperty.Name);
-                    }
-                }
-            }
+            Assert.True(PrimitiveType.IsKnownType(empNumKey.PropertyType) && empNumKey.PropertyType == typeof(int));
+            Assert.True(PrimitiveType.IsKnownType(deptNumKey.PropertyType) && deptNumKey.PropertyType == typeof(string));
         }
 
         [Fact]
@@ -126,9 +119,11 @@ namespace Microsoft.OData.Client.Tests.Metadata
 
             //Act
             var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            var key = keyProperties.Single(k => k.Name == "NullableId");
 
             //Assert
-            Assert.Equal("NullableId", keyProperties.Single(k => k.PropertyType == typeof(System.Nullable<int>)).Name);
+            Assert.True(key.PropertyType.IsGenericType);
+            Assert.True(key.PropertyType == typeof(System.Nullable<int>));
         }
 
         public class Person
