@@ -118,16 +118,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteMetadataDocumentAsync()
+        internal override async Task WriteMetadataDocumentAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteMetadataDocumentImplementation();
-                    return this.FlushAsync();
-                });
+            await this.WriteMetadataDocumentImplementationAsync().ConfigureAwait(false);
+            await this.FlushAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -277,6 +273,30 @@ namespace Microsoft.OData
             }
 
             if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, writerSettings, out errors))
+            {
+                Debug.Assert(errors != null, "errors != null");
+
+                StringBuilder builder = new StringBuilder();
+                foreach (EdmError error in errors)
+                {
+                    builder.AppendLine(error.ToString());
+                }
+
+                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+            }
+        }
+
+        private async Task WriteMetadataDocumentImplementationAsync()
+        {
+            CsdlXmlWriterSettings writerSettings = new CsdlXmlWriterSettings();
+
+            if (this.MessageWriterSettings.LibraryCompatibility.HasFlag(ODataLibraryCompatibility.UseLegacyVariableCasing))
+            {
+                writerSettings.LibraryCompatibility |= EdmLibraryCompatibility.UseLegacyVariableCasing;
+            }
+
+            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.xmlWriter, CsdlTarget.OData, writerSettings).ConfigureAwait(false);
+            if (!success)
             {
                 Debug.Assert(errors != null, "errors != null");
 
