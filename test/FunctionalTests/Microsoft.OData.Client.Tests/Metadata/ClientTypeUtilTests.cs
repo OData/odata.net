@@ -7,6 +7,7 @@
 using Microsoft.OData.Client.Metadata;
 using System;
 using System.Linq;
+using System.Reflection;
 using Xunit;
 
 namespace Microsoft.OData.Client.Tests.Metadata
@@ -70,10 +71,10 @@ namespace Microsoft.OData.Client.Tests.Metadata
             //Arrange
             Type employee = typeof(Employee);
 
-            int expectedNumberOfKeyProperties = 4; // 2 Primitive Known Types, 1 Enum Type, 1 Nullable Generic Type
+            int expectedNumberOfKeyProperties = 4; // 2 Primitive Known Types, 1 Enum Type, 1 Enum Nullable Generic Type
 
             //Act
-            var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
 
             //Assert
             Assert.Equal(expectedNumberOfKeyProperties, keyProperties.Length);
@@ -86,8 +87,8 @@ namespace Microsoft.OData.Client.Tests.Metadata
             Type employee = typeof(Employee);
 
             //Act
-            var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
-            var key = keyProperties.Single(k => k.Name == "EmpType");
+            PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            PropertyInfo key = keyProperties.Single(k => k.Name == "EmpType");
 
             //Assert
             Assert.True(key.PropertyType.IsEnum());
@@ -101,10 +102,10 @@ namespace Microsoft.OData.Client.Tests.Metadata
             Type employee = typeof(Employee);
 
             //Act
-            var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
 
-            var empNumKey = keyProperties.Single(k => k.Name == "EmpNumber");
-            var deptNumKey = keyProperties.Single(k => k.Name == "DeptNumber");
+            PropertyInfo empNumKey = keyProperties.Single(k => k.Name == "EmpNumber");
+            PropertyInfo deptNumKey = keyProperties.Single(k => k.Name == "DeptNumber");
 
             //Assert
             Assert.True(PrimitiveType.IsKnownType(empNumKey.PropertyType) && empNumKey.PropertyType == typeof(int));
@@ -112,18 +113,18 @@ namespace Microsoft.OData.Client.Tests.Metadata
         }
 
         [Fact]
-        public void IFTypeProperty_HasNullableGenericTypeKeyAttribute_GetKeyPropertiesOnType_DoesNotThrowException()
+        public void IFTypeProperty_HasNullableGenericTypeKeyAttributeOfTypeEnum_GetKeyPropertiesOnType_DoesNotThrowException()
         {
             // Arrange
             Type employee = typeof(Employee);
 
             //Act
-            var keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
-            var key = keyProperties.Single(k => k.Name == "NullableId");
+            PropertyInfo[] keyProperties = ClientTypeUtil.GetKeyPropertiesOnType(employee);
+            PropertyInfo key = keyProperties.Single(k => k.Name == "NullableEmpType");
 
             //Assert
             Assert.True(key.PropertyType.IsGenericType);
-            Assert.True(key.PropertyType == typeof(System.Nullable<int>));
+            Assert.True(key.PropertyType == typeof(System.Nullable<EmployeeType>));
         }
 
         public class Person
@@ -157,7 +158,7 @@ namespace Microsoft.OData.Client.Tests.Metadata
             public EmployeeType EmpType { get; set; }
 
             [System.ComponentModel.DataAnnotations.Key]
-            public int? NullableId { get; set; }
+            public EmployeeType? NullableEmpType { get; set; }
 
             public string Name { get; set; }
 
