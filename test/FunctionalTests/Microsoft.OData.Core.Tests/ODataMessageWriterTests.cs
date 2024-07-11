@@ -811,7 +811,7 @@ namespace Microsoft.OData.Tests
     }
 
         [Fact]
-        public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl_NoSyncSupport()
+        public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl_WithNoSynchronousIOSupport()
         {
             // Arrange
             IEdmModel edmModel = GetEdmModel();
@@ -849,7 +849,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteMetadataDocument_ComparedWith_WriteMetadataDocumentAsync_ForJsonCsdl()
+        public async Task WriteMetadataDocumentPayload_MustEqual_WriteMetadataDocumentAsyncPayload_ForJsonCsdl()
         {
             // Arrange
             IEdmModel edmModel = GetEdmModel();
@@ -918,7 +918,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl_NoSyncSupport()
+        public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl_WithNoSynchronousIOSupport()
         {
             // Arrange
             IEdmModel edmModel = GetEdmModel();
@@ -950,7 +950,7 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteMetadataDocument_ComparedWith_WriteMetadataDocumentAsync_ForXmlCsdl()
+        public async Task WriteMetadataDocumentPayload_MustEqual_WriteMetadataDocumentAsyncPayload_ForXmlCsdl()
         {
             // Arrange
             IEdmModel edmModel = GetEdmModel();
