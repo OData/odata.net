@@ -50,7 +50,7 @@ namespace Microsoft.OData.Edm.Csdl
             WriteReferenceElements();
 
             // It also MAY contain members for schemas.
-            WriteSchema();
+            WriteSchemas();
 
             WriteCsdlEnd();
         }
@@ -67,7 +67,7 @@ namespace Microsoft.OData.Edm.Csdl
             await WriteReferenceElementsAsync().ConfigureAwait(false);
 
             // It also MAY contain members for schemas.
-            await WriteSchemaAsync().ConfigureAwait(false);
+            await WriteSchemasAsync().ConfigureAwait(false);
 
             await WriteCsdlEndAsync().ConfigureAwait(false);
         }
@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <summary>
         /// Writes Schema Object.
         /// </summary>
-        private void WriteSchema()
+        private void WriteSchemas()
         {
             // A schema is represented as a member of the document object whose name is the schema namespace.
             // Its value is an object that MAY contain the members $Alias and $Annotations.
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// Asynchronously Writes Schema Object
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
-        private async Task WriteSchemaAsync()
+        private async Task WriteSchemasAsync()
         {
             // A schema is represented as a member of the document object whose name is the schema namespace.
             // Its value is an object that MAY contain the members $Alias and $Annotations.
