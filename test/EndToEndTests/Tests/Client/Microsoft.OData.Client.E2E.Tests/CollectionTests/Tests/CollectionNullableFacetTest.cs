@@ -13,7 +13,6 @@ using Microsoft.OData.Client.E2E.TestCommon.Common;
 using Microsoft.OData.Client.E2E.Tests.CollectionTests.Server;
 using Microsoft.OData.Client.E2E.Tests.Common.Server;
 using Microsoft.OData.Edm;
-using System.Reflection;
 using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
@@ -106,7 +105,6 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
                 var requestMessage = new HttpClientRequestMessage(args);
                 requestMessage.SetHeader("Content-Type", mimeType);
                 requestMessage.SetHeader("Accept", mimeType);
-                requestMessage.Method = "PUT";
 
                 try
                 {
@@ -183,8 +181,6 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
 
             return item;
         }
-
         #endregion
-
     }
 }

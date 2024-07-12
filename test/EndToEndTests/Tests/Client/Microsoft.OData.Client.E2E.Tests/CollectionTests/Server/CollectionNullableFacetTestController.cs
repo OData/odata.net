@@ -21,5 +21,25 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
             var rowIndex = DefaultDataSource.Customers;
             return Ok(rowIndex);
         }
+
+        [EnableQuery]
+        [HttpGet("odata/Customers({key})")]
+        public IActionResult GetCustomer([FromRoute] int key)
+        {
+            var customer = DefaultDataSource.Customers.SingleOrDefault(a=>a.PersonID == key);
+            return Ok(customer);
+        }
+
+        [EnableQuery]
+        [HttpPut("odata/Customers({key})")]
+        public IActionResult UpdateCustomers([FromRoute] int key, [FromBody] Customer customer)
+        {
+            var updateCustomer = DefaultDataSource.Customers.FirstOrDefault(a=>a.PersonID == key);
+
+            updateCustomer.Numbers = customer.Numbers;
+            updateCustomer.Emails = customer.Emails;
+
+            return NoContent();
+        }
     }
 }
