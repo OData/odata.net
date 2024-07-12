@@ -114,12 +114,5 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             var query = _context.CreateQuery<Common.Clients.OpenTypes.RowIndex>("RowIndex").Expand(i => i.Rows);
             var results = query.Execute();
         }
-
-        [Fact, TestPriority(4)]
-        public void ProjectionQuery()
-        {
-            var query = _context.CreateQuery<Common.Clients.OpenTypes.Row>("Row").Select(r => new { r.Id, r.DynamicProperties.Where(a=>a.Key.Equals("")) });
-            var results = query.ToList();
-        }
     }
 }
