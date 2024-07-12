@@ -113,7 +113,7 @@ namespace Microsoft.OData.Client.Tests.Metadata
         }
 
         [Fact]
-        public void IFTypeProperty_HasNullableGenericTypeKeyAttributeOfTypeEnum_GetKeyPropertiesOnType_DoesNotThrowException()
+        public void IFTypeProperty_HasNullableGenericTypeKeyAttribute_OfTypeEnum_GetKeyPropertiesOnType_DoesNotThrowException()
         {
             // Arrange
             Type employee = typeof(Employee);
@@ -125,6 +125,24 @@ namespace Microsoft.OData.Client.Tests.Metadata
             //Assert
             Assert.True(key.PropertyType.IsGenericType);
             Assert.True(key.PropertyType == typeof(System.Nullable<EmployeeType>));
+        }
+
+        [Fact]
+        public void IFTypeProperty_HasNullableGenericTypeKey_OfTypeStruct_GetKeyPropertiesOnType_ThrowsException()
+        {
+            // Arrange
+            Type employee = typeof(EmployeeWithNullableStruct);
+
+            PropertyInfo empTypeStructKey = employee.GetProperty("EmpTypeStruct");
+
+            InvalidOperationException expectedException = Error.InvalidOperation(Strings.ClientType_KeysMustBeSimpleTypes(empTypeStructKey.Name, employee.ToString(), empTypeStructKey.PropertyType.FullName));
+
+            //Act
+            InvalidOperationException actualException = Assert.Throws<InvalidOperationException>(() => ClientTypeUtil.GetKeyPropertiesOnType(employee));
+
+            //Assert
+            Assert.NotNull(actualException);
+            Assert.Equal(expectedException.Message, actualException.Message);
         }
 
         public class Person
@@ -162,10 +180,19 @@ namespace Microsoft.OData.Client.Tests.Metadata
 
             public string Name { get; set; }
 
-            public decimal Salary { get; set; }
-
             [System.ComponentModel.DataAnnotations.Schema.ForeignKey("DeptNumber")]
             public Department Department { get; set; }
+        }
+
+        public class EmployeeWithNullableStruct
+        {
+            [System.ComponentModel.DataAnnotations.Key]
+            public int EmpNumber { get; set; }
+
+            [System.ComponentModel.DataAnnotations.Key]
+            public EmployeeTypeStruct? EmpTypeStruct { get; set; }
+
+            public string Name { get; set; }
         }
 
         public enum EmployeeType
@@ -180,6 +207,11 @@ namespace Microsoft.OData.Client.Tests.Metadata
             [System.ComponentModel.DataAnnotations.Key]
             public string DeptId { get; set; }
             public string Name { get; set; }
+        }
+
+        public struct EmployeeTypeStruct
+        {
+            public int EmpTypeId { get; set; }
         }
 
     }
