@@ -8,12 +8,13 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 6/27/2024 12:23:02 PM
-namespace Microsoft.OData.Client.E2E.Tests.ClientTests
+// Generation date: 7/11/2024 7:25:08 PM
+namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes
 {
     /// <summary>
     /// There are no comments for RowSingle in the schema.
     /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("RowSingle")]
     public partial class RowSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<Row>
     {
         /// <summary>
@@ -42,6 +43,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// Id
     /// </KeyProperties>
     [global::Microsoft.OData.Client.Key("Id")]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("Row")]
     public partial class Row : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
         /// <summary>
@@ -59,6 +61,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Id")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Id is required.")]
         public virtual global::System.Guid Id
         {
             get
@@ -77,6 +81,30 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         private global::System.Guid _Id;
         partial void OnIdChanging(global::System.Guid value);
         partial void OnIdChanged();
+        /// <summary>
+        /// There are no comments for Property DynamicProperties in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("DynamicProperties")]
+        [global::Microsoft.OData.Client.ContainerProperty]
+        public virtual global::System.Collections.Generic.IDictionary<string, object> DynamicProperties
+        {
+            get
+            {
+                return this._DynamicProperties;
+            }
+            set
+            {
+                this.OnDynamicPropertiesChanging(value);
+                this._DynamicProperties = value;
+                this.OnDynamicPropertiesChanged();
+                this.OnPropertyChanged("DynamicProperties");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.Collections.Generic.IDictionary<string, object> _DynamicProperties = new global::System.Collections.Generic.Dictionary<string, object>();
+        partial void OnDynamicPropertiesChanging(global::System.Collections.Generic.IDictionary<string, object> value);
+        partial void OnDynamicPropertiesChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
@@ -98,6 +126,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// <summary>
     /// There are no comments for RowIndexSingle in the schema.
     /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("RowIndexSingle")]
     public partial class RowIndexSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<RowIndex>
     {
         /// <summary>
@@ -122,7 +151,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Rows in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> Rows
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Rows")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> Rows
         {
             get
             {
@@ -132,13 +162,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
                 }
                 if ((this._Rows == null))
                 {
-                    this._Rows = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow>(GetPath("Rows"));
+                    this._Rows = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow>(GetPath("Rows"));
                 }
                 return this._Rows;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> _Rows;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> _Rows;
     }
     /// <summary>
     /// There are no comments for RowIndex in the schema.
@@ -147,6 +177,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// Id
     /// </KeyProperties>
     [global::Microsoft.OData.Client.Key("Id")]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("RowIndex")]
     public partial class RowIndex : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
     {
         /// <summary>
@@ -164,6 +195,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Id in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Id")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Id is required.")]
         public virtual int Id
         {
             get
@@ -186,7 +219,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Rows in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> Rows
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Rows")]
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> Rows
         {
             get
             {
@@ -201,9 +235,33 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> _Rows = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnRowsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> _Rows = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnRowsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> value);
         partial void OnRowsChanged();
+        /// <summary>
+        /// There are no comments for Property DynamicProperties in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("DynamicProperties")]
+        [global::Microsoft.OData.Client.ContainerProperty]
+        public virtual global::System.Collections.Generic.IDictionary<string, object> DynamicProperties
+        {
+            get
+            {
+                return this._DynamicProperties;
+            }
+            set
+            {
+                this.OnDynamicPropertiesChanging(value);
+                this._DynamicProperties = value;
+                this.OnDynamicPropertiesChanged();
+                this.OnPropertyChanged("DynamicProperties");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.Collections.Generic.IDictionary<string, object> _DynamicProperties = new global::System.Collections.Generic.Dictionary<string, object>();
+        partial void OnDynamicPropertiesChanging(global::System.Collections.Generic.IDictionary<string, object> value);
+        partial void OnDynamicPropertiesChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
         /// </summary>
@@ -225,6 +283,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// <summary>
     /// There are no comments for ContactDetails in the schema.
     /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("ContactDetails")]
     public partial class ContactDetails : global::System.ComponentModel.INotifyPropertyChanged
     {
         /// <summary>
@@ -272,6 +331,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property FirstContacted in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("FirstContacted")]
         public virtual byte[] FirstContacted
         {
             get
@@ -294,6 +354,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property LastContacted in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("LastContacted")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "LastContacted is required.")]
         public virtual global::System.DateTimeOffset LastContacted
         {
             get
@@ -316,6 +378,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Contacted in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Contacted")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Contacted is required.")]
         public virtual global::System.DateTimeOffset Contacted
         {
             get
@@ -338,6 +402,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property GUID in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GUID")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "GUID is required.")]
         public virtual global::System.Guid GUID
         {
             get
@@ -360,6 +426,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property PreferedContactTime in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PreferedContactTime")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "PreferedContactTime is required.")]
         public virtual global::System.TimeSpan PreferedContactTime
         {
             get
@@ -382,6 +450,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Byte in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Byte")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Byte is required.")]
         public virtual byte Byte
         {
             get
@@ -404,6 +474,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property SignedByte in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SignedByte")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "SignedByte is required.")]
         public virtual sbyte SignedByte
         {
             get
@@ -426,6 +498,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Double in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Double")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Double is required.")]
         public virtual double Double
         {
             get
@@ -448,6 +522,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Single in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Single")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Single is required.")]
         public virtual float Single
         {
             get
@@ -470,6 +546,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Short in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Short")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Short is required.")]
         public virtual short Short
         {
             get
@@ -492,6 +570,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Int in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Int")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Int is required.")]
         public virtual int Int
         {
             get
@@ -514,6 +594,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
         /// There are no comments for Property Long in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Long")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "Long is required.")]
         public virtual long Long
         {
             get
@@ -553,6 +635,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// <summary>
     /// There are no comments for IndexedRowSingle in the schema.
     /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("IndexedRowSingle")]
     public partial class IndexedRowSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<IndexedRow>
     {
         /// <summary>
@@ -581,6 +664,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     /// Id
     /// </KeyProperties>
     [global::Microsoft.OData.Client.Key("Id")]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("IndexedRow")]
     public partial class IndexedRow : Row
     {
         /// <summary>
@@ -601,90 +685,91 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row as global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
-        /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row> source, global::System.Collections.Generic.IDictionary<string, object> keys)
+        /// <param name="_source">source entity set</param>
+        /// <param name="_keys">dictionary with the names and values of keys</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row as global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
+        /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row> source,
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _source,
             global::System.Guid id)
         {
-            global::System.Collections.Generic.IDictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
+            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex as global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
-        /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex> source, global::System.Collections.Generic.IDictionary<string, object> keys)
+        /// <param name="_source">source entity set</param>
+        /// <param name="_keys">dictionary with the names and values of keys</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex as global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
+        /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex> source,
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> _source,
             int id)
         {
-            global::System.Collections.Generic.IDictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
+            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndexSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndexSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow as global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
-        /// <param name="keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> source, global::System.Collections.Generic.IDictionary<string, object> keys)
+        /// <param name="_source">source entity set</param>
+        /// <param name="_keys">dictionary with the names and values of keys</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow as global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle specified by key from an entity set
         /// </summary>
-        /// <param name="source">source entity set</param>
+        /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> source,
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> _source,
             global::System.Guid id)
         {
-            global::System.Collections.Generic.IDictionary<string, object> keys = new global::System.Collections.Generic.Dictionary<string, object>
+            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle(source.Context, source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(source.Context, keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow
         /// </summary>
-        /// <param name="source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle CastToIndexedRow(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row> source)
+        /// <param name="_source">source entity</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle CastToIndexedRow(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow> query = source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRow>();
-            return new global::Microsoft.OData.Client.E2E.Tests.ClientTests.IndexedRowSingle(source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRow>();
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.IndexedRowSingle(_source.Context, query.GetPath(null));
         }
     }
 }
-namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
+namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default
 {
     /// <summary>
     /// There are no comments for Container in the schema.
     /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("Container")]
     public partial class Container : global::Microsoft.OData.Client.DataServiceContext
     {
         /// <summary>
@@ -692,7 +777,16 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         public Container(global::System.Uri serviceRoot) :
-                base(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
+                this(serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion.V4)
+        {
+        }
+
+        /// <summary>
+        /// Initialize a new Container object.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public Container(global::System.Uri serviceRoot, global::Microsoft.OData.Client.ODataProtocolVersion protocolVersion) :
+                base(serviceRoot, protocolVersion)
         {
             this.ResolveName = new global::System.Func<global::System.Type, string>(this.ResolveNameFromType);
             this.ResolveType = new global::System.Func<string, global::System.Type>(this.ResolveTypeFromName);
@@ -709,12 +803,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.ClientTests.Server", "Microsoft.OData.Client.E2E.Tests.ClientTests");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes", "Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes");
             if ((resolvedType != null))
             {
                 return resolvedType;
             }
-            resolvedType = this.DefaultResolveType(typeName, "Default", "Microsoft.OData.Client.E2E.Tests.ClientTests.Default");
+            resolvedType = this.DefaultResolveType(typeName, "Default", "Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -729,13 +823,26 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         protected string ResolveNameFromType(global::System.Type clientType)
         {
-            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.ClientTests", global::System.StringComparison.Ordinal))
+            global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
+            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes", global::System.StringComparison.Ordinal))
             {
-                return string.Concat("Microsoft.OData.Client.E2E.Tests.ClientTests.Server.", clientType.Name);
+                if (originalNameAttribute != null)
+                {
+                    return string.Concat("Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.", originalNameAttribute.OriginalName);
+                }
+                return string.Concat("Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.", clientType.Name);
             }
-            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.ClientTests.Default", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default", global::System.StringComparison.Ordinal))
             {
+                if (originalNameAttribute != null)
+                {
+                    return string.Concat("Default.", originalNameAttribute.OriginalName);
+                }
                 return string.Concat("Default.", clientType.Name);
+            }
+            if (originalNameAttribute != null)
+            {
+                return clientType.Namespace + "." + originalNameAttribute.OriginalName;
             }
             return clientType.FullName;
         }
@@ -743,41 +850,43 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
         /// There are no comments for Row in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row> Row
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Row")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> Row
         {
             get
             {
                 if ((this._Row == null))
                 {
-                    this._Row = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row>("Row");
+                    this._Row = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row>("Row");
                 }
                 return this._Row;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row> _Row;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _Row;
         /// <summary>
         /// There are no comments for RowIndex in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex> RowIndex
+        [global::Microsoft.OData.Client.OriginalNameAttribute("RowIndex")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> RowIndex
         {
             get
             {
                 if ((this._RowIndex == null))
                 {
-                    this._RowIndex = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex>("RowIndex");
+                    this._RowIndex = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex>("RowIndex");
                 }
                 return this._RowIndex;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex> _RowIndex;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> _RowIndex;
         /// <summary>
         /// There are no comments for Row in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToRow(global::Microsoft.OData.Client.E2E.Tests.ClientTests.Row row)
+        public virtual void AddToRow(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row row)
         {
             base.AddObject("Row", row);
         }
@@ -785,7 +894,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
         /// There are no comments for RowIndex in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToRowIndex(global::Microsoft.OData.Client.E2E.Tests.ClientTests.RowIndex rowIndex)
+        public virtual void AddToRowIndex(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex rowIndex)
         {
             base.AddObject("RowIndex", rowIndex);
         }
@@ -796,48 +905,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
 
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-            private const string Edmx = @"<edmx:Edmx Version=""4.0"" xmlns:edmx=""http://docs.oasis-open.org/odata/ns/edmx"">
-  <edmx:DataServices>
-    <Schema Namespace=""Microsoft.OData.Client.E2E.Tests.ClientTests.Server"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <EntityType Name=""Row"" OpenType=""true"">
-        <Key>
-          <PropertyRef Name=""Id"" />
-        </Key>
-        <Property Name=""Id"" Type=""Edm.Guid"" Nullable=""false"" />
-      </EntityType>
-      <EntityType Name=""RowIndex"" OpenType=""true"">
-        <Key>
-          <PropertyRef Name=""Id"" />
-        </Key>
-        <Property Name=""Id"" Type=""Edm.Int32"" Nullable=""false"" />
-        <NavigationProperty Name=""Rows"" Type=""Collection(Microsoft.OData.Client.E2E.Tests.ClientTests.Server.IndexedRow)"" />
-      </EntityType>
-      <ComplexType Name=""ContactDetails"">
-        <Property Name=""FirstContacted"" Type=""Edm.Binary"" />
-        <Property Name=""LastContacted"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
-        <Property Name=""Contacted"" Type=""Edm.DateTimeOffset"" Nullable=""false"" />
-        <Property Name=""GUID"" Type=""Edm.Guid"" Nullable=""false"" />
-        <Property Name=""PreferedContactTime"" Type=""Edm.Duration"" Nullable=""false"" />
-        <Property Name=""Byte"" Type=""Edm.Byte"" Nullable=""false"" />
-        <Property Name=""SignedByte"" Type=""Edm.SByte"" Nullable=""false"" />
-        <Property Name=""Double"" Type=""Edm.Double"" Nullable=""false"" />
-        <Property Name=""Single"" Type=""Edm.Single"" Nullable=""false"" />
-        <Property Name=""Short"" Type=""Edm.Int16"" Nullable=""false"" />
-        <Property Name=""Int"" Type=""Edm.Int32"" Nullable=""false"" />
-        <Property Name=""Long"" Type=""Edm.Int64"" Nullable=""false"" />
-      </ComplexType>
-      <EntityType Name=""IndexedRow"" BaseType=""Microsoft.OData.Client.E2E.Tests.ClientTests.Server.Row"" OpenType=""true"" />
-    </Schema>
-    <Schema Namespace=""Default"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
-      <EntityContainer Name=""Container"">
-        <EntitySet Name=""Row"" EntityType=""Microsoft.OData.Client.E2E.Tests.ClientTests.Server.Row"" />
-        <EntitySet Name=""RowIndex"" EntityType=""Microsoft.OData.Client.E2E.Tests.ClientTests.Server.RowIndex"">
-          <NavigationPropertyBinding Path=""Rows"" Target=""Row"" />
-        </EntitySet>
-      </EntityContainer>
-    </Schema>
-  </edmx:DataServices>
-</edmx:Edmx>";
+            private const string filePath = @"OpenTypesODataServiceCsdl.xml";
 
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
@@ -847,15 +915,15 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             private static global::Microsoft.OData.Edm.IEdmModel LoadModelFromString()
             {
-                global::System.Xml.XmlReader reader = CreateXmlReader(Edmx);
+                global::System.Xml.XmlReader reader = CreateXmlReader();
                 try
                 {
                     global::System.Collections.Generic.IEnumerable<global::Microsoft.OData.Edm.Validation.EdmError> errors;
                     global::Microsoft.OData.Edm.IEdmModel edmModel;
 
-                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, false, out edmModel, out errors))
+                    if (!global::Microsoft.OData.Edm.Csdl.CsdlReader.TryParse(reader, true, out edmModel, out errors))
                     {
-                        global::System.Text.StringBuilder errorMessages = new System.Text.StringBuilder();
+                        global::System.Text.StringBuilder errorMessages = new global::System.Text.StringBuilder();
                         foreach (var error in errors)
                         {
                             errorMessages.Append(error.ErrorMessage);
@@ -877,6 +945,21 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Default
                 return global::System.Xml.XmlReader.Create(new global::System.IO.StringReader(edmxToParse));
             }
 
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+            private static global::System.Xml.XmlReader CreateXmlReader()
+            {
+                try
+                {
+                    var assembly = global::System.Reflection.Assembly.GetExecutingAssembly();
+                    var resourcePath = global::System.Linq.Enumerable.Single(assembly.GetManifestResourceNames(), str => str.EndsWith(filePath));
+                    global::System.IO.Stream stream = assembly.GetManifestResourceStream(resourcePath);
+                    return global::System.Xml.XmlReader.Create(new global::System.IO.StreamReader(stream));
+                }
+                catch (global::System.Xml.XmlException e)
+                {
+                    throw new global::System.Xml.XmlException("Failed to create an XmlReader from the stream. Check if the resource exists.", e);
+                }
+            }
         }
     }
 }

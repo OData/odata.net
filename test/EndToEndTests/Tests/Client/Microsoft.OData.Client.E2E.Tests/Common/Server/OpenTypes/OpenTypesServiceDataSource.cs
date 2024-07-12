@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="OpenTypesServiceClientTestsDataSource.cs" company=".NET Foundation">
+// <copyright file="OpenTypesServiceDataSource.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -7,11 +7,11 @@
 
 using Microsoft.Spatial;
 
-namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
+namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
 {
-    public class OpenTypesServiceClientTestsDataSource
+    public class OpenTypesServiceDataSource
     {
-        static OpenTypesServiceClientTestsDataSource()
+        static OpenTypesServiceDataSource()
         {
             Initialize();
         }

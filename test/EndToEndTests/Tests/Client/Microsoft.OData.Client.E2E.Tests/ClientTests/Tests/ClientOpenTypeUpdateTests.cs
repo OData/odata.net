@@ -9,8 +9,9 @@ using Microsoft.AspNetCore.OData;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
-using Microsoft.OData.Client.E2E.Tests.ClientTests.Default;
 using Microsoft.OData.Client.E2E.Tests.ClientTests.Server;
+using Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
 using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
@@ -26,7 +27,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
                 services.ConfigureControllers(typeof(OpenTypesServiceClientTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
-                    .AddRouteComponents("odata", OpenTypesServiceClientTestsEdmModel.GetEdmModel()));
+                    .AddRouteComponents("odata", OpenTypesServiceEdmModel.GetEdmModel()));
             }
         }
         public ClientOpenTypeUpdateTests(TestWebApplicationFactory<TestsStartup> fixture)
@@ -54,7 +55,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         [Fact]
         public void AddOpenTypeWithUndeclaredProperties()
         {
-            var row = Row.CreateRow(Guid.NewGuid());
+            var row = Common.Clients.OpenTypes.Row.CreateRow(Guid.NewGuid());
 
             _context.Configurations.RequestPipeline.OnEntryStarting(ea => EntryStarting(ea));
 
@@ -72,7 +73,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             // Send up an undeclared property on an Open Type.
             if (entityState == EntityStates.Modified || entityState == EntityStates.Added)
             {
-                if (ea.Entity.GetType() == typeof(Row))
+                if (ea.Entity.GetType() == typeof(Common.Clients.OpenTypes.Row))
                 {
                     // In practice, the data from this undeclared property would probably be stored in a transient property of the partial companion class to the client proxy.
                     var undeclaredOdataProperty = new ODataProperty() { Name = "dynamicPropertyKey", Value = "dynamicPropertyValue" };

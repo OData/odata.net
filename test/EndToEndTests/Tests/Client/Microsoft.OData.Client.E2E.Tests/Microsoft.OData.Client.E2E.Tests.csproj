@@ -9,10 +9,14 @@
 
   <ItemGroup>
     <None Remove="Common\Clients\EndToEnd\OData ServiceCsdl.xml" />
+    <None Remove="Common\Clients\OpenTypes\OpenTypesODataServiceCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
     <EmbeddedResource Include="Common\Clients\EndToEnd\OData ServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Clients\OpenTypes\OpenTypesODataServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>
   </ItemGroup>
@@ -29,11 +33,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Microsoft.OData.Client.E2E.TestCommon\Microsoft.OData.Client.E2E.TestCommon.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="AnnotationTests\Client\" />
-    <Folder Include="AnnotationTests\Tests\" />
   </ItemGroup>
 
 </Project>

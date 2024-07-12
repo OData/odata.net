@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.OData.Formatter;
 using Microsoft.AspNetCore.OData.Query;
 using Microsoft.AspNetCore.OData.Routing.Controllers;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
 
 namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
 {
@@ -18,14 +19,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/Row")]
         public IActionResult Get()
         {
-            var row = OpenTypesServiceClientTestsDataSource.Row;
+            var row = OpenTypesServiceDataSource.Row;
             return Ok(row);
         }
 
         [HttpPatch("odata/Row({key})")]
         public IActionResult Patch([FromODataUri]Guid key, Row row)
         {
-            var rowToUpdate = OpenTypesServiceClientTestsDataSource.Row.SingleOrDefault(a => a.Id == key);
+            var rowToUpdate = OpenTypesServiceDataSource.Row.SingleOrDefault(a => a.Id == key);
             rowToUpdate.Id = row.Id;
             return Ok();
         }
@@ -33,7 +34,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpPost("odata/Row")]
         public IActionResult Post(Row row)
         {
-            OpenTypesServiceClientTestsDataSource.Row.Add(row);
+            OpenTypesServiceDataSource.Row.Add(row);
             return Created(row);
         }
 
@@ -42,7 +43,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         [HttpGet("odata/RowIndex")]
         public IActionResult RowIndex()
         {
-            var rowIndex = OpenTypesServiceClientTestsDataSource.RowIndex;
+            var rowIndex = OpenTypesServiceDataSource.RowIndex;
             return Ok(rowIndex);
         }
     }

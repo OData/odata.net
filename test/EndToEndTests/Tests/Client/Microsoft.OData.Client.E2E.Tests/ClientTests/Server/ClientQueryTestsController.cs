@@ -56,13 +56,6 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         }
 
         [EnableQuery]
-        [HttpGet("odata/Logins({key})/SentMessages({MessageId})")]
-        public IActionResult GetLoginSentMessagesId([FromODataUri] string key, [FromODataUri] int MessageId)
-        {
-            return BadRequest();
-        }
-
-        [EnableQuery]
         [HttpGet("odata/Cars")]
         public IActionResult GetCars()
         {
@@ -76,6 +69,38 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Server
         {
             var car = CommonEndToEndDataSource.Cars?.FirstOrDefault(a => a.VIN == key);
             return Ok(car);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/Customers")]
+        public IActionResult GetCustomers()
+        {
+            var customers = CommonEndToEndDataSource.Customers;
+            return Ok(customers);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/Customers/$count")]
+        public IActionResult GetCustomersCount()
+        {
+            var customers = CommonEndToEndDataSource.Customers;
+            return Ok(customers);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/Customers({key})/Orders")]
+        public IActionResult GetCustomersByKey(int key)
+        {
+            var customerOrders = CommonEndToEndDataSource.Customers.SingleOrDefault(a=>a.CustomerId == key).Orders;
+            return Ok(customerOrders);
+        }
+
+        [EnableQuery]
+        [HttpGet("odata/Customers({key})/Orders/$count")]
+        public IActionResult GetCustomersByKeyCount(int key)
+        {
+            var customerOrders = CommonEndToEndDataSource.Customers.SingleOrDefault(a => a.CustomerId == key).Orders;
+            return Ok(customerOrders);
         }
     }
 }

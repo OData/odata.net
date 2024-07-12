@@ -23,6 +23,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             PopulateCars();
             PopulateMessages();
             PopulateLogin_SentMessages();
+            PopulatePageViews();
+            PopulateMappedEntityTypes();
         }
 
         public static IList<AllSpatialTypes>? AllGeoTypesSet { get; private set; }
@@ -34,6 +36,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public static IList<Login>? Logins { get; private set; }
         public static IList<Car>? Cars { get; private set; }
         public static IList<Message>? Messages { get; private set; }
+        public static IList<PageView>? PageViews { get; private set; }
+        public static IList<MappedEntityType>? MappedEntityTypes { get; private set; }
 
         private static void PopulateAllTypesSet()
         {
@@ -501,6 +505,40 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 {
                     CustomerId = -10,
                     Name = "commastartedtotalnormaloffsetsregisteredgroupcelestialexposureconventionsimportcastclass",
+                    PrimaryContactInfo = new ContactDetails
+                    {
+                        EmailBag = new List<string>()
+                        {
+                            "rdstukrvlltteßzi","psgdkmxamznjulzbsohqjytbxhnojbufe","をﾝぺひぼゼせ暦裹я裹ぺあ亜ぞｚァバ畚マﾈぞゼあﾈ弌チァ歹まゼ縷チハ裹亜黑ほゼё歹"
+                        },
+                        AlternativeNames = new List<string>()
+                        {
+                            "グぁマせぺﾈソぁぼソひバたぴソ歹九ﾈボボяポソ畚クяせべ歹珱Я欲タハバミ裹ぼボをｦ歹んひ九ひ匚ぁａ",
+                            "qckrnuruxcbhjfimnsykgfquffobcadpsaocixoeljhspxrhebkudppgndgcrlyvynqhbujrnvyxyymhnroemigogsqulvgallta",
+                            "btsnhqrjqryqzgxducl",
+                            "qbtlssjhunufmzdv",
+                            "ボんЯぜチべゼボボほａ匚ミぼ九ぁひチ珱黑ミんぁタび暦クソソボゾんんあゼぞひタボタぜん弌ひべ匚",
+                            "vicqasfdkxsuyuzspjqunxpyfuhlxfhgfqnlcpdfivqnxqoothnfsbuykfguftgulgldnkkzufssbae",
+                            "九ソミせボぜゾボёａをぜЯまゾタぜタひ縷ダんａバたゼソ",
+                            "ぽマタぁぁ黑ソゼミゼ匚ｚソダマぁァゾぽミａタゾ弌ミゼタそｚぺポせ裹バポハハｦぺチあマ匚ミ",
+                            "hssiißuamtctgqhglmusexyikhcsqctusonubxorssyizhyqpbtbdßjnelxqttkhdalabibuqhiubtßsptrmzelud",
+                            "gbjssllxzzxkmßppyyrhgmoeßizlcmsuqqnvjßudszevtfunflqzqcuubukypßqjcix"
+                        },
+                        ContactAlias = new Aliases()
+                        {
+                            AlternativeNames = new List<string>()
+                            {
+                                "ゼポソソァんマａグぴ九縷亜ぞゼソグバぼダぽママぽポチボソぼぜゾんミぴほダミミ畚珱九ｚべ弌畚タソｚゼソぁび裹ァソマｦひ匚亜ポべポぽマゼたチ裹歹ミポ",
+                                "flzjuisevegjjtmpnssobmdssikhzepsjklnoceuqrßuychauxhdutqcdenvssubqkoqyzxpfmvflbhjs",
+                                "esgmrxddisdvykgttpmizcethjuazqxemuossopssaqpmqdßkayrrocgsxqpo",
+                                "クソ珱べをマんグハひボソソんミソソゼﾝぞたぼｚミ歹ぴ",
+                                "ljrggbaseqsrkelksvhouoscmoilogibae",
+                                "そぜぜママゼミぼゼボべソほあんせひびゼミソ弌ほそタボマチタマソﾈ弌チポ匚まソゾマЯЯたゾ裹あ畚ん弌た珱畚マЯソァ珱ﾈびё九たミミぴぺポマゼダ弌ミマママソボ亜ぺソ匚グ弌グ歹ハま匚そん黑ん",
+                                "ydjfrjbzcgouafasiutdhhgypssyniqlkdtxbclnaplnasjfliqxnmuplznstnqvpyrzdkxkqbtszvguurhllvzziugdsuvl",
+                                "たёタЯяまひぺァ暦ソマポハクタせたひァ暦ｦ九暦ぞぜチ匚欲ゼほ九ぺ畚びぞポボクぴをチチそボソマポんぽミァ弌ァぞぴまミ縷黑ミゼゼｚチミソ暦ゼほ畚ソ匚ﾈёほゼボぴポゼ縷ソチポ裹ｦ縷九ﾝ歹ａ九ソソ"
+                            }
+                        }
+                    }
                 },
                 new Customer
                 {
@@ -560,13 +598,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     Description = "onesusjnzuzrmzhqankkugdrftiukzkzqaggsfdmtvineulehkrbpu",
                     BaseConcurrency = "assrfsssfdtrmdajadchvrqehsszybuiyiußlhmazsuemptziruotkqcyßßp"
                 },
-                new()
+                new DiscontinuedProduct()
                 {
                     ProductId = -9,
                     Description = "kdcuklu",
                     BaseConcurrency = "яァそ珱ｚそ縷ミёボぜЯ歹ミバほポほゼｦ畚クほﾈゼま裹びぴべ歹あダグソびёёんポそミマほソｚ裹ぼん珱べゼ歹ミｚポぜぞソポぺミダ欲弌яソソぽソべバ黑九珱ぞポЯダソゼ"
                 },
-                new()
+                new DiscontinuedProduct()
                 {
                     ProductId = -8,
                     Description = "kelßebrrbesshcnkmhsxokyßetgscprtmiptxyiqnxrohjßuyfegßßmlnejcsmkemgjfrxpqfeffuuqru",
@@ -584,7 +622,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     Description = "expdybhclurfobuyvzmhkgrnrajhamqmkhqpmiypittnp",
                     BaseConcurrency = "uacssmuxummhtezdsnoßssrlbsßloxjsslnnayinxiksspjsssvumgduaapcfvnsseeßgpaxuaabosemß"
                 },
-                new()
+                new DiscontinuedProduct()
                 {
                     ProductId = -5,
                     Description = "uuudqysoiozagpcpumnydpupopsvd",
@@ -596,13 +634,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     Description = "rgdhvcueuidboerbhyvsvjg",
                     BaseConcurrency = "ぽボﾝあび"
                 },
-                new()
+                new DiscontinuedProduct()
                 {
                     ProductId = -3,
                     Description = "ißuhmxavnmlsssssjssagmqjpchjußtkcoaldeyyduarovnxspzsskufxxfltußtxfhgjlksrn",
                     BaseConcurrency = "fvrnsbiußevuqssnuidjbhtluhcydhhjihyasecdnumhdpfxtijßlvfqngmulfvjqqtvussyixßykxhbn"
                 },
-                new()
+                new DiscontinuedProduct()
                 {
                     ProductId = -2,
                     Description = null,
@@ -974,7 +1012,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             {
                 if (loginDictionary.TryGetValue(message.FromUsername, out var senderLogin))
                 {
-                    message.Sender = senderLogin;
+                    //message.Sender = senderLogin;
 
                     if (senderLogin.SentMessages == null)
                     {
@@ -984,6 +1022,127 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     senderLogin.SentMessages.Add(message);
                 }
             }
+        }
+
+        private static void PopulatePageViews()
+        {
+            PageViews = new List<PageView>
+            {
+                new ProductPageView
+                {
+                    PageViewId = -10,
+                    Username = "珱び畚ボぴマせёミソ",
+                    Viewed = new DateTimeOffset(new DateTime(0, DateTimeKind.Unspecified), new TimeSpan(0)),
+                    TimeSpentOnPage = TimeSpan.MinValue,
+                    PageUrl = "マ縷ぴべｚぴびマゼタゾグそチべ黑ダゾｚЯせをぼマポんんあぼん珱ａびゾひダハマﾝ黑マゾソぜマんﾈソゾタミ暦弌暦ポグボゾダボ畚ぜソそマチべボゼポん珱ゾёァバ",
+                    ProductId = -661313570,
+                    ConcurrencyToken = "peohxvziohepefjoogexbxfulemllbfamsmqkxvqtctoßtnntzcßvtmuthyudkpzeeegvurfn"
+                },
+                new PageView
+                {
+                    PageViewId = -9,
+                    Username = "sdppimfqojrgrlmakbmrdlslzjivhaaebqezkaye",
+                    Viewed = new DateTimeOffset(new DateTime(3155378975999999999, DateTimeKind.Unspecified), new TimeSpan(0)),
+                    TimeSpentOnPage = new TimeSpan(-20714019215549),
+                    PageUrl = "exozulicliqpkjdijqoejnlkdlqlizhgdmulvavrmujhfdnnkffjjoik"
+                },
+                new ProductPageView
+                {
+                    PageViewId = -8,
+                    Username = "",
+                    Viewed = new DateTimeOffset(new DateTime(635065154115665324, DateTimeKind.Unspecified), new TimeSpan(-276600000000)),
+                    TimeSpentOnPage = new TimeSpan(-7806705063807),
+                    PageUrl = "kdqßeqpmßdjoedihqsgzlße",
+                    ProductId = 378,
+                    ConcurrencyToken = null
+                },
+                new PageView
+                {
+                    PageViewId = -7,
+                    Username = null,
+                    Viewed = new DateTimeOffset(new DateTime(634890040689875500, DateTimeKind.Unspecified), new TimeSpan(-288000000000)),
+                    TimeSpentOnPage = TimeSpan.MaxValue,
+                    PageUrl = "gcvxypuinhtbovkyceojyptrippdbsnjtpoox"
+                },
+                new PageView
+                {
+                    PageViewId = -6,
+                    Username = "itideuecujovruvleebrbbcxsspvtqptboorftbncyssmgkissvuutnqtsymcfkssfqnsssrnoltylssudsyjyqanxy",
+                    Viewed = new DateTimeOffset(new DateTime(0, DateTimeKind.Unspecified), new TimeSpan(0)),
+                    TimeSpentOnPage = new TimeSpan(-8474227957562),
+                    PageUrl = "ifnfßqmjjsreyessskuqvjxsstusmhdofrbsshqcsstczlbfyußiylßqbsmdhvmdioufhayssseslkhzssqqxaskmvos"
+                },
+                new ProductPageView
+                {
+                    PageViewId = -5,
+                    Username = "qljviysmqrpaf",
+                    Viewed = new DateTimeOffset(new DateTime(634884013562978192, DateTimeKind.Unspecified), new TimeSpan(363600000000)),
+                    TimeSpentOnPage = TimeSpan.Zero,
+                    PageUrl = "チダソグ縷ボゾグぼほ弌ポチ歹ほёЯソミを亜ミ畚ほ匚まチポゾ九",
+                    ProductId = -807373440,
+                    ConcurrencyToken = "racduextfkkejytrmvrbppexymjpijmsmquremß"
+                },
+                new PageView
+                {
+                    PageViewId = -4,
+                    Username = "ssuovuuxaouytejmxufpssssdrjhftßgsstobqßmyjpucejnkttitgpßrmusoskxexsbjt",
+                    Viewed = new DateTimeOffset(new DateTime(634958117802408440, DateTimeKind.Unspecified), new TimeSpan(-504000000000)),
+                    TimeSpentOnPage = new TimeSpan(90138131337590),
+                    PageUrl = "qmqczgskqvdguzsshgborudpshudvtvuassdgmruqcvnopstyedmqzckdalmljpvzjghbkgupgjjdrkopagtkfuakdzgeofb"
+                },
+                new ProductPageView
+                {
+                    PageViewId = -3,
+                    Username = "ysezssyqrvqifmdzbsayuxyesslrmzdbxlhgpetpaixozbhgxd",
+                    Viewed = new DateTimeOffset(new DateTime(272266420241479976, DateTimeKind.Unspecified), new TimeSpan(493200000000)),
+                    TimeSpentOnPage = TimeSpan.MinValue,
+                    PageUrl = "dfrhntnyurvjiasyqyvmouclcehmqqmjnorsorfhshqml",
+                    ProductId = 1881032792,
+                    ConcurrencyToken = "mdjeuulgeckohuydauynjusorzpezhxqkqevcrymtarobhosiooyekdslfgblkhpftqstiadxhuj"
+                },
+                new PageView
+                {
+                    PageViewId = -2,
+                    Username = null,
+                    Viewed = new DateTimeOffset(new DateTime(631990133830009951, DateTimeKind.Unspecified), new TimeSpan(-436800000000)),
+                    TimeSpentOnPage = new TimeSpan(5944435062742720512),
+                    PageUrl = "jnxxxvzlbrbrxssßszsbciebßbih"
+                },
+                new ProductPageView
+                {
+                    PageViewId = -1,
+                    Username = "珱チマチミﾈ九ぞぞａ暦タ珱をバびミ",
+                    Viewed = new DateTimeOffset(new DateTime(3155378975999999999, DateTimeKind.Unspecified), new TimeSpan(0)),
+                    TimeSpentOnPage = new TimeSpan(-15823440477000),
+                    PageUrl = "agffmessdzaea",
+                    ProductId = -2119,
+                    ConcurrencyToken = "ゼぜゼぼ畚ァチぜた黑ぜａクソミボソ欲ボ畚歹ほａぽチびんソﾝボゾほ畚ゼマａ黑ёソびゾ畚ぞЯａぞポａせяタｚ縷裹ぜひびたママёそぜタゼ珱あｦ匚弌ミゼゼソグﾈぜ黑ァゼタググｦぜダクｦまタ九亜ァ九た"
+                }
+            };
+        }
+
+        private static void PopulateMappedEntityTypes()
+        {
+            MappedEntityTypes = new List<MappedEntityType>()
+            {
+                new MappedEntityType()
+                {
+                    Id = -10,
+                    Href = "offsetrefusepowerpersonallocalmappedstyleinitobj",
+                    Title = "conditionaltodaydecisionconfigurationhexinteger",
+                    HrefLang = "platformdocumentsdecryptorsizeshmacweekoncefirst",
+                    Type = "erastobjcustscreensharebindingmismatchcodesmacrobrowsablecriteriamapfeatureinequalityiidpacking",
+                    Length = 13,
+                    BagOfDecimals = new List<decimal>()
+                    {
+                        3153.09837524813m,
+                        -9722.00954692332m,
+                        -0.589368370856242m,
+                        -28792308624934300000000000000m,
+                        -79228162514264337593543950335m
+                    }
+                }
+            };
         }
     }
 }
