@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTests
+    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTest
     {
 
         [Fact]
