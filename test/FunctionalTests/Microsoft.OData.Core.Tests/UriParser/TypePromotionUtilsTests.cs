@@ -337,7 +337,7 @@ namespace Microsoft.OData.Tests.UriParser
             SingleValueNode rightNode = new SingleValuePropertyAccessNode(new ConstantNode(null)/*parent*/, new EdmStructuralProperty(new EdmEntityType("MyNamespace", "MyEntityType"), "myPropertyName", right));
             
             // Act
-            var result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
+            bool result = TypePromotionUtils.PromoteOperandTypes(BinaryOperatorKind.Equal, leftNode, rightNode, out left, out right, new TypeFacetsPromotionRules());
 
             // Assert
             Assert.True(result);
