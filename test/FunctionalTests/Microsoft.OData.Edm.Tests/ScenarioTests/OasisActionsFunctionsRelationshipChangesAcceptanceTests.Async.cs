@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="OasisActionsFunctionsRelationshipChangesAcceptanceTests.cs" company="Microsoft">
+// <copyright file="OasisActionsFunctionsRelationshipChangesAcceptanceTests.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -13,7 +13,7 @@ using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.ScenarioTests
 {
-    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTest
+    public partial class OasisActionsFunctionsRelationshipChangesAcceptanceTests
     {
 
         [Fact]
