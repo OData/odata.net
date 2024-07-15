@@ -94,7 +94,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void IfTypePromotionNeededForEnum_SourceIsIntegralMemberValueInStringAndTargetIsEnumType_ConstantNodeIsCreated()
         {
             // Arrange
-            var enumValue = "5";
+            string enumValue = "5";
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
@@ -125,7 +125,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void IfTypePromotionNeededForEnum_SourceIsIntegerExceedingDefinedIntegralLimits_ValueIsNotValidEnumConstantExceptionIsThrown()
         {
             // Arrange
-            var enumValue = 10;
+            int enumValue = 10;
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
@@ -142,7 +142,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // Arrange
             float[] floatValues = new float[] { 1.0F, 3.3F, 5.0F, 6.0F };
 
-            foreach (var enumValue in floatValues)
+            foreach (float enumValue in floatValues)
             {
                 SingleValueNode source = new ConstantNode(enumValue);
                 IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
@@ -161,7 +161,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // Arrange
             string[] floatValues = new string[] { "1.0", "3.1", "5.5", "7.0" };
 
-            foreach (var enumValue in floatValues)
+            foreach (string enumValue in floatValues)
             {
                 SingleValueNode source = new ConstantNode(enumValue);
                 IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
@@ -178,7 +178,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             get
             {
-                var weekDayType = new EdmEnumType("NS", "WeekDay");
+                EdmEnumType weekDayType = new EdmEnumType("NS", "WeekDay");
                 weekDayType.AddMember("Monday", new EdmEnumMemberValue(1L));
                 weekDayType.AddMember("Tuesday", new EdmEnumMemberValue(2L));
                 weekDayType.AddMember("Wednesday", new EdmEnumMemberValue(3L));

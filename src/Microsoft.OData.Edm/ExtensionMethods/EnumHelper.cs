@@ -136,7 +136,7 @@ namespace Microsoft.OData.Edm
         public static bool TryParseEnum(this IEdmEnumType enumType, long value, out IEdmEnumMember enumMember)
         {
             enumMember = null;
-            foreach (var member in enumType.Members)
+            foreach (IEdmEnumMember member in enumType.Members)
             {
                 if (member.Value.Value == value)
                 {
@@ -157,7 +157,7 @@ namespace Microsoft.OData.Edm
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
         public static bool EnumMemberExists(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
         {
-            foreach (var member in enumType.Members)
+            foreach (IEdmEnumMember member in enumType.Members)
             {
                 if (string.Equals(member.Name, memberName, comparison))
                 {
