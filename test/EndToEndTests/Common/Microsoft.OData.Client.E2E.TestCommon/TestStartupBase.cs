@@ -7,6 +7,7 @@
 
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.OData;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Microsoft.OData.Client.E2E.TestCommon
@@ -24,6 +25,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon
         {
             ConfigureBeforeRouting(app, env);
 
+            app.UseODataBatching();
             app.UseRouting();
 
             ConfigureInRouting(app, env);

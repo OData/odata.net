@@ -8,9 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Common\Clients\EndToEnd\OData ServiceCsdl.xml" />
+    <None Remove="Common\Clients\OpenTypes\OpenTypesODataServiceCsdl.xml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Common\Clients\EndToEnd\OData ServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Common\Clients\OpenTypes\OpenTypesODataServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.6" />
     <PackageReference Include="Microsoft.AspNetCore.OData" Version="9.0.0-rc.1" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.10.0" />
     <PackageReference Include="xunit" Version="2.8.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.8.1">
       <PrivateAssets>all</PrivateAssets>
@@ -19,7 +32,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\src\Microsoft.OData.Client\Microsoft.OData.Client.csproj" />
+    <ProjectReference Include="..\..\..\Common\Microsoft.OData.Client.E2E.TestCommon\Microsoft.OData.Client.E2E.TestCommon.csproj" />
   </ItemGroup>
 
 </Project>
