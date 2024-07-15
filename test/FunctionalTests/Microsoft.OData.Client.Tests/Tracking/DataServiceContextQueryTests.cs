@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="DataServiceContextDataSelectTests.cs" company="Microsoft">
+// <copyright file="DataServiceContextQueryTests.cs" company="Microsoft">
 // Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -18,6 +18,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
 {
     public class DataServiceContextQueryTests
     {
+        private const string ServiceRoot = "http://localhost:8007";
         private readonly Container _defaultContext;
 
         #region Test Edmx
@@ -66,7 +67,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
         public DataServiceContextQueryTests()
         {
-            var uri = new Uri("http://localhost:8000");
+            var uri = new Uri(ServiceRoot);
             _defaultContext = new Container(uri);
         }
 
@@ -75,7 +76,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         {
             // Arrange
             string response = @"{
-    ""@odata.context"": ""http://localhost:5128/$metadata#Employees"",
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
     ""value"": [
         {
             ""EmpNumber"": 1,
@@ -91,7 +92,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "http://localhost:8000/employees");
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "employees");
 
             // Act
             IEnumerable<Employee> employees = await _defaultContext.Employees.ExecuteAsync();
@@ -100,8 +101,35 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal(2, employees.Count());
         }
 
-        private void SetupContextWithRequestPipeline(DataServiceContext[] contexts, string response, string location)
+        [Fact]
+        public void SelectSpecificEntity_WithEnumAsKey_DoNotThrowException()
         {
+            // Arrange
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Employee Two""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "employees");
+
+            // Act
+            Employee employee = _defaultContext.Employees.Where(e => e.EmpNumber == 8).First();
+
+            // Assert
+            Assert.Equal(EmployeeType.PartTime, employee.EmpType);
+            Assert.Equal("Employee Two", employee.Name);
+        }
+
+        private void SetupContextWithRequestPipeline(DataServiceContext[] contexts, string response, string path)
+        {
+            string location = $"{ServiceRoot}/{path}";
+
             foreach (var context in contexts)
             {
                 context.Configurations.RequestPipeline.OnMessageCreating =
