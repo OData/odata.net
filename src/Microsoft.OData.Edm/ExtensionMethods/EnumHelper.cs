@@ -127,6 +127,48 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Parse an enum integral value to enum member.
+        /// </summary>
+        /// <param name="enumType">edm enum type</param>
+        /// <param name="value">input integral value.</param>
+        /// <param name="enumMember">parsed result.</param>
+        /// <returns>true if parse succeeds, false if parse fails.</returns>
+        public static bool TryParseEnum(this IEdmEnumType enumType, long value, out IEdmEnumMember enumMember)
+        {
+            enumMember = null;
+            foreach (var member in enumType.Members)
+            {
+                if (member.Value.Value == value)
+                {
+                    enumMember = member;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
+        /// Checks if the given member name exists in the enum type.
+        /// </summary>
+        /// <param name="enumType">The enum type.</param>
+        /// <param name="memberName">The member name to check.</param>
+        /// <param name="comparison">The comparison type to use for string comparison. Default is Ordinal.</param>
+        /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
+        public static bool EnumMemberExists(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
+        {
+            foreach (var member in enumType.Members)
+            {
+                if (string.Equals(member.Name, memberName, comparison))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Convert enum int value to string
         /// </summary>
         /// <param name="type">edm enum type reference</param>

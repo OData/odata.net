@@ -1,0 +1,2 @@
+static Microsoft.OData.Edm.EnumHelper.EnumMemberExists(this Microsoft.OData.Edm.IEdmEnumType enumType, string memberName, System.StringComparison comparison = System.StringComparison.Ordinal) -> bool
+static Microsoft.OData.Edm.EnumHelper.TryParseEnum(this Microsoft.OData.Edm.IEdmEnumType enumType, long value, out Microsoft.OData.Edm.IEdmEnumMember enumMember) -> bool

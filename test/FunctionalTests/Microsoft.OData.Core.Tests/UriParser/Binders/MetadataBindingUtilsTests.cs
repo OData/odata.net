@@ -53,20 +53,41 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         }
 
         [Fact]
-        public void IfTypePromotionNeeded_SourceIsIntegralMemberValueAndTargetIsEnum_ConstantNodeIsCreated()
+        public void IfTypePromotionNeeded_SourceIsIntegerMemberValueAndTargetIsEnum_ConstantNodeIsCreated()
         {
             // Arrange
-            var enumValue = 3;
+            int enumValue = 3;
+            bool success = WeekDayEmumType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
             // Act
-            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
 
             // Assert
-            var member = WeekDayEmumType.Members.First(m => m.Value.Value == enumValue);
-            result.ShouldBeEnumNode(WeekDayEmumType, member.Name);
+            Assert.True(success);
+            result.ShouldBeEnumNode(WeekDayEmumType, expectedMember.Name);
+            Assert.Equal(expectedMember.Name, result.Value.ToString());
+        }
+
+        [Fact]
+        public void IfTypePromotionNeeded_SourceIsLongMemberValueAndTargetIsEnum_ConstantNodeIsCreated()
+        {
+            // Arrange
+            long enumValue = 7L;
+            bool success = WeekDayEmumType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
+
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
+
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
+
+            // Assert
+            Assert.True(success);
+            result.ShouldBeEnumNode(WeekDayEmumType, expectedMember.Name);
+            Assert.Equal(expectedMember.Name, result.Value.ToString());
         }
 
         [Fact]
@@ -78,10 +99,10 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
             // Act
-            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+            SingleValueNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
 
             // Assert
-            var member = WeekDayEmumType.Members.First(m => m.Value.Value == int.Parse(enumValue));
+            IEdmEnumMember member = WeekDayEmumType.Members.First(m => m.Value.Value == int.Parse(enumValue));
             result.ShouldBeEnumNode(WeekDayEmumType, member.Name);
         }
 
@@ -89,19 +110,19 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         public void IfTypePromotionNeededForEnum_SourceIsMemberName_ConstantNodeIsCreated()
         {
             // Arrange
-            var enumValue = "Monday";
+            string enumValue = "Monday";
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
             // Act
-            var result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+            SingleValueNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
 
             // Assert
             result.ShouldBeEnumNode(WeekDayEmumType, enumValue);
         }
 
         [Fact]
-        public void IfTypePromotionNeededForEnum_SourceIsIntegerExceedingDefinedIntegralLimits_ErrorIsThrown()
+        public void IfTypePromotionNeededForEnum_SourceIsIntegerExceedingDefinedIntegralLimits_ValueIsNotValidEnumConstantExceptionIsThrown()
         {
             // Arrange
             var enumValue = 10;
@@ -113,6 +134,44 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
             // Assert
             convertIfNeeded.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue.ToString()));
+        }
+
+        [Fact]
+        public void IfTypePromotionNeeded_SourceIsFloatMemberValuesAndTargetIsEnum_CannotConvertToTypeExceptionIsThrown()
+        {
+            // Arrange
+            float[] floatValues = new float[] { 1.0F, 3.3F, 5.0F, 6.0F };
+
+            foreach (var enumValue in floatValues)
+            {
+                SingleValueNode source = new ConstantNode(enumValue);
+                IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
+
+                // Act
+                Action convertIfNeeded = () => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+
+                // Assert
+                convertIfNeeded.Throws<ODataException>(ODataErrorStrings.MetadataBinder_CannotConvertToType(source.TypeReference.FullName(), targetTypeReference.FullName()));
+            }
+        }
+
+        [Fact]
+        public void IfTypePromotionNeeded_SourceIsFloatMemberValuesInStringAndTargetIsEnum_ValueIsNotValidEnumConstantExceptionIsThrown()
+        {
+            // Arrange
+            string[] floatValues = new string[] { "1.0", "3.1", "5.5", "7.0" };
+
+            foreach (var enumValue in floatValues)
+            {
+                SingleValueNode source = new ConstantNode(enumValue);
+                IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
+
+                // Act
+                Action convertIfNeeded = () => MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+
+                // Assert
+                convertIfNeeded.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue));
+            }
         }
 
         private static EdmEnumType WeekDayEmumType
@@ -130,6 +189,17 @@ namespace Microsoft.OData.Tests.UriParser.Binders
 
                 return weekDayType;
             }
+        }
+
+        private enum WeekDay
+        {
+            Monday = 1,
+            Tuesday = 2,
+            Wednesday = 3,
+            Thursday = 4,
+            Friday = 5,
+            Saturday = 6,
+            Sunday = 7
         }
         #endregion
     }

@@ -1638,7 +1638,17 @@ public sealed class Microsoft.OData.Edm.EnumHelper {
     [
     ExtensionAttribute(),
     ]
+    public static bool EnumMemberExists (Microsoft.OData.Edm.IEdmEnumType enumType, string memberName, params System.StringComparison comparison)
+
+    [
+    ExtensionAttribute(),
+    ]
     public static string ToStringLiteral (Microsoft.OData.Edm.IEdmEnumTypeReference type, long value)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static bool TryParseEnum (Microsoft.OData.Edm.IEdmEnumType enumType, long value, out Microsoft.OData.Edm.IEdmEnumMember& enumMember)
 
     [
     ExtensionAttribute(),
