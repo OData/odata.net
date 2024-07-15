@@ -122,8 +122,8 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
                     // verify the update
                     Assert.Equal(204, responseMessage.StatusCode);
                     ODataResource updatedProduct = this.QueryEntityItem("Customers(1)") as ODataResource;
-                    ODataCollectionValue testCollection = updatedProduct.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
-                    ODataCollectionValue expectValue = personToAdd.Properties.Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+                    ODataCollectionValue testCollection = updatedProduct.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
+                    ODataCollectionValue expectValue = personToAdd.Properties.OfType<ODataProperty>().Single(p => p.Name == testProperty).Value as ODataCollectionValue;
                     var actIter = testCollection.Items.GetEnumerator();
                     var expIter = expectValue.Items.GetEnumerator();
                     while ((actIter.MoveNext()) && (expIter.MoveNext()))

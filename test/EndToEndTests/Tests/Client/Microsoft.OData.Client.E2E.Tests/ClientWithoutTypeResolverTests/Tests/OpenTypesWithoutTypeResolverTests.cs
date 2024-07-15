@@ -39,10 +39,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
             _context = new Container(_baseUri);
             _context.HttpClientFactory = HttpClientFactory;
 
-            _context.ResolveName = this.typeNameResolver;
-
             _context.AddObject("Row", row1);
             _context.AddObject("Row", row2);
+
+            _context.ResolveName = this.typeNameResolver;
 
             var rowIndex = new Common.Clients.OpenTypes.RowIndex
             {
@@ -54,12 +54,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
                 }
             };
 
-           // rowIndex.Rows.Add(row3);
-          //  _context.AddObject("RowIndex", rowIndex);
-
             _context.SaveChanges(SaveChangesOptions.BatchWithSingleChangeset);
         }
 
+        #region Test Data
         private Common.Clients.OpenTypes.Row row1 = new Common.Clients.OpenTypes.Row
         {
             Id = Guid.NewGuid(),
@@ -73,7 +71,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
                 { "OpenGuid", Guid.NewGuid() },
                 { "OpenInt16", Int16.MaxValue },
                 { "OpenInt64", Int64.MaxValue },
-                { "OpenString", "hello world" },
+                { "OpenString","hello world" },
                 { "OpenTime", TimeSpan.MaxValue }
             }
         };
@@ -86,12 +84,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
                 { "OpenBoolean", null },
                 { "OpenDateTimeOffset", null },
                 { "OpenDecimal", null },
-                { "OpenDouble", null},
+                { "OpenDouble", null },
                 { "OpenFloat", null },
                 { "OpenGuid", null },
                 { "OpenInt16", null },
                 { "OpenInt64", null },
-                { "OpenString", null },
+                { "OpenString",null },
                 { "OpenTime", null }
             }
         };
@@ -104,6 +102,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
                 { "OpenDouble", double.NaN }
             }
         };
+        #endregion
 
         private const int TestRowIndexId = 999;
         private Func<Type, string> typeNameResolver;
@@ -113,6 +112,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Tests
         {
             var query = _context.CreateQuery<Common.Clients.OpenTypes.RowIndex>("RowIndex").Expand(i => i.Rows);
             var results = query.Execute();
+        }
+
+        [Fact, TestPriority(4)]
+        public void ProjectionQuery()
+        {
+            var query = _context.CreateQuery<Common.Clients.OpenTypes.Row>("Row").Select(r => new { r.Id });
+            var results = query.ToList();
         }
     }
 }

@@ -36,5 +36,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Server
             OpenTypesServiceDataSource.Row.Add(row);
             return Created(row);
         }
+
+        [HttpGet("odata/Row/Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.IndexedRow")]
+        public IActionResult Get()
+        {
+            return Ok(OpenTypesServiceDataSource.Row.OfType<IndexedRow>().ToList());
+        }
     }
 }

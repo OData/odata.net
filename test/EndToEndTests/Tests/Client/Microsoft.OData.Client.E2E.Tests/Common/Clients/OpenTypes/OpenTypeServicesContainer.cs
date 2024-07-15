@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 7/11/2024 7:25:08 PM
+// Generation date: 7/15/2024 12:05:19 PM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes
 {
     /// <summary>
