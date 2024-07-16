@@ -75,6 +75,8 @@ namespace Microsoft.OData.Client.Tests.Tracking
         public async Task SelectEntities_WithEnumAsKey_DoNotThrowException()
         {
             // Arrange
+            var expectedUri = $"{ServiceRoot}/Employees";
+
             string response = @"{
     ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
     ""value"": [
@@ -92,19 +94,23 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "employees");
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
 
             // Act
-            IEnumerable<Employee> employees = await _defaultContext.Employees.ExecuteAsync();
+            DataServiceQuery<Employee> query = _defaultContext.Employees;
+            IEnumerable<Employee> employees = await query.ExecuteAsync();
 
             // Assert
+            Assert.Equal(expectedUri, query.ToString());
             Assert.Equal(2, employees.Count());
         }
 
         [Fact]
-        public void SelectSpecificEntity_WithEnumAsKey_DoNotThrowException()
+        public void UseWhereToFilterByEmployeeNumberKey_WithEnumAsKey_DoNotThrowException()
         {
             // Arrange
+            string expectedUri = $"{ServiceRoot}/Employees?$filter=EmpNumber eq 8";
+
             string response = @"{
     ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
     ""value"": [
@@ -116,14 +122,76 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "employees");
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
 
             // Act
-            Employee employee = _defaultContext.Employees.Where(e => e.EmpNumber == 8).First();
+            IQueryable<Employee> query = _defaultContext.Employees.Where(e => e.EmpNumber == 8);
+            Employee employee = query.First();
 
             // Assert
+            Assert.Equal(expectedUri, query.ToString());
             Assert.Equal(EmployeeType.PartTime, employee.EmpType);
             Assert.Equal("Employee Two", employee.Name);
+        }
+
+        [Fact]
+        public void UseWhereToFilterByEnumKey_WithEnumAsKey_DoNotThrowException()
+        {
+            // Arrange
+            string expectedUri = $"{ServiceRoot}/Employees?$filter=EmpType eq Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime'";
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Employee 45""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+
+            // Act
+            var query = _defaultContext.Employees.Where(e => e.EmpType == EmployeeType.PartTime);
+            Employee employee = query.First();
+
+            // Assert
+            Assert.Equal(expectedUri, query.ToString());
+            Assert.Equal(8, employee.EmpNumber);
+            Assert.Equal(EmployeeType.PartTime, employee.EmpType);
+        }
+
+        [Fact]
+        public void UseByKeyToFilterByCompositeKeys_WithEnumAsKey_DoNotThrowException()
+        {
+            // Arrange
+            string expectedUri = $"{ServiceRoot}/Employees(EmpNumber=8,EmpType=Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime',OrgId=1)";
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 8,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Employee 24""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+
+            // Act
+            EmployeeSingle query = _defaultContext.Employees.ByKey(
+                new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
+
+            Employee employee = query.GetValue();
+
+            // Assert
+            Assert.Equal(expectedUri, query.Query.ToString());
+            Assert.Equal("Employee 24", employee.Name);
+            Assert.Equal(EmployeeType.PartTime, employee.EmpType);
         }
 
         private void SetupContextWithRequestPipeline(DataServiceContext[] contexts, string response, string path)
@@ -185,5 +253,22 @@ namespace Microsoft.OData.Client.Tests.Tracking
         None = 1,
         FullTime = 2,
         PartTime = 3
+    }
+
+    public partial class EmployeeSingle : DataServiceQuerySingle<Employee>
+    {
+        /// <summary>
+        /// Initialize a new EmployeeSingle object.
+        /// </summary>
+        public EmployeeSingle(DataServiceContext context, string path)
+            : base(context, path) { }
+    }
+
+    public static class ExtensionMethods
+    {
+        public static EmployeeSingle ByKey(this DataServiceQuery<Employee> _source, IDictionary<string, object> _keys)
+        {
+            return new EmployeeSingle(_source.Context, _source.GetKeyPath(Serializer.GetKeyString(_source.Context, _keys)));
+        }
     }
 }
