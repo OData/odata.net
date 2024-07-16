@@ -87,7 +87,45 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             // Assert
             Assert.True(success);
             result.ShouldBeEnumNode(WeekDayEmumType, expectedMember.Name);
-            Assert.Equal(expectedMember.Name, result.Value.ToString());
+            Assert.Equal(expectedMember.Name, result.Value.ToString()); // Compare the enum member name
+        }
+
+        [Fact]
+        public void IfTypePromotionNeeded_SourceIsHugeLongMemberValueAndTargetIsEnum_ConstantNodeIsCreated()
+        {
+            // Arrange
+            long enumValue = 2147483657; // ((long)int.MaxValue + 10L).ToString()
+            bool success = EmployeeType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
+
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeType, false);
+
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
+
+            // Assert
+            Assert.True(success);
+            result.ShouldBeEnumNode(EmployeeType, expectedMember.Name);
+            Assert.Equal(expectedMember.Name, result.Value.ToString()); // Compare the enum member name
+        }
+
+        [Fact]
+        public void IfTypePromotionNeeded_SourceIsLongAsStringMemberValueAndTargetIsEnum_ConstantNodeIsCreated()
+        {
+            // Arrange
+            string enumValue = "4294967294"; // ((long)int.MaxValue + (long)int.MaxValue).ToString();
+            bool success = EmployeeType.TryParseEnum(long.Parse(enumValue), out IEdmEnumMember expectedMember);
+
+            SingleValueNode source = new ConstantNode(enumValue);
+            IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeType, false);
+
+            // Act
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
+
+            // Assert
+            Assert.True(success);
+            result.ShouldBeEnumNode(EmployeeType, expectedMember.Name);
+            Assert.Equal(expectedMember.Name, result.Value.ToString()); // Compare the enum member name
         }
 
         [Fact]
@@ -95,15 +133,18 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             string enumValue = "5";
+            bool success = WeekDayEmumType.TryParseEnum(long.Parse(enumValue), out IEdmEnumMember expectedMember);
+
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
 
             // Act
-            SingleValueNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
 
             // Assert
-            IEdmEnumMember member = WeekDayEmumType.Members.First(m => m.Value.Value == int.Parse(enumValue));
-            result.ShouldBeEnumNode(WeekDayEmumType, member.Name);
+            Assert.True(success);
+            result.ShouldBeEnumNode(WeekDayEmumType, expectedMember.Name);
+            Assert.Equal(expectedMember.Name, result.Value.ToString()); // compare the enum member name
         }
 
         [Fact]
@@ -191,15 +232,17 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             }
         }
 
-        private enum WeekDay
+        private static EdmEnumType EmployeeType
         {
-            Monday = 1,
-            Tuesday = 2,
-            Wednesday = 3,
-            Thursday = 4,
-            Friday = 5,
-            Saturday = 6,
-            Sunday = 7
+            get
+            {
+                EdmEnumType employeeType = new EdmEnumType("NS", "EmployeeType");
+                employeeType.AddMember("FullTime", new EdmEnumMemberValue((long)int.MaxValue));
+                employeeType.AddMember("PartTime", new EdmEnumMemberValue((long)int.MaxValue + 10L));
+                employeeType.AddMember("Contractor", new EdmEnumMemberValue((long)int.MaxValue + (long)int.MaxValue));
+
+                return employeeType;
+            }
         }
         #endregion
     }
