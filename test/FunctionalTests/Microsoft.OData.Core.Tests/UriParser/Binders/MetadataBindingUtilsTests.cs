@@ -154,12 +154,12 @@ namespace Microsoft.OData.Tests.UriParser.Binders
             string enumValue = "Monday";
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
-
             // Act
-            SingleValueNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference);
+            ConstantNode result = MetadataBindingUtils.ConvertToTypeIfNeeded(source, targetTypeReference) as ConstantNode;
 
             // Assert
             result.ShouldBeEnumNode(WeekDayEmumType, enumValue);
+            Assert.Equal(enumValue, result.Value.ToString());
         }
 
         [Fact]
