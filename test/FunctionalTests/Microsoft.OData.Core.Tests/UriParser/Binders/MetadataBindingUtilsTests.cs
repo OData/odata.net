@@ -57,7 +57,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             int enumValue = 3;
-            bool success = WeekDayEmumType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
+            bool success = WeekDayEmumType.TryParse(enumValue, out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
@@ -76,7 +76,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             long enumValue = 7L;
-            bool success = WeekDayEmumType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
+            bool success = WeekDayEmumType.TryParse(enumValue, out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);
@@ -95,7 +95,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             long enumValue = 2147483657; // ((long)int.MaxValue + 10L).ToString()
-            bool success = EmployeeType.TryParseEnum(enumValue, out IEdmEnumMember expectedMember);
+            bool success = EmployeeType.TryParse(enumValue, out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeType, false);
@@ -114,7 +114,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             string enumValue = "4294967294"; // ((long)int.MaxValue + (long)int.MaxValue).ToString();
-            bool success = EmployeeType.TryParseEnum(long.Parse(enumValue), out IEdmEnumMember expectedMember);
+            bool success = EmployeeType.TryParse(long.Parse(enumValue), out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(EmployeeType, false);
@@ -133,7 +133,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         {
             // Arrange
             string enumValue = "5";
-            bool success = WeekDayEmumType.TryParseEnum(long.Parse(enumValue), out IEdmEnumMember expectedMember);
+            bool success = WeekDayEmumType.TryParse(long.Parse(enumValue), out IEdmEnumMember expectedMember);
 
             SingleValueNode source = new ConstantNode(enumValue);
             IEdmTypeReference targetTypeReference = new EdmEnumTypeReference(WeekDayEmumType, false);

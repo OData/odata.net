@@ -133,7 +133,7 @@ namespace Microsoft.OData.Edm
         /// <param name="value">input integral value.</param>
         /// <param name="enumMember">parsed result.</param>
         /// <returns>true if parse succeeds, false if parse fails.</returns>
-        public static bool TryParseEnum(this IEdmEnumType enumType, long value, out IEdmEnumMember enumMember)
+        public static bool TryParse(this IEdmEnumType enumType, long value, out IEdmEnumMember enumMember)
         {
             enumMember = null;
             foreach (IEdmEnumMember member in enumType.Members)
@@ -155,7 +155,7 @@ namespace Microsoft.OData.Edm
         /// <param name="memberName">The member name to check.</param>
         /// <param name="comparison">The comparison type to use for string comparison. Default is Ordinal.</param>
         /// <returns>True if the member name exists in the enum type; otherwise, false.</returns>
-        public static bool EnumMemberExists(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
+        public static bool ContainsMember(this IEdmEnumType enumType, string memberName, StringComparison comparison = StringComparison.Ordinal)
         {
             foreach (IEdmEnumMember member in enumType.Members)
             {

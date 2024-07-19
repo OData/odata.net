@@ -64,21 +64,17 @@ namespace Microsoft.OData.UriParser
                 {
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if(enumType.EnumMemberExists(memberName, StringComparison.Ordinal))
+                    if(enumType.ContainsMember(memberName, StringComparison.Ordinal))
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
                         return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
                     }
 
-                    // If the member name is an integral value, we should try to convert it to the enum member name.
-                    if (long.TryParse(memberName, out long memberIntegralValue))
+                    // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
+                    if (long.TryParse(memberName, out long memberIntegralValue) && enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
                     {
-                        // Find the enum member with the matching integral value
-                        if (enumType.TryParseEnum(memberIntegralValue, out IEdmEnumMember enumMember))
-                        {
-                            string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
-                            return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
-                        }
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                     }
 
                     throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
