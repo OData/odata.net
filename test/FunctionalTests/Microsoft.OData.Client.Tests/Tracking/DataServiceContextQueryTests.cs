@@ -94,7 +94,11 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+            };
 
             // Act
             DataServiceQuery<Employee> query = _defaultContext.Employees;
@@ -106,7 +110,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public void UseWhereToFilterByEmployeeNumberKey_WithEnumAsKey_DoNotThrowException()
+        public void UseWhereToFilterByOtherKeyOtherThanEnumKey_WithEnumAsKey_DoNotThrowException()
         {
             // Arrange
             string expectedUri = $"{ServiceRoot}/Employees?$filter=EmpNumber eq 8";
@@ -122,7 +126,11 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal($"{expectedUri}&$top=1", args.RequestMessage.Url.ToString());
+            };
 
             // Act
             IQueryable<Employee> query = _defaultContext.Employees.Where(e => e.EmpNumber == 8);
@@ -151,7 +159,11 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal($"{expectedUri}&$top=1", args.RequestMessage.Url.ToString());
+            };
 
             // Act
             var query = _defaultContext.Employees.Where(e => e.EmpType == EmployeeType.PartTime);
@@ -164,7 +176,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
 
         [Fact]
-        public void UseByKeyToFilterByCompositeKeys_WithEnumAsKey_DoNotThrowException()
+        public async Task FilterByCompositeKeys_WithEnumAsKey_DoNotThrowException()
         {
             // Arrange
             string expectedUri = $"{ServiceRoot}/Employees(EmpNumber=8,EmpType=Microsoft.OData.Client.Tests.Tracking.EmployeeType'PartTime',OrgId=1)";
@@ -180,13 +192,17 @@ namespace Microsoft.OData.Client.Tests.Tracking
         }
     ]
 }";
-            SetupContextWithRequestPipeline(new DataServiceContext[] { _defaultContext }, response, "Employees");
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+            };
 
             // Act
             EmployeeSingle query = _defaultContext.Employees.ByKey(
                 new Dictionary<string, object>() { { "EmpNumber", 8 }, { "EmpType", EmployeeType.PartTime }, { "OrgId", 1 } });
 
-            Employee employee = query.GetValue();
+            Employee employee = await query.GetValueAsync().ConfigureAwait(false);
 
             // Assert
             Assert.Equal(expectedUri, query.Query.ToString());
@@ -194,22 +210,53 @@ namespace Microsoft.OData.Client.Tests.Tracking
             Assert.Equal(EmployeeType.PartTime, employee.EmpType);
         }
 
-        private void SetupContextWithRequestPipeline(DataServiceContext[] contexts, string response, string path)
+        [Fact]
+        public void FilterByEnumKey_WithEnumAsKey_DoNotThrowException()
+        {
+            // Arrange
+            string expectedUri = $"{ServiceRoot}/Employees(Microsoft.OData.Client.Tests.Tracking.EmployeeType'FullTime')";
+
+            string response = @"{
+        ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+        ""value"": [
+        {
+            ""EmpNumber"": 9,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1,
+            ""Name"": ""John Doe""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+            };
+
+            // Act
+            EmployeeSingle query = _defaultContext.Employees.ByKey(
+                new Dictionary<string, object>() { { "EmpType", EmployeeType.FullTime } });
+
+            Employee employee = query.GetValue();
+
+            // Assert
+            Assert.Equal(expectedUri, query.Query.ToString());
+            Assert.Equal(9, employee.EmpNumber);
+            Assert.Equal(EmployeeType.FullTime, employee.EmpType);
+        }
+
+        private void SetupContextWithRequestPipeline(DataServiceContext context, string response, string path)
         {
             string location = $"{ServiceRoot}/{path}";
 
-            foreach (var context in contexts)
-            {
-                context.Configurations.RequestPipeline.OnMessageCreating =
-                    (args) => new CustomizedRequestMessage(
-                        args,
-                        response,
-                        new Dictionary<string, string>()
-                        {
-                            { "Content-Type", "application/json;charset=utf-8" },
-                            { "Location", location },
-                        });
-            }
+            context.Configurations.RequestPipeline.OnMessageCreating = (args) => new CustomizedRequestMessage(
+                args,
+                response,
+                new Dictionary<string, string>()
+                {
+                    { "Content-Type", "application/json;charset=utf-8" },
+                    { "Location", location },
+                });
         }
 
         class Container : DataServiceContext
