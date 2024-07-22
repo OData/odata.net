@@ -58,19 +58,26 @@ namespace Microsoft.OData.UriParser
                 }
 
                 ConstantNode constantNode = source as ConstantNode;
-                if (constantNode != null && constantNode.Value != null && source.TypeReference.IsString() && targetTypeReference.IsEnum())
+                // Check if the source node is a constant node, not null, and the source type is either string or integral
+                // and the target type is an enum.
+                if (constantNode != null && constantNode.Value != null && (source.TypeReference.IsString() || source.TypeReference.IsIntegral()) && targetTypeReference.IsEnum())
                 {
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if (enumType.Members.Any(m => string.Compare(m.Name, memberName, StringComparison.Ordinal) == 0))
+                    if(enumType.ContainsMember(memberName, StringComparison.Ordinal))
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
-                        return new ConstantNode(new ODataEnumValue(constantNode.Value.ToString(), targetTypeReference.Definition.ToString()), literalText, targetTypeReference);
+                        return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
                     }
-                    else
+
+                    // If the member name is an integral value, we should try to convert it to the enum member name and find the enum member with the matching integral value
+                    if (long.TryParse(memberName, out long memberIntegralValue) && enumType.TryParse(memberIntegralValue, out IEdmEnumMember enumMember))
                     {
-                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
+                        string literalText = ODataUriUtils.ConvertToUriLiteral(enumMember.Name, default(ODataVersion));
+                        return new ConstantNode(new ODataEnumValue(enumMember.Name, enumType.ToString()), literalText, targetTypeReference);
                     }
+
+                    throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(memberName));
                 }
 
                 if (!TypePromotionUtils.CanConvertTo(source, source.TypeReference, targetTypeReference))
