@@ -2042,6 +2042,91 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void FilterWithInOperationWithEnumsMemberName_WithoutQualifiedNamespace()
+        {
+            // Arrange
+            string filterQuery = "'SolidYellow' in FavoriteColors";
+
+            string expectedLiteralText = "'SolidYellow'";
+            string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
+            string expectedCollectionPropertyName = "FavoriteColors";
+
+            // Act
+            FilterClause filter = ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            // Assert
+            InNode inNode = Assert.IsType<InNode>(filter.Expression);
+            ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
+
+            Assert.Equal(expectedLiteralText, left.LiteralText);
+            Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
+            Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithEnumsMemberIntegralValue_WithSingleQuotes()
+        {
+            // Arrange
+            string filterQuery = "'12' in FavoriteColors";
+
+            string expectedLiteralText = "'SolidYellow'";
+            string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
+            string expectedCollectionPropertyName = "FavoriteColors";
+
+            // Act
+            FilterClause filter = ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            // Assert
+            InNode inNode = Assert.IsType<InNode>(filter.Expression);
+            ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
+
+            Assert.Equal(expectedLiteralText, left.LiteralText);
+            Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
+            Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
+        }
+
+        [Fact]
+        public void FilterWithInOperationWithEnumsMemberIntegralValue_WithoutSingleQuotes()
+        {
+            // Arrange
+            string filterQuery = "12 in FavoriteColors";
+
+            string expectedLiteralText = "'SolidYellow'";
+            string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
+            string expectedCollectionPropertyName = "FavoriteColors";
+
+            // Act
+            FilterClause filter = ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            // Assert
+            InNode inNode = Assert.IsType<InNode>(filter.Expression);
+            ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
+            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
+
+            Assert.Equal(expectedLiteralText, left.LiteralText);
+            Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
+            Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
+        }
+
+        [Theory]
+        [InlineData(53)]
+        [InlineData("53")]
+        [InlineData("'53'")]
+        public void FilterWithInOperationWithEnumsInValidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(object integralValue)
+        {
+            // Arrange
+            string filterQuery = $"{integralValue} in FavoriteColors";
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            // Assert
+            action.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant("53"));
+        }
+
+        [Fact]
         public void FilterWithInOperationWithAny()
         {
             // https://github.com/OData/odata.net/issues/1447
