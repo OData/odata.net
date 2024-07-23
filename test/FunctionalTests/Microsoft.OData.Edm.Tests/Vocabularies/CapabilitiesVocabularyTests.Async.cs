@@ -1,33 +1,24 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CapabilitiesVocabularyTests.cs" company="Microsoft">
+// <copyright file="CapabilitiesVocabularyTests.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
-using System.Collections.Generic;
+using Microsoft.OData.Edm.Csdl;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
-using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Csdl.CsdlSemantics;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
-    /// <summary>
-    /// Test capabilities vocabulary
-    /// </summary>
     public partial class CapabilitiesVocabularyTests
     {
-        private readonly IEdmModel capVocModel = CapabilitiesVocabularyModel.Instance;
-
         [Fact]
-        public void TestCapabilitiesVocabularyModel()
+        public async Task TestCapabilitiesVocabularyModel_Async()
         {
+            #region Expected Vocabulary Model
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Capabilities.V1"" Alias=""Capabilities"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <TypeDefinition Name=""FilterExpressionType"" UnderlyingType=""Edm.String"">
@@ -846,16 +837,16 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.Description"" String=""Stream property or media stream supports update of its media edit URL and/or media read URL"" />
   </Term>
 </Schema>";
+            #endregion
 
             StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
+            XmlWriterSettings settings = new XmlWriterSettings() { Async = true };
             settings.Indent = true;
             settings.Encoding = System.Text.Encoding.UTF8;
 
-            IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            this.capVocModel.TryWriteSchema(xw, out errors);
-            xw.Flush();
+            var (_, errors) = await this.capVocModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            await xw.FlushAsync().ConfigureAwait(false);
 #if NETCOREAPP1_1
             xw.Dispose();
 #else
@@ -864,428 +855,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             string output = sw.ToString();
             Assert.True(!errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyDependsOnCoreAuthorizationValidationVocabularies()
-        {
-            var referencedModels = this.capVocModel.ReferencedModels;
-
-            Assert.NotNull(referencedModels);
-
-            Assert.Equal(4, referencedModels.Count());
-
-            Assert.Contains(EdmCoreModel.Instance, referencedModels);
-            Assert.Contains(CoreVocabularyModel.Instance, referencedModels);
-            Assert.Contains(ValidationVocabularyModel.Instance, referencedModels);
-            Assert.Contains(AuthorizationVocabularyModel.Instance, referencedModels);
-        }
-
-        [Theory]
-        [InlineData("AsynchronousRequestsSupported")]
-        [InlineData("BatchContinueOnErrorSupported")]
-        public void TestCapabilitiesVocabularyReferenceCoreVocabularyTypesAndTerms(string termName)
-        {
-            var term = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1." + termName);
-            Assert.NotNull(term);
-
-            // Core.Tag
-            Assert.NotNull(term.Type);
-
-            Assert.Equal(EdmTypeKind.TypeDefinition, term.Type.Definition.TypeKind);
-            Assert.Equal("Org.OData.Core.V1.Tag", term.Type.Definition.FullTypeName());
-
-            // Core.Description
-            var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(term).ToList();
-            Assert.Single(annotations);
-            var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
-            Assert.NotNull(description);
-            Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyReferenceMultiCoreVocabularyTerms()
-        {
-            var supportedFormats = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.SupportedFormats");
-            Assert.NotNull(supportedFormats);
-
-            var annotations = this.capVocModel.FindDeclaredVocabularyAnnotations(supportedFormats).ToList();
-            Assert.Equal(2, annotations.Count());
-
-            // Core.Description
-            var description = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "Description");
-            Assert.NotNull(description);
-            Assert.Equal("Org.OData.Core.V1", description.Term.Namespace);
-
-            // Core.IsMediaType
-            var isMediaType = annotations.SingleOrDefault(a => a.Term is CsdlSemanticsTerm && a.Term.Name == "IsMediaType");
-            Assert.NotNull(isMediaType);
-            Assert.Equal("Org.OData.Core.V1", isMediaType.Term.Namespace);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyChangeTracking()
-        {
-            var changeTerm = this.capVocModel.FindDeclaredTerm(CapabilitiesVocabularyConstants.ChangeTracking);
-            Assert.NotNull(changeTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", changeTerm.Namespace);
-            Assert.Equal("ChangeTracking", changeTerm.Name);
-
-            var type = changeTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.ChangeTrackingType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty(CapabilitiesVocabularyConstants.ChangeTrackingSupported);
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty(CapabilitiesVocabularyConstants.ChangeTrackingFilterableProperties);
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            p = complexType.FindProperty(CapabilitiesVocabularyConstants.ChangeTrackingExpandableProperties);
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyCountRestrictions()
-        {
-            var countTerm = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.CountRestrictions");
-            Assert.NotNull(countTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", countTerm.Namespace);
-            Assert.Equal("CountRestrictions", countTerm.Name);
-
-            var type = countTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.CountRestrictionsType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty("Countable");
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty("NonCountableProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
-            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
-            Assert.NotNull(pathType);
-            Assert.Equal("PropertyPath", pathType.Name);
-            Assert.Equal("Edm", pathType.Namespace);
-            Assert.Equal("Edm.PropertyPath", pathType.FullName());
-
-            p = complexType.FindProperty("NonCountableNavigationProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyNavigationRestrictions()
-        {
-            var navigationTerm = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.NavigationRestrictions");
-            Assert.NotNull(navigationTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", navigationTerm.Namespace);
-            Assert.Equal("NavigationRestrictions", navigationTerm.Name);
-
-            var type = navigationTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.NavigationRestrictionsType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty("Navigability");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Enum, p.Type.Definition.TypeKind);
-
-            var navType = p.Type.Definition as IEdmEnumType;
-            Assert.NotNull(navType);
-            Assert.Equal(3, navType.Members.Count());
-            Assert.Equal("Recursive|Single|None", String.Join("|", navType.Members.Select(e => e.Name)));
-
-            p = complexType.FindProperty("RestrictedProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            IEdmCollectionType collection = p.Type.Definition as IEdmCollectionType;
-            Assert.NotNull(collection);
-            var propertyResType = collection.ElementType.Definition as IEdmComplexType;
-            Assert.NotNull(propertyResType);
-            Assert.Equal("Org.OData.Capabilities.V1.NavigationPropertyRestriction", propertyResType.FullName());
-
-            p = propertyResType.FindProperty("NavigationProperty");
-            Assert.NotNull(p);
-
-            p = propertyResType.FindProperty("Navigability");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Enum, p.Type.Definition.TypeKind);
-
-            p = propertyResType.FindProperty("FilterFunctions");
-            Assert.NotNull(p);
-            Assert.Equal("Collection(Edm.String)", p.Type.FullName());
-
-            p = propertyResType.FindProperty("FilterRestrictions");
-            Assert.NotNull(p);
-            Assert.Equal("Org.OData.Capabilities.V1.FilterRestrictionsType", p.Type.FullName());
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyFilterRestrictions()
-        {
-            var filterTerm = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.FilterRestrictions");
-            Assert.NotNull(filterTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", filterTerm.Namespace);
-            Assert.Equal("FilterRestrictions", filterTerm.Name);
-
-            var type = filterTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.FilterRestrictionsType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty("Filterable");
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty("RequiresFilter");
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty("RequiredProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            p = complexType.FindProperty("NonFilterableProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            p = complexType.FindProperty("FilterExpressionRestrictions");
-            Assert.NotNull(p);
-            Assert.Equal("Collection(Org.OData.Capabilities.V1.FilterExpressionRestrictionType)", p.Type.FullName());
-
-            p = complexType.FindProperty("MaxLevels");
-            Assert.NotNull(p);
-            Assert.Equal("Edm.Int32", p.Type.FullName());
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularySortRestrictions()
-        {
-            var sortTerm = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.SortRestrictions");
-            Assert.NotNull(sortTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", sortTerm.Namespace);
-            Assert.Equal("SortRestrictions", sortTerm.Name);
-
-            var type = sortTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.SortRestrictionsType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty("Sortable");
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty("AscendingOnlyProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            p = complexType.FindProperty("DescendingOnlyProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            p = complexType.FindProperty("NonSortableProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyExpandRestrictions()
-        {
-            var expandTerm = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.ExpandRestrictions");
-            Assert.NotNull(expandTerm);
-            Assert.Equal("Org.OData.Capabilities.V1", expandTerm.Namespace);
-            Assert.Equal("ExpandRestrictions", expandTerm.Name);
-
-            var type = expandTerm.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.ExpandRestrictionsType", type.FullName());
-            Assert.Equal(EdmTypeKind.Complex, type.Definition.TypeKind);
-
-            var complexType = type.Definition as IEdmComplexType;
-            Assert.NotNull(complexType);
-            var p = complexType.FindProperty("Expandable");
-            Assert.NotNull(p);
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, p.Type.PrimitiveKind());
-
-            p = complexType.FindProperty("NonExpandableProperties");
-            Assert.NotNull(p);
-            Assert.Equal(EdmTypeKind.Collection, p.Type.Definition.TypeKind);
-
-            Assert.Equal(EdmTypeKind.Path, p.Type.AsCollection().ElementType().TypeKind());
-            IEdmPathType pathType = p.Type.AsCollection().ElementType().AsPath().Definition as IEdmPathType;
-            Assert.NotNull(pathType);
-            Assert.Equal("NavigationPropertyPath", pathType.Name);
-            Assert.Equal("Edm", pathType.Namespace);
-            Assert.Equal("Edm.NavigationPropertyPath", pathType.FullName());
-
-            p = complexType.FindProperty("MaxLevels");
-            Assert.NotNull(p);
-            Assert.Equal("Edm.Int32", p.Type.FullName());
-        }
-
-        [Theory]
-        [InlineData("InsertRestrictionsType", true, true)]
-        [InlineData("UpdateRestrictionsType", true, true)]
-        [InlineData("DeleteRestrictionsType", false, true)]
-        [InlineData("OperationRestrictionsType", false, false)]
-        [InlineData("ReadRestrictionsBase", false, true)]
-        public void TestCapabilitiesVocabularyComplexTypeWithPermissions(string typeName, bool hasQueryOptions, bool hasDescription)
-        {
-            var capType = this.capVocModel.FindDeclaredType("Org.OData.Capabilities.V1." + typeName);
-            Assert.NotNull(capType);
-
-            IEdmComplexType capComplexType = capType as IEdmComplexType;
-            Assert.NotNull(capComplexType);
-
-            var permissions = capComplexType.FindProperty("Permissions");
-            Assert.NotNull(permissions);
-            Assert.Equal("Collection(Org.OData.Capabilities.V1.PermissionType)", permissions.Type.FullName());
-
-            var queryOptions = capComplexType.FindProperty("QueryOptions");
-            if (hasQueryOptions)
-            {
-                Assert.NotNull(queryOptions);
-                Assert.Equal("Org.OData.Capabilities.V1.ModificationQueryOptionsType", queryOptions.Type.FullName());
-            }
-            else
-            {
-                Assert.Null(queryOptions);
-            }
-
-            var customHeaders = capComplexType.FindProperty("CustomHeaders");
-            Assert.NotNull(customHeaders);
-            Assert.Equal("Collection(Org.OData.Capabilities.V1.CustomParameter)", customHeaders.Type.FullName());
-
-            var customQueryOptions = capComplexType.FindProperty("CustomQueryOptions");
-            Assert.NotNull(customQueryOptions);
-            Assert.Equal("Collection(Org.OData.Capabilities.V1.CustomParameter)", customQueryOptions.Type.FullName());
-
-            var description = capComplexType.FindProperty("Description");
-            if (hasDescription)
-            {
-                Assert.NotNull(description);
-                Assert.Equal("Edm.String", description.Type.FullName());
-            }
-            else
-            {
-                Assert.Null(description);
-            }
-
-            var longDescription = capComplexType.FindProperty("LongDescription");
-            if (hasDescription)
-            {
-                Assert.NotNull(longDescription);
-                Assert.Equal("Edm.String", longDescription.Type.FullName());
-            }
-            else
-            {
-                Assert.Null(longDescription);
-            }
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyConformanceLevel()
-        {
-            var confLevel = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.ConformanceLevel");
-            Assert.NotNull(confLevel);
-            Assert.Equal("Org.OData.Capabilities.V1", confLevel.Namespace);
-            Assert.Equal("ConformanceLevel", confLevel.Name);
-
-            var type = confLevel.Type;
-            Assert.Equal("Org.OData.Capabilities.V1.ConformanceLevelType", type.FullName());
-            Assert.Equal(EdmTypeKind.Enum, type.Definition.TypeKind);
-
-            var enumType = type.Definition as IEdmEnumType;
-            Assert.NotNull(enumType);
-            Assert.Equal(3, enumType.Members.Count());
-            Assert.Equal("Minimal|Intermediate|Advanced", String.Join("|", enumType.Members.Select(e => e.Name)));
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularySupportedFormats()
-        {
-            var supportedFormats = this.capVocModel.FindDeclaredTerm("Org.OData.Capabilities.V1.SupportedFormats");
-            Assert.NotNull(supportedFormats);
-            Assert.Equal("Org.OData.Capabilities.V1", supportedFormats.Namespace);
-            Assert.Equal("SupportedFormats", supportedFormats.Name);
-
-            var type = supportedFormats.Type;
-            Assert.Equal("Collection(Edm.String)", type.FullName());
-        }
-
-        [Theory]
-        [InlineData("AsynchronousRequestsSupported", "EntityContainer")]
-        [InlineData("BatchContinueOnErrorSupported", "EntityContainer")]
-        [InlineData("CrossJoinSupported", "EntityContainer")]
-        [InlineData("TopSupported", "EntitySet Collection")]
-        [InlineData("SkipSupported", "EntitySet Collection")]
-        [InlineData("IndexableByKey", "EntitySet Collection")]
-        [InlineData("BatchSupported", "EntityContainer")]
-        [InlineData("KeyAsSegmentSupported", "EntityContainer")]
-        public void TestCapabilitiesVocabularySupportedTerm(string name, string appliesTo)
-        {
-            string qualifiedName = "Org.OData.Capabilities.V1." + name;
-            var supported = this.capVocModel.FindDeclaredTerm(qualifiedName);
-            Assert.NotNull(supported);
-            Assert.Equal("Org.OData.Capabilities.V1", supported.Namespace);
-            Assert.Equal(name, supported.Name);
-
-            Assert.Equal(appliesTo, supported.AppliesTo);
-            var type = supported.Type;
-            Assert.Equal("Org.OData.Core.V1.Tag", type.FullName());
-
-            Assert.Equal(EdmTypeKind.TypeDefinition, type.TypeKind());
-            IEdmTypeDefinitionReference typeDefinitionReference = type.AsTypeDefinition();
-            Assert.NotNull(typeDefinitionReference);
-
-            Assert.Equal(EdmPrimitiveTypeKind.Boolean, typeDefinitionReference.TypeDefinition().UnderlyingType.PrimitiveKind);
-        }
-
-        [Fact]
-        public void TestCapabilitiesVocabularyDependentOnValidationVocabulary()
-        {
-            var batchSupportType = this.capVocModel.FindDeclaredType("Org.OData.Capabilities.V1.BatchSupportType");
-            Assert.NotNull(batchSupportType);
-            Assert.Equal("Org.OData.Capabilities.V1", batchSupportType.Namespace);
-            Assert.Equal("BatchSupportType", batchSupportType.Name);
-            Assert.Equal(EdmTypeKind.Complex, batchSupportType.TypeKind);
-            var complexType = batchSupportType as IEdmComplexType;
-
-            IEdmProperty edmProperty = complexType.FindProperty("SupportedFormats");
-            Assert.NotNull(edmProperty);
-
-            var allowedValuesTerm = ValidationVocabularyModel.Instance.FindDeclaredTerm("Org.OData.Validation.V1.AllowedValues");
-            Assert.NotNull(allowedValuesTerm);
-            var annotation = this.capVocModel.FindVocabularyAnnotations<IEdmVocabularyAnnotation>(edmProperty, allowedValuesTerm).FirstOrDefault();
-            Assert.NotNull(annotation);
-            Assert.NotNull(annotation.Value);
-
-            IEdmCollectionExpression collectionExpression = annotation.Value as IEdmCollectionExpression;
-            Assert.NotNull(collectionExpression);
-            Assert.Equal(2, collectionExpression.Elements.Count());
-            foreach(var item in collectionExpression.Elements)
-            {
-                IEdmRecordExpression recordExpress = item as IEdmRecordExpression;
-                Assert.NotNull(recordExpress);
-
-                var recordProperty = recordExpress.FindProperty("Value");
-                Assert.NotNull(recordProperty);
-
-                Assert.Contains(((IEdmStringConstantExpression)recordProperty.Value).Value, new[] { "multipart/mixed", "application/json" });
-            }
         }
     }
 }

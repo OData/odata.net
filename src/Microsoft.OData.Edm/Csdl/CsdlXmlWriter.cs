@@ -7,6 +7,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
 
@@ -73,6 +74,25 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        /// <summary>
+        /// Asynchronously write the CSDL XML.
+        /// </summary>
+        /// <exception cref="InvalidOperationException"></exception>
+        protected override async Task WriteCsdlAsync()
+        {
+            switch (this.target)
+            {
+                case CsdlTarget.EntityFramework:
+                    await this.WriteEFCsdlAsync().ConfigureAwait(false);
+                    break;
+                case CsdlTarget.OData:
+                    await this.WriteODataCsdlAsync().ConfigureAwait(false);
+                    break;
+                default:
+                    throw new InvalidOperationException(Strings.UnknownEnumVal_CsdlTarget(this.target.ToString()));
+            }
+        }
+
         private void WriteODataCsdl()
         {
             this.WriteEdmxElement();
@@ -82,6 +102,17 @@ namespace Microsoft.OData.Edm.Csdl
             this.EndElement(); // </DataServices>
             this.EndElement(); // </Edmx>
             this.writer.Flush();
+        }
+
+        private async Task WriteODataCsdlAsync()
+        {
+            await this.WriteEdmxElementAsync().ConfigureAwait(false);
+            await this.WriteReferenceElementsAsync().ConfigureAwait(false);
+            await this.WriteDataServicesElementAsync().ConfigureAwait(false);
+            await this.WriteSchemasAsync().ConfigureAwait(false);
+            await this.EndElementAsync().ConfigureAwait(false); // </DataServices>
+            await this.EndElementAsync().ConfigureAwait(false); // </Edmx>
+            await this.writer.FlushAsync().ConfigureAwait(false);
         }
 
         private void WriteEFCsdl()
@@ -96,10 +127,28 @@ namespace Microsoft.OData.Edm.Csdl
             this.writer.Flush();
         }
 
+        private async Task WriteEFCsdlAsync()
+        {
+            await this.WriteEdmxElementAsync().ConfigureAwait(false);
+            await this.WriteRuntimeElementAsync().ConfigureAwait(false);
+            await this.WriteConceptualModelsElementAsync().ConfigureAwait(false);
+            await this.WriteSchemasAsync().ConfigureAwait(false);
+            await this.EndElementAsync().ConfigureAwait(false); // </ConceptualModels>
+            await this.EndElementAsync().ConfigureAwait(false); // </Runtime>
+            await this.EndElementAsync().ConfigureAwait(false); // </Edmx>
+            await this.writer.FlushAsync().ConfigureAwait(false);
+        }
+
         private void WriteEdmxElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Edmx, this.edmxNamespace);
             this.writer.WriteAttributeString(CsdlConstants.Attribute_Version, GetVersionString(this.edmxVersion));
+        }
+
+        private async Task WriteEdmxElementAsync()
+        {
+            await this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Edmx, this.edmxNamespace).ConfigureAwait(false);
+            await this.writer.WriteAttributeStringAsync(null, CsdlConstants.Attribute_Version, null, GetVersionString(this.edmxVersion)).ConfigureAwait(false);
         }
 
         private void WriteRuntimeElement()
@@ -107,9 +156,23 @@ namespace Microsoft.OData.Edm.Csdl
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
         }
 
+        private Task WriteRuntimeElementAsync()
+        {
+            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_Runtime, this.edmxNamespace);
+        }
+
         private void WriteConceptualModelsElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
+        }
+
+        /// <summary>
+        /// Asynchronously write the ConceptualModels element.
+        /// </summary>
+        /// <returns>The task represents the asynchronous operation.</returns>
+        private Task WriteConceptualModelsElementAsync()
+        {
+            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_ConceptualModels, this.edmxNamespace);
         }
 
         private void WriteReferenceElements()
@@ -141,9 +204,43 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        private async Task WriteReferenceElementsAsync()
+        {
+            EdmModelReferenceElementsXmlVisitor visitor;
+            IEnumerable<IEdmReference> references = model.GetEdmReferences();
+            if (references != null)
+            {
+                foreach (IEdmReference reference in references)
+                {
+                    //loop through the includes and set the namespace alias 
+                    if (reference.Includes != null)
+                    {
+                        foreach (IEdmInclude include in reference.Includes)
+                        {
+                            if (include.Alias != null)
+                            {
+                                model.SetNamespaceAlias(include.Namespace, include.Alias);
+                            }
+                        }
+                    }
+                }
+
+                foreach (IEdmReference edmReference in references)
+                {
+                    visitor = new EdmModelReferenceElementsXmlVisitor(this.model, this.writer, this.edmxVersion, this.writerSettings);
+                    await visitor.VisitEdmReferencesAsync(this.model, edmReference).ConfigureAwait(false);
+                }
+            }
+        }
+
         private void WriteDataServicesElement()
         {
             this.writer.WriteStartElement(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
+        }
+
+        private Task WriteDataServicesElementAsync()
+        {
+            return this.writer.WriteStartElementAsync(CsdlConstants.Prefix_Edmx, CsdlConstants.Element_DataServices, this.edmxNamespace);
         }
 
         private void WriteSchemas()
@@ -159,9 +256,27 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        private async Task WriteSchemasAsync()
+        {
+            // TODO: for referenced model - write alias as is, instead of writing its namespace.
+            EdmModelCsdlSerializationVisitor visitor;
+            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
+            foreach (EdmSchema schema in this.schemas)
+            {
+                var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion, this.writerSettings);
+                visitor = new EdmModelCsdlSerializationVisitor(this.model, schemaWriter);
+                await visitor.VisitEdmSchemaAsync(schema, this.model.GetNamespacePrefixMappings()).ConfigureAwait(false);
+            }
+        }
+
         private void EndElement()
         {
             this.writer.WriteEndElement();
+        }
+
+        private Task EndElementAsync()
+        {
+            return this.writer.WriteEndElementAsync();
         }
     }
 }
