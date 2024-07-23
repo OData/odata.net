@@ -1,28 +1,27 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="AlternateKeysVocabularyTests.cs" company="Microsoft">
+// <copyright file="AlternateKeysVocabularyTests.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Xml;
 using System.Text;
+using System.Threading.Tasks;
+using System.Xml;
+using Xunit;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.Community.V1;
-using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
     public partial class AlternateKeysVocabularyTests
     {
-        private readonly IEdmModel model = AlternateKeysVocabularyModel.Instance;
-
         [Fact]
-        public void TestAlternateKeysVocabularyModel()
+        public async Task TestAlternateKeysVocabularyModel_Async()
         {
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""OData.Community.Keys.V1"" Alias=""Keys"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
@@ -52,9 +51,12 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
 
             StringWriter sw = new StringWriter();
             IEnumerable<EdmError> errors;
-            using (var xw = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8 }))
+            using (var xw = XmlWriter.Create(sw, new XmlWriterSettings { Indent = true, Encoding = Encoding.UTF8, Async = true }))
             {
-                Assert.True(model.TryWriteSchema(xw, out errors));
+                Tuple<bool, IEnumerable<EdmError>> result = await model.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+                Assert.True(result.Item1);
+
+                errors = result.Item2; // Assign the async errors to the variable
             }
 
             string output = sw.ToString();
@@ -64,4 +66,3 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         }
     }
 }
-

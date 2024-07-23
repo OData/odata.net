@@ -1,0 +1,4 @@
+static Microsoft.OData.Edm.Csdl.CsdlWriter.TryWriteCsdlAsync(Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target) -> System.Threading.Tasks.Task<System.Tuple<bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>>
+static Microsoft.OData.Edm.Csdl.SchemaWriter.TryWriteSchemaAsync(this Microsoft.OData.Edm.IEdmModel model, System.Func<string, System.Xml.XmlWriter> writerProvider) -> System.Threading.Tasks.Task<System.Tuple<bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>>
+static Microsoft.OData.Edm.Csdl.SchemaWriter.TryWriteSchemaAsync(this Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer) -> System.Threading.Tasks.Task<System.Tuple<bool, System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.Validation.EdmError>>>
+virtual Microsoft.OData.Edm.Csdl.CsdlWriter.WriteCsdlAsync() -> System.Threading.Tasks.Task

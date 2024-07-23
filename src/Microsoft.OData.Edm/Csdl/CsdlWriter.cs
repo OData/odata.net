@@ -11,6 +11,7 @@ using System.Linq;
 #if NETSTANDARD2_0
 using System.Text.Json;
 #endif
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
 
@@ -56,6 +57,17 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
+        /// </summary>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
+        /// <returns>A Task with a tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer)
+        {
+            return TryWriteCsdlAsync(model, writer, CsdlJsonWriterSettings.Default);
+        }
+
+        /// <summary>
         /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
         /// </summary>
         /// <param name="model">The Edm model to be written.</param>
@@ -80,6 +92,31 @@ namespace Microsoft.OData.Edm.Csdl
 
             errors = Enumerable.Empty<EdmError>();
             return true;
+        }
+
+        /// <summary>
+        /// Asynchronously Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/> using the settings.
+        /// </summary>
+        /// <param name="model">The Edm model to be written.</param>
+        /// <param name="writer">JSON writer the generated CSDL will be written to.</param>
+        /// <param name="settings">The CSDL writer settings.</param>
+        /// <returns>A Task with tuple with a value indicating whether serialization was successful and EdmError if any</returns>
+        public static async Task<(bool, IEnumerable<EdmError>)> TryWriteCsdlAsync(IEdmModel model, Utf8JsonWriter writer, CsdlJsonWriterSettings settings)
+        {
+            EdmUtil.CheckArgumentNull(model, nameof(model));
+            EdmUtil.CheckArgumentNull(writer, nameof(writer));
+            EdmUtil.CheckArgumentNull(settings, nameof(settings));
+
+            Version edmxVersion;
+            if (!VerifyAndGetVersion(model, out edmxVersion, out IEnumerable<EdmError> errors))
+            {
+                return (false, errors);
+            }
+
+            CsdlWriter csdlWriter = new CsdlJsonWriter(model, writer, settings, edmxVersion);
+            await csdlWriter.WriteCsdlAsync().ConfigureAwait(false);
+
+            return (true, Enumerable.Empty<EdmError>());
         }
 #endif
 
@@ -110,11 +147,44 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
+        /// Asynchronously Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.
+        /// </summary>
+        /// <param name="model">Model to be written.</param>
+        /// <param name="writer">XmlWriter the generated CSDL will be written to.</param>
+        /// <param name="target">Target implementation of the CSDL being generated.</param>
+        /// <returns>A task with a value indicating whether serialization was successful.</returns>
+        public static async Task<Tuple<bool, IEnumerable<EdmError>>> TryWriteCsdlAsync(IEdmModel model, XmlWriter writer, CsdlTarget target)
+        {
+            EdmUtil.CheckArgumentNull(model, "model");
+            EdmUtil.CheckArgumentNull(writer, "writer");
+
+            Version edmxVersion;
+            if (!VerifyAndGetVersion(model, out edmxVersion, out IEnumerable<EdmError> errors))
+            {
+                return Tuple.Create(false, errors);
+            }
+
+            CsdlWriter csdlWriter = new CsdlXmlWriter(model, writer, edmxVersion, target);
+            await csdlWriter.WriteCsdlAsync().ConfigureAwait(false);
+
+            return Tuple.Create(true, Enumerable.Empty<EdmError>());
+        }
+
+        /// <summary>
         /// Write CSDL output.
         /// </summary>
         protected virtual void WriteCsdl()
         {
             // nothing here
+        }
+
+        /// <summary>
+        /// Asynchronously Writes CSDL output.
+        /// </summary>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        protected virtual Task WriteCsdlAsync()
+        {
+            return Task.FromResult(0);
         }
 
         /// <summary>
