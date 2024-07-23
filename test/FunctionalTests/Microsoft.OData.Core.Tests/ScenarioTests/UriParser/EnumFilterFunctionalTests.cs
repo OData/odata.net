@@ -10,6 +10,7 @@ using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
+using System.Linq;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -41,8 +42,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // set up the edm model etc
             this.userModel = new EdmModel();
 
-            var enumType = new EdmEnumType("NS", "Color", EdmPrimitiveTypeKind.Int32, false);
-            var red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
+            EdmEnumType enumType = new EdmEnumType("NS", "Color", EdmPrimitiveTypeKind.Int32, false);
+            EdmEnumMember red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
             enumType.AddMember(red);
             enumType.AddMember("Green", new EdmEnumMemberValue(2));
             enumType.AddMember("Blue", new EdmEnumMemberValue(3));
@@ -53,11 +54,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // add enum property
             this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);
-            var enumTypeReference = new EdmEnumTypeReference(enumType, true);
+            EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "Color", enumTypeReference));
 
             // enum with flags
-            var enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
+            EdmEnumType enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
             enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1L));
             enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2L));
             enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4L));
@@ -67,8 +68,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             this.userModel.AddElement(enumFlagsType);
 
             // add enum with flags
-            var enumFlagsTypeReference = new EdmEnumTypeReference(enumFlagsType, true);
+            EdmEnumTypeReference enumFlagsTypeReference = new EdmEnumTypeReference(enumFlagsType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "ColorFlags", enumFlagsTypeReference));
+
+            // add colors collection
+            EdmCollectionTypeReference colorCollectionTypeRef = new EdmCollectionTypeReference(new EdmCollectionType(new EdmEnumTypeReference(enumType, true)));
+            this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "Colors", colorCollectionTypeRef));
 
             this.userModel.AddElement(this.entityType);
 
@@ -515,11 +520,139 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsFullyQualifiedMemberName()
+        {
+            // Arrange
+            string enumValue = "White";
+            string filterQuery = $"NS.Color'{enumValue}' in Colors"; // "NS.Color'White' in Colors"
+            string expectedLiteral = "NS.Color'White'";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+            IEdmEnumMember enumMember = colorType.Members.Single(m => m.Name == enumValue);
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal("NS.Color'White' in Colors", filterQuery);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumMember.Value.Value);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumMember.Value.Value.ToString(), leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetColorsProperty(this.userModel));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+        }
+
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberNameWithoutFullyQualifiedName()
+        {
+            // Arrange
+            string enumValue = "Green";
+            string filterQuery = $"'{enumValue}' in Colors"; // "'Green' in Colors"
+            string expectedLiteral = "'Green'";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal("'Green' in Colors", filterQuery);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumValue);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumValue, leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetColorsProperty(this.userModel));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+        }
+
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberIntegralValueWithSingleQuotes()
+        {
+            // Arrange
+            int enumValue = 1;
+            string filterQuery = $"'{enumValue}' in Colors"; // "'1' in Colors"
+            string expectedLiteral = "'Red'";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+            bool success = colorType.TryParse(enumValue, out IEdmEnumMember enumMember);
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal("'1' in Colors", filterQuery);
+            Assert.True(success);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumMember.Name);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumMember.Name, leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetColorsProperty(this.userModel));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+        }
+
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberIntegralValueWithoutSingleQuotes()
+        {
+            // Arrange
+            int enumValue = 3;
+            string filterQuery = $"{enumValue} in Colors"; // "3 in Colors"
+            string expectedLiteral = "'Blue'";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+            bool success = colorType.TryParse(enumValue, out IEdmEnumMember enumMember);
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal("3 in Colors", filterQuery);
+            Assert.True(success);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumMember.Name);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumMember.Name, leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetColorsProperty(this.userModel));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+        }
+
         private IEdmStructuralProperty GetColorProp(IEdmModel model)
         {
             return (IEdmStructuralProperty)((IEdmStructuredType)model
                 .FindType("NS.MyEntityType"))
                 .FindProperty("Color");
+        }
+
+        private IEdmStructuralProperty GetColorsProperty(IEdmModel model)
+        {
+            return (IEdmStructuralProperty)((IEdmStructuredType)model
+                .FindType("NS.MyEntityType"))
+                .FindProperty("Colors");
         }
 
         private IEdmEnumType GetColorType(IEdmModel model)
