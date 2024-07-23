@@ -267,14 +267,15 @@ namespace Microsoft.OData.UriParser
                     return true;
                 }
 
-                // Comparing an enum with a string is valid
-                if (left != null && right != null && left.IsEnum() && right.IsString())
+                // Comparing an enum with a string or int is valid
+                if (left != null && right != null && left.IsEnum() && (right.IsString() || right.IsIntegral()))
                 {
                     right = left;
                     return true;
                 }
 
-                if (left != null && right != null && right.IsEnum() && left.IsString())
+                // Comparing an enum with a string or int is valid
+                if (left != null && right != null && right.IsEnum() && (left.IsString() || left.IsIntegral()))
                 {
                     left = right;
                     return true;
