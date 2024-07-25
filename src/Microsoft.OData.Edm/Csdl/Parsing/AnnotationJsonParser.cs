@@ -170,7 +170,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             }
 
             // $IsOf
-            if (BuildIsOfExpression(element, context, out CsdlIsTypeExpression isOfExp))
+            if (BuildIsOfExpression(element, context, out CsdlIsOfExpression isOfExp))
             {
                 return isOfExp;
             }
@@ -328,7 +328,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
         /// <param name="context">The parser context.</param>
         /// <param name="isOfExp">The built IsOf expression.</param>
         /// <returns>true/false</returns>
-        private static bool BuildIsOfExpression(JsonElement element, JsonParserContext context, out CsdlIsTypeExpression isOfExp)
+        private static bool BuildIsOfExpression(JsonElement element, JsonParserContext context, out CsdlIsOfExpression isOfExp)
         {
             Debug.Assert(context != null);
             isOfExp = null;
@@ -350,7 +350,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             // If the facet members are not specified, their values are considered unspecified.
             CsdlTypeReference typeReference = CsdlJsonParseHelper.ParseCsdlTypeReference(element, context);
 
-            isOfExp = new CsdlIsTypeExpression(typeReference, expression, context.Location());
+            isOfExp = new CsdlIsOfExpression(typeReference, expression, context.Location());
             return true;
         }
 

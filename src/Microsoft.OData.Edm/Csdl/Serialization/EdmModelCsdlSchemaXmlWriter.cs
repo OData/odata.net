@@ -2030,13 +2030,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Writes IsType Expression header.
+        /// Writes IsOf Expression header.
         /// </summary>
-        /// <param name="expression">The Edm IsType expression.</param>
+        /// <param name="expression">The Edm IsOf expression.</param>
         /// <param name="inlineType">Is inline type or not.</param>
-        internal override void WriteIsTypeExpressionElementHeader(IEdmIsTypeExpression expression, bool inlineType)
+        internal override void WriteIsOfExpressionElementHeader(IEdmIsOfExpression expression, bool inlineType)
         {
-            this.xmlWriter.WriteStartElement(CsdlConstants.Element_IsType);
+            this.xmlWriter.WriteStartElement(CsdlConstants.Element_IsOf);
             if (inlineType)
             {
                 this.WriteRequiredAttribute(CsdlConstants.Attribute_Type, expression.Type, this.TypeReferenceAsXml);
@@ -2045,14 +2045,14 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
 
         /// <summary>
-        /// Asynchronously writes IsType Expression header.
+        /// Asynchronously writes IsOf Expression header.
         /// </summary>
-        /// <param name="expression">The Edm IsType expression.</param>
+        /// <param name="expression">The Edm IsOf expression.</param>
         /// <param name="inlineType">Is inline type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
-        internal override async Task WriteIsTypeExpressionElementHeaderAsync(IEdmIsTypeExpression expression, bool inlineType)
+        internal override async Task WriteIsOfExpressionElementHeaderAsync(IEdmIsOfExpression expression, bool inlineType)
         {
-            await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_IsType, null).ConfigureAwait(false);
+            await this.xmlWriter.WriteStartElementAsync(null, CsdlConstants.Element_IsOf, null).ConfigureAwait(false);
             if (inlineType)
             {
                 await this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_Type, expression.Type, this.TypeReferenceAsXml).ConfigureAwait(false);

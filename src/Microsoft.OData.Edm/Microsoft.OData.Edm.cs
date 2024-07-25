@@ -236,7 +236,7 @@ namespace Microsoft.OData.Edm
         internal const string CsdlParser_ReferentialConstraintRequiresOneDependent = "CsdlParser_ReferentialConstraintRequiresOneDependent";
         internal const string CsdlParser_ReferentialConstraintRequiresOnePrincipal = "CsdlParser_ReferentialConstraintRequiresOnePrincipal";
         internal const string CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands = "CsdlParser_InvalidIfExpressionIncorrectNumberOfOperands";
-        internal const string CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands = "CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands";
+        internal const string CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands = "CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands";
         internal const string CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands = "CsdlParser_InvalidCastExpressionIncorrectNumberOfOperands";
         internal const string CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands = "CsdlParser_InvalidLabeledElementExpressionIncorrectNumberOfOperands";
         internal const string CsdlParser_InvalidTypeName = "CsdlParser_InvalidTypeName";

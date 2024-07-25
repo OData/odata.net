@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1
 using System;
 using System.Text;
 using System.Text.Json;
@@ -184,4 +183,3 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         }
     }
 }
-#endif

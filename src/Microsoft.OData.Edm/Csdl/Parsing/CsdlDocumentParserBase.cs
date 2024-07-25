@@ -242,9 +242,9 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 //// <Cast>
                 CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_Cast, this.OnCastExpression);
 
-            var isTypeExpressionParser =
-                //// <IsType>
-                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_IsType, this.OnIsTypeExpression);
+            var isOfExpressionParser =
+                //// <IsOf>
+                CsdlElement<CsdlExpressionBase>(CsdlConstants.Element_IsOf, this.OnIsOfExpression);
 
             var propertyValueParser =
                 //// <PropertyValue>
@@ -307,8 +307,8 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
                 navigationPropertyPathExpressionParser,
                 //// <If/>
                 ifExpressionParser,
-                //// <IsType/>
-                isTypeExpressionParser,
+                //// <IsOf/>
+                isOfExpressionParser,
                 //// <Cast>
                 castExpressionParser,
                 //// <Record/>
@@ -329,7 +329,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
             AddChildParsers(ifExpressionParser, expressionParsers);
             AddChildParsers(castExpressionParser, expressionParsers);
-            AddChildParsers(isTypeExpressionParser, expressionParsers);
+            AddChildParsers(isOfExpressionParser, expressionParsers);
             AddChildParsers(propertyValueParser, expressionParsers);
             AddChildParsers(collectionExpressionParser, expressionParsers);
             AddChildParsers(labeledElementParser, expressionParsers);
@@ -553,7 +553,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             return new CsdlCastExpression(type, expressions.ElementAtOrDefault(0), element.Location);
         }
 
-        private CsdlExpressionBase OnIsTypeExpression(XmlElementInfo element, XmlElementValueCollection childValues)
+        private CsdlExpressionBase OnIsOfExpression(XmlElementInfo element, XmlElementValueCollection childValues)
         {
             string typeName = OptionalType(CsdlConstants.Attribute_Type);
             CsdlTypeReference type = this.ParseTypeReference(typeName, childValues, element.Location, Optionality.Required);
@@ -561,10 +561,10 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             IEnumerable<CsdlExpressionBase> expressions = childValues.ValuesOfType<CsdlExpressionBase>();
             if (expressions.Count() != 1)
             {
-                this.ReportError(element.Location, EdmErrorCode.InvalidIsTypeExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands);
+                this.ReportError(element.Location, EdmErrorCode.InvalidIsOfExpressionIncorrectNumberOfOperands, Edm.Strings.CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands);
             }
 
-            return new CsdlIsTypeExpression(type, expressions.ElementAtOrDefault(0), element.Location);
+            return new CsdlIsOfExpression(type, expressions.ElementAtOrDefault(0), element.Location);
         }
 
         private CsdlExpressionBase ParseAnnotationExpression(XmlElementInfo element, XmlElementValueCollection childValues)

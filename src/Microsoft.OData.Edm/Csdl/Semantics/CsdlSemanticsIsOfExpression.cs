@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlSemanticsIsTypeExpression.cs" company="Microsoft">
+// <copyright file="CsdlSemanticsIsOfExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,18 +10,18 @@ using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 {
-    internal class CsdlSemanticsIsTypeExpression : CsdlSemanticsExpression, IEdmIsTypeExpression
+    internal class CsdlSemanticsIsOfExpression : CsdlSemanticsExpression, IEdmIsOfExpression
     {
-        private readonly CsdlIsTypeExpression expression;
+        private readonly CsdlIsOfExpression expression;
         private readonly IEdmEntityType bindingContext;
 
-        private readonly Cache<CsdlSemanticsIsTypeExpression, IEdmExpression> operandCache = new Cache<CsdlSemanticsIsTypeExpression, IEdmExpression>();
-        private static readonly Func<CsdlSemanticsIsTypeExpression, IEdmExpression> ComputeOperandFunc = (me) => me.ComputeOperand();
+        private readonly Cache<CsdlSemanticsIsOfExpression, IEdmExpression> operandCache = new Cache<CsdlSemanticsIsOfExpression, IEdmExpression>();
+        private static readonly Func<CsdlSemanticsIsOfExpression, IEdmExpression> ComputeOperandFunc = (me) => me.ComputeOperand();
 
-        private readonly Cache<CsdlSemanticsIsTypeExpression, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsIsTypeExpression, IEdmTypeReference>();
-        private static readonly Func<CsdlSemanticsIsTypeExpression, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
+        private readonly Cache<CsdlSemanticsIsOfExpression, IEdmTypeReference> typeCache = new Cache<CsdlSemanticsIsOfExpression, IEdmTypeReference>();
+        private static readonly Func<CsdlSemanticsIsOfExpression, IEdmTypeReference> ComputeTypeFunc = (me) => me.ComputeType();
 
-        public CsdlSemanticsIsTypeExpression(CsdlIsTypeExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
+        public CsdlSemanticsIsOfExpression(CsdlIsOfExpression expression, IEdmEntityType bindingContext, CsdlSemanticsSchema schema)
             : base(schema, expression)
         {
             this.expression = expression;
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         public override EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.IsType; }
+            get { return EdmExpressionKind.IsOf; }
         }
 
         public IEdmExpression Operand

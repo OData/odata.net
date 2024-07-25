@@ -141,7 +141,7 @@ namespace Microsoft.OData.Edm
                 {
                     case EdmExpressionKind.FunctionApplication:
                         return "Apply";
-                    case EdmExpressionKind.IsType:
+                    case EdmExpressionKind.IsOf:
                         return "IsOf";
                     case EdmExpressionKind.Labeled:
                         return "LabeledElement";

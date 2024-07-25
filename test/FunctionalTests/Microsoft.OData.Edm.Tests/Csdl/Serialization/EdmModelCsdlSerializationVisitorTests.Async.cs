@@ -7,10 +7,8 @@
 using System;
 using System.IO;
 using System.Threading.Tasks;
-#if NETCOREAPP3_1
 using System.Text.Json;
 using System.Text.Encodings.Web;
-#endif
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
@@ -788,7 +786,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
         internal async Task VisitAndVerifyJsonAsync(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true, bool wrapper = true)
         {
-#if NETCOREAPP3_1
             Version edmxVersion = this.model.GetEdmxVersion();
 
             using (MemoryStream memStream = new MemoryStream())
@@ -827,7 +824,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
                 string result = reader.ReadToEnd();
                 Assert.Equal(expected, result);
             }
-#endif
         }
     }
 }

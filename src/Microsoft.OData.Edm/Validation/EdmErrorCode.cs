@@ -892,9 +892,9 @@ namespace Microsoft.OData.Edm.Validation
         EnumMemberValueOutOfRange = 292,
 
         /// <summary>
-        /// The IsType expression is invalid because it does not have 1 element.
+        /// The IsOf expression is invalid because it does not have 1 element.
         /// </summary>
-        InvalidIsTypeExpressionIncorrectNumberOfOperands = 293,
+        InvalidIsOfExpressionIncorrectNumberOfOperands = 293,
 
         /// <summary>
         /// The type name is not fully qualified and not a primitive.

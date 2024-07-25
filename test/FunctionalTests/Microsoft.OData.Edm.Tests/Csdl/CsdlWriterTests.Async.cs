@@ -9,12 +9,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
-
-#if NETCOREAPP3_1
 using System.Text.Encodings.Web;
 using System.Text.Json;
-#endif
+using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -3037,7 +3034,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
         internal async Task WriteAndVerifyJsonAsync(IEdmModel model, string expected, bool indented = true, bool isIeee754Compatible = false)
         {
-#if NETCOREAPP3_1
             using (MemoryStream memStream = new MemoryStream())
             {
                 JsonWriterOptions options = new JsonWriterOptions
@@ -3051,7 +3047,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 {
                     CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
                     settings.IsIeee754Compatible = isIeee754Compatible;
-                    IEnumerable<EdmError> errors;
                     var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, jsonWriter, settings).ConfigureAwait(false);
                     await jsonWriter.FlushAsync().ConfigureAwait(false);
                     Assert.True(ok);
@@ -3061,7 +3056,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 string actual = new StreamReader(memStream).ReadToEnd();
                 Assert.Equal(expected, actual);
             }
-#endif
         }
     }
 }

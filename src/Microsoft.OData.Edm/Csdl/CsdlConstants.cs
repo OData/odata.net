@@ -135,7 +135,7 @@ namespace Microsoft.OData.Edm.Csdl
         internal const string Element_FunctionImport = "FunctionImport";
         internal const string Element_FunctionReference = "FunctionReference";
         internal const string Element_If = "If";
-        internal const string Element_IsType = "IsType";
+        internal const string Element_IsOf = "IsOf";
         internal const string Element_Int = "Int";
         internal const string Element_Key = "Key";
         internal const string Element_LabeledElement = "LabeledElement";

@@ -992,13 +992,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.EndElementAsync(expression, this.schemaWriter.WriteCollectionExpressionElementEndAsync).ConfigureAwait(false);
         }
 
-        protected override void ProcessIsTypeExpression(IEdmIsTypeExpression expression)
+        protected override void ProcessIsOfExpression(IEdmIsOfExpression expression)
         {
             bool inlineType = IsInlineType(expression.Type);
 
             if (this.isXml)
             {
-                this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
+                this.BeginElement(expression, (IEdmIsOfExpression t) => { this.schemaWriter.WriteIsOfExpressionElementHeader(t, inlineType); }, e => { this.ProcessFacets(e.Type, inlineType); });
                 if (!inlineType)
                 {
                     VisitTypeReference(expression.Type);
@@ -1009,7 +1009,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
             else
             {
-                this.BeginElement(expression, (IEdmIsTypeExpression t) => { this.schemaWriter.WriteIsTypeExpressionElementHeader(t, inlineType); });
+                this.BeginElement(expression, (IEdmIsOfExpression t) => { this.schemaWriter.WriteIsOfExpressionElementHeader(t, inlineType); });
                 this.VisitExpression(expression.Operand);
                 this.schemaWriter.WriteIsOfExpressionType(expression, inlineType);
                 this.ProcessFacets(expression.Type, inlineType);
@@ -1018,16 +1018,16 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously processes the is type expression.
+        /// Asynchronously processes the is of expression.
         /// </summary>
-        /// <param name="expression">The Edm IsType expression.</param>
-        protected override async Task ProcessIsTypeExpressionAsync(IEdmIsTypeExpression expression)
+        /// <param name="expression">The Edm IsOf expression.</param>
+        protected override async Task ProcessIsOfExpressionAsync(IEdmIsOfExpression expression)
         {
             bool inlineType = IsInlineType(expression.Type);
 
             if (this.isXml)
             {
-                await this.BeginElementAsync(expression, (IEdmIsTypeExpression t) => this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType), e => this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmIsOfExpression t) => this.schemaWriter.WriteIsOfExpressionElementHeaderAsync(t, inlineType), e => this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
 
                 if (!inlineType)
                 {
@@ -1039,7 +1039,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
             else
             {
-                await this.BeginElementAsync(expression, (IEdmIsTypeExpression t) => this.schemaWriter.WriteIsTypeExpressionElementHeaderAsync(t, inlineType)).ConfigureAwait(false);
+                await this.BeginElementAsync(expression, (IEdmIsOfExpression t) => this.schemaWriter.WriteIsOfExpressionElementHeaderAsync(t, inlineType)).ConfigureAwait(false);
                 this.VisitExpression(expression.Operand);
                 await this.schemaWriter.WriteIsOfExpressionTypeAsync(expression, inlineType).ConfigureAwait(false);
                 await this.ProcessFacetsAsync(expression.Type, inlineType).ConfigureAwait(false);

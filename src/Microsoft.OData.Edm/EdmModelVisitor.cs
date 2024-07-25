@@ -149,8 +149,8 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.IntegerConstant:
                     this.ProcessIntegerConstantExpression((IEdmIntegerConstantExpression)expression);
                     break;
-                case EdmExpressionKind.IsType:
-                    this.ProcessIsTypeExpression((IEdmIsTypeExpression)expression);
+                case EdmExpressionKind.IsOf:
+                    this.ProcessIsOfExpression((IEdmIsOfExpression)expression);
                     break;
                 case EdmExpressionKind.LabeledExpressionReference:
                     this.ProcessLabeledExpressionReferenceExpression((IEdmLabeledExpressionReferenceExpression)expression);
@@ -1004,14 +1004,14 @@ namespace Microsoft.OData.Edm
             await this.ProcessExpressionAsync(expression);
         }
 
-        protected virtual void ProcessIsTypeExpression(IEdmIsTypeExpression expression)
+        protected virtual void ProcessIsOfExpression(IEdmIsOfExpression expression)
         {
             this.ProcessExpression(expression);
             this.VisitTypeReference(expression.Type);
             this.VisitExpression(expression.Operand);
         }
 
-        protected virtual async Task ProcessIsTypeExpressionAsync(IEdmIsTypeExpression expression)
+        protected virtual async Task ProcessIsOfExpressionAsync(IEdmIsOfExpression expression)
         {
             await this.ProcessExpressionAsync(expression);
             this.VisitTypeReference(expression.Type);

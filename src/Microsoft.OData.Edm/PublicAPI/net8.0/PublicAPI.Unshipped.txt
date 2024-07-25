@@ -279,7 +279,7 @@ Microsoft.OData.Edm.EdmExpressionKind.FunctionApplication = 17 -> Microsoft.ODat
 Microsoft.OData.Edm.EdmExpressionKind.GuidConstant = 6 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.If = 14 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.IntegerConstant = 7 -> Microsoft.OData.Edm.EdmExpressionKind
-Microsoft.OData.Edm.EdmExpressionKind.IsType = 16 -> Microsoft.OData.Edm.EdmExpressionKind
+Microsoft.OData.Edm.EdmExpressionKind.IsOf = 16 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.Labeled = 19 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.LabeledExpressionReference = 18 -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.EdmExpressionKind.NavigationPropertyPath = 21 -> Microsoft.OData.Edm.EdmExpressionKind
@@ -896,7 +896,7 @@ Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidFloatingPoint = 284 -> Micros
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidGuid = 288 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidIfExpressionIncorrectNumberOfOperands = 290 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidInteger = 278 -> Microsoft.OData.Edm.Validation.EdmErrorCode
-Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidIsTypeExpressionIncorrectNumberOfOperands = 293 -> Microsoft.OData.Edm.Validation.EdmErrorCode
+Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidIsOfExpressionIncorrectNumberOfOperands = 293 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidJson = 404 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidKey = 75 -> Microsoft.OData.Edm.Validation.EdmErrorCode
 Microsoft.OData.Edm.Validation.EdmErrorCode.InvalidKeyValue = 401 -> Microsoft.OData.Edm.Validation.EdmErrorCode
@@ -1162,11 +1162,11 @@ Microsoft.OData.Edm.Vocabularies.EdmIntegerConstant.EdmIntegerConstant(long valu
 Microsoft.OData.Edm.Vocabularies.EdmIntegerConstant.EdmIntegerConstant(Microsoft.OData.Edm.IEdmPrimitiveTypeReference type, long value) -> void
 Microsoft.OData.Edm.Vocabularies.EdmIntegerConstant.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
 Microsoft.OData.Edm.Vocabularies.EdmIntegerConstant.Value.get -> long
-Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression
-Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression.EdmIsTypeExpression(Microsoft.OData.Edm.IEdmExpression operand, Microsoft.OData.Edm.IEdmTypeReference type) -> void
-Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
-Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression.Operand.get -> Microsoft.OData.Edm.IEdmExpression
-Microsoft.OData.Edm.Vocabularies.EdmIsTypeExpression.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
+Microsoft.OData.Edm.Vocabularies.EdmIsOfExpression
+Microsoft.OData.Edm.Vocabularies.EdmIsOfExpression.EdmIsOfExpression(Microsoft.OData.Edm.IEdmExpression operand, Microsoft.OData.Edm.IEdmTypeReference type) -> void
+Microsoft.OData.Edm.Vocabularies.EdmIsOfExpression.ExpressionKind.get -> Microsoft.OData.Edm.EdmExpressionKind
+Microsoft.OData.Edm.Vocabularies.EdmIsOfExpression.Operand.get -> Microsoft.OData.Edm.IEdmExpression
+Microsoft.OData.Edm.Vocabularies.EdmIsOfExpression.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression
 Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression.EdmLabeledExpression(string name, Microsoft.OData.Edm.IEdmExpression expression) -> void
 Microsoft.OData.Edm.Vocabularies.EdmLabeledExpression.Expression.get -> Microsoft.OData.Edm.IEdmExpression
@@ -1348,9 +1348,9 @@ Microsoft.OData.Edm.Vocabularies.IEdmIfExpression.TrueExpression.get -> Microsof
 Microsoft.OData.Edm.Vocabularies.IEdmIntegerConstantExpression
 Microsoft.OData.Edm.Vocabularies.IEdmIntegerValue
 Microsoft.OData.Edm.Vocabularies.IEdmIntegerValue.Value.get -> long
-Microsoft.OData.Edm.Vocabularies.IEdmIsTypeExpression
-Microsoft.OData.Edm.Vocabularies.IEdmIsTypeExpression.Operand.get -> Microsoft.OData.Edm.IEdmExpression
-Microsoft.OData.Edm.Vocabularies.IEdmIsTypeExpression.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
+Microsoft.OData.Edm.Vocabularies.IEdmIsOfExpression
+Microsoft.OData.Edm.Vocabularies.IEdmIsOfExpression.Operand.get -> Microsoft.OData.Edm.IEdmExpression
+Microsoft.OData.Edm.Vocabularies.IEdmIsOfExpression.Type.get -> Microsoft.OData.Edm.IEdmTypeReference
 Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpression
 Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpression.Expression.get -> Microsoft.OData.Edm.IEdmExpression
 Microsoft.OData.Edm.Vocabularies.IEdmLabeledExpressionReferenceExpression

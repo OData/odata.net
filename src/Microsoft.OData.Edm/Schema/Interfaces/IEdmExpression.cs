@@ -94,9 +94,9 @@ namespace Microsoft.OData.Edm
         Cast,
 
         /// <summary>
-        /// Represents an expression implementing <see cref="IEdmIsTypeExpression"/>.
+        /// Represents an expression implementing <see cref="IEdmIsOfExpression"/>.
         /// </summary>
-        IsType,
+        IsOf,
 
         /// <summary>
         /// Represents an expression implementing <see cref="IEdmApplyExpression"/>.
