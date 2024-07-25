@@ -243,10 +243,10 @@ namespace Microsoft.OData.Client
         /// </remarks>
         private static bool ContainsSelectQueryOption(string queryString)
         {
-            return queryString.Contains(SelectQueryOptionWithQuestionMark)
-                || queryString.Contains(SelectQueryOptionWithAmpersand)
-                || queryString.Contains(SelectQueryOptionWithLeftParen)
-                || queryString.Contains(SelectQueryOptionWithSemi);
+            return queryString.Contains(SelectQueryOptionWithQuestionMark, StringComparison.Ordinal)
+                || queryString.Contains(SelectQueryOptionWithAmpersand, StringComparison.Ordinal)
+                || queryString.Contains(SelectQueryOptionWithLeftParen, StringComparison.Ordinal)
+                || queryString.Contains(SelectQueryOptionWithSemi, StringComparison.Ordinal);
         }
     }
 }

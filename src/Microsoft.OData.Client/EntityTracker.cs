@@ -272,7 +272,7 @@ namespace Microsoft.OData.Client
         /// <returns>true if found and not removed</returns>
         internal LinkDescriptor DetachReferenceLink(object source, string sourceProperty, object target, MergeOption linkMerge)
         {
-            Debug.Assert(sourceProperty.IndexOf('/') == -1, "sourceProperty.IndexOf('/') == -1");
+            Debug.Assert(sourceProperty.IndexOf('/', StringComparison.Ordinal) == -1, "sourceProperty.IndexOf('/') == -1");
 
             LinkDescriptor existing = this.GetLinks(source, sourceProperty).FirstOrDefault();
             if (existing != null)
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Client
         internal override IEnumerable<LinkDescriptor> GetLinks(object source, string sourceProperty)
         {
             this.EnsureLinkBindings();
-            Debug.Assert(sourceProperty.IndexOf('/') == -1, "sourceProperty.IndexOf('/') == -1");
+            Debug.Assert(sourceProperty.IndexOf('/', StringComparison.Ordinal) == -1, "sourceProperty.IndexOf('/') == -1");
             return this.bindings.Values.Where(o => (o.Source == source) && (o.SourceProperty == sourceProperty));
         }
 

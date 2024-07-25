@@ -356,7 +356,7 @@ namespace Microsoft.OData.Json
             ODataPayloadKind detectedPayloadKind = ODataPayloadKind.Unsupported;
             EdmTypeResolver edmTypeResolver = new EdmTypeReaderResolver(this.model, clientCustomTypeResolver);
 
-            if (!fragment.Contains(ODataConstants.UriSegmentSeparator) && !hasItemSelector && kind == ODataDeltaKind.None)
+            if (!fragment.Contains(ODataConstants.UriSegmentSeparator, StringComparison.Ordinal) && !hasItemSelector && kind == ODataDeltaKind.None)
             {
                 // Service document: no fragment
                 if (fragment.Length == 0)

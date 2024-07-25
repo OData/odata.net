@@ -62,7 +62,7 @@ namespace Microsoft.OData
         /// <param name="name">Name to validate.</param>
         internal static void ValidateName(string name)
         {
-            if (name.IndexOf('.') < 0 || name[0] == '.' || name[name.Length - 1] == '.')
+            if (name.IndexOf('.', StringComparison.Ordinal) < 0 || name[0] == '.' || name[name.Length - 1] == '.')
             {
                 throw new ArgumentException(Strings.ODataInstanceAnnotation_NeedPeriodInName(name));
             }

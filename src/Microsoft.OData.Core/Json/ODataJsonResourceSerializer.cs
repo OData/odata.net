@@ -56,7 +56,7 @@ namespace Microsoft.OData.Json
                 resourceSet,
                 isUndeclared);
 
-            if (typeName != null && !typeName.Contains(ODataConstants.ContextUriFragmentUntyped))
+            if (typeName != null && !typeName.Contains(ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
             {
                 if (propertyName == null)
                 {
@@ -355,7 +355,7 @@ namespace Microsoft.OData.Json
                 resourceSet,
                 isUndeclared);
 
-            if (typeName != null && !typeName.Contains(ODataConstants.ContextUriFragmentUntyped))
+            if (typeName != null && !typeName.Contains(ODataConstants.ContextUriFragmentUntyped, StringComparison.Ordinal))
             {
                 if (propertyName == null)
                 {

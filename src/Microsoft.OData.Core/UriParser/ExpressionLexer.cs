@@ -746,7 +746,7 @@ namespace Microsoft.OData.UriParser
                         string leftToken = ExpressionText.Substring(start, this.textPos - start);
 
 
-                        t = this.parsingFunctionParameters && !leftToken.Contains(".")
+                        t = this.parsingFunctionParameters && !leftToken.Contains(".", StringComparison.Ordinal)
                             ? ExpressionTokenKind.ParameterAlias
                             : ExpressionTokenKind.Identifier;
                         break;

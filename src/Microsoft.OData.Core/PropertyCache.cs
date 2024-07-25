@@ -45,8 +45,8 @@ namespace Microsoft.OData
             public override int GetHashCode()
             {
                 return this.Depth.GetHashCode() ^
-                       this.Name.GetHashCode() ^
-                       (this.FullTypeName?.GetHashCode() ?? 0);
+                       this.Name.GetHashCode(StringComparison.Ordinal) ^
+                       (this.FullTypeName?.GetHashCode(StringComparison.Ordinal) ?? 0);
             }
 
             public override bool Equals(object obj)

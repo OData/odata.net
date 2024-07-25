@@ -162,7 +162,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.IndexOf('.') >= 0;
+            return propertyName.IndexOf('.', StringComparison.Ordinal) >= 0;
         }
 
         /// <summary>

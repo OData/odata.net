@@ -2951,7 +2951,7 @@ namespace Microsoft.OData.Edm
         {
             VersioningDictionary<string, string> mappings = model.GetNamespaceAliases();
             VersioningList<string> list = model.GetUsedNamespacesHavingAlias();
-            int idx = name.IndexOf('.');
+            int idx = name.IndexOf('.', StringComparison.Ordinal);
 
             if (list != null && mappings != null && idx > 0)
             {
@@ -3361,7 +3361,7 @@ namespace Microsoft.OData.Edm
 
             string firstElementName = pathSegments[0];
             int nextIndex = 1;
-            if (firstElementName.Contains("."))
+            if (firstElementName.Contains(".", StringComparison.Ordinal))
             {
                 if (string.Equals(firstElementName, container.FullName(), StringComparison.OrdinalIgnoreCase))
                 {
@@ -3478,7 +3478,7 @@ namespace Microsoft.OData.Edm
 
             IEdmEntityContainer container;
             var segment = segmentIterator.Current;
-            if (segment.Contains("."))
+            if (segment.Contains(".", StringComparison.Ordinal))
             {
                 // The first segment is the qualified name of an entity container.
                 container = model.FindEntityContainer(segment);
@@ -3824,7 +3824,14 @@ namespace Microsoft.OData.Edm
             // '.'                      Appears in qualified names.
             // '`', '[', ']', ','       Appear in generic instantiations.
             // '+'                      Appears in names of local classes.
-            public static readonly string LocalName = typeof(T).ToString().Replace("_", "_____").Replace('.', '_').Replace("[", "").Replace("]", "").Replace(",", "__").Replace("`", "___").Replace("+", "____");
+            public static readonly string LocalName = typeof(T).ToString()
+                .Replace("_", "_____", StringComparison.Ordinal)
+                .Replace(".", "_", StringComparison.Ordinal)
+                .Replace("[", "", StringComparison.Ordinal)
+                .Replace("]", "", StringComparison.Ordinal)
+                .Replace(",", "__", StringComparison.Ordinal)
+                .Replace("`", "___", StringComparison.Ordinal)
+                .Replace("+", "____", StringComparison.Ordinal);
         }
     }
 }

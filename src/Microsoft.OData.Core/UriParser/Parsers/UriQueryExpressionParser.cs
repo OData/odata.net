@@ -1300,7 +1300,7 @@ namespace Microsoft.OData.UriParser
                     verb = AggregationMethodDefinition.Sum;
                     break;
                 default:
-                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot))
+                    if (!methodLabel.Contains(OData.ExpressionConstants.SymbolDot, StringComparison.Ordinal))
                     {
                         throw ParseError(
                             ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(

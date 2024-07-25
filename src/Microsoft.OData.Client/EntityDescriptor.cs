@@ -704,7 +704,7 @@ namespace Microsoft.OData.Client
         internal bool TryGetLinkInfo(string propertyName, out LinkInfo linkInfo)
         {
             Util.CheckArgumentNullAndEmpty(propertyName, "propertyName");
-            Debug.Assert(propertyName.IndexOf('/') == -1, "propertyName.IndexOf('/') == -1");
+            Debug.Assert(propertyName.IndexOf('/', StringComparison.Ordinal) == -1, "propertyName.IndexOf('/') == -1");
 
             linkInfo = null;
             if (this.TransientEntityDescriptor != null && this.TransientEntityDescriptor.TryGetLinkInfo(propertyName, out linkInfo))

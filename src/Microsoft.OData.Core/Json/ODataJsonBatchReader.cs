@@ -182,11 +182,11 @@ namespace Microsoft.OData.Json
             ValidateRequiredProperty(url, ODataJsonBatchPayloadItemPropertiesCache.PropertyNameUrl);
 
             // escape any colons in the query string portion of the url
-            int queryOptionSeparator = url.IndexOf('?');
-            int firstColon = url.IndexOf(':');
+            int queryOptionSeparator = url.IndexOf('?', StringComparison.Ordinal);
+            int firstColon = url.IndexOf(':', StringComparison.Ordinal);
             if (queryOptionSeparator > 0 && firstColon > 0 && queryOptionSeparator < firstColon)
             {
-                url = url.Substring(0, queryOptionSeparator) + url.Substring(queryOptionSeparator).Replace(":", "%3A");
+                url = url.Substring(0, queryOptionSeparator) + url.Substring(queryOptionSeparator).Replace(":", "%3A", StringComparison.Ordinal);
             }
 
             Uri requestUri = new Uri(url, UriKind.RelativeOrAbsolute);

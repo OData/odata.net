@@ -7,6 +7,7 @@
 namespace Microsoft.OData
 {
     using System;
+    using System.Globalization;
     using Microsoft.OData.UriParser;
 
     /// <summary>
@@ -68,21 +69,21 @@ namespace Microsoft.OData
             {
                 queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
                 writeQueryPrefix = false;
-                queryOptions = string.Concat(queryOptions, "$top", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.Top.ToString()));
+                queryOptions = string.Concat(queryOptions, "$top", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(string.Format(CultureInfo.InvariantCulture, $"{odataUri.Top}")));
             }
 
             if (odataUri.Skip != null)
             {
                 queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
                 writeQueryPrefix = false;
-                queryOptions = string.Concat(queryOptions, "$skip", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.Skip.ToString()));
+                queryOptions = string.Concat(queryOptions, "$skip", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(string.Format(CultureInfo.InvariantCulture, $"{odataUri.Skip}")));
             }
 
             if (odataUri.Index != null)
             {
                 queryOptions = WriteQueryPrefixOrSeparator(writeQueryPrefix, queryOptions);
                 writeQueryPrefix = false;
-                queryOptions = string.Concat(queryOptions, "$index", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(odataUri.Index.ToString()));
+                queryOptions = string.Concat(queryOptions, "$index", ExpressionConstants.SymbolEqual, Uri.EscapeDataString(string.Format(CultureInfo.InvariantCulture, $"{odataUri.Index}")));
             }
 
             if (odataUri.QueryCount != null)

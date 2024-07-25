@@ -414,7 +414,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                         // Empty Path is not supported.
                         foreach (string hop in pathExpression.PathSegments)
                         {
-                            if (hop.Contains("@"))
+                            if (hop.Contains("@", StringComparison.Ordinal))
                             {
                                 var currentPathSegmentInfos = hop.Split('@');
                                 var propertyName = currentPathSegmentInfos[0];
@@ -461,7 +461,7 @@ namespace Microsoft.OData.Edm.Vocabularies
                                     break;
                                 }
                             }
-                            else if (hop.Contains("."))
+                            else if (hop.Contains(".", StringComparison.Ordinal))
                             {
                                 if (this.edmModel == null)
                                 {

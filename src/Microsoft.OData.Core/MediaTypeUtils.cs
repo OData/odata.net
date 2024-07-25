@@ -970,7 +970,7 @@ namespace Microsoft.OData
             public override int GetHashCode()
             {
                 int result = this.MediaTypeResolver.GetHashCode() ^ this.PayloadKind.GetHashCode();
-                return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode() : result;
+                return this.ContentTypeName != null ? result ^ this.ContentTypeName.GetHashCode(StringComparison.Ordinal) : result;
             }
 
             /// <summary>
@@ -984,7 +984,7 @@ namespace Microsoft.OData
                 if (contentTypeName.StartsWith("multipart", StringComparison.OrdinalIgnoreCase))
                 {
                     // our formatters don't care about parameters for multipart, so just strip them all out for simplicity
-                    int parameter = contentTypeName.IndexOf(';');
+                    int parameter = contentTypeName.IndexOf(';', StringComparison.Ordinal);
                     if (parameter > 0)
                     {
                         return contentTypeName.Substring(0, parameter);

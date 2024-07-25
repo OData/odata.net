@@ -121,7 +121,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.token.Kind == ExpressionTokenKind.StringLiteral)
             {
-                this.token.Text = this.token.Text.Substring(1, this.token.Text.Length - 2).Replace("\\\\", "\\").Replace("\\\"", "\"");
+                this.token.Text = this.token.Text.Substring(1, this.token.Text.Length - 2).Replace("\\\\", "\\", StringComparison.Ordinal).Replace("\\\"", "\"", StringComparison.Ordinal);
                 if (string.IsNullOrEmpty(this.token.Text))
                 {
                     throw ParseError(Strings.ExpressionToken_IdentifierExpected(this.token.Position));
@@ -165,7 +165,7 @@ namespace Microsoft.OData.UriParser
                 this.isEscape = true;
                 this.NextChar();
 
-                if (!this.ch.HasValue || EscapeSequenceSet.IndexOf(this.ch.Value) < 0)
+                if (!this.ch.HasValue || EscapeSequenceSet.IndexOf(this.ch.Value, StringComparison.Ordinal) < 0)
                 {
                     throw ParseError(Strings.ExpressionLexer_InvalidEscapeSequence(this.ch, this.textPos, this.Text));
                 }

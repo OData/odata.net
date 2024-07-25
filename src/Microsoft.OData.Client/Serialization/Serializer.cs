@@ -917,7 +917,7 @@ namespace Microsoft.OData.Client
                 queryBuilder.Append(UriHelper.AMPERSAND);
             }
 
-            if (!lastSeg.Contains(Char.ToString(UriHelper.ATSIGN)))
+            if (!lastSeg.Contains(Char.ToString(UriHelper.ATSIGN), StringComparison.Ordinal))
             {
                 pathBuilder.Append(UriHelper.LEFTPAREN);
             }
@@ -938,7 +938,7 @@ namespace Microsoft.OData.Client
                 string paramName = op.Name.Trim();
 
                 // if the parameter name is an alias, make sure that the URI contains it.
-                if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase) && !uriString.Contains(paramName))
+                if (paramName.StartsWith(Char.ToString(UriHelper.ATSIGN), StringComparison.OrdinalIgnoreCase) && !uriString.Contains(paramName, StringComparison.Ordinal))
                 {
                     throw new DataServiceRequestException(Strings.Serializer_UriDoesNotContainParameterAlias(op.Name));
                 }

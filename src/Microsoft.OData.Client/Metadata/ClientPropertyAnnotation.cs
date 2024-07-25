@@ -14,7 +14,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Linq.Expressions;
     using System.Reflection;
     using Microsoft.OData.Edm;
-    using c = Microsoft.OData.Client;
+    using C = Microsoft.OData.Client;
 
     #endregion Namespaces.
 
@@ -444,7 +444,7 @@ namespace Microsoft.OData.Client.Metadata
             }
             else
             {
-                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(value.GetType().ToString(), propertyName));
+                throw C.Error.InvalidOperation(C.Strings.ClientType_MissingProperty(value.GetType().ToString(), propertyName));
             }
         }
 

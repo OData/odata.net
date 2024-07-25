@@ -25,7 +25,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved operation list.</returns>
         public override IEnumerable<IEdmOperation> ResolveUnboundOperations(IEdmModel model, string identifier)
         {
-            if (identifier.Contains("."))
+            if (identifier.Contains(".", StringComparison.Ordinal))
             {
                 return base.ResolveUnboundOperations(model, identifier);
             }
@@ -42,7 +42,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Resolved operation list.</returns>
         public override IEnumerable<IEdmOperation> ResolveBoundOperations(IEdmModel model, string identifier, IEdmType bindingType)
         {
-            if (identifier.Contains("."))
+            if (identifier.Contains(".", StringComparison.Ordinal))
             {
                 return base.ResolveBoundOperations(model, identifier, bindingType);
             }

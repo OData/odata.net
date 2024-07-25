@@ -185,7 +185,7 @@ namespace Microsoft.OData.Client
         public virtual string AppendRequestUri(string nextSegment)
         {
             Uri requestUri = this.RequestUri;
-            return UriUtil.UriToString(requestUri).Replace(requestUri.AbsolutePath, requestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment);
+            return UriUtil.UriToString(requestUri).Replace(requestUri.AbsolutePath, requestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment, StringComparison.Ordinal);
         }
 
         /// <summary>

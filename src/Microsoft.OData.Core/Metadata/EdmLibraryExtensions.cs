@@ -50,7 +50,7 @@ namespace Microsoft.OData.Metadata
         /// Packs the <see cref="TypeCode"/> of supported primitive types. This is used to speed up the <see cref="IsPrimitiveType(Type)"/> method.
         /// If the bit at a given type code position is set, it means that's a support primitive type.
         /// </summary>
-        private static readonly int PrimitiveTypeCodeBitMap = 0;
+        private static int PrimitiveTypeCodeBitMap = 0;
 #endif
 
         /// <summary>Type reference for Edm.Boolean.</summary>
@@ -483,7 +483,7 @@ namespace Microsoft.OData.Metadata
                 return Enumerable.Empty<IEdmOperation>();
             }
 
-            int indexOfParameterStart = operationName.IndexOf(ODataJsonConstants.FunctionParameterStart);
+            int indexOfParameterStart = operationName.IndexOf(ODataJsonConstants.FunctionParameterStart, StringComparison.Ordinal);
             string operationNameWithoutParameterTypes;
             if (indexOfParameterStart > 0)
             {
@@ -1674,7 +1674,7 @@ namespace Microsoft.OData.Metadata
             }
 
 #if !ODATA_SERVICE && !ODATA_CLIENT
-            int indexOfParameterStart = operationImportName.IndexOf(ODataJsonConstants.FunctionParameterStart);
+            int indexOfParameterStart = operationImportName.IndexOf(ODataJsonConstants.FunctionParameterStart, StringComparison.Ordinal);
             string functionImportNameWithoutParameterTypes = operationImportName;
             if (indexOfParameterStart > 0)
             {

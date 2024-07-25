@@ -3709,7 +3709,7 @@ namespace Microsoft.OData.Client
 
                 string contentType = buildingRequestEventArgs.HeaderCollection.GetHeader(ContentType);
 
-                if (!string.IsNullOrEmpty(contentType) && contentType.ToUpperInvariant().Contains(MimeIeee754CompatibleHeaderTrue.ToUpperInvariant()))
+                if (!string.IsNullOrEmpty(contentType) && contentType.ToUpperInvariant().Contains(MimeIeee754CompatibleHeaderTrue.ToUpperInvariant(), StringComparison.Ordinal))
                 {
                     this.IsIeee754Compatible = true;
                 }

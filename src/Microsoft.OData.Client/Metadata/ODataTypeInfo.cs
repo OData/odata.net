@@ -15,7 +15,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    using c = Microsoft.OData.Client;
+    using C = Microsoft.OData.Client;
 
     #endregion Namespaces.
 
@@ -170,7 +170,7 @@ namespace Microsoft.OData.Client.Metadata
 
                 if (memberInfo == null)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverSideName));
+                    throw C.Error.InvalidOperation(C.Strings.ClientType_MissingProperty(type.ToString(), serverSideName));
                 }
 
                 memberInfoName = memberInfo.Name;
@@ -197,7 +197,7 @@ namespace Microsoft.OData.Client.Metadata
 
             if ((!_propertyInfoDict.TryGetValue(serverDefinedName, out clientPropertyInfo)) && undeclaredPropertyBehavior == UndeclaredPropertyBehavior.ThrowException)
             {
-                throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(type.ToString(), serverDefinedName));
+                throw C.Error.InvalidOperation(C.Strings.ClientType_MissingProperty(type.ToString(), serverDefinedName));
             }
 
             return clientPropertyInfo;
@@ -274,7 +274,7 @@ namespace Microsoft.OData.Client.Metadata
         {
             if (CommonUtil.IsUnsupportedType(type))
             {
-                throw new InvalidOperationException(c.Strings.ClientType_UnsupportedType(type));
+                throw new InvalidOperationException(C.Strings.ClientType_UnsupportedType(type));
             }
 
             string typeName = type.ToString();
@@ -318,14 +318,14 @@ namespace Microsoft.OData.Client.Metadata
                 }
                 else if (keyPropertyDeclaringType != key.DeclaringType)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
+                    throw C.Error.InvalidOperation(C.Strings.ClientType_KeysOnDifferentDeclaredType(typeName));
                 }
 
                 // Check if the key property's type is a known primitive, an enum, or a nullable generic.
                 // If it doesn't meet any of these conditions, throw an InvalidOperationException.
                 if (!PrimitiveType.IsKnownType(key.PropertyType) && !key.PropertyType.IsEnum() && !(key.PropertyType.IsGenericType() && key.PropertyType.GetGenericTypeDefinition() == typeof(System.Nullable<>) && key.PropertyType.GetGenericArguments().First().IsEnum()))
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
+                    throw C.Error.InvalidOperation(C.Strings.ClientType_KeysMustBeSimpleTypes(key.Name, typeName, key.PropertyType.FullName));
                 }
             }
 
@@ -338,7 +338,7 @@ namespace Microsoft.OData.Client.Metadata
                                     where b.Name == a
                                     select b).FirstOrDefault() == null
                                 select a).First<string>();
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingProperty(typeName, m));
+                    throw C.Error.InvalidOperation(C.Strings.ClientType_MissingProperty(typeName, m));
                 }
             }
 

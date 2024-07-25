@@ -7,6 +7,8 @@
 #if ODATA_CLIENT
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
+using System;
+
 namespace Microsoft.OData.UriParser
 #endif
 {
@@ -48,7 +50,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
-            int identifierHashCode = this.Identifier.GetHashCode();
+            int identifierHashCode = this.Identifier.GetHashCode(System.StringComparison.Ordinal);
             if (this.NextToken != null)
             {
                 identifierHashCode = Combine(identifierHashCode, this.NextToken.GetHashCode());

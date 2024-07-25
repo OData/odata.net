@@ -762,7 +762,7 @@ namespace Microsoft.OData
         /// </summary>
         /// <param name="node">The node to extract the ResourceRangeVariableReferenceNode.</param>
         /// <returns>The extracted ResourceRangeVariableReferenceNode.</returns>
-        private ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
+        private static ResourceRangeVariableReferenceNode GetResourceRangeVariableReferenceNode(QueryNode node)
         {
             if (node == null)
             {

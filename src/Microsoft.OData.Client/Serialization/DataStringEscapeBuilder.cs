@@ -83,7 +83,7 @@ namespace Microsoft.OData.Client
                 {
                     this.ReadQuotedString(current);
                 }
-                else if (SensitiveCharacters.IndexOf(current) >= 0)
+                else if (SensitiveCharacters.IndexOf(current, StringComparison.Ordinal) >= 0)
                 {
                     this.output.Append(Uri.EscapeDataString(current.ToString()));
                 }

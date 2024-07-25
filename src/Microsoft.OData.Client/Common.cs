@@ -275,7 +275,7 @@ namespace Microsoft.OData.Service
             Debug.Assert(text != null, "text != null");
 
             // Separate version number and extra string.
-            int separator = text.IndexOf(';');
+            int separator = text.IndexOf(';', StringComparison.Ordinal);
             string versionText, libraryName;
             if (separator >= 0)
             {

@@ -8,6 +8,7 @@
 namespace Microsoft.OData.Service
 #else
 #if NETCOREAPP
+using System;
 using System.Text.Json;
 #endif
 
@@ -46,7 +47,7 @@ namespace Microsoft.OData
 
             if (objectToConvert.GetType().IsEnum())
             {
-                return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ","));
+                return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ",", StringComparison.Ordinal));
             }
 
 #if NETCOREAPP

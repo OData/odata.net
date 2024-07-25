@@ -1368,7 +1368,7 @@ namespace Microsoft.OData.Json
                             bool isJson = false;
                             if (streamPropertyInfo.ContentType != null)
                             {
-                                if (streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson))
+                                if (streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal))
                                 {
                                     isJson = true;
                                 }
@@ -1380,7 +1380,7 @@ namespace Microsoft.OData.Json
                                 {
                                     // If the property does not have a mediaType annotation specifying application/json, then read over the property name
                                     IEdmStringConstantExpression stringExpression = mediaTypeAnnotation.Value as IEdmStringConstantExpression;
-                                    if (stringExpression != null && stringExpression.Value.Contains(MimeConstants.MimeApplicationJson))
+                                    if (stringExpression != null && stringExpression.Value.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal))
                                     {
                                         isJson = true;
                                     }
@@ -1475,7 +1475,7 @@ namespace Microsoft.OData.Json
         /// <returns>True, if the StreamPropertyInfo specifies application/json, otherwise false.</returns>
         private static bool IsJsonStream(ODataStreamPropertyInfo streamPropertyInfo)
         {
-            return streamPropertyInfo.ContentType != null && streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson);
+            return streamPropertyInfo.ContentType != null && streamPropertyInfo.ContentType.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -1860,7 +1860,7 @@ namespace Microsoft.OData.Json
                         break;
 
                     case ODataAnnotationNames.ODataType:
-                        Debug.Assert(((string)propertyAnnotation.Value).Contains("Stream"), "Non-stream type annotation on stream property");
+                        Debug.Assert(((string)propertyAnnotation.Value).Contains("Stream", StringComparison.Ordinal), "Non-stream type annotation on stream property");
                         break;
 
                     default:
@@ -2149,7 +2149,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.Resource != null, "resourceState.Resource != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
 
             this.ValidateCanReadMetadataReferenceProperty();
@@ -2190,7 +2190,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
 
             this.ValidateCanReadMetadataReferenceProperty();
@@ -3625,7 +3625,7 @@ namespace Microsoft.OData.Json
                         if (this.JsonReader.NodeType == JsonNodeType.Property)
                         {
                             bool isJson = false;
-                            if (streamPropertyInfo.ContentType?.Contains(MimeConstants.MimeApplicationJson) == true)
+                            if (streamPropertyInfo.ContentType?.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal) == true)
                             {
                                 isJson = true;
                             }
@@ -3636,7 +3636,7 @@ namespace Microsoft.OData.Json
                                 {
                                     // If the property does not have a mediaType annotation specifying application/json, then read over the property name
                                     IEdmStringConstantExpression stringExpression = mediaTypeAnnotation.Value as IEdmStringConstantExpression;
-                                    if (stringExpression != null && stringExpression.Value.Contains(MimeConstants.MimeApplicationJson))
+                                    if (stringExpression != null && stringExpression.Value.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal))
                                     {
                                         isJson = true;
                                     }
@@ -4244,7 +4244,7 @@ namespace Microsoft.OData.Json
             Debug.Assert(resourceState != null, "resourceState != null");
             Debug.Assert(resourceState.Resource != null, "resourceState.Resource != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
 
             this.ValidateCanReadMetadataReferenceProperty();
@@ -4289,7 +4289,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(resourceSet != null, "resourceSet != null");
             Debug.Assert(!string.IsNullOrEmpty(metadataReferencePropertyName), "!string.IsNullOrEmpty(metadataReferencePropertyName)");
-            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
+            Debug.Assert(metadataReferencePropertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) > -1, "metadataReferencePropertyName.IndexOf(ODataJsonConstants.ContextUriFragmentIndicator) > -1");
             this.JsonReader.AssertNotBuffering();
 
             this.ValidateCanReadMetadataReferenceProperty();

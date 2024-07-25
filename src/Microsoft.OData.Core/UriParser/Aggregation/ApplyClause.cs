@@ -105,7 +105,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             return result;
         }
 
-        private IEnumerable<EndPathToken> GetGroupByPaths(IEnumerable<GroupByPropertyNode> nodes, EndPathToken token)
+        private static IEnumerable<EndPathToken> GetGroupByPaths(IEnumerable<GroupByPropertyNode> nodes, EndPathToken token)
         {
             foreach (var node in nodes)
             {
@@ -124,7 +124,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             }
         }
 
-        private string CreatePropertiesUriSegment(
+        private static string CreatePropertiesUriSegment(
             IEnumerable<GroupByPropertyNode> groupByPropertyNodes,
             IEnumerable<AggregateExpressionBase> aggregateExpressions,
             IEnumerable<ComputeExpression> computeExpressions)

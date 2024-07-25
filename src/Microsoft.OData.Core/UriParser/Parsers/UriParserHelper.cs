@@ -268,7 +268,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>True if the identifier is an annotation term, otherwise false</returns>
         internal static bool IsAnnotation(string identifier)
         {
-            return !string.IsNullOrEmpty(identifier) && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".");
+            return !string.IsNullOrEmpty(identifier) && identifier[0] == UriQueryConstants.AnnotationPrefix && identifier.Contains(".", StringComparison.Ordinal);
         }
 
         /// <summary>

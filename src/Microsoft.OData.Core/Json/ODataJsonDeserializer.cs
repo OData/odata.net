@@ -228,7 +228,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(!string.IsNullOrEmpty(propertyAnnotationName), "!string.IsNullOrEmpty(propertyAnnotationName)");
 
-            int propertyAnnotationSeparatorIndex = propertyAnnotationName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar);
+            int propertyAnnotationSeparatorIndex = propertyAnnotationName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar, StringComparison.Ordinal);
             if (propertyAnnotationSeparatorIndex <= 0 || propertyAnnotationSeparatorIndex == propertyAnnotationName.Length - 1)
             {
                 propertyName = null;
@@ -805,8 +805,8 @@ namespace Microsoft.OData.Json
         /// <returns>If the JSON property name equals the simplified OData annotation property name.</returns>
         protected bool CompareSimplifiedODataAnnotation(string simplifiedPropertyName, string propertyName)
         {
-            Debug.Assert(simplifiedPropertyName.IndexOf('@') == 0, "simplifiedPropertyName must start with '@'.");
-            Debug.Assert(simplifiedPropertyName.IndexOf('.') == -1, "simplifiedPropertyName must not be namespace-qualified.");
+            Debug.Assert(simplifiedPropertyName.IndexOf('@', StringComparison.Ordinal) == 0, "simplifiedPropertyName must start with '@'.");
+            Debug.Assert(simplifiedPropertyName.IndexOf('.', StringComparison.Ordinal) == -1, "simplifiedPropertyName must not be namespace-qualified.");
 
             return this.JsonInputContext.OptionalODataPrefix &&
                    string.Equals(simplifiedPropertyName, propertyName, StringComparison.Ordinal);
@@ -820,7 +820,7 @@ namespace Microsoft.OData.Json
         protected string CompleteSimplifiedODataAnnotation(string annotationName)
         {
             if (this.JsonInputContext.OptionalODataPrefix &&
-                annotationName.IndexOf('.') == -1)
+                annotationName.IndexOf('.', StringComparison.Ordinal) == -1)
             {
                 annotationName = ODataJsonConstants.ODataAnnotationNamespacePrefix + annotationName;
             }

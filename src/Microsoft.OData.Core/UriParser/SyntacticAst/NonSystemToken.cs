@@ -10,6 +10,7 @@ namespace Microsoft.OData.Client.ALinq.UriParser
 namespace Microsoft.OData.UriParser
 #endif
 {
+    using System;
     #region Namespaces
 
     using System.Collections.Generic;
@@ -69,7 +70,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>true if this token is namespace or container qualified.</returns>
         public override bool IsNamespaceOrContainerQualified()
         {
-            return this.identifier.Contains(".");
+            return this.identifier.Contains(".", StringComparison.Ordinal);
         }
 
         /// <summary>

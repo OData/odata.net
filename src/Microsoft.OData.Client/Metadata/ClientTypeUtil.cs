@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Reflection;
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
-    using c = Microsoft.OData.Client;
+    using C = Microsoft.OData.Client;
 
     #endregion Namespaces.
 
@@ -263,7 +263,7 @@ namespace Microsoft.OData.Client.Metadata
                         }
                         else
                         {   // Multiple implementations (e.g. ICollection<int> and ICollection<int?>)
-                            throw c.Error.NotSupported(c.Strings.ClientType_MultipleImplementationNotSupported);
+                            throw C.Error.NotSupported(C.Strings.ClientType_MultipleImplementationNotSupported);
                         }
                     }
                 }
@@ -337,12 +337,12 @@ namespace Microsoft.OData.Client.Metadata
         {
             while (type != null)
             {
-                if (c.PlatformHelper.IsGenericType(type) && WebUtil.IsDataServiceCollectionType(type.GetGenericTypeDefinition()))
+                if (C.PlatformHelper.IsGenericType(type) && WebUtil.IsDataServiceCollectionType(type.GetGenericTypeDefinition()))
                 {
                     return true;
                 }
 
-                type = c.PlatformHelper.GetBaseType(type);
+                type = C.PlatformHelper.GetBaseType(type);
             }
 
             return false;

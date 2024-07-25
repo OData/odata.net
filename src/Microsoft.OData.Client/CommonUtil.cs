@@ -34,10 +34,10 @@ namespace Microsoft.OData.Service
 
         public static object ParseJsonToPrimitiveValue(string rawValue)
         {
-            Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0,
+            Debug.Assert(rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{', StringComparison.Ordinal) != 0 && rawValue.IndexOf('[', StringComparison.Ordinal) != 0,
                   "rawValue != null && rawValue.Length > 0 && rawValue.IndexOf('{') != 0 && rawValue.IndexOf('[') != 0");
             ODataCollectionValue collectionValue = (ODataCollectionValue)
-                Microsoft.OData.ODataUriUtils.ConvertFromUriLiteral(string.Format(CultureInfo.InvariantCulture, "[{0}]", rawValue), ODataVersion.V4);
+                ODataUriUtils.ConvertFromUriLiteral(string.Format(CultureInfo.InvariantCulture, "[{0}]", rawValue), ODataVersion.V4);
             foreach (object item in collectionValue.Items)
             {
                 return item;
