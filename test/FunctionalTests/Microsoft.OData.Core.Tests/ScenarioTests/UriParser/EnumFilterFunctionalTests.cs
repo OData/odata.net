@@ -42,8 +42,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // set up the edm model etc
             this.userModel = new EdmModel();
 
-            EdmEnumType enumType = new EdmEnumType("NS", "Color", EdmPrimitiveTypeKind.Int32, false);
-            EdmEnumMember red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
+            var enumType = new EdmEnumType("NS", "Color", EdmPrimitiveTypeKind.Int32, false);
+            var red = new EdmEnumMember(enumType, "Red", new EdmEnumMemberValue(1));
             enumType.AddMember(red);
             enumType.AddMember("Green", new EdmEnumMemberValue(2));
             enumType.AddMember("Blue", new EdmEnumMemberValue(3));
@@ -54,11 +54,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // add enum property
             this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);
-            EdmEnumTypeReference enumTypeReference = new EdmEnumTypeReference(enumType, true);
+            var enumTypeReference = new EdmEnumTypeReference(enumType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "Color", enumTypeReference));
 
             // enum with flags
-            EdmEnumType enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
+            var enumFlagsType = new EdmEnumType("NS", "ColorFlags", EdmPrimitiveTypeKind.Int64, true);
             enumFlagsType.AddMember("Red", new EdmEnumMemberValue(1L));
             enumFlagsType.AddMember("Green", new EdmEnumMemberValue(2L));
             enumFlagsType.AddMember("Blue", new EdmEnumMemberValue(4L));
@@ -68,7 +68,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             this.userModel.AddElement(enumFlagsType);
 
             // add enum with flags
-            EdmEnumTypeReference enumFlagsTypeReference = new EdmEnumTypeReference(enumFlagsType, true);
+            var enumFlagsTypeReference = new EdmEnumTypeReference(enumFlagsType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "ColorFlags", enumFlagsTypeReference));
 
             // add colors collection
@@ -682,13 +682,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // Arrange
             string filterQuery = $"{floatString} in Colors";
 
-            IEdmEnumType colorType = this.GetColorType(this.userModel);
-
             // Act
             Action test = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
             test.Throws<ArgumentException>(Strings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("NS.Color", "Edm.Single")); // Float are of Type Edm.Single
+        }
+
+        [Theory]
+        [InlineData(-20)]
+        [InlineData("-20")]
+        [InlineData("'-20'")]
+        public void ParseFilterWithInOperatorWithEnumsMemberInvalidIntegralValue(object integralValue)
+        {
+            // Arrange
+            string filterQuery = $"{integralValue} in Colors";
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("-20"));
         }
 
         private IEdmStructuralProperty GetColorProp(IEdmModel model)
