@@ -68,8 +68,8 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             foreach (var operationName in expectedOperations)
             {
-                var filteredImports = actionImports.Where(fi => fi.Name == operationName);
-                Assert.NotNull(filteredImports);
+                var import = actionImports.FirstOrDefault(fi => fi.Name == operationName);
+                Assert.NotNull(import);
             }
         }
 
@@ -196,9 +196,11 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
                     if (_baseUri + expected.Item2 == action.Target.AbsoluteUri)
                     {
                         matched = true;
+                        break;
                     }
                 }
-                Assert.True(matched);
+
+                Assert.True(matched, $"Failed to match action with metadata: {_baseUri + expected.Item1} and target: {_baseUri + expected.Item2}");
             }
         }
     }

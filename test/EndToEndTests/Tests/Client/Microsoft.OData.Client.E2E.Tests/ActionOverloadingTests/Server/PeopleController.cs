@@ -43,26 +43,43 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [HttpPost("odata/Default.UpdatePersonInfo")]
         public IActionResult UpdatePersonInfo()
         {
-            CommonEndToEndDataSource.People.Single(a=>a.PersonId == -10).Name += "[UpdataPersonName]";
+            var person = CommonEndToEndDataSource.People.SingleOrDefault(a => a.PersonId == -10);
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            person.Name += "[UpdataPersonName]";
+
             return Ok();
         }
 
         [HttpPost("odata/People({key})/Default.UpdatePersonInfo")]
         public IActionResult UpdatePersonInfo([FromODataUri] int key)
         {
-            CommonEndToEndDataSource.People.First(a => a.PersonId == key).Name += "[UpdataPersonName]";
+            var person = CommonEndToEndDataSource.People.SingleOrDefault(x => x.PersonId == key);
+
+            if (person == null)
+            {
+                return NotFound();
+            }
+
+            person.Name += "[UpdataPersonName]";
+
             return Ok();
         }
 
         [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Person/Default.UpdatePersonInfo")]
         public IActionResult UpdateEmployeeInfo([FromODataUri] int key)
         {
-            if (!ModelState.IsValid)
+            var person = CommonEndToEndDataSource.People.SingleOrDefault(a => a.PersonId == key);
+
+            if (person == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            CommonEndToEndDataSource.People.First(a => a.PersonId == key).Name += "[UpdataPersonName]";
+            person.Name += "[UpdataPersonName]";
 
             return Ok();
         }
@@ -70,12 +87,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [HttpPost("odata/People({key})/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.Employee/Default.UpdatePersonInfo")]
         public IActionResult UpdateEmployeeeInfo([FromODataUri] int key)
         {
-            if (!ModelState.IsValid)
+            var person = CommonEndToEndDataSource.People.SingleOrDefault(a => a.PersonId == key);
+
+            if (person == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            CommonEndToEndDataSource.People.First(a => a.PersonId == key).Name += "[UpdataPersonName]";
+            person.Name += "[UpdataPersonName]";
 
             return Ok();
         }

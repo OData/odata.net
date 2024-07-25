@@ -29,26 +29,42 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [EnableQuery]
         public IActionResult Get(int key)
         {
-            var product = CommonEndToEndDataSource.Products?.FirstOrDefault(a => a.ProductId == key);
+            var product = CommonEndToEndDataSource.Products.FirstOrDefault(a => a.ProductId == key);
+
+            if (product == null)
+            {
+                return NotFound();
+            }
+
             return Ok(product);
         }
 
         [HttpPost("odata/RetrieveProduct")]
         public IActionResult RetrieveProduct()
         {
-            var productId = CommonEndToEndDataSource.Products?.FirstOrDefault(a => a.ProductId == -9)?.ProductId;
+            var product = CommonEndToEndDataSource.Products.FirstOrDefault(a => a.ProductId == -9);
+
+            if (product == null)
+            { 
+                return NotFound();
+            }
+
+            var productId = product.ProductId;
+
             return Ok(productId);
         }
 
         [HttpPost("odata/Products({key})/RetrieveProduct")]
         public IActionResult RetrieveProduct([FromODataUri] int key)
         {
-            if (!ModelState.IsValid)
+            var product = CommonEndToEndDataSource.Products.FirstOrDefault(a => a.ProductId == key);
+
+            if (product == null)
             {
-                return BadRequest();
+                return NotFound();
             }
 
-            var productId = CommonEndToEndDataSource.Products?.FirstOrDefault(a => a.ProductId == key)?.ProductId;
+            var productId = product.ProductId;
 
             return Ok(productId);
         }

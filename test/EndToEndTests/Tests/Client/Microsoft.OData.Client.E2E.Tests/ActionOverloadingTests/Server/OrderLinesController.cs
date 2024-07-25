@@ -48,7 +48,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [HttpPost("odata/OrderLines({keyOrderId},{keyProductId})/RetrieveProduct")]
         public IActionResult RetrieveProduct([FromODataUri] int keyOrderId, [FromODataUri] int keyProductId)
         {
-            var productId = CommonEndToEndDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId)?.ProductId;
+            var orderLine = CommonEndToEndDataSource.OrderLines?.FirstOrDefault(a => a.OrderId == keyOrderId && a.ProductId == keyProductId);
+
+            if (orderLine == null)
+            {
+                return NotFound();
+            }
+
+            var productId = orderLine.ProductId;
 
             return Ok(productId);
         }
