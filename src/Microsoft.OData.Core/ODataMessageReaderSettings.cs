@@ -194,7 +194,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Whether to read untyped values as a raw string.
         /// </summary>
-        [Obsolete("This will be dropped in the 9.x release. Please use 'PrimitiveTypeResolver' for unknown types.")]
+        [Obsolete("ReadUntypedAsString is deprecated and will be dropped in a future release. Please use 'PrimitiveTypeResolver' for primitive unknown types.")]
         public bool ReadUntypedAsString { get; set; }
 
         /// <summary>

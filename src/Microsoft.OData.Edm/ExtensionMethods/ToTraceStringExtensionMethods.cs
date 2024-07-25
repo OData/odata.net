@@ -137,12 +137,11 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1305:Specify IFormatProvider", Justification = "<Pending>")]
         private static void AppendBinaryFacets(this StringBuilder sb, IEdmBinaryTypeReference type)
         {
             if (type.IsUnbounded || type.MaxLength != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : type.MaxLength.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : $"{type.MaxLength}");
             }
         }
 
