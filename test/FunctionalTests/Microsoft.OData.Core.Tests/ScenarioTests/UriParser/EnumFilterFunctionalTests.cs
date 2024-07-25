@@ -641,6 +641,56 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal(colorType, rightNode.ItemType.Definition);
         }
 
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberDoubleIntegralValue()
+        {
+            // Arrange
+            long enumValue = 3;
+            string filterQuery = $"{enumValue} in Colors"; // "3 in Colors"
+            string expectedLiteral = "'Blue'";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+            bool success = colorType.TryParse(enumValue, out IEdmEnumMember enumMember);
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal("3 in Colors", filterQuery);
+            Assert.True(success);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumMember.Name);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumMember.Name, leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetColorsProperty(this.userModel));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+        }
+
+        [Theory]
+        [InlineData("3.0")]
+        [InlineData("3.1")]
+        [InlineData("4.0")]
+        [InlineData("5.0")]
+        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue(string floatString)
+        {
+            // Arrange
+            string filterQuery = $"{floatString} in Colors";
+
+            IEdmEnumType colorType = this.GetColorType(this.userModel);
+
+            // Act
+            Action test = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            test.Throws<ArgumentException>(Strings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("NS.Color", "Edm.Single")); // Float are of Type Edm.Single
+        }
+
         private IEdmStructuralProperty GetColorProp(IEdmModel model)
         {
             return (IEdmStructuralProperty)((IEdmStructuredType)model
