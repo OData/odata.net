@@ -114,7 +114,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.Latest"/>,
+        /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.None"/>,
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 

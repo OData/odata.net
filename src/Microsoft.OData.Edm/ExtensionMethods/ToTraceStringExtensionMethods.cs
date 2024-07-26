@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System.Globalization;
 using System.Text;
 
 namespace Microsoft.OData.Edm
@@ -140,7 +141,7 @@ namespace Microsoft.OData.Edm
         {
             if (type.IsUnbounded || type.MaxLength != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : type.MaxLength.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : $"{type.MaxLength}");
             }
         }
 
@@ -148,7 +149,7 @@ namespace Microsoft.OData.Edm
         {
             if (type.IsUnbounded == true || type.MaxLength != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : type.MaxLength.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_MaxLength, (type.IsUnbounded) ? EdmConstants.Value_Max : string.Format(CultureInfo.InvariantCulture, $"{type.MaxLength}"));
             }
 
             if (type.IsUnicode != null)
@@ -161,7 +162,7 @@ namespace Microsoft.OData.Edm
         {
             if (type.Precision != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_Precision, type.Precision.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_Precision, string.Format(CultureInfo.InvariantCulture, $"{type.Precision}"));
             }
         }
 
@@ -169,18 +170,18 @@ namespace Microsoft.OData.Edm
         {
             if (type.Precision != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_Precision, type.Precision.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_Precision, string.Format(CultureInfo.InvariantCulture, $"{type.Precision}"));
             }
 
             if (type.Scale != null)
             {
-                sb.AppendKeyValue(EdmConstants.FacetName_Scale, type.Scale.ToString());
+                sb.AppendKeyValue(EdmConstants.FacetName_Scale, string.Format(CultureInfo.InvariantCulture, $"{type.Scale}"));
             }
         }
 
         private static void AppendSpatialFacets(this StringBuilder sb, IEdmSpatialTypeReference type)
         {
-            sb.AppendKeyValue(EdmConstants.FacetName_Srid, type.SpatialReferenceIdentifier != null ? type.SpatialReferenceIdentifier.ToString() : EdmConstants.Value_SridVariable);
+            sb.AppendKeyValue(EdmConstants.FacetName_Srid, type.SpatialReferenceIdentifier != null ? string.Format(CultureInfo.InvariantCulture, $"{type.SpatialReferenceIdentifier}") : EdmConstants.Value_SridVariable);
         }
 
         private static void AppendKeyValue(this StringBuilder sb, string key, string value)

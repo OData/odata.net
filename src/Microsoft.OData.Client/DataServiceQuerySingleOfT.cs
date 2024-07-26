@@ -205,7 +205,7 @@ namespace Microsoft.OData.Client
         /// <returns>The new URI string.</returns>
         public virtual string AppendRequestUri(string nextSegment)
         {
-            return UriUtil.UriToString(this.RequestUri).Replace(this.RequestUri.AbsolutePath, this.RequestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment);
+            return UriUtil.UriToString(this.RequestUri).Replace(this.RequestUri.AbsolutePath, this.RequestUri.AbsolutePath + UriHelper.FORWARDSLASH + nextSegment, StringComparison.Ordinal);
         }
 
         /// <summary>

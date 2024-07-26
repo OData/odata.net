@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Collections.Generic;
 
     /// <summary>
@@ -48,7 +49,7 @@ namespace Microsoft.OData.UriParser
                 return 0;
             }
 
-            return this.ToHashableString(path).GetHashCode();
+            return this.ToHashableString(path).GetHashCode(StringComparison.Ordinal);
         }
 
         /// <summary>

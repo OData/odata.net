@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
@@ -65,37 +66,37 @@ namespace Microsoft.OData.Edm.Vocabularies.V1
             string[] allResources = assembly.GetManifestResourceNames();
 
             // core
-            string coreVocabularies = allResources.FirstOrDefault(x => x.Contains("CoreVocabularies.xml"));
+            string coreVocabularies = allResources.FirstOrDefault(x => x.Contains("CoreVocabularies.xml", StringComparison.InvariantCulture));
             Debug.Assert(coreVocabularies != null, "CoreVocabularies.xml: not found.");
             CoreModel = LoadSchemaEdmModel(assembly, coreVocabularies, Enumerable.Empty<IEdmModel>());
 
             // Authorization
-            string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml"));
+            string authorizationVocabularies = allResources.FirstOrDefault(x => x.Contains("AuthorizationVocabularies.xml", StringComparison.InvariantCulture));
             Debug.Assert(authorizationVocabularies != null, "AuthorizationVocabularies.xml: not found.");
             AuthorizationModel = LoadCsdlEdmModel(assembly, authorizationVocabularies, new[] { CoreModel }); // authorization relies on core
 
             // Validation
-            string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml")).FirstOrDefault();
+            string validationVocabularies = allResources.Where(x => x.Contains("ValidationVocabularies.xml", StringComparison.Ordinal)).FirstOrDefault();
             Debug.Assert(validationVocabularies != null, "ValidationVocabularies.xml: not found.");
             ValidationModel = LoadCsdlEdmModel(assembly, validationVocabularies, new[] { CoreModel }); // validation relies on core
 
             // capabilities
-            string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml"));
+            string capabilitiesVocabularies = allResources.FirstOrDefault(x => x.Contains("CapabilitiesVocabularies.xml", StringComparison.InvariantCulture));
             Debug.Assert(capabilitiesVocabularies != null, "CapabilitiesVocabularies.xml: not found.");
             CapabilitiesModel = LoadCsdlEdmModel(assembly, capabilitiesVocabularies, new[] { CoreModel, AuthorizationModel, ValidationModel }); // capabilities relies on core & validation
 
             // alternateKey
-            string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml")).FirstOrDefault();
+            string alternateKeysVocabularies = allResources.Where(x => x.Contains("AlternateKeysVocabularies.xml", StringComparison.InvariantCulture)).FirstOrDefault();
             Debug.Assert(alternateKeysVocabularies != null, "AlternateKeysVocabularies.xml: not found.");
             AlternateKeyModel = LoadSchemaEdmModel(assembly, alternateKeysVocabularies, new[] { CoreModel }); // alternate relies on core
 
             // Community
-            string communityVocabularies = allResources.Where(x => x.Contains("CommunityVocabularies.xml")).FirstOrDefault();
+            string communityVocabularies = allResources.Where(x => x.Contains("CommunityVocabularies.xml", StringComparison.InvariantCulture)).FirstOrDefault();
             Debug.Assert(communityVocabularies != null, "CommunityVocabularies.xml: not found.");
             CommunityModel = LoadCsdlEdmModel(assembly, communityVocabularies, new[] { CoreModel }); // community relies on core
 
             // Measures
-            string measuresVocabularies = allResources.Where(x => x.Contains("MeasuresVocabularies.xml")).FirstOrDefault();
+            string measuresVocabularies = allResources.Where(x => x.Contains("MeasuresVocabularies.xml", StringComparison.InvariantCulture)).FirstOrDefault();
             Debug.Assert(communityVocabularies != null, "MeasuresVocabularies.xml: not found.");
             MeasuresModel = LoadCsdlEdmModel(assembly, measuresVocabularies, new[] { CoreModel, ValidationModel }); // measures relies on core and validation
 

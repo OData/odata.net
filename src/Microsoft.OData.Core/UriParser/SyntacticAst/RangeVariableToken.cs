@@ -5,6 +5,8 @@
 //---------------------------------------------------------------------
 
 #if ODATA_CLIENT
+using System;
+
 namespace Microsoft.OData.Client.ALinq.UriParser
 #else
 namespace Microsoft.OData.UriParser
@@ -76,7 +78,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>A hash code for this instance, suitable for use in hashing algorithms and data structures like a hash table.</returns>
         public override int GetHashCode()
         {
-            return this.Name.GetHashCode();
+            return this.Name.GetHashCode(System.StringComparison.Ordinal);
         }
     }
 }

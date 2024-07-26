@@ -507,7 +507,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
 
         private IEdmOperation FindParameterizedOperation(string parameterizedName, Func<string, IEnumerable<IEdmOperation>> findFunctions, Func<IEnumerable<IEdmOperation>, IEdmOperation> ambiguityCreator)
         {
-            int openParen = parameterizedName.IndexOf('(');
+            int openParen = parameterizedName.IndexOf('(', StringComparison.Ordinal);
             int closeParen = parameterizedName.LastIndexOf(')');
             if (openParen < 0)
             {

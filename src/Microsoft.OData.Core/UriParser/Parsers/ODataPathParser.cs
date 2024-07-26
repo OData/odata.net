@@ -81,7 +81,7 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(segmentText != null, "segment != null");
 
-            int parenthesisStart = segmentText.IndexOf('(');
+            int parenthesisStart = segmentText.IndexOf('(', StringComparison.Ordinal);
             if (parenthesisStart < 0)
             {
                 identifier = segmentText;
@@ -1371,7 +1371,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>Whether or not a type segment was created for the identifier.</returns>
         private bool TryCreateTypeNameSegment(ODataPathSegment previous, string identifier, string parenthesisExpression)
         {
-            if (identifier.IndexOf('.') < 0)
+            if (identifier.IndexOf('.', StringComparison.Ordinal) < 0)
             {
                 return false;
             }

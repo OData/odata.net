@@ -460,7 +460,7 @@ namespace Microsoft.OData
             foreach (string t in paths)
             {
                 string[] segments = null;
-                int idxLP = t.IndexOf('(');
+                int idxLP = t.IndexOf('(', StringComparison.Ordinal);
                 if (-1 == idxLP)
                 {
                     segments = t.Split(PathSeparator);
@@ -610,7 +610,7 @@ namespace Microsoft.OData
         private bool IsValidExpandToken(string item)
         {
             // Expand token must contain '(' and end with ')', must not contain a dot, and must be related to navigation property.
-            int idxLP = item.IndexOf('(');
+            int idxLP = item.IndexOf('(', StringComparison.Ordinal);
             if (idxLP == -1
                 || !item.EndsWith(")", StringComparison.Ordinal)
                 || !IsNavigationPropertyToken(item.Substring(0, idxLP)))
@@ -640,7 +640,7 @@ namespace Microsoft.OData
 
             // For better readability, set the value in if-else branches corresponding to decision tree above.
             bool found;
-            if (token.IndexOf(NameSpaceSeparator) != -1)
+            if (token.IndexOf(NameSpaceSeparator, StringComparison.Ordinal) != -1)
             {
                 // #1
                 found = false;
@@ -721,7 +721,7 @@ namespace Microsoft.OData
             //       separated by slash ('/'). The special star ('*') character is only supported at the end of a path.
             string currentSegment = segments[index].Trim();
             bool isStar = string.CompareOrdinal(StarSegment, currentSegment) == 0;
-            int idxLP = currentSegment.IndexOf('(');
+            int idxLP = currentSegment.IndexOf('(', StringComparison.Ordinal);
 
             if (idxLP != -1 && IsValidExpandToken(currentSegment))
             {

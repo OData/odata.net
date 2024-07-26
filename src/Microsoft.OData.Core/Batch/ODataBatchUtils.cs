@@ -162,7 +162,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(uri != null, "uri != null");
 
-            if (UriUtils.UriToString(uri).IndexOf('$') == -1)
+            if (UriUtils.UriToString(uri).IndexOf('$', StringComparison.Ordinal) == -1)
             {
                 // uri does not use $requestId,
                 return;

@@ -254,7 +254,7 @@ namespace Microsoft.OData
                     throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternEmptySegment(pattern));
                 }
 
-                if (currentSegment != WildCard && currentSegment.Contains(WildCard))
+                if (currentSegment != WildCard && currentSegment.Contains(WildCard, StringComparison.Ordinal))
                 {
                     throw new ArgumentException(Strings.AnnotationFilterPattern_InvalidPatternWildCardInSegment(pattern));
                 }

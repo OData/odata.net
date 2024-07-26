@@ -11,6 +11,7 @@ namespace Microsoft.OData.UriParser
 
     using System.Collections.Generic;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     #endregion Namespaces
@@ -78,7 +79,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (skip < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger(skip.ToString()));
+                    throw new ODataException(ODataErrorStrings.MetadataBinder_SkipRequiresNonNegativeInteger(skip));
                 }
 
                 return skip;
@@ -99,7 +100,7 @@ namespace Microsoft.OData.UriParser
             {
                 if (top < 0)
                 {
-                    throw new ODataException(ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger(top.ToString()));
+                    throw new ODataException(ODataErrorStrings.MetadataBinder_TopRequiresNonNegativeInteger(top));
                 }
 
                 return top;

@@ -137,13 +137,13 @@ namespace Microsoft.OData
             if (item.TopOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$top=" + item.TopOption.ToString();
+                res += $"$top={item.TopOption.Value}";
             }
 
             if (item.SkipOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$skip=" + item.SkipOption.ToString();
+                res += $"$skip={item.SkipOption.Value}";
             }
 
             if (item.CountOption != null)
@@ -247,13 +247,13 @@ namespace Microsoft.OData
             if (item.TopOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$top=" + item.TopOption.ToString();
+                res += $"$top={item.TopOption.Value}";
             }
 
             if (item.SkipOption != null)
             {
                 res += string.IsNullOrEmpty(res) ? null : ";";
-                res += "$skip=" + item.SkipOption.ToString();
+                res += $"$skip={item.SkipOption.Value}";
             }
 
             if (item.CountOption != null)

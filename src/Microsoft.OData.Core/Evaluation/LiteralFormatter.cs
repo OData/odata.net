@@ -273,7 +273,7 @@ namespace Microsoft.OData.Evaluation
 
             if (value is string)
             {
-                result = result.Replace("'", "''");
+                result = result.Replace("'", "''", StringComparison.Ordinal);
             }
 
             return this.EscapeResultForUri(result);

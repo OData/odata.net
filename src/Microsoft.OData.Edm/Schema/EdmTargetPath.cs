@@ -93,7 +93,7 @@ namespace Microsoft.OData.Edm
         /// <inheritdoc/>
         public override int GetHashCode()
         {
-            return this.path.GetHashCode();
+            return this.path.GetHashCode(StringComparison.Ordinal);
         }
 
         private void ValidateSegments()

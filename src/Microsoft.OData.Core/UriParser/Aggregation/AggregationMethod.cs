@@ -4,6 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Diagnostics;
 
 namespace Microsoft.OData.UriParser.Aggregation
@@ -79,7 +80,7 @@ namespace Microsoft.OData.UriParser.Aggregation
             ExceptionUtils.CheckArgumentNotNull(customMethodLabel, "customMethodLabel");
 
             // Custom aggregation methods MUST use a namespace-qualified name (see [OData-ABNF]), i.e. contain at least one dot.
-            Debug.Assert(customMethodLabel.Contains(OData.ExpressionConstants.SymbolDot));
+            Debug.Assert(customMethodLabel.Contains(OData.ExpressionConstants.SymbolDot, StringComparison.Ordinal));
 
             var aggregationMethod = new AggregationMethodDefinition(AggregationMethod.Custom);
             aggregationMethod.MethodLabel = customMethodLabel;

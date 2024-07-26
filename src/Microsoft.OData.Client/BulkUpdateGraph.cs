@@ -26,7 +26,7 @@ namespace Microsoft.OData.Client
         private string entitySetName;
 
         /// <summary>where to pull the changes from</summary>
-        protected readonly RequestInfo requestInfo;
+        private readonly RequestInfo requestInfo;
 
         public BulkUpdateGraph(RequestInfo requestInfo)
         { 

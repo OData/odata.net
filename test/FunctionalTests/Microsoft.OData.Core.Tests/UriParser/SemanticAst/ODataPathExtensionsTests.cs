@@ -10,7 +10,7 @@ using Microsoft.OData.Edm;
 using Microsoft.OData.Metadata;
 using Microsoft.OData.UriParser;
 using Xunit;
-using mbh = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
+using Helpers = Microsoft.OData.Tests.UriParser.ModelBuildingHelpers;
 using ODataErrorStrings = Microsoft.OData.Strings;
 
 namespace Microsoft.OData.Tests.UriParser.SemanticAst
@@ -22,7 +22,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void TypeComputedForEntitySetSegment()
         {
-            IEdmEntitySet entitySet = mbh.BuildValidEntitySet();
+            IEdmEntitySet entitySet = Helpers.BuildValidEntitySet();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new EntitySetSegment(entitySet)
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void EntitySetComputedForEntitySetSegment()
         {
-            var entitySet = mbh.BuildValidEntitySet();
+            var entitySet = Helpers.BuildValidEntitySet();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new EntitySetSegment(entitySet)
@@ -47,7 +47,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathExtensionsIsCollectionWithEntitySetReturnsTrue()
         {
-            var entitySet = mbh.BuildValidEntitySet();
+            var entitySet = Helpers.BuildValidEntitySet();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new EntitySetSegment(entitySet)
@@ -59,7 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathExtensionsIsCollectionWithPropertyReturnsFalse()
         {
-            var property = mbh.BuildValidPrimitiveProperty();
+            var property = Helpers.BuildValidPrimitiveProperty();
             var path = new ODataPath(new ODataPathSegment[]
             {
                 new PropertySegment(property)
@@ -71,7 +71,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathExtensionsToExpandPathWithNonNavigationPropertyThrows()
         {
-            var property = mbh.BuildValidPrimitiveProperty();
+            var property = Helpers.BuildValidPrimitiveProperty();
             ODataSelectPath path = new ODataSelectPath(
                 new ODataPathSegment[]
                 {
@@ -86,7 +86,7 @@ namespace Microsoft.OData.Tests.UriParser.SemanticAst
         [Fact]
         public void PathExtensionsToExpandPathWithNavigationPropertyReturnsExpandedPath()
         {
-            var property = mbh.BuildValidPrimitiveProperty();
+            var property = Helpers.BuildValidPrimitiveProperty();
             ODataSelectPath path = new ODataSelectPath(
                 new ODataPathSegment[]
                 {

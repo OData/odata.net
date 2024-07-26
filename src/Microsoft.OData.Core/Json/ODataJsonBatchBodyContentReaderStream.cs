@@ -310,12 +310,12 @@ namespace Microsoft.OData.Json
             }
 
             contentTypeHeader = contentTypeHeader.Trim();
-            int idx = contentTypeHeader.IndexOf(';');
+            int idx = contentTypeHeader.IndexOf(';', StringComparison.Ordinal);
             string fullType = idx != -1
                 ? contentTypeHeader.Substring(0, idx)
                 : contentTypeHeader;
 
-            int idxSlash = fullType.IndexOf('/');
+            int idxSlash = fullType.IndexOf('/', StringComparison.Ordinal);
             string type = null;
             string subType = null;
             if (idxSlash != -1)

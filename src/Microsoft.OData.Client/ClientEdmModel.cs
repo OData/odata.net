@@ -20,7 +20,7 @@ namespace Microsoft.OData.Client
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.OData.Edm.Vocabularies;
-    using c = Microsoft.OData.Client;
+    using Client = Microsoft.OData.Client;
     using ConcurrentEdmSchemaDictionary = System.Collections.Concurrent.ConcurrentDictionary<string, Edm.IEdmSchemaElement>;
 
     #endregion Namespaces.
@@ -301,9 +301,9 @@ namespace Microsoft.OData.Client
                     // Find the type where the DataServiceEntityAttribute is declared on.
                     baseEntityType = type;
                     Debug.Assert(type.GetCustomAttributes(true).OfType<EntityTypeAttribute>().Any(), "type.GetCustomAttributes(true).OfType<DataServiceEntityAttribute>().Any()");
-                    while (!baseEntityType.GetCustomAttributes(false).OfType<EntityTypeAttribute>().Any() && c.PlatformHelper.GetBaseType(baseEntityType) != null)
+                    while (!baseEntityType.GetCustomAttributes(false).OfType<EntityTypeAttribute>().Any() && Client.PlatformHelper.GetBaseType(baseEntityType) != null)
                     {
-                        baseEntityType = c.PlatformHelper.GetBaseType(baseEntityType);
+                        baseEntityType = Client.PlatformHelper.GetBaseType(baseEntityType);
                     }
 
                     Debug.Assert(baseEntityType != null, "keyPropertyDeclaringType != null");
@@ -313,7 +313,7 @@ namespace Microsoft.OData.Client
                 {
                     hierarchy.Insert(0, type);
                 }
-                while (type != baseEntityType && (type = c.PlatformHelper.GetBaseType(type)) != null);
+                while (type != baseEntityType && (type = Client.PlatformHelper.GetBaseType(type)) != null);
             }
             else
             {
@@ -322,7 +322,7 @@ namespace Microsoft.OData.Client
                 {
                     hierarchy.Insert(0, type);
                 }
-                while ((type = c.PlatformHelper.GetBaseType(type)) != null && type != typeof(object));
+                while ((type = Client.PlatformHelper.GetBaseType(type)) != null && type != typeof(object));
             }
 
             return hierarchy.ToArray();
@@ -353,7 +353,7 @@ namespace Microsoft.OData.Client
 
                 if (hasProperties == false && (type == typeof(System.Object) || type.IsGenericType()))
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_NoSettableFields(type.ToString()));
+                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_NoSettableFields(type.ToString()));
                 }
             }
         }
@@ -371,13 +371,13 @@ namespace Microsoft.OData.Client
                 IEdmProperty dataProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.DataPropertyName);
                 if (dataProperty == null)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingMimeTypeDataProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.DataPropertyName));
+                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_MissingMimeTypeDataProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.DataPropertyName));
                 }
 
                 IEdmProperty mimeTypeProperty = edmStructuredType.Properties().SingleOrDefault(p => p.Name == attribute.MimeTypePropertyName);
                 if (mimeTypeProperty == null)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_MissingMimeTypeProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.MimeTypePropertyName));
+                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_MissingMimeTypeProperty(this.GetClientTypeAnnotation(edmStructuredType).ElementTypeName, attribute.MimeTypePropertyName));
                 }
 
                 this.GetClientPropertyAnnotation(dataProperty).MimeTypeProperty = this.GetClientPropertyAnnotation(mimeTypeProperty);
@@ -493,7 +493,7 @@ namespace Microsoft.OData.Client
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Entity, "baseType == null || baseType.TypeKind == EdmTypeKind.Entity");
                         bool hasStream = GetHasStreamValue((IEdmEntityType)edmBaseType, type);
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, hasStream, delayLoadEntityProperties),
+                            new EdmEntityTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmEntityType)edmBaseType, Client.PlatformHelper.IsAbstract(type), isOpen, hasStream, delayLoadEntityProperties),
                             hasProperties);
                     }
                     else if ((enumTypeTmp = Nullable.GetUnderlyingType(type) ?? type) != null
@@ -540,7 +540,7 @@ namespace Microsoft.OData.Client
                         // Creating a complex type
                         Debug.Assert(edmBaseType == null || edmBaseType.TypeKind == EdmTypeKind.Complex, "baseType == null || baseType.TypeKind == EdmTypeKind.Complex");
                         cachedEdmType = new EdmTypeCacheValue(
-                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, c.PlatformHelper.IsAbstract(type), isOpen, delayLoadComplexProperties),
+                            new EdmComplexTypeWithDelayLoadedProperties(CommonUtil.GetModelTypeNamespace(type), CommonUtil.GetModelTypeName(type), (IEdmComplexType)edmBaseType, Client.PlatformHelper.IsAbstract(type), isOpen, delayLoadComplexProperties),
                             hasProperties);
                     }
                 }
@@ -602,7 +602,7 @@ namespace Microsoft.OData.Client
                 {
                     if (declaringType as IEdmEntityType == null && declaringType as IEdmComplexType == null)
                     {
-                        throw c.Error.InvalidOperation(c.Strings.ClientTypeCache_NonEntityTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
+                        throw Client.Error.InvalidOperation(Client.Strings.ClientTypeCache_NonEntityTypeCannotContainEntityProperties(propertyInfo.Name, propertyInfo.DeclaringType.ToString()));
                     }
 
                     // Create a navigation property representing one side of an association.
@@ -653,7 +653,7 @@ namespace Microsoft.OData.Client
                         qualifiedName = type.AssemblyQualifiedName;
                         if (this.typeNameToClientTypeAnnotationCache.TryGetValue(qualifiedName, out clientTypeAnnotation) && clientTypeAnnotation.ElementType != type)
                         {
-                            throw c.Error.InvalidOperation(Strings.ClientType_MultipleTypesWithSameName(qualifiedName));
+                            throw Client.Error.InvalidOperation(Strings.ClientType_MultipleTypesWithSameName(qualifiedName));
                         }
                     }
 

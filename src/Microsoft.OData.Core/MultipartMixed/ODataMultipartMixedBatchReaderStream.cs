@@ -494,7 +494,7 @@ namespace Microsoft.OData.MultipartMixed
         {
             Debug.Assert(headerLine != null && headerLine.Length > 0, "Expected non-empty header line.");
 
-            int colon = headerLine.IndexOf(':');
+            int colon = headerLine.IndexOf(':', StringComparison.Ordinal);
             if (colon <= 0)
             {
                 throw new ODataException(Strings.ODataBatchReaderStream_InvalidHeaderSpecified(headerLine));

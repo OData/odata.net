@@ -53,7 +53,7 @@ namespace Microsoft.OData
                 else if (segment is TypeSegment)
                 {
                     // May need match type if the binding path contains type cast.
-                    if (pathIndex >= 0 && paths[pathIndex].IndexOf('.') >= 0)
+                    if (pathIndex >= 0 && paths[pathIndex].IndexOf('.', System.StringComparison.Ordinal) >= 0)
                     {
                         if (string.CompareOrdinal(paths[pathIndex], segment.EdmType.AsElementType().FullTypeName()) != 0)
                         {

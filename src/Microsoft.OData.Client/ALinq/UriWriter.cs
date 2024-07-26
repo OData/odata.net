@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client
 
             if (writer.alias.Any())
             {
-                if (fullUri.IndexOf(UriHelper.QUESTIONMARK) > -1)
+                if (fullUri.IndexOf(UriHelper.QUESTIONMARK, StringComparison.Ordinal) > -1)
                 {
                     fullUri += UriHelper.AMPERSAND;
                 }

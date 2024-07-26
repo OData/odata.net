@@ -152,7 +152,7 @@ namespace Microsoft.Spatial
         /// <returns>The string representation of this instance.</returns>
         public override string ToString()
         {
-            return String.Format(System.Globalization.CultureInfo.InvariantCulture, "GeometryPosition({0}, {1}, {2}, {3})", this.x, this.y, this.z.HasValue ? this.z.ToString() : "null", this.m.HasValue ? this.m.ToString() : "null");
+            return String.Format(System.Globalization.CultureInfo.InvariantCulture, "GeometryPosition({0}, {1}, {2}, {3})", this.x, this.y, this.z.HasValue ? $"{this.z}" : "null", this.m.HasValue ? $"{this.m}" : "null");
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Microsoft.OData.Client.Metadata
     using System.Diagnostics;
     using System.Linq;
     using System.Reflection;
-    using c = Microsoft.OData.Client;
+    using Client = Microsoft.OData.Client;
 
     #endregion Namespaces.
 
@@ -116,11 +116,11 @@ namespace Microsoft.OData.Client.Metadata
         /// <exception cref="InvalidOperationException">if the mapping is ambiguous</exception>
         private static void ResolveSubclass(string wireClassName, Type userType, Type type, ref Type existing)
         {
-            if ((type != null) && c.PlatformHelper.IsVisible(type) && (wireClassName == type.Name) && userType.IsAssignableFrom(type))
+            if ((type != null) && Client.PlatformHelper.IsVisible(type) && (wireClassName == type.Name) && userType.IsAssignableFrom(type))
             {
                 if (existing != null)
                 {
-                    throw c.Error.InvalidOperation(c.Strings.ClientType_Ambiguous(wireClassName, userType));
+                    throw Client.Error.InvalidOperation(Client.Strings.ClientType_Ambiguous(wireClassName, userType));
                 }
 
                 existing = type;
@@ -154,7 +154,7 @@ namespace Microsoft.OData.Client.Metadata
             /// <returns>computed hashcode</returns>
             public int GetHashCode(TypeName obj)
             {
-                return obj.Type.GetHashCode() ^ obj.Name.GetHashCode();
+                return obj.Type.GetHashCode() ^ obj.Name.GetHashCode(StringComparison.Ordinal);
             }
         }
     }

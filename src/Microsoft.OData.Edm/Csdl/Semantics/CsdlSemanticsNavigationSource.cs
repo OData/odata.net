@@ -200,7 +200,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             for (int index = 0; index < segmentCount; index++)
             {
                 string segment = pathSegments[index];
-                if (segment.IndexOf('.') < 0)
+                if (segment.IndexOf('.', StringComparison.Ordinal) < 0)
                 {
                     var property = definingType.FindProperty(segment);
                     if (property == null)

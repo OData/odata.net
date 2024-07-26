@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);
             }
 
-            if (navigationProperty.Name != lastSegment && (lastSegment.IndexOf('.') < 0
+            if (navigationProperty.Name != lastSegment && (lastSegment.IndexOf('.', StringComparison.Ordinal) < 0
                 || navigationProperty.Name != penultimateSegment))
             {
                 throw new ArgumentException(Strings.NavigationPropertyBinding_PathIsNotValid);

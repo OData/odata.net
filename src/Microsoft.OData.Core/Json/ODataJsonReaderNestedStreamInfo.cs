@@ -8,6 +8,7 @@ namespace Microsoft.OData.Json
 {
     #region Namespaces
     using Microsoft.OData.Edm;
+    using System;
     #endregion Namespaces
     internal sealed class ODataJsonReaderStreamInfo
     {
@@ -32,7 +33,7 @@ namespace Microsoft.OData.Json
         {
             this.PrimitiveTypeKind = primitiveTypeKind;
             this.ContentType = contentType;
-            if (contentType.Contains(MimeConstants.MimeApplicationJson))
+            if (contentType.Contains(MimeConstants.MimeApplicationJson, StringComparison.Ordinal))
             {
                 // Json should always be read/written as a string
                 this.PrimitiveTypeKind = EdmPrimitiveTypeKind.String;

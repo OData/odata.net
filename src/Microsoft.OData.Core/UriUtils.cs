@@ -156,7 +156,7 @@ namespace Microsoft.OData
                 // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
                 // which comes to length of 36
                 string trimmedText = text.Trim();
-                if (trimmedText.Length != 36 || trimmedText.IndexOf('-') != 8)
+                if (trimmedText.Length != 36 || trimmedText.IndexOf('-', StringComparison.Ordinal) != 8)
                 {
                     targetValue = default(Guid);
                     return false;

@@ -32,7 +32,7 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(!String.IsNullOrEmpty(propertyName), "!string.IsNullOrEmpty(propertyName)");
 
-            return propertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator) >= 0;
+            return propertyName.IndexOf(ODataConstants.ContextUriFragmentIndicator, StringComparison.Ordinal) >= 0;
         }
 
         /// <summary>
@@ -50,7 +50,7 @@ namespace Microsoft.OData.Json
             string fullyQualifiedFunctionImportName = GetUriFragmentFromMetadataReferencePropertyName(metadataDocumentUri, metadataReferencePropertyName);
             parameterNames = null;
 
-            int indexOfLeftParenthesis = fullyQualifiedFunctionImportName.IndexOf(ODataJsonConstants.FunctionParameterStart);
+            int indexOfLeftParenthesis = fullyQualifiedFunctionImportName.IndexOf(ODataJsonConstants.FunctionParameterStart, StringComparison.Ordinal);
             if (indexOfLeftParenthesis > -1)
             {
                 string parameters = fullyQualifiedFunctionImportName.Substring(indexOfLeftParenthesis + 1);
@@ -144,7 +144,7 @@ namespace Microsoft.OData.Json
 
             // Note that the property name can be '#name' which is not a valid Uri. We need to prepend the metadata document uri in that case.
             int parameterStartIndex = 0;
-            if (isAction && (parameterStartIndex = metadataReferencePropertyName.IndexOf(ODataJsonConstants.FunctionParameterStart)) > 0)
+            if (isAction && (parameterStartIndex = metadataReferencePropertyName.IndexOf(ODataJsonConstants.FunctionParameterStart, StringComparison.Ordinal)) > 0)
             {
                 metadataReferencePropertyName = metadataReferencePropertyName.Substring(0, parameterStartIndex);
             }

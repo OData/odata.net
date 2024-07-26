@@ -471,8 +471,8 @@ namespace Microsoft.OData.Client
             string requestDSVHeaderValue = headers[XmlConstants.HttpODataVersion];
             if (!String.IsNullOrEmpty(requestDSVHeaderValue))
             {
-                Debug.Assert(requestDSVHeaderValue.Contains(";"), "Unexpected request DSV header value");
-                return Version.Parse(requestDSVHeaderValue.Substring(0, requestDSVHeaderValue.IndexOf(';')));
+                Debug.Assert(requestDSVHeaderValue.Contains(";", StringComparison.Ordinal), "Unexpected request DSV header value");
+                return Version.Parse(requestDSVHeaderValue.Substring(0, requestDSVHeaderValue.IndexOf(';', StringComparison.Ordinal)));
             }
 
             return null;

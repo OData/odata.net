@@ -180,7 +180,7 @@ namespace Microsoft.OData
                 throw new ODataException(Strings.ODataAsyncReader_InvalidResponseLine(responseLine));
             }
 
-            int firstSpaceIndex = responseLine.IndexOf(' ');
+            int firstSpaceIndex = responseLine.IndexOf(' ', StringComparison.Ordinal);
             if (firstSpaceIndex <= 0 || responseLine.Length - 3 <= firstSpaceIndex)
             {
                 // only 1 segment or empty first segment or not enough left for 2nd and 3rd segments
@@ -250,7 +250,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(!string.IsNullOrEmpty(headerLine), "Expected non-empty header line.");
 
-            int colon = headerLine.IndexOf(':');
+            int colon = headerLine.IndexOf(':', StringComparison.Ordinal);
             if (colon <= 0)
             {
                 throw new ODataException(Strings.ODataAsyncReader_InvalidHeaderSpecified(headerLine));

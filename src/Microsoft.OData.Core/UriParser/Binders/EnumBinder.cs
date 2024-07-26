@@ -62,7 +62,7 @@ namespace Microsoft.OData.UriParser
             // get type information, and also convert Green into an ODataEnumValue
 
             // find the first ', before that, it is namespace.type
-            int indexOfSingleQuote = text.IndexOf('\'');
+            int indexOfSingleQuote = text.IndexOf('\'', StringComparison.Ordinal);
             if (indexOfSingleQuote < 0)
             {
                 return false;

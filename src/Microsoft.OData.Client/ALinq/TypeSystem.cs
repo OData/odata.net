@@ -403,7 +403,7 @@ namespace Microsoft.OData.Client
         private static bool IsVisualBasicAssembly(Assembly assembly)
         {
             string assemblyFullName = assembly.FullName;
-            if (assemblyFullName.Contains(VisualBasicAssemblyName) && assembly.FullName.Contains(VisualBasicAssemblyPublicKeyToken))
+            if (assemblyFullName.Contains(VisualBasicAssemblyName, StringComparison.Ordinal) && assembly.FullName.Contains(VisualBasicAssemblyPublicKeyToken, StringComparison.Ordinal))
             {
                 return true;
             }

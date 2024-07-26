@@ -134,7 +134,7 @@ namespace Microsoft.OData
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(version, "version");
 
             // removes the ";" and the user agent string from the version.
-            int ix = modifiedVersion.IndexOf(';');
+            int ix = modifiedVersion.IndexOf(';', StringComparison.Ordinal);
             if (ix >= 0)
             {
                 modifiedVersion = modifiedVersion.Substring(0, ix);

@@ -122,7 +122,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     return null;
                 }
 
-                if (segment.IndexOf('.') < 0)
+                if (segment.IndexOf('.', StringComparison.Ordinal) < 0)
                 {
                     property = currentType.FindProperty(segment);
                     if (property == null)

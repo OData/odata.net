@@ -56,7 +56,7 @@ namespace Microsoft.OData.Client
         {
             Debug.Assert(source != null, "source != null");
             Debug.Assert(!String.IsNullOrEmpty(sourceProperty), "!String.IsNullOrEmpty(propertyName)");
-            Debug.Assert(!sourceProperty.Contains("/"), "!sourceProperty.Contains('/')");
+            Debug.Assert(!sourceProperty.Contains("/", StringComparison.Ordinal), "!sourceProperty.Contains('/')");
 
             this.source = source;
             this.sourceProperty = sourceProperty;
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client
             /// <returns>hashcode</returns>
             public int GetHashCode(LinkDescriptor obj)
             {
-                return (obj != null) ? (obj.Source.GetHashCode() ^ ((obj.Target != null) ? obj.Target.GetHashCode() : 0) ^ obj.SourceProperty.GetHashCode()) : 0;
+                return (obj != null) ? (obj.Source.GetHashCode() ^ ((obj.Target != null) ? obj.Target.GetHashCode() : 0) ^ obj.SourceProperty.GetHashCode(StringComparison.Ordinal)) : 0;
             }
         }
     }

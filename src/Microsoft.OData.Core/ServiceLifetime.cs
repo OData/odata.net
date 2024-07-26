@@ -4,10 +4,12 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
+
 namespace Microsoft.OData
 {
     /// <summary>
-    /// Enumerates all kinds of lifetime of a service in an <see cref="IContainerBuilder"/>.
+    /// Enumerates all kinds of lifetime of a service in an <see cref="IServiceProvider"/>.
     /// </summary>
     public enum ServiceLifetime
     {

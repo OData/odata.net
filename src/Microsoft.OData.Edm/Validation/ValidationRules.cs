@@ -2765,7 +2765,7 @@ namespace Microsoft.OData.Edm.Validation
             for (int index = 0; index < pathSegments.Length; index++)
             {
                 string segment = pathSegments[index];
-                if (segment.IndexOf('.') < 0)
+                if (segment.IndexOf('.', StringComparison.Ordinal) < 0)
                 {
                     var property = definingType.FindProperty(segment);
                     if (property == null)
@@ -2866,7 +2866,7 @@ namespace Microsoft.OData.Edm.Validation
                     return 0;
                 }
 
-                return fullName.GetHashCode();
+                return fullName.GetHashCode(StringComparison.Ordinal);
             }
         }
     }

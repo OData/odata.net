@@ -483,14 +483,14 @@ namespace Microsoft.OData.Json
                 // Instance-level annotation for the instance itself; not property name.
                 propertyName = null;
                 annotationName = jsonPropertyName.Substring(1);
-                if (annotationName.IndexOf('.') == -1)
+                if (annotationName.IndexOf('.', StringComparison.Ordinal) == -1)
                 {
                     annotationName = ODataJsonConstants.ODataAnnotationNamespacePrefix + annotationName;
                 }
             }
             else
             {
-                int separatorIndex = jsonPropertyName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar);
+                int separatorIndex = jsonPropertyName.IndexOf(ODataJsonConstants.ODataPropertyAnnotationSeparatorChar, StringComparison.Ordinal);
                 if (separatorIndex > 0)
                 {
                     // This is a property annotation; compute the property and annotation names
@@ -500,7 +500,7 @@ namespace Microsoft.OData.Json
                 else
                 {
                     // This is either a regular data property or an instance-level annotation
-                    int dotIndex = jsonPropertyName.IndexOf('.');
+                    int dotIndex = jsonPropertyName.IndexOf('.', StringComparison.Ordinal);
                     if (dotIndex < 0)
                     {
                         // Regular property

@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 #if NETCOREAPP
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -432,7 +433,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             {
                 // Try to build the type. The type should be "Complex type" or "Entity Type".
                 string typeName = typeValue.ProcessProperty("@type", context, (e, c) => e.ParseAsString(c));
-                int index = typeName.IndexOf('#');
+                int index = typeName.IndexOf('#', StringComparison.Ordinal);
                 if (index >= 0)
                 {
                     typeName = typeName.Substring(index + 1); // remove the "#"
@@ -452,7 +453,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
 
                 // It MAY contain annotations for itself and its members. Annotations for record members are prefixed with the member name.
                 // So far, it's not supported. So report non-fatal error for all the annotations on record.
-                if (propertyName.IndexOf('@') != -1)
+                if (propertyName.IndexOf('@', StringComparison.Ordinal) != -1)
                 {
                     context.ReportError(EdmErrorCode.UnsupportedElement, Strings.CsdlJsonParser_UnsupportedJsonMember(context.Path));
                     return;
@@ -493,7 +494,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             //
             // So, Core.Description is annotation for "Measures.ISOCurrency annotation.
 
-            int index = annotationName.IndexOf('#');
+            int index = annotationName.IndexOf('#', StringComparison.Ordinal);
             if (index != -1)
             {
                 term = annotationName.Substring(1, index - 1); // remove '@'

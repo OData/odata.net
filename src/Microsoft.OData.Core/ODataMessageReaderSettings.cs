@@ -67,7 +67,7 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.Latest"/>,
+        /// Gets or sets library compatibility version. Default value is <see cref="Microsoft.OData.ODataLibraryCompatibility.None"/>,
         /// </summary>
         public ODataLibraryCompatibility LibraryCompatibility { get; set; }
 
@@ -194,6 +194,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Whether to read untyped values as a raw string.
         /// </summary>
+        [Obsolete("ReadUntypedAsString is deprecated and will be dropped in a future release. Please use 'PrimitiveTypeResolver' for primitive unknown types.")]
         public bool ReadUntypedAsString { get; set; }
 
         /// <summary>
