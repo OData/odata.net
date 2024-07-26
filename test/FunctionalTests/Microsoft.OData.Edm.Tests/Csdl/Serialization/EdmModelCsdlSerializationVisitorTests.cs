@@ -6,10 +6,8 @@
 
 using System;
 using System.IO;
-#if NETCOREAPP3_1
 using System.Text.Json;
 using System.Text.Encodings.Web;
-#endif
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
@@ -1894,16 +1892,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
             EdmTerm term = new EdmTerm("Self", "IsPreferredCustomer", EdmPrimitiveTypeKind.String); // It seems the type here is meanless?
 
-            EdmIsTypeExpression isType = new EdmIsTypeExpression(new EdmPathExpression("Customer"),
+            EdmIsOfExpression isOf = new EdmIsOfExpression(new EdmPathExpression("Customer"),
                 new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetString(false, 42, true, true))));
-            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, isType);
+            IEdmVocabularyAnnotation annotation = new EdmVocabularyAnnotation(complexType, term, isOf);
 
             // Act & Assert for XML
             VisitAndVerifyXml(v => v.VisitVocabularyAnnotation(annotation),
                 @"<Annotation Term=""Self.IsPreferredCustomer"">
-  <IsType Type=""Collection(Edm.String)"" MaxLength=""42"">
+  <IsOf Type=""Collection(Edm.String)"" MaxLength=""42"">
     <Path>Customer</Path>
-  </IsType>
+  </IsOf>
 </Annotation>");
 
             // Act & Assert for Json
@@ -2058,7 +2056,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 
         internal void VisitAndVerifyJson(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true, bool wrapper = true)
         {
-#if NETCOREAPP3_1
             Version edmxVersion = this.model.GetEdmxVersion();
 
             using (MemoryStream memStream = new MemoryStream())
@@ -2097,7 +2094,6 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
                 string result = reader.ReadToEnd();
                 Assert.Equal(expected, result);
             }
-#endif
         }
     }
 }

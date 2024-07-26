@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -2021,4 +2020,3 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
     }
 }
-#endif

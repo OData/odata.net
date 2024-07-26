@@ -10,10 +10,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if NETCOREAPP3_1
 using System.Text.Encodings.Web;
 using System.Text.Json;
-#endif
 using System.Xml;
 using System.Xml.Linq;
 using Microsoft.OData.Edm.Csdl;
@@ -2942,7 +2940,6 @@ var v40Json =
 
         internal void WriteAndVerifyJson(IEdmModel model, string expected, bool indented = true, bool isIeee754Compatible = false)
         {
-#if NETCOREAPP3_1
             using (MemoryStream memStream = new MemoryStream())
             {
                 JsonWriterOptions options = new JsonWriterOptions
@@ -2966,7 +2963,6 @@ var v40Json =
                 string actual = new StreamReader(memStream).ReadToEnd();
                 Assert.Equal(expected, actual);
             }
-#endif
         }
 
         [Fact]

@@ -584,12 +584,12 @@ namespace Microsoft.OData.Edm.Vocabularies
                         return this.Eval(ifExpression.FalseExpression, context);
                     }
 
-                case EdmExpressionKind.IsType:
+                case EdmExpressionKind.IsOf:
                     {
-                        IEdmIsTypeExpression isType = (IEdmIsTypeExpression)expression;
+                        IEdmIsOfExpression isOf = (IEdmIsOfExpression)expression;
 
-                        IEdmValue operand = this.Eval(isType.Operand, context);
-                        IEdmTypeReference targetType = isType.Type;
+                        IEdmValue operand = this.Eval(isOf.Operand, context);
+                        IEdmTypeReference targetType = isOf.Type;
 
                         return new EdmBooleanConstant(MatchesType(targetType, operand));
                     }

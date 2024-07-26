@@ -4,16 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
-using Microsoft.OData.Edm.Validation;
 using Microsoft.OData.Edm.Vocabularies;
-using NuGet.Frameworks;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
@@ -579,4 +576,3 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         }
     }
 }
-#endif

@@ -100,7 +100,7 @@ namespace Microsoft.OData.Edm.Validation
                     return true;
                 case EdmExpressionKind.If:
                     return TryCastIfAsType((IEdmIfExpression)expression, type, context, matchExactly, out discoveredErrors);
-                case EdmExpressionKind.IsType:
+                case EdmExpressionKind.IsOf:
                     return TestTypeReferenceMatch(EdmCoreModel.Instance.GetBoolean(false), type, expression.Location(), matchExactly, out discoveredErrors);
                 case EdmExpressionKind.Record:
                     IEdmRecordExpression recordExpression = (IEdmRecordExpression)expression;

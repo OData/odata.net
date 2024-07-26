@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP3_1
 using System.Linq;
 using System.Text.Json;
 using Microsoft.OData.Edm.Csdl.Parsing;
@@ -271,16 +270,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
             CsdlExpressionBase expressionBase = ParseExpression(json);
 
             Assert.NotNull(expressionBase);
-            CsdlIsTypeExpression isTypeExp = Assert.IsType<CsdlIsTypeExpression>(expressionBase);
+            CsdlIsOfExpression isOfExp = Assert.IsType<CsdlIsOfExpression>(expressionBase);
 
-            Assert.NotNull(isTypeExp.Type);
-            CsdlExpressionTypeReference expTypeReference = Assert.IsType<CsdlExpressionTypeReference>(isTypeExp.Type);
+            Assert.NotNull(isOfExp.Type);
+            CsdlExpressionTypeReference expTypeReference = Assert.IsType<CsdlExpressionTypeReference>(isOfExp.Type);
             CsdlCollectionType collectionType = Assert.IsType<CsdlCollectionType>(expTypeReference.TypeExpression);
             CsdlNamedTypeReference namedType = Assert.IsType<CsdlNamedTypeReference>(collectionType.ElementType);
             Assert.Equal("self.PreferredCustomer", namedType.FullName);
 
-            Assert.NotNull(isTypeExp.Operand);
-            Assert.IsType<CsdlPathExpression>(isTypeExp.Operand);
+            Assert.NotNull(isOfExp.Operand);
+            Assert.IsType<CsdlPathExpression>(isOfExp.Operand);
         }
 
         [Fact]
@@ -407,4 +406,3 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Parsing
         }
     }
 }
-#endif

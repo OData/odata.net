@@ -2844,13 +2844,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="expression">The Edm IsOf Type Expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
-        internal override void WriteIsTypeExpressionElementHeader(IEdmIsTypeExpression expression, bool inlineType)
+        internal override void WriteIsOfExpressionElementHeader(IEdmIsOfExpression expression, bool inlineType)
         {
             // Is-of expressions are represented as an object
             this.jsonWriter.WriteStartObject();
 
             // a member $IsOf whose value is an annotation expression
-            // fix it using $IsOf, not using $IsType
             this.jsonWriter.WritePropertyName("$IsOf");
         }
 
@@ -2860,13 +2859,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="expression">The Edm IsOf Type Expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteIsTypeExpressionElementHeaderAsync(IEdmIsTypeExpression expression, bool inlineType)
+        internal override Task WriteIsOfExpressionElementHeaderAsync(IEdmIsOfExpression expression, bool inlineType)
         {
             // Is-of expressions are represented as an object
             this.jsonWriter.WriteStartObject();
 
             // a member $IsOf whose value is an annotation expression
-            // fix it using $IsOf, not using $IsType
             this.jsonWriter.WritePropertyName("$IsOf");
 
             return Task.CompletedTask;
@@ -2877,7 +2875,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// </summary>
         /// <param name="expression">The Edm IsOf Type Expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
-        internal override void WriteIsOfExpressionType(IEdmIsTypeExpression expression, bool inlineType)
+        internal override void WriteIsOfExpressionType(IEdmIsOfExpression expression, bool inlineType)
         {
             if (inlineType)
             {
@@ -2891,7 +2889,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="expression">The Edm IsOf Type Expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
-        internal override Task WriteIsOfExpressionTypeAsync(IEdmIsTypeExpression expression, bool inlineType)
+        internal override Task WriteIsOfExpressionTypeAsync(IEdmIsOfExpression expression, bool inlineType)
         {
             if (inlineType)
             {

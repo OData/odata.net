@@ -1370,8 +1370,8 @@ namespace Microsoft.OData.Edm.Validation
                             expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmCastExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
-                        case EdmExpressionKind.IsType:
-                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmIsTypeExpression>(expression, expression.ExpressionKind, "ExpressionKind");
+                        case EdmExpressionKind.IsOf:
+                            expressionKindError = CheckForInterfaceKindValueMismatchError<IEdmExpression, EdmExpressionKind, IEdmIsOfExpression>(expression, expression.ExpressionKind, "ExpressionKind");
                             break;
 
                         case EdmExpressionKind.FunctionApplication:
@@ -1563,9 +1563,9 @@ namespace Microsoft.OData.Edm.Validation
             }
         }
 
-        private sealed class VistorOfIEdmIsTypeExpression : VisitorOfT<IEdmIsTypeExpression>
+        private sealed class VistorOfIEdmIsOfExpression : VisitorOfT<IEdmIsOfExpression>
         {
-            protected override IEnumerable<EdmError> VisitT(IEdmIsTypeExpression expression, List<object> followup, List<object> references)
+            protected override IEnumerable<EdmError> VisitT(IEdmIsOfExpression expression, List<object> followup, List<object> references)
             {
                 List<EdmError> errors = null;
 

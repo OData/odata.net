@@ -412,8 +412,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         return new CsdlSemanticsIfExpression((CsdlIfExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.IntegerConstant:
                         return new CsdlSemanticsIntConstantExpression((CsdlConstantExpression)expression, schema);
-                    case EdmExpressionKind.IsType:
-                        return new CsdlSemanticsIsTypeExpression((CsdlIsTypeExpression)expression, bindingContext, schema);
+                    case EdmExpressionKind.IsOf:
+                        return new CsdlSemanticsIsOfExpression((CsdlIsOfExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.LabeledExpressionReference:
                         return new CsdlSemanticsLabeledExpressionReferenceExpression((CsdlLabeledExpressionReferenceExpression)expression, bindingContext, schema);
                     case EdmExpressionKind.Labeled:

@@ -1,5 +1,5 @@
 //---------------------------------------------------------------------
-// <copyright file="EdmIsTypeExpression.cs" company="Microsoft">
+// <copyright file="EdmIsOfExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -9,17 +9,17 @@ namespace Microsoft.OData.Edm.Vocabularies
     /// <summary>
     /// Represents an EDM type test expression.
     /// </summary>
-    public class EdmIsTypeExpression : EdmElement, IEdmIsTypeExpression
+    public class EdmIsOfExpression : EdmElement, IEdmIsOfExpression
     {
         private readonly IEdmExpression operand;
         private readonly IEdmTypeReference type;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EdmIsTypeExpression"/> class.
+        /// Initializes a new instance of the <see cref="EdmIsOfExpression"/> class.
         /// </summary>
         /// <param name="operand">Expression whose type is to be tested.</param>
         /// <param name="type">Type to test.</param>
-        public EdmIsTypeExpression(IEdmExpression operand, IEdmTypeReference type)
+        public EdmIsOfExpression(IEdmExpression operand, IEdmTypeReference type)
         {
             EdmUtil.CheckArgumentNull(operand, "operand");
             EdmUtil.CheckArgumentNull(type, "type");
@@ -49,7 +49,7 @@ namespace Microsoft.OData.Edm.Vocabularies
         /// </summary>
         public EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.IsType; }
+            get { return EdmExpressionKind.IsOf; }
         }
     }
 }

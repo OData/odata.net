@@ -368,15 +368,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         internal abstract void WriteTimeOfDayConstantExpressionElement(IEdmTimeOfDayConstantExpression expression);
         internal abstract Task WriteTimeOfDayConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression);
 
-        internal abstract void WriteIsTypeExpressionElementHeader(IEdmIsTypeExpression expression, bool inlineType);
-        internal abstract Task WriteIsTypeExpressionElementHeaderAsync(IEdmIsTypeExpression expression, bool inlineType);
+        internal abstract void WriteIsOfExpressionElementHeader(IEdmIsOfExpression expression, bool inlineType);
+        internal abstract Task WriteIsOfExpressionElementHeaderAsync(IEdmIsOfExpression expression, bool inlineType);
 
-        internal virtual void WriteIsOfExpressionType(IEdmIsTypeExpression expression, bool inlineType)
+        internal virtual void WriteIsOfExpressionType(IEdmIsOfExpression expression, bool inlineType)
         {
             // nothing here
         }
 
-        internal virtual Task WriteIsOfExpressionTypeAsync(IEdmIsTypeExpression expression, bool inlineType)
+        internal virtual Task WriteIsOfExpressionTypeAsync(IEdmIsOfExpression expression, bool inlineType)
         {
             return Task.CompletedTask;
         }

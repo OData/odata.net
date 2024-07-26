@@ -1,17 +1,17 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CsdlIsTypeExpression.cs" company="Microsoft">
+// <copyright file="CsdlIsOfExpression.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
 namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 {
-    internal class CsdlIsTypeExpression : CsdlExpressionBase
+    internal class CsdlIsOfExpression : CsdlExpressionBase
     {
         private readonly CsdlTypeReference type;
         private readonly CsdlExpressionBase operand;
 
-        public CsdlIsTypeExpression(CsdlTypeReference type, CsdlExpressionBase operand, CsdlLocation location)
+        public CsdlIsOfExpression(CsdlTypeReference type, CsdlExpressionBase operand, CsdlLocation location)
             : base(location)
         {
             this.type = type;
@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Ast
 
         public override EdmExpressionKind ExpressionKind
         {
-            get { return EdmExpressionKind.IsType; }
+            get { return EdmExpressionKind.IsOf; }
         }
 
         public CsdlTypeReference Type

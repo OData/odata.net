@@ -1863,13 +1863,13 @@ namespace Microsoft.OData.Edm {
         }
 
         /// <summary>
-        /// A string like "The IsType expression must contain 1 operand."
+        /// A string like "The IsOf expression must contain 1 operand."
         /// </summary>
-        internal static string CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands
+        internal static string CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands
         {
             get
             {
-                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlParser_InvalidIsTypeExpressionIncorrectNumberOfOperands);
+                return Microsoft.OData.Edm.EdmRes.GetString(Microsoft.OData.Edm.EdmRes.CsdlParser_InvalidIsOfExpressionIncorrectNumberOfOperands);
             }
         }
 

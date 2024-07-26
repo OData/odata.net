@@ -249,8 +249,8 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                         break;
                     }
 
-                case EdmExpressionKind.IsType:
-                    AddLabeledExpressions(((CsdlIsTypeExpression)expression).Operand, result);
+                case EdmExpressionKind.IsOf:
+                    AddLabeledExpressions(((CsdlIsOfExpression)expression).Operand, result);
                     break;
                 case EdmExpressionKind.Cast:
                     AddLabeledExpressions(((CsdlCastExpression)expression).Operand, result);
