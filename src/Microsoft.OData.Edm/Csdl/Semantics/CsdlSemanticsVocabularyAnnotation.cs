@@ -489,19 +489,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
         private static IEdmOperationImport FindParameterizedOperationImport(string parameterizedName, Func<string, IEnumerable<IEdmOperationImport>> findFunctions, Func<IEnumerable<IEdmOperationImport>, IEdmOperationImport> ambiguityCreator)
         {
             IEnumerable<IEdmOperationImport> matchingFunctions = findFunctions(parameterizedName);
-            if (!matchingFunctions.Any())
+            var length = TryCount(matchingFunctions, out var value);
+            if (length == 0)
             {
                 return null;
             }
-
-            if (matchingFunctions.Count() == 1)
+            else if (length == 1)
             {
-                return matchingFunctions.First();
+                return value;
             }
             else
             {
-                IEdmOperationImport ambiguous = ambiguityCreator(matchingFunctions);
-                return ambiguous;
+                return ambiguityCreator(matchingFunctions);
             }
         }
 
@@ -517,19 +516,18 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             string name = parameterizedName.Substring(0, openParen);
             string[] parameters = parameterizedName.Substring(openParen + 1, closeParen - (openParen + 1)).Split(new string[] { ", " }, StringSplitOptions.RemoveEmptyEntries);
             IEnumerable<IEdmOperation> matchingFunctions = this.FindParameterizedOperationFromList(findFunctions(name).Cast<IEdmOperation>(), parameters);
-            if (!matchingFunctions.Any())
+            var length = TryCount(matchingFunctions, out var value);
+            if (length == 0)
             {
                 return null;
             }
-
-            if (matchingFunctions.Count() == 1)
+            else if (length == 1)
             {
-                return matchingFunctions.First();
+                return value;
             }
             else
             {
-                IEdmOperation ambiguous = ambiguityCreator(matchingFunctions);
-                return ambiguous;
+                return ambiguityCreator(matchingFunctions);
             }
         }
 
@@ -609,6 +607,32 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             }
 
             return matchingOperations;
+        }
+
+        private static int TryCount<T>(IEnumerable<T> source, out T value)
+        {
+            //// TODO check build from https://github.com/OData/odata.net/pull/2237
+            //// TODO benchmark this
+            //// TODO ensure that there are existing tests covering this
+            //// TODO add prepend stuff so that you are sure to enumerate only once?
+            using (var enumerator = source.GetEnumerator())
+            {
+                int length;
+                for (length = 0; length < 2 && enumerator.MoveNext(); ++length)
+                {
+                }
+
+                if (length == 1)
+                {
+                    value = enumerator.Current;
+                }
+                else
+                {
+                    value = default(T);
+                }
+
+                return length;
+            }
         }
     }
 }
