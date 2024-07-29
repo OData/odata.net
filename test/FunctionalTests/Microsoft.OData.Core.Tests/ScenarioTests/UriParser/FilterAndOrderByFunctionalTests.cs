@@ -2114,7 +2114,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData(53)]
         [InlineData("53")]
         [InlineData("'53'")]
-        public void FilterWithInOperationWithEnumsInValidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(object integralValue)
+        public void FilterWithInOperationWithEnumsInvalidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(object integralValue)
         {
             // Arrange
             string filterQuery = $"{integralValue} in FavoriteColors";
@@ -2124,6 +2124,23 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             action.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant("53"));
+        }
+
+        [Theory]
+        [InlineData("'Teal'")]
+        [InlineData("NS.Color'Teal'")]
+        public void FilterWithInOperationWithEnumsInvalidMemberNames_ThrowsIsNotValidEnumConstantException(string memberName)
+        {
+            // Arrange
+            string filterQuery = $"{memberName} in FavoriteColors";
+
+            string expectedExceptionParameter = memberName.StartsWith("'") ? memberName.Trim('\'') : memberName; // Trim('\'') method removes any single quotes from the start and end of the string
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            // Assert
+            action.Throws<ODataException>(ODataErrorStrings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
         }
 
         [Fact]

@@ -5,12 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Edm;
 using Xunit;
-using System.Linq;
 
 namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 {
@@ -677,7 +677,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("3.1")]
         [InlineData("4.0")]
         [InlineData("5.0")]
-        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue(string floatString)
+        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue_ThrowCollectionItemTypeMustBeSameAsSingleItemTypeException(string floatString)
         {
             // Arrange
             string filterQuery = $"{floatString} in Colors";
@@ -693,7 +693,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData(-20)]
         [InlineData("-20")]
         [InlineData("'-20'")]
-        public void ParseFilterWithInOperatorWithEnumsMemberInvalidIntegralValue(object integralValue)
+        public void ParseFilterWithInOperatorWithEnumsInvalidIntegralValues_ThrowsIsNotValidEnumConstantException(object integralValue)
         {
             // Arrange
             string filterQuery = $"{integralValue} in Colors";
@@ -703,6 +703,40 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("-20"));
+        }
+
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberNameWithoutSingleQuotes_ThrowsNullReferenceException()
+        {
+            // Arrange
+            string filterQuery = "Red in Colors";
+
+            string erroMessage = "Object reference not set to an instance of an object.";
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<NullReferenceException>(erroMessage);
+        }
+
+        [Theory]
+        [InlineData("'Yellow'")]
+        [InlineData("'Teal'")]
+        [InlineData("NS.Color'Yellow'")]
+        [InlineData("NS.Color'Teal'")]
+        public void ParseFilterWithInOperatorWithEnumsInvalidMemberNames_ThrowsIsNotValidEnumConstantException(string memberName)
+        {
+            // Arrange
+            string filterQuery = $"{memberName} in Colors";
+
+            string expectedExceptionParameter = memberName.StartsWith("'") ? memberName.Trim('\'') : memberName; // Trim('\'') method removes any single quotes from the start and end of the string
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
         }
 
         private IEdmStructuralProperty GetColorProp(IEdmModel model)
