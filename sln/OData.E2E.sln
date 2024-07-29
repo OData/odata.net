@@ -35,6 +35,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.OData.TestCommon"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.Test.OData.DependencyInjection", "..\test\Common\Microsoft.Test.OData.DependencyInjection\Microsoft.Test.OData.DependencyInjection.csproj", "{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.OData.Client.E2E.Tests", "..\test\EndToEndTests\Tests\Client\Microsoft.OData.Client.E2E.Tests\Microsoft.OData.Client.E2E.Tests.csproj", "{F9D836BC-2289-4B6E-8295-2B9F3888E3A1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -85,6 +87,10 @@ Global
 		{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F9D836BC-2289-4B6E-8295-2B9F3888E3A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F9D836BC-2289-4B6E-8295-2B9F3888E3A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F9D836BC-2289-4B6E-8295-2B9F3888E3A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F9D836BC-2289-4B6E-8295-2B9F3888E3A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -104,6 +110,7 @@ Global
 		{C2ADD565-E633-42A9-9956-9FF9FAF5E4B5} = {5D4916FD-F73F-422D-90C3-4E1203D2EFD1}
 		{F9BF7E61-402B-4492-A4FE-F9549921741B} = {C2ADD565-E633-42A9-9956-9FF9FAF5E4B5}
 		{AB1B80D6-EAE2-41C0-A089-7CD492E85FE9} = {C2ADD565-E633-42A9-9956-9FF9FAF5E4B5}
+		{F9D836BC-2289-4B6E-8295-2B9F3888E3A1} = {57146ABA-0B08-4B0A-8D27-9A477FA0C2B5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6CBE9B94-7DB7-4304-8670-252389D79D5E}
