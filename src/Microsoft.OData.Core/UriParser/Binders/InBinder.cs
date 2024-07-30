@@ -58,14 +58,25 @@ namespace Microsoft.OData.UriParser
                     inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model);
             }
 
-            // If the left operand is either an integral or a string type and the right operand is a collection of enums,
-            // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
-            if ((right is CollectionPropertyAccessNode && right.ItemType.IsEnum()) && (left.TypeReference.IsString() || left.TypeReference.IsIntegral()))
+            if (ShouldConvertLeftOperand(left, right))
             {
                 left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
             }
 
             return new InNode(left, right);
+        }
+
+        /// <summary>
+        /// Checks if the left operand is either an integral or a string type and the right operand is a collection of enums.
+        /// </summary>
+        /// <param name="leftNode">The left operand.</param>
+        /// <param name="rightNode">The right operand.</param>
+        /// <returns>True if the condition is met, otherwise false.</returns>
+        private static bool ShouldConvertLeftOperand(SingleValueNode leftNode, CollectionNode rightNode)
+        {
+            // If the left operand is either an integral or a string type and the right operand is a collection of enums,
+            // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
+            return (rightNode is CollectionPropertyAccessNode && rightNode.ItemType.IsEnum()) && (leftNode.TypeReference.IsString() || leftNode.TypeReference.IsIntegral());
         }
 
         /// <summary>
