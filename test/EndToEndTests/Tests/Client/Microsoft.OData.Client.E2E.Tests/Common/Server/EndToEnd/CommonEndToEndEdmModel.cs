@@ -97,8 +97,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             builder.Function("GetPrimitiveString")
                 .Returns<string>();
 
-            builder.EntityType<Computer>()
-                .Action("GetSpecificCustomer")
+            builder.Function("GetSpecificCustomer")
                 .ReturnsCollectionFromEntitySet<Customer>("Customers")
                 .Parameter<string>("Name");
 
