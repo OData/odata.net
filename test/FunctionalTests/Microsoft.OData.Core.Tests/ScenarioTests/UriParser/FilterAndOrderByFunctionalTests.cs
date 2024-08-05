@@ -136,7 +136,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(ODataErrorStrings.MetadataBinder_IncompatibleOperandsError("Edm.Double", "Edm.Decimal", "Equal"));
         }
 
-#if !NETCOREAPP3_1
+#if !NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void ParseFilterDecimalValuesWithOptionalSuffix()
         {
@@ -324,7 +324,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         }
 
-#if !NETCOREAPP3_1
+#if !NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void ParseFilterNodeInComplexExpression()
         {

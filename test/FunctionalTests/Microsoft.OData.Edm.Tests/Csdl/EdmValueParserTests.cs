@@ -429,7 +429,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             double? result;
             Assert.True(EdmValueParser.TryParseFloat("1.7976931348623157E+308", out result));
             Assert.Equal(double.MaxValue, result);
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
             Assert.True(EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result));
 #else
             Assert.False(EdmValueParser.TryParseFloat("1.7976931348623157E+309", out result));

@@ -851,7 +851,7 @@ namespace Microsoft.OData.Tests
 
             string contentType = "application/json";
 
-#if NETCOREAPP3_1 || NETCOREAPP2_1
+#if NETCOREAPP3_1_OR_GREATER || NETCOREAPP2_1
             // Act
             string payload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
             {
@@ -893,7 +893,7 @@ namespace Microsoft.OData.Tests
 #endif
         }
 
-#if NETCOREAPP3_1 || NETCOREAPP2_1
+#if NETCOREAPP3_1_OR_GREATER || NETCOREAPP2_1
         [Fact]
         public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl()
         {
