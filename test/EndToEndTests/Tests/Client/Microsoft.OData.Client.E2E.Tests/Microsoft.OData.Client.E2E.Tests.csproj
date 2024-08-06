@@ -10,11 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="ClientWithoutTypeResolverTests\Clients\MismatchedClientModelCsdl.xml" />
     <None Remove="Common\Client\EndToEnd\EndToEndServiceCsdl.xml" />
     <None Remove="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="ClientWithoutTypeResolverTests\Clients\MismatchedClientModel\MismatchedClientModelCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\EndToEnd\EndToEndServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

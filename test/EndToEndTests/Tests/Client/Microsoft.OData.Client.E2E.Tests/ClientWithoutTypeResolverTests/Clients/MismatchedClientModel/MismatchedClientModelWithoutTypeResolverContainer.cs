@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 // Generation date: 7/31/2024 2:39:09 PM
-namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
+namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients
 {
     /// <summary>
     /// There are no comments for ProductSingle in the schema.
@@ -40,7 +40,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RelatedProducts")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> RelatedProducts
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> RelatedProducts
         {
             get
             {
@@ -50,19 +50,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._RelatedProducts == null))
                 {
-                    this._RelatedProducts = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product>(GetPath("RelatedProducts"));
+                    this._RelatedProducts = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product>(GetPath("RelatedProducts"));
                 }
                 return this._RelatedProducts;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _RelatedProducts;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _RelatedProducts;
         /// <summary>
         /// There are no comments for Detail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Detail")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle Detail
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle Detail
         {
             get
             {
@@ -72,19 +72,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Detail == null))
                 {
-                    this._Detail = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle(this.Context, GetPath("Detail"));
+                    this._Detail = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle(this.Context, GetPath("Detail"));
                 }
                 return this._Detail;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle _Detail;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle _Detail;
         /// <summary>
         /// There are no comments for Reviews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Reviews")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> Reviews
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> Reviews
         {
             get
             {
@@ -94,19 +94,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Reviews == null))
                 {
-                    this._Reviews = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview>(GetPath("Reviews"));
+                    this._Reviews = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview>(GetPath("Reviews"));
                 }
                 return this._Reviews;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _Reviews;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _Reviews;
         /// <summary>
         /// There are no comments for Photos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photos")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> Photos
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> Photos
         {
             get
             {
@@ -116,13 +116,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Photos == null))
                 {
-                    this._Photos = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto>(GetPath("Photos"));
+                    this._Photos = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto>(GetPath("Photos"));
                 }
                 return this._Photos;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _Photos;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _Photos;
     }
     /// <summary>
     /// There are no comments for Product in the schema.
@@ -220,7 +220,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Dimensions")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions Dimensions
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions Dimensions
         {
             get
             {
@@ -235,8 +235,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions _Dimensions;
-        partial void OnDimensionsChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions _Dimensions;
+        partial void OnDimensionsChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions value);
         partial void OnDimensionsChanged();
         /// <summary>
         /// There are no comments for Property BaseConcurrency in the schema.
@@ -266,7 +266,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComplexConcurrency")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo ComplexConcurrency
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo ComplexConcurrency
         {
             get
             {
@@ -281,15 +281,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo _ComplexConcurrency;
-        partial void OnComplexConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo _ComplexConcurrency;
+        partial void OnComplexConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo value);
         partial void OnComplexConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property NestedComplexConcurrency in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("NestedComplexConcurrency")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo NestedComplexConcurrency
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo NestedComplexConcurrency
         {
             get
             {
@@ -304,15 +304,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo _NestedComplexConcurrency;
-        partial void OnNestedComplexConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo _NestedComplexConcurrency;
+        partial void OnNestedComplexConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo value);
         partial void OnNestedComplexConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property RelatedProducts in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RelatedProducts")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> RelatedProducts
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> RelatedProducts
         {
             get
             {
@@ -327,15 +327,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _RelatedProducts = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnRelatedProductsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _RelatedProducts = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnRelatedProductsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> value);
         partial void OnRelatedProductsChanged();
         /// <summary>
         /// There are no comments for Property Detail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Detail")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail Detail
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail Detail
         {
             get
             {
@@ -350,15 +350,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail _Detail;
-        partial void OnDetailChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail _Detail;
+        partial void OnDetailChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail value);
         partial void OnDetailChanged();
         /// <summary>
         /// There are no comments for Property Reviews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Reviews")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> Reviews
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> Reviews
         {
             get
             {
@@ -373,15 +373,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _Reviews = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnReviewsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _Reviews = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnReviewsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> value);
         partial void OnReviewsChanged();
         /// <summary>
         /// There are no comments for Property Photos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photos")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> Photos
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> Photos
         {
             get
             {
@@ -396,8 +396,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _Photos = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnPhotosChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _Photos = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnPhotosChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> value);
         partial void OnPhotosChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -446,7 +446,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Order")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle Order
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle Order
         {
             get
             {
@@ -456,19 +456,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Order == null))
                 {
-                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle(this.Context, GetPath("Order"));
+                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle(this.Context, GetPath("Order"));
                 }
                 return this._Order;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle _Order;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle Product
         {
             get
             {
@@ -478,13 +478,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Product == null))
                 {
-                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(this.Context, GetPath("Product"));
+                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(this.Context, GetPath("Product"));
                 }
                 return this._Product;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle _Product;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle _Product;
     }
     /// <summary>
     /// There are no comments for OrderLine in the schema.
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Order")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order Order
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order Order
         {
             get
             {
@@ -644,15 +644,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order _Order;
-        partial void OnOrderChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order _Order;
+        partial void OnOrderChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order value);
         partial void OnOrderChanged();
         /// <summary>
         /// There are no comments for Property Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product Product
         {
             get
             {
@@ -667,8 +667,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product _Product;
-        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product _Product;
+        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product value);
         partial void OnProductChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -717,7 +717,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonMetadata
         {
             get
             {
@@ -727,13 +727,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._PersonMetadata == null))
                 {
-                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>(GetPath("PersonMetadata"));
+                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>(GetPath("PersonMetadata"));
                 }
                 return this._PersonMetadata;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonMetadata;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
     /// There are no comments for Person in the schema.
@@ -808,7 +808,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonMetadata
         {
             get
             {
@@ -823,8 +823,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonMetadata = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnPersonMetadataChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonMetadata = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnPersonMetadataChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> value);
         partial void OnPersonMetadataChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -873,7 +873,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Person")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle Person
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle Person
         {
             get
             {
@@ -883,13 +883,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Person == null))
                 {
-                    this._Person = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle(this.Context, GetPath("Person"));
+                    this._Person = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle(this.Context, GetPath("Person"));
                 }
                 return this._Person;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle _Person;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle _Person;
     }
     /// <summary>
     /// There are no comments for PersonMetadata in the schema.
@@ -1010,7 +1010,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Person")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person Person
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person Person
         {
             get
             {
@@ -1025,8 +1025,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person _Person;
-        partial void OnPersonChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person _Person;
+        partial void OnPersonChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person value);
         partial void OnPersonChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -1608,7 +1608,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> Orders
         {
             get
             {
@@ -1618,19 +1618,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Orders == null))
                 {
-                    this._Orders = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order>(GetPath("Orders"));
+                    this._Orders = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order>(GetPath("Orders"));
                 }
                 return this._Orders;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _Orders;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _Orders;
         /// <summary>
         /// There are no comments for Logins in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Logins")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> Logins
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> Logins
         {
             get
             {
@@ -1640,19 +1640,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Logins == null))
                 {
-                    this._Logins = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login>(GetPath("Logins"));
+                    this._Logins = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login>(GetPath("Logins"));
                 }
                 return this._Logins;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> _Logins;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> _Logins;
         /// <summary>
         /// There are no comments for Husband in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Husband")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle Husband
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle Husband
         {
             get
             {
@@ -1662,19 +1662,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Husband == null))
                 {
-                    this._Husband = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(this.Context, GetPath("Husband"));
+                    this._Husband = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(this.Context, GetPath("Husband"));
                 }
                 return this._Husband;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle _Husband;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle _Husband;
         /// <summary>
         /// There are no comments for Wife in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Wife")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle Wife
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle Wife
         {
             get
             {
@@ -1684,19 +1684,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Wife == null))
                 {
-                    this._Wife = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(this.Context, GetPath("Wife"));
+                    this._Wife = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(this.Context, GetPath("Wife"));
                 }
                 return this._Wife;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle _Wife;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle _Wife;
         /// <summary>
         /// There are no comments for Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Info")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle Info
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle Info
         {
             get
             {
@@ -1706,13 +1706,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Info == null))
                 {
-                    this._Info = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle(this.Context, GetPath("Info"));
+                    this._Info = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle(this.Context, GetPath("Info"));
                 }
                 return this._Info;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle _Info;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle _Info;
     }
     /// <summary>
     /// There are no comments for Customer in the schema.
@@ -1821,7 +1821,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PrimaryContactInfo")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails PrimaryContactInfo
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails PrimaryContactInfo
         {
             get
             {
@@ -1836,8 +1836,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails _PrimaryContactInfo;
-        partial void OnPrimaryContactInfoChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails _PrimaryContactInfo;
+        partial void OnPrimaryContactInfoChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails value);
         partial void OnPrimaryContactInfoChanged();
         /// <summary>
         /// There are no comments for Property BackupContactInfo in the schema.
@@ -1845,7 +1845,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("BackupContactInfo")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "BackupContactInfo is required.")]
-        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails> BackupContactInfo
+        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails> BackupContactInfo
         {
             get
             {
@@ -1860,15 +1860,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails> _BackupContactInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails>();
-        partial void OnBackupContactInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails> value);
+        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails> _BackupContactInfo = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails>();
+        partial void OnBackupContactInfoChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails> value);
         partial void OnBackupContactInfoChanged();
         /// <summary>
         /// There are no comments for Property Auditing in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Auditing")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo Auditing
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo Auditing
         {
             get
             {
@@ -1883,15 +1883,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo _Auditing;
-        partial void OnAuditingChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo _Auditing;
+        partial void OnAuditingChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo value);
         partial void OnAuditingChanged();
         /// <summary>
         /// There are no comments for Property Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> Orders
         {
             get
             {
@@ -1906,15 +1906,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _Orders = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnOrdersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _Orders = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnOrdersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> value);
         partial void OnOrdersChanged();
         /// <summary>
         /// There are no comments for Property Logins in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Logins")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> Logins
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> Logins
         {
             get
             {
@@ -1929,15 +1929,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> _Logins = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnLoginsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> _Logins = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnLoginsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> value);
         partial void OnLoginsChanged();
         /// <summary>
         /// There are no comments for Property Husband in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Husband")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer Husband
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer Husband
         {
             get
             {
@@ -1952,15 +1952,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer _Husband;
-        partial void OnHusbandChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer _Husband;
+        partial void OnHusbandChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer value);
         partial void OnHusbandChanged();
         /// <summary>
         /// There are no comments for Property Wife in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Wife")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer Wife
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer Wife
         {
             get
             {
@@ -1975,15 +1975,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer _Wife;
-        partial void OnWifeChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer _Wife;
+        partial void OnWifeChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer value);
         partial void OnWifeChanged();
         /// <summary>
         /// There are no comments for Property Info in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Info")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo Info
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo Info
         {
             get
             {
@@ -1998,8 +1998,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo _Info;
-        partial void OnInfoChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo _Info;
+        partial void OnInfoChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo value);
         partial void OnInfoChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -2048,7 +2048,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Customer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle Customer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle Customer
         {
             get
             {
@@ -2058,19 +2058,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Customer == null))
                 {
-                    this._Customer = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(this.Context, GetPath("Customer"));
+                    this._Customer = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(this.Context, GetPath("Customer"));
                 }
                 return this._Customer;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle _Customer;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle _Customer;
         /// <summary>
         /// There are no comments for LastLogin in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastLogin")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle LastLogin
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle LastLogin
         {
             get
             {
@@ -2080,19 +2080,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._LastLogin == null))
                 {
-                    this._LastLogin = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle(this.Context, GetPath("LastLogin"));
+                    this._LastLogin = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle(this.Context, GetPath("LastLogin"));
                 }
                 return this._LastLogin;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle _LastLogin;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle _LastLogin;
         /// <summary>
         /// There are no comments for SentMessages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("SentMessages")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> SentMessages
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> SentMessages
         {
             get
             {
@@ -2102,19 +2102,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._SentMessages == null))
                 {
-                    this._SentMessages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(GetPath("SentMessages"));
+                    this._SentMessages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(GetPath("SentMessages"));
                 }
                 return this._SentMessages;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _SentMessages;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _SentMessages;
         /// <summary>
         /// There are no comments for ReceivedMessages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ReceivedMessages")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> ReceivedMessages
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> ReceivedMessages
         {
             get
             {
@@ -2124,19 +2124,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._ReceivedMessages == null))
                 {
-                    this._ReceivedMessages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(GetPath("ReceivedMessages"));
+                    this._ReceivedMessages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(GetPath("ReceivedMessages"));
                 }
                 return this._ReceivedMessages;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _ReceivedMessages;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _ReceivedMessages;
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> Orders
         {
             get
             {
@@ -2146,13 +2146,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Orders == null))
                 {
-                    this._Orders = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order>(GetPath("Orders"));
+                    this._Orders = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order>(GetPath("Orders"));
                 }
                 return this._Orders;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _Orders;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _Orders;
     }
     /// <summary>
     /// There are no comments for Login in the schema.
@@ -2227,7 +2227,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Customer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer Customer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer Customer
         {
             get
             {
@@ -2242,15 +2242,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer _Customer;
-        partial void OnCustomerChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer _Customer;
+        partial void OnCustomerChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer value);
         partial void OnCustomerChanged();
         /// <summary>
         /// There are no comments for Property LastLogin in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastLogin")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin LastLogin
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin LastLogin
         {
             get
             {
@@ -2265,15 +2265,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin _LastLogin;
-        partial void OnLastLoginChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin _LastLogin;
+        partial void OnLastLoginChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin value);
         partial void OnLastLoginChanged();
         /// <summary>
         /// There are no comments for Property SentMessages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("SentMessages")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> SentMessages
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> SentMessages
         {
             get
             {
@@ -2288,15 +2288,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _SentMessages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnSentMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _SentMessages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnSentMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> value);
         partial void OnSentMessagesChanged();
         /// <summary>
         /// There are no comments for Property ReceivedMessages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ReceivedMessages")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> ReceivedMessages
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> ReceivedMessages
         {
             get
             {
@@ -2311,15 +2311,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _ReceivedMessages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnReceivedMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _ReceivedMessages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnReceivedMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> value);
         partial void OnReceivedMessagesChanged();
         /// <summary>
         /// There are no comments for Property Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> Orders
         {
             get
             {
@@ -2334,8 +2334,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _Orders = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnOrdersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _Orders = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnOrdersChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> value);
         partial void OnOrdersChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -2384,7 +2384,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Login
         {
             get
             {
@@ -2394,13 +2394,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Login == null))
                 {
-                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Login"));
+                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Login"));
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Login;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Login;
     }
     /// <summary>
     /// There are no comments for RSAToken in the schema.
@@ -2478,7 +2478,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Login
         {
             get
             {
@@ -2493,8 +2493,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Login;
-        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Login;
+        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnLoginChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -2543,7 +2543,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Login
         {
             get
             {
@@ -2553,13 +2553,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Login == null))
                 {
-                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Login"));
+                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Login"));
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Login;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Login;
     }
     /// <summary>
     /// There are no comments for PageView in the schema.
@@ -2709,7 +2709,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Login
         {
             get
             {
@@ -2724,8 +2724,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Login;
-        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Login;
+        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnLoginChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -2774,7 +2774,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Login
         {
             get
             {
@@ -2784,13 +2784,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Login == null))
                 {
-                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Login"));
+                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Login"));
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Login;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Login;
     }
     /// <summary>
     /// There are no comments for LastLogin in the schema.
@@ -2917,7 +2917,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Login
         {
             get
             {
@@ -2932,8 +2932,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Login;
-        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Login;
+        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnLoginChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -2982,7 +2982,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Sender")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Sender
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Sender
         {
             get
             {
@@ -2992,19 +2992,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Sender == null))
                 {
-                    this._Sender = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Sender"));
+                    this._Sender = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Sender"));
                 }
                 return this._Sender;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Sender;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Sender;
         /// <summary>
         /// There are no comments for Recipient in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Recipient")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Recipient
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Recipient
         {
             get
             {
@@ -3014,19 +3014,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Recipient == null))
                 {
-                    this._Recipient = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Recipient"));
+                    this._Recipient = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Recipient"));
                 }
                 return this._Recipient;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Recipient;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Recipient;
         /// <summary>
         /// There are no comments for Attachments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Attachments")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> Attachments
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> Attachments
         {
             get
             {
@@ -3036,13 +3036,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Attachments == null))
                 {
-                    this._Attachments = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment>(GetPath("Attachments"));
+                    this._Attachments = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment>(GetPath("Attachments"));
                 }
                 return this._Attachments;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> _Attachments;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> _Attachments;
     }
     /// <summary>
     /// There are no comments for Message in the schema.
@@ -3063,7 +3063,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// <param name="sent">Initial value of Sent.</param>
         /// <param name="isRead">Initial value of IsRead.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static Message CreateMessage(int messageId, string fromUsername, global::System.DateTimeOffset sent, bool isRead)
+        public static Message CreateMessage(string messageId, string fromUsername, global::System.DateTimeOffset sent, string isRead)
         {
             Message message = new Message();
             message.MessageId = messageId;
@@ -3078,7 +3078,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MessageId")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "MessageId is required.")]
-        public virtual int MessageId
+        public virtual string MessageId
         {
             get
             {
@@ -3093,8 +3093,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _MessageId;
-        partial void OnMessageIdChanging(int value);
+        private string _MessageId;
+        partial void OnMessageIdChanging(string value);
         partial void OnMessageIdChanged();
         /// <summary>
         /// There are no comments for Property FromUsername in the schema.
@@ -3219,7 +3219,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("IsRead")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "IsRead is required.")]
-        public virtual bool IsRead
+        public virtual string IsRead
         {
             get
             {
@@ -3234,15 +3234,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private bool _IsRead;
-        partial void OnIsReadChanging(bool value);
+        private string _IsRead;
+        partial void OnIsReadChanging(string value);
         partial void OnIsReadChanged();
         /// <summary>
         /// There are no comments for Property Sender in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Sender")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Sender
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Sender
         {
             get
             {
@@ -3257,15 +3257,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Sender;
-        partial void OnSenderChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Sender;
+        partial void OnSenderChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnSenderChanged();
         /// <summary>
         /// There are no comments for Property Recipient in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Recipient")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Recipient
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Recipient
         {
             get
             {
@@ -3280,15 +3280,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Recipient;
-        partial void OnRecipientChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Recipient;
+        partial void OnRecipientChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnRecipientChanged();
         /// <summary>
         /// There are no comments for Property Attachments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Attachments")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> Attachments
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> Attachments
         {
             get
             {
@@ -3303,8 +3303,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> _Attachments = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnAttachmentsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> _Attachments = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnAttachmentsChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> value);
         partial void OnAttachmentsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -3353,7 +3353,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Messages")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> Messages
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> Messages
         {
             get
             {
@@ -3363,13 +3363,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Messages == null))
                 {
-                    this._Messages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(GetPath("Messages"));
+                    this._Messages = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(GetPath("Messages"));
                 }
                 return this._Messages;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _Messages;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _Messages;
     }
     /// <summary>
     /// There are no comments for MessageAttachment in the schema.
@@ -3386,7 +3386,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         /// <param name="attachmentId">Initial value of AttachmentId.</param>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static MessageAttachment CreateMessageAttachment(global::System.Guid attachmentId)
+        public static MessageAttachment CreateMessageAttachment(string attachmentId)
         {
             MessageAttachment messageAttachment = new MessageAttachment();
             messageAttachment.AttachmentId = attachmentId;
@@ -3398,7 +3398,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AttachmentId")]
         [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "AttachmentId is required.")]
-        public virtual global::System.Guid AttachmentId
+        public string AttachmentId
         {
             get
             {
@@ -3413,8 +3413,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Guid _AttachmentId;
-        partial void OnAttachmentIdChanging(global::System.Guid value);
+        private string _AttachmentId;
+        partial void OnAttachmentIdChanging(string value);
         partial void OnAttachmentIdChanged();
         /// <summary>
         /// There are no comments for Property Attachment in the schema.
@@ -3444,7 +3444,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Messages")]
-        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> Messages
+        public virtual global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> Messages
         {
             get
             {
@@ -3459,8 +3459,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _Messages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
-        partial void OnMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> value);
+        private global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _Messages = new global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>(null, global::Microsoft.OData.Client.TrackingMode.None);
+        partial void OnMessagesChanging(global::Microsoft.OData.Client.DataServiceCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> value);
         partial void OnMessagesChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -3509,7 +3509,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Login
         {
             get
             {
@@ -3519,19 +3519,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Login == null))
                 {
-                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Login"));
+                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Login"));
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Login;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Login;
         /// <summary>
         /// There are no comments for Customer in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Customer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle Customer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle Customer
         {
             get
             {
@@ -3541,13 +3541,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Customer == null))
                 {
-                    this._Customer = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(this.Context, GetPath("Customer"));
+                    this._Customer = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(this.Context, GetPath("Customer"));
                 }
                 return this._Customer;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle _Customer;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle _Customer;
     }
     /// <summary>
     /// There are no comments for Order in the schema.
@@ -3622,7 +3622,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Concurrency")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo Concurrency
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo Concurrency
         {
             get
             {
@@ -3637,15 +3637,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo _Concurrency;
-        partial void OnConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo _Concurrency;
+        partial void OnConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo value);
         partial void OnConcurrencyChanged();
         /// <summary>
         /// There are no comments for Property Login in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login Login
         {
             get
             {
@@ -3660,15 +3660,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login _Login;
-        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login _Login;
+        partial void OnLoginChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login value);
         partial void OnLoginChanged();
         /// <summary>
         /// There are no comments for Property Customer in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Customer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer Customer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer Customer
         {
             get
             {
@@ -3683,8 +3683,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer _Customer;
-        partial void OnCustomerChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer _Customer;
+        partial void OnCustomerChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer value);
         partial void OnCustomerChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -3733,7 +3733,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle Product
         {
             get
             {
@@ -3743,13 +3743,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Product == null))
                 {
-                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(this.Context, GetPath("Product"));
+                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(this.Context, GetPath("Product"));
                 }
                 return this._Product;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle _Product;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle _Product;
     }
     /// <summary>
     /// There are no comments for ProductDetail in the schema.
@@ -3812,7 +3812,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product Product
         {
             get
             {
@@ -3827,8 +3827,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product _Product;
-        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product _Product;
+        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product value);
         partial void OnProductChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -3877,7 +3877,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle Product
         {
             get
             {
@@ -3887,13 +3887,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Product == null))
                 {
-                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(this.Context, GetPath("Product"));
+                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(this.Context, GetPath("Product"));
                 }
                 return this._Product;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle _Product;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle _Product;
     }
     /// <summary>
     /// There are no comments for ProductReview in the schema.
@@ -4019,7 +4019,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product Product
         {
             get
             {
@@ -4034,8 +4034,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product _Product;
-        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product _Product;
+        partial void OnProductChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product value);
         partial void OnProductChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -4333,7 +4333,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComputerDetail")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle ComputerDetail
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle ComputerDetail
         {
             get
             {
@@ -4343,13 +4343,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._ComputerDetail == null))
                 {
-                    this._ComputerDetail = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle(this.Context, GetPath("ComputerDetail"));
+                    this._ComputerDetail = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle(this.Context, GetPath("ComputerDetail"));
                 }
                 return this._ComputerDetail;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle _ComputerDetail;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle _ComputerDetail;
     }
     /// <summary>
     /// There are no comments for Computer in the schema.
@@ -4424,7 +4424,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComputerDetail")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail ComputerDetail
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail ComputerDetail
         {
             get
             {
@@ -4439,8 +4439,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail _ComputerDetail;
-        partial void OnComputerDetailChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail _ComputerDetail;
+        partial void OnComputerDetailChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail value);
         partial void OnComputerDetailChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -4489,7 +4489,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Computer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle Computer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle Computer
         {
             get
             {
@@ -4499,13 +4499,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Computer == null))
                 {
-                    this._Computer = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle(this.Context, GetPath("Computer"));
+                    this._Computer = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle(this.Context, GetPath("Computer"));
                 }
                 return this._Computer;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle _Computer;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle _Computer;
     }
     /// <summary>
     /// There are no comments for ComputerDetail in the schema.
@@ -4675,7 +4675,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Dimensions")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions Dimensions
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions Dimensions
         {
             get
             {
@@ -4690,15 +4690,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions _Dimensions;
-        partial void OnDimensionsChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Dimensions value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions _Dimensions;
+        partial void OnDimensionsChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Dimensions value);
         partial void OnDimensionsChanged();
         /// <summary>
         /// There are no comments for Property Computer in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Computer")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer Computer
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer Computer
         {
             get
             {
@@ -4713,8 +4713,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer _Computer;
-        partial void OnComputerChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer _Computer;
+        partial void OnComputerChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer value);
         partial void OnComputerChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -4763,7 +4763,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("License")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle License
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle License
         {
             get
             {
@@ -4773,13 +4773,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._License == null))
                 {
-                    this._License = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle(this.Context, GetPath("License"));
+                    this._License = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle(this.Context, GetPath("License"));
                 }
                 return this._License;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle _License;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle _License;
     }
     /// <summary>
     /// There are no comments for Driver in the schema.
@@ -4857,7 +4857,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("License")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License License
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License License
         {
             get
             {
@@ -4872,8 +4872,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License _License;
-        partial void OnLicenseChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License _License;
+        partial void OnLicenseChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License value);
         partial void OnLicenseChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -4922,7 +4922,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Driver")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle Driver
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle Driver
         {
             get
             {
@@ -4932,13 +4932,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Driver == null))
                 {
-                    this._Driver = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle(this.Context, GetPath("Driver"));
+                    this._Driver = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle(this.Context, GetPath("Driver"));
                 }
                 return this._Driver;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle _Driver;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle _Driver;
     }
     /// <summary>
     /// There are no comments for License in the schema.
@@ -5085,7 +5085,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Driver")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver Driver
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver Driver
         {
             get
             {
@@ -5100,8 +5100,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver _Driver;
-        partial void OnDriverChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver _Driver;
+        partial void OnDriverChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver value);
         partial void OnDriverChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -5576,7 +5576,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("BagOfComplexToCategories")]
-        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComplexToCategory> BagOfComplexToCategories
+        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComplexToCategory> BagOfComplexToCategories
         {
             get
             {
@@ -5591,15 +5591,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComplexToCategory> _BagOfComplexToCategories = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComplexToCategory>();
-        partial void OnBagOfComplexToCategoriesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComplexToCategory> value);
+        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComplexToCategory> _BagOfComplexToCategories = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComplexToCategory>();
+        partial void OnBagOfComplexToCategoriesChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComplexToCategory> value);
         partial void OnBagOfComplexToCategoriesChanged();
         /// <summary>
         /// There are no comments for Property ComplexPhone in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComplexPhone")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone ComplexPhone
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone ComplexPhone
         {
             get
             {
@@ -5614,15 +5614,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone _ComplexPhone;
-        partial void OnComplexPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone _ComplexPhone;
+        partial void OnComplexPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone value);
         partial void OnComplexPhoneChanged();
         /// <summary>
         /// There are no comments for Property ComplexContactDetails in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComplexContactDetails")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails ComplexContactDetails
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails ComplexContactDetails
         {
             get
             {
@@ -5637,8 +5637,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails _ComplexContactDetails;
-        partial void OnComplexContactDetailsChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails _ComplexContactDetails;
+        partial void OnComplexContactDetailsChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails value);
         partial void OnComplexContactDetailsChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -5844,7 +5844,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Manager")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle Manager
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle Manager
         {
             get
             {
@@ -5854,19 +5854,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Manager == null))
                 {
-                    this._Manager = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle(this.Context, GetPath("Manager"));
+                    this._Manager = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle(this.Context, GetPath("Manager"));
                 }
                 return this._Manager;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle _Manager;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle _Manager;
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonMetadata
         {
             get
             {
@@ -5876,13 +5876,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._PersonMetadata == null))
                 {
-                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>(GetPath("PersonMetadata"));
+                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>(GetPath("PersonMetadata"));
                 }
                 return this._PersonMetadata;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonMetadata;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
     /// There are no comments for Employee in the schema.
@@ -5985,7 +5985,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Manager")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee Manager
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee Manager
         {
             get
             {
@@ -6000,8 +6000,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee _Manager;
-        partial void OnManagerChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee _Manager;
+        partial void OnManagerChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee value);
         partial void OnManagerChanged();
     }
     /// <summary>
@@ -6033,7 +6033,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Car")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle Car
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle Car
         {
             get
             {
@@ -6043,19 +6043,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Car == null))
                 {
-                    this._Car = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle(this.Context, GetPath("Car"));
+                    this._Car = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle(this.Context, GetPath("Car"));
                 }
                 return this._Car;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle _Car;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle _Car;
         /// <summary>
         /// There are no comments for Manager in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Manager")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle Manager
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle Manager
         {
             get
             {
@@ -6065,19 +6065,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Manager == null))
                 {
-                    this._Manager = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle(this.Context, GetPath("Manager"));
+                    this._Manager = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle(this.Context, GetPath("Manager"));
                 }
                 return this._Manager;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle _Manager;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle _Manager;
         /// <summary>
         /// There are no comments for PersonMetadata in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonMetadata
         {
             get
             {
@@ -6087,13 +6087,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._PersonMetadata == null))
                 {
-                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>(GetPath("PersonMetadata"));
+                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>(GetPath("PersonMetadata"));
                 }
                 return this._PersonMetadata;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonMetadata;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
     /// There are no comments for SpecialEmployee in the schema.
@@ -6208,7 +6208,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Car")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car Car
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car Car
         {
             get
             {
@@ -6223,8 +6223,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car _Car;
-        partial void OnCarChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car _Car;
+        partial void OnCarChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car value);
         partial void OnCarChanged();
     }
     /// <summary>
@@ -6256,7 +6256,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonMetadata
         {
             get
             {
@@ -6266,13 +6266,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._PersonMetadata == null))
                 {
-                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>(GetPath("PersonMetadata"));
+                    this._PersonMetadata = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>(GetPath("PersonMetadata"));
                 }
                 return this._PersonMetadata;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonMetadata;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonMetadata;
     }
     /// <summary>
     /// There are no comments for Contractor in the schema.
@@ -6466,7 +6466,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Concurrency")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo Concurrency
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo Concurrency
         {
             get
             {
@@ -6481,8 +6481,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo _Concurrency;
-        partial void OnConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ConcurrencyInfo value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo _Concurrency;
+        partial void OnConcurrencyChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ConcurrencyInfo value);
         partial void OnConcurrencyChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -6559,7 +6559,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ContactAlias")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Aliases ContactAlias
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Aliases ContactAlias
         {
             get
             {
@@ -6574,15 +6574,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Aliases _ContactAlias;
-        partial void OnContactAliasChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Aliases value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Aliases _ContactAlias;
+        partial void OnContactAliasChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Aliases value);
         partial void OnContactAliasChanged();
         /// <summary>
         /// There are no comments for Property HomePhone in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("HomePhone")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone HomePhone
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone HomePhone
         {
             get
             {
@@ -6597,15 +6597,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone _HomePhone;
-        partial void OnHomePhoneChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone _HomePhone;
+        partial void OnHomePhoneChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone value);
         partial void OnHomePhoneChanged();
         /// <summary>
         /// There are no comments for Property WorkPhone in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("WorkPhone")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone WorkPhone
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone WorkPhone
         {
             get
             {
@@ -6620,15 +6620,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone _WorkPhone;
-        partial void OnWorkPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone _WorkPhone;
+        partial void OnWorkPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone value);
         partial void OnWorkPhoneChanged();
         /// <summary>
         /// There are no comments for Property MobilePhoneBag in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MobilePhoneBag")]
-        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone> MobilePhoneBag
+        public virtual global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone> MobilePhoneBag
         {
             get
             {
@@ -6643,8 +6643,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone> _MobilePhoneBag = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone>();
-        partial void OnMobilePhoneBagChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone> value);
+        private global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone> _MobilePhoneBag = new global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone>();
+        partial void OnMobilePhoneBagChanging(global::System.Collections.ObjectModel.ObservableCollection<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone> value);
         partial void OnMobilePhoneBagChanged();
         /// <summary>
         /// This event is raised when the value of the property is changed
@@ -6874,7 +6874,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RelatedProducts")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> RelatedProducts
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> RelatedProducts
         {
             get
             {
@@ -6884,19 +6884,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._RelatedProducts == null))
                 {
-                    this._RelatedProducts = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product>(GetPath("RelatedProducts"));
+                    this._RelatedProducts = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product>(GetPath("RelatedProducts"));
                 }
                 return this._RelatedProducts;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _RelatedProducts;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _RelatedProducts;
         /// <summary>
         /// There are no comments for Detail in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Detail")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle Detail
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle Detail
         {
             get
             {
@@ -6906,19 +6906,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Detail == null))
                 {
-                    this._Detail = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle(this.Context, GetPath("Detail"));
+                    this._Detail = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle(this.Context, GetPath("Detail"));
                 }
                 return this._Detail;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle _Detail;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle _Detail;
         /// <summary>
         /// There are no comments for Reviews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Reviews")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> Reviews
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> Reviews
         {
             get
             {
@@ -6928,19 +6928,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Reviews == null))
                 {
-                    this._Reviews = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview>(GetPath("Reviews"));
+                    this._Reviews = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview>(GetPath("Reviews"));
                 }
                 return this._Reviews;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _Reviews;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _Reviews;
         /// <summary>
         /// There are no comments for Photos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Photos")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> Photos
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> Photos
         {
             get
             {
@@ -6950,13 +6950,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Photos == null))
                 {
-                    this._Photos = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto>(GetPath("Photos"));
+                    this._Photos = Context.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto>(GetPath("Photos"));
                 }
                 return this._Photos;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _Photos;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _Photos;
     }
     /// <summary>
     /// There are no comments for DiscontinuedProduct in the schema.
@@ -7033,7 +7033,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("DiscontinuedPhone")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone DiscontinuedPhone
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone DiscontinuedPhone
         {
             get
             {
@@ -7048,8 +7048,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone _DiscontinuedPhone;
-        partial void OnDiscontinuedPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Phone value);
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone _DiscontinuedPhone;
+        partial void OnDiscontinuedPhoneChanging(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Phone value);
         partial void OnDiscontinuedPhoneChanged();
         /// <summary>
         /// There are no comments for Property ChildConcurrencyToken in the schema.
@@ -7221,7 +7221,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Order")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle Order
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle Order
         {
             get
             {
@@ -7231,19 +7231,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Order == null))
                 {
-                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle(this.Context, GetPath("Order"));
+                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle(this.Context, GetPath("Order"));
                 }
                 return this._Order;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle _Order;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle Product
         {
             get
             {
@@ -7253,13 +7253,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Product == null))
                 {
-                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(this.Context, GetPath("Product"));
+                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(this.Context, GetPath("Product"));
                 }
                 return this._Product;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle _Product;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle _Product;
     }
     /// <summary>
     /// There are no comments for BackOrderLine in the schema.
@@ -7313,7 +7313,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Order")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle Order
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle Order
         {
             get
             {
@@ -7323,19 +7323,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Order == null))
                 {
-                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle(this.Context, GetPath("Order"));
+                    this._Order = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle(this.Context, GetPath("Order"));
                 }
                 return this._Order;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle _Order;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle _Order;
         /// <summary>
         /// There are no comments for Product in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Product")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle Product
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle Product
         {
             get
             {
@@ -7345,13 +7345,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Product == null))
                 {
-                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(this.Context, GetPath("Product"));
+                    this._Product = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(this.Context, GetPath("Product"));
                 }
                 return this._Product;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle _Product;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle _Product;
     }
     /// <summary>
     /// There are no comments for BackOrderLine2 in the schema.
@@ -7590,7 +7590,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle Login
+        public virtual global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle Login
         {
             get
             {
@@ -7600,13 +7600,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 }
                 if ((this._Login == null))
                 {
-                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(this.Context, GetPath("Login"));
+                    this._Login = new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(this.Context, GetPath("Login"));
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle _Login;
+        private global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle _Login;
     }
     /// <summary>
     /// There are no comments for ProductPageView in the schema.
@@ -7782,44 +7782,44 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
     public static class ExtensionMethods
     {
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _source,
             int productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source,
             global::System.Nullable<int> orderId,
             global::System.Nullable<int> productId)
         {
@@ -7828,231 +7828,231 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "OrderId", orderId },
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="personId">The value of personId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source,
             int personId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PersonId", personId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="personMetadataId">The value of personMetadataId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _source,
             int personMetadataId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PersonMetadataId", personMetadataId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadataSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadataSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes> _source,
             int id)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes> _source,
             int id)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypesSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="customerId">The value of customerId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> _source,
             global::System.Nullable<int> customerId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "CustomerId", customerId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="username">The value of username</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> _source,
             string username)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Username", username }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="serial">The value of serial</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken> _source,
             string serial)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Serial", serial }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSATokenSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSATokenSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="pageViewId">The value of pageViewId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView> _source,
             int pageViewId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PageViewId", pageViewId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="username">The value of username</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin> _source,
             string username)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Username", username }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLoginSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="fromUsername">The value of fromUsername</param>
         /// <param name="messageId">The value of messageId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _source,
             string fromUsername,
             int messageId)
         {
@@ -8061,94 +8061,94 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "FromUsername", fromUsername },
                 { "MessageId", messageId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="attachmentId">The value of attachmentId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> _source,
             global::System.Guid attachmentId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "AttachmentId", attachmentId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachmentSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachmentSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="orderId">The value of orderId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _source,
             int orderId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "OrderId", orderId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail> _source,
             global::System.Nullable<int> productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="productId">The value of productId</param>
         /// <param name="reviewId">The value of reviewId</param>
         /// <param name="revisionId">The value of revisionId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _source,
             global::System.Nullable<int> productId,
             int reviewId,
             string revisionId)
@@ -8159,24 +8159,24 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "ReviewId", reviewId },
                 { "RevisionId", revisionId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReviewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReviewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="photoId">The value of photoId</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _source,
             int photoId,
             int productId)
         {
@@ -8185,322 +8185,322 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "PhotoId", photoId },
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhotoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhotoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="customerInfoId">The value of customerInfoId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo> _source,
             int customerInfoId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "CustomerInfoId", customerInfoId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfoSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="computerId">The value of computerId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer> _source,
             int computerId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "ComputerId", computerId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="computerDetailId">The value of computerDetailId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail> _source,
             int computerDetailId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "ComputerDetailId", computerDetailId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetailSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="name">The value of name</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver> _source,
             string name)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Name", name }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DriverSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DriverSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="name">The value of name</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License> _source,
             string name)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Name", name }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LicenseSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LicenseSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType> _source,
             int id)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityTypeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityTypeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="vIN">The value of vIN</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car> _source,
             int vIN)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "VIN", vIN }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CarSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CarSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="personId">The value of personId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source,
             int personId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PersonId", personId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle CastToEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle CastToEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.EmployeeSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.EmployeeSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="personId">The value of personId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> _source,
             int personId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PersonId", personId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle CastToSpecialEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle CastToSpecialEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle CastToSpecialEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle CastToSpecialEmployee(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployeeSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployeeSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="personId">The value of personId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor> _source,
             int personId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PersonId", personId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle CastToContractor(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle CastToContractor(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContractorSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContractorSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct> _source,
             int productId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle CastToDiscontinuedProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle CastToDiscontinuedProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProduct>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.DiscontinuedProductSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProduct>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.DiscontinuedProductSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine> _source,
             global::System.Nullable<int> orderId,
             global::System.Nullable<int> productId)
         {
@@ -8509,33 +8509,33 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "OrderId", orderId },
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle CastToBackOrderLine(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle CastToBackOrderLine(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLineSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLineSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2 as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2 as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2 as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2 as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="orderId">The value of orderId</param>
         /// <param name="productId">The value of productId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2> _source,
             global::System.Nullable<int> orderId,
             global::System.Nullable<int> productId)
         {
@@ -8544,93 +8544,93 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
                 { "OrderId", orderId },
                 { "ProductId", productId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single CastToBackOrderLine2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single CastToBackOrderLine2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single CastToBackOrderLine2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single CastToBackOrderLine2(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.BackOrderLine2Single(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.BackOrderLine2Single(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="id">The value of id</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple> _source,
             int id)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "Id", id }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle CastToAllSpatialCollectionTypes_Simple(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle CastToAllSpatialCollectionTypes_Simple(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_Simple>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes_SimpleSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_Simple>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes_SimpleSingle(_source.Context, query.GetPath(null));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
         {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView as global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle specified by key from an entity set
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView as global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
         /// <param name="pageViewId">The value of pageViewId</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView> _source,
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView> _source,
             int pageViewId)
         {
             global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
             {
                 { "PageViewId", pageViewId }
             };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView to its derived type global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView
+        /// Cast an entity of type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView to its derived type global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView
         /// </summary>
         /// <param name="_source">source entity</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle CastToProductPageView(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView> _source)
+        public static global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle CastToProductPageView(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView> _source)
         {
-            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageView>();
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPageViewSingle(_source.Context, query.GetPath(null));
+            global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView> query = _source.CastTo<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageView>();
+            return new global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPageViewSingle(_source.Context, query.GetPath(null));
         }
     }
 }
-namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
+namespace Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Default
 {
     /// <summary>
     /// There are no comments for Container in the schema.
@@ -8669,12 +8669,12 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         protected global::System.Type ResolveTypeFromName(string typeName)
         {
-            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd", "Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd");
+            global::System.Type resolvedType = this.DefaultResolveType(typeName, "Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd", "Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients");
             if ((resolvedType != null))
             {
                 return resolvedType;
             }
-            resolvedType = this.DefaultResolveType(typeName, "Default", "Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default");
+            resolvedType = this.DefaultResolveType(typeName, "Default", "Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Default");
             if ((resolvedType != null))
             {
                 return resolvedType;
@@ -8690,7 +8690,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         protected string ResolveNameFromType(global::System.Type clientType)
         {
             global::Microsoft.OData.Client.OriginalNameAttribute originalNameAttribute = (global::Microsoft.OData.Client.OriginalNameAttribute)global::System.Linq.Enumerable.SingleOrDefault(global::Microsoft.OData.Client.Utility.GetCustomAttributes(clientType, typeof(global::Microsoft.OData.Client.OriginalNameAttribute), true));
-            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
@@ -8698,7 +8698,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
                 }
                 return string.Concat("Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.", clientType.Name);
             }
-            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default", global::System.StringComparison.Ordinal))
+            if (clientType.Namespace.Equals("Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Default", global::System.StringComparison.Ordinal))
             {
                 if (originalNameAttribute != null)
                 {
@@ -8717,438 +8717,438 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Products")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> Products
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> Products
         {
             get
             {
                 if ((this._Products == null))
                 {
-                    this._Products = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product>("Products");
+                    this._Products = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product>("Products");
                 }
                 return this._Products;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _Products;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _Products;
         /// <summary>
         /// There are no comments for OrderLines in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("OrderLines")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> OrderLines
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> OrderLines
         {
             get
             {
                 if ((this._OrderLines == null))
                 {
-                    this._OrderLines = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine>("OrderLines");
+                    this._OrderLines = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine>("OrderLines");
                 }
                 return this._OrderLines;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _OrderLines;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _OrderLines;
         /// <summary>
         /// There are no comments for People in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("People")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> People
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> People
         {
             get
             {
                 if ((this._People == null))
                 {
-                    this._People = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person>("People");
+                    this._People = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person>("People");
                 }
                 return this._People;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _People;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _People;
         /// <summary>
         /// There are no comments for PersonsMetadata in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PersonsMetadata")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> PersonsMetadata
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> PersonsMetadata
         {
             get
             {
                 if ((this._PersonsMetadata == null))
                 {
-                    this._PersonsMetadata = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata>("PersonsMetadata");
+                    this._PersonsMetadata = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata>("PersonsMetadata");
                 }
                 return this._PersonsMetadata;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata> _PersonsMetadata;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata> _PersonsMetadata;
         /// <summary>
         /// There are no comments for AllGeoTypesSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AllGeoTypesSet")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes> AllGeoTypesSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes> AllGeoTypesSet
         {
             get
             {
                 if ((this._AllGeoTypesSet == null))
                 {
-                    this._AllGeoTypesSet = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes>("AllGeoTypesSet");
+                    this._AllGeoTypesSet = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes>("AllGeoTypesSet");
                 }
                 return this._AllGeoTypesSet;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes> _AllGeoTypesSet;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes> _AllGeoTypesSet;
         /// <summary>
         /// There are no comments for AllGeoCollectionTypesSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("AllGeoCollectionTypesSet")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes> AllGeoCollectionTypesSet
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes> AllGeoCollectionTypesSet
         {
             get
             {
                 if ((this._AllGeoCollectionTypesSet == null))
                 {
-                    this._AllGeoCollectionTypesSet = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes>("AllGeoCollectionTypesSet");
+                    this._AllGeoCollectionTypesSet = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes>("AllGeoCollectionTypesSet");
                 }
                 return this._AllGeoCollectionTypesSet;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes> _AllGeoCollectionTypesSet;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes> _AllGeoCollectionTypesSet;
         /// <summary>
         /// There are no comments for Customers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Customers")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> Customers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> Customers
         {
             get
             {
                 if ((this._Customers == null))
                 {
-                    this._Customers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer>("Customers");
+                    this._Customers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer>("Customers");
                 }
                 return this._Customers;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> _Customers;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> _Customers;
         /// <summary>
         /// There are no comments for Login in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Login")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> Login
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> Login
         {
             get
             {
                 if ((this._Login == null))
                 {
-                    this._Login = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login>("Login");
+                    this._Login = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login>("Login");
                 }
                 return this._Login;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login> _Login;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login> _Login;
         /// <summary>
         /// There are no comments for RSATokens in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("RSATokens")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken> RSATokens
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken> RSATokens
         {
             get
             {
                 if ((this._RSATokens == null))
                 {
-                    this._RSATokens = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken>("RSATokens");
+                    this._RSATokens = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken>("RSATokens");
                 }
                 return this._RSATokens;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken> _RSATokens;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken> _RSATokens;
         /// <summary>
         /// There are no comments for PageViews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("PageViews")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView> PageViews
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView> PageViews
         {
             get
             {
                 if ((this._PageViews == null))
                 {
-                    this._PageViews = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView>("PageViews");
+                    this._PageViews = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView>("PageViews");
                 }
                 return this._PageViews;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView> _PageViews;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView> _PageViews;
         /// <summary>
         /// There are no comments for LastLogins in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("LastLogins")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin> LastLogins
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin> LastLogins
         {
             get
             {
                 if ((this._LastLogins == null))
                 {
-                    this._LastLogins = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin>("LastLogins");
+                    this._LastLogins = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin>("LastLogins");
                 }
                 return this._LastLogins;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin> _LastLogins;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin> _LastLogins;
         /// <summary>
         /// There are no comments for Messages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Messages")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> Messages
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> Messages
         {
             get
             {
                 if ((this._Messages == null))
                 {
-                    this._Messages = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message>("Messages");
+                    this._Messages = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message>("Messages");
                 }
                 return this._Messages;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message> _Messages;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message> _Messages;
         /// <summary>
         /// There are no comments for MessageAttachments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MessageAttachments")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> MessageAttachments
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> MessageAttachments
         {
             get
             {
                 if ((this._MessageAttachments == null))
                 {
-                    this._MessageAttachments = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment>("MessageAttachments");
+                    this._MessageAttachments = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment>("MessageAttachments");
                 }
                 return this._MessageAttachments;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment> _MessageAttachments;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment> _MessageAttachments;
         /// <summary>
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Orders")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> Orders
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> Orders
         {
             get
             {
                 if ((this._Orders == null))
                 {
-                    this._Orders = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order>("Orders");
+                    this._Orders = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order>("Orders");
                 }
                 return this._Orders;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order> _Orders;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order> _Orders;
         /// <summary>
         /// There are no comments for ProductDetails in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductDetails")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail> ProductDetails
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail> ProductDetails
         {
             get
             {
                 if ((this._ProductDetails == null))
                 {
-                    this._ProductDetails = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail>("ProductDetails");
+                    this._ProductDetails = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail>("ProductDetails");
                 }
                 return this._ProductDetails;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail> _ProductDetails;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail> _ProductDetails;
         /// <summary>
         /// There are no comments for ProductReviews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductReviews")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> ProductReviews
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> ProductReviews
         {
             get
             {
                 if ((this._ProductReviews == null))
                 {
-                    this._ProductReviews = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview>("ProductReviews");
+                    this._ProductReviews = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview>("ProductReviews");
                 }
                 return this._ProductReviews;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview> _ProductReviews;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview> _ProductReviews;
         /// <summary>
         /// There are no comments for ProductPhotos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ProductPhotos")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> ProductPhotos
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> ProductPhotos
         {
             get
             {
                 if ((this._ProductPhotos == null))
                 {
-                    this._ProductPhotos = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto>("ProductPhotos");
+                    this._ProductPhotos = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto>("ProductPhotos");
                 }
                 return this._ProductPhotos;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto> _ProductPhotos;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto> _ProductPhotos;
         /// <summary>
         /// There are no comments for CustomerInfos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("CustomerInfos")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo> CustomerInfos
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo> CustomerInfos
         {
             get
             {
                 if ((this._CustomerInfos == null))
                 {
-                    this._CustomerInfos = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo>("CustomerInfos");
+                    this._CustomerInfos = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo>("CustomerInfos");
                 }
                 return this._CustomerInfos;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo> _CustomerInfos;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo> _CustomerInfos;
         /// <summary>
         /// There are no comments for Computers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Computers")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer> Computers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer> Computers
         {
             get
             {
                 if ((this._Computers == null))
                 {
-                    this._Computers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer>("Computers");
+                    this._Computers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer>("Computers");
                 }
                 return this._Computers;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer> _Computers;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer> _Computers;
         /// <summary>
         /// There are no comments for ComputerDetails in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("ComputerDetails")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail> ComputerDetails
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail> ComputerDetails
         {
             get
             {
                 if ((this._ComputerDetails == null))
                 {
-                    this._ComputerDetails = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail>("ComputerDetails");
+                    this._ComputerDetails = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail>("ComputerDetails");
                 }
                 return this._ComputerDetails;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail> _ComputerDetails;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail> _ComputerDetails;
         /// <summary>
         /// There are no comments for Drivers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Drivers")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver> Drivers
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver> Drivers
         {
             get
             {
                 if ((this._Drivers == null))
                 {
-                    this._Drivers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver>("Drivers");
+                    this._Drivers = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver>("Drivers");
                 }
                 return this._Drivers;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver> _Drivers;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver> _Drivers;
         /// <summary>
         /// There are no comments for Licenses in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Licenses")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License> Licenses
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License> Licenses
         {
             get
             {
                 if ((this._Licenses == null))
                 {
-                    this._Licenses = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License>("Licenses");
+                    this._Licenses = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License>("Licenses");
                 }
                 return this._Licenses;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License> _Licenses;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License> _Licenses;
         /// <summary>
         /// There are no comments for MappedEntityTypes in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("MappedEntityTypes")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType> MappedEntityTypes
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType> MappedEntityTypes
         {
             get
             {
                 if ((this._MappedEntityTypes == null))
                 {
-                    this._MappedEntityTypes = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType>("MappedEntityTypes");
+                    this._MappedEntityTypes = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType>("MappedEntityTypes");
                 }
                 return this._MappedEntityTypes;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType> _MappedEntityTypes;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType> _MappedEntityTypes;
         /// <summary>
         /// There are no comments for Cars in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         [global::Microsoft.OData.Client.OriginalNameAttribute("Cars")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car> Cars
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car> Cars
         {
             get
             {
                 if ((this._Cars == null))
                 {
-                    this._Cars = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car>("Cars");
+                    this._Cars = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car>("Cars");
                 }
                 return this._Cars;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car> _Cars;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car> _Cars;
         /// <summary>
         /// There are no comments for Products in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToProducts(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product product)
+        public virtual void AddToProducts(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product product)
         {
             base.AddObject("Products", product);
         }
@@ -9156,7 +9156,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for OrderLines in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToOrderLines(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine orderLine)
+        public virtual void AddToOrderLines(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine orderLine)
         {
             base.AddObject("OrderLines", orderLine);
         }
@@ -9164,7 +9164,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for People in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToPeople(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person person)
+        public virtual void AddToPeople(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person person)
         {
             base.AddObject("People", person);
         }
@@ -9172,7 +9172,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for PersonsMetadata in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToPersonsMetadata(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PersonMetadata personMetadata)
+        public virtual void AddToPersonsMetadata(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PersonMetadata personMetadata)
         {
             base.AddObject("PersonsMetadata", personMetadata);
         }
@@ -9180,7 +9180,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for AllGeoTypesSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToAllGeoTypesSet(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialTypes allSpatialTypes)
+        public virtual void AddToAllGeoTypesSet(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialTypes allSpatialTypes)
         {
             base.AddObject("AllGeoTypesSet", allSpatialTypes);
         }
@@ -9188,7 +9188,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for AllGeoCollectionTypesSet in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToAllGeoCollectionTypesSet(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AllSpatialCollectionTypes allSpatialCollectionTypes)
+        public virtual void AddToAllGeoCollectionTypesSet(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AllSpatialCollectionTypes allSpatialCollectionTypes)
         {
             base.AddObject("AllGeoCollectionTypesSet", allSpatialCollectionTypes);
         }
@@ -9196,7 +9196,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Customers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToCustomers(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer customer)
+        public virtual void AddToCustomers(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer customer)
         {
             base.AddObject("Customers", customer);
         }
@@ -9204,7 +9204,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Login in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToLogin(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Login login)
+        public virtual void AddToLogin(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Login login)
         {
             base.AddObject("Login", login);
         }
@@ -9212,7 +9212,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for RSATokens in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToRSATokens(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.RSAToken rSAToken)
+        public virtual void AddToRSATokens(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.RSAToken rSAToken)
         {
             base.AddObject("RSATokens", rSAToken);
         }
@@ -9220,7 +9220,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for PageViews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToPageViews(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.PageView pageView)
+        public virtual void AddToPageViews(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.PageView pageView)
         {
             base.AddObject("PageViews", pageView);
         }
@@ -9228,7 +9228,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for LastLogins in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToLastLogins(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.LastLogin lastLogin)
+        public virtual void AddToLastLogins(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.LastLogin lastLogin)
         {
             base.AddObject("LastLogins", lastLogin);
         }
@@ -9236,7 +9236,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Messages in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToMessages(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Message message)
+        public virtual void AddToMessages(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Message message)
         {
             base.AddObject("Messages", message);
         }
@@ -9244,7 +9244,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for MessageAttachments in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToMessageAttachments(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MessageAttachment messageAttachment)
+        public virtual void AddToMessageAttachments(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MessageAttachment messageAttachment)
         {
             base.AddObject("MessageAttachments", messageAttachment);
         }
@@ -9252,7 +9252,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Orders in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToOrders(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Order order)
+        public virtual void AddToOrders(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Order order)
         {
             base.AddObject("Orders", order);
         }
@@ -9260,7 +9260,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ProductDetails in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToProductDetails(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductDetail productDetail)
+        public virtual void AddToProductDetails(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductDetail productDetail)
         {
             base.AddObject("ProductDetails", productDetail);
         }
@@ -9268,7 +9268,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ProductReviews in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToProductReviews(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductReview productReview)
+        public virtual void AddToProductReviews(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductReview productReview)
         {
             base.AddObject("ProductReviews", productReview);
         }
@@ -9276,7 +9276,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ProductPhotos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToProductPhotos(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ProductPhoto productPhoto)
+        public virtual void AddToProductPhotos(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ProductPhoto productPhoto)
         {
             base.AddObject("ProductPhotos", productPhoto);
         }
@@ -9284,7 +9284,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for CustomerInfos in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToCustomerInfos(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.CustomerInfo customerInfo)
+        public virtual void AddToCustomerInfos(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.CustomerInfo customerInfo)
         {
             base.AddObject("CustomerInfos", customerInfo);
         }
@@ -9292,7 +9292,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Computers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToComputers(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer computer)
+        public virtual void AddToComputers(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Computer computer)
         {
             base.AddObject("Computers", computer);
         }
@@ -9300,7 +9300,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ComputerDetails in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToComputerDetails(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail computerDetail)
+        public virtual void AddToComputerDetails(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail computerDetail)
         {
             base.AddObject("ComputerDetails", computerDetail);
         }
@@ -9308,7 +9308,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Drivers in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToDrivers(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Driver driver)
+        public virtual void AddToDrivers(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Driver driver)
         {
             base.AddObject("Drivers", driver);
         }
@@ -9316,7 +9316,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Licenses in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToLicenses(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.License license)
+        public virtual void AddToLicenses(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.License license)
         {
             base.AddObject("Licenses", license);
         }
@@ -9324,7 +9324,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for MappedEntityTypes in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToMappedEntityTypes(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.MappedEntityType mappedEntityType)
+        public virtual void AddToMappedEntityTypes(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.MappedEntityType mappedEntityType)
         {
             base.AddObject("MappedEntityTypes", mappedEntityType);
         }
@@ -9332,7 +9332,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Cars in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToCars(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Car car)
+        public virtual void AddToCars(global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Car car)
         {
             base.AddObject("Cars", car);
         }
@@ -9343,7 +9343,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
             private static global::Microsoft.OData.Edm.IEdmModel ParsedModel = LoadModelFromString();
 
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-            private const string filePath = @"EndToEndServiceCsdl.xml";
+            private const string filePath = @"MismatchedClientModelCsdl.xml";
 
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
             public static global::Microsoft.OData.Edm.IEdmModel GetInstance()
@@ -9411,9 +9411,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for GetSpecificCustomer in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetSpecificCustomer")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> GetSpecificCustomer(string Name)
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> GetSpecificCustomer(string Name)
         {
-            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer>("", "GetSpecificCustomer", false, new global::Microsoft.OData.Client.UriOperationParameter("Name", Name));
+            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer>("", "GetSpecificCustomer", false, new global::Microsoft.OData.Client.UriOperationParameter("Name", Name));
         }
         /// <summary>
         /// There are no comments for GetCustomerCount in the schema.
@@ -9435,17 +9435,17 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for EntityProjectionReturnsCollectionOfComplexTypes in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("EntityProjectionReturnsCollectionOfComplexTypes")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails> EntityProjectionReturnsCollectionOfComplexTypes()
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails> EntityProjectionReturnsCollectionOfComplexTypes()
         {
-            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ContactDetails>("", "EntityProjectionReturnsCollectionOfComplexTypes", false);
+            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ContactDetails>("", "EntityProjectionReturnsCollectionOfComplexTypes", false);
         }
         /// <summary>
         /// There are no comments for InStreamErrorGetCustomer in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("InStreamErrorGetCustomer")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> InStreamErrorGetCustomer()
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> InStreamErrorGetCustomer()
         {
-            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer>("", "InStreamErrorGetCustomer", false);
+            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer>("", "InStreamErrorGetCustomer", false);
         }
         /// <summary>
         /// There are no comments for RetrieveProduct in the schema.
@@ -9473,7 +9473,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for RetrieveProduct in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("RetrieveProduct")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> RetrieveProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Product> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> RetrieveProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Product> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9486,7 +9486,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for RetrieveProduct in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("RetrieveProduct")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> RetrieveProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.OrderLine> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> RetrieveProduct(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.OrderLine> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9499,7 +9499,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for UpdatePersonInfo in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatePersonInfo")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Person> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Person> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9512,7 +9512,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for UpdatePersonInfo in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatePersonInfo")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9525,7 +9525,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for UpdatePersonInfo in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatePersonInfo")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9538,7 +9538,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for UpdatePersonInfo in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatePersonInfo")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Contractor> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Contractor> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9551,7 +9551,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for IncreaseEmployeeSalary in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseEmployeeSalary")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<int> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9564,7 +9564,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for IncreaseEmployeeSalary in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseEmployeeSalary")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source, int n)
+        public static global::Microsoft.OData.Client.DataServiceActionQuerySingle<bool> IncreaseEmployeeSalary(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source, int n)
         {
             if (!_source.IsComposable)
             {
@@ -9577,7 +9577,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for IncreaseSalaries in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseSalaries")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery IncreaseSalaries(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source, int n)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery IncreaseSalaries(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source, int n)
         {
             if (!_source.IsComposable)
             {
@@ -9590,7 +9590,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for IncreaseSalaries in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("IncreaseSalaries")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery IncreaseSalaries(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.SpecialEmployee> _source, int n)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery IncreaseSalaries(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.SpecialEmployee> _source, int n)
         {
             if (!_source.IsComposable)
             {
@@ -9603,7 +9603,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for Sack in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("Sack")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery Sack(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Employee> _source)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery Sack(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Employee> _source)
         {
             if (!_source.IsComposable)
             {
@@ -9616,7 +9616,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ChangeCustomerAuditInfo in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("ChangeCustomerAuditInfo")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery ChangeCustomerAuditInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> _source, global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.AuditInfo auditInfo)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery ChangeCustomerAuditInfo(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.Customer> _source, global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.AuditInfo auditInfo)
         {
             if (!_source.IsComposable)
             {
@@ -9629,7 +9629,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         /// There are no comments for ResetComputerDetailsSpecifications in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("ResetComputerDetailsSpecifications")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery ResetComputerDetailsSpecifications(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.ComputerDetail> _source, global::System.Collections.Generic.ICollection<string> specifications, global::System.DateTimeOffset purchaseTime)
+        public static global::Microsoft.OData.Client.DataServiceActionQuery ResetComputerDetailsSpecifications(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.ClientWithoutTypeResolverTests.Clients.ComputerDetail> _source, global::System.Collections.Generic.ICollection<string> specifications, global::System.DateTimeOffset purchaseTime)
         {
             if (!_source.IsComposable)
             {
