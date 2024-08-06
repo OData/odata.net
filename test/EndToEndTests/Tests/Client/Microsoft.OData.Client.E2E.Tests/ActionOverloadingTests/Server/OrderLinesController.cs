@@ -23,12 +23,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         public IActionResult Get()
         {
             var orderLines = CommonEndToEndDataSource.OrderLines;
-
-            if (orderLines == null)
-            {
-                return NotFound();
-            }
-
+            
             return Ok(orderLines);
         }
 
