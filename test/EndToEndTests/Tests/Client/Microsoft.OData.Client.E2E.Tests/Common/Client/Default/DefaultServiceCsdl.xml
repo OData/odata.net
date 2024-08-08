@@ -146,9 +146,9 @@
         <Property Name="CountryRegion" Type="Edm.String" />
         <Property Name="AccountInfo" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.AccountInfo" />
         <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="MyPaymentInstruments" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PaymentInstrument)" />
-        <NavigationProperty Name="ActiveSubscriptions" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Subscription)" />
-        <NavigationProperty Name="MyGiftCard" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.GiftCard" />
+        <NavigationProperty Name="MyPaymentInstruments" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PaymentInstrument)" ContainsTarget="true" />
+        <NavigationProperty Name="ActiveSubscriptions" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Subscription)" ContainsTarget="true" />
+        <NavigationProperty Name="MyGiftCard" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.GiftCard" ContainsTarget="true" />
       </EntityType>
       <EntityType Name="Order" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.AbstractEntity">
         <Key>
@@ -173,9 +173,31 @@
         <Property Name="FriendlyName" Type="Edm.String" />
         <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
         <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="BillingStatements" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Statement)" />
+        <NavigationProperty Name="BillingStatements" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Statement)" ContainsTarget="true" />
         <NavigationProperty Name="TheStoredPI" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.StoredPI" />
         <NavigationProperty Name="BackupStoredPI" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.StoredPI" />
+      </EntityType>
+      <EntityType Name="StoredPI">
+        <Key>
+          <PropertyRef Name="StoredPIID" />
+        </Key>
+        <Property Name="StoredPIID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="PIName" Type="Edm.String" />
+        <Property Name="PIType" Type="Edm.String" />
+        <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
+      </EntityType>
+      <EntityType Name="Subscription">
+        <Key>
+          <PropertyRef Name="SubscriptionID" />
+        </Key>
+        <Property Name="SubscriptionID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="TemplateGuid" Type="Edm.String" />
+        <Property Name="Title" Type="Edm.String" />
+        <Property Name="Category" Type="Edm.String" />
+        <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
+        <Property Name="QualifiedAccountID" Type="Edm.Int32" Nullable="false" />
+        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
       </EntityType>
       <ComplexType Name="Address">
         <Property Name="Street" Type="Edm.String" />
@@ -207,8 +229,8 @@
       </ComplexType>
       <EntityType Name="PublicCompany" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Company" OpenType="true">
         <Property Name="StockExchange" Type="Edm.String" />
-        <NavigationProperty Name="Assets" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Asset)" />
-        <NavigationProperty Name="Club" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Club" />
+        <NavigationProperty Name="Assets" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Asset)" ContainsTarget="true" />
+        <NavigationProperty Name="Club" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Club" ContainsTarget="true" />
         <NavigationProperty Name="LabourUnion" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.LabourUnion" />
       </EntityType>
       <EntityType Name="Asset">
@@ -242,23 +264,13 @@
         <Property Name="Amount" Type="Edm.Double" Nullable="false" />
         <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
       </EntityType>
-      <EntityType Name="StoredPI">
-        <Key>
-          <PropertyRef Name="StoredPIID" />
-        </Key>
-        <Property Name="StoredPIID" Type="Edm.Int32" Nullable="false" />
-        <Property Name="PIName" Type="Edm.String" />
-        <Property Name="PIType" Type="Edm.String" />
-        <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
-      </EntityType>
       <EntityType Name="CreditCardPI" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PaymentInstrument">
         <Property Name="CardNumber" Type="Edm.String" />
         <Property Name="CVV" Type="Edm.String" />
         <Property Name="HolderName" Type="Edm.String" />
         <Property Name="Balance" Type="Edm.Double" Nullable="false" />
         <Property Name="ExperationDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <NavigationProperty Name="CreditRecords" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.CreditRecord)" />
+        <NavigationProperty Name="CreditRecords" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.Default.CreditRecord)" ContainsTarget="true" />
       </EntityType>
       <EntityType Name="CreditRecord">
         <Key>
@@ -268,18 +280,6 @@
         <Property Name="IsGood" Type="Edm.Boolean" Nullable="false" />
         <Property Name="Reason" Type="Edm.String" />
         <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
-      </EntityType>
-      <EntityType Name="Subscription">
-        <Key>
-          <PropertyRef Name="SubscriptionID" />
-        </Key>
-        <Property Name="SubscriptionID" Type="Edm.Int32" Nullable="false" />
-        <Property Name="TemplateGuid" Type="Edm.String" />
-        <Property Name="Title" Type="Edm.String" />
-        <Property Name="Category" Type="Edm.String" />
-        <Property Name="CreatedDate" Type="Edm.DateTimeOffset" Nullable="false" />
-        <Property Name="QualifiedAccountID" Type="Edm.Int32" Nullable="false" />
         <Property Name="UpdatedTime" Type="Edm.DateTimeOffset" Nullable="false" />
       </EntityType>
       <EnumType Name="AccessLevel" IsFlags="true">
@@ -461,15 +461,18 @@
           <NavigationPropertyBinding Path="ProductOrdered" Target="Products" />
         </EntitySet>
         <EntitySet Name="Departments" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Department" />
-        <EntitySet Name="Accounts" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Account">
-          <NavigationPropertyBinding Path="MyPaymentInstruments" Target="PaymentInstruments" />
-        </EntitySet>
+        <EntitySet Name="Accounts" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Account" />
         <EntitySet Name="Orders" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Order">
           <NavigationPropertyBinding Path="CustomerForOrder" Target="Customers" />
           <NavigationPropertyBinding Path="LoggedInEmployee" Target="Employees" />
           <NavigationPropertyBinding Path="OrderDetails" Target="OrderDetails" />
         </EntitySet>
-        <EntitySet Name="PaymentInstruments" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PaymentInstrument" />
+        <EntitySet Name="PaymentInstruments" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.PaymentInstrument">
+          <NavigationPropertyBinding Path="BackupStoredPI" Target="StoredPIs" />
+          <NavigationPropertyBinding Path="TheStoredPI" Target="StoredPIs" />
+        </EntitySet>
+        <EntitySet Name="StoredPIs" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.StoredPI" />
+        <EntitySet Name="SubscriptionTemplates" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Subscription" />
         <Singleton Name="Boss" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Person">
           <NavigationPropertyBinding Path="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.Customer/Orders" Target="Orders" />
           <NavigationPropertyBinding Path="Parent" Target="People" />
@@ -491,6 +494,7 @@
           <NavigationPropertyBinding Path="VipCustomer" Target="Customers" />
         </Singleton>
         <Singleton Name="LabourUnion" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.LabourUnion" />
+        <Singleton Name="DefaultStoredPI" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.Default.StoredPI" />
         <ActionImport Name="Discount" Action="Default.Discount" />
         <ActionImport Name="ResetBossEmail" Action="Default.ResetBossEmail" />
         <ActionImport Name="ResetBossAddress" Action="Default.ResetBossAddress" />
