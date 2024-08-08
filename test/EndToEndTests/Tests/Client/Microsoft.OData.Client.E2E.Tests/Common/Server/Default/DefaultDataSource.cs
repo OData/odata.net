@@ -430,6 +430,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
                     },
                 }
+
+            };
+            Accounts[0].AccountInfo.OpenProperties["MiddleName"] = "Hood";
+            Accounts[0].AccountInfo.OpenProperties["FavoriteColor"] = Color.Red;
+            Accounts[0].AccountInfo.OpenProperties["Address"] = new Address
+            {
+                City = "a",
+                Street = "b",
+                PostalCode = "c"
             };
 
             Orders = new List<Order>()

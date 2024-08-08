@@ -300,5 +300,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public Dictionary<string, object>? OpenProperties { get; set; } = new Dictionary<string, object>();
     }
 }
