@@ -109,7 +109,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public Calendar()
         {
         }
-
+        [EfKey]
         public Date Day { get; set; }
     }
 
@@ -143,11 +143,12 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
 
     public class ProductDetail
     {
+        [EfKey]
         public int ProductDetailID { get; set; }
         public string? ProductName { get; set; }
         public string? Description { get; set; }
         public Product? RelatedProduct { get; set; }
-
+        [EfKey]
         public int ProductID { get; set; }
 
         public List<ProductReview>? Reviews { get; set; }
@@ -163,9 +164,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
 
     public class ProductReview
     {
+        [EfKey]
         public int ProductID { get; set; }
+        [EfKey]
         public int ProductDetailID { get; set; }
+        [EfKey]
         public string? ReviewTitle { get; set; }
+        [EfKey]
         public int RevisionID { get; set; }
         public string? Comment { get; set; }
         public string? Author { get; set; }
@@ -247,8 +252,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? FriendlyName { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public List<Statement>? BillingStatements { get; set; }
-        // public StoredPI? TheStoredPI { get; set; }
-        // public StoredPI? BackupStoredPI { get; set; }
+        public StoredPI? TheStoredPI { get; set; }
+        public StoredPI? BackupStoredPI { get; set; }
     }
 
     public class CreditCardPI : PaymentInstrument

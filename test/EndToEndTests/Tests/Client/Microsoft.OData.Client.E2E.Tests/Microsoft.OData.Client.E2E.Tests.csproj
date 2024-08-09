@@ -10,11 +10,15 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Common\Client\Default\DefaultServiceCsdl.xml" />
     <None Remove="Common\Client\EndToEnd\EndToEndServiceCsdl.xml" />
     <None Remove="Common\Client\OpenTypes\OpenTypesODataServiceCsdl.xml" />
   </ItemGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="Common\Client\Default\DefaultServiceCsdl.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </EmbeddedResource>
     <EmbeddedResource Include="Common\Client\EndToEnd\EndToEndServiceCsdl.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </EmbeddedResource>

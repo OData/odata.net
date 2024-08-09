@@ -11,7 +11,13 @@ using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server;
 using Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
+using Microsoft.OData.Edm.Csdl;
+using Microsoft.OData.Edm.Validation;
+using Microsoft.OData.Edm;
+using System.Xml;
 using Xunit;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes;
+using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 {
@@ -41,6 +47,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         [Fact]
         public void An_OverloadedOperation_Executes_Successfully()
         {
+            WriteModelToCsdl(DefaultEdmModel.GetEdmModel(), "csdl.xml");
             // Arrange
             var productUri = new Uri(_baseUri + "Products(-10)", UriKind.Absolute);
             var expectedProductTargetUri = "http://localhost/odata/Products(-10)/Default.RetrieveProduct";
@@ -357,6 +364,15 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             foreach (OperationDescriptor od in operationDescriptors)
             {
                 context.Execute(od.Target, "POST");
+            }
+        }
+
+        private static void WriteModelToCsdl(IEdmModel model, string fileName)
+        {
+            using (var writer = XmlWriter.Create(fileName))
+            {
+                IEnumerable<EdmError> errors;
+                CsdlWriter.TryWriteCsdl(model, writer, CsdlTarget.OData, out errors);
             }
         }
     }
