@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 7/1/2024 8:09:40 PM
+// Generation date: 8/19/2024 5:51:48 PM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd
 {
     /// <summary>
@@ -9408,6 +9408,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
             return this.CreateFunctionQuerySingle<string>("", "GetPrimitiveString", false);
         }
         /// <summary>
+        /// There are no comments for GetSpecificCustomer in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("GetSpecificCustomer")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> GetSpecificCustomer(string Name)
+        {
+            return this.CreateFunctionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer>("", "GetSpecificCustomer", false, new global::Microsoft.OData.Client.UriOperationParameter("Name", Name));
+        }
+        /// <summary>
         /// There are no comments for GetCustomerCount in the schema.
         /// </summary>
         [global::Microsoft.OData.Client.OriginalNameAttribute("GetCustomerCount")]
@@ -9454,6 +9462,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
         public virtual global::Microsoft.OData.Client.DataServiceActionQuery UpdatePersonInfo()
         {
             return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/UpdatePersonInfo");
+        }
+        /// <summary>
+        /// There are no comments for ResetDataSource in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetDataSource")]
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery ResetDataSource()
+        {
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/ResetDataSource");
         }
     }
     /// <summary>
@@ -9630,19 +9646,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Default
 
             return new global::Microsoft.OData.Client.DataServiceActionQuery(_source.Context, _source.AppendRequestUri("Default.ResetComputerDetailsSpecifications"), new global::Microsoft.OData.Client.BodyOperationParameter("specifications", specifications),
                     new global::Microsoft.OData.Client.BodyOperationParameter("purchaseTime", purchaseTime));
-        }
-        /// <summary>
-        /// There are no comments for GetSpecificCustomer in the schema.
-        /// </summary>
-        [global::Microsoft.OData.Client.OriginalNameAttribute("GetSpecificCustomer")]
-        public static global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer> GetSpecificCustomer(this global::Microsoft.OData.Client.DataServiceQuerySingle<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Computer> _source, string Name)
-        {
-            if (!_source.IsComposable)
-            {
-                throw new global::System.NotSupportedException("The previous function is not composable.");
-            }
-
-            return new global::Microsoft.OData.Client.DataServiceActionQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.EndToEnd.Customer>(_source.Context, _source.AppendRequestUri("Default.GetSpecificCustomer"), new global::Microsoft.OData.Client.BodyOperationParameter("Name", Name));
         }
     }
 }

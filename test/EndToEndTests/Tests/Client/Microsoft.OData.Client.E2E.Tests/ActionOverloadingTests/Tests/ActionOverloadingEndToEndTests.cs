@@ -15,7 +15,6 @@ using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 {
-    [TestCaseOrderer("Microsoft.OData.Client.E2E.TestCommon.PriorityOrderer", "Microsoft.OData.Client.E2E.TestCommon")]
     public class ActionOverloadingEndToEndTests : EndToEndTestBase<ActionOverloadingEndToEndTests.TestsStartup>
     {
         private readonly Uri _baseUri;
@@ -36,6 +35,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _context = new Container(_baseUri);
             _context.HttpClientFactory = HttpClientFactory;
+             ResetDataSource();
         }
 
         [Fact]
@@ -108,7 +108,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             Assert.Equal(-9, productId);
         }
 
-        [Fact, TestPriority(1)]
+        [Fact]
         public void A_BoundAction_Executes_Successfully()
         {
             _context.MergeOption = MergeOption.OverwriteChanges;
@@ -198,7 +198,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             ExecuteActions(_context, contractorDescriptors);
         }
 
-        [Fact, TestPriority(3)]
+        [Fact]
         public void OverloadedActionsWithDifferentParameters_Execute_Successfully()
         {
             string actionName = "IncreaseEmployeeSalary";
@@ -210,7 +210,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             // Action bound with a regular employee instance
             var employeeUri = new Uri(_baseUri + "People(0)", UriKind.Absolute);
             Common.Clients.EndToEnd.Employee employee = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
-            Assert.Equal(88, employee.Salary);
+            Assert.Equal(85, employee.Salary);
 
             var employeeDescriptors = _context
                 .GetEntityDescriptor(employee)
@@ -229,12 +229,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Verify salary after action
             Common.Clients.EndToEnd.Employee employeeAfterAction = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
-            Assert.Equal(211, employeeAfterAction.Salary);
+            Assert.Equal(208, employeeAfterAction.Salary);
 
             // Action bound with a special employee instance
             var specialEmployeeUri = new Uri(_baseUri + "People(-7)", UriKind.Absolute);
             Common.Clients.EndToEnd.SpecialEmployee specialEmployee = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
-            Assert.Equal(2016141264, specialEmployee.Salary);
+            Assert.Equal(2016141256, specialEmployee.Salary);
 
             var specialEmployeeDescriptors = _context
                 .GetEntityDescriptor(specialEmployee)
@@ -257,7 +257,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             ).Single();
 
             Common.Clients.EndToEnd.SpecialEmployee specialEmployeeAfterActionWithParam = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
-            Assert.Equal(2016141387, specialEmployeeAfterActionWithParam.Salary);
+            Assert.Equal(2016141379, specialEmployeeAfterActionWithParam.Salary);
 
             _context.Execute<int>(
                 specialEmployeeDescriptors.Single(d => d.Target.AbsoluteUri.Contains(".SpecialEmployee")).Target,
@@ -266,10 +266,10 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             ).Single();
 
             Common.Clients.EndToEnd.SpecialEmployee specialEmployeeAfterActionWithoutParam = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
-            Assert.Equal(2016141388, specialEmployeeAfterActionWithoutParam.Salary);
+            Assert.Equal(2016141380, specialEmployeeAfterActionWithoutParam.Salary);
         }
 
-        [Fact, TestPriority(2)]
+        [Fact]
         public void EntitySetBoundOverloadedOperations_Executes_Successfully()
         {
             // Set the merge option to overwrite changes in the context
@@ -294,10 +294,9 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             var specialEmployee = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
             Assert.Equal(4091, specialEmployee.Salary); // Verify initial salary is 4094
 
-            // Execute the IncreaseSalaries action for employees ~ This will increase salaries for all employees.
+            // Execute the IncreaseSalaries action for employees ~ This will increase salaries for all employees
+            // including special employees.
             _context.Execute(employeesUri, "POST", actionParameter);
-            // Execute the IncreaseSalaries action for special employees ~ This will only increase salaries for special employees. 
-            _context.Execute(specialEmployeesUri, "POST", actionParameter);
 
             // Fetch and verify the employee's salary after the action
             var employeeAfterAction = _context.Execute<Common.Clients.EndToEnd.Employee>(employeeUri).Single();
@@ -305,7 +304,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
             // Fetch and verify the special employee's salary after the action
             var specialEmployeeAfterAction = _context.Execute<Common.Clients.EndToEnd.SpecialEmployee>(specialEmployeeUri).Single();
-            Assert.Equal(4097, specialEmployeeAfterAction.Salary); // Verify the salary increased by 3
+            Assert.Equal(4094, specialEmployeeAfterAction.Salary); // Verify the salary increased by 3
         }
 
 
@@ -358,6 +357,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             {
                 context.Execute(od.Target, "POST");
             }
+        }
+
+        private void ResetDataSource()
+        {
+            var actionUri = new Uri(_baseUri + "Default.ResetDataSource", UriKind.Absolute);
+            _context.Execute(actionUri, "POST");
         }
     }
 }

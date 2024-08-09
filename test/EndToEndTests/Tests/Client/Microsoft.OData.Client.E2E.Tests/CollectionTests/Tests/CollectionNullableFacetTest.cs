@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Client.E2E.TestCommon;
 using Microsoft.OData.Client.E2E.TestCommon.Common;
 using Microsoft.OData.Client.E2E.Tests.CollectionTests.Server;
+using Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default;
 using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 using Microsoft.OData.Edm;
 using Xunit;
@@ -21,6 +22,7 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
     {
         private readonly Uri _baseUri;
         private IEdmModel _model = null;
+        private readonly Container _context;
         private static string NameSpacePrefix = "Microsoft.OData.Client.E2E.Tests.Common.Server.Default.";
         protected readonly string[] mimeTypes =
         [
@@ -48,6 +50,8 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _model = DefaultEdmModel.GetEdmModel();
+            _context = new Container(_baseUri);
+            _context.HttpClientFactory = HttpClientFactory;
         }
 
         /// <summary>
@@ -201,5 +205,11 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
             return item;
         }
         #endregion
+
+        private void ResetDataSource()
+        {
+            var actionUri = new Uri(_baseUri + "Default.ResetDefaultDataSource", UriKind.Absolute);
+            _context.Execute(actionUri, "POST");
+        }
     }
 }

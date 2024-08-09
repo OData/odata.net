@@ -17,7 +17,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? Street { get; set; }
         public string? City { get; set; }
         public string? PostalCode { get; set; }
-        public DateTime UpdatedTime { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class HomeAddress : Address
@@ -34,6 +34,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
     {
         public string? CountryRegion { get; set; }
         public bool IsCapital { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public enum Color
@@ -73,6 +74,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public Address? HomeAddress { get; set; }
         public GeographyPoint? Home { get; set; }
         public Person? Parent { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Customer : Person
@@ -84,7 +86,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public List<Order>? Orders { get; set; }
     }
 
-    public class Order
+    public abstract class AbstractEntity
+    {
+        public DateTimeOffset UpdatedTime { get; set; }
+    }
+
+
+    public class Order : AbstractEntity 
     {
         public int OrderID { get; set; }
         public DateTimeOffset OrderDate { get; set; }
@@ -95,25 +103,25 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public Date ShipDate { get; set; }
         public TimeOfDay ShipTime { get; set; }
         public InfoFromCustomer? InfoFromCustomer { get; set; }
-
         public List<OrderDetail>? OrderDetails { get; set; }
     }
 
     public class InfoFromCustomer
     {
         public string? CustomerMessage { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
-    public class Calendar
+    public class Calendar : AbstractEntity
     {
         public Calendar()
         {
         }
-
+        [EfKey]
         public Date Day { get; set; }
     }
 
-    public class OrderDetail
+    public class OrderDetail : AbstractEntity
     {
         [EfKey]
         public int OrderID { get; set; }
@@ -137,20 +145,21 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public Color? SkinColor { get; set; }
         public Collection<Color>? CoverColors { get; set; }
         public AccessLevel? UserAccess { get; set; }
-
         public List<ProductDetail>? Details { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class ProductDetail
     {
+        [EfKey]
         public int ProductDetailID { get; set; }
         public string? ProductName { get; set; }
         public string? Description { get; set; }
         public Product? RelatedProduct { get; set; }
-
+        [EfKey]
         public int ProductID { get; set; }
-
         public List<ProductReview>? Reviews { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Employee : Person
@@ -163,12 +172,17 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
 
     public class ProductReview
     {
+        [EfKey]
         public int ProductID { get; set; }
+        [EfKey]
         public int ProductDetailID { get; set; }
+        [EfKey]
         public string? ReviewTitle { get; set; }
+        [EfKey]
         public int RevisionID { get; set; }
         public string? Comment { get; set; }
         public string? Author { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Company
@@ -178,12 +192,11 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? Name { get; set; }
         public Address? Address { get; set; }
         public long Revenue { get; set; }
-        public List<Employee>? Employees { get; private set; }
+        public List<Employee>? Employees { get; set; }
         public Department? CoreDepartment { get; set; }
         public Customer? VipCustomer { get; set; }
-
-        public List<Department>? Departments { get; private set; }
-        public Dictionary<string, object>? OpenProperties { get; set; }
+        public List<Department>? Departments { get; set; }
+        public Dictionary<string, object>? DynamicProperties { get; set; }
     }
 
     public class PublicCompany : Company
@@ -198,12 +211,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
     {
         public int ClubID { get; set; }
         public string? Name { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class LabourUnion
     {
         public int LabourUnionID { get; set; }
         public string? Name { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Asset
@@ -211,6 +226,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public int AssetID { get; set; }
         public string? Name { get; set; }
         public int Number { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Department
@@ -219,6 +235,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? Name { get; set; }
         public string? DepartmentNO { get; set; }
         public Company? Company { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Account
@@ -226,10 +243,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public int AccountID { get; set; }
         public string? CountryRegion { get; set; }
         public AccountInfo? AccountInfo { get; set; }
-
         public List<PaymentInstrument>? MyPaymentInstruments { get; set; }
         public List<Subscription>? ActiveSubscriptions { get; set; }
         public GiftCard? MyGiftCard { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class GiftCard
@@ -239,6 +256,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public double Amount { get; set; }
         public DateTimeOffset ExperationDate { get; set; }
         public string? OwnerName { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class PaymentInstrument
@@ -247,8 +265,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? FriendlyName { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
         public List<Statement>? BillingStatements { get; set; }
-        // public StoredPI? TheStoredPI { get; set; }
-        // public StoredPI? BackupStoredPI { get; set; }
+        public StoredPI? TheStoredPI { get; set; }
+        public StoredPI? BackupStoredPI { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class CreditCardPI : PaymentInstrument
@@ -267,6 +286,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? PIName { get; set; }
         public string? PIType { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Statement
@@ -275,6 +295,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? TransactionType { get; set; }
         public string? TransactionDescription { get; set; }
         public double Amount { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class CreditRecord
@@ -283,6 +304,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public bool IsGood { get; set; }
         public string? Reason { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class Subscription
@@ -292,13 +314,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? Title { get; set; }
         public string? Category { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
-
         public int QualifiedAccountID { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
     }
 
     public class AccountInfo
     {
         public string? FirstName { get; set; }
         public string? LastName { get; set; }
+        public DateTimeOffset UpdatedTime { get; set; }
+        public Dictionary<string, object>? DynamicProperties { get; set; } = new Dictionary<string, object>();
     }
 }

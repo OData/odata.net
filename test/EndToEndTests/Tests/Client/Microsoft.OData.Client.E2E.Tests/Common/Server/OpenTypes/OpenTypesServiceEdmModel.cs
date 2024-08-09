@@ -16,8 +16,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
         {
             var builder = new ODataConventionModelBuilder();
 
-            builder.EntitySet<Row>("Row");
-            builder.EntitySet<RowIndex>("RowIndex");
+            builder.EntitySet<Row>("Rows");
+            builder.EntitySet<RowIndex>("RowIndices");
             builder.ComplexType<ContactDetails>();
 
             return builder.GetEdmModel();

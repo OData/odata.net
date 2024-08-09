@@ -85,6 +85,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             builder.EntityType<Employee>()
                 .Action("Sack");
 
+            builder.Action("ResetDataSource");
+
             builder.EntityType<Customer>()
                 .Action("ChangeCustomerAuditInfo")
                 .Parameter<AuditInfo>("auditInfo");
@@ -97,8 +99,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             builder.Function("GetPrimitiveString")
                 .Returns<string>();
 
-            builder.EntityType<Computer>()
-                .Action("GetSpecificCustomer")
+            builder.Function("GetSpecificCustomer")
                 .ReturnsCollectionFromEntitySet<Customer>("Customers")
                 .Parameter<string>("Name");
 

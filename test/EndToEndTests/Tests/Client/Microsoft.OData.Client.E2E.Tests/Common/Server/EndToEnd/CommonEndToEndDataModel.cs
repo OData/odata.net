@@ -121,7 +121,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public int OrderId { get; set; }
         public int? CustomerId { get; set; }
         public ConcurrencyInfo? Concurrency { get; set; }
-
         public Login? Login { get; set; }
         public Customer? Customer { get; set; }
     }
