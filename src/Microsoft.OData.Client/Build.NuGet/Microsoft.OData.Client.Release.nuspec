@@ -17,6 +17,7 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
     <copyright>© Microsoft Corporation. All rights reserved.</copyright>
     <dependencies>
       <dependency id="Microsoft.OData.Core" version="[$VersionNuGetSemantic$]" />
+      <dependency id="Microsoft.Extensions.Http" version="8.0.0" />
     </dependencies>
     <frameworkAssemblies>
       <frameworkAssembly assemblyName="System.Windows" targetFramework="sl4" />
