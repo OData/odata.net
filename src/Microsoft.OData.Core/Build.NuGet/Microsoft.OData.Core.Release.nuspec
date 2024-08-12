@@ -19,12 +19,8 @@ OData .NET library is open source at http://github.com/OData/odata.net. Document
       <group>
         <dependency id="Microsoft.Spatial" version="[$VersionNuGetSemantic$]" />
         <dependency id="Microsoft.OData.Edm" version="[$VersionNuGetSemantic$]" />
-      </group>
-      <group targetFramework=".NETStandard2.0">
-        <dependency id="Microsoft.Spatial" version="[$VersionNuGetSemantic$]" />
-        <dependency id="Microsoft.OData.Edm" version="[$VersionNuGetSemantic$]" />
         <dependency id="Microsoft.Bcl.AsyncInterfaces" version="8.0.0" />
-         <dependency id="Microsoft.Extensions.ObjectPool" version="6.0.3" />
+        <dependency id="Microsoft.Extensions.ObjectPool" version="6.0.3" />
       </group>
     </dependencies>
   </metadata>
