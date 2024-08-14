@@ -99,11 +99,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -121,11 +121,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -143,11 +143,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)ColorFlags.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)ColorFlags.Green);
         }
 
         [Fact]
@@ -165,11 +165,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)ColorFlags.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)ColorFlags.Green);
         }
 
         [Fact]
@@ -187,11 +187,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
             .Left
-            .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)(ColorFlags.Green | ColorFlags.Red));
+            .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)(ColorFlags.Green | ColorFlags.Red));
 
             binaryNode
             .Right
-            .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+            .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
         }
 
         [Fact]
@@ -209,11 +209,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -231,12 +231,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -255,12 +255,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -279,12 +279,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                  .Right
                  .ShouldBeEnumNode(
-                 this.GetColorFlagsType(this.userModel),
+                 this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                  "Red");
         }
 
@@ -303,12 +303,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -327,12 +327,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -351,12 +351,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.Color"),
                 (int)(Color.White));
 
             var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
@@ -379,12 +379,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.Color"),
                 -132534290);
 
             var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
@@ -403,7 +403,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("Color eq null", this.userModel, this.entityType, this.entitySet);
             var binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             var convertNode = Assert.IsType<ConvertNode>(binaryNode.Right);
             convertNode.Source.ShouldBeConstantQueryNode((object)null);
@@ -699,30 +699,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
-        }
-
-        private IEdmStructuralProperty GetColorProp(IEdmModel model)
-        {
-            return (IEdmStructuralProperty)((IEdmStructuredType)model
-               .FindType("NS.MyEntityType"))
-               .FindProperty("Color");
-        }
-
-        private IEdmEnumType GetColorType(IEdmModel model)
-        {
-            return (IEdmEnumType)model.FindType("NS.Color");
-        }
-
-        private IEdmStructuralProperty GetColorFlagsProp(IEdmModel model)
-        {
-            return (IEdmStructuralProperty)((IEdmStructuredType)model
-                .FindType("NS.MyEntityType"))
-                .FindProperty("ColorFlags");
-        }
-
-        private IEdmEnumType GetColorFlagsType(IEdmModel model)
-        {
-            return (IEdmEnumType)model.FindType("NS.ColorFlags");
         }
 
         private T GetIEdmType<T>(string typeName) where T : IEdmType
