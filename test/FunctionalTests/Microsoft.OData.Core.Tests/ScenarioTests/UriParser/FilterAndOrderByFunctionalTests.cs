@@ -2041,57 +2041,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Assert.Equal("FavoriteColors", Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
         }
 
-        [Fact]
-        public void FilterWithInOperationWithEnumsMemberName_WithoutQualifiedNamespace()
+        [Theory]
+        [InlineData("'SolidYellow'")]
+        [InlineData("'12'")]
+        [InlineData("12")]
+        public void FilterWithInOperationWithEnumsMemberIntegralValue(string filterOptionValue)
         {
             // Arrange
-            string filterQuery = "'SolidYellow' in FavoriteColors";
-
-            string expectedLiteralText = "'SolidYellow'";
-            string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
-            string expectedCollectionPropertyName = "FavoriteColors";
-
-            // Act
-            FilterClause filter = ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-
-            // Assert
-            InNode inNode = Assert.IsType<InNode>(filter.Expression);
-            ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
-            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
-
-            Assert.Equal(expectedLiteralText, left.LiteralText);
-            Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
-            Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
-        }
-
-        [Fact]
-        public void FilterWithInOperationWithEnumsMemberIntegralValue_WithSingleQuotes()
-        {
-            // Arrange
-            string filterQuery = "'12' in FavoriteColors";
-
-            string expectedLiteralText = "'SolidYellow'";
-            string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
-            string expectedCollectionPropertyName = "FavoriteColors";
-
-            // Act
-            FilterClause filter = ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
-
-            // Assert
-            InNode inNode = Assert.IsType<InNode>(filter.Expression);
-            ConstantNode left = Assert.IsType<ConstantNode>(inNode.Left);
-            ODataEnumValue enumValue = Assert.IsType<ODataEnumValue>(left.Value);
-
-            Assert.Equal(expectedLiteralText, left.LiteralText);
-            Assert.Equal(expectedfullyQualifiedName, (enumValue.TypeName + left.LiteralText));
-            Assert.Equal(expectedCollectionPropertyName, Assert.IsType<CollectionPropertyAccessNode>(inNode.Right).Property.Name);
-        }
-
-        [Fact]
-        public void FilterWithInOperationWithEnumsMemberIntegralValue_WithoutSingleQuotes()
-        {
-            // Arrange
-            string filterQuery = "12 in FavoriteColors";
+            string filterQuery = $"{filterOptionValue} in FavoriteColors";
 
             string expectedLiteralText = "'SolidYellow'";
             string expectedfullyQualifiedName = "Fully.Qualified.Namespace.ColorPattern'SolidYellow'";
@@ -2111,7 +2068,6 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData(53)]
         [InlineData("53")]
         [InlineData("'53'")]
         public void FilterWithInOperationWithEnumsInvalidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(object integralValue)

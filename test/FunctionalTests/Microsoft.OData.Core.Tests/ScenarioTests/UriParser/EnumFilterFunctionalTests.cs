@@ -520,49 +520,35 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
-        [Fact]
-        public void ParseFilterWithInOperatorWithEnumsFullyQualifiedMemberName()
+        [Theory]
+        [InlineData("NS.Color'Green'")]
+        [InlineData("'Green'")]
+        [InlineData("'2'")]
+        [InlineData("2")]
+        public void ParseFilterWithInOperatorWithEnums(string filterOptionValue)
         {
             // Arrange
-            string filterQuery = "NS.Color'White' in Colors";
-            string expectedLiteral = "NS.Color'White'";
-
-            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>("NS.Color");
-            IEdmEnumMember enumMember = colorType.Members.Single(m => m.Name == "White");
-
-            // Act
-            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
-            SingleValueNode expression = filterQueryNode.Expression;
-
-            // Assert
-            InNode inNode = expression.ShouldBeInNode();
-            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
-            leftNode.ShouldBeEnumNode(colorType, enumMember.Value.Value);
-
-            Assert.True(leftNode.TypeReference.IsEnum());
-            Assert.Equal(enumMember.Value.Value.ToString(), leftNode.Value.ToString());
-            Assert.Equal(expectedLiteral, leftNode.LiteralText);
-
-            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
-            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));
-            Assert.Equal(colorType, rightNode.ItemType.Definition);
-        }
-
-        [Fact]
-        public void ParseFilterWithInOperatorWithEnumsMemberNameWithoutFullyQualifiedName()
-        {
-            // Arrange
+            string filterQuery = $"{filterOptionValue} in Colors";
             string enumValue = "Green";
-            string filterQuery = "'Green' in Colors"; // "'Green' in Colors"
-            string expectedLiteral = "'Green'";
+            string colorTypeName = "NS.Color";
 
-            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>("NS.Color");
+            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>(colorTypeName);
+            IEdmEnumMember enumMember = colorType.Members.First(m => m.Name == enumValue);
+
+            string expectedLiteral = "'Green'"; 
+            if (filterOptionValue.StartsWith(colorTypeName)) // if the filterOptionValue is already fully qualified, then the expectedLiteral should be the same as filterOptionValue
+            {
+                expectedLiteral = "NS.Color'Green'";
+                enumValue = enumMember.Value.Value.ToString(); // "2" <cref="ODataEnumValue.Value"/> The backing type, can be "3" or "White" or "Black,Yellow,Cyan"
+            }
 
             // Act
             FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
             SingleValueNode expression = filterQueryNode.Expression;
 
             // Assert
+            Assert.Equal(2, enumMember.Value.Value);
+            Assert.Equal("Green", enumMember.Name);
             InNode inNode = expression.ShouldBeInNode();
             ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
             leftNode.ShouldBeEnumNode(colorType, enumValue);
@@ -574,77 +560,14 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
             rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));
             Assert.Equal(colorType, rightNode.ItemType.Definition);
+
         }
 
         [Fact]
-        public void ParseFilterWithInOperatorWithEnumsMemberIntegralValueWithSingleQuotes()
+        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue_ThrowCollectionItemTypeMustBeSameAsSingleItemTypeException()
         {
             // Arrange
-            int enumValue = 1;
-            string filterQuery = "'1' in Colors";
-            string expectedLiteral = "'Red'";
-
-            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>("NS.Color");
-            bool success = colorType.TryParse(enumValue, out IEdmEnumMember enumMember);
-
-            // Act
-            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
-            SingleValueNode expression = filterQueryNode.Expression;
-
-            // Assert
-            Assert.True(success);
-            InNode inNode = expression.ShouldBeInNode();
-            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
-            leftNode.ShouldBeEnumNode(colorType, enumMember.Name);
-
-            Assert.True(leftNode.TypeReference.IsEnum());
-            Assert.Equal(enumMember.Name, leftNode.Value.ToString());
-            Assert.Equal(expectedLiteral, leftNode.LiteralText);
-
-            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
-            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));
-            Assert.Equal(colorType, rightNode.ItemType.Definition);
-        }
-
-        [Fact]
-        public void ParseFilterWithInOperatorWithEnumsMemberIntegralValueWithoutSingleQuotes()
-        {
-            // Arrange
-            int enumValue = 3;
-            string filterQuery = "3 in Colors";
-            string expectedLiteral = "'Blue'";
-
-            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>("NS.Color");
-            bool success = colorType.TryParse(enumValue, out IEdmEnumMember enumMember);
-
-            // Act
-            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
-            SingleValueNode expression = filterQueryNode.Expression;
-
-            // Assert
-            Assert.True(success);
-            InNode inNode = expression.ShouldBeInNode();
-            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
-            leftNode.ShouldBeEnumNode(colorType, enumMember.Name);
-
-            Assert.True(leftNode.TypeReference.IsEnum());
-            Assert.Equal(enumMember.Name, leftNode.Value.ToString());
-            Assert.Equal(expectedLiteral, leftNode.LiteralText);
-
-            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
-            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));
-            Assert.Equal(colorType, rightNode.ItemType.Definition);
-        }
-
-        [Theory]
-        [InlineData("3.0")]
-        [InlineData("3.1")]
-        [InlineData("4.0")]
-        [InlineData("5.0")]
-        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue_ThrowCollectionItemTypeMustBeSameAsSingleItemTypeException(string floatString)
-        {
-            // Arrange
-            string filterQuery = $"{floatString} in Colors";
+            string filterQuery = $"3.0 in Colors";
 
             // Act
             Action test = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
@@ -654,10 +577,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData(-20)]
-        [InlineData("-20")]
-        [InlineData("'-20'")]
-        public void ParseFilterWithInOperatorWithEnumsInvalidIntegralValues_ThrowsIsNotValidEnumConstantException(object integralValue)
+        [InlineData("-20", "-20")]
+        [InlineData("'-20'", "-20")]
+        [InlineData("'3.0'", "3.0")]
+        public void ParseFilterWithInOperatorWithEnumsInvalidIntegralValues_ThrowsIsNotValidEnumConstantException(string integralValue, string errorMessageParam)
         {
             // Arrange
             string filterQuery = $"{integralValue} in Colors";
@@ -666,7 +589,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
 
             // Assert
-            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant("-20"));
+            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(errorMessageParam));
         }
 
         [Fact]
