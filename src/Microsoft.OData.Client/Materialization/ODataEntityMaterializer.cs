@@ -753,7 +753,7 @@ namespace Microsoft.OData.Client.Materialization
                                 this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(propertyName, linkEntry.Entry, expectedType, entry.ResolvedObject);
                             }
 
-                            properties = linkEntry.Properties.OfType<ODataProperty>();
+                            properties = linkEntry.Properties?.OfType<ODataProperty>();
                             links = linkEntry.NestedResourceInfos;
                             result = linkEntry.ResolvedObject;
                             entry = linkEntry;
