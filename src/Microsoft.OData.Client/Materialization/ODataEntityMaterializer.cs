@@ -618,7 +618,7 @@ namespace Microsoft.OData.Client.Materialization
             ODataNestedResourceInfo link = null;
             ODataProperty odataProperty = null;
             ICollection<ODataNestedResourceInfo> links = entry.NestedResourceInfos;
-            IEnumerable<ODataProperty> properties = entry.Entry.Properties.OfType<ODataProperty>();
+            IEnumerable<ODataProperty> properties = entry.Entry.Properties?.OfType<ODataProperty>();
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             for (int i = 0; i < path.Count; i++)
             {
@@ -840,7 +840,7 @@ namespace Microsoft.OData.Client.Materialization
 
             object result = null;
             ODataProperty odataProperty = null;
-            IEnumerable<ODataProperty> properties = entry.Entry.Properties.OfType<ODataProperty>();
+            IEnumerable<ODataProperty> properties = entry.Entry.Properties?.OfType<ODataProperty>();
 
             for (int i = 0; i < path.Count; i++)
             {
