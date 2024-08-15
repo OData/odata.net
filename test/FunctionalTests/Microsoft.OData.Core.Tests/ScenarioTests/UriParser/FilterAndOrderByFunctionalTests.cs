@@ -2070,7 +2070,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("53")]
         [InlineData("'53'")]
-        public void FilterWithInOperationWithEnumsInvalidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(object integralValue)
+        public void FilterWithInOperationWithEnumsInvalidMemberIntegralValue_ThrowsIsNotValidEnumConstantException(string integralValue)
         {
             // Arrange
             string filterQuery = $"{integralValue} in FavoriteColors";
