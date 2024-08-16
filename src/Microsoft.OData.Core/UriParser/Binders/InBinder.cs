@@ -58,6 +58,13 @@ namespace Microsoft.OData.UriParser
                     inToken.Right, new EdmCollectionTypeReference(new EdmCollectionType(EdmCoreModel.Instance.GetUntyped())), state.Model);
             }
 
+            // If the left operand is either an integral or a string type and the right operand is a collection of enums,
+            // Calls the MetadataBindingUtils.ConvertToTypeIfNeeded() method to convert the left operand to the same enum type as the right operand.
+            if ((right is CollectionPropertyAccessNode && right.ItemType.IsEnum()) && (left.TypeReference != null && (left.TypeReference.IsString() || left.TypeReference.IsIntegral())))
+            {
+                left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
+            }
+
             return new InNode(left, right);
         }
 
