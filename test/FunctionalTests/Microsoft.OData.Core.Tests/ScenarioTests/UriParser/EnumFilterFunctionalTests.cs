@@ -5,6 +5,7 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using Microsoft.OData.Tests.UriParser;
 using Microsoft.OData.UriParser;
@@ -52,7 +53,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             this.userModel.AddElement(enumType);
 
             // add enum property
-            this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: true, baseType: null);
+            this.entityType = new EdmEntityType("NS", "MyEntityType", isAbstract: false, isOpen: false, baseType: null);
             var enumTypeReference = new EdmEnumTypeReference(enumType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "Color", enumTypeReference));
 
@@ -69,6 +70,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             // add enum with flags
             var enumFlagsTypeReference = new EdmEnumTypeReference(enumFlagsType, true);
             this.entityType.AddProperty(new EdmStructuralProperty(this.entityType, "ColorFlags", enumFlagsTypeReference));
+
+            // add colors collection
+            var colorTypeReference = new EdmEnumTypeReference(enumType, false);
+            this.entityType.AddStructuralProperty("Colors", new EdmCollectionTypeReference(new EdmCollectionType(colorTypeReference)));
 
             this.userModel.AddElement(this.entityType);
 
@@ -94,11 +99,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -116,11 +121,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -138,11 +143,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)ColorFlags.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)ColorFlags.Green);
         }
 
         [Fact]
@@ -160,11 +165,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)ColorFlags.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)ColorFlags.Green);
         }
 
         [Fact]
@@ -182,11 +187,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
             .Left
-            .ShouldBeEnumNode(this.GetColorFlagsType(this.userModel), (int)(ColorFlags.Green | ColorFlags.Red));
+            .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"), (int)(ColorFlags.Green | ColorFlags.Red));
 
             binaryNode
             .Right
-            .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+            .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
         }
 
         [Fact]
@@ -204,11 +209,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
-                .ShouldBeEnumNode(this.GetColorType(this.userModel), (int)Color.Green);
+                .ShouldBeEnumNode(this.GetIEdmType<IEdmEnumType>("NS.Color"), (int)Color.Green);
         }
 
         [Fact]
@@ -226,12 +231,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -250,18 +255,18 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
         [Fact]
         public void ParseFilterWithEnumValuesCompatibleWithString()
-        {         
+        {
             var filterQueryNode = ParseFilter(
                 "ColorFlags has 'Red'",
                 this.userModel,
@@ -274,12 +279,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
-         
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
+
             binaryNode
                  .Right
                  .ShouldBeEnumNode(
-                 this.GetColorFlagsType(this.userModel),
+                 this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                  "Red");
         }
 
@@ -298,12 +303,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -322,12 +327,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorFlagsProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("ColorFlags"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorFlagsType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.ColorFlags"),
                 (int)(ColorFlags.Green | ColorFlags.Red));
         }
 
@@ -346,12 +351,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.Color"),
                 (int)(Color.White));
 
             var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
@@ -374,12 +379,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             binaryNode
                 .Left
-                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+                .ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             binaryNode
                 .Right
                 .ShouldBeEnumNode(
-                this.GetColorType(this.userModel),
+                this.GetIEdmType<IEdmEnumType>("NS.Color"),
                 -132534290);
 
             var constantNode = Assert.IsType<ConstantNode>(binaryNode.Right);
@@ -398,7 +403,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         {
             var filterQueryNode = ParseFilter("Color eq null", this.userModel, this.entityType, this.entitySet);
             var binaryNode = filterQueryNode.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
-            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetColorProp(this.userModel));
+            binaryNode.Left.ShouldBeSingleValuePropertyAccessQueryNode(this.GetIEdmProperty("Color"));
 
             var convertNode = Assert.IsType<ConvertNode>(binaryNode.Right);
             convertNode.Source.ShouldBeConstantQueryNode((object)null);
@@ -515,28 +520,130 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             parse.Throws<ODataException>(Strings.MetadataBinder_CastOrIsOfFunctionWithoutATypeArgument);
         }
 
-        private IEdmStructuralProperty GetColorProp(IEdmModel model)
+        [Theory]
+        [InlineData("NS.Color'Green'")]
+        [InlineData("'Green'")]
+        [InlineData("'2'")]
+        [InlineData("2")]
+        public void ParseFilterWithInOperatorWithEnums(string filterOptionValue)
         {
-            return (IEdmStructuralProperty)((IEdmStructuredType)model
-                .FindType("NS.MyEntityType"))
-                .FindProperty("Color");
+            // Arrange
+            string filterQuery = $"{filterOptionValue} in Colors";
+            string enumValue = "Green";
+            string colorTypeName = "NS.Color";
+
+            IEdmEnumType colorType = this.GetIEdmType<IEdmEnumType>(colorTypeName);
+            IEdmEnumMember enumMember = colorType.Members.First(m => m.Name == enumValue);
+
+            string expectedLiteral = "'Green'"; 
+            if (filterOptionValue.StartsWith(colorTypeName)) // if the filterOptionValue is already fully qualified, then the expectedLiteral should be the same as filterOptionValue
+            {
+                expectedLiteral = "NS.Color'Green'";
+                enumValue = enumMember.Value.Value.ToString(); // "2" <cref="ODataEnumValue.Value"/> The backing type, can be "3" or "White" or "Black,Yellow,Cyan"
+            }
+
+            // Act
+            FilterClause filterQueryNode = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            SingleValueNode expression = filterQueryNode.Expression;
+
+            // Assert
+            Assert.Equal(2, enumMember.Value.Value);
+            Assert.Equal("Green", enumMember.Name);
+            InNode inNode = expression.ShouldBeInNode();
+            ConstantNode leftNode = Assert.IsType<ConstantNode>(inNode.Left);
+            leftNode.ShouldBeEnumNode(colorType, enumValue);
+
+            Assert.True(leftNode.TypeReference.IsEnum());
+            Assert.Equal(enumValue, leftNode.Value.ToString());
+            Assert.Equal(expectedLiteral, leftNode.LiteralText);
+
+            CollectionPropertyAccessNode rightNode = Assert.IsType<CollectionPropertyAccessNode>(inNode.Right);
+            rightNode.ShouldBeCollectionPropertyAccessQueryNode(this.GetIEdmProperty("Colors"));
+            Assert.Equal(colorType, rightNode.ItemType.Definition);
+
         }
 
-        private IEdmEnumType GetColorType(IEdmModel model)
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberFloatIntegralValue_ThrowCollectionItemTypeMustBeSameAsSingleItemTypeException()
         {
-            return (IEdmEnumType)model.FindType("NS.Color");
+            // Arrange
+            string filterQuery = $"3.0 in Colors";
+
+            // Act
+            Action test = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            test.Throws<ArgumentException>(Strings.Nodes_InNode_CollectionItemTypeMustBeSameAsSingleItemType("NS.Color", "Edm.Single")); // Float are of Type Edm.Single
         }
 
-        private IEdmStructuralProperty GetColorFlagsProp(IEdmModel model)
+        [Theory]
+        [InlineData("-20", "-20")]
+        [InlineData("'-20'", "-20")]
+        [InlineData("'3.0'", "3.0")]
+        public void ParseFilterWithInOperatorWithEnumsInvalidIntegralValues_ThrowsIsNotValidEnumConstantException(string integralValue, string errorMessageParam)
         {
-            return (IEdmStructuralProperty)((IEdmStructuredType)model
-                .FindType("NS.MyEntityType"))
-                .FindProperty("ColorFlags");
+            // Arrange
+            string filterQuery = $"{integralValue} in Colors";
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(errorMessageParam));
         }
 
-        private IEdmEnumType GetColorFlagsType(IEdmModel model)
+        [Fact]
+        public void ParseFilterWithInOperatorWithEnumsMemberNameWithoutSingleQuotes_ThrowsPropertyNotDeclaredException()
         {
-            return (IEdmEnumType)model.FindType("NS.ColorFlags");
+            // Arrange
+            string filterQuery = "Red in Colors";
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<ODataException>(Strings.MetadataBinder_PropertyNotDeclared(this.entityType.FullName, "Red"));
+        }
+
+        [Theory]
+        [InlineData("'Yellow'")]
+        [InlineData("'Teal'")]
+        [InlineData("NS.Color'Yellow'")]
+        [InlineData("NS.Color'Teal'")]
+        public void ParseFilterWithInOperatorWithEnumsInvalidMemberNames_ThrowsIsNotValidEnumConstantException(string memberName)
+        {
+            // Arrange
+            string filterQuery = $"{memberName} in Colors";
+
+            string expectedExceptionParameter = memberName.StartsWith("'") ? memberName.Trim('\'') : memberName; // Trim('\'') method removes any single quotes from the start and end of the string
+
+            // Act
+            Action action = () => ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+
+            // Assert
+            action.Throws<ODataException>(Strings.Binder_IsNotValidEnumConstant(expectedExceptionParameter));
+        }
+
+        private T GetIEdmType<T>(string typeName) where T : IEdmType
+        {
+            return (T)this.userModel.FindType(typeName);
+        }
+
+        private T GetIEdmType<T>(IEdmModel model, string typeName) where T : IEdmType
+        {
+            return (T)model.FindType(typeName);
+        }
+
+        private IEdmStructuralProperty GetIEdmProperty(string propertyName)
+        {
+            return (IEdmStructuralProperty)this.GetIEdmType<IEdmStructuredType>("NS.MyEntityType")
+                .FindProperty(propertyName);
+        }
+
+        private IEdmStructuralProperty GetIEdmProperty(string entityName, string propertyName)
+        {
+            return (IEdmStructuralProperty)this.GetIEdmType<IEdmStructuredType>(entityName)
+                .FindProperty(propertyName);
         }
 
         private FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet)
