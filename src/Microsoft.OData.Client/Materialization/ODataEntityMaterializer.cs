@@ -618,7 +618,7 @@ namespace Microsoft.OData.Client.Materialization
             ODataNestedResourceInfo link = null;
             ODataProperty odataProperty = null;
             ICollection<ODataNestedResourceInfo> links = entry.NestedResourceInfos;
-            IEnumerable<ODataProperty> properties = entry.Entry.Properties.OfType<ODataProperty>();
+            IEnumerable<ODataProperty> properties = entry.Entry.Properties?.OfType<ODataProperty>();
             ClientEdmModel edmModel = this.MaterializerContext.Model;
             for (int i = 0; i < path.Count; i++)
             {
@@ -663,14 +663,14 @@ namespace Microsoft.OData.Client.Materialization
                     // Note that we should only return the default value if the current segment is leaf.
                     // Take for example, select(new { M = (p as Employee).Manager }). If p is Person and Manager is null, we should return null here.
                     // On the other hand select(new { MID = (p as Employee).Manager.ID }) should throw if p is Person and Manager is null.
-                    if (segment.SourceTypeAs != null && !links.Any(p => p.Name == propertyName) && !properties.Any(p => p.Name == propertyName) && segmentIsLeaf)
+                    if (segment.SourceTypeAs != null && !links.Any(p => p.Name == propertyName) && !(properties?.Any(p => p.Name == propertyName) == true) && segmentIsLeaf)
                     {
                         // We are projecting a derived property and entry is of a base type which the property is not defined on. Return null.
                         result = WebUtil.GetDefaultValue(property.PropertyType);
                         break;
                     }
 
-                    odataProperty = properties.Where(p => p.Name == propertyName).FirstOrDefault();
+                    odataProperty = properties?.FirstOrDefault(p => p.Name == propertyName);
                     link = odataProperty == null && links != null ? links.Where(p => p.Name == propertyName).FirstOrDefault() : null;
                     if (link == null && odataProperty == null)
                     {
@@ -753,7 +753,7 @@ namespace Microsoft.OData.Client.Materialization
                                 this.InstanceAnnotationMaterializationPolicy.SetInstanceAnnotations(propertyName, linkEntry.Entry, expectedType, entry.ResolvedObject);
                             }
 
-                            properties = linkEntry.Properties.OfType<ODataProperty>();
+                            properties = linkEntry.Properties?.OfType<ODataProperty>();
                             links = linkEntry.NestedResourceInfos;
                             result = linkEntry.ResolvedObject;
                             entry = linkEntry;
@@ -840,7 +840,7 @@ namespace Microsoft.OData.Client.Materialization
 
             object result = null;
             ODataProperty odataProperty = null;
-            IEnumerable<ODataProperty> properties = entry.Entry.Properties.OfType<ODataProperty>();
+            IEnumerable<ODataProperty> properties = entry.Entry.Properties?.OfType<ODataProperty>();
 
             for (int i = 0; i < path.Count; i++)
             {
@@ -852,7 +852,7 @@ namespace Microsoft.OData.Client.Materialization
 
                 string propertyName = segment.Member;
 
-                odataProperty = properties.Where(p => p.Name == propertyName).FirstOrDefault();
+                odataProperty = properties?.FirstOrDefault(p => p.Name == propertyName);
 
                 if (odataProperty == null)
                 {

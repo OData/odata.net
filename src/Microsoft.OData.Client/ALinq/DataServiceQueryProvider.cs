@@ -250,8 +250,8 @@ namespace Microsoft.OData.Client
                     {
                         case ODataReaderState.ResourceEnd:
                             entry = reader.Item as ODataResource;
-                            IEnumerable<ODataProperty> properties = entry.Properties.OfType<ODataProperty>();
-                            if (entry != null && properties.Any())
+                            IEnumerable<ODataProperty> properties = entry.Properties?.OfType<ODataProperty>();
+                            if (entry != null && properties?.Any() == true)
                             {
                                 ODataProperty aggregationProperty = properties.First();
                                 ODataUntypedValue untypedValue = aggregationProperty.Value as ODataUntypedValue;
