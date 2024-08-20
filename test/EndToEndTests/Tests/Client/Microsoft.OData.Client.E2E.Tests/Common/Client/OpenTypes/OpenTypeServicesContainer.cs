@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 7/15/2024 12:05:19 PM
+// Generation date: 8/16/2024 9:09:00 AM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes
 {
     /// <summary>
@@ -847,56 +847,56 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default
             return clientType.FullName;
         }
         /// <summary>
-        /// There are no comments for Row in the schema.
+        /// There are no comments for Rows in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("Row")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> Row
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Rows")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> Rows
         {
             get
             {
-                if ((this._Row == null))
+                if ((this._Rows == null))
                 {
-                    this._Row = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row>("Row");
+                    this._Rows = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row>("Rows");
                 }
-                return this._Row;
+                return this._Rows;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _Row;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row> _Rows;
         /// <summary>
-        /// There are no comments for RowIndex in the schema.
+        /// There are no comments for RowIndices in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("RowIndex")]
-        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> RowIndex
+        [global::Microsoft.OData.Client.OriginalNameAttribute("RowIndices")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> RowIndices
         {
             get
             {
-                if ((this._RowIndex == null))
+                if ((this._RowIndices == null))
                 {
-                    this._RowIndex = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex>("RowIndex");
+                    this._RowIndices = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex>("RowIndices");
                 }
-                return this._RowIndex;
+                return this._RowIndices;
             }
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> _RowIndex;
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex> _RowIndices;
         /// <summary>
-        /// There are no comments for Row in the schema.
+        /// There are no comments for Rows in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToRow(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row row)
+        public virtual void AddToRows(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Row row)
         {
-            base.AddObject("Row", row);
+            base.AddObject("Rows", row);
         }
         /// <summary>
-        /// There are no comments for RowIndex in the schema.
+        /// There are no comments for RowIndices in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public virtual void AddToRowIndex(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex rowIndex)
+        public virtual void AddToRowIndices(global::Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.RowIndex rowIndex)
         {
-            base.AddObject("RowIndex", rowIndex);
+            base.AddObject("RowIndices", rowIndex);
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private abstract class GeneratedEdmModel

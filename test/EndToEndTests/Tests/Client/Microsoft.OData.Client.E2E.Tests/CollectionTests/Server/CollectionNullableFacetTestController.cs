@@ -18,8 +18,8 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
         [HttpGet("odata/Customers")]
         public IActionResult GetCustomers()
         {
-            var rowIndex = DefaultDataSource.Customers;
-            return Ok(rowIndex);
+            var customers = DefaultDataSource.Customers;
+            return Ok(customers);
         }
 
         [EnableQuery]
@@ -51,6 +51,15 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
             updateCustomer.Emails = customer.Emails;
 
             return NoContent();
+        }
+
+        [HttpPost("odata/Default.ResetDefaultDataSource")]
+        public IActionResult ResetDefaultDataSource()
+        {
+            DefaultDataSource.ResetDataSource();
+            DefaultDataSource.Initialize();
+
+            return Ok();
         }
     }
 }

@@ -44,6 +44,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         public IActionResult UpdatePersonInfo()
         {
             var person = CommonEndToEndDataSource.People.SingleOrDefault(a => a.PersonId == -10);
+
             if (person == null)
             {
                 return NotFound();
@@ -103,6 +104,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         public IActionResult IncreaseEmployeeSalary([FromODataUri] int key, ODataActionParameters parameters)
         {
             var person = CommonEndToEndDataSource.People.First(a => a.PersonId == key);
+            
             if (person is SpecialEmployee specialEmployee && parameters == null)
             {
                 specialEmployee.Salary += 1;
@@ -121,6 +123,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         public IActionResult IncreaseSalaries(ODataActionParameters parameters)
         {
             var employees = CommonEndToEndDataSource.People.OfType<Employee>();
+
             foreach (var employee in employees)
             {
                 employee.Salary += (int)parameters["n"];
@@ -133,6 +136,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         public IActionResult IncreaseSpecialEmployeesSalaries(ODataActionParameters parameters)
         {
             var employees = CommonEndToEndDataSource.People.OfType<SpecialEmployee>();
+
             foreach (var employee in employees)
             {
                 employee.Salary += (int)parameters["n"];
@@ -144,6 +148,15 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Server
         [HttpPost("odata/People({key})/Default.Sack")]
         public IActionResult Sack([FromODataUri] int key)
         {
+            return Ok();
+        }
+
+        [HttpPost("odata/Default.ResetDataSource")]
+        public IActionResult ResetDataSource()
+        {
+            CommonEndToEndDataSource.ResetData();
+            CommonEndToEndDataSource.InitializeData();
+
             return Ok();
         }
     }

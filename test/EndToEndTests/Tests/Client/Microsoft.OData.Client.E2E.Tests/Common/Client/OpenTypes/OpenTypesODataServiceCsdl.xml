@@ -32,9 +32,9 @@
     </Schema>
     <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
       <EntityContainer Name="Container">
-        <EntitySet Name="Row" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.Row" />
-        <EntitySet Name="RowIndex" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.RowIndex">
-          <NavigationPropertyBinding Path="Rows" Target="Row" />
+        <EntitySet Name="Rows" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.Row" />
+        <EntitySet Name="RowIndices" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.RowIndex">
+          <NavigationPropertyBinding Path="Rows" Target="Rows" />
         </EntitySet>
       </EntityContainer>
     </Schema>

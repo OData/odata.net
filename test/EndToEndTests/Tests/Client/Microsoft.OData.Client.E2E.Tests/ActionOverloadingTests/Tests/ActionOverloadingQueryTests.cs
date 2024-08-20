@@ -50,6 +50,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _context = new Container(_baseUri);
             _context.HttpClientFactory = HttpClientFactory;
             _model = CommonEndToEndEdmModel.GetEdmModel();
+            ResetDataSource();
         }
 
         /// <summary>
@@ -202,6 +203,12 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
                 Assert.True(matched, $"Failed to match action with metadata: {_baseUri + expected.Item1} and target: {_baseUri + expected.Item2}");
             }
+        }
+
+        private void ResetDataSource()
+        {
+            var actionUri = new Uri(_baseUri + "Default.ResetDataSource", UriKind.Absolute);
+            _context.Execute(actionUri, "POST");
         }
     }
 }

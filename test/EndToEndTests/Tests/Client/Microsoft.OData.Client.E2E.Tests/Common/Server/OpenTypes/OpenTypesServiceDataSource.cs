@@ -16,12 +16,12 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
             Initialize();
         }
 
-        public static IList<Row>? Row { get; private set; }
-        public static IList<RowIndex>? RowIndex { get; private set; }
+        public static IList<Row>? Rows { get; private set; }
+        public static IList<RowIndex>? RowIndices { get; private set; }
 
         private static void Initialize()
         {
-            Row = new List<Row>()
+            Rows = new List<Row>()
                 {
                     new IndexedRow
                     {
@@ -107,14 +107,53 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
                     }
                 };
 
-            RowIndex = new List<RowIndex>();
+            RowIndices = new List<RowIndex>();
 
             for (int i = -10; i <= -1; i++)
             {
-                RowIndex.Add(new RowIndex()
+                RowIndices.Add(new RowIndex()
                 {
                     Id = i
                 });
+            }
+
+            PopulateIndex_Rows();
+        }
+
+        private static void PopulateIndex_Rows()
+        {
+            // Add row0 to rowIndex1
+            AddRowToIndex(-9, new Guid("432f0da9-806e-4a2f-b708-dbd1c57a1c21"));
+
+            // Add row1 and row3 to rowIndex3
+            AddRowToIndex(-7,
+                new Guid("02d5d465-edb3-4169-9176-89dd7c86535e"),
+                new Guid("5dcbef86-a002-4121-8087-f6160fe9a1ed"));
+
+            // Add row9 to rowIndex4
+            AddRowToIndex(-6, new Guid("9f9c963b-5c2f-4e39-8bec-b45d19c5dc85"));
+        }
+
+        private static void AddRowToIndex(int rowIndexId, params Guid[] rowIds)
+        {
+            var rowIndex = RowIndices.FirstOrDefault(a => a.Id == rowIndexId);
+
+            if (rowIndex != null)
+            {
+                // Initialize the Rows collection if it's null
+                if (rowIndex.Rows == null)
+                {
+                    rowIndex.Rows = new List<IndexedRow>();
+                }
+
+                foreach (var rowId in rowIds)
+                {
+                    var row = Rows.FirstOrDefault(a => a.Id == rowId) as IndexedRow;
+                    if (row != null)
+                    {
+                        rowIndex.Rows.Add(row);
+                    }
+                }
             }
         }
     }
