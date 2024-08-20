@@ -11,12 +11,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
 {
     public class CommonEndToEndDataSource
     {
-        static CommonEndToEndDataSource()
+        public static CommonEndToEndDataSource CreateInstance()
         {
+            return new CommonEndToEndDataSource();
+        }
+
+        public CommonEndToEndDataSource()
+        {
+            ResetData();
             InitializeData();
         }
 
-        public static void InitializeData()
+        private void InitializeData()
         {
             PopulateAllTypesSet();
             PopulateAllCollectionTypesSet();
@@ -66,7 +72,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             PopulateSpecialEmployee_Car();
         }
 
-        public static void ResetData()
+        private void ResetData()
         {
             AllGeoTypesSet?.Clear();
             AllGeoCollectionTypesSet?.Clear();
@@ -94,34 +100,34 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             PersonMetadata?.Clear();
         }
 
-        public static IList<AllSpatialTypes>? AllGeoTypesSet { get; private set; }
-        public static IList<AllSpatialCollectionTypes>? AllGeoCollectionTypesSet { get; private set; }
-        public static IList<Customer>? Customers { get; private set; }
-        public static IList<Product>? Products { get; private set; }
-        public static IList<OrderLine>? OrderLines { get; private set; }
-        public static IList<Person>? People { get; private set; }
-        public static IList<Login>? Logins { get; private set; }
-        public static IList<LastLogin>? LastLogins { get; private set; }
-        public static IList<RSAToken>? RSATokens { get; private set; }
-        public static IList<Order>? Orders { get; private set; }
-        public static IList<Car>? Cars { get; private set; }
-        public static IList<Message>? Messages { get; private set; }
-        public static IList<PageView>? PageViews { get; private set; }
-        public static IList<MappedEntityType>? MappedEntityTypes { get; private set; }
-        public static IList<MessageAttachment>? MessageAttachments { get; private set; }
-        public static IList<ProductDetail>? ProductDetails { get; private set; }
-        public static IList<ProductReview>? ProductReviews { get; private set; }
-        public static IList<ProductPhoto>? ProductPhotos { get; private set; }
-        public static IList<CustomerInfo>? CustomerInfos { get; private set; }
-        public static IList<Computer>? Computers { get; private set; }
-        public static IList<ComputerDetail>? ComputerDetails { get; private set; }
-        public static IList<Driver>? Drivers { get; private set; }
-        public static IList<License>? Licenses { get; private set; }
-        public static IList<PersonMetadata>? PersonMetadata { get; private set; }
+        public IList<AllSpatialTypes>? AllGeoTypesSet { get; set; }
+        public IList<AllSpatialCollectionTypes>? AllGeoCollectionTypesSet { get; private set; }
+        public IList<Customer>? Customers { get; private set; }
+        public IList<Product>? Products { get; private set; }
+        public IList<OrderLine>? OrderLines { get; private set; }
+        public IList<Person>? People { get; private set; }
+        public IList<Login>? Logins { get; private set; }
+        public IList<LastLogin>? LastLogins { get; private set; }
+        public IList<RSAToken>? RSATokens { get; private set; }
+        public IList<Order>? Orders { get; private set; }
+        public IList<Car>? Cars { get; private set; }
+        public IList<Message>? Messages { get; private set; }
+        public IList<PageView>? PageViews { get; private set; }
+        public IList<MappedEntityType>? MappedEntityTypes { get; private set; }
+        public IList<MessageAttachment>? MessageAttachments { get; private set; }
+        public IList<ProductDetail>? ProductDetails { get; private set; }
+        public IList<ProductReview>? ProductReviews { get; private set; }
+        public IList<ProductPhoto>? ProductPhotos { get; private set; }
+        public IList<CustomerInfo>? CustomerInfos { get; private set; }
+        public IList<Computer>? Computers { get; private set; }
+        public IList<ComputerDetail>? ComputerDetails { get; private set; }
+        public IList<Driver>? Drivers { get; private set; }
+        public IList<License>? Licenses { get; private set; }
+        public IList<PersonMetadata>? PersonMetadata { get; private set; }
 
-        private static void PopulateAllTypesSet()
+        private void PopulateAllTypesSet()
         {
-            AllGeoTypesSet =
+            this.AllGeoTypesSet =
             [
                 new()
                 {
@@ -135,7 +141,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     GeogMultiLine = WellKnownTextSqlFormatter.Create().Read<GeographyMultiLineString>(new System.IO.StringReader("SRID=4326;MULTILINESTRING ((10 10, 20 20, 10 40), (40 40, 30 30, 40 20, 30 10))")),
                     GeogMultiPolygon = null,
                     Geom = WellKnownTextSqlFormatter.Create().Read<GeometryLineString>(new System.IO.StringReader("SRID=0;LINESTRING (1 1, 3 3, 2 4, 2 0)")),
-                    GeomPoint = WellKnownTextSqlFormatter.Create().Read<GeometryPoint>(new System.IO.StringReader("SRID=0;POINT EMPTY")),
+                    GeomPoint = WellKnownTextSqlFormatter.Create().Read<GeometryPoint>(new System.IO.StringReader("SRID=0;POINT(0 0)")),
                     GeomLine = null,
                     GeomPolygon = null,
                     GeomCollection = WellKnownTextSqlFormatter.Create().Read<GeometryCollection>(new System.IO.StringReader("SRID=0;GEOMETRYCOLLECTION EMPTY")),
@@ -328,9 +334,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateAllCollectionTypesSet()
+        private void PopulateAllCollectionTypesSet()
         {
-            AllGeoCollectionTypesSet =
+            this.AllGeoCollectionTypesSet =
             [
                 new AllSpatialCollectionTypes_Simple()
                 {
@@ -576,7 +582,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateCustomers() => Customers =
+        private void PopulateCustomers() => this.Customers =
             [
                 // Initialize a new Customer object
                 new Customer
@@ -1808,7 +1814,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                                 Extension = "uxcfosnpenucrxbxqbimkbiakylecffeshvebxumxkesmuidfhmfpngztcuuclhrctkfaorthlqaogkpvcsus"
                             },
                             MobilePhoneBag = new List<Phone>()
-                            
+
                         }
                     },
                     Auditing = new AuditInfo()
@@ -2515,7 +2521,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                                 Extension = "uzylexqmyzuimljbnfbinzakexcsvcvtvvxjvuzsxvxecaxmvth"
                             }
                         }
-                    
+
                     },
                     BackupContactInfo = new List<ContactDetails>()
                     {
@@ -4058,7 +4064,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                                 PhoneNumber = "pnxvpcpphgaduzßejenzofppxghdfmvsmzzlyßnlblpoanßqblpgzlj",
                                 Extension = "bufdvlfsczlujkerqrjmdgsauxktalplpafpvurnruspqfouutsnlqqvidjyelrrgaljohukzuvkpiglspzctezzfkmmstmbi"
                             },
-                            WorkPhone = null, 
+                            WorkPhone = null,
                             MobilePhoneBag = new List<Phone>()
                             {
                                 new Phone()
@@ -4243,7 +4249,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                                 },
                                 new Phone()
                                 {
-                                    PhoneNumber = null, 
+                                    PhoneNumber = null,
                                     Extension = "unfngqssiajxavob"
                                 },
                                 new Phone()
@@ -5562,9 +5568,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 }
             ];
 
-        private static void PopulateProducts()
+        private void PopulateProducts()
         {
-            Products =
+            this.Products =
             [
                 new()
                 {
@@ -5831,97 +5837,87 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateOrderlines()
+        private void PopulateOrderlines()
         {
             PopulateProducts();
-            OrderLines =
+            this.OrderLines =
             [
                 new()
                 {
                     OrderId = -10,
                     ProductId = -10,
                     Quantity = -325231153,
-                    ConcurrencyToken = "lhvyagabhicdpqiqoxpztssvacdkxvoxdzksdsbykdrvnyg",
-                    //Product = Products?[-10]
+                    ConcurrencyToken = "lhvyagabhicdpqiqoxpztssvacdkxvoxdzksdsbykdrvnyg"
                 },
                 new()
                 {
                     OrderId = -9,
                     ProductId = -9,
                     Quantity = -916,
-                    ConcurrencyToken = "kyjykfxslrtjyhyueifuoyxqsuaduxrehalbjcmcxqzssbuhuirmacnlasbqdnmnzrayvsstlexk",
-                    //Product = Products?[-9]
+                    ConcurrencyToken = "kyjykfxslrtjyhyueifuoyxqsuaduxrehalbjcmcxqzssbuhuirmacnlasbqdnmnzrayvsstlexk"
                 },
                 new()
                 {
                     OrderId = -8,
                     ProductId = -8,
                     Quantity = -94,
-                    ConcurrencyToken = "guijsdboufjdxgddcqssßhdhrlguhxutßnßhlqsvuqnockgcjgyhurjlevjzgovdapksxßvqmvugxoocu",
-                    //Product = Products?[-8]
+                    ConcurrencyToken = "guijsdboufjdxgddcqssßhdhrlguhxutßnßhlqsvuqnockgcjgyhurjlevjzgovdapksxßvqmvugxoocu"
                 },
                 new()
                 {
                     OrderId = -7,
                     ProductId = -7,
                     Quantity = 74,
-                    ConcurrencyToken = "oljmddssrussdoistakqckhfuhsvucqjfgsdbugymciogcgtaexsnqubhvgaxkosatqssjvlßspi",
-                    //Product = Products?[-7]
+                    ConcurrencyToken = "oljmddssrussdoistakqckhfuhsvucqjfgsdbugymciogcgtaexsnqubhvgaxkosatqssjvlßspi"
                 },
                 new()
                 {
                     OrderId = -6,
                     ProductId = -6,
                     Quantity = -2147483648,
-                    ConcurrencyToken = "ctntßtpfiax",
-                    //Product = Products?[-6]
+                    ConcurrencyToken = "ctntßtpfiax"
                 },
                 new()
                 {
                     OrderId = -5,
                     ProductId = -5,
                     Quantity = -94,
-                    ConcurrencyToken = "vesaruhsvmvsthubptmpjcdßßojpvnciunngjbbjjlhbnfomkehyozupu",
-                    //Product = Products?[-5]
+                    ConcurrencyToken = "vesaruhsvmvsthubptmpjcdßßojpvnciunngjbbjjlhbnfomkehyozupu"
                 },
                 new()
                 {
                     OrderId = -4,
                     ProductId = -4,
                     Quantity = -58,
-                    ConcurrencyToken = "aullcßssoudxjuotakazoccxhuslpuy",
-                    //Product = Products?[-4]
+                    ConcurrencyToken = "aullcßssoudxjuotakazoccxhuslpuy"
                 },
                 new()
                 {
                     OrderId = -3,
                     ProductId = -3,
                     Quantity = -61,
-                    ConcurrencyToken = "ehpkubjlhzvuukitzlxyuokmoejoa",
-                    //Product = Products?[-3]
+                    ConcurrencyToken = "ehpkubjlhzvuukitzlxyuokmoejoa"
                 },
                 new()
                 {
                     OrderId = -2,
                     ProductId = -2,
                     Quantity = 2147483647,
-                    ConcurrencyToken = "弌ぽﾈ九ソァタяダタたяぁぺЯゼそバんボяほ畚せマァゼひ黑んゼびァボダソ裹ァチたあぺぞソん",
-                    //Product = Products?[-2]
+                    ConcurrencyToken = "弌ぽﾈ九ソァタяダタたяぁぺЯゼそバんボяほ畚せマァゼひ黑んゼびァボダソ裹ァチたあぺぞソん"
                 },
                 new()
                 {
                     OrderId = -1,
                     ProductId = -1,
                     Quantity = 158,
-                    ConcurrencyToken = null,
-                    //Product = Products?[-1]
+                    ConcurrencyToken = null
                 }
             ];
         }
 
-        private static void PopulatePeople()
+        private void PopulatePeople()
         {
-            People =
+            this.People =
             [
                 new SpecialEmployee()
                 {
@@ -6032,9 +6028,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateLogins()
+        private void PopulateLogins()
         {
-            Logins =
+            this.Logins =
             [
                 new() { Username = "1", CustomerId = 36 },
                 new() { Username = "2", CustomerId = 6084 },
@@ -6049,9 +6045,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateCars()
+        private void PopulateCars()
         {
-            Cars =
+            this.Cars =
             [
                 new Car { VIN = -10, Description = "cenbviijieljtrtdslbuiqubcvhxhzenidqdnaopplvlqc" },
                 new Car { VIN = -9, Description = "lx" },
@@ -6066,9 +6062,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateMessages()
+        private void PopulateMessages()
         {
-            Messages =
+            this.Messages =
             [
                 new Message
                 {
@@ -6173,7 +6169,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateLogin_SentMessages()
+        private void PopulateLogin_SentMessages()
         {
             PopulateLogins();
             PopulateMessages();
@@ -6200,9 +6196,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void PopulatePageViews()
+        private void PopulatePageViews()
         {
-            PageViews = new List<PageView>
+            this.PageViews = new List<PageView>
             {
                 new ProductPageView
                 {
@@ -6297,9 +6293,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             };
         }
 
-        private static void PopulateMappedEntityTypes()
+        private void PopulateMappedEntityTypes()
         {
-            MappedEntityTypes = new List<MappedEntityType>()
+            this.MappedEntityTypes = new List<MappedEntityType>()
             {
                 new MappedEntityType()
                 {
@@ -6321,9 +6317,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             };
         }
 
-        private static void PopulateMessageAttachments()
+        private void PopulateMessageAttachments()
         {
-            MessageAttachments =
+            this.MessageAttachments =
             [
                 new MessageAttachment()
                 {
@@ -6718,7 +6714,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateProducts_RelatedProducts()
+        private void PopulateProducts_RelatedProducts()
         {
             var relatedProductsMapping = new Dictionary<int, List<int>>
             {
@@ -6741,9 +6737,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void PopulateProductDetail()
+        private void PopulateProductDetail()
         {
-            ProductDetails =
+            this.ProductDetails =
             [
                 new()
                 {
@@ -6798,9 +6794,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateProductReview()
+        private void PopulateProductReview()
         {
-            ProductReviews =
+            this.ProductReviews =
             [
                 new()
                 {
@@ -6875,9 +6871,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateProductPhoto()
+        private void PopulateProductPhoto()
         {
-            ProductPhotos =
+            this.ProductPhotos =
             [
                 new()
                 {
@@ -7389,7 +7385,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             ];
         }
 
-        private static void PopulateProduct_ProductReview()
+        private void PopulateProduct_ProductReview()
         {
             var productReviewsMapping = new Dictionary<int, List<int>>
             {
@@ -7398,7 +7394,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 { -1, new List<int> { -1 } }
             };
 
-            foreach (var product in Products)
+            foreach (var product in this.Products)
             {
                 if (productReviewsMapping.TryGetValue(product.ProductId, out var reviewIds))
                 {
@@ -7409,7 +7405,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void PopulateProduct_ProductPhoto()
+        private void PopulateProduct_ProductPhoto()
         {
             var productPhotosMapping = new Dictionary<int, List<int>>
             {
@@ -7419,18 +7415,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 { -4, new List<int> { -3, -1 } }
             };
 
-            foreach (var product in Products)
+            foreach (var product in this.Products)
             {
                 if (productPhotosMapping.TryGetValue(product.ProductId, out var photoIds))
                 {
-                    product.Photos = ProductPhotos
+                    product.Photos = this.ProductPhotos
                         .Where(p => photoIds.Contains(p.ProductId))
                         .ToList();
                 }
             }
         }
 
-        private static void PopulateProduct_ProductDetail()
+        private void PopulateProduct_ProductDetail()
         {
             var productDetailMapping = new Dictionary<int, int>
             {
@@ -7445,18 +7441,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                 { -1, -1 }
             };
 
-            foreach (var product in Products)
+            foreach (var product in this.Products)
             {
                 if (productDetailMapping.TryGetValue(product.ProductId, out var productId))
                 {
-                    product.Detail = ProductDetails.FirstOrDefault(p => p.ProductId == productId);
+                    product.Detail = this.ProductDetails.FirstOrDefault(p => p.ProductId == productId);
                 }
             }
         }
 
-        private static void PopulateRSATokens()
+        private void PopulateRSATokens()
         {
-            RSATokens = new List<RSAToken>
+            this.RSATokens = new List<RSAToken>
             {
                 new RSAToken { Serial = "1", Issued = new DateTimeOffset(new DateTime(634829455350446194, DateTimeKind.Utc)) },
                 new RSAToken { Serial = "2", Issued = new DateTimeOffset(new DateTime(503076552589558344, DateTimeKind.Local)) },
@@ -7471,9 +7467,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             };
         }
 
-        private static void PopulateLastLogins()
+        private void PopulateLastLogins()
         {
-            LastLogins = new List<LastLogin>
+            this.LastLogins = new List<LastLogin>
             {
                 new LastLogin
                 {
@@ -7548,11 +7544,11 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             };
         }
 
-        private static void PopulateOrders()
+        private void PopulateOrders()
         {
-            Orders = new List<Order>
-            {
-                new Order
+            this.Orders =
+            [
+                new Order()
                 {
                     OrderId = -10,
                     CustomerId = 8212,
@@ -7648,13 +7644,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                         QueriedDateTime = new DateTimeOffset(new DateTime(634890040688842825, DateTimeKind.Utc))
                     }
                 }
-            };
+            ];
         }
 
-        private static void PopulateCustomerInfos()
+        private void PopulateCustomerInfos()
         {
-            CustomerInfos = new List<CustomerInfo>
-            {
+            this.CustomerInfos =
+            [
                 new CustomerInfo
                 {
                     CustomerInfoId = -10,
@@ -7705,13 +7701,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     CustomerInfoId = -1,
                     Information = "マびａゼミひグ暦タぽんミａソЯんクポをんЯダ珱ポぼａё九ぁｦЯべほ歹ァソぜボ縷ァﾝ弌バマ亜ぞミ暦ダダポソソボﾈたんまた匚ぞボ九チぽぜソぜぞチぺミ弌ｚんぺｚひ縷そぴぺべタまチ亜ハ珱びぞ暦ゾぜぺクёёゼ"
                 }
-            };
+            ];
         }
 
-        private static void PopulateComputers()
+        private void PopulateComputers()
         {
-            Computers = new List<Computer>
-            {
+            this.Computers =
+            [
                 new Computer
                 {
                     ComputerId = -10,
@@ -7762,13 +7758,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     ComputerId = -1,
                     Name = "xifstdltzpytkiufbpzuofuxnzuyyiazceilfmkqubusfqzuyfrmddtnxjutkmuxnyljapzpodzyojnyapaphkqzcknxhq"
                 }
-            };
+            ];
         }
 
-        private static void PopulateComputerDetails()
+        private void PopulateComputerDetails()
         {
-            ComputerDetails = new List<ComputerDetail>
-            {
+            this.ComputerDetails =
+            [
                 new ComputerDetail
                 {
                     ComputerDetailId = -10,
@@ -7974,13 +7970,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                         Depth = -79228162514264337593543950335m
                     }
                 }
-            };
+            ];
         }
 
-        private static void PopulateDrivers()
+        private void PopulateDrivers()
         {
-            Drivers = new List<Driver>
-            {
+            this.Drivers =
+            [
                 new Driver
                 {
                     Name = "1",
@@ -8031,13 +8027,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     Name = "10",
                     BirthDate = new DateTimeOffset(new DateTime(635046048763579371, DateTimeKind.Utc))
                 }
-            };
+            ];
         }
 
-        private static void PopulateLicenses()
+        private void PopulateLicenses()
         {
-            Licenses = new List<License>
-            {
+            this.Licenses =
+            [
                 new License
                 {
                     Name = "1",
@@ -8118,13 +8114,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     Restrictions = "ァあぞァぴミぽゼあ",
                     ExpirationDate = new DateTimeOffset(new DateTime(3155378975999999999, DateTimeKind.Utc))
                 }
-            };
+            ];
         }
 
-        private static void PopulatePersonMetadata()
+        private void PopulatePersonMetadata()
         {
-            PersonMetadata = new List<PersonMetadata>
-            {
+            this.PersonMetadata =
+            [
                 new PersonMetadata
                 {
                     PersonMetadataId = -10,
@@ -8195,18 +8191,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
                     PropertyName = "ixggjbuqubfuqpkaokhejvxaumbqlklmzvrbehokediispknlaxteudcafuxauorrsbtyd",
                     PropertyValue = "ßouvdnequlnsmvpkbtcckyohjajrrcibkiuolberxharoßcjblicloliahhcohßzjhdjrkßßrphiyldjvaluuxtfqeoixxm"
                 }
-            };
+            ];
         }
 
-        private static void PopulateLogin_ReceivedMessages()
+        private void PopulateLogin_ReceivedMessages()
         {
             var loginDictionary = new Dictionary<string, Login>();
-            foreach (var login in Logins)
+            foreach (var login in this.Logins)
             {
                 loginDictionary[login.Username] = login;
             }
 
-            foreach (var message in Messages)
+            foreach (var message in this.Messages)
             {
                 if (loginDictionary.TryGetValue(message.FromUsername, out var recipientLogin))
                 {
@@ -8222,15 +8218,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void PopulateCustomer_CustomerInfo()
+        private void PopulateCustomer_CustomerInfo()
         {
             var customerDictionary = new Dictionary<int, Customer>();
-            foreach (var customer in Customers)
+            foreach (var customer in this.Customers)
             {
                 customerDictionary[customer.CustomerId] = customer;
             }
 
-            foreach (var customerInfo in CustomerInfos)
+            foreach (var customerInfo in this.CustomerInfos)
             {
                 if (customerDictionary.TryGetValue(customerInfo.CustomerInfoId, out var customer))
                 {
@@ -8239,7 +8235,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void PopulateLogin_Orders()
+        private void PopulateLogin_Orders()
         {
             AddLoginOrderReference("1", -10, -5, -2);
             AddLoginOrderReference("2", -9);
@@ -8248,7 +8244,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddLoginOrderReference("5", -1);
         }
 
-        private static void PopulateMessage_Attachments()
+        private void PopulateMessage_Attachments()
         {
             AddMessageAttachmentReference(-10, new Guid("1126a28b-a4af-4bbd-bf0a-2b2c22635565"), new Guid("4b7ab900-bf82-4857-ac02-470ffbeffe1d"), new Guid("66527e34-9d1f-45b2-ba8e-3e2306a9be78"));
             AddMessageAttachmentReference(-9, new Guid("5cb091a6-bbb4-43b4-ac12-d7ae631edcb0"));
@@ -8258,15 +8254,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddMessageAttachmentReference(-6, new Guid("7e926398-4690-4a4b-b7c7-d1587441b90f"));
         }
 
-        private static void PopulateCustomer_Orders()
+        private void PopulateCustomer_Orders()
         {
-            AddOrderToCustomer(-10, -10, -7,-6);
+            AddOrderToCustomer(-10, -10, -7, -6);
             AddOrderToCustomer(-9, -9);
             AddOrderToCustomer(-7, -5, -4);
             AddOrderToCustomer(-6, -3, -2, -1);
         }
 
-        private static void PopulateCustomer_Logins()
+        private void PopulateCustomer_Logins()
         {
             AddLoginToCustomer(-10, "1", "4");
             AddLoginToCustomer(-9, "2");
@@ -8276,7 +8272,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddLoginToCustomer(-3, "10");
         }
 
-        private static void PopulateLogin_LastLogin()
+        private void PopulateLogin_LastLogin()
         {
             SetLastLoginForLogin("1", "1");
             SetLastLoginForLogin("2", "2");
@@ -8289,11 +8285,11 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             SetLastLoginForLogin("10", "10");
         }
 
-        private static void PopulateOrder_OrderLines()
+        private void PopulateOrder_OrderLines()
         {
             AddOrderToOrderLine((-10, -10), -9);
             AddOrderToOrderLine((-9, -9), -7);
-            AddOrderToOrderLine((-7,-7), -7);
+            AddOrderToOrderLine((-7, -7), -7);
             AddOrderToOrderLine((-6, 6), -5);
             AddOrderToOrderLine((-5, -5), -5);
             AddOrderToOrderLine((-4, -4), -10);
@@ -8302,7 +8298,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddOrderToOrderLine((-1, -1), -4);
         }
 
-        private static void PopulateProduct_OrderLines()
+        private void PopulateProduct_OrderLines()
         {
             AddProductToOrderLine((-10, -10), -10);
             AddProductToOrderLine((-9, -9), -10);
@@ -8315,20 +8311,20 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddProductToOrderLine((-1, -1), -5);
         }
 
-        private static void PopulateHusband_Wife()
+        private void PopulateHusband_Wife()
         {
-            AddHusbandWifeRelationship(-10,-10);
+            AddHusbandWifeRelationship(-10, -10);
             AddHusbandWifeRelationship(-9, -9);
             AddHusbandWifeRelationship(-7, -7);
             AddHusbandWifeRelationship(-6, -6);
-            AddHusbandWifeRelationship( -5, -5);
+            AddHusbandWifeRelationship(-5, -5);
             AddHusbandWifeRelationship(-4, -4);
             AddHusbandWifeRelationship(-3, -3);
             AddHusbandWifeRelationship(-2, -2);
             AddHusbandWifeRelationship(-1, -1);
         }
 
-        private static void PopulateLogin_RSAToken()
+        private void PopulateLogin_RSAToken()
         {
             AddLoginRSATokenRelationship("1", "1");
             AddLoginRSATokenRelationship("2", "2");
@@ -8341,7 +8337,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddLoginRSATokenRelationship("10", "10");
         }
 
-        private static void PopulateLogin_PageViews()
+        private void PopulateLogin_PageViews()
         {
             AddLoginToPageView(-10, "2");
             AddLoginToPageView(-9, "4");
@@ -8354,7 +8350,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddLoginToPageView(-1, "5");
         }
 
-        private static void PopulateComputer_ComputerDetail()
+        private void PopulateComputer_ComputerDetail()
         {
             AddComputerDetailToComputer(-10, -10);
             AddComputerDetailToComputer(-9, -9);
@@ -8367,7 +8363,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddComputerDetailToComputer(-1, -1);
         }
 
-        private static void PopulateDriver_License()
+        private void PopulateDriver_License()
         {
             AddLicenseToDriver("1", "1");
             AddLicenseToDriver("2", "2");
@@ -8380,7 +8376,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddLicenseToDriver("10", "10");
         }
 
-        private static void PopulatePerson_PersonMetadata()
+        private void PopulatePerson_PersonMetadata()
         {
             AddPersonMetadataToPerson(-10, -10, -9, -7);
             AddPersonMetadataToPerson(-9, -6);
@@ -8389,7 +8385,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddPersonMetadataToPerson(-4, -2, -1);
         }
 
-        private static void AddLoginOrderReference(string username, params int[] orderIds)
+        private void AddLoginOrderReference(string username, params int[] orderIds)
         {
             var login = Logins.FirstOrDefault(l => l.Username == username);
 
@@ -8417,15 +8413,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddMessageAttachmentReference(int messageId, params Guid[] attachmentIds)
+        private void AddMessageAttachmentReference(int messageId, params Guid[] attachmentIds)
         {
-            var message = Messages.FirstOrDefault(m => m.MessageId == messageId);
+            var message = this.Messages.FirstOrDefault(m => m.MessageId == messageId);
 
             if (message != null)
             {
                 foreach (var attachmentId in attachmentIds)
                 {
-                    var attachment = MessageAttachments.FirstOrDefault(a => a.AttachmentId == attachmentId);
+                    var attachment = this.MessageAttachments.FirstOrDefault(a => a.AttachmentId == attachmentId);
 
                     if (attachment != null)
                     {
@@ -8442,15 +8438,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddOrderToCustomer(int customerId, params int[] orderIds)
+        private void AddOrderToCustomer(int customerId, params int[] orderIds)
         {
-            var customer = Customers.FirstOrDefault(c => c.CustomerId == customerId);
+            var customer = this.Customers.FirstOrDefault(c => c.CustomerId == customerId);
 
             if (customer != null)
             {
                 foreach (var orderId in orderIds)
                 {
-                    var order = Orders.FirstOrDefault(o => o.OrderId == orderId);
+                    var order = this.Orders.FirstOrDefault(o => o.OrderId == orderId);
 
                     if (order != null)
                     {
@@ -8470,15 +8466,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddLoginToCustomer(int customerId, params string[] loginIds)
+        private void AddLoginToCustomer(int customerId, params string[] loginIds)
         {
-            var customer = Customers.FirstOrDefault(c => c.CustomerId == customerId);
+            var customer = this.Customers.FirstOrDefault(c => c.CustomerId == customerId);
 
             if (customer != null)
             {
                 foreach (var loginId in loginIds)
                 {
-                    var login = Logins.FirstOrDefault(l => l.Username == loginId);
+                    var login = this.Logins.FirstOrDefault(l => l.Username == loginId);
 
                     if (login != null)
                     {
@@ -8498,10 +8494,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void SetLastLoginForLogin(string loginId, string lastLoginId)
+        private void SetLastLoginForLogin(string loginId, string lastLoginId)
         {
-            var login = Logins.FirstOrDefault(l => l.Username == loginId);
-            var lastLogin = LastLogins.FirstOrDefault(ll => ll.Username == lastLoginId);
+            var login = this.Logins.FirstOrDefault(l => l.Username == loginId);
+            var lastLogin = this.LastLogins.FirstOrDefault(ll => ll.Username == lastLoginId);
 
             if (login != null && lastLogin != null)
             {
@@ -8513,27 +8509,27 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddOrderToOrderLine((int orderId,int productId) orderLineId, int orderId)
+        private void AddOrderToOrderLine((int orderId, int productId) orderLineId, int orderId)
         {
-            var orderLine = OrderLines.FirstOrDefault(ol => ol.OrderId == orderLineId.orderId && ol.ProductId == orderLineId.productId);
+            var orderLine = this.OrderLines.FirstOrDefault(ol => ol.OrderId == orderLineId.orderId && ol.ProductId == orderLineId.productId);
 
             if (orderLine != null)
             {
-                orderLine.Order = Orders.FirstOrDefault(o => o.OrderId == orderId);
+                orderLine.Order = this.Orders.FirstOrDefault(o => o.OrderId == orderId);
             }
         }
 
-        private static void AddProductToOrderLine((int orderId, int productId) orderLineId, int productId)
+        private void AddProductToOrderLine((int orderId, int productId) orderLineId, int productId)
         {
-            var orderLine = OrderLines.FirstOrDefault(ol => ol.OrderId == orderLineId.orderId && ol.ProductId == orderLineId.productId);
+            var orderLine = this.OrderLines.FirstOrDefault(ol => ol.OrderId == orderLineId.orderId && ol.ProductId == orderLineId.productId);
 
             if (orderLine != null)
             {
-                orderLine.Product = Products.FirstOrDefault(o => o.ProductId == productId);
+                orderLine.Product = this.Products.FirstOrDefault(o => o.ProductId == productId);
             }
         }
 
-        private static void PopulateEmployee_Manager()
+        private void PopulateEmployee_Manager()
         {
             AddManagerToEmployee(-10, -10);
             AddManagerToEmployee(-9, -9);
@@ -8543,17 +8539,17 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             AddManagerToEmployee(0, -6);
         }
 
-        private static void PopulateSpecialEmployee_Car()
+        private void PopulateSpecialEmployee_Car()
         {
             AssignCarToEmployee(-10, -9);
             AssignCarToEmployee(-9, -7);
             AssignCarToEmployee(-7, -7);
         }
 
-        private static void AddHusbandWifeRelationship(int husbandId, int wifeId)
+        private void AddHusbandWifeRelationship(int husbandId, int wifeId)
         {
-            var husband = Customers.FirstOrDefault(c => c.CustomerId == husbandId);
-            var wife = Customers.FirstOrDefault(c => c.CustomerId == wifeId);
+            var husband = this.Customers.FirstOrDefault(c => c.CustomerId == husbandId);
+            var wife = this.Customers.FirstOrDefault(c => c.CustomerId == wifeId);
 
             if (husband != null && wife != null)
             {
@@ -8562,10 +8558,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddLoginRSATokenRelationship(string rsaTokenId, string loginId)
+        private void AddLoginRSATokenRelationship(string rsaTokenId, string loginId)
         {
-            var rsaToken = RSATokens.FirstOrDefault(rt => rt.Serial == rsaTokenId);
-            var login = Logins.FirstOrDefault(l => l.Username == loginId);
+            var rsaToken = this.RSATokens.FirstOrDefault(rt => rt.Serial == rsaTokenId);
+            var login = this.Logins.FirstOrDefault(l => l.Username == loginId);
 
             if (rsaToken != null && login != null)
             {
@@ -8573,10 +8569,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddLoginToPageView(int pageViewId, string userName)
+        private void AddLoginToPageView(int pageViewId, string userName)
         {
-            var pageView = PageViews.FirstOrDefault(pv => pv.PageViewId == pageViewId);
-            var login = Logins.FirstOrDefault(l => l.Username == userName);
+            var pageView = this.PageViews.FirstOrDefault(pv => pv.PageViewId == pageViewId);
+            var login = this.Logins.FirstOrDefault(l => l.Username == userName);
 
             if (pageView != null && login != null)
             {
@@ -8584,10 +8580,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddComputerDetailToComputer(int computerId, int computerDetailId)
+        private void AddComputerDetailToComputer(int computerId, int computerDetailId)
         {
-            var computer = Computers.FirstOrDefault(c => c.ComputerId == computerId);
-            var computerDetail = ComputerDetails.FirstOrDefault(cd => cd.ComputerDetailId == computerDetailId);
+            var computer = this.Computers.FirstOrDefault(c => c.ComputerId == computerId);
+            var computerDetail = this.ComputerDetails.FirstOrDefault(cd => cd.ComputerDetailId == computerDetailId);
 
             if (computer != null && computerDetail != null)
             {
@@ -8599,10 +8595,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddLicenseToDriver(string licenseName, string driverName)
+        private void AddLicenseToDriver(string licenseName, string driverName)
         {
-            var license = Licenses.FirstOrDefault(c => c.Name == licenseName);
-            var driver = Drivers.FirstOrDefault(cd => cd.Name == driverName);
+            var license = this.Licenses.FirstOrDefault(c => c.Name == licenseName);
+            var driver = this.Drivers.FirstOrDefault(cd => cd.Name == driverName);
 
             if (license != null && driver != null)
             {
@@ -8611,15 +8607,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddPersonMetadataToPerson(int personId, params int[] personMetadataIds)
+        private void AddPersonMetadataToPerson(int personId, params int[] personMetadataIds)
         {
-            var person = People.FirstOrDefault(c => c.PersonId == personId);
+            var person = this.People.FirstOrDefault(c => c.PersonId == personId);
 
             if (person != null)
             {
                 foreach (var personMetadataId in personMetadataIds)
                 {
-                    var personMetadata = PersonMetadata.FirstOrDefault(o => o.PersonMetadataId == personMetadataId);
+                    var personMetadata = this.PersonMetadata.FirstOrDefault(o => o.PersonMetadataId == personMetadataId);
 
                     if (personMetadata != null)
                     {
@@ -8639,10 +8635,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AddManagerToEmployee(int employeeId, int managerId)
+        private void AddManagerToEmployee(int employeeId, int managerId)
         {
-            var employee = People.FirstOrDefault(a=>a.PersonId == employeeId) as Employee;
-            var manager = People.FirstOrDefault(a => a.PersonId == managerId) as Employee;
+            var employee = this.People.FirstOrDefault(a => a.PersonId == employeeId) as Employee;
+            var manager = this.People.FirstOrDefault(a => a.PersonId == managerId) as Employee;
 
             if (employee != null && manager != null)
             {
@@ -8650,10 +8646,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             }
         }
 
-        private static void AssignCarToEmployee(int employeeId, int carId)
+        private void AssignCarToEmployee(int employeeId, int carId)
         {
-            var employee = People.FirstOrDefault(a=>a.PersonId == employeeId) as SpecialEmployee;
-            var car = Cars.FirstOrDefault(a => a.VIN == carId);
+            var employee = this.People.FirstOrDefault(a => a.PersonId == employeeId) as SpecialEmployee;
+            var car = this.Cars.FirstOrDefault(a => a.VIN == carId);
 
             if (employee != null && car != null)
             {

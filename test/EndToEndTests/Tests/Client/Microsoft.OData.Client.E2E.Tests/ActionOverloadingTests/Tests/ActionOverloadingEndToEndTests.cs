@@ -23,7 +23,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(ProductsController), typeof(OrderLinesController), typeof(PeopleController));
+                services.ConfigureControllers(typeof(ActionOverloadingTestsController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel()));
@@ -35,7 +35,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _context = new Container(_baseUri);
             _context.HttpClientFactory = HttpClientFactory;
-             ResetDataSource();
+            ResetDataSource();
         }
 
         [Fact]
@@ -118,7 +118,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             Assert.Equal(2016141256, specialEmployee.Salary);
 
             // Create a DataServiceQuerySingle instance for the special employee and increase their salary
-            var singleSpecialEmployee = new DataServiceQuerySingle<Common.Clients.EndToEnd.SpecialEmployee>(_context,"People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee");
+            var singleSpecialEmployee = new DataServiceQuerySingle<Common.Clients.EndToEnd.SpecialEmployee>(_context, "People(-7)/Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd.SpecialEmployee");
 
             int salary = singleSpecialEmployee.IncreaseEmployeeSalary().GetValue();
             Assert.Equal(2016141257, salary);
@@ -361,7 +361,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
         private void ResetDataSource()
         {
-            var actionUri = new Uri(_baseUri + "Default.ResetDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "actionoverloading/Default.ResetDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }

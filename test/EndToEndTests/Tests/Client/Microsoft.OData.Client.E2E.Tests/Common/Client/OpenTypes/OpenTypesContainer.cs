@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 8/16/2024 9:09:00 AM
+// Generation date: 8/21/2024 10:19:03 PM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes
 {
     /// <summary>
@@ -960,6 +960,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Clients.OpenTypes.Default
                     throw new global::System.Xml.XmlException("Failed to create an XmlReader from the stream. Check if the resource exists.", e);
                 }
             }
+        }
+        /// <summary>
+        /// There are no comments for ResetOpenTypesDataSource in the schema.
+        /// </summary>
+        [global::Microsoft.OData.Client.OriginalNameAttribute("ResetOpenTypesDataSource")]
+        public virtual global::Microsoft.OData.Client.DataServiceActionQuery ResetOpenTypesDataSource()
+        {
+            return new global::Microsoft.OData.Client.DataServiceActionQuery(this, this.BaseUri.OriginalString.Trim('/') + "/ResetOpenTypesDataSource");
         }
     }
 }
