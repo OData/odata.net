@@ -7,48 +7,53 @@
 
 using Microsoft.OData.Edm;
 using Microsoft.Spatial;
-using System.Collections.ObjectModel;
 
 namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
 {
     public class DefaultDataSource
     {
-        static DefaultDataSource()
+        public static DefaultDataSource CreateInstance()
         {
+            return new DefaultDataSource();
+        }
+
+        public DefaultDataSource()
+        {
+            ResetDataSource();
             Initialize();
         }
 
-        public static Person Boss { get; private set; }
-        public static Customer VipCustomer { get; private set; }
-        public static Company Company { get; private set; }
-        public static PublicCompany PublicCompany { get; private set; }
-        public static LabourUnion LabourUnion { get; private set; }
-        public static StoredPI DefaultStoredPI { get; private set; }
-        public static IList<Person> People { get; private set; }
-        public static IList<Account> Accounts { get; private set; }
-        public static IList<Product> Products { get; private set; }
-        public static IList<Order> Orders { get; private set; }
-        public static IList<ProductDetail> ProductDetails { get; private set; }
-        public static IList<Customer> Customers { get; private set; }
-        public static IList<Employee> Employees { get; private set; }
-        public static IList<OrderDetail> OrderDetails { get; private set; }
-        public static IList<ProductReview> ProductReviews { get; private set; }
-        public static IList<Calendar> Calendars { get; private set; }
-        public static IList<Department> Departments { get; private set; }
-        public static IList<StoredPI> StoredPIs { get; private set; }
-        public static IList<Subscription> SubscriptionTemplates { get; private set; }
+        public Person? Boss { get; private set; }
+        public Customer? VipCustomer { get; private set; }
+        public Company? Company { get; private set; }
+        public PublicCompany? PublicCompany { get; private set; }
+        public LabourUnion? LabourUnion { get; private set; }
+        public StoredPI? DefaultStoredPI { get; private set; }
+        public IList<Person>? People { get; private set; }
+        public IList<Account>? Accounts { get; private set; }
+        public IList<Product>? Products { get; private set; }
+        public IList<Order>? Orders { get; private set; }
+        public IList<ProductDetail>? ProductDetails { get; private set; }
+        public IList<Customer>? Customers { get; private set; }
+        public IList<Employee>? Employees { get; private set; }
+        public IList<OrderDetail>? OrderDetails { get; private set; }
+        public IList<ProductReview>? ProductReviews { get; private set; }
+        public IList<Calendar>? Calendars { get; private set; }
+        public IList<Department>? Departments { get; private set; }
+        public IList<StoredPI>? StoredPIs { get; private set; }
+        public IList<Subscription>? SubscriptionTemplates { get; private set; }
 
         /// <summary>
         /// Populates the data source.
         /// </summary>
-        public static void Initialize()
+        public void Initialize()
         {
-            Boss = new Customer()
+            this.Boss = new Customer()
             {
                 FirstName = "Jill",
                 LastName = "Jones",
-                Numbers = new Collection<string>(),
-                Emails = new Collection<string>(),
+                Numbers = [],
+                Emails = [],
                 PersonID = 2,
                 Birthday = new DateTimeOffset(new DateTime(1983, 1, 15)),
                 City = "Sydney",
@@ -56,13 +61,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 TimeBetweenLastTwoOrders = new TimeSpan(2)
             };
 
-            VipCustomer = new Customer()
+            this.VipCustomer = new Customer()
             {
                 FirstName = "Bob",
                 MiddleName = "Vat",
                 LastName = "Cat",
-                Numbers = new Collection<string> { "111-111-1111" },
-                Emails = new Collection<string> { "abc@abc.com" },
+                Numbers = ["111-111-1111"],
+                Emails = ["abc@abc.com"],
                 PersonID = 1,
                 Birthday = new DateTimeOffset(new DateTime(1957, 4, 3)),
                 City = "London",
@@ -76,7 +81,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 }
             };
 
-            Company = new Company()
+            this.Company = new Company()
             {
                 CompanyID = 0,
                 CompanyCategory = CompanyCategory.IT,
@@ -91,7 +96,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 }
             };
 
-            PublicCompany = new PublicCompany
+            this.PublicCompany = new PublicCompany
             {
                 CompanyID = 1,
                 CompanyCategory = CompanyCategory.IT,
@@ -104,8 +109,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 },
                 Revenue = 100000,
                 StockExchange = "NASDAQ",
-                Assets = new List<Asset>()
-                {
+                Assets =
+                [
                     new Asset()
                     {
                         AssetID = 0,
@@ -119,7 +124,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         Name = "ThinkPad",
                         Number = 200
                     }
-                },
+                ],
                 Club = new Club
                 {
                     ClubID = 0,
@@ -127,15 +132,15 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 }
             };
 
-            LabourUnion = new LabourUnion
+            this.LabourUnion = new LabourUnion
             {
                 LabourUnionID = 0,
                 Name = "MS Labour Union"
             };
 
-            PublicCompany.LabourUnion = LabourUnion;
+            this.PublicCompany.LabourUnion = LabourUnion;
 
-            DefaultStoredPI = new StoredPI()
+            this.DefaultStoredPI = new StoredPI()
             {
                 StoredPIID = 800,
                 PIName = "The Default Stored PI",
@@ -143,14 +148,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 CreatedDate = new DateTimeOffset(new DateTime(2013, 12, 31))
             };
 
-            People = new List<Person>()
-            {
+            this.People =
+            [
                 new Customer()
                 {
                     FirstName = "Bob",
                     LastName = "Cat",
-                    Numbers = new Collection<string> { "111-111-1111", "012", "310", "bca", "ayz" },
-                    Emails = new Collection<string> { "abc@abc.com" },
+                    Numbers = ["111-111-1111", "012", "310", "bca", "ayz"],
+                    Emails = ["abc@abc.com"],
                     PersonID = 1,
                     Birthday = new DateTimeOffset(new DateTime(1957, 4, 3)),
                     City = "London",
@@ -163,8 +168,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         Street = "1 Microsoft Way",
                         FamilyName = "Cats"
                     },
-                    Addresses = new Collection<Address>
-                    {
+                    Addresses =
+                    [
                         new HomeAddress()
                         {
                             City = "Tokyo",
@@ -178,14 +183,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             PostalCode = "200000",
                             Street = "999 Zixing Road"
                         },
-                    }
+                    ]
                 },
                 new Customer()
                 {
                     FirstName = "Jill",
                     LastName = "Jones",
-                    Numbers = new Collection<string>(),
-                    Emails = new Collection<string>(),
+                    Numbers = [],
+                    Emails = [],
                     PersonID = 2,
                     Birthday = new DateTimeOffset(new DateTime(1983, 1, 15)),
                     City = "Sydney",
@@ -196,8 +201,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 {
                     FirstName = "Jacob",
                     LastName = "Zip",
-                    Numbers = new Collection<string> { "333-333-3333" },
-                    Emails = new Collection<string> { null },
+                    Numbers = ["333-333-3333"],
+                    Emails = [null],
                     PersonID = 3,
                     DateHired = new DateTimeOffset(new DateTime(2010, 12, 13)),
                     Home = GeographyPoint.Create(15.0, 161.8),
@@ -209,47 +214,47 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         Street = "1 Microsoft Way",
                         FamilyName = "Zips"
                     },
-                    Addresses = new Collection<Address>
-                    {
+                    Addresses =
+                    [
                         new Address()
                         {
                             City = "Shanghai2",
                             PostalCode = "200000",
                             Street = "B01, 999 Zixing Road"
                         }
-                    }
+                    ]
                 },
                 new Employee()
                 {
                     FirstName = "Elmo",
                     LastName = "Rogers",
-                    Numbers = new Collection<string> { "444-444-4444", "555-555-5555", "666-666-6666" },
-                    Emails = new Collection<string> { "def@def.org", "lmn@lmn.com","max@max.com","test@test.com" },
+                    Numbers = ["444-444-4444", "555-555-5555", "666-666-6666"],
+                    Emails = ["def@def.org", "lmn@lmn.com","max@max.com","test@test.com"],
                     PersonID = 4,
                     DateHired = new DateTimeOffset(new DateTime(2008, 3, 27)),
                     Home = GeographyPoint.Create(-15.0, -61.8),
                     Office = GeographyPoint.Create(-15.0, -62),
-                    Addresses = new Collection<Address>
-                    {
+                    Addresses =
+                    [
                         new Address()
                         {
                             City = "Shanghai2",
                             PostalCode = "200000",
                             Street = "B01, 999 Zixing Road"
                         }
-                    }
+                    ]
                 },
                 new Person()
                 {
                     FirstName = "Peter",
                     LastName = "Bee",
                     MiddleName = null,
-                    Numbers = new Collection<string> { "555-555-5555" },
-                    Emails = new Collection<string> { "def@test.msn" },
+                    Numbers = ["555-555-5555"],
+                    Emails = ["def@test.msn"],
                     PersonID = 5,
                     Home = GeographyPoint.Create(-16.0, -261.8),
-                    Addresses = new Collection<Address>
-                    {
+                    Addresses =
+                    [
                         new HomeAddress()
                         {
                             City = "Tokyo",
@@ -263,19 +268,19 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             PostalCode = "200000",
                             Street = "999 Zixing Road"
                         },
-                    }
+                    ]
                 }
-            };
+            ];
 
-            Customers = People.OfType<Customer>().ToList();
-            Employees = People.OfType<Employee>().ToList();
+            this.Customers = People.OfType<Customer>().ToList();
+            this.Employees = People.OfType<Employee>().ToList();
 
-            People[0].Parent = People[1];
-            People[1].Parent = People[3];
-            People[2].Parent = People[3];
+            this.People[0].Parent = People[1];
+            this.People[1].Parent = People[3];
+            this.People[2].Parent = People[3];
 
-            Products = new List<Product>()
-            {
+            this.Products =
+            [
                 new Product()
                 {
                     Name = "Cheetos",
@@ -285,7 +290,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     UnitPrice = 3.24f,
                     Discontinued = true,
                     SkinColor = Color.Red,
-                    CoverColors = new Collection<Color>(){ Color.Green, Color.Blue, Color.Blue },
+                    CoverColors = [Color.Green, Color.Blue, Color.Blue],
                     UserAccess = AccessLevel.None
                 },
                 new Product()
@@ -297,7 +302,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     UnitPrice = 3.24f,
                     Discontinued = false,
                     SkinColor = Color.Blue,
-                    CoverColors = new Collection<Color>(){ Color.Red, Color.Blue },
+                    CoverColors = [Color.Red, Color.Blue],
                     UserAccess = AccessLevel.ReadWrite,
                 },
                 new Product()
@@ -309,7 +314,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     UnitPrice = 0.35f,
                     Discontinued = false,
                     SkinColor = Color.Red,
-                    CoverColors = new Collection<Color>(){ Color.Blue },
+                    CoverColors = [Color.Blue],
                     UserAccess = AccessLevel.Read,
                 },
                 new Product()
@@ -321,7 +326,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     UnitPrice = 28000f,
                     Discontinued = false,
                     SkinColor = Color.Red,
-                    CoverColors = new Collection<Color>(){ Color.Red, Color.Red, Color.Blue },
+                    CoverColors = [Color.Red, Color.Red, Color.Blue],
                     UserAccess = AccessLevel.Execute,
                 },
                 new Product()
@@ -333,13 +338,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     UnitPrice = 1250f,
                     Discontinued = false,
                     SkinColor = Color.Green,
-                    CoverColors = new Collection<Color>(){ Color.Green, Color.Blue },
+                    CoverColors = [Color.Green, Color.Blue],
                     UserAccess = AccessLevel.Read,
                 }
-            };
+            ];
 
-            ProductDetails = new List<ProductDetail>
-            {
+            this.ProductDetails =
+            [
                 new ProductDetail()
                 {
                     ProductDetailID = 1,
@@ -376,22 +381,22 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     ProductName = "Gatorade",
                     Description = "fitness drink!"
                 },
-            };
+            ];
 
-            Products[0].Details = new List<ProductDetail>() { ProductDetails[1], ProductDetails[2], ProductDetails[3], ProductDetails[4], ProductDetails[5] };
+            this.Products[0].Details = [this.ProductDetails[1], this.ProductDetails[2], this.ProductDetails[3], this.ProductDetails[4], this.ProductDetails[5]];
 
-            Products[1].Details = new List<ProductDetail>() { ProductDetails[0] };
+            this.Products[1].Details = new List<ProductDetail>() { this.ProductDetails[0] };
 
-            ProductDetails[0].RelatedProduct =  Products[1];
+            this.ProductDetails[0].RelatedProduct = this.Products[1];
 
-            ProductDetails[1].RelatedProduct = Products[0];
-            ProductDetails[2].RelatedProduct = Products[0];
-            ProductDetails[3].RelatedProduct = Products[0];
-            ProductDetails[4].RelatedProduct = Products[0];
-            ProductDetails[5].RelatedProduct = Products[0];
+            this.ProductDetails[1].RelatedProduct = this.Products[0];
+            this.ProductDetails[2].RelatedProduct = this.Products[0];
+            this.ProductDetails[3].RelatedProduct = this.Products[0];
+            this.ProductDetails[4].RelatedProduct = this.Products[0];
+            this.ProductDetails[5].RelatedProduct = this.Products[0];
 
-            ProductReviews = new List<ProductReview>()
-            {
+            this.ProductReviews =
+            [
                 new ProductReview()
                 {
                     ProductID = 6,
@@ -428,17 +433,17 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     Author = "Andy",
                     Comment = "It's Special!"
                 },
-            };
+            ];
 
-            ProductDetails[0].Reviews = new List<ProductReview>() { ProductReviews[0] };
-            ProductDetails[0].Reviews = new List<ProductReview>() { ProductReviews[1] };
-            ProductDetails[0].Reviews = new List<ProductReview>() { ProductReviews[2] };
-            ProductDetails[0].Reviews = new List<ProductReview>() { ProductReviews[3] };
-            ProductDetails[1].Reviews = new List<ProductReview>() { ProductReviews[1] };
-            ProductDetails[1].Reviews = new List<ProductReview>() { ProductReviews[2] };
-            ProductDetails[1].Reviews = new List<ProductReview>() { ProductReviews[3] };
+            this.ProductDetails[0].Reviews = [this.ProductReviews[0]];
+            this.ProductDetails[0].Reviews = [this.ProductReviews[1]];
+            this.ProductDetails[0].Reviews = [this.ProductReviews[2]];
+            this.ProductDetails[0].Reviews = [this.ProductReviews[3]];
+            this.ProductDetails[1].Reviews = [this.ProductReviews[1]];
+            this.ProductDetails[1].Reviews = [this.ProductReviews[2]];
+            this.ProductDetails[1].Reviews = [this.ProductReviews[3]];
 
-            Calendars = new List<Calendar>()
+            this.Calendars = new List<Calendar>()
             {
                 new Calendar()
                 {
@@ -450,7 +455,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 }
             };
 
-            Orders = new List<Order>()
+            this.Orders = new List<Order>()
             {
                 new Order()
                 {
@@ -459,7 +464,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     LoggedInEmployee = People.OfType<Employee>().ElementAt(0),
                     OrderDate = new DateTimeOffset(2011, 5, 29, 14, 21, 12, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
-                    OrderShelfLifes = new Collection<TimeSpan>(){new TimeSpan(1)},
+                    OrderShelfLifes = [new TimeSpan(1)],
                     ShipDate = new Date(2014, 8, 31),
                     ShipTime = new TimeOfDay(12, 40, 5, 50),
                 },
@@ -470,7 +475,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     LoggedInEmployee = People.OfType<Employee>().ElementAt(1),
                     OrderDate = new DateTimeOffset(2011, 3, 4, 16, 3, 57, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
-                    OrderShelfLifes = new Collection<TimeSpan>(){new TimeSpan(1)},
+                    OrderShelfLifes = [new TimeSpan(1)],
                     ShipDate = new Date(2014, 8, 12),
                     ShipTime = new TimeOfDay(6, 5, 30, 0),
                 },
@@ -481,17 +486,17 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     LoggedInEmployee = People.OfType<Employee>().ElementAt(1),
                     OrderDate = new DateTimeOffset(2011, 1, 4, 18, 3, 57, TimeSpan.FromHours(-8)),
                     ShelfLife = new TimeSpan(1),
-                    OrderShelfLifes = new Collection<TimeSpan>(){new TimeSpan(1)},
+                    OrderShelfLifes = [new TimeSpan(1)],
                     ShipDate = new Date(2014, 6, 12),
                     ShipTime = new TimeOfDay(4, 5, 30, 0),
                 }
             };
 
-            (People[0] as Customer).Orders = new List<Order>() { Orders[1] };
-            (People[1] as Customer).Orders = new List<Order> { Orders[0], Orders[2] };
-            (VipCustomer as Customer).Orders = new List<Order> { Orders[0], Orders[1] };
+            (this.People[0] as Customer).Orders = [this.Orders[1]];
+            (this.People[1] as Customer).Orders = [this.Orders[0], this.Orders[2]];
+            (this.VipCustomer as Customer).Orders = [this.Orders[0], this.Orders[1]];
 
-            OrderDetails = new List<OrderDetail>()
+            this.OrderDetails = new List<OrderDetail>()
             {
                 new OrderDetail()
                 {
@@ -525,20 +530,20 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                 }
             };
 
-            Orders[0].OrderDetails = new List<OrderDetail>() { OrderDetails[0] };
-            Orders[0].OrderDetails = new List<OrderDetail>() { OrderDetails[1] };
-            Orders[1].OrderDetails = new List<OrderDetail> { OrderDetails[2] };
+            this.Orders[0].OrderDetails = [this.OrderDetails[0]];
+            this.Orders[0].OrderDetails = [this.OrderDetails[1]];
+            this.Orders[1].OrderDetails = [this.OrderDetails[2]];
 
-            (People[2] as Employee).CompanyID = Company.CompanyID;
-            (People[3] as Employee).CompanyID = Company.CompanyID;
-            (People[2] as Employee).Company = Company;
-            (People[3] as Employee).Company = Company;
-            Company.Employees = new List<Employee>() { People[2] as Employee, People[3] as Employee };
-            Company.VipCustomer = VipCustomer;
-            VipCustomer.Company = Company;
+            (this.People[2] as Employee).CompanyID = this.Company.CompanyID;
+            (this.People[3] as Employee).CompanyID = this.Company.CompanyID;
+            (this.People[2] as Employee).Company = this.Company;
+            (this.People[3] as Employee).Company = this.Company;
+            this.Company.Employees = [this.People[2] as Employee, this.People[3] as Employee];
+            this.Company.VipCustomer = this.VipCustomer;
+            this.VipCustomer.Company = this.Company;
 
-            Departments = new List<Department>()
-            {
+            this.Departments =
+            [
                 new Department()
                 {
                     DepartmentID = 1,
@@ -551,18 +556,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     Name = "D2",
                     Company = Company
                 }
-            };
+            ];
 
-            Company.Departments = new List<Department> { Departments[0], Departments[1] };
-            Company.CoreDepartment = new Department()
+            this.Company.Departments = [this.Departments[0], this.Departments[1]];
+            this.Company.CoreDepartment = new Department()
             {
                 DepartmentID = 3,
                 Name = "D3",
                 Company = Company
             };
 
-            StoredPIs = new List<StoredPI>()
-            {
+            this.StoredPIs =
+            [
                 new StoredPI()
                 {
                     StoredPIID = 801,
@@ -605,10 +610,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     PIType = "StoredValue",
                     CreatedDate = new DateTimeOffset(new DateTime(2013, 12, 26))
                 }
-            };
+            ];
 
-            Accounts = new List<Account>()
-            {
+            this.Accounts =
+            [
                 new Account()
                 {
                     AccountID = 101,
@@ -625,8 +630,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         Amount = 19.9,
                         ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
                     },
-                    MyPaymentInstruments = new List<PaymentInstrument>()
-                    {
+                    MyPaymentInstruments =
+                    [
                         new PaymentInstrument()
                         {
                             PaymentInstrumentID = 101901,
@@ -643,8 +648,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             HolderName = "Alex",
                             Balance = 100.00,
                             ExperationDate = new DateTimeOffset(new DateTime(2022, 11, 1)),
-                            CreditRecords = new List<CreditRecord>()
-                            {
+                            CreditRecords =
+                            [
                                 new CreditRecord()
                                 {
                                     CreditRecordID = 1,
@@ -659,7 +664,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                                     Reason = "Rental",
                                     CreatedDate = new DateTimeOffset(new DateTime(2012, 11, 1))
                                 }
-                            }
+                            ]
                         },
                         new CreditCardPI()
                         {
@@ -671,8 +676,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             HolderName = "James",
                             Balance = 300.00,
                             ExperationDate = new DateTimeOffset(new DateTime(2022, 10, 2)),
-                            CreditRecords = new List<CreditRecord>()
-                            {
+                            CreditRecords =
+                            [
                                 new CreditRecord()
                                 {
                                     CreditRecordID = 1,
@@ -687,11 +692,11 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                                     Reason = "Rental",
                                     CreatedDate = new DateTimeOffset(new DateTime(2012, 11, 1))
                                 }
-                            }
+                            ]
                         }
-                    },
-                    ActiveSubscriptions = new List<Subscription>()
-                    {
+                    ],
+                    ActiveSubscriptions =
+                    [
                         new Subscription()
                         {
                             SubscriptionID = 10001011,
@@ -716,7 +721,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             Category = "Yearly",
                             CreatedDate = new DateTimeOffset(new DateTime(2013, 5, 11))
                         }
-                    }
+                    ]
                 },
                 new Account()
                 {
@@ -751,8 +756,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         Amount = 1.9,
                         ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
                     },
-                    MyPaymentInstruments = new List<PaymentInstrument>()
-                    {
+                    MyPaymentInstruments =
+                    [
                         new PaymentInstrument()
                         {
                             PaymentInstrumentID = 103901,
@@ -794,9 +799,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             FriendlyName = "103 backup PI",
                             CreatedDate = new DateTimeOffset(new DateTime(2013, 6, 15))
                         }
-                    },
-                    ActiveSubscriptions = new List<Subscription>()
-                    {
+                    ],
+                    ActiveSubscriptions =
+                    [
                         new Subscription()
                         {
                             SubscriptionID = 10021031,
@@ -824,7 +829,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             CreatedDate = new DateTimeOffset(new DateTime(2012, 12, 15)),
                             QualifiedAccountID = 103
                         },
-                    }
+                    ]
                 },
                 new Account()
                 {
@@ -881,18 +886,18 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     },
                 }
 
-            };
-            Accounts[0].AccountInfo.DynamicProperties["MiddleName"] = "Hood";
-            Accounts[0].AccountInfo.DynamicProperties["FavoriteColor"] = Color.Red;
-            Accounts[0].AccountInfo.DynamicProperties["Address"] = new Address
+            ];
+            this.Accounts[0].AccountInfo.DynamicProperties["MiddleName"] = "Hood";
+            this.Accounts[0].AccountInfo.DynamicProperties["FavoriteColor"] = Color.Red;
+            this.Accounts[0].AccountInfo.DynamicProperties["Address"] = new Address
             {
                 City = "a",
                 Street = "b",
                 PostalCode = "c"
             };
 
-            SubscriptionTemplates = new List<Subscription>()
-            {
+            this.SubscriptionTemplates =
+            [
                 new Subscription()
                 {
                     SubscriptionID = 1000,
@@ -938,33 +943,33 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                     CreatedDate = new DateTimeOffset(new DateTime(2005, 2, 11)),
                     QualifiedAccountID = 103
                 }
-            };
+            ];
         }
 
         /// <summary>
         /// Resets the data source
         /// </summary>
-        public static void ResetDataSource()
+        public void ResetDataSource()
         {
-            Boss = new Person();
-            VipCustomer = new Customer();
-            Company = new Company();
-            PublicCompany = new PublicCompany();
-            LabourUnion = new LabourUnion();
-            DefaultStoredPI = new StoredPI();
-            People.Clear();
-            Accounts.Clear();
-            Products.Clear();
-            Orders.Clear();
-            ProductDetails.Clear();
-            Customers.Clear();
-            Employees.Clear();
-            OrderDetails.Clear();
-            ProductReviews.Clear();
-            Calendars.Clear();
-            Departments.Clear();
-            StoredPIs.Clear();
-            SubscriptionTemplates.Clear();
+            this.Boss = new Person();
+            this.VipCustomer = new Customer();
+            this.Company = new Company();
+            this.PublicCompany = new PublicCompany();
+            this.LabourUnion = new LabourUnion();
+            this.DefaultStoredPI = new StoredPI();
+            this.People?.Clear();
+            this.Accounts?.Clear();
+            this.Products?.Clear();
+            this.Orders?.Clear();
+            this.ProductDetails?.Clear();
+            this.Customers?.Clear();
+            this.Employees?.Clear();
+            this.OrderDetails?.Clear();
+            this.ProductReviews?.Clear();
+            this.Calendars?.Clear();
+            this.Departments?.Clear();
+            this.StoredPIs?.Clear();
+            this.SubscriptionTemplates?.Clear();
         }
     }
 }

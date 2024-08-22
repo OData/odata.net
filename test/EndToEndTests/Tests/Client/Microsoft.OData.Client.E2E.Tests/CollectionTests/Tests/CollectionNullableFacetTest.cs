@@ -50,8 +50,12 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
             _model = DefaultEdmModel.GetEdmModel();
-            _context = new Container(_baseUri);
-            _context.HttpClientFactory = HttpClientFactory;
+            _context = new Container(_baseUri)
+            {
+                HttpClientFactory = HttpClientFactory
+            };
+
+            ResetDefaultDataSource();
         }
 
         /// <summary>
@@ -206,9 +210,9 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Tests
         }
         #endregion
 
-        private void ResetDataSource()
+        private void ResetDefaultDataSource()
         {
-            var actionUri = new Uri(_baseUri + "Default.ResetDefaultDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "collectionnullable/Default.ResetDefaultDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }

@@ -31,11 +31,13 @@
       <EntityType Name="IndexedRow" BaseType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.Row" OpenType="true" />
     </Schema>
     <Schema Namespace="Default" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      <Action Name="ResetOpenTypesDataSource" />
       <EntityContainer Name="Container">
         <EntitySet Name="Rows" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.Row" />
         <EntitySet Name="RowIndices" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes.RowIndex">
           <NavigationPropertyBinding Path="Rows" Target="Rows" />
         </EntitySet>
+        <ActionImport Name="ResetOpenTypesDataSource" Action="Default.ResetOpenTypesDataSource" />
       </EntityContainer>
     </Schema>
   </edmx:DataServices>

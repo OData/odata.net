@@ -14,11 +14,13 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
 {
     public class CollectionNullableFacetTestController : ODataController
     {
+        private static DefaultDataSource _dataSource;
+
         [EnableQuery]
         [HttpGet("odata/Customers")]
         public IActionResult GetCustomers()
         {
-            var customers = DefaultDataSource.Customers;
+            var customers = _dataSource.Customers;
             return Ok(customers);
         }
 
@@ -26,7 +28,7 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
         [HttpGet("odata/Customers({key})")]
         public IActionResult GetCustomer([FromRoute] int key)
         {
-            var customer = DefaultDataSource.Customers.SingleOrDefault(a => a.PersonID == key);
+            var customer = _dataSource.Customers.SingleOrDefault(a => a.PersonID == key);
 
             if (customer == null)
             {
@@ -40,7 +42,7 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
         [HttpPut("odata/Customers({key})")]
         public IActionResult UpdateCustomers([FromRoute] int key, [FromBody] Customer customer)
         {
-            var updateCustomer = DefaultDataSource.Customers.FirstOrDefault(a => a.PersonID == key);
+            var updateCustomer = _dataSource.Customers.FirstOrDefault(a => a.PersonID == key);
 
             if (updateCustomer == null)
             {
@@ -53,11 +55,10 @@ namespace Microsoft.OData.Client.E2E.Tests.CollectionTests.Server
             return NoContent();
         }
 
-        [HttpPost("odata/Default.ResetDefaultDataSource")]
+        [HttpPost("odata/collectionnullable/Default.ResetDefaultDataSource")]
         public IActionResult ResetDefaultDataSource()
         {
-            DefaultDataSource.ResetDataSource();
-            DefaultDataSource.Initialize();
+            _dataSource = DefaultDataSource.CreateInstance();
 
             return Ok();
         }

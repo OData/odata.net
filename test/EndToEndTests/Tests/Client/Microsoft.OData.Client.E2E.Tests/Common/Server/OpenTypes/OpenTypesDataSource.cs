@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="OpenTypesServiceDataSource.cs" company=".NET Foundation">
+// <copyright file="OpenTypesDataSource.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -9,20 +9,23 @@ using Microsoft.Spatial;
 
 namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
 {
-    public class OpenTypesServiceDataSource
+    public class OpenTypesDataSource
     {
-        static OpenTypesServiceDataSource()
+        public static OpenTypesDataSource CreateInstance()
         {
+            return new OpenTypesDataSource();
+        }
+
+        public OpenTypesDataSource()
+        {
+            ResetData();
             Initialize();
         }
 
-        public static IList<Row>? Rows { get; private set; }
-        public static IList<RowIndex>? RowIndices { get; private set; }
-
-        private static void Initialize()
+        private void Initialize()
         {
-            Rows = new List<Row>()
-                {
+            this.Rows =
+                [
                     new IndexedRow
                     {
                         Id = new Guid("432f0da9-806e-4a2f-b708-dbd1c57a1c21"),
@@ -105,13 +108,13 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
                     {
                         Id = new Guid("9f9c963b-5c2f-4e39-8bec-b45d19c5dc85")
                     }
-                };
+                ];
 
-            RowIndices = new List<RowIndex>();
+            this.RowIndices = [];
 
             for (int i = -10; i <= -1; i++)
             {
-                RowIndices.Add(new RowIndex()
+                this.RowIndices.Add(new RowIndex()
                 {
                     Id = i
                 });
@@ -120,7 +123,16 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
             PopulateIndex_Rows();
         }
 
-        private static void PopulateIndex_Rows()
+        private void ResetData()
+        {
+            Rows?.Clear();
+            RowIndices?.Clear();
+        }
+
+        public IList<Row>? Rows { get; private set; }
+        public IList<RowIndex>? RowIndices { get; private set; }
+
+        private void PopulateIndex_Rows()
         {
             // Add row0 to rowIndex1
             AddRowToIndex(-9, new Guid("432f0da9-806e-4a2f-b708-dbd1c57a1c21"));
@@ -134,21 +146,21 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.OpenTypes
             AddRowToIndex(-6, new Guid("9f9c963b-5c2f-4e39-8bec-b45d19c5dc85"));
         }
 
-        private static void AddRowToIndex(int rowIndexId, params Guid[] rowIds)
+        private void AddRowToIndex(int rowIndexId, params Guid[] rowIds)
         {
-            var rowIndex = RowIndices.FirstOrDefault(a => a.Id == rowIndexId);
+            var rowIndex = this.RowIndices.FirstOrDefault(a => a.Id == rowIndexId);
 
             if (rowIndex != null)
             {
                 // Initialize the Rows collection if it's null
                 if (rowIndex.Rows == null)
                 {
-                    rowIndex.Rows = new List<IndexedRow>();
+                    rowIndex.Rows = [];
                 }
 
                 foreach (var rowId in rowIds)
                 {
-                    var row = Rows.FirstOrDefault(a => a.Id == rowId) as IndexedRow;
+                    var row = this.Rows.FirstOrDefault(a => a.Id == rowId) as IndexedRow;
                     if (row != null)
                     {
                         rowIndex.Rows.Add(row);

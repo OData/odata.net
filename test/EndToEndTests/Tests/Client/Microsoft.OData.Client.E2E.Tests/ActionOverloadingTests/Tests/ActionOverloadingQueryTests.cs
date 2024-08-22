@@ -36,7 +36,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(ProductsController), typeof(OrderLinesController), typeof(PeopleController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(ActionOverloadingQueryTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", CommonEndToEndEdmModel.GetEdmModel()));
@@ -47,9 +47,13 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");
-            _context = new Container(_baseUri);
-            _context.HttpClientFactory = HttpClientFactory;
+            _context = new Container(_baseUri)
+            {
+                HttpClientFactory = HttpClientFactory
+            };
+
             _model = CommonEndToEndEdmModel.GetEdmModel();
+
             ResetDataSource();
         }
 
@@ -207,7 +211,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ActionOverloadingTests.Tests
 
         private void ResetDataSource()
         {
-            var actionUri = new Uri(_baseUri + "Default.ResetDataSource", UriKind.Absolute);
+            var actionUri = new Uri(_baseUri + "actionoverloadingquery/Default.ResetDataSource", UriKind.Absolute);
             _context.Execute(actionUri, "POST");
         }
     }
