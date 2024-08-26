@@ -637,12 +637,16 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             PaymentInstrumentID = 101901,
                             FriendlyName = "101 first PI",
                             CreatedDate = new DateTimeOffset(new DateTime(2012, 11, 1)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 802),
+                            BackupStoredPI = DefaultStoredPI
                         },
                         new CreditCardPI()
                         {
                             PaymentInstrumentID = 101902,
                             FriendlyName = "101 frist credit PI",
                             CreatedDate = new DateTimeOffset(new DateTime(2012, 11, 1)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 801),
+                            BackupStoredPI = DefaultStoredPI,
                             CVV = "234",
                             CardNumber = "6000000000000000",
                             HolderName = "Alex",
@@ -671,6 +675,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             PaymentInstrumentID = 101903,
                             FriendlyName = "101 second credit PI",
                             CreatedDate = new DateTimeOffset(new DateTime(2012, 11, 1)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 804),
+                            BackupStoredPI = DefaultStoredPI,
                             CVV = "012",
                             CardNumber = "8000000000000000",
                             HolderName = "James",
@@ -763,8 +769,10 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                             PaymentInstrumentID = 103901,
                             FriendlyName = "103 frist PI",
                             CreatedDate = new DateTimeOffset(new DateTime(2013, 10, 1)),
-                            BillingStatements = new List<Statement>()
-                            {
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 802),
+                            BackupStoredPI = DefaultStoredPI,
+                            BillingStatements =
+                            [
                                 new Statement()
                                 {
                                     StatementID =  103901001,
@@ -779,25 +787,31 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                                     TransactionDescription = "Amazon purchase",
                                     Amount = 125.0
                                 }
-                            }
+                            ]
                         },
                         new PaymentInstrument()
                         {
                             PaymentInstrumentID = 103902,
                             FriendlyName = "103 second PI",
-                            CreatedDate = new DateTimeOffset(new DateTime(2013, 1, 1))
+                            CreatedDate = new DateTimeOffset(new DateTime(2013, 1, 1)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 803),
+                            BackupStoredPI = DefaultStoredPI
                         },
                         new PaymentInstrument()
                         {
                             PaymentInstrumentID = 103905,
                             FriendlyName = "103 new PI",
-                            CreatedDate = new DateTimeOffset(new DateTime(2013, 10, 29))
+                            CreatedDate = new DateTimeOffset(new DateTime(2013, 10, 29)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 805),
+                            BackupStoredPI = DefaultStoredPI
                         },
                         new PaymentInstrument()
                         {
                             PaymentInstrumentID = 101910,
                             FriendlyName = "103 backup PI",
-                            CreatedDate = new DateTimeOffset(new DateTime(2013, 6, 15))
+                            CreatedDate = new DateTimeOffset(new DateTime(2013, 6, 15)),
+                            TheStoredPI = this.StoredPIs.SingleOrDefault((it)=> it.StoredPIID == 805),
+                            BackupStoredPI = DefaultStoredPI
                         }
                     ],
                     ActiveSubscriptions =
@@ -885,8 +899,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
                         ExperationDate = new DateTimeOffset(new DateTime(2013, 12, 30))
                     },
                 }
-
             ];
+
             this.Accounts[0].AccountInfo.DynamicProperties["MiddleName"] = "Hood";
             this.Accounts[0].AccountInfo.DynamicProperties["FavoriteColor"] = Color.Red;
             this.Accounts[0].AccountInfo.DynamicProperties["Address"] = new Address
