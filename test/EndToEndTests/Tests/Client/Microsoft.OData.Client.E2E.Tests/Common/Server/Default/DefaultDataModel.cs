@@ -6,6 +6,7 @@
 //------------------------------------------------------------------------------
 
 using Microsoft.OData.Edm;
+using Microsoft.OData.ModelBuilder;
 using Microsoft.Spatial;
 using System.Collections.ObjectModel;
 using EfKey = System.ComponentModel.DataAnnotations.KeyAttribute;
@@ -202,7 +203,11 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
     public class PublicCompany : Company
     {
         public string? StockExchange { get; set; }
+
+        [Contained]
         public List<Asset>? Assets { get; set; }
+
+        [Contained]
         public Club? Club { get; set; }
         public LabourUnion? LabourUnion { get; set; }
     }
@@ -243,8 +248,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public int AccountID { get; set; }
         public string? CountryRegion { get; set; }
         public AccountInfo? AccountInfo { get; set; }
+
+        [Contained]
         public List<PaymentInstrument>? MyPaymentInstruments { get; set; }
+
+        [Contained]
         public List<Subscription>? ActiveSubscriptions { get; set; }
+
+        [Contained]
         public GiftCard? MyGiftCard { get; set; }
         public DateTimeOffset UpdatedTime { get; set; }
     }
@@ -264,6 +275,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public int PaymentInstrumentID { get; set; }
         public string? FriendlyName { get; set; }
         public DateTimeOffset CreatedDate { get; set; }
+
+        [Contained]
         public List<Statement>? BillingStatements { get; set; }
         public StoredPI? TheStoredPI { get; set; }
         public StoredPI? BackupStoredPI { get; set; }
@@ -277,6 +290,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public string? HolderName { get; set; }
         public double Balance { get; set; }
         public DateTimeOffset ExperationDate { get; set; }
+
+        [Contained]
         public List<CreditRecord>? CreditRecords { get; set; }
     }
 

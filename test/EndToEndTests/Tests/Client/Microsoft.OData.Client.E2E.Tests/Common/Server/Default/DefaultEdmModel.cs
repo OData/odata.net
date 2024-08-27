@@ -34,6 +34,9 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
             builder.EntitySet<Order>("Orders");
             builder.EntitySet<PaymentInstrument>("PaymentInstruments");
             builder.EntityType<AbstractEntity>().Abstract();
+            builder.EntitySet<StoredPI>("StoredPIs");
+            builder.EntitySet<Subscription>("SubscriptionTemplates");
+            builder.Singleton<StoredPI>("DefaultStoredPI");
 
             builder.EntityType<Product>()
                 .Action("AddAccessRight")
