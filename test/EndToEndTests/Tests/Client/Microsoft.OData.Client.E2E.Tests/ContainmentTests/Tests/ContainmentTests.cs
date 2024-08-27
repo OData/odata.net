@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="ContainmentTest.cs" company=".NET Foundation">
+// <copyright file="ContainmentTests.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -19,7 +19,7 @@ using Xunit;
 
 namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 {
-    public class ContainmentTest : EndToEndTestBase<ContainmentTest.TestsStartup>
+    public class ContainmentTests : EndToEndTestBase<ContainmentTests.TestsStartup>
     {
         private readonly Uri _baseUri;
         private readonly Container _context;
@@ -30,14 +30,14 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
         {
             public override void ConfigureServices(IServiceCollection services)
             {
-                services.ConfigureControllers(typeof(ContainmentTestController), typeof(MetadataController));
+                services.ConfigureControllers(typeof(ContainmentTestsController), typeof(MetadataController));
 
                 services.AddControllers().AddOData(opt => opt.Count().Filter().Expand().Select().OrderBy().SetMaxTop(null)
                     .AddRouteComponents("odata", DefaultEdmModel.GetEdmModel()));
             }
         }
 
-        public ContainmentTest(TestWebApplicationFactory<TestsStartup> fixture)
+        public ContainmentTests(TestWebApplicationFactory<TestsStartup> fixture)
             : base(fixture)
         {
             _baseUri = new Uri(Client.BaseAddress, "odata/");

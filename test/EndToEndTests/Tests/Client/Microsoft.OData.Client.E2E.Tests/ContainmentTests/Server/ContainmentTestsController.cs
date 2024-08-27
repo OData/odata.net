@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="ContainmentTestController.cs" company=".NET Foundation">
+// <copyright file="ContainmentTestsController.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -13,7 +13,7 @@ using Microsoft.OData.Client.E2E.Tests.Common.Server.Default;
 
 namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Server
 {
-    public class ContainmentTestController : ODataController
+    public class ContainmentTestsController : ODataController
     {
         private static DefaultDataSource _dataSource;
 
