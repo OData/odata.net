@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
     /// An implementation of <see cref="IODataResponseMessageAsync"/> that uses an <see cref="HttpResponseMessage"/> under the covers.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
     /// </summary>
-    public class HttpClientResponseMessage : IODataResponseMessageAsync, IServiceCollectionProvider, IDisposable, IAsyncDisposable
+    public class HttpClientResponseMessage : IODataResponseMessageAsync, IServiceCollectionProvider
     {
         private readonly HttpResponseMessage _response;
         private bool _disposed;
@@ -87,46 +87,6 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
         public Stream GetStream()
         {
             return _response.Content.ReadAsStream();
-        }
-
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual void Dispose(bool disposing)
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            if (disposing)
-            {
-                _response?.Dispose();
-            }
-
-            _disposed = true;
-        }
-
-        public async ValueTask DisposeAsync()
-        {
-            await DisposeAsyncCore();
-            GC.SuppressFinalize(this);
-        }
-
-        protected virtual async ValueTask DisposeAsyncCore()
-        {
-            if (_disposed)
-            {
-                return;
-            }
-
-            _response?.Dispose();
-            _disposed = true;
-
-            await ValueTask.CompletedTask;
         }
 
         public IServiceProvider ServiceProvider { get; set; }
