@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-// Generation date: 8/19/2024 6:14:16 PM
+// Generation date: 8/25/2024 6:54:52 PM
 namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
 {
     /// <summary>
@@ -3730,6 +3730,427 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
         }
     }
     /// <summary>
+    /// There are no comments for StoredPISingle in the schema.
+    /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPISingle")]
+    public partial class StoredPISingle : global::Microsoft.OData.Client.DataServiceQuerySingle<StoredPI>
+    {
+        /// <summary>
+        /// Initialize a new StoredPISingle object.
+        /// </summary>
+        public StoredPISingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
+            : base(context, path) { }
+
+        /// <summary>
+        /// Initialize a new StoredPISingle object.
+        /// </summary>
+        public StoredPISingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new StoredPISingle object.
+        /// </summary>
+        public StoredPISingle(global::Microsoft.OData.Client.DataServiceQuerySingle<StoredPI> query)
+            : base(query) { }
+
+    }
+    /// <summary>
+    /// There are no comments for StoredPI in the schema.
+    /// </summary>
+    /// <KeyProperties>
+    /// StoredPIID
+    /// </KeyProperties>
+    [global::Microsoft.OData.Client.Key("StoredPIID")]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPI")]
+    public partial class StoredPI : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Create a new StoredPI object.
+        /// </summary>
+        /// <param name="storedPIID">Initial value of StoredPIID.</param>
+        /// <param name="createdDate">Initial value of CreatedDate.</param>
+        /// <param name="updatedTime">Initial value of UpdatedTime.</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public static StoredPI CreateStoredPI(int storedPIID, global::System.DateTimeOffset createdDate, global::System.DateTimeOffset updatedTime)
+        {
+            StoredPI storedPI = new StoredPI();
+            storedPI.StoredPIID = storedPIID;
+            storedPI.CreatedDate = createdDate;
+            storedPI.UpdatedTime = updatedTime;
+            return storedPI;
+        }
+        /// <summary>
+        /// There are no comments for Property StoredPIID in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPIID")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "StoredPIID is required.")]
+        public virtual int StoredPIID
+        {
+            get
+            {
+                return this._StoredPIID;
+            }
+            set
+            {
+                this.OnStoredPIIDChanging(value);
+                this._StoredPIID = value;
+                this.OnStoredPIIDChanged();
+                this.OnPropertyChanged("StoredPIID");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private int _StoredPIID;
+        partial void OnStoredPIIDChanging(int value);
+        partial void OnStoredPIIDChanged();
+        /// <summary>
+        /// There are no comments for Property PIName in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PIName")]
+        public virtual string PIName
+        {
+            get
+            {
+                return this._PIName;
+            }
+            set
+            {
+                this.OnPINameChanging(value);
+                this._PIName = value;
+                this.OnPINameChanged();
+                this.OnPropertyChanged("PIName");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private string _PIName;
+        partial void OnPINameChanging(string value);
+        partial void OnPINameChanged();
+        /// <summary>
+        /// There are no comments for Property PIType in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("PIType")]
+        public virtual string PIType
+        {
+            get
+            {
+                return this._PIType;
+            }
+            set
+            {
+                this.OnPITypeChanging(value);
+                this._PIType = value;
+                this.OnPITypeChanged();
+                this.OnPropertyChanged("PIType");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private string _PIType;
+        partial void OnPITypeChanging(string value);
+        partial void OnPITypeChanged();
+        /// <summary>
+        /// There are no comments for Property CreatedDate in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "CreatedDate is required.")]
+        public virtual global::System.DateTimeOffset CreatedDate
+        {
+            get
+            {
+                return this._CreatedDate;
+            }
+            set
+            {
+                this.OnCreatedDateChanging(value);
+                this._CreatedDate = value;
+                this.OnCreatedDateChanged();
+                this.OnPropertyChanged("CreatedDate");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.DateTimeOffset _CreatedDate;
+        partial void OnCreatedDateChanging(global::System.DateTimeOffset value);
+        partial void OnCreatedDateChanged();
+        /// <summary>
+        /// There are no comments for Property UpdatedTime in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatedTime")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "UpdatedTime is required.")]
+        public virtual global::System.DateTimeOffset UpdatedTime
+        {
+            get
+            {
+                return this._UpdatedTime;
+            }
+            set
+            {
+                this.OnUpdatedTimeChanging(value);
+                this._UpdatedTime = value;
+                this.OnUpdatedTimeChanged();
+                this.OnPropertyChanged("UpdatedTime");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.DateTimeOffset _UpdatedTime;
+        partial void OnUpdatedTimeChanging(global::System.DateTimeOffset value);
+        partial void OnUpdatedTimeChanged();
+        /// <summary>
+        /// This event is raised when the value of the property is changed
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// The value of the property is changed
+        /// </summary>
+        /// <param name="property">property name</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        protected virtual void OnPropertyChanged(string property)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
+            }
+        }
+    }
+    /// <summary>
+    /// There are no comments for SubscriptionSingle in the schema.
+    /// </summary>
+    [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionSingle")]
+    public partial class SubscriptionSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<Subscription>
+    {
+        /// <summary>
+        /// Initialize a new SubscriptionSingle object.
+        /// </summary>
+        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
+            : base(context, path) { }
+
+        /// <summary>
+        /// Initialize a new SubscriptionSingle object.
+        /// </summary>
+        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
+            : base(context, path, isComposable) { }
+
+        /// <summary>
+        /// Initialize a new SubscriptionSingle object.
+        /// </summary>
+        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Subscription> query)
+            : base(query) { }
+
+    }
+    /// <summary>
+    /// There are no comments for Subscription in the schema.
+    /// </summary>
+    /// <KeyProperties>
+    /// SubscriptionID
+    /// </KeyProperties>
+    [global::Microsoft.OData.Client.Key("SubscriptionID")]
+    [global::Microsoft.OData.Client.OriginalNameAttribute("Subscription")]
+    public partial class Subscription : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
+    {
+        /// <summary>
+        /// Create a new Subscription object.
+        /// </summary>
+        /// <param name="subscriptionID">Initial value of SubscriptionID.</param>
+        /// <param name="createdDate">Initial value of CreatedDate.</param>
+        /// <param name="qualifiedAccountID">Initial value of QualifiedAccountID.</param>
+        /// <param name="updatedTime">Initial value of UpdatedTime.</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public static Subscription CreateSubscription(int subscriptionID, global::System.DateTimeOffset createdDate, int qualifiedAccountID, global::System.DateTimeOffset updatedTime)
+        {
+            Subscription subscription = new Subscription();
+            subscription.SubscriptionID = subscriptionID;
+            subscription.CreatedDate = createdDate;
+            subscription.QualifiedAccountID = qualifiedAccountID;
+            subscription.UpdatedTime = updatedTime;
+            return subscription;
+        }
+        /// <summary>
+        /// There are no comments for Property SubscriptionID in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionID")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "SubscriptionID is required.")]
+        public virtual int SubscriptionID
+        {
+            get
+            {
+                return this._SubscriptionID;
+            }
+            set
+            {
+                this.OnSubscriptionIDChanging(value);
+                this._SubscriptionID = value;
+                this.OnSubscriptionIDChanged();
+                this.OnPropertyChanged("SubscriptionID");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private int _SubscriptionID;
+        partial void OnSubscriptionIDChanging(int value);
+        partial void OnSubscriptionIDChanged();
+        /// <summary>
+        /// There are no comments for Property TemplateGuid in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("TemplateGuid")]
+        public virtual string TemplateGuid
+        {
+            get
+            {
+                return this._TemplateGuid;
+            }
+            set
+            {
+                this.OnTemplateGuidChanging(value);
+                this._TemplateGuid = value;
+                this.OnTemplateGuidChanged();
+                this.OnPropertyChanged("TemplateGuid");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private string _TemplateGuid;
+        partial void OnTemplateGuidChanging(string value);
+        partial void OnTemplateGuidChanged();
+        /// <summary>
+        /// There are no comments for Property Title in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Title")]
+        public virtual string Title
+        {
+            get
+            {
+                return this._Title;
+            }
+            set
+            {
+                this.OnTitleChanging(value);
+                this._Title = value;
+                this.OnTitleChanged();
+                this.OnPropertyChanged("Title");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private string _Title;
+        partial void OnTitleChanging(string value);
+        partial void OnTitleChanged();
+        /// <summary>
+        /// There are no comments for Property Category in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("Category")]
+        public virtual string Category
+        {
+            get
+            {
+                return this._Category;
+            }
+            set
+            {
+                this.OnCategoryChanging(value);
+                this._Category = value;
+                this.OnCategoryChanged();
+                this.OnPropertyChanged("Category");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private string _Category;
+        partial void OnCategoryChanging(string value);
+        partial void OnCategoryChanged();
+        /// <summary>
+        /// There are no comments for Property CreatedDate in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "CreatedDate is required.")]
+        public virtual global::System.DateTimeOffset CreatedDate
+        {
+            get
+            {
+                return this._CreatedDate;
+            }
+            set
+            {
+                this.OnCreatedDateChanging(value);
+                this._CreatedDate = value;
+                this.OnCreatedDateChanged();
+                this.OnPropertyChanged("CreatedDate");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.DateTimeOffset _CreatedDate;
+        partial void OnCreatedDateChanging(global::System.DateTimeOffset value);
+        partial void OnCreatedDateChanged();
+        /// <summary>
+        /// There are no comments for Property QualifiedAccountID in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("QualifiedAccountID")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "QualifiedAccountID is required.")]
+        public virtual int QualifiedAccountID
+        {
+            get
+            {
+                return this._QualifiedAccountID;
+            }
+            set
+            {
+                this.OnQualifiedAccountIDChanging(value);
+                this._QualifiedAccountID = value;
+                this.OnQualifiedAccountIDChanged();
+                this.OnPropertyChanged("QualifiedAccountID");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private int _QualifiedAccountID;
+        partial void OnQualifiedAccountIDChanging(int value);
+        partial void OnQualifiedAccountIDChanged();
+        /// <summary>
+        /// There are no comments for Property UpdatedTime in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatedTime")]
+        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "UpdatedTime is required.")]
+        public virtual global::System.DateTimeOffset UpdatedTime
+        {
+            get
+            {
+                return this._UpdatedTime;
+            }
+            set
+            {
+                this.OnUpdatedTimeChanging(value);
+                this._UpdatedTime = value;
+                this.OnUpdatedTimeChanged();
+                this.OnPropertyChanged("UpdatedTime");
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::System.DateTimeOffset _UpdatedTime;
+        partial void OnUpdatedTimeChanging(global::System.DateTimeOffset value);
+        partial void OnUpdatedTimeChanged();
+        /// <summary>
+        /// This event is raised when the value of the property is changed
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        /// <summary>
+        /// The value of the property is changed
+        /// </summary>
+        /// <param name="property">property name</param>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        protected virtual void OnPropertyChanged(string property)
+        {
+            if ((this.PropertyChanged != null))
+            {
+                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
+            }
+        }
+    }
+    /// <summary>
     /// There are no comments for Address in the schema.
     /// </summary>
     [global::Microsoft.OData.Client.OriginalNameAttribute("Address")]
@@ -5146,192 +5567,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
         }
     }
     /// <summary>
-    /// There are no comments for StoredPISingle in the schema.
-    /// </summary>
-    [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPISingle")]
-    public partial class StoredPISingle : global::Microsoft.OData.Client.DataServiceQuerySingle<StoredPI>
-    {
-        /// <summary>
-        /// Initialize a new StoredPISingle object.
-        /// </summary>
-        public StoredPISingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) { }
-
-        /// <summary>
-        /// Initialize a new StoredPISingle object.
-        /// </summary>
-        public StoredPISingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) { }
-
-        /// <summary>
-        /// Initialize a new StoredPISingle object.
-        /// </summary>
-        public StoredPISingle(global::Microsoft.OData.Client.DataServiceQuerySingle<StoredPI> query)
-            : base(query) { }
-
-    }
-    /// <summary>
-    /// There are no comments for StoredPI in the schema.
-    /// </summary>
-    /// <KeyProperties>
-    /// StoredPIID
-    /// </KeyProperties>
-    [global::Microsoft.OData.Client.Key("StoredPIID")]
-    [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPI")]
-    public partial class StoredPI : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Create a new StoredPI object.
-        /// </summary>
-        /// <param name="storedPIID">Initial value of StoredPIID.</param>
-        /// <param name="createdDate">Initial value of CreatedDate.</param>
-        /// <param name="updatedTime">Initial value of UpdatedTime.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static StoredPI CreateStoredPI(int storedPIID, global::System.DateTimeOffset createdDate, global::System.DateTimeOffset updatedTime)
-        {
-            StoredPI storedPI = new StoredPI();
-            storedPI.StoredPIID = storedPIID;
-            storedPI.CreatedDate = createdDate;
-            storedPI.UpdatedTime = updatedTime;
-            return storedPI;
-        }
-        /// <summary>
-        /// There are no comments for Property StoredPIID in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPIID")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "StoredPIID is required.")]
-        public virtual int StoredPIID
-        {
-            get
-            {
-                return this._StoredPIID;
-            }
-            set
-            {
-                this.OnStoredPIIDChanging(value);
-                this._StoredPIID = value;
-                this.OnStoredPIIDChanged();
-                this.OnPropertyChanged("StoredPIID");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _StoredPIID;
-        partial void OnStoredPIIDChanging(int value);
-        partial void OnStoredPIIDChanged();
-        /// <summary>
-        /// There are no comments for Property PIName in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("PIName")]
-        public virtual string PIName
-        {
-            get
-            {
-                return this._PIName;
-            }
-            set
-            {
-                this.OnPINameChanging(value);
-                this._PIName = value;
-                this.OnPINameChanged();
-                this.OnPropertyChanged("PIName");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private string _PIName;
-        partial void OnPINameChanging(string value);
-        partial void OnPINameChanged();
-        /// <summary>
-        /// There are no comments for Property PIType in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("PIType")]
-        public virtual string PIType
-        {
-            get
-            {
-                return this._PIType;
-            }
-            set
-            {
-                this.OnPITypeChanging(value);
-                this._PIType = value;
-                this.OnPITypeChanged();
-                this.OnPropertyChanged("PIType");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private string _PIType;
-        partial void OnPITypeChanging(string value);
-        partial void OnPITypeChanged();
-        /// <summary>
-        /// There are no comments for Property CreatedDate in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "CreatedDate is required.")]
-        public virtual global::System.DateTimeOffset CreatedDate
-        {
-            get
-            {
-                return this._CreatedDate;
-            }
-            set
-            {
-                this.OnCreatedDateChanging(value);
-                this._CreatedDate = value;
-                this.OnCreatedDateChanged();
-                this.OnPropertyChanged("CreatedDate");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.DateTimeOffset _CreatedDate;
-        partial void OnCreatedDateChanging(global::System.DateTimeOffset value);
-        partial void OnCreatedDateChanged();
-        /// <summary>
-        /// There are no comments for Property UpdatedTime in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatedTime")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "UpdatedTime is required.")]
-        public virtual global::System.DateTimeOffset UpdatedTime
-        {
-            get
-            {
-                return this._UpdatedTime;
-            }
-            set
-            {
-                this.OnUpdatedTimeChanging(value);
-                this._UpdatedTime = value;
-                this.OnUpdatedTimeChanged();
-                this.OnPropertyChanged("UpdatedTime");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.DateTimeOffset _UpdatedTime;
-        partial void OnUpdatedTimeChanging(global::System.DateTimeOffset value);
-        partial void OnUpdatedTimeChanged();
-        /// <summary>
-        /// This event is raised when the value of the property is changed
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// The value of the property is changed
-        /// </summary>
-        /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
-            }
-        }
-    }
-    /// <summary>
     /// There are no comments for CreditCardPISingle in the schema.
     /// </summary>
     [global::Microsoft.OData.Client.OriginalNameAttribute("CreditCardPISingle")]
@@ -5761,241 +5996,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
         private global::System.DateTimeOffset _CreatedDate;
         partial void OnCreatedDateChanging(global::System.DateTimeOffset value);
         partial void OnCreatedDateChanged();
-        /// <summary>
-        /// There are no comments for Property UpdatedTime in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("UpdatedTime")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "UpdatedTime is required.")]
-        public virtual global::System.DateTimeOffset UpdatedTime
-        {
-            get
-            {
-                return this._UpdatedTime;
-            }
-            set
-            {
-                this.OnUpdatedTimeChanging(value);
-                this._UpdatedTime = value;
-                this.OnUpdatedTimeChanged();
-                this.OnPropertyChanged("UpdatedTime");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.DateTimeOffset _UpdatedTime;
-        partial void OnUpdatedTimeChanging(global::System.DateTimeOffset value);
-        partial void OnUpdatedTimeChanged();
-        /// <summary>
-        /// This event is raised when the value of the property is changed
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public event global::System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
-        /// <summary>
-        /// The value of the property is changed
-        /// </summary>
-        /// <param name="property">property name</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        protected virtual void OnPropertyChanged(string property)
-        {
-            if ((this.PropertyChanged != null))
-            {
-                this.PropertyChanged(this, new global::System.ComponentModel.PropertyChangedEventArgs(property));
-            }
-        }
-    }
-    /// <summary>
-    /// There are no comments for SubscriptionSingle in the schema.
-    /// </summary>
-    [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionSingle")]
-    public partial class SubscriptionSingle : global::Microsoft.OData.Client.DataServiceQuerySingle<Subscription>
-    {
-        /// <summary>
-        /// Initialize a new SubscriptionSingle object.
-        /// </summary>
-        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceContext context, string path)
-            : base(context, path) { }
-
-        /// <summary>
-        /// Initialize a new SubscriptionSingle object.
-        /// </summary>
-        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceContext context, string path, bool isComposable)
-            : base(context, path, isComposable) { }
-
-        /// <summary>
-        /// Initialize a new SubscriptionSingle object.
-        /// </summary>
-        public SubscriptionSingle(global::Microsoft.OData.Client.DataServiceQuerySingle<Subscription> query)
-            : base(query) { }
-
-    }
-    /// <summary>
-    /// There are no comments for Subscription in the schema.
-    /// </summary>
-    /// <KeyProperties>
-    /// SubscriptionID
-    /// </KeyProperties>
-    [global::Microsoft.OData.Client.Key("SubscriptionID")]
-    [global::Microsoft.OData.Client.OriginalNameAttribute("Subscription")]
-    public partial class Subscription : global::Microsoft.OData.Client.BaseEntityType, global::System.ComponentModel.INotifyPropertyChanged
-    {
-        /// <summary>
-        /// Create a new Subscription object.
-        /// </summary>
-        /// <param name="subscriptionID">Initial value of SubscriptionID.</param>
-        /// <param name="createdDate">Initial value of CreatedDate.</param>
-        /// <param name="qualifiedAccountID">Initial value of QualifiedAccountID.</param>
-        /// <param name="updatedTime">Initial value of UpdatedTime.</param>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        public static Subscription CreateSubscription(int subscriptionID, global::System.DateTimeOffset createdDate, int qualifiedAccountID, global::System.DateTimeOffset updatedTime)
-        {
-            Subscription subscription = new Subscription();
-            subscription.SubscriptionID = subscriptionID;
-            subscription.CreatedDate = createdDate;
-            subscription.QualifiedAccountID = qualifiedAccountID;
-            subscription.UpdatedTime = updatedTime;
-            return subscription;
-        }
-        /// <summary>
-        /// There are no comments for Property SubscriptionID in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionID")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "SubscriptionID is required.")]
-        public virtual int SubscriptionID
-        {
-            get
-            {
-                return this._SubscriptionID;
-            }
-            set
-            {
-                this.OnSubscriptionIDChanging(value);
-                this._SubscriptionID = value;
-                this.OnSubscriptionIDChanged();
-                this.OnPropertyChanged("SubscriptionID");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _SubscriptionID;
-        partial void OnSubscriptionIDChanging(int value);
-        partial void OnSubscriptionIDChanged();
-        /// <summary>
-        /// There are no comments for Property TemplateGuid in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("TemplateGuid")]
-        public virtual string TemplateGuid
-        {
-            get
-            {
-                return this._TemplateGuid;
-            }
-            set
-            {
-                this.OnTemplateGuidChanging(value);
-                this._TemplateGuid = value;
-                this.OnTemplateGuidChanged();
-                this.OnPropertyChanged("TemplateGuid");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private string _TemplateGuid;
-        partial void OnTemplateGuidChanging(string value);
-        partial void OnTemplateGuidChanged();
-        /// <summary>
-        /// There are no comments for Property Title in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("Title")]
-        public virtual string Title
-        {
-            get
-            {
-                return this._Title;
-            }
-            set
-            {
-                this.OnTitleChanging(value);
-                this._Title = value;
-                this.OnTitleChanged();
-                this.OnPropertyChanged("Title");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private string _Title;
-        partial void OnTitleChanging(string value);
-        partial void OnTitleChanged();
-        /// <summary>
-        /// There are no comments for Property Category in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("Category")]
-        public virtual string Category
-        {
-            get
-            {
-                return this._Category;
-            }
-            set
-            {
-                this.OnCategoryChanging(value);
-                this._Category = value;
-                this.OnCategoryChanged();
-                this.OnPropertyChanged("Category");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private string _Category;
-        partial void OnCategoryChanging(string value);
-        partial void OnCategoryChanged();
-        /// <summary>
-        /// There are no comments for Property CreatedDate in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("CreatedDate")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "CreatedDate is required.")]
-        public virtual global::System.DateTimeOffset CreatedDate
-        {
-            get
-            {
-                return this._CreatedDate;
-            }
-            set
-            {
-                this.OnCreatedDateChanging(value);
-                this._CreatedDate = value;
-                this.OnCreatedDateChanged();
-                this.OnPropertyChanged("CreatedDate");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private global::System.DateTimeOffset _CreatedDate;
-        partial void OnCreatedDateChanging(global::System.DateTimeOffset value);
-        partial void OnCreatedDateChanged();
-        /// <summary>
-        /// There are no comments for Property QualifiedAccountID in the schema.
-        /// </summary>
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        [global::Microsoft.OData.Client.OriginalNameAttribute("QualifiedAccountID")]
-        [global::System.ComponentModel.DataAnnotations.RequiredAttribute(ErrorMessage = "QualifiedAccountID is required.")]
-        public virtual int QualifiedAccountID
-        {
-            get
-            {
-                return this._QualifiedAccountID;
-            }
-            set
-            {
-                this.OnQualifiedAccountIDChanging(value);
-                this._QualifiedAccountID = value;
-                this.OnQualifiedAccountIDChanged();
-                this.OnPropertyChanged("QualifiedAccountID");
-            }
-        }
-        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
-        private int _QualifiedAccountID;
-        partial void OnQualifiedAccountIDChanging(int value);
-        partial void OnQualifiedAccountIDChanged();
         /// <summary>
         /// There are no comments for Property UpdatedTime in the schema.
         /// </summary>
@@ -6472,6 +6472,52 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
             return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.PaymentInstrumentSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle specified by key from an entity set
+        /// </summary>
+        /// <param name="_source">source entity set</param>
+        /// <param name="_keys">dictionary with the names and values of keys</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        {
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+        }
+        /// <summary>
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle specified by key from an entity set
+        /// </summary>
+        /// <param name="_source">source entity set</param>
+        /// <param name="storedPIID">The value of storedPIID</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> _source,
+            int storedPIID)
+        {
+            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
+            {
+                { "StoredPIID", storedPIID }
+            };
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+        }
+        /// <summary>
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle specified by key from an entity set
+        /// </summary>
+        /// <param name="_source">source entity set</param>
+        /// <param name="_keys">dictionary with the names and values of keys</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
+        {
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+        }
+        /// <summary>
+        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle specified by key from an entity set
+        /// </summary>
+        /// <param name="_source">source entity set</param>
+        /// <param name="subscriptionID">The value of subscriptionID</param>
+        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> _source,
+            int subscriptionID)
+        {
+            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
+            {
+                { "SubscriptionID", subscriptionID }
+            };
+            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
+        }
+        /// <summary>
         /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.GiftCard as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.GiftCardSingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
@@ -6596,29 +6642,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
             return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StatementSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
         /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle specified by key from an entity set
-        /// </summary>
-        /// <param name="_source">source entity set</param>
-        /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
-        {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
-        }
-        /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle specified by key from an entity set
-        /// </summary>
-        /// <param name="_source">source entity set</param>
-        /// <param name="storedPIID">The value of storedPIID</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> _source,
-            int storedPIID)
-        {
-            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
-            {
-                { "StoredPIID", storedPIID }
-            };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
-        }
-        /// <summary>
         /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.CreditCardPI as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.CreditCardPISingle specified by key from an entity set
         /// </summary>
         /// <param name="_source">source entity set</param>
@@ -6672,29 +6695,6 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default
                 { "CreditRecordID", creditRecordID }
             };
             return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.CreditRecordSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
-        }
-        /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle specified by key from an entity set
-        /// </summary>
-        /// <param name="_source">source entity set</param>
-        /// <param name="_keys">dictionary with the names and values of keys</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> _source, global::System.Collections.Generic.IDictionary<string, object> _keys)
-        {
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
-        }
-        /// <summary>
-        /// Get an entity of type global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription as global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle specified by key from an entity set
-        /// </summary>
-        /// <param name="_source">source entity set</param>
-        /// <param name="subscriptionID">The value of subscriptionID</param>
-        public static global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle ByKey(this global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> _source,
-            int subscriptionID)
-        {
-            global::System.Collections.Generic.IDictionary<string, object> _keys = new global::System.Collections.Generic.Dictionary<string, object>
-            {
-                { "SubscriptionID", subscriptionID }
-            };
-            return new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.SubscriptionSingle(_source.Context, _source.GetKeyPath(global::Microsoft.OData.Client.Serializer.GetKeyString(_source.Context, _keys)));
         }
     }
 }
@@ -6997,6 +6997,42 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.PaymentInstrument> _PaymentInstruments;
         /// <summary>
+        /// There are no comments for StoredPIs in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("StoredPIs")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> StoredPIs
+        {
+            get
+            {
+                if ((this._StoredPIs == null))
+                {
+                    this._StoredPIs = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI>("StoredPIs");
+                }
+                return this._StoredPIs;
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI> _StoredPIs;
+        /// <summary>
+        /// There are no comments for SubscriptionTemplates in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("SubscriptionTemplates")]
+        public virtual global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> SubscriptionTemplates
+        {
+            get
+            {
+                if ((this._SubscriptionTemplates == null))
+                {
+                    this._SubscriptionTemplates = base.CreateQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription>("SubscriptionTemplates");
+                }
+                return this._SubscriptionTemplates;
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::Microsoft.OData.Client.DataServiceQuery<global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription> _SubscriptionTemplates;
+        /// <summary>
         /// There are no comments for People in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
@@ -7093,6 +7129,22 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default
             base.AddObject("PaymentInstruments", paymentInstrument);
         }
         /// <summary>
+        /// There are no comments for StoredPIs in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public virtual void AddToStoredPIs(global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPI storedPI)
+        {
+            base.AddObject("StoredPIs", storedPI);
+        }
+        /// <summary>
+        /// There are no comments for SubscriptionTemplates in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        public virtual void AddToSubscriptionTemplates(global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Subscription subscription)
+        {
+            base.AddObject("SubscriptionTemplates", subscription);
+        }
+        /// <summary>
         /// There are no comments for Boss in the schema.
         /// </summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
@@ -7182,6 +7234,24 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Client.Default.Default
         }
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.LabourUnionSingle _LabourUnion;
+        /// <summary>
+        /// There are no comments for DefaultStoredPI in the schema.
+        /// </summary>
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        [global::Microsoft.OData.Client.OriginalNameAttribute("DefaultStoredPI")]
+        public virtual global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle DefaultStoredPI
+        {
+            get
+            {
+                if ((this._DefaultStoredPI == null))
+                {
+                    this._DefaultStoredPI = new global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle(this, "DefaultStoredPI");
+                }
+                return this._DefaultStoredPI;
+            }
+        }
+        [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
+        private global::Microsoft.OData.Client.E2E.Tests.Common.Client.Default.StoredPISingle _DefaultStoredPI;
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.OData.Client.Design.T4", "#VersionNumber#")]
         private abstract class GeneratedEdmModel
         {
