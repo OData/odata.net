@@ -72,7 +72,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUri = new Uri(_baseUri.AbsoluteUri + "People(1)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -128,7 +128,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "People(1)/HomeAddress", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -163,7 +163,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "People(1)/HomeAddress/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.HomeAddress/FamilyName", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -191,7 +191,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "People?$filter=HomeAddress/Microsoft.OData.Client.E2E.Tests.Common.Server.Default.HomeAddress/FamilyName eq 'Cats'", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -309,7 +309,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUrl = new Uri(_baseUri + "People(1)");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, base.Client)
             {
                 Method = "PATCH"
             };
@@ -426,7 +426,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUrl = new Uri(_baseUri + "People");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, base.Client)
             {
                 Method = "POST"
             };
@@ -456,7 +456,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var deleteRequestUrl = new Uri(_baseUri + "People(101)");
 
-            var deleteRequestMessage = new TestCommon.Common.HttpClientRequestMessage(deleteRequestUrl, base.Client)
+            var deleteRequestMessage = new TestHttpClientRequestMessage(deleteRequestUrl, base.Client)
             {
                 Method = "DELETE"
             };
@@ -480,7 +480,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "People(1)/Default.GetHomeAddress", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -510,7 +510,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             requestUri = new Uri(_baseUri.AbsoluteUri + "People(3)/Default.GetHomeAddress", UriKind.Absolute);
 
-            requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -668,7 +668,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "Accounts(101)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -730,7 +730,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "Accounts(101)/AccountInfo/MiddleName", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -756,7 +756,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri.AbsoluteUri + "Accounts?$filter=AccountInfo/MiddleName eq 'Hood'", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -939,7 +939,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUri = new Uri(_baseUri + "Accounts");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "POST"
             };
@@ -972,7 +972,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
             // delete the entry
             var deleteRequestUri = new Uri(_baseUri + "Accounts(10086)");
 
-            var deleteRequestMessage = new TestCommon.Common.HttpClientRequestMessage(deleteRequestUri, base.Client)
+            var deleteRequestMessage = new TestHttpClientRequestMessage(deleteRequestUri, base.Client)
             {
                 Method = "DELETE"
             };
@@ -993,7 +993,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             Uri requestUri = new(_baseUri + "Accounts(101)/Default.GetAccountInfo", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -1024,7 +1024,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             requestUri = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/Default.GetAccountInfo", UriKind.Absolute);
 
-            requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            requestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "GET"
             };
@@ -1251,7 +1251,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
             // delete the entry
             Uri requestUri = new(_baseUri + "Accounts(101)");
 
-            var deleteRequestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUri, base.Client)
+            var deleteRequestMessage = new TestHttpClientRequestMessage(requestUri, base.Client)
             {
                 Method = "DELETE"
             };
@@ -1295,7 +1295,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var reqUrl = new Uri(_baseUri + "Accounts");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(reqUrl, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(reqUrl, base.Client)
             {
                 Method = "POST"
             };
@@ -1362,7 +1362,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUrl = new Uri(_baseUri + "Accounts(101)/AccountInfo");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, base.Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, base.Client)
             {
                 Method = "PATCH"
             };
@@ -1409,7 +1409,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ComplexTypeTests.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + uri, UriKind.Absolute);
 
-            var queryRequestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, base.Client)
+            var queryRequestMessage = new TestHttpClientRequestMessage(requestUrl, base.Client)
             {
                 Method = "GET"
             };

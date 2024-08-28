@@ -70,7 +70,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(101)/MyGiftCard", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await  requestMessage.GetResponseAsync();
@@ -103,7 +103,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
             var requestUrl = new Uri(_baseUri.AbsoluteUri +
                 "Accounts(101)/MyGiftCard/Default.GetActualAmount(bonusRate=0.2)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", "*/*");
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(101)/Default.GetDefaultPI()", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -168,7 +168,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri + "Accounts(101)/Default.RefreshDefaultPI");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client)
             {
                 Method = "POST"
             };
@@ -221,7 +221,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             Uri requestUrl = new(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -265,7 +265,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103902)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -298,7 +298,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements(103901001)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/BillingStatements", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -371,7 +371,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments(103901)/TheStoredPI", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
 
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -404,7 +404,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101901)/BackupStoredPI", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -442,7 +442,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments(101902)/{0}.CreditCardPI", TestModelNameSpace), UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
 
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -475,7 +475,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments/{0}.CreditCardPI", TestModelNameSpace), UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
 
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -511,7 +511,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + string.Format("Accounts(101)/MyPaymentInstruments(101902)/{0}.CreditCardPI/CreditRecords", TestModelNameSpace), UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -547,7 +547,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(101)", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
 
             var responseMessage = await requestMessage.GetResponseAsync();
@@ -580,7 +580,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -621,7 +621,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(101)/MyPaymentInstruments(101902)/PaymentInstrumentID", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -643,7 +643,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments?$filter=PaymentInstrumentID gt 103901", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -684,7 +684,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + "Accounts(103)/MyPaymentInstruments?$orderby=CreatedDate", UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
             Assert.Equal(200, responseMessage.StatusCode);
@@ -727,7 +727,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + query, UriKind.Absolute);
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             requestMessage.SetHeader("Accept", mimeType);
             var responseMessage = await requestMessage.GetResponseAsync();
 
@@ -786,7 +786,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri + "Accounts(101)/MyPaymentInstruments");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client)
             {
                 Method = "POST"
             };
@@ -812,7 +812,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
             // delete the entry
             var deleteRequestUrl = new Uri(_baseUri + "Accounts(101)/MyPaymentInstruments(101904)");
 
-            var deleteRequestMessage = new TestCommon.Common.HttpClientRequestMessage(deleteRequestUrl, Client)
+            var deleteRequestMessage = new TestHttpClientRequestMessage(deleteRequestUrl, Client)
             {
                 Method = "DELETE"
             };
@@ -851,7 +851,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri + "Accounts(104)/MyGiftCard");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client)
             {
                 // Use PATCH to upsert
                 Method = "PATCH"
@@ -900,7 +900,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri + "Accounts(101)/MyPaymentInstruments(101903)");
 
-            var requestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client)
+            var requestMessage = new TestHttpClientRequestMessage(requestUrl, Client)
             {
                 Method = "PATCH"
             };
@@ -1182,7 +1182,7 @@ namespace Microsoft.OData.Client.E2E.Tests.ContainmentTest.Tests
 
             var requestUrl = new Uri(_baseUri.AbsoluteUri + uri, UriKind.Absolute);
 
-            var queryRequestMessage = new TestCommon.Common.HttpClientRequestMessage(requestUrl, Client);
+            var queryRequestMessage = new TestHttpClientRequestMessage(requestUrl, Client);
             queryRequestMessage.SetHeader("Accept", MimeTypes.ApplicationJsonLight);
             var queryResponseMessage = await queryRequestMessage.GetResponseAsync();
 
