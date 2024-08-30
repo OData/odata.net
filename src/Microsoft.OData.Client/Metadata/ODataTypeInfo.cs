@@ -396,7 +396,7 @@ namespace Microsoft.OData.Client.Metadata
                 order = newOrder;
                 keyKind = newKind;
             }
-            else if (propertyName.EndsWith("ID", StringComparison.Ordinal))
+            else if (propertyName.EndsWith("ID", StringComparison.OrdinalIgnoreCase))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;
                 if ((propertyName.Length == (declaringTypeName.Length + 2)) && propertyName.StartsWith(declaringTypeName, StringComparison.Ordinal))
