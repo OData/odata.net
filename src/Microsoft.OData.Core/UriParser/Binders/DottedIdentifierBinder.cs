@@ -100,6 +100,15 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
+            // Check if the parent type is related to the child type
+            if (!UriEdmHelpers.IsRelatedTo(parentType, childType) && childStructuredType.BaseType != null && childStructuredType.BaseType is IEdmType)
+            {
+                // Update parentType to the base type
+                parentType = childType;
+                // Update parentAsSingleResource to reflect the cast
+                parentAsSingleResource = new SingleResourceCastNode(parentAsSingleResource, (IEdmStructuredType)childType);
+            }
+
             // Check whether childType is a derived type of the type of its parent node
             UriEdmHelpers.CheckRelatedTo(parentType, childType);
 
