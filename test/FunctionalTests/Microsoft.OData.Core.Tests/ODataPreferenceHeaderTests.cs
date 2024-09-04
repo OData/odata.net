@@ -73,7 +73,7 @@ namespace Microsoft.OData.Tests
             Assert.Equal(ReturnRepresentationPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void SetAnnotationFilterToEmptyShouldThrow()
         {

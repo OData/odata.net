@@ -188,7 +188,7 @@ namespace AstoriaUnitTests.Stubs
 
     public class AdHocPrimitiveType : AdHocType
     {
-        private static Dictionary<Type, string> map = TestUtil.CreateDictionary(
+        private static Dictionary<Type, string> map = TestUtil.CreateDictionary<Type, string>(
             new KeyValuePair<Type, string>(typeof(int), "int"),
             new KeyValuePair<Type, string>(typeof(Guid), "uniqueidentifier"),
             new KeyValuePair<Type, string>(typeof(string), "nvarchar"));

@@ -171,7 +171,7 @@ namespace Microsoft.OData.Tests
             this.odataEntry.InstanceAnnotations.Add(new ODataInstanceAnnotation("namespace.name", new ODataPrimitiveValue("value")));
             Assert.Single(this.odataEntry.InstanceAnnotations);
         }
-#if NETCOREAPP3_1
+#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void SetNullValueToInstanceAnnotationsPropertyShouldThrow()
         {
