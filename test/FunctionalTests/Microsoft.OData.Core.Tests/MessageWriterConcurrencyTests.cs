@@ -28,6 +28,7 @@ namespace Microsoft.OData.Core.Tests
             services.AddDefaultODataServices();
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
+            await Task.CompletedTask; // Added due to dotnet < 5 as async await cannot be used only in a loop
             var content1 = string.Concat(Enumerable.Repeat('A', 1000_000));
             var content2 = string.Concat(Enumerable.Repeat('B', 1000_000));
             for (int i = 0; i < 1000; i++)
@@ -54,13 +55,16 @@ namespace Microsoft.OData.Core.Tests
 
             var message = new ODataMessage(outputStream, serviceProvider);
             await using ODataMessageWriter writer = new ODataMessageWriter(message);
+
             await Task.Yield();
 
             await writer.WriteValueAsync(content);
 
             outputStream.Position = 0;
             using var reader = new StreamReader(outputStream);
+
             await Task.Yield();
+
             string writen = await reader.ReadToEndAsync();
             await writer.DisposeAsync();
             return writen;
