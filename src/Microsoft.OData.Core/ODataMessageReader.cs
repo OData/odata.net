@@ -904,24 +904,18 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.serviceProvider == null)
+                this.messageInfo = new ODataMessageInfo
                 {
-                    this.messageInfo = new ODataMessageInfo();
-                }
-                else
-                {
-                    this.messageInfo = this.serviceProvider.GetRequiredService<ODataMessageInfo>();
-                }
-
-                this.messageInfo.Encoding = this.encoding;
-                this.messageInfo.IsResponse = this.readingResponse;
-                this.messageInfo.IsAsync = isAsync;
-                this.messageInfo.MediaType = this.contentType;
-                this.messageInfo.Model = this.model;
-                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.ServiceProvider = this.serviceProvider;
-                this.messageInfo.MessageStream = messageStream;
-                this.messageInfo.PayloadKind = this.readerPayloadKind;
+                    Encoding = this.encoding,
+                    IsResponse = this.readingResponse,
+                    IsAsync = isAsync,
+                    MediaType = this.contentType,
+                    Model = this.model,
+                    PayloadUriConverter = this.payloadUriConverter,
+                    ServiceProvider = this.serviceProvider,
+                    MessageStream = messageStream,
+                    PayloadKind = this.readerPayloadKind
+                };
             }
 
             return this.messageInfo;

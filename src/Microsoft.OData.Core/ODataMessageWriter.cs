@@ -19,9 +19,9 @@ namespace Microsoft.OData
     using Microsoft.OData.Metadata;
     #endregion Namespaces
 
-/// <summary>
-/// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
-/// </summary>
+    /// <summary>
+    /// Writer class used to write all OData payloads (entries, resource sets, metadata documents, service documents, etc.).
+    /// </summary>
 #if NETCOREAPP
     public sealed class ODataMessageWriter : IDisposable, IAsyncDisposable
 #else
@@ -1111,7 +1111,7 @@ namespace Microsoft.OData
             // We cannot use ODataRawValueUtils.TryConvertPrimitiveToString for all cases since binary values are
             // converted into unencoded byte streams in the raw format
             // (as opposed to base64 encoded byte streams in the ODataRawValueUtils); see OIPI 2.2.6.4.1.
-            return value is byte[] ? ODataPayloadKind.BinaryValue : ODataPayloadKind.Value;
+            return value is byte[]? ODataPayloadKind.BinaryValue : ODataPayloadKind.Value;
         }
 
         /// <summary>
@@ -1227,23 +1227,18 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.serviceProvider == null)
-                {
-                    this.messageInfo = new ODataMessageInfo();
-                }
-                else
-                {
-                    this.messageInfo = this.serviceProvider.GetRequiredService<ODataMessageInfo>();
-                }
 
-                this.messageInfo.Encoding = this.encoding;
-                this.messageInfo.IsResponse = this.writingResponse;
-                this.messageInfo.IsAsync = isAsync;
-                this.messageInfo.MediaType = this.mediaType;
-                this.messageInfo.Model = this.model;
-                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.ServiceProvider = this.serviceProvider;
-                this.messageInfo.MessageStream = messageStream;
+                this.messageInfo = new ODataMessageInfo
+                {
+                    Encoding = this.encoding,
+                    IsResponse = this.writingResponse,
+                    IsAsync = isAsync,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    PayloadUriConverter = this.payloadUriConverter,
+                    ServiceProvider = this.serviceProvider,
+                    MessageStream = messageStream
+                };
             }
 
             return this.messageInfo;
@@ -1321,7 +1316,7 @@ namespace Microsoft.OData
             this.outputContext = await this.format.CreateOutputContextAsync(
                 this.GetOrCreateMessageInfo(messageStream, true),
                 this.settings).ConfigureAwait(false);
-            
+
             return await writeFunc(this.outputContext).ConfigureAwait(false);
         }
     }
