@@ -13,6 +13,7 @@ using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.CsdlSemantics;
 using Microsoft.OData.Edm.Csdl.Parsing.Ast;
+using Microsoft.OData.Edm.Helpers;
 using Microsoft.OData.Edm.Vocabularies;
 using Microsoft.OData.Edm.Vocabularies.V1;
 
@@ -718,7 +719,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 return this.WriteSpatialTypeAttributesAsync(actualTypeReference.AsSpatial());
             }
 
-            return Task.FromResult(0);
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -811,7 +812,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 return this.WriteOptionalAttributeAsync(CsdlConstants.Attribute_Srid, reference.SpatialReferenceIdentifier, CsdlConstants.Default_SpatialGeometrySrid, SridAsXml);
             }
 
-            return Task.FromResult(0);
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>
@@ -1348,7 +1349,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     return this.WriteRequiredAttributeAsync(CsdlConstants.Attribute_TimeOfDay, ((IEdmTimeOfDayConstantExpression)expression).Value, EdmValueWriter.TimeOfDayAsXml);
                 default:
                     Debug.Assert(false, "Attempted to inline an expression that was not one of the expected inlineable types.");
-                    return Task.FromResult(0);
+                    return TaskUtils.CompletedTask;
             }
         }
 

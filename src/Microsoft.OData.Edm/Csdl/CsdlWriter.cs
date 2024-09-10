@@ -14,7 +14,7 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
-
+using Microsoft.OData.Edm.Helpers;
 using Microsoft.OData.Edm.Validation;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -184,7 +184,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         protected virtual Task WriteCsdlAsync()
         {
-            return Task.FromResult(0);
+            return TaskUtils.CompletedTask;
         }
 
         /// <summary>

@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -2959,6 +2960,60 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             }
         }
 
+#if NETSTANDARD2_0
+    [Fact]
+    public async Task TryWriteCsdlAsyncFromLargeModelToJson_Async()
+    {
+        // Arrange
+        var model = CreateLargeTestModel();
+        using(var memStream = new MemoryStream())
+        {
+            JsonWriterOptions options = new JsonWriterOptions
+            {
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
+                Indented = indented,
+                SkipValidation = false
+            };
+
+            using (Utf8JsonWriter jsonWriter = new Utf8JsonWriter(memStream, options))
+            {
+                CsdlJsonWriterSettings settings = CsdlJsonWriterSettings.Default;
+                settings.IsIeee754Compatible = isIeee754Compatible;
+                var (ok, errors) = await CsdlWriter.TryWriteCsdlAsync(model, jsonWriter, settings).ConfigureAwait(false);
+                await jsonWriter.FlushAsync().ConfigureAwait(false);
+                Assert.True(ok);
+            }
+        }
+    }
+#endif
+
+        [Fact]
+        public async Task TryWriteCsdlAsyncFromLargeModelToXml_Async()
+        {
+            // Arrange
+            var model = CreateLargeTestModel();
+            using (var stream = new MemoryStream())
+            {
+                using (var writer = XmlWriter.Create(stream, new XmlWriterSettings { Async = true }))
+                {
+                    var target = CsdlTarget.OData;
+
+                    // Act
+                    var stopwatch = Stopwatch.StartNew();
+
+                    Tuple<bool, IEnumerable<EdmError>> result = await CsdlWriter.TryWriteCsdlAsync(model, writer, target).ConfigureAwait(false);
+                    bool success = result.Item1;
+                    IEnumerable<EdmError> errors = result.Item2;
+
+                    stopwatch.Stop();
+
+                    // Assert
+                    Assert.True(success);
+                    Assert.Empty(errors);
+                }
+            }
+        }
+
         internal static async Task WriteAndVerifyXmlAsync(IEdmModel model, string expected, CsdlTarget target = CsdlTarget.OData)
         {
             using (StringWriter sw = new StringWriter())
@@ -3009,6 +3064,23 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                 Assert.Equal(expected, actual);
             }
 #endif
+        }
+
+        private IEdmModel CreateLargeTestModel()
+        {
+            var model = new EdmModel();
+            var container = new EdmEntityContainer("NS", "Container");
+            model.AddElement(container);
+
+            for (int i = 0; i < 2000; i++)
+            {
+                var entityType = new EdmEntityType("NS", $"EntityType{i}");
+                entityType.AddKeys(entityType.AddStructuralProperty("Id", EdmPrimitiveTypeKind.Int32));
+                model.AddElement(entityType);
+                container.AddEntitySet($"EntitySet{i}", entityType);
+            }
+
+            return model;
         }
     }
 }
