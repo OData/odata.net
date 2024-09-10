@@ -19,10 +19,9 @@ namespace Microsoft.OData.Core.Tests
         /// <summary>
         /// Verifies that concurrent message writer does not interleave execution and isolates the underlying streams.
         /// </summary>
-        /// <returns>A task for the asyncronous test</returns>
-
+        /// <returns>A task for the asynchronous test</returns>
         [Fact]
-        public async Task VerifyConcurrentResultsAreConsistentAsync()
+        public async Task VerifyConcurrentResultsAreIsolatedAsync()
         {
             ServiceCollection services = new();
             services.AddDefaultODataServices();
@@ -44,7 +43,7 @@ namespace Microsoft.OData.Core.Tests
 
 
         /// <summary>
-        /// A helper function that writes to a strem using the message writer and returns the content that is present in the stream.
+        /// A helper function that writes to a stream using the message writer and returns the content that is present in the stream.
         /// </summary>
         /// <param name="content">String content to write.</param>
         /// <param name="serviceProvider">A service provider with the default configurations.</param>
@@ -66,9 +65,9 @@ namespace Microsoft.OData.Core.Tests
 
             await Task.Yield();
 
-            string writen = await reader.ReadToEndAsync();
+            string written = await reader.ReadToEndAsync();
             await writer.DisposeAsync();
-            return writen;
+            return written;
         }
 
 
