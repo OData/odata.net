@@ -4,13 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
 using System;
 using Xunit;
 using Microsoft.Extensions.DependencyInjection;
 using System.Linq;
+using Microsoft.OData.Tests;
 
 namespace Microsoft.OData.Core.Tests
 {
@@ -52,7 +52,12 @@ namespace Microsoft.OData.Core.Tests
         {
             using Stream outputStream = new MemoryStream();
 
-            var message = new ODataMessage(outputStream, serviceProvider);
+            var message = new InMemoryMessage
+            {
+                Stream = outputStream,
+                ServiceProvider = serviceProvider
+            };
+
             var responseMessage = new ODataResponseMessage(message, writing: true, enableMessageStreamDisposal: true, maxMessageSize: -1);
             await using ODataMessageWriter writer = new ODataMessageWriter(responseMessage);
 
@@ -68,48 +73,6 @@ namespace Microsoft.OData.Core.Tests
             string written = await reader.ReadToEndAsync();
             await writer.DisposeAsync();
             return written;
-        }
-
-
-        class ODataMessage : IODataResponseMessage, IODataResponseMessageAsync, IServiceCollectionProvider
-        {
-            private Dictionary<string, string> _headers = new();
-            private Stream _outputStream;
-            public ODataMessage(Stream outputStream, IServiceProvider serviceProvider)
-            {
-                this.ServiceProvider = serviceProvider;
-                _outputStream = outputStream;
-            }
-            public IEnumerable<KeyValuePair<string, string>> Headers => _headers;
-
-            public int StatusCode { get => throw new NotImplementedException(); set => throw new NotImplementedException(); }
-
-            public IServiceProvider ServiceProvider { get; private set; }
-
-            public string GetHeader(string headerName)
-            {
-                if (_headers.TryGetValue(headerName, out var value))
-                {
-                    return value;
-                }
-
-                return null;
-            }
-
-            public Stream GetStream()
-            {
-                return _outputStream;
-            }
-
-            public Task<Stream> GetStreamAsync()
-            {
-                return Task.FromResult(_outputStream);
-            }
-
-            public void SetHeader(string headerName, string headerValue)
-            {
-                _headers[headerName] = headerValue;
-            }
         }
     }
 }
