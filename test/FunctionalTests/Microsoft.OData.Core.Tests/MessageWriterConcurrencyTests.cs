@@ -33,7 +33,7 @@ namespace Microsoft.OData.Core.Tests
             var content2 = string.Concat(Enumerable.Repeat('B', 1000_000));
             for (int i = 0; i < 1000; i++)
             {
-                var values = await Task.WhenAll([WritePayload(content1, serviceProvider), WritePayload(content2, serviceProvider)]);
+                var values = await Task.WhenAll([WritePayloadAsync(content1, serviceProvider), WritePayloadAsync(content2, serviceProvider)]);
                 Assert.Equal(content1.Length, values[0].Length);
                 Assert.Equal(content2.Length, values[1].Length);
 
@@ -49,12 +49,13 @@ namespace Microsoft.OData.Core.Tests
         /// <param name="content">String content to write.</param>
         /// <param name="serviceProvider">A service provider with the default configurations.</param>
         /// <returns>A task that resolves to the string present in the output stream.</returns>
-        private async Task<string> WritePayload(string content, IServiceProvider serviceProvider)
+        private static async Task<string> WritePayloadAsync(string content, IServiceProvider serviceProvider)
         {
             using Stream outputStream = new MemoryStream();
 
             var message = new ODataMessage(outputStream, serviceProvider);
-            await using ODataMessageWriter writer = new ODataMessageWriter(message);
+            var responseMessage = new ODataResponseMessage(message, writing: true, enableMessageStreamDisposal: true, maxMessageSize: -1);
+            await using ODataMessageWriter writer = new ODataMessageWriter(responseMessage);
 
             await Task.Yield();
 
