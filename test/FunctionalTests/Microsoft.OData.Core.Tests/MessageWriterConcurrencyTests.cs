@@ -50,7 +50,7 @@ namespace Microsoft.OData.Core.Tests
         /// <returns>A task that resolves to the string present in the output stream.</returns>
         private static async Task<string> WritePayloadAsync(string content, IServiceProvider serviceProvider)
         {
-            using Stream outputStream = new MemoryStream();
+            await using Stream outputStream = new MemoryStream();
 
             var message = new InMemoryMessage
             {
