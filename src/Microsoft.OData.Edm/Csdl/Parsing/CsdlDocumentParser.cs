@@ -339,7 +339,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing
             string name = Required(CsdlConstants.Attribute_Name);
             string underlyingTypeName = RequiredType(CsdlConstants.Attribute_UnderlyingType);
 
-            return new CsdlTypeDefinition(name, underlyingTypeName, element.Location);
+            int? maxLength = OptionalMaxLength(CsdlConstants.Attribute_MaxLength);
+            bool? isUnicode = OptionalBoolean(CsdlConstants.Attribute_Unicode);
+            int? precision = OptionalInteger(CsdlConstants.Attribute_Precision);
+            int? scale = OptionalInteger(CsdlConstants.Attribute_Scale);
+            int? srid = OptionalSrid(CsdlConstants.Attribute_Srid, CsdlConstants.Default_UnspecifiedSrid);
+
+            return new CsdlTypeDefinition(name, underlyingTypeName, maxLength, isUnicode, precision, scale, srid, element.Location);
         }
 
         private CsdlNamedElement OnNavigationPropertyElement(XmlElementInfo element, XmlElementValueCollection childValues)
