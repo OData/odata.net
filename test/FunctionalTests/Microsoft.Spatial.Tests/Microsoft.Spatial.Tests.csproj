@@ -46,7 +46,7 @@
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.6.0" />
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netcoreapp1.1' or '$(TargetFramework)' == 'net452'">
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.9.2" />
   </ItemGroup>
 

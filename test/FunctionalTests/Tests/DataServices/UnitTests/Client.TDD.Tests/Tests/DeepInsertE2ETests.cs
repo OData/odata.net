@@ -202,7 +202,7 @@ namespace Microsoft.OData.Client.TDDUnitTests.Tests
         [Fact]
         public async Task CallingDeepInsertAsyncRequest_WithUntrackedEntity_ShouldThrowAnInvalidException()
         {
-            Assert.Throws<InvalidOperationException>(delegate { this.context.DeepInsertAsync<Person>(this.person); });
+            await Assert.ThrowsAsync<InvalidOperationException>(() => this.context.DeepInsertAsync<Person>(this.person));
         }
 
         [Fact]

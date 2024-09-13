@@ -15,6 +15,7 @@ obj/
 
 # Test results
 sln/TestResults/
+**/TestResults/
 test/packages/
 *BenchmarkDotNet.Artifacts*
 
