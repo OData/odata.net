@@ -81,6 +81,64 @@ namespace Microsoft.OData.Json
             this.currentBufferedNode = null;
         }
 
+        internal bool TryGetValueFromBuffered(string propertyName, bool removeIfExist, out object value)
+        {
+            bool found = false;
+            BufferedNode currentNode = this.bufferedNodesHead;
+            if (this.bufferedNodesHead != null)
+            {
+                do
+                {
+                    if (currentNode.NodeType == JsonNodeType.StartObject ||
+                        currentNode.NodeType == JsonNodeType.StartArray)
+                    {
+                        break;
+                    }
+
+                    if (currentNode.NodeType == JsonNodeType.Property &&
+                        currentNode.Value.ToString() == propertyName &&
+                        currentNode.Next != currentNode) // must have another node
+                    {
+                        found = true;
+                        break;
+                    }
+
+                    currentNode = currentNode.Next;
+                }
+                while (currentNode != this.bufferedNodesHead);
+            }
+
+            value = null;
+            if (!found)
+            {
+                return false;
+            }
+
+            BufferedNode valueNode = currentNode.Next;
+
+            if (removeIfExist)
+            {
+                currentNode.Previous.Next = valueNode.Next;
+                valueNode.Next.Previous = currentNode.Previous;
+
+                if (this.bufferedNodesHead == currentNode)
+                {
+                    this.bufferedNodesHead = valueNode.Next;
+                }
+
+                if (this.isBuffering)
+                {
+                    if (this.currentBufferedNode == currentNode || this.currentBufferedNode == valueNode)
+                    {
+                        this.currentBufferedNode = this.bufferedNodesHead;
+                    }
+                }
+            }
+
+            value = valueNode.Value;
+            return true;
+        }
+
         /// <summary>
         /// The type of the last node read.
         /// </summary>
