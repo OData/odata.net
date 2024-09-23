@@ -155,7 +155,7 @@ namespace Microsoft.OData.Tests
             Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
             Assert.True(settingsFromSameScope.EnableCharactersCheck);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.False(object.ReferenceEquals(settings, settingsFromOtherScope));
             Assert.False(settingsFromOtherScope.EnableCharactersCheck);
         }
 
@@ -202,7 +202,7 @@ namespace Microsoft.OData.Tests
             Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
             Assert.True(settingsFromSameScope.EnableCharactersCheck);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.False(object.ReferenceEquals(settings, settingsFromOtherScope));
             Assert.False(settingsFromOtherScope.EnableCharactersCheck);
         }
 
@@ -249,7 +249,7 @@ namespace Microsoft.OData.Tests
             Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
             Assert.False(settingsFromSameScope.EnableParsingKeyAsSegment);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.False(object.ReferenceEquals(settings, settingsFromOtherScope));
             Assert.True(settingsFromOtherScope.EnableParsingKeyAsSegment);
         }
 
