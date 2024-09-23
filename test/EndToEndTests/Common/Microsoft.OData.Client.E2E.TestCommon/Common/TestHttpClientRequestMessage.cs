@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="HttpClientRequestMessage.cs" company=".NET Foundation">
+// <copyright file="TestHttpClientRequestMessage.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -11,7 +11,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
     /// An implementation of <see cref="IODataRequestMessageAsync"/> that uses an <see cref="HttpRequestMessage"/> under the covers.
     /// In OData library, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
     /// </summary>
-    public class HttpClientRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider, IDisposable, IAsyncDisposable
+    public class TestHttpClientRequestMessage : IODataRequestMessageAsync, IServiceCollectionProvider, IDisposable, IAsyncDisposable
     {
         private readonly HttpRequestMessage _request;
         private readonly HttpClient _httpClient;
@@ -19,7 +19,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
         private Stream _stream;
         private bool _disposed;
 
-        public HttpClientRequestMessage(Uri uri, HttpClient httpClient)
+        public TestHttpClientRequestMessage(Uri uri, HttpClient httpClient)
         {
             _httpClient = httpClient;
             _stream = new MemoryStream();
@@ -101,7 +101,7 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
                 throw new Exception($"Request to {_request.RequestUri} failed: {ex.Message}", ex);
             }
 
-            return new HttpClientResponseMessage(response)
+            return new TestHttpClientResponseMessage(response)
             {
                 ServiceProvider = ServiceProvider
             };

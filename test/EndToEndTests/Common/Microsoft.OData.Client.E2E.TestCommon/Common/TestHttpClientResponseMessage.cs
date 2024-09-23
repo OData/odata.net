@@ -1,5 +1,5 @@
 ﻿//-----------------------------------------------------------------------------
-// <copyright file="HttpClientResponseMessage.cs" company=".NET Foundation">
+// <copyright file="TestHttpClientResponseMessage.cs" company=".NET Foundation">
 //      Copyright (c) .NET Foundation and Contributors. All rights reserved.
 //      See License.txt in the project root for license information.
 // </copyright>
@@ -11,12 +11,12 @@ namespace Microsoft.OData.Client.E2E.TestCommon.Common
     /// An implementation of <see cref="IODataResponseMessageAsync"/> that uses an <see cref="HttpResponseMessage"/> under the covers.
     /// In ODataLibrary, a message is an abstraction which consists of stream and header interfaces that hides the details of stream-reading/writing.
     /// </summary>
-    public class HttpClientResponseMessage : IODataResponseMessageAsync, IServiceCollectionProvider
+    public class TestHttpClientResponseMessage : IODataResponseMessageAsync, IServiceCollectionProvider
     {
         private readonly HttpResponseMessage _response;
         private bool _disposed;
 
-        public HttpClientResponseMessage(HttpResponseMessage response)
+        public TestHttpClientResponseMessage(HttpResponseMessage response)
         {
             _response = response;
         }
