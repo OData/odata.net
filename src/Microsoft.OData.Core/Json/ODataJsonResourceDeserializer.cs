@@ -101,8 +101,8 @@ namespace Microsoft.OData.Json
             this.AssertJsonCondition(JsonNodeType.Property, JsonNodeType.EndObject);
 
             object value;
-            if (this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.PrefixedODataTypePropertyName, true, out value) ||
-                this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.SimplifiedODataTypePropertyName, true, out value))
+            if (this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.PrefixedODataTypePropertyName, removeIfExist: true, out value) ||
+                this.JsonReader.TryGetValueFromBuffered(ODataJsonConstants.SimplifiedODataTypePropertyName, removeIfExist: true, out value))
             {
                 resourceState.Resource.TypeName = ReaderUtils.AddEdmPrefixOfTypeName(ReaderUtils.RemovePrefixOfTypeName(value as string));
                 return;
@@ -122,8 +122,6 @@ namespace Microsoft.OData.Json
 
                     // Read the annotation value.
                     resourceState.Resource.TypeName = this.ReadODataTypeAnnotationValue();
-
-                 //   resourceState.TypeAnnotationFound = true;
                 }
             }
 
