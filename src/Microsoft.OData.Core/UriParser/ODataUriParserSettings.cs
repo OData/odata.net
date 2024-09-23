@@ -91,14 +91,17 @@ namespace Microsoft.OData.UriParser
 
         internal ODataUriParserSettings Clone()
         {
-            ODataUriParserSettings copy = new ODataUriParserSettings();
-            copy.FilterLimit = this.FilterLimit;
-            copy.OrderByLimit = this.OrderByLimit;
-            copy.PathLimit = this.PathLimit;
-            copy.SearchLimit = this.SearchLimit;
-            copy.MaximumExpansionDepth = this.MaximumExpansionDepth;
-            copy.MaximumExpansionCount = this.MaximumExpansionCount;
-            copy.EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment;
+            ODataUriParserSettings copy = new()
+            {
+                FilterLimit = this.FilterLimit,
+                OrderByLimit = this.OrderByLimit,
+                PathLimit = this.PathLimit,
+                SearchLimit = this.SearchLimit,
+                MaximumExpansionDepth = this.MaximumExpansionDepth,
+                MaximumExpansionCount = this.MaximumExpansionCount,
+                EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment
+            };
+
             return copy;
         }
 
