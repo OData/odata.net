@@ -91,7 +91,7 @@ namespace Microsoft.OData.UriParser
 
         internal ODataUriParserSettings Clone()
         {
-            ODataUriParserSettings copy = new()
+            return new()
             {
                 FilterLimit = this.FilterLimit,
                 OrderByLimit = this.OrderByLimit,
@@ -101,8 +101,6 @@ namespace Microsoft.OData.UriParser
                 MaximumExpansionCount = this.MaximumExpansionCount,
                 EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment
             };
-
-            return copy;
         }
 
         /// <summary>
