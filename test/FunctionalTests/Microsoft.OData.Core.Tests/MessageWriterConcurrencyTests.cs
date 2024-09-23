@@ -27,7 +27,6 @@ namespace Microsoft.OData.Core.Tests
             services.AddDefaultODataServices();
             ServiceProvider serviceProvider = services.BuildServiceProvider();
 
-            await Task.CompletedTask; // Added due to dotnet < 5 as async await cannot be used only in a loop
             var content1 = string.Concat(Enumerable.Repeat('A', 1000_000));
             var content2 = string.Concat(Enumerable.Repeat('B', 1000_000));
             for (int i = 0; i < 1000; i++)
