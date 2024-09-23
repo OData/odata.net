@@ -89,6 +89,19 @@ namespace Microsoft.OData.UriParser
             this.EnableParsingKeyAsSegment = true;
         }
 
+        internal ODataUriParserSettings Clone()
+        {
+            ODataUriParserSettings copy = new ODataUriParserSettings();
+            copy.FilterLimit = this.FilterLimit;
+            copy.OrderByLimit = this.OrderByLimit;
+            copy.PathLimit = this.PathLimit;
+            copy.SearchLimit = this.SearchLimit;
+            copy.MaximumExpansionDepth = this.MaximumExpansionDepth;
+            copy.MaximumExpansionCount = this.MaximumExpansionCount;
+            copy.EnableParsingKeyAsSegment = this.EnableParsingKeyAsSegment;
+            return copy;
+        }
+
         /// <summary>
         /// Gets or sets the maximum depth of the tree that results from parsing $expand.
         /// </summary>

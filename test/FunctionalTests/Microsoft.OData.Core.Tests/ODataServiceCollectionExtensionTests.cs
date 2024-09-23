@@ -4,11 +4,11 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-using System;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Microsoft.OData.UriParser;
+using System;
 using Xunit;
 
 namespace Microsoft.OData.Tests
@@ -143,20 +143,20 @@ namespace Microsoft.OData.Tests
             services.AddDefaultODataServices();
             var provider = services.BuildServiceProvider();
             using var scope1 = provider.CreateScope();
-            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
-            settings1.EnableCharactersCheck = true;
+            var settings = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+            settings.EnableCharactersCheck = true;
 
-            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+            var settingsFromSameScope = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
 
             using var scope2 = provider.CreateScope();
-            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+            var settingsFromOtherScope = scope2.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
             
             // Instances from the same scope should be the same
-            Assert.True(object.ReferenceEquals(settings1, settings2));
-            Assert.True(settings2.EnableCharactersCheck);
+            Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
+            Assert.True(settingsFromSameScope.EnableCharactersCheck);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settings2, settings3));
-            Assert.False(settings2.EnableCharactersCheck);
+            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.False(settingsFromOtherScope.EnableCharactersCheck);
         }
 
         /// <summary>
@@ -190,20 +190,20 @@ namespace Microsoft.OData.Tests
             services.AddDefaultODataServices();
             var provider = services.BuildServiceProvider();
             using var scope1 = provider.CreateScope();
-            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
-            settings1.EnableCharactersCheck = true;
+            var settings = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+            settings.EnableCharactersCheck = true;
 
-            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+            var settingsFromSameScope = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
 
             using var scope2 = provider.CreateScope();
-            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+            var settingsFromOtherScope = scope2.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
 
             // Instances from the same scope should be the same
-            Assert.True(object.ReferenceEquals(settings1, settings2));
-            Assert.True(settings2.EnableCharactersCheck);
+            Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
+            Assert.True(settingsFromSameScope.EnableCharactersCheck);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settings2, settings3));
-            Assert.False(settings2.EnableCharactersCheck);
+            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.False(settingsFromOtherScope.EnableCharactersCheck);
         }
 
         /// <summary>
@@ -237,20 +237,20 @@ namespace Microsoft.OData.Tests
             services.AddDefaultODataServices();
             var provider = services.BuildServiceProvider();
             using var scope1 = provider.CreateScope();
-            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
-            settings1.EnableParsingKeyAsSegment = false;
+            var settings = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+            settings.EnableParsingKeyAsSegment = false;
 
-            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+            var settingsFromSameScope = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
 
             using var scope2 = provider.CreateScope();
-            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+            var settingsFromOtherScope = scope2.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
 
             // Instances from the same scope should be the same
-            Assert.True(object.ReferenceEquals(settings1, settings2));
-            Assert.False(settings2.EnableParsingKeyAsSegment);
+            Assert.True(object.ReferenceEquals(settings, settingsFromSameScope));
+            Assert.False(settingsFromSameScope.EnableParsingKeyAsSegment);
             // Instances from different scopes should be different
-            Assert.False(object.ReferenceEquals(settings2, settings3));
-            Assert.True(settings2.EnableParsingKeyAsSegment);
+            Assert.False(object.ReferenceEquals(settingsFromSameScope, settingsFromOtherScope));
+            Assert.True(settingsFromOtherScope.EnableParsingKeyAsSegment);
         }
 
         /// <summary>
