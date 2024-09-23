@@ -136,6 +136,29 @@ namespace Microsoft.OData.Tests
             Assert.True(readerSettings.EnableCharactersCheck);
         }
 
+        [Fact]
+        public void AddDefaultODataServices_ReaderSettings_InstancesAreScoped()
+        {
+            var services = new ServiceCollection();
+            services.AddDefaultODataServices();
+            var provider = services.BuildServiceProvider();
+            using var scope1 = provider.CreateScope();
+            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+            settings1.EnableCharactersCheck = true;
+
+            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+
+            using var scope2 = provider.CreateScope();
+            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataMessageReaderSettings>();
+            
+            // Instances from the same scope should be the same
+            Assert.True(object.ReferenceEquals(settings1, settings2));
+            Assert.True(settings2.EnableCharactersCheck);
+            // Instances from different scopes should be different
+            Assert.False(object.ReferenceEquals(settings2, settings3));
+            Assert.False(settings2.EnableCharactersCheck);
+        }
+
         /// <summary>
         /// Tests whether the <see cref="ODataMessageReaderSettings" /> can be configured using the <see cref="Action{ODataMessageWriterSettings}" />.
         /// </summary>
@@ -160,6 +183,29 @@ namespace Microsoft.OData.Tests
             Assert.True(writerSettings.EnableCharactersCheck);
         }
 
+        [Fact]
+        public void AddDefaultODataServices_WriterSettings_InstancesAreScoped()
+        {
+            var services = new ServiceCollection();
+            services.AddDefaultODataServices();
+            var provider = services.BuildServiceProvider();
+            using var scope1 = provider.CreateScope();
+            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+            settings1.EnableCharactersCheck = true;
+
+            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+
+            using var scope2 = provider.CreateScope();
+            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataMessageWriterSettings>();
+
+            // Instances from the same scope should be the same
+            Assert.True(object.ReferenceEquals(settings1, settings2));
+            Assert.True(settings2.EnableCharactersCheck);
+            // Instances from different scopes should be different
+            Assert.False(object.ReferenceEquals(settings2, settings3));
+            Assert.False(settings2.EnableCharactersCheck);
+        }
+
         /// <summary>
         /// Tests whether the <see cref="ODataUriParserSettings" /> can be configured using the <see cref="Action{ODataUriParserSettings}" />.
         /// </summary>
@@ -182,6 +228,29 @@ namespace Microsoft.OData.Tests
             var parserSettings = scope.ServiceProvider.GetService<ODataUriParserSettings>();
             Assert.NotNull(parserSettings);
             Assert.Equal(1, parserSettings.MaximumExpansionCount);
+        }
+
+        [Fact]
+        public void AddDefaultODataServices_ODataUriParserSettings_InstancesAreScoped()
+        {
+            var services = new ServiceCollection();
+            services.AddDefaultODataServices();
+            var provider = services.BuildServiceProvider();
+            using var scope1 = provider.CreateScope();
+            var settings1 = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+            settings1.EnableParsingKeyAsSegment = false;
+
+            var settings2 = scope1.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+
+            using var scope2 = provider.CreateScope();
+            var settings3 = scope2.ServiceProvider.GetRequiredService<ODataUriParserSettings>();
+
+            // Instances from the same scope should be the same
+            Assert.True(object.ReferenceEquals(settings1, settings2));
+            Assert.False(settings2.EnableParsingKeyAsSegment);
+            // Instances from different scopes should be different
+            Assert.False(object.ReferenceEquals(settings2, settings3));
+            Assert.True(settings2.EnableParsingKeyAsSegment);
         }
 
         /// <summary>
