@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ODataTypeInfo.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -399,7 +399,7 @@ namespace Microsoft.OData.Client.Metadata
             else if (propertyName.Equals(propertyInfo.DeclaringType.Name + "Id", StringComparison.OrdinalIgnoreCase) || propertyName.Equals("Id", StringComparison.OrdinalIgnoreCase))
             {
                 string declaringTypeName = propertyInfo.DeclaringType.Name;
-                if ((propertyName.Length == (declaringTypeName.Length + 2)) && propertyName.StartsWith(declaringTypeName, StringComparison.Ordinal))
+                if ((propertyName.Length == (declaringTypeName.Length + 2)) && propertyName.StartsWith(declaringTypeName, StringComparison.OrdinalIgnoreCase))
                 {
                     // matched "DeclaringType.Name+ID" pattern
                     keyKind = KeyKind.TypeNameId;
