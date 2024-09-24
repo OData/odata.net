@@ -1257,23 +1257,17 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.container == null)
+                this.messageInfo = new ODataMessageInfo
                 {
-                    this.messageInfo = new ODataMessageInfo();
-                }
-                else
-                {
-                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
-                }
-
-                this.messageInfo.Encoding = this.encoding;
-                this.messageInfo.IsResponse = this.writingResponse;
-                this.messageInfo.IsAsync = isAsync;
-                this.messageInfo.MediaType = this.mediaType;
-                this.messageInfo.Model = this.model;
-                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.Container = this.container;
-                this.messageInfo.MessageStream = messageStream;
+                    Encoding = this.encoding,
+                    IsResponse = this.writingResponse,
+                    IsAsync = isAsync,
+                    MediaType = this.mediaType,
+                    Model = this.model,
+                    PayloadUriConverter = this.payloadUriConverter,
+                    Container = this.container,
+                    MessageStream = messageStream
+                };
             }
 
             return this.messageInfo;

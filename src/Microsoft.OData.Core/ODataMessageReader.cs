@@ -935,24 +935,18 @@ namespace Microsoft.OData
         {
             if (this.messageInfo == null)
             {
-                if (this.container == null)
+                this.messageInfo = new ODataMessageInfo
                 {
-                    this.messageInfo = new ODataMessageInfo();
-                }
-                else
-                {
-                    this.messageInfo = this.container.GetRequiredService<ODataMessageInfo>();
-                }
-
-                this.messageInfo.Encoding = this.encoding;
-                this.messageInfo.IsResponse = this.readingResponse;
-                this.messageInfo.IsAsync = isAsync;
-                this.messageInfo.MediaType = this.contentType;
-                this.messageInfo.Model = this.model;
-                this.messageInfo.PayloadUriConverter = this.payloadUriConverter;
-                this.messageInfo.Container = this.container;
-                this.messageInfo.MessageStream = messageStream;
-                this.messageInfo.PayloadKind = this.readerPayloadKind;
+                    Encoding = this.encoding,
+                    IsResponse = this.readingResponse,
+                    IsAsync = isAsync,
+                    MediaType = this.contentType,
+                    Model = this.model,
+                    PayloadUriConverter = this.payloadUriConverter,
+                    Container = this.container,
+                    MessageStream = messageStream,
+                    PayloadKind = this.readerPayloadKind
+                };
             }
 
             return this.messageInfo;
