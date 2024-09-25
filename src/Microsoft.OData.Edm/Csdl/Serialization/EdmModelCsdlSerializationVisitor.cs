@@ -80,8 +80,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <exception cref="InvalidOperationException"></exception>
         public override async Task VisitEntityContainerElementsAsync(IEnumerable<IEdmEntityContainerElement> elements)
         {
-            var functionImportsWritten = new HashSet<string>();
-            var actionImportsWritten = new HashSet<string>();
+            HashSet<string> functionImportsWritten = new HashSet<string>();
+            HashSet<string> actionImportsWritten = new HashSet<string>();
 
             foreach (IEdmEntityContainerElement element in elements)
             {
@@ -97,7 +97,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         // Skip actionImports that have the same name for same overloads of a action.
                         IEdmActionImport actionImport = (IEdmActionImport)element;
 
-                        var uniqueActionName = string.Concat(actionImport.Name, "_", actionImport.Action.FullName(), GetEntitySetString(actionImport));
+                        string uniqueActionName = string.Concat(actionImport.Name, "_", actionImport.Action.FullName(), GetEntitySetString(actionImport));
                         if (!actionImportsWritten.Contains(uniqueActionName))
                         {
                             actionImportsWritten.Add(uniqueActionName);
@@ -109,7 +109,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                         // Skip functionImports that have the same name for same overloads of a function.
                         IEdmFunctionImport functionImport = (IEdmFunctionImport)element;
 
-                        var uniqueFunctionName = string.Concat(functionImport.Name, "_", functionImport.Function.FullName(), GetEntitySetString(functionImport));
+                        string uniqueFunctionName = string.Concat(functionImport.Name, "_", functionImport.Function.FullName(), GetEntitySetString(functionImport));
                         if (!functionImportsWritten.Contains(uniqueFunctionName))
                         {
                             functionImportsWritten.Add(uniqueFunctionName);
@@ -139,7 +139,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             VisitSchemaElements(element.SchemaElements);
 
             // process the functions/actions seperately
-            foreach (var operation in element.SchemaOperations)
+            foreach (KeyValuePair<string, IList<IEdmSchemaElement>> operation in element.SchemaOperations)
             {
                 this.schemaWriter.WriteSchemaOperationsHeader(operation);
                 VisitSchemaElements(operation.Value.AsEnumerable<IEdmSchemaElement>()); // Call AsEnumerable() to make .net 3.5 happy
@@ -183,7 +183,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             VisitSchemaElements(element.SchemaElements);
 
             // process the functions/actions seperately
-            foreach (var operation in element.SchemaOperations)
+            foreach (KeyValuePair<string, IList<IEdmSchemaElement>> operation in element.SchemaOperations)
             {
                 await this.schemaWriter.WriteSchemaOperationsHeaderAsync(operation).ConfigureAwait(false);
                 VisitSchemaElements(operation.Value.AsEnumerable<IEdmSchemaElement>()); // Call AsEnumerable() to make .net 3.5 happy
@@ -1377,7 +1377,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             if (operationImport.EntitySet != null)
             {
-                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                IEdmPathExpression pathExpression = operationImport.EntitySet as IEdmPathExpression;
                 if (pathExpression != null)
                 {
                     return EdmModelCsdlSchemaWriter.PathAsXml(pathExpression.PathSegments);
@@ -1426,7 +1426,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             if (element != null)
             {
                 this.schemaWriter.WriteReferentialConstraintBegin(element);
-                foreach (var pair in element.PropertyPairs)
+                foreach (EdmReferentialConstraintPropertyPair pair in element.PropertyPairs)
                 {
                     this.schemaWriter.WriteReferentialConstraintPair(pair);
                 }
@@ -1444,7 +1444,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             if (element != null)
             {
                 await this.schemaWriter.WriteReferentialConstraintBeginAsync(element).ConfigureAwait(false);
-                foreach (var pair in element.PropertyPairs)
+                foreach (EdmReferentialConstraintPropertyPair pair in element.PropertyPairs)
                 {
                     await this.schemaWriter.WriteReferentialConstraintPairAsync(pair).ConfigureAwait(false);
                 }
@@ -1556,7 +1556,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 if (annotation.NamespaceUri != EdmConstants.InternalUri)
                 {
-                    var edmValue = annotation.Value as IEdmValue;
+                    IEdmValue edmValue = annotation.Value as IEdmValue;
                     if (edmValue != null)
                     {
                         if (!edmValue.IsSerializedAsElement(this.Model))
@@ -1595,7 +1595,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 if (annotation.NamespaceUri != EdmConstants.InternalUri)
                 {
-                    var edmValue = annotation.Value as IEdmValue;
+                    IEdmValue edmValue = annotation.Value as IEdmValue;
                     if (edmValue != null)
                     {
                         if (edmValue.IsSerializedAsElement(this.Model))

@@ -77,7 +77,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             if (!annotation.IsInline(this.Model))
             {
-                var annotationSchemaNamespace = annotation.GetSchemaNamespace(this.Model) ?? this.modelSchemas.Select(s => s.Key).FirstOrDefault() ?? string.Empty;
+                string annotationSchemaNamespace = annotation.GetSchemaNamespace(this.Model) ?? this.modelSchemas.Select(s => s.Key).FirstOrDefault() ?? string.Empty;
 
                 EdmSchema annotationSchema;
                 if (!this.modelSchemas.TryGetValue(annotationSchemaNamespace, out annotationSchema))
@@ -106,7 +106,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <param name="element">The entity container being processed.</param>
         protected override void ProcessEntityContainer(IEdmEntityContainer element)
         {
-            var containerSchemaNamespace = element.Namespace;
+            string containerSchemaNamespace = element.Namespace;
 
             EdmSchema containerSchema;
             if (!this.modelSchemas.TryGetValue(containerSchemaNamespace, out containerSchema))

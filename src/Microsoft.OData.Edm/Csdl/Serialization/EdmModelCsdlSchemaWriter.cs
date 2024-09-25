@@ -425,7 +425,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         {
             string enumTypeName = members.First().DeclaringType.FullName();
             List<string> memberList = new List<string>();
-            foreach (var member in members)
+            foreach (IEdmEnumMember member in members)
             {
                 memberList.Add(enumTypeName + "/" + member.Name);
             }

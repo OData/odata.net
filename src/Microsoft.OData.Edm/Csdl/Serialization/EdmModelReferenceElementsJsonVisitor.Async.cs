@@ -1,5 +1,5 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="EdmModelReferenceElementsJsonVisitor.cs" company="Microsoft">
+// <copyright file="EdmModelReferenceElementsJsonVisitor.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
@@ -10,6 +10,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
@@ -18,16 +19,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// </summary>
     internal partial class EdmModelReferenceElementsJsonVisitor
     {
-        private readonly EdmModelCsdlSchemaJsonWriter schemaWriter;
-        private Utf8JsonWriter jsonWriter;
-
-        internal EdmModelReferenceElementsJsonVisitor(IEdmModel model, Utf8JsonWriter writer, Version edmVersion)
-        {
-            this.jsonWriter = writer;
-            this.schemaWriter = new EdmModelCsdlSchemaJsonWriter(model, writer, edmVersion);
-        }
-
-        internal void VisitEdmReferences(IEdmModel model)
+        /// <summary>
+        /// Asynchronously Visits Edm references and Write includes and annotations.
+        /// </summary>
+        /// <param name="model">The Edm Model.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        internal async Task VisitEdmReferencesAsync(IEdmModel model)
         {
             IEnumerable<IEdmReference> references = model.GetEdmReferences();
             if (model != null && references != null && references.Any())
@@ -38,15 +35,15 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 foreach (IEdmReference refence in references)
                 {
-                    this.schemaWriter.WriteReferenceElementHeader(refence);
+                    await this.schemaWriter.WriteReferenceElementHeaderAsync(refence).ConfigureAwait(false);
 
-                    WriteIncludes(model, refence.Includes);
+                    await WriteIncludesAsync(model, refence.Includes).ConfigureAwait(false);
 
-                    WriteIncludeAnnotations(refence.IncludeAnnotations);
+                    await WriteIncludeAnnotationsAsync(refence.IncludeAnnotations).ConfigureAwait(false);
 
-                    WriteAnnotations(model, refence);
+                    await WriteAnnotationsAsync(model, refence).ConfigureAwait(false);
 
-                    this.schemaWriter.WriteReferenceElementEnd(refence);
+                    await this.schemaWriter.WriteReferenceElementEndAsync(refence).ConfigureAwait(false);
                 }
 
                 // End of $Reference
@@ -54,7 +51,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
         }
 
-        private void WriteIncludes(IEdmModel model, IEnumerable<IEdmInclude> includes)
+        /// <summary>
+        /// Asynchronously Writes Includes
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="includes">Collection of Edm includes.</param>
+        /// <returns>Task represents an asynchronous operation.</returns>
+        private async Task WriteIncludesAsync(IEdmModel model, IEnumerable<IEdmInclude> includes)
         {
             if (includes == null || !includes.Any())
             {
@@ -70,24 +73,26 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             foreach (IEdmInclude include in includes)
             {
                 // Array items are objects.
-                this.schemaWriter.WritIncludeElementHeader(include);
+                await this.schemaWriter.WritIncludeElementHeaderAsync(include).ConfigureAwait(false);
 
-                WriteAnnotations(model, include);
+                await WriteAnnotationsAsync(model, include).ConfigureAwait(false);
 
-                this.schemaWriter.WriteIncludeElementEnd(include);
+                await this.schemaWriter.WriteIncludeElementEndAsync(include).ConfigureAwait(false);
             }
 
             this.jsonWriter.WriteEndArray();
         }
 
         /// <summary>
-        /// $IncludeAnnotations Array.
+        /// Asynchronously Writes $IncludeAnnotations Array
         /// </summary>
-        private void WriteIncludeAnnotations(IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
+        /// <param name="includeAnnotations">Collection of Edm include annotations.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        private Task WriteIncludeAnnotationsAsync(IEnumerable<IEdmIncludeAnnotations> includeAnnotations)
         {
             if (includeAnnotations == null || !includeAnnotations.Any())
             {
-                return;
+                return Task.CompletedTask;
             }
 
             // The reference object MAY contain the members $IncludeAnnotations
@@ -114,15 +119,23 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
 
             this.jsonWriter.WriteEndArray();
+
+            return Task.CompletedTask;
         }
 
-        private void WriteAnnotations(IEdmModel model, IEdmVocabularyAnnotatable target)
+        /// <summary>
+        /// Asynchronously Writes Annotations
+        /// </summary>
+        /// <param name="model">The Edm model.</param>
+        /// <param name="target">The Edm vocabulary annotations.</param>
+        /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
+        private async Task WriteAnnotationsAsync(IEdmModel model, IEdmVocabularyAnnotatable target)
         {
             IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindDeclaredVocabularyAnnotations(target);
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
-                this.schemaWriter.WriteVocabularyAnnotationElementHeader(annotation, true);
-                this.schemaWriter.WriteVocabularyAnnotationElementEnd(annotation, true);
+                await this.schemaWriter.WriteVocabularyAnnotationElementHeaderAsync(annotation, true).ConfigureAwait(false);
+                await this.schemaWriter.WriteVocabularyAnnotationElementEndAsync(annotation, true).ConfigureAwait(false);
             }
         }
     }

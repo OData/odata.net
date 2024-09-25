@@ -128,7 +128,7 @@ namespace Microsoft.OData.Edm.Csdl
         /// <returns>A task that represents the asynchronous operation</returns>
         private Task WriteReferenceElementsAsync()
         {
-            var visitor = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
+            EdmModelReferenceElementsJsonVisitor visitor = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
 
             return visitor.VisitEdmReferencesAsync(this.model);
         }

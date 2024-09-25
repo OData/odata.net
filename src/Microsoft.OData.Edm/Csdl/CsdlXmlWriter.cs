@@ -235,7 +235,7 @@ namespace Microsoft.OData.Edm.Csdl
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)
             {
-                var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion);
+                EdmModelCsdlSchemaXmlWriter schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, this.writer, edmVersion);
                 visitor = new EdmModelCsdlSerializationVisitor(this.model, schemaWriter);
                 visitor.VisitEdmSchema(schema, this.model.GetNamespacePrefixMappings());
             }

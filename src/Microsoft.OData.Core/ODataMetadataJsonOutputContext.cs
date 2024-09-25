@@ -257,12 +257,12 @@ namespace Microsoft.OData
 
         private async Task WriteMetadataDocumentImplementationAsync()
         {
-            var writerSettings = new CsdlJsonWriterSettings
+            CsdlJsonWriterSettings writerSettings = new CsdlJsonWriterSettings
             {
                 IsIeee754Compatible = MessageWriterSettings.IsIeee754Compatible,
             };
 
-            var (success, errors) = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.jsonWriter, writerSettings).ConfigureAwait(false);
+            (bool success, IEnumerable<EdmError> errors) = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.jsonWriter, writerSettings).ConfigureAwait(false);
             if (!success)
             {
                 Debug.Assert(errors != null, "errors != null");
