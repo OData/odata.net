@@ -46,7 +46,7 @@ namespace Microsoft.OData.Client.Metadata
         public ODataTypeInfo(Type type)
         {
             this.type = type;
-            ServerSideNameDict = new ConcurrentDictionary<string, string>();                      
+            ServerSideNameDict = new ConcurrentDictionary<string, string>();
         }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace Microsoft.OData.Client.Metadata
         /// <summary>
         /// Sertver defined type name
         /// </summary>
-        public string ServerDefinedTypeName 
-        { 
+        public string ServerDefinedTypeName
+        {
             get
             {
                 if (_serverDefinedTypeName == null)
@@ -102,7 +102,7 @@ namespace Microsoft.OData.Client.Metadata
                     else
                     {
                         _serverDefinedTypeName = type.Name;
-                    }                    
+                    }
                 }
 
                 return _serverDefinedTypeName;
@@ -251,9 +251,9 @@ namespace Microsoft.OData.Client.Metadata
                     (typeof(UIntPtr) == propertyType))
                 {
                     continue;
-                }                    
+                }
 
-                Debug.Assert(!propertyType.ContainsGenericParameters(), "remove when test case is found that encounters this");                
+                Debug.Assert(!propertyType.ContainsGenericParameters(), "remove when test case is found that encounters this");
 
                 if (propertyInfo.CanRead &&
                     (!propertyType.IsValueType() || propertyInfo.CanWrite) &&
@@ -334,10 +334,10 @@ namespace Microsoft.OData.Client.Metadata
                 if (newKeyKind == KeyKind.AttributedKey && keyProperties.Count != dataServiceKeyAttribute?.KeyNames.Count)
                 {
                     var m = (from string a in dataServiceKeyAttribute.KeyNames
-                                where (from b in Properties
+                             where (from b in Properties
                                     where b.Name == a
                                     select b).FirstOrDefault() == null
-                                select a).First<string>();
+                             select a).First<string>();
                     throw Client.Error.InvalidOperation(Client.Strings.ClientType_MissingProperty(typeName, m));
                 }
             }
@@ -381,10 +381,16 @@ namespace Microsoft.OData.Client.Metadata
         private static KeyKind IsKeyProperty(PropertyInfo propertyInfo, KeyAttribute dataServiceKeyAttribute, out int order)
         {
             Debug.Assert(propertyInfo != null, "propertyInfo != null");
+            order = -1;
+
+            //If the property's declaring type is anonymous, it is not a key.
+            if (propertyInfo.IsAnonymousProperty())
+            {
+                return KeyKind.NotKey;
+            }
 
             string propertyName = ClientTypeUtil.GetServerDefinedName(propertyInfo);
 
-            order = -1;
             KeyKind keyKind = KeyKind.NotKey;
             if (dataServiceKeyAttribute != null && dataServiceKeyAttribute.KeyNames.Contains(propertyName))
             {
@@ -419,7 +425,7 @@ namespace Microsoft.OData.Client.Metadata
             order = -1;
             kind = KeyKind.NotKey;
             var attributes = propertyInfo.GetCustomAttributes();
-            if(!attributes.Any(a => a is System.ComponentModel.DataAnnotations.KeyAttribute))
+            if (!attributes.Any(a => a is System.ComponentModel.DataAnnotations.KeyAttribute))
             {
                 return false;
             }
