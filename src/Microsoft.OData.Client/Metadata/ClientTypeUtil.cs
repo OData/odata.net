@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ClientTypeUtil.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -18,6 +18,7 @@ namespace Microsoft.OData.Client.Metadata
     using Microsoft.OData.Metadata;
     using Microsoft.OData.Edm;
     using Client = Microsoft.OData.Client;
+    using System.Runtime.CompilerServices;
 
     #endregion Namespaces.
 
@@ -834,6 +835,21 @@ namespace Microsoft.OData.Client.Metadata
                 || assembly.Equals(typeof(ODataItem).Assembly) // OData core assembly
                 || assembly.Equals(typeof(EdmModel).Assembly) // OData Edm assembly
                 || assembly.Equals(typeof(Spatial.Geography).Assembly); // Spatial assembly
+        }
+
+
+        internal static bool IsAnonymousProperty(this PropertyInfo propertyInfo)
+        {
+            return propertyInfo.DeclaringType.IsAnonymousType();
+        }
+
+        internal static bool IsAnonymousType(this Type type)
+        {
+            return type.IsDefined(typeof(CompilerGeneratedAttribute), false)
+                && type.IsGenericType
+                && (type.Name.Contains("AnonymousType", StringComparison.Ordinal) || type.Name.Contains("AnonType", StringComparison.Ordinal))
+                && (type.Name.StartsWith("<>") || type.Name.StartsWith("VB$"))
+                && (type.Attributes & TypeAttributes.NotPublic) == TypeAttributes.NotPublic;
         }
     }
 }
