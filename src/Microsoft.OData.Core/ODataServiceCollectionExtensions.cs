@@ -55,15 +55,15 @@ namespace Microsoft.Extensions.DependencyInjection
             // Finally, register configurable settings.
             var readerSettings = new ODataMessageReaderSettings(odataVersion);
             configureReaderAction?.Invoke(readerSettings);
-            services.AddScoped(sp => readerSettings);
+            services.AddScoped(sp => readerSettings.Clone());
 
             var writerSettings = new ODataMessageWriterSettings(odataVersion);
             configureWriterAction?.Invoke(writerSettings);
-            services.AddScoped(sp => writerSettings);
+            services.AddScoped(sp => writerSettings.Clone());
 
             var parserSettings = new ODataUriParserSettings();
             configureUriParserAction?.Invoke(parserSettings);
-            services.AddScoped(sp => parserSettings);
+            services.AddScoped(sp => parserSettings.Clone());
 
             return services;
         }
