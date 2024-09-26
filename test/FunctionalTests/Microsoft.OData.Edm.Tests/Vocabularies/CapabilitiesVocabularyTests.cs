@@ -339,7 +339,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""TypecastSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Entities of a specific derived type can be created by specifying a type-cast segment"" />
     </Property>
-    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the insert."" />
     </Property>
     <Property Name=""QueryOptions"" Type=""Capabilities.ModificationQueryOptionsType"">
@@ -419,7 +419,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""MaxLevels"" Type=""Edm.Int32"" DefaultValue=""-1"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""The maximum number of navigation properties that can be traversed when addressing the collection or entity to update. A value of -1 indicates there is no restriction."" />
     </Property>
-    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the update."" />
     </Property>
     <Property Name=""QueryOptions"" Type=""Capabilities.ModificationQueryOptionsType"">
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""TypecastSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Members of collections can be deleted via a DELETE request with a type-cast segment and a `/$each` segment"" />
     </Property>
-    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to perform the delete."" />
     </Property>
     <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
@@ -529,7 +529,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""FilterSegmentSupported"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Bound action or function can be invoked on a collection-valued binding parameter path with a `/$filter(...)` segment"" />
     </Property>
-    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to invoke an action or function"" />
     </Property>
     <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">
@@ -566,7 +566,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Readable"" Type=""Edm.Boolean"" DefaultValue=""true"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""Entities can be retrieved"" />
     </Property>
-    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"">
+    <Property Name=""Permissions"" Type=""Collection(Capabilities.PermissionType)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""Required permissions. One of the specified sets of scopes is required to read."" />
     </Property>
     <Property Name=""CustomHeaders"" Type=""Collection(Capabilities.CustomParameter)"" Nullable=""false"">

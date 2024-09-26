@@ -27,7 +27,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""OData.Community.Keys.V1"" Alias=""Keys"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <ComplexType Name=""AlternateKey"">
-    <Property Name=""Key"" Type=""Collection(Keys.PropertyRef)"">
+    <Property Name=""Key"" Type=""Collection(Keys.PropertyRef)"" Nullable=""true"">
       <Annotation Term=""Core.Description"" String=""The set of properties that make up this key"" />
     </Property>
   </ComplexType>

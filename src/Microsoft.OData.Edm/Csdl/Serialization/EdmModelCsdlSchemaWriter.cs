@@ -111,7 +111,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             // Nothing here
         }
 
-        internal abstract void WriteNullableAttribute(IEdmTypeReference reference);
+        /// <summary>
+        /// 7.2.1 Nullable, A Boolean value specifying whether a value is required for the property.
+        /// </summary>
+        /// <param name="reference">The Edm type reference.</param>
+        /// <param name="parentTypeKind">The parent object's (the property's) type kind.
+        internal abstract void WriteNullableAttribute(IEdmTypeReference reference, EdmTypeKind parentTypeKind);
+
 
         internal abstract void WriteTypeDefinitionAttributes(IEdmTypeDefinitionReference reference);
 
