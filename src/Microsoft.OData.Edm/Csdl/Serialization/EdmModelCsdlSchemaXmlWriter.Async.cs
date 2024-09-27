@@ -25,9 +25,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     internal partial class EdmModelCsdlSchemaXmlWriter : EdmModelCsdlSchemaWriter
     {
         /// <summary>
-        /// Asynchronously writes Reference element header.
+        /// Asynchronously writes reference element header.
         /// </summary>
-        /// <param name="reference">edmx:reference element</param>
+        /// <param name="reference">edmx:Reference element</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteReferenceElementHeaderAsync(IEdmReference reference)
         {
@@ -39,7 +39,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously writes the reference element end.
         /// </summary>
-        /// <param name="reference">edmx:reference element</param>
+        /// <param name="reference">edmx:Reference element</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override Task WriteReferenceElementEndAsync(IEdmReference reference)
         {

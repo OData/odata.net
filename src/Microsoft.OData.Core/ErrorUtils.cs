@@ -77,11 +77,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Write an error message.
+        /// Writes an error message.
         /// </summary>
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="code">The error code.</param>
-        /// <param name="message">The message of the error.</param>
+        /// <param name="message">The error message.</param>
         /// <param name="innerError">The inner error details of the error that will be included in debug mode (if present).</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         private static void WriteXmlError(XmlWriter writer, string code, string message, ODataInnerError innerError, int maxInnerErrorDepth)
@@ -109,11 +109,11 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Asynchronously write an error message.
+        /// Asynchronously writes an error message.
         /// </summary>
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="code">The error code.</param>
-        /// <param name="message">The message of the error.</param>
+        /// <param name="message">The error message.</param>
         /// <param name="innerError">The inner error details of the error that will be included in debug mode (if present).</param>
         /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
         private static async Task WriteXmlErrorAsync(XmlWriter writer, string code, string message, ODataInnerError innerError, int maxInnerErrorDepth)

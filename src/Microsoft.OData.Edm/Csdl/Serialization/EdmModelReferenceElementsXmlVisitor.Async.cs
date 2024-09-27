@@ -13,7 +13,7 @@ using Microsoft.OData.Edm.Vocabularies;
 namespace Microsoft.OData.Edm.Csdl.Serialization
 {
     /// <summary>
-    /// The visitor for outputting &lt;edmx:referenced&gt; elements for referenced model.
+    /// The visitor for outputting &lt;edmx:Reference&gt; elements for referenced model.
     /// </summary>
     internal partial class EdmModelReferenceElementsXmlVisitor
     {
