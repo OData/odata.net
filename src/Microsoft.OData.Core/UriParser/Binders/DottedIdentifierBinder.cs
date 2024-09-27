@@ -101,16 +101,30 @@ namespace Microsoft.OData.UriParser
             }
 
             // Check if the parent type is related to the child type
-            if (!UriEdmHelpers.IsRelatedTo(parentType, childType) && childStructuredType.BaseType != null && childStructuredType.BaseType is IEdmType)
+            bool isRelatedTo = UriEdmHelpers.IsRelatedTo(parentType, childType);
+
+            // Check whether childType is a derived type of the type of its parent node
+            if (!isRelatedTo && TryBindDottedIdentifierAsProperty(parentType, childType))
             {
-                // Update parentType to the base type
-                parentType = childType;
+                // If childType is a derived type of the type of its parent node, we need to update parentType to reflect the cast
+                if(childStructuredType.BaseType != null && childStructuredType.BaseType is IEdmType childBaseType)
+                {
+                    parentType = childBaseType;
+                }
+                else
+                {
+                    parentType = childType;
+                }
+
                 // Update parentAsSingleResource to reflect the cast
                 parentAsSingleResource = new SingleResourceCastNode(parentAsSingleResource, (IEdmStructuredType)childType);
             }
 
             // Check whether childType is a derived type of the type of its parent node
-            UriEdmHelpers.CheckRelatedTo(parentType, childType);
+            if (!isRelatedTo)
+            {
+                UriEdmHelpers.CheckRelatedTo(parentType, childType);
+            }
 
             this.state.ParsedSegments.Add(new TypeSegment(childType, parentType, null));
 
@@ -121,6 +135,22 @@ namespace Microsoft.OData.UriParser
             }
 
             return new SingleResourceCastNode(parentAsSingleResource, childStructuredType);
+        }
+
+        private static bool TryBindDottedIdentifierAsProperty(IEdmType parentType, IEdmType childType)
+        {
+            if (parentType is IEdmStructuredType parentStructuredType)
+            {
+                foreach (IEdmProperty property in parentStructuredType.DeclaredProperties)
+                {
+                    if (property.Type.Definition is IEdmStructuredType propertyType && UriEdmHelpers.IsRelatedTo(propertyType, childType))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
     }
 }
