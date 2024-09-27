@@ -60,7 +60,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously write the CSDL XML.
+        /// Asynchronously writes the CSDL XML.
         /// </summary>
         /// <exception cref="InvalidOperationException"></exception>
         protected override async Task WriteCsdlAsync()
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously write the ConceptualModels element.
+        /// Asynchronously writes the ConceptualModels element.
         /// </summary>
         /// <returns>The task represents the asynchronous operation.</returns>
         private Task WriteConceptualModelsElementAsync()
@@ -243,7 +243,6 @@ namespace Microsoft.OData.Edm.Csdl
 
         private async Task WriteSchemasAsync()
         {
-            // TODO: for referenced model - write alias as is, instead of writing its namespace.
             EdmModelCsdlSerializationVisitor visitor;
             Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
             foreach (EdmSchema schema in this.schemas)

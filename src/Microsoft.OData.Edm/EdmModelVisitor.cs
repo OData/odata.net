@@ -443,7 +443,6 @@ namespace Microsoft.OData.Edm
         {
             this.ProcessElement(model);
 
-            // TODO: also visit referenced models?
             this.VisitSchemaElements(model.SchemaElements);
             this.VisitVocabularyAnnotations(model.VocabularyAnnotations);
         }

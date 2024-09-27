@@ -32,14 +32,14 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously Outputs a Schema artifact to the provided writer.
+        /// Asynchronously outputs a schema artifact to the provided writer.
         /// </summary>
         /// <param name="model">Model to be written.</param>
         /// <param name="writer">XmlWriter the generated Schema will be written to.</param>
         /// <returns>A task represents a Tuple with value indicating whether serialization was successful and Errors that prevented successful serialization, or no errors if serialization was successful.</returns>
         public static Task<Tuple<bool, IEnumerable<EdmError>>> TryWriteSchemaAsync(this IEdmModel model, XmlWriter writer)
         {
-            return TryWriteSchemaAsync(model, x => writer, true);
+            return TryWriteSchemaAsync(model, x => writer, singleFileExpected: true);
         }
 
         /// <summary>
@@ -55,14 +55,14 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously Outputs Schema artifacts to the provided writers.
+        /// Asynchronously outputs schema artifacts to the provided writers.
         /// </summary>
         /// <param name="model">Model to be written.</param>
-        /// <param name="writerProvider">A delegate that takes in a Schema namespace name and returns an XmlWriter to write the Schema to.</param>
-        /// <returns>A task represents a Tuple with value indicating whether serialization was successful and Errors that prevented successful serialization, or no errors if serialization was successful.</returns>
+        /// <param name="writerProvider">A delegate that takes in a schema namespace name and returns an XmlWriter to write the schema to.</param>
+        /// <returns>A task represents a Tuple with value indicating whether serialization was successful and errors that prevented successful serialization, or no errors if serialization was successful.</returns>
         public static Task<Tuple<bool, IEnumerable<EdmError>>> TryWriteSchemaAsync(this IEdmModel model, Func<string, XmlWriter> writerProvider)
         {
-            return TryWriteSchemaAsync(model, writerProvider, false);
+            return TryWriteSchemaAsync(model, writerProvider, singleFileExpected: false);
         }
 
         internal static bool TryWriteSchema(IEdmModel model, Func<string, XmlWriter> writerProvider, bool singleFileExpected, out IEnumerable<EdmError> errors)

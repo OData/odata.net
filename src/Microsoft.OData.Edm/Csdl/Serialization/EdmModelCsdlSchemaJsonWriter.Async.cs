@@ -27,9 +27,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
 
         /// <summary>
-        /// Asynchronously Writes Reference Element Header.
+        /// Asynchronously writes reference element header.
         /// </summary>
-        /// <param name="reference">The Edm Reference.</param>
+        /// <param name="reference">The Edm reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReferenceElementHeaderAsync(IEdmReference reference)
         {
@@ -43,9 +43,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Reference Element End.
+        /// Asynchronously writes reference element end.
         /// </summary>
-        /// <param name="reference">The Edm Reference element.</param>
+        /// <param name="reference">The Edm reference element.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReferenceElementEndAsync(IEdmReference reference)
         {
@@ -55,9 +55,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Include Element Header.
+        /// Asynchronously writes include element header.
         /// </summary>
-        /// <param name="include">The Edm Include information.</param>
+        /// <param name="include">The Edm include information.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WritIncludeElementHeaderAsync(IEdmInclude include)
         {
@@ -74,9 +74,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Include Element End.
+        /// Asynchronously writes include element end.
         /// </summary>
-        /// <param name="include">The Edm Include information.</param>
+        /// <param name="include">The Edm include information.</param>
         /// <returns>Task representing asynchronous</returns>
         internal override Task WriteIncludeElementEndAsync(IEdmInclude include)
         {
@@ -86,9 +86,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Term Object header.
+        /// Asynchronously writes term object header.
         /// </summary>
-        /// <param name="term">The Edm Term</param>
+        /// <param name="term">The Edm term</param>
         /// <param name="inlineType">Is inline type or not.</param>
         internal override async Task WriteTermElementHeaderAsync(IEdmTerm term, bool inlineType)
         {
@@ -131,7 +131,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Entity Type object.
+        /// Asynchronously writes entity type object.
         /// </summary>
         /// <param name="entityType">The Edm entity type.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -162,7 +162,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Complex Type Object.
+        /// Asynchronously writes complex type object.
         /// </summary>
         /// <param name="complexType">The Edm complex type.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -190,7 +190,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes $Key.
+        /// Asynchronously writes key.
         /// </summary>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDeclaredKeyPropertiesElementHeaderAsync()
@@ -205,9 +205,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes the Key property.
+        /// Asynchronously writes the key property.
         /// </summary>
-        /// <param name="property">The Edm Structural Property.</param>
+        /// <param name="property">The Edm structural property.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WritePropertyRefElementAsync(IEdmStructuralProperty property)
         {
@@ -219,7 +219,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Navigation Property Object.
+        /// Asynchronously writes navigation property object.
         /// </summary>
         /// <param name="property">The Edm navigation property.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
@@ -256,9 +256,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Referential Constraint Begin.
+        /// Asynchronously writes referential constraint begin.
         /// </summary>
-        /// <param name="referentialConstraint">The Edm Referential Constraint.</param>
+        /// <param name="referentialConstraint">The Edm referential constraint.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReferentialConstraintBeginAsync(IEdmReferentialConstraint referentialConstraint)
         {
@@ -271,9 +271,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Referential Constraint End.
+        /// Asynchronously writes referential constraint end.
         /// </summary>
-        /// <param name="referentialConstraint">The Edm Referential Constraint.</param>
+        /// <param name="referentialConstraint">The Edm referential constraint.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReferentialConstraintEndAsync(IEdmReferentialConstraint referentialConstraint)
         {
@@ -286,9 +286,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Referential Constraint Pair.
+        /// Asynchronously writes referential constraint pair.
         /// </summary>
-        /// <param name="pair">The Edm Referential Constraint Property Pair.</param>
+        /// <param name="pair">The Edm referential constraint property pair.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReferentialConstraintPairAsync(EdmReferentialConstraintPropertyPair pair)
         {
@@ -303,9 +303,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Navigation OnDelete Action Element.
+        /// Asynchronously writes navigation ondelete action element.
         /// </summary>
-        /// <param name="operationAction">The Edm OnDelete Action.</param>
+        /// <param name="operationAction">The Edm ondelete action.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction)
         {
@@ -321,9 +321,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Schema Object.
+        /// Asynchronously writes schema object.
         /// </summary>
-        /// <param name="schema">The Schema</param>
+        /// <param name="schema">The schema</param>
         /// <param name="alias">The alias</param>
         /// <param name="mappings">The namespace prefix mapping. It's used in XML, Not apply for JSON.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes $Annotations Begin : {
+        /// Asynchronously writes annotations begin : {
         /// </summary>
         /// <param name="outOfLineAnnotations">The total out of line annotations.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -356,7 +356,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Annotations with External Targeting.
+        /// Asynchronously writes annotations with external targeting.
         /// </summary>
         /// <param name="annotationsForTarget">The annotation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -370,7 +370,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes $Annotations End: }
+        /// Asynchronously writes annotations end: }
         /// </summary>
         /// <param name="outOfLineAnnotations">The total out of line annotations.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -382,7 +382,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes structural property object.
+        /// Asynchronously writes structural property object.
         /// </summary>
         /// <param name="property">The Edm structural property.</param>
         /// <param name="inlineType">Is line type or not.</param>
@@ -410,7 +410,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes enumeration type object header
+        /// Asynchronously writes enumeration type object header
         /// </summary>
         /// <param name="enumType">The given enumeration type.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes enumeration type object end
+        /// Asynchronously writes enumeration type object end
         /// </summary>
         /// <param name="enumType">The given enumeration type.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
@@ -452,7 +452,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Enumeration Member Object start
+        /// Asynchronously writes enumeration member object start
         /// </summary>
         /// <param name="member">The Edm Enum member.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -467,7 +467,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Nullable, A Boolean value specifying whether a value is required for the property.
+        /// Asynchronously writes nullable, A boolean value specifying whether a value is required for the property.
         /// </summary>
         /// <param name="reference">The Edm type reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -480,9 +480,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Type Definition Attributes.
+        /// Asynchronously writes type definition attributes.
         /// </summary>
-        /// <param name="reference">The Edm Type Definition Reference.</param>
+        /// <param name="reference">The Edm type definition reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteTypeDefinitionAttributesAsync(IEdmTypeDefinitionReference reference)
         {
@@ -511,9 +511,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Binary Type Attributes.
+        /// Asynchronously writes binary type attributes.
         /// </summary>
-        /// <param name="reference">The Edm Binary Type Reference</param>
+        /// <param name="reference">The Edm binary type reference</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteBinaryTypeAttributesAsync(IEdmBinaryTypeReference reference)
         {
@@ -526,9 +526,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Decimal Type Attributes.
+        /// Asynchronously writes decimal type attributes.
         /// </summary>
-        /// <param name="reference">The Edm Decimal Type Reference.</param>
+        /// <param name="reference">The Edm decimal type reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDecimalTypeAttributesAsync(IEdmDecimalTypeReference reference)
         {
@@ -544,9 +544,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Spatial Type Attributes. $SRID
+        /// Asynchronously writes spatial type attributes. $SRID
         /// </summary>
-        /// <param name="reference">The Edm Spatial Type Reference.</param>
+        /// <param name="reference">The Edm spatial type reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteSpatialTypeAttributesAsync(IEdmSpatialTypeReference reference)
         {
@@ -567,9 +567,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes String Type Attributes. $MaxLength, $Unicode
+        /// Asynchronously writes string type attributes. $MaxLength, $Unicode
         /// </summary>
-        /// <param name="reference">The Edm String Type Reference.</param>
+        /// <param name="reference">The Edm string type reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteStringTypeAttributesAsync(IEdmStringTypeReference reference)
         {
@@ -584,9 +584,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Temporal Type Attributes. $Precision
+        /// Asynchronously writes temporal type attributes. $Precision
         /// </summary>
-        /// <param name="reference">The Edm Temporal Type Reference.</param>
+        /// <param name="reference">The Edm temporal type reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteTemporalTypeAttributesAsync(IEdmTemporalTypeReference reference)
         {
@@ -597,9 +597,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Annotation String Attribute.
+        /// Asynchronously writes annotation string attribute.
         /// </summary>
-        /// <param name="annotation">The Edm Direct Value Annotation.</param>
+        /// <param name="annotation">The Edm direct value annotation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteAnnotationStringAttributeAsync(IEdmDirectValueAnnotation annotation)
         {
@@ -612,9 +612,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Annotation String Element.
+        /// Asynchronously writes annotation string element.
         /// </summary>
-        /// <param name="annotation">The Edm Direct Value Annotation.</param>
+        /// <param name="annotation">The Edm direct value annotation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteAnnotationStringElementAsync(IEdmDirectValueAnnotation annotation)
         {
@@ -628,10 +628,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Schema Operations Header.
+        /// Asynchronously writes schema operations header.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="operation">The Key/Value Pair Operation. An operation is represented as a member of the schema object whose name is the unqualified name of the operation.</param>
+        /// <param name="operation">The Key/Value pair operation. An operation is represented as a member of the schema object whose name is the unqualified name of the operation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteSchemaOperationsHeaderAsync<T>(KeyValuePair<string, IList<T>> operation)
         {
@@ -645,10 +645,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Schema Operations End.
+        /// Asynchronously writes schema operations end.
         /// </summary>
         /// <typeparam name="T"></typeparam>
-        /// <param name="operation">The Key/Value Pair Operation. An operation is represented as a member of the schema object whose name is the unqualified name of the operation.</param>
+        /// <param name="operation">The Key/Value pair operation. An operation is represented as a member of the schema object whose name is the unqualified name of the operation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteSchemaOperationsEndAsync<T>(KeyValuePair<string, IList<T>> operation)
         {
@@ -658,9 +658,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Action Element Header. $Kind
+        /// Asynchronously writes action element header. $Kind
         /// </summary>
-        /// <param name="action">The Edm Action.</param>
+        /// <param name="action">The Edm action.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteActionElementHeaderAsync(IEdmAction action)
         {
@@ -673,9 +673,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Function Element Header. $Kind, $IsComposable
+        /// Asynchronously writes function element header. $Kind, $IsComposable
         /// </summary>
-        /// <param name="function">The Edm Function.</param>
+        /// <param name="function">The Edm function.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteFunctionElementHeaderAsync(IEdmFunction function)
         {
@@ -693,9 +693,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Element Attributes. $IsBound, $EntitySetPath
+        /// Asynchronously writes operation element attributes. $IsBound, $EntitySetPath
         /// </summary>
-        /// <param name="operation">The Edm Operation.</param>
+        /// <param name="operation">The Edm operation.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteOperationElementAttributesAsync(IEdmOperation operation)
         {
@@ -713,9 +713,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Parameters Begin. $Parameter
+        /// Asynchronously writes operation parameters begin. $Parameter
         /// </summary>
-        /// <param name="parameters">The Edm Operation parameters.</param>
+        /// <param name="parameters">The Edm operation parameters.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteOperationParametersBeginAsync(IEnumerable<IEdmOperationParameter> parameters)
         {
@@ -729,9 +729,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Parameters End.
+        /// Asynchronously writes operation parameters end.
         /// </summary>
-        /// <param name="parameters">The Edm Operation parameters.</param>
+        /// <param name="parameters">The Edm operation parameters.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteOperationParametersEndAsync(IEnumerable<IEdmOperationParameter> parameters)
         {
@@ -744,9 +744,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Return Type Element Header. $ReturnType
+        /// Asynchronously writes return type element header. $ReturnType
         /// </summary>
-        /// <param name="operationReturn">The Edm Operation Return.</param>
+        /// <param name="operationReturn">The Edm operation return.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteReturnTypeElementHeaderAsync(IEdmOperationReturn operationReturn)
         {
@@ -760,9 +760,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Type Attribute
+        /// Asynchronously writes type attribute
         /// </summary>
-        /// <param name="typeReference">The Edm Type Reference.</param>
+        /// <param name="typeReference">The Edm type reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override Task WriteTypeAttributeAsync(IEdmTypeReference typeReference)
         {
@@ -770,9 +770,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Entity Container Element Header.
+        /// Asynchronously writes entity container element header.
         /// </summary>
-        /// <param name="container">The Edm Entity Container.</param>
+        /// <param name="container">The Edm entity container.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteEntityContainerElementHeaderAsync(IEdmEntityContainer container)
         {
@@ -798,9 +798,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Entity Set object.
+        /// Asynchronously writes entity set object.
         /// </summary>
-        /// <param name="entitySet">The Edm Entity Set.</param>
+        /// <param name="entitySet">The Edm entity set.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteEntitySetElementHeaderAsync(IEdmEntitySet entitySet)
         {
@@ -823,7 +823,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Singleton Object.
+        /// Asynchronously writes singleton object.
         /// </summary>
         /// <param name="singleton">The Edm singleton.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -845,7 +845,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Action Import Object.
+        /// Asynchronously writes action import object.
         /// </summary>
         /// <param name="actionImport">The Edm action import.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
@@ -868,7 +868,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Function Import Object.
+        /// Asynchronously writes function import object.
         /// </summary>
         /// <param name="functionImport">The Edm function import.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
@@ -897,9 +897,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Parameter Object.
+        /// Asynchronously writes operation parameter object.
         /// </summary>
-        /// <param name="parameter">The Edm Operation parameter.</param>
+        /// <param name="parameter">The Edm operation parameter.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteOperationParameterElementHeaderAsync(IEdmOperationParameter parameter, bool inlineType)
@@ -916,10 +916,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Type Reference.
+        /// Asynchronously writes type reference.
         /// </summary>
-        /// <param name="type">The Edm Type Reference.</param>
-        /// <param name="defaultTypeName">The Default Type name. Set to "Edm.String" by default.</param>
+        /// <param name="type">The Edm type reference.</param>
+        /// <param name="defaultTypeName">The Default type name. Set to "Edm.String" by default.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal Task WriteTypeReferenceAsync(IEdmTypeReference type, string defaultTypeName = "Edm.String")
         {
@@ -944,9 +944,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Parameter End Element.
+        /// Asynchronously writes operation parameter end element.
         /// </summary>
-        /// <param name="parameter">The Edm Operation Parameter.</param>
+        /// <param name="parameter">The Edm operation parameter.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteOperationParameterEndElementAsync(IEdmOperationParameter parameter)
         {
@@ -976,9 +976,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Collection Type Element Header.
+        /// Asynchronously writes collection type element header.
         /// </summary>
-        /// <param name="collectionType">The Edm Collection Type.</param>
+        /// <param name="collectionType">The Edm collection type.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteCollectionTypeElementHeaderAsync(IEdmCollectionType collectionType, bool inlineType)
@@ -987,9 +987,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Inline Expression.
+        /// Asynchronously writes inline expression.
         /// </summary>
-        /// <param name="expression">The Edm Expression.</param>
+        /// <param name="expression">The Edm expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override Task WriteInlineExpressionAsync(IEdmExpression expression)
         {
@@ -1033,9 +1033,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Vocabulary Annotation Header.
+        /// Asynchronously writes vocabulary annotation header.
         /// </summary>
-        /// <param name="annotation">The Edm Vocabulary Annotation.</param>
+        /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteVocabularyAnnotationElementHeaderAsync(IEdmVocabularyAnnotation annotation, bool isInline)
@@ -1050,9 +1050,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Vocabulary Annotation End.
+        /// Asynchronously writes vocabulary annotation end.
         /// </summary>
-        /// <param name="annotation">The Edm Vocabulary Annotation.</param>
+        /// <param name="annotation">The Edm vocabulary annotation.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteVocabularyAnnotationElementEndAsync(IEdmVocabularyAnnotation annotation, bool isInline)
@@ -1061,9 +1061,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Property Value Header.
+        /// Asynchronously writes property value header.
         /// </summary>
-        /// <param name="value">The Edm Property Constructor.</param>
+        /// <param name="value">The Edm property constructor.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WritePropertyValueElementHeaderAsync(IEdmPropertyConstructor value, bool isInline)
@@ -1077,9 +1077,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Record Expression Header.
+        /// Asynchronously writes record expression header.
         /// </summary>
-        /// <param name="expression">The Edm Record Expression.</param>
+        /// <param name="expression">The Edm record expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteRecordExpressionElementHeaderAsync(IEdmRecordExpression expression)
         {
@@ -1097,9 +1097,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Property Constructor Header.
+        /// Asynchronously writes property constructor header.
         /// </summary>
-        /// <param name="constructor">The Edm Property Constructor.</param>
+        /// <param name="constructor">The Edm property constructor.</param>
         /// <param name="isInline">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WritePropertyConstructorElementHeaderAsync(IEdmPropertyConstructor constructor, bool isInline)
@@ -1116,9 +1116,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Property Constructor End.
+        /// Asynchronously writes property constructor end.
         /// </summary>
-        /// <param name="constructor">The Edm Property Constructor.</param>
+        /// <param name="constructor">The Edm property constructor.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WritePropertyConstructorElementEndAsync(IEdmPropertyConstructor constructor)
         {
@@ -1126,9 +1126,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes String Constant Expression.
+        /// Asynchronously writes string constant expression.
         /// </summary>
-        /// <param name="expression">The Edm String Constant Expression.</param>
+        /// <param name="expression">The Edm string constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteStringConstantExpressionElementAsync(IEdmStringConstantExpression expression)
         {
@@ -1139,9 +1139,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Binary Constant Expression.
+        /// Asynchronously writes binary constant expression.
         /// </summary>
-        /// <param name="expression">The Edm String Constant Expression.</param>
+        /// <param name="expression">The Edm string constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteBinaryConstantExpressionElementAsync(IEdmBinaryConstantExpression expression)
         {
@@ -1152,9 +1152,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Boolean Constant Expression.
+        /// Asynchronously writes boolean constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Boolean Constant Expression.</param>
+        /// <param name="expression">The Edm boolean constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteBooleanConstantExpressionElementAsync(IEdmBooleanConstantExpression expression)
         {
@@ -1165,9 +1165,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Null Constant Expression.
+        /// Asynchronously writes null constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Null Constant Expression.</param>
+        /// <param name="expression">The Edm null constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteNullConstantExpressionElementAsync(IEdmNullExpression expression)
         {
@@ -1181,9 +1181,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Date Constant Expression.
+        /// Asynchronously writes date constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Date Constant Expression.</param>
+        /// <param name="expression">The Edm Date constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDateConstantExpressionElementAsync(IEdmDateConstantExpression expression)
         {
@@ -1194,9 +1194,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Datetime Offset Constant Expression.
+        /// Asynchronously writes datetimeoffset constant expression.
         /// </summary>
-        /// <param name="expression">The Edm DateTimeOffset Constant Expression.</param>
+        /// <param name="expression">The Edm datetimeoffset constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDateTimeOffsetConstantExpressionElementAsync(IEdmDateTimeOffsetConstantExpression expression)
         {
@@ -1207,9 +1207,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Duration Constant Expression.
+        /// Asynchronously writes duration constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Duration Constant Expression.</param>
+        /// <param name="expression">The Edm duration constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDurationConstantExpressionElementAsync(IEdmDurationConstantExpression expression)
         {
@@ -1220,9 +1220,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Decimal Constant Expression.
+        /// Asynchronously writes decimal constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Decimal Constant Expression.</param>
+        /// <param name="expression">The Edm decimal constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteDecimalConstantExpressionElementAsync(IEdmDecimalConstantExpression expression)
         {
@@ -1241,9 +1241,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Floating Constant Expression.
+        /// Asynchronously writes floating constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Floating Constant Expression.</param>
+        /// <param name="expression">The Edm floating constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteFloatingConstantExpressionElementAsync(IEdmFloatingConstantExpression expression)
         {
@@ -1270,9 +1270,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Function Application Header.
+        /// Asynchronously writes function application header.
         /// </summary>
-        /// <param name="expression">The Edm Apply Expression.</param>
+        /// <param name="expression">The Edm Apply expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteFunctionApplicationElementHeaderAsync(IEdmApplyExpression expression)
         {
@@ -1289,9 +1289,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Function Application End.
+        /// Asynchronously writes function application end.
         /// </summary>
-        /// <param name="expression">The Edm Apply Expression.</param>
+        /// <param name="expression">The Edm Apply expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteFunctionApplicationElementEndAsync(IEdmApplyExpression expression)
         {
@@ -1308,9 +1308,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Guid Constant Expression.
+        /// Asynchronously writes guid constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Guid Constant Expression.</param>
+        /// <param name="expression">The Edm guid constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteGuidConstantExpressionElementAsync(IEdmGuidConstantExpression expression)
         {
@@ -1321,9 +1321,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Integer Constant Expression.
+        /// Asynchronously writes integer constant expression.
         /// </summary>
-        /// <param name="expression">The Edm Integer Constant Expression.</param>
+        /// <param name="expression">The Edm integer constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIntegerConstantExpressionElementAsync(IEdmIntegerConstantExpression expression)
         {
@@ -1341,9 +1341,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Path Expression.
+        /// Asynchronously writes path expression.
         /// </summary>
-        /// <param name="expression">The Edm Path Expression.</param>
+        /// <param name="expression">The Edm path expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WritePathExpressionElementAsync(IEdmPathExpression expression)
         {
@@ -1357,9 +1357,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Property Path Expression.
+        /// Asynchronously writes property path expression.
         /// </summary>
-        /// <param name="expression">The Edm Path Expression.</param>
+        /// <param name="expression">The Edm path expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WritePropertyPathExpressionElementAsync(IEdmPathExpression expression)
         {
@@ -1370,9 +1370,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Navigation Property Path Expression.
+        /// Asynchronously writes navigation property path expression.
         /// </summary>
-        /// <param name="expression">The Edm Path Expression.</param>
+        /// <param name="expression">The Edm path expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteNavigationPropertyPathExpressionElementAsync(IEdmPathExpression expression)
         {
@@ -1383,9 +1383,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Annotation Path Expression.
+        /// Asynchronously writes annotation path expression.
         /// </summary>
-        /// <param name="expression">The Edm Path Expression.</param>
+        /// <param name="expression">The Edm path expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteAnnotationPathExpressionElementAsync(IEdmPathExpression expression)
         {
@@ -1396,9 +1396,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes 'If' Expression Header.
+        /// Asynchronously writes 'if' expression header.
         /// </summary>
-        /// <param name="expression">The If Expression.</param>
+        /// <param name="expression">The if expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIfExpressionElementHeaderAsync(IEdmIfExpression expression)
         {
@@ -1415,9 +1415,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes 'If' Expression End.
+        /// Asynchronously writes 'if' expression end.
         /// </summary>
-        /// <param name="expression">The Edm If Expression.</param>
+        /// <param name="expression">The Edm if expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIfExpressionElementEndAsync(IEdmIfExpression expression)
         {
@@ -1429,9 +1429,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Collection Expression Header.
+        /// Asynchronously writes collection expression header.
         /// </summary>
-        /// <param name="expression">The Edm Collection Expression.</param>
+        /// <param name="expression">The Edm collection expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteCollectionExpressionElementHeaderAsync(IEdmCollectionExpression expression)
         {
@@ -1441,9 +1441,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Collection Expression End.
+        /// Asynchronously writes collection expression end.
         /// </summary>
-        /// <param name="expression">The Edm Collection Expression.</param>
+        /// <param name="expression">The Edm collection expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteCollectionExpressionElementEndAsync(IEdmCollectionExpression expression)
         {
@@ -1453,9 +1453,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Labeled Header.
+        /// Asynchronously writes labeled header.
         /// </summary>
-        /// <param name="labeledElement">The Edm Labeled Expression.</param>
+        /// <param name="labeledElement">The Edm labeled expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteLabeledElementHeaderAsync(IEdmLabeledExpression labeledElement)
         {
@@ -1472,9 +1472,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Labeled Expression Reference.
+        /// Asynchronously writes labeled expression reference.
         /// </summary>
-        /// <param name="labeledExpressionReference">The Edm Labeled Expression Reference.</param>
+        /// <param name="labeledExpressionReference">The Edm labeled expression reference.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression labeledExpressionReference)
         {
@@ -1496,9 +1496,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Time Of Day Constant Expression.
+        /// Asynchronously writes time of day constant expression.
         /// </summary>
-        /// <param name="expression">The Edm TimeOfDay Constant Expression.</param>
+        /// <param name="expression">The Edm TimeOfDay constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteTimeOfDayConstantExpressionElementAsync(IEdmTimeOfDayConstantExpression expression)
         {
@@ -1509,9 +1509,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Is Type Expression Header.
+        /// Asynchronously writes IsOf type expression header.
         /// </summary>
-        /// <param name="expression">The Edm IsOf Type Expression.</param>
+        /// <param name="expression">The Edm IsOf type expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIsTypeExpressionElementHeaderAsync(IEdmIsTypeExpression expression, bool inlineType)
@@ -1527,9 +1527,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes 'Is Of' Expression Type.
+        /// Asynchronously writes 'IsOf' expression type.
         /// </summary>
-        /// <param name="expression">The Edm IsOf Type Expression.</param>
+        /// <param name="expression">The Edm IsOf type expression.</param>
         /// <param name="inlineType">Is line type or not.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIsOfExpressionTypeAsync(IEdmIsTypeExpression expression, bool inlineType)
@@ -1543,7 +1543,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Cast Expression Header.
+        /// Asynchronously writes cast expression header.
         /// </summary>
         /// <param name="expression">The cast expression</param>
         /// <param name="inlineType">Is inline type.</param>
@@ -1559,7 +1559,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Cast Expression End.
+        /// Asynchronously writes cast expression end.
         /// </summary>
         /// <param name="expression">The Edm cast expression</param>
         /// <param name="inlineType">Is inline type.</param>
@@ -1572,7 +1572,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Cast Expression Type.
+        /// Asynchronously writes cast expression type.
         /// </summary>
         /// <param name="expression">The Edm cast expression</param>
         /// <param name="inlineType">Is inline type.</param>
@@ -1588,9 +1588,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Enumeration Member Expression
+        /// Asynchronously enumeration member expression
         /// </summary>
-        /// <param name="expression">The Edm Enumeration member expression.</param>
+        /// <param name="expression">The Edm enumeration member expression.</param>
         internal override Task WriteEnumMemberExpressionElementAsync(IEdmEnumMemberExpression expression)
         {
             // Enumeration member expressions are represented as a string containing the numeric or symbolic enumeration value.
@@ -1600,7 +1600,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Type Definition Object
+        /// Asynchronously writes type definition object
         /// </summary>
         /// <param name="typeDefinition">The Edm type definition.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1622,7 +1622,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Navigation Property Bindings Begin $NavigationPropertyBinding
+        /// Asynchronously writes navigation property Bindings begin $NavigationPropertyBinding
         /// </summary>
         /// <param name="bindings">The collection the bindings.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1638,7 +1638,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Navigation Property Bindings End $NavigationPropertyBinding
+        /// Asynchronously writes navigation property Bindings end $NavigationPropertyBinding
         /// </summary>
         /// <param name="bindings">The collection the bindings.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1650,9 +1650,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes the navigation property binding member in $NavigationPropertyBinding object.
+        /// Asynchronously writes the navigation property binding member in $NavigationPropertyBinding object.
         /// </summary>
-        /// <param name="binding">The Edm Navigation Property binding.</param>
+        /// <param name="binding">The Edm navigation property binding.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteNavigationPropertyBindingAsync(IEdmNavigationPropertyBinding binding)
         {
@@ -1673,7 +1673,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes End Element.
+        /// Asynchronously writes end element.
         /// </summary>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteEndElementAsync()
@@ -1684,7 +1684,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Array End Element.
+        /// Asynchronously writes array end element.
         /// </summary>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteArrayEndElementAsync()
@@ -1695,10 +1695,10 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Operation Import Attributes.
+        /// Asynchronously writes operation import attributes.
         /// </summary>
-        /// <param name="operationImport">The Edm Operation import.</param>
-        /// <param name="operationAttributeName">Operation Attribute name.</param>
+        /// <param name="operationImport">The Edm operation import.</param>
+        /// <param name="operationAttributeName">Operation attribute name.</param>
         /// <exception cref="InvalidOperationException"></exception>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteOperationImportAttributesAsync(IEdmOperationImport operationImport, string operationAttributeName)

@@ -60,7 +60,7 @@ namespace Microsoft.OData.Metadata
         }
 
         /// <summary>
-        /// Asynchronously Write an error message.
+        /// Asynchronously writes an error message.
         /// </summary>
         /// <param name="writer">The Xml writer to write to.</param>
         /// <param name="error">The error instance to write.</param>

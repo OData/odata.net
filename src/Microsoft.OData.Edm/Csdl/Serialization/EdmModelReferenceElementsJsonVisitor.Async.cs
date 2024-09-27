@@ -20,9 +20,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     internal partial class EdmModelReferenceElementsJsonVisitor
     {
         /// <summary>
-        /// Asynchronously Visits Edm references and Write includes and annotations.
+        /// Asynchronously visits Edm references and writes includes and annotations.
         /// </summary>
-        /// <param name="model">The Edm Model.</param>
+        /// <param name="model">The Edm model.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal async Task VisitEdmReferencesAsync(IEdmModel model)
         {
@@ -52,7 +52,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Includes
+        /// Asynchronously writes includes
         /// </summary>
         /// <param name="model">The Edm model.</param>
         /// <param name="includes">Collection of Edm includes.</param>
@@ -84,7 +84,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes $IncludeAnnotations Array
+        /// Asynchronously writes include annotations array
         /// </summary>
         /// <param name="includeAnnotations">Collection of Edm include annotations.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -124,7 +124,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously Writes Annotations
+        /// Asynchronously writes annotations
         /// </summary>
         /// <param name="model">The Edm model.</param>
         /// <param name="target">The Edm vocabulary annotations.</param>

@@ -19,7 +19,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     {
         #region write IEdmModel.References for referenced models.
         /// <summary>
-        /// Asynchronously visit Edm references and Write includes and annotations.
+        /// Asynchronously visits Edm references and writes includes and annotations.
         /// </summary>
         /// <param name="model">The Edm model.</param>
         /// <param name="reference">The Edm reference.</param>
@@ -54,7 +54,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously write annotations.
+        /// Asynchronously writes annotations.
         /// </summary>
         /// <param name="model">The Edm model.</param>
         /// <param name="target">The Edm vocabulary annotations.</param>

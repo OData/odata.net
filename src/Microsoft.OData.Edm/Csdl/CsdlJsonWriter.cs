@@ -56,7 +56,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously Writes the JSON CSDL.
+        /// Asynchronously writes the JSON CSDL.
         /// </summary>
         /// <returns>Task that represents the asynchronous operation.</returns>
         protected override async Task WriteCsdlAsync()
@@ -73,7 +73,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Writes CSDL JSON Document Object
+        /// Writes CSDL JSON document object
         /// </summary>
         private void WriteCsdlStart()
         {
@@ -91,7 +91,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously Writes CSDL JSON Document Object
+        /// Asynchronously writes CSDL JSON document object
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         private Task WriteCsdlStartAsync()
@@ -112,7 +112,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Writes $Reference Object
+        /// Writes reference object
         /// </summary>
         private void WriteReferenceElements()
         {
@@ -123,7 +123,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously writes $Reference Object.
+        /// Asynchronously writes reference object.
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         private Task WriteReferenceElementsAsync()
@@ -134,7 +134,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Writes Schema Object.
+        /// Writes schema object.
         /// </summary>
         private void WriteSchemas()
         {
@@ -151,7 +151,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Asynchronously Writes Schema Object
+        /// Asynchronously writes schema object
         /// </summary>
         /// <returns>A task that represents the asynchronous operation</returns>
         private async Task WriteSchemasAsync()
@@ -177,7 +177,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Write the end of the CSDL JSON document asynchronously.
+        /// Asynchronously writes the end of the CSDL JSON document.
         /// </summary>
         /// <returns>A task that flushing the JSON writer (jsonWriter) asynchronously.</returns>
         private Task WriteCsdlEndAsync()
