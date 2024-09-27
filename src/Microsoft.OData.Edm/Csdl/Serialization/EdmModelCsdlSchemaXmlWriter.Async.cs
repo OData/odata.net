@@ -246,9 +246,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes the navigation ondelete action element.
+        /// Asynchronously writes the navigation OnDelete action element.
         /// </summary>
-        /// <param name="operationAction">The Edm ondelete action.</param>
+        /// <param name="operationAction">The Edm OnDelete action.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction)
         {
@@ -901,9 +901,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes guid constant expression element.
+        /// Asynchronously writes Guid constant expression element.
         /// </summary>
-        /// <param name="expression">The Edm guid constant expression.</param>
+        /// <param name="expression">The Edm Guid constant expression.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override async Task WriteGuidConstantExpressionElementAsync(IEdmGuidConstantExpression expression)
         {
@@ -973,9 +973,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes If expression element header.
+        /// Asynchronously writes 'if' expression element header.
         /// </summary>
-        /// <param name="expression">EDM if Expression</param>
+        /// <param name="expression">Edm if Expression</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override Task WriteIfExpressionElementHeaderAsync(IEdmIfExpression expression)
         {
@@ -985,7 +985,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         /// <summary>
         /// Asynchronously writes If expression element end.
         /// </summary>
-        /// <param name="expression">EDM if Expression</param>
+        /// <param name="expression">Edm if Expression</param>
         /// <returns>Task represents an asynchronous operation.</returns>
         internal override Task WriteIfExpressionElementEndAsync(IEdmIfExpression expression)
         {

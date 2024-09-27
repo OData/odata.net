@@ -303,9 +303,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes navigation ondelete action element.
+        /// Asynchronously writes navigation OnDelete action element.
         /// </summary>
-        /// <param name="operationAction">The Edm ondelete action.</param>
+        /// <param name="operationAction">The Edm OnDelete action.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteNavigationOnDeleteActionElementAsync(EdmOnDeleteAction operationAction)
         {
@@ -1181,7 +1181,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes date constant expression.
+        /// Asynchronously writes Date constant expression.
         /// </summary>
         /// <param name="expression">The Edm Date constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1194,7 +1194,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes datetimeoffset constant expression.
+        /// Asynchronously writes DateTimeOffset constant expression.
         /// </summary>
         /// <param name="expression">The Edm datetimeoffset constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1308,9 +1308,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes guid constant expression.
+        /// Asynchronously writes Guid constant expression.
         /// </summary>
-        /// <param name="expression">The Edm guid constant expression.</param>
+        /// <param name="expression">The Edm Guid constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteGuidConstantExpressionElementAsync(IEdmGuidConstantExpression expression)
         {
@@ -1321,9 +1321,9 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes integer constant expression.
+        /// Asynchronously writes Integer constant expression.
         /// </summary>
-        /// <param name="expression">The Edm integer constant expression.</param>
+        /// <param name="expression">The Edm Integer constant expression.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
         internal override Task WriteIntegerConstantExpressionElementAsync(IEdmIntegerConstantExpression expression)
         {
@@ -1622,7 +1622,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes navigation property Bindings begin $NavigationPropertyBinding
+        /// Asynchronously writes navigation property bindings begin
         /// </summary>
         /// <param name="bindings">The collection the bindings.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1638,7 +1638,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes navigation property Bindings end $NavigationPropertyBinding
+        /// Asynchronously writes navigation property bindings end
         /// </summary>
         /// <param name="bindings">The collection the bindings.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
@@ -1650,7 +1650,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes the navigation property binding member in $NavigationPropertyBinding object.
+        /// Asynchronously writes the navigation property binding member in navigation property binding object.
         /// </summary>
         /// <param name="binding">The Edm navigation property binding.</param>
         /// <returns>Task represents an asynchronous operation that may or may not return a result.</returns>
