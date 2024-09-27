@@ -383,7 +383,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
 
         /// <summary>
-        /// Asynchronously writes binary yype attributes.
+        /// Asynchronously writes binary type attributes.
         /// </summary>
         /// <param name="reference">The Edm binary type reference.</param>
         /// <returns>Task represents an asynchronous operation.</returns>
