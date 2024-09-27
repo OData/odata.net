@@ -180,12 +180,12 @@ namespace Microsoft.OData.Edm.Csdl
         /// Asynchronously writes the end of the CSDL JSON document.
         /// </summary>
         /// <returns>A task that flushing the JSON writer (jsonWriter) asynchronously.</returns>
-        private Task WriteCsdlEndAsync()
+        private async Task WriteCsdlEndAsync()
         {
             // End of the CSDL JSON document.
             this.jsonWriter.WriteEndObject();
 
-            return this.jsonWriter.FlushAsync();
+            await this.jsonWriter.FlushAsync().ConfigureAwait(false);
         }
     }
 }

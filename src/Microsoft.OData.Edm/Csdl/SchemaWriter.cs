@@ -35,8 +35,8 @@ namespace Microsoft.OData.Edm.Csdl
         /// Asynchronously outputs a schema artifact to the provided writer.
         /// </summary>
         /// <param name="model">Model to be written.</param>
-        /// <param name="writer">XmlWriter the generated Schema will be written to.</param>
-        /// <returns>A task represents a Tuple with value indicating whether serialization was successful and Errors that prevented successful serialization, or no errors if serialization was successful.</returns>
+        /// <param name="writer">XmlWriter the generated schema will be written to.</param>
+        /// <returns>A task represents a Tuple with value indicating whether serialization was successful and errors that prevented successful serialization, or no errors if serialization was successful.</returns>
         public static Task<Tuple<bool, IEnumerable<EdmError>>> TryWriteSchemaAsync(this IEdmModel model, XmlWriter writer)
         {
             return TryWriteSchemaAsync(model, x => writer, singleFileExpected: true);
