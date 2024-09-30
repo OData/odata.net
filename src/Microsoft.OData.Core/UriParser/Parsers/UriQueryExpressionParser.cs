@@ -205,7 +205,8 @@ namespace Microsoft.OData.UriParser
                 case ExpressionTokenKind.BracketedExpression:
                 case ExpressionTokenKind.ParenthesesExpression:
                     {
-                        LiteralToken result = new LiteralToken(lexer.CurrentToken.Text, lexer.CurrentToken.Text);
+                        string tokenText = lexer.CurrentToken.Text.ToString();
+                        LiteralToken result = new LiteralToken(tokenText, tokenText);
                         lexer.NextToken();
                         return result;
                     }
@@ -751,7 +752,7 @@ namespace Microsoft.OData.UriParser
         private static FunctionParameterAliasToken ParseParameterAlias(ExpressionLexer lexer)
         {
             Debug.Assert(lexer != null, "lexer != null");
-            FunctionParameterAliasToken ret = new FunctionParameterAliasToken(lexer.CurrentToken.Text);
+            FunctionParameterAliasToken ret = new FunctionParameterAliasToken(lexer.CurrentToken.Text.ToString());
             lexer.NextToken();
             return ret;
         }
@@ -767,8 +768,9 @@ namespace Microsoft.OData.UriParser
         {
             Debug.Assert(lexer != null, "lexer != null");
 
+            string tokenText = lexer.CurrentToken.Text.ToString();
             UriLiteralParsingException typeParsingException;
-            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(lexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
 
             if (targetValue == null)
             {
@@ -778,7 +780,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeName,
-                        lexer.CurrentToken.Text,
+                        tokenText,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText);
 
@@ -788,7 +790,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
                         targetTypeName,
-                        lexer.CurrentToken.Text,
+                        tokenText,
                         lexer.CurrentToken.Position,
                         lexer.ExpressionText,
                         typeParsingException.Message);
@@ -797,7 +799,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            LiteralToken result = new LiteralToken(targetValue, lexer.CurrentToken.Text);
+            LiteralToken result = new LiteralToken(targetValue, tokenText);
             lexer.NextToken();
             return result;
         }
@@ -812,7 +814,7 @@ namespace Microsoft.OData.UriParser
             Debug.Assert(lexer != null, "lexer != null");
             Debug.Assert(lexer.CurrentToken.Kind == ExpressionTokenKind.NullLiteral, "this.lexer.CurrentToken.InternalKind == ExpressionTokenKind.NullLiteral");
 
-            LiteralToken result = new LiteralToken(null, lexer.CurrentToken.Text);
+            LiteralToken result = new LiteralToken(null, lexer.CurrentToken.Text.ToString());
 
             lexer.NextToken();
             return result;
@@ -986,7 +988,7 @@ namespace Microsoft.OData.UriParser
                 if (operatorToken.Kind == ExpressionTokenKind.Minus && (ExpressionLexerUtils.IsNumeric(this.lexer.CurrentToken.Kind)))
                 {
                     ExpressionToken numberLiteral = this.lexer.CurrentToken;
-                    numberLiteral.Text = "-" + numberLiteral.Text;
+                    numberLiteral.Text = this.Lexer.ExpressionText.AsMemory(operatorToken.Position, 1 + this.lexer.CurrentToken.Length);
                     numberLiteral.Position = operatorToken.Position;
                     this.lexer.CurrentToken = numberLiteral;
                     this.RecurseLeave();
@@ -1208,7 +1210,7 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            string parameter = this.lexer.CurrentToken.GetIdentifier();
+            string parameter = this.lexer.CurrentToken.GetIdentifier().ToString();
             if (!this.parameters.Add(parameter))
             {
                 throw ParseError(ODataErrorStrings.UriQueryExpressionParser_RangeVariableAlreadyDeclared(parameter));
@@ -1246,7 +1248,7 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexical token representing the segment.</returns>
         private QueryToken ParseSegment(QueryToken parent)
         {
-            string propertyName = this.lexer.CurrentToken.GetIdentifier();
+            string propertyName = this.lexer.CurrentToken.GetIdentifier().ToString();
             this.lexer.NextToken();
             if (this.parameters.Contains(propertyName) && parent == null)
             {
@@ -1280,7 +1282,7 @@ namespace Microsoft.OData.UriParser
 
             AggregationMethodDefinition verb;
             int identifierStartPosition = lexer.CurrentToken.Position;
-            string methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
+            ReadOnlySpan<char> methodLabel = lexer.ReadDottedIdentifier(false /* acceptStar */);
 
             switch (methodLabel)
             {
@@ -1304,12 +1306,12 @@ namespace Microsoft.OData.UriParser
                     {
                         throw ParseError(
                             ODataErrorStrings.UriQueryExpressionParser_UnrecognizedWithMethod(
-                                methodLabel,
+                                methodLabel.ToString(),
                                 identifierStartPosition,
                                 this.lexer.ExpressionText));
                     }
 
-                    verb = AggregationMethodDefinition.Custom(methodLabel);
+                    verb = AggregationMethodDefinition.Custom(methodLabel.ToString());
                     break;
             }
 
@@ -1325,7 +1327,7 @@ namespace Microsoft.OData.UriParser
 
             lexer.NextToken();
 
-            var alias = new StringLiteralToken(lexer.CurrentToken.Text);
+            var alias = new StringLiteralToken(lexer.CurrentToken.Text.ToString());
 
             lexer.NextToken();
 

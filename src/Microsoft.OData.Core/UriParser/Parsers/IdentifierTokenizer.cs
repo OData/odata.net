@@ -68,7 +68,7 @@ namespace Microsoft.OData.UriParser
 
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
-                string fullIdentifier = this.lexer.ReadDottedIdentifier(false);
+                string fullIdentifier = this.lexer.ReadDottedIdentifier(false).ToString();
                 return new DottedIdentifierToken(fullIdentifier, parent);
             }
 
@@ -82,12 +82,12 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexical token representing the expression.</returns>
         public QueryToken ParseMemberAccess(QueryToken instance)
         {
-            if (this.lexer.CurrentToken.Text == UriQueryConstants.Star)
+            if (this.lexer.CurrentToken.Span.Equals(UriQueryConstants.Star, StringComparison.Ordinal))
             {
                 return this.ParseStarMemberAccess(instance);
             }
 
-            string identifier = this.lexer.CurrentToken.GetIdentifier();
+            string identifier = this.lexer.CurrentToken.GetIdentifier().ToString();
             if (instance == null && this.parameters.Contains(identifier))
             {
                 this.lexer.NextToken();
@@ -105,9 +105,9 @@ namespace Microsoft.OData.UriParser
         /// <returns>The lexical token representing the expression.</returns>
         public QueryToken ParseStarMemberAccess(QueryToken instance)
         {
-            if (this.lexer.CurrentToken.Text != UriQueryConstants.Star)
+            if (!this.lexer.CurrentToken.Span.Equals(UriQueryConstants.Star, StringComparison.Ordinal))
             {
-                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar(this.lexer.CurrentToken.Text));
+                throw ParseError(ODataErrorStrings.UriQueryExpressionParser_CannotCreateStarTokenFromNonStar(this.lexer.CurrentToken.Text.ToString()));
             }
 
             this.lexer.NextToken();

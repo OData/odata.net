@@ -148,28 +148,20 @@ namespace Microsoft.OData
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryKeyStringToGuid.</remarks>
-        internal static bool TryUriStringToGuid(string text, out Guid targetValue)
+        internal static bool TryUriStringToGuid(ReadOnlySpan<char> text, out Guid targetValue)
         {
-            try
-            {
-                // ABNF shows guidValue defined as
-                // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
-                // which comes to length of 36
-                string trimmedText = text.Trim();
-                if (trimmedText.Length != 36 || trimmedText.IndexOf('-', StringComparison.Ordinal) != 8)
-                {
-                    targetValue = default(Guid);
-                    return false;
-                }
-
-                targetValue = XmlConvert.ToGuid(text);
-                return true;
-            }
-            catch (FormatException)
+            // ABNF shows guidValue defined as
+            // guidValue = 8HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 4HEXDIG "-" 12HEXDIG
+            // which comes to length of 36
+            ReadOnlySpan<char> trimmedText = text.Trim();
+            if (trimmedText.Length != 36 || trimmedText.IndexOf("-", StringComparison.Ordinal) != 8)
             {
                 targetValue = default(Guid);
                 return false;
             }
+
+            return Guid.TryParse(text, out targetValue);
+
         }
 
         /// <summary>
@@ -179,7 +171,7 @@ namespace Microsoft.OData
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
         /// <remarks>Copy of WebConvert.TryKeyStringToDateTimeOffset.</remarks>
-        internal static bool ConvertUriStringToDateTimeOffset(string text, out DateTimeOffset targetValue)
+        internal static bool ConvertUriStringToDateTimeOffset(ReadOnlySpan<char> text, out DateTimeOffset targetValue)
         {
             targetValue = default(DateTimeOffset);
 
@@ -191,11 +183,11 @@ namespace Microsoft.OData
             catch (FormatException exception)
             {
                 // This means it is a string similar to DateTimeOffset String, but cannot be parsed as DateTimeOffset and could not be a digit or GUID .etc.
-                Match m = PlatformHelper.PotentialDateTimeOffsetValidator.Match(text);
-                if (m.Success)
+                bool m = PlatformHelper.PotentialDateTimeOffsetValidator.IsMatch(text);
+                if (m)
                 {
                     // The format should be exactly "yyyy-mm-ddThh:mm:ss('.'s+)?(zzzzzz)?" and each field value is within valid range
-                    throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
+                    throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text.ToString()), exception);
                 }
 
                 return false;
@@ -203,7 +195,7 @@ namespace Microsoft.OData
             catch (ArgumentOutOfRangeException exception)
             {
                 // This means the timezone number is bigger than 14:00, inclusive exception has detail exception.
-                throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text), exception);
+                throw new ODataException(Strings.UriUtils_DateTimeOffsetInvalidFormat(text.ToString()), exception);
             }
         }
 
@@ -213,7 +205,7 @@ namespace Microsoft.OData
         /// <param name="text">String text to convert.</param>
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
-        internal static bool TryUriStringToDate(string text, out Date targetValue)
+        internal static bool TryUriStringToDate(ReadOnlySpan<char> text, out Date targetValue)
         {
             return PlatformHelper.TryConvertStringToDate(text, out targetValue);
         }
@@ -224,7 +216,7 @@ namespace Microsoft.OData
         /// <param name="text">String text to convert.</param>
         /// <param name="targetValue">After invocation, converted value.</param>
         /// <returns>true if the value was converted; false otherwise.</returns>
-        internal static bool TryUriStringToTimeOfDay(string text, out TimeOfDay targetValue)
+        internal static bool TryUriStringToTimeOfDay(ReadOnlySpan<char> text, out TimeOfDay targetValue)
         {
             return PlatformHelper.TryConvertStringToTimeOfDay(text, out targetValue);
         }

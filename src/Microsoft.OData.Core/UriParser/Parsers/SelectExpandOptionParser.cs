@@ -137,8 +137,8 @@ namespace Microsoft.OData.UriParser
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                        ? this.lexer.CurrentToken.Text.ToString().ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text.ToString();
 
                     // Prepend '$' prefix if needed.
                     if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
@@ -243,8 +243,8 @@ namespace Microsoft.OData.UriParser
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                        ? this.lexer.CurrentToken.Text.ToString().ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text.ToString();
 
                     // Prepend '$' prefix if needed.
                     if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
@@ -371,8 +371,8 @@ namespace Microsoft.OData.UriParser
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                        ? this.lexer.CurrentToken.Text.ToString().ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text.ToString();
                     switch (text)
                     {
                         case ExpressionConstants.QueryOptionLevels:

@@ -19,22 +19,33 @@ namespace Microsoft.OData.UriParser
     internal struct ExpressionToken
     {
         /// <summary>Token representing gt keyword</summary>
-        internal static readonly ExpressionToken GreaterThan = new ExpressionToken { Text = ExpressionConstants.KeywordGreaterThan, Kind = ExpressionTokenKind.Identifier, Position = 0 };
+        internal static readonly ExpressionToken GreaterThan = new ExpressionToken { Text = ExpressionConstants.KeywordGreaterThan.AsMemory(), Kind = ExpressionTokenKind.Identifier, Position = 0 };
 
         /// <summary>Token representing eq keyword</summary>
-        internal static readonly ExpressionToken EqualsTo = new ExpressionToken { Text = ExpressionConstants.KeywordEqual, Kind = ExpressionTokenKind.Identifier, Position = 0 };
+        internal static readonly ExpressionToken EqualsTo = new ExpressionToken { Text = ExpressionConstants.KeywordEqual.AsMemory(), Kind = ExpressionTokenKind.Identifier, Position = 0 };
 
         /// <summary>Token representing lt keyword</summary>
-        internal static readonly ExpressionToken LessThan = new ExpressionToken { Text = ExpressionConstants.KeywordLessThan, Kind = ExpressionTokenKind.Identifier, Position = 0 };
+        internal static readonly ExpressionToken LessThan = new ExpressionToken { Text = ExpressionConstants.KeywordLessThan.AsMemory(), Kind = ExpressionTokenKind.Identifier, Position = 0 };
 
         /// <summary>InternalKind of token.</summary>
         internal ExpressionTokenKind Kind;
 
         /// <summary>Token text.</summary>
-        internal string Text;
+        internal ReadOnlyMemory<char> Text;
 
         /// <summary>Position of token.</summary>
         internal int Position;
+
+        /// <summary>
+        /// Gets the token text as <see cref="ReadOnlySpan{T}"/>
+        /// Be noted, avoid calling 'ToString()' multiple times since it will create a new string everytime.
+        /// </summary>
+        internal ReadOnlySpan<char> Span => Text.Span;
+
+        /// <summary>
+        /// Gets the token length.
+        /// </summary>
+        internal int Length => Text.Length;
 
         /// <summary>The edm type of the expression token literal.</summary>
         private IEdmTypeReference LiteralEdmType;
@@ -77,12 +88,12 @@ namespace Microsoft.OData.UriParser
         /// <returns>String representation of this token.</returns>
         public override string ToString()
         {
-            return String.Format(System.Globalization.CultureInfo.InvariantCulture, "{0} @ {1}: [{2}]", this.Kind, this.Position, this.Text);
+            return String.Format(System.Globalization.CultureInfo.InvariantCulture, $"{this.Kind} @ {this.Position}: [{this.Text}]", this.Kind, this.Position);
         }
 
         /// <summary>Gets the current identifier text.</summary>
         /// <returns>The current identifier text.</returns>
-        internal string GetIdentifier()
+        internal ReadOnlySpan<char> GetIdentifier()
         {
             if (this.Kind != ExpressionTokenKind.Identifier)
             {
@@ -90,8 +101,8 @@ namespace Microsoft.OData.UriParser
                 throw new ODataException(message);
             }
 
-            Debug.Assert(this.Text != null, "Text is null");
-            return this.Text;
+            Debug.Assert(!this.Text.IsEmpty, "Text is null");
+            return this.Span;
         }
 
         /// <summary>Checks that this token has the specified identifier.</summary>
@@ -101,7 +112,7 @@ namespace Microsoft.OData.UriParser
         internal bool IdentifierIs(string id, bool enableCaseInsensitive)
         {
             return this.Kind == ExpressionTokenKind.Identifier
-                && string.Equals(this.Text, id, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+                && this.Span.Equals(id, enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
         }
 
         internal void SetCustomEdmTypeLiteral(IEdmTypeReference edmType)

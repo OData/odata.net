@@ -109,17 +109,17 @@ namespace Microsoft.OData.UriParser
         /// <returns>A parsed PathSegmentToken representing the next segment in this path.</returns>
         private PathSegmentToken ParseSegment(PathSegmentToken previousSegment, bool allowRef)
         {
-            if (this.lexer.CurrentToken.Text.StartsWith("$", StringComparison.Ordinal)
-                && (!allowRef || this.lexer.CurrentToken.Text != UriQueryConstants.RefSegment)
-                && this.lexer.CurrentToken.Text != UriQueryConstants.CountSegment)
+            if (this.lexer.CurrentToken.Span.StartsWith("$", StringComparison.Ordinal)
+                && (!allowRef || !this.lexer.CurrentToken.Span.Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
+                && !this.lexer.CurrentToken.Span.Equals(UriQueryConstants.CountSegment, StringComparison.Ordinal))
             {
-                throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text, this.lexer.ExpressionText));
+                throw new ODataException(ODataErrorStrings.UriSelectParser_SystemTokenInSelectExpand(this.lexer.CurrentToken.Text.ToString(), this.lexer.ExpressionText));
             }
 
             // Some check here to throw exception, prop1/*/prop2 and */$ref/prop and prop1/$count/prop2 will throw exception, all are $expand cases.
             if (!isSelect)
             {
-                if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && this.lexer.CurrentToken.GetIdentifier() != UriQueryConstants.RefSegment)
+                if (previousSegment != null && previousSegment.Identifier == UriQueryConstants.Star && !this.lexer.CurrentToken.GetIdentifier().Equals(UriQueryConstants.RefSegment, StringComparison.Ordinal))
                 {
                     // Star can only be followed with $ref. $count is not supported with star as expand option
                     throw new ODataException(ODataErrorStrings.ExpressionToken_OnlyRefAllowWithStarInExpand);
@@ -136,13 +136,13 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            if (this.lexer.CurrentToken.Text == UriQueryConstants.CountSegment && isSelect)
+            if (this.lexer.CurrentToken.Span.Equals(UriQueryConstants.CountSegment, StringComparison.Ordinal) && isSelect)
             {
                 // $count is not allowed in $select e.g $select=NavProperty/$count
                 throw new ODataException(ODataErrorStrings.ExpressionToken_DollarCountNotAllowedInSelect);
             }
 
-            string propertyName;
+            ReadOnlySpan<char> propertyName;
 
             if (this.lexer.PeekNextToken().Kind == ExpressionTokenKind.Dot)
             {
@@ -161,7 +161,7 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.ExpressionToken_NoSegmentAllowedBeforeStarInExpand);
                 }
 
-                propertyName = this.lexer.CurrentToken.Text;
+                propertyName = this.lexer.CurrentToken.Span;
                 this.lexer.NextToken();
             }
             else
@@ -170,7 +170,7 @@ namespace Microsoft.OData.UriParser
                 this.lexer.NextToken();
             }
 
-            return new NonSystemToken(propertyName, null, previousSegment);
+            return new NonSystemToken(propertyName.ToString(), null, previousSegment);
         }
     }
 }
