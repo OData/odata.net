@@ -17,7 +17,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
     /// <summary>
     ///Tests EdmModelCsdlSchemaWriter functionalities
     ///</summary>
-    public class EdmModelCsdlSchemaWriterTests
+    public partial class EdmModelCsdlSchemaWriterTests
     {
         private static readonly EdmEntityContainer defaultContainer = new EdmEntityContainer("Default.NameSpace", "Container");
         private static readonly EdmAction defaultCheckoutAction = new EdmAction("Default.NameSpace2", "CheckOut", null);

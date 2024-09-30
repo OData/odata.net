@@ -1,30 +1,26 @@
 ﻿//---------------------------------------------------------------------
-// <copyright file="CoreVocabularyTest.cs" company="Microsoft">
+// <copyright file="CoreVocabularyTests.Async.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Xml;
 using Microsoft.OData.Edm.Csdl;
-using Microsoft.OData.Edm.Validation;
-using Microsoft.OData.Edm.Vocabularies.V1;
 using Xunit;
 
 namespace Microsoft.OData.Edm.Tests.Vocabularies
 {
-    /// <summary>
-    /// Test core vocabulary
-    /// </summary>
     public partial class CoreVocabularyTests
     {
-        private readonly IEdmModel coreVocModel = CoreVocabularyModel.Instance;
-
         [Fact]
-        public void TestBaseCoreVocabularyModel()
+        public async Task TestBaseCoreVocabularyModel_Async()
         {
+            #region Expected Text
             const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Core.V1"" Alias=""Core"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <TypeDefinition Name=""MessageSeverity"" UnderlyingType=""Edm.String"">
@@ -405,6 +401,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Annotation Term=""Core.LongDescription"" String=""The select-list of a context URL MUST be `(@Core.AnyStructure)` if it would otherwise be empty,&#xA;      but this instance annotation SHOULD be omitted from the response value."" />
   </Term>
 </Schema>";
+            #endregion
 
             var s = coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
             Assert.NotNull(s);
@@ -450,15 +447,19 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             Assert.NotNull(qualifiedBoundOperationNameType);
             Assert.Equal(qualifiedBoundOperationNameType, explicitOperationBindingsType.AsElementType());
 
-            StringWriter sw = new StringWriter();
-            XmlWriterSettings settings = new XmlWriterSettings();
-            settings.Indent = true;
-            settings.Encoding = System.Text.Encoding.UTF8;
+            var sw = new StringWriter();
+            var settings = new XmlWriterSettings()
+            {
+                Indent = true,
+                Encoding = System.Text.Encoding.UTF8,
+                Async = true
+            };
 
-            IEnumerable<EdmError> errors;
             XmlWriter xw = XmlWriter.Create(sw, settings);
-            coreVocModel.TryWriteSchema(xw, out errors);
-            xw.Flush();
+            Tuple<bool, IEnumerable<Edm.Validation.EdmError>> result = await coreVocModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
+            IEnumerable<Edm.Validation.EdmError> errors = result.Item2;
+
+            await xw.FlushAsync().ConfigureAwait(false);
 #if NETCOREAPP1_1
             xw.Dispose();
 #else
@@ -467,147 +468,6 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             string output = sw.ToString();
             Assert.False(errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);
-        }
-
-        [Theory]
-        [InlineData("OptionalParameterType", "DefaultValue", null)]
-        [InlineData("PropertyRef", "Name|Alias", null)]
-        [InlineData("AlternateKey", "Key", null)]
-        [InlineData("MessageType", "code|message|severity|target|details", null)]
-        [InlineData("Link", "rel|href", null)]
-        [InlineData("RevisionType", "Version|Kind|Description", null)]
-        [InlineData("ExampleValue", "Description", null)]
-        [InlineData("PrimitiveExampleValue", "Value", "ExampleValue")]
-        [InlineData("ComplexExampleValue", "Value", "ExampleValue")]
-        [InlineData("EntityExampleValue", "Value", "ExampleValue")]
-        [InlineData("ExternalExampleValue", "ExternalValue", "ExampleValue")]
-        public void TestCoreVocabularyComplexType(string typeName, string properties, string baseType)
-        {
-            var schemaType = this.coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.Complex, schemaType.TypeKind);
-            IEdmComplexType complex = (IEdmComplexType)(schemaType);
-
-            Assert.False(complex.IsAbstract);
-            Assert.False(complex.IsOpen);
-            if (baseType == null)
-            {
-                Assert.Null(complex.BaseType);
-            }
-            else
-            {
-                Assert.Equal("Org.OData.Core.V1." + baseType, complex.BaseType.FullTypeName());
-            }
-
-            Assert.NotEmpty(complex.DeclaredProperties);
-            Assert.Equal(properties, string.Join("|", complex.DeclaredProperties.Select(e => e.Name)));
-
-            if (typeName != "EntityExampleValue")
-            {
-                Assert.Empty(complex.DeclaredNavigationProperties());
-            }
-            else
-            {
-                Assert.Equal(properties, string.Join("|", complex.DeclaredNavigationProperties().Select(e => e.Name)));
-            }
-        }
-
-        [Theory]
-        [InlineData("RevisionKind", "Added|Modified|Deprecated", false)]
-        [InlineData("Permission", "None|Read|Write|ReadWrite|Invoke", true)]
-        public void TestCoreVocabularyEnumType(string typeName, string members, bool isFlags)
-        {
-            var schemaType = this.coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
-            Assert.NotNull(schemaType);
-
-            Assert.Equal(EdmTypeKind.Enum, schemaType.TypeKind);
-            IEdmEnumType enumType = (IEdmEnumType)(schemaType);
-
-            Assert.Equal(isFlags, enumType.IsFlags);
-
-            Assert.NotEmpty(enumType.Members);
-            Assert.Equal(members, string.Join("|", enumType.Members.Select(e => e.Name)));
-        }
-
-        [Theory]
-        [InlineData("ExplicitOperationBindings", "Collection(Org.OData.Core.V1.QualifiedBoundOperationName)", null)]
-        [InlineData("RequiresExplicitBinding", "Org.OData.Core.V1.Tag", "Action Function")]
-        [InlineData("OperationAvailable", "Edm.Boolean", "Action Function")]
-        [InlineData("OptionalParameter", "Org.OData.Core.V1.OptionalParameterType", "Parameter")]
-        [InlineData("AlternateKeys", "Collection(Org.OData.Core.V1.AlternateKey)", "EntityType EntitySet NavigationProperty")]
-        [InlineData("PositionalInsert", "Org.OData.Core.V1.Tag", "Property NavigationProperty EntitySet")]
-        [InlineData("Ordered", "Org.OData.Core.V1.Tag", "Property NavigationProperty EntitySet ReturnType Term")]
-        [InlineData("MayImplement", "Collection(Org.OData.Core.V1.QualifiedTypeName)", null)]
-        [InlineData("AutoExpandReferences", "Org.OData.Core.V1.Tag", "NavigationProperty")]
-        [InlineData("AutoExpand", "Org.OData.Core.V1.Tag", "EntityType NavigationProperty Property")]
-        [InlineData("AdditionalProperties", "Org.OData.Core.V1.Tag", "EntityType ComplexType")]
-        [InlineData("OptimisticConcurrency", "Collection(Edm.PropertyPath)", "EntitySet")]
-        [InlineData("IsMediaType", "Org.OData.Core.V1.Tag", "Property Term")]
-        [InlineData("MediaType", "Edm.String", "EntityType Property Term TypeDefinition Parameter ReturnType")]
-        [InlineData("AcceptableMediaTypes", "Collection(Edm.String)", "EntityType Property Term TypeDefinition Parameter ReturnType")]
-        [InlineData("IsURL", "Org.OData.Core.V1.Tag", "Property Term")]
-        [InlineData("ComputedDefaultValue", "Org.OData.Core.V1.Tag", "Property")]
-        [InlineData("Computed", "Org.OData.Core.V1.Tag", "Property")]
-        [InlineData("Immutable", "Org.OData.Core.V1.Tag", "Property")]
-        [InlineData("DefaultNamespace", "Org.OData.Core.V1.Tag", "Schema Include")]
-        [InlineData("ContentID", "Edm.String", null)]
-        [InlineData("Permissions", "Org.OData.Core.V1.Permission", "Property ComplexType TypeDefinition EntityType EntitySet NavigationProperty Action Function")]
-        [InlineData("ConventionalIDs", "Org.OData.Core.V1.Tag", "EntityContainer")]
-        [InlineData("DereferenceableIDs", "Org.OData.Core.V1.Tag", "EntityContainer")]
-        [InlineData("ResourcePath", "Edm.String", "EntitySet Singleton ActionImport FunctionImport")]
-        [InlineData("RequiresType", "Edm.String", "Term")]
-        [InlineData("IsLanguageDependent", "Org.OData.Core.V1.Tag", "Term Property")]
-        [InlineData("Messages", "Collection(Org.OData.Core.V1.MessageType)", null)]
-        [InlineData("Links", "Collection(Org.OData.Core.V1.Link)", null)]
-        [InlineData("LongDescription", "Edm.String", null)]
-        [InlineData("Description", "Edm.String", null)]
-        [InlineData("Revisions", "Collection(Org.OData.Core.V1.RevisionType)", null)]
-        [InlineData("SchemaVersion", "Edm.String", "Schema Reference")]
-        [InlineData("ODataVersions", "Edm.String", "EntityContainer")]
-        [InlineData("Example", "Org.OData.Core.V1.ExampleValue", "EntityType ComplexType TypeDefinition Term Property NavigationProperty Parameter ReturnType")]
-        public void TestCoreVocabularyTermType(string termName, string typeName, string appliesTo)
-        {
-            var termType = this.coreVocModel.FindDeclaredTerm("Org.OData.Core.V1." + termName);
-            Assert.NotNull(termType);
-
-            Assert.Equal(typeName, termType.Type.FullName());
-
-            if (appliesTo != null)
-            {
-                Assert.Equal(appliesTo, termType.AppliesTo);
-            }
-            else
-            {
-                Assert.Null(termType.AppliesTo);
-            }
-        }
-
-        [Theory]
-        [InlineData("QualifiedBoundOperationName", "Edm.String")]
-        [InlineData("MessageSeverity", "Edm.String")]
-        [InlineData("Tag", "Edm.Boolean")]
-        [InlineData("QualifiedTermName", "Edm.String")]
-        [InlineData("QualifiedTypeName", "Edm.String")]
-        [InlineData("LocalDateTime", "Edm.String")]
-        public void TestCoreVocabularyTypeDefinition(string typeName, string underlyingTypeName)
-        {
-            var declaredType = this.coreVocModel.FindDeclaredType("Org.OData.Core.V1." + typeName);
-            Assert.NotNull(declaredType);
-
-            Assert.Equal(EdmTypeKind.TypeDefinition, declaredType.TypeKind);
-
-            IEdmTypeDefinition typeDefinition = (IEdmTypeDefinition)declaredType;
-            Assert.Equal(underlyingTypeName, typeDefinition.UnderlyingType.FullName());
-        }
-
-        [Fact]
-        public void TestRevisionsTerm()
-        {
-            var revisionsTerm = CoreVocabularyModel.RevisionsTerm;
-            Assert.NotNull(revisionsTerm);
-            Assert.Equal("Org.OData.Core.V1.Revisions", revisionsTerm.FullName());
-            Assert.Equal("Collection(Org.OData.Core.V1.RevisionType)", revisionsTerm.Type.FullName());
         }
     }
 }

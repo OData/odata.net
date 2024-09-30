@@ -947,6 +947,69 @@ namespace Microsoft.OData.Tests
   }
 }", payload);
     }
+
+        [Fact]
+        public async Task WriteMetadataDocumentAsync_WorksForJsonCsdl_WithNoSynchronousIOSupport()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act - JSON
+            string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/json", async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert
+            Assert.Equal(@"{
+  ""$Version"": ""4.0"",
+  ""$EntityContainer"": ""NS.Container"",
+  ""NS"": {
+    ""Customer"": {
+      ""$Kind"": ""EntityType"",
+      ""$Key"": [
+        ""Id""
+      ],
+      ""Id"": {
+        ""$Type"": ""Edm.Int32""
+      },
+      ""Name"": {}
+    },
+    ""Container"": {
+      ""$Kind"": ""EntityContainer"",
+      ""Customers"": {
+        ""$Collection"": true,
+        ""$Type"": ""NS.Customer""
+      }
+    }
+  }
+}", payload);
+        }
+
+        [Fact]
+        public async Task WriteMetadataDocumentPayload_MustEqual_WriteMetadataDocumentAsyncPayload_ForJsonCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act
+            var contentType = "application/json";
+
+            // Json CSDL generated synchronously
+            string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            {
+                omWriter.WriteMetadataDocument();
+            });
+
+            // Json CSDL generated asynchronously
+            string asyncPayload = await this.WriteAndGetPayloadAsync(edmModel, contentType, async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert
+            Assert.Equal(syncPayload, asyncPayload);
+        }
 #endif
 
         [Fact]
@@ -990,6 +1053,63 @@ namespace Microsoft.OData.Tests
                     "</Schema>" +
                   "</edmx:DataServices>" +
                 "</edmx:Edmx>", payload);
+        }
+
+        [Fact]
+        public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl_WithNoSynchronousIOSupport()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act - XML
+            string payload = await this.WriteAndGetPayloadAsync(edmModel, "application/xml", async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert - XML
+            Assert.Equal("<?xml version=\"1.0\" encoding=\"utf-8\"?>" +
+                "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                  "<edmx:DataServices>" +
+                    "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                      "<EntityType Name=\"Customer\">" +
+                        "<Key>" +
+                          "<PropertyRef Name=\"Id\" />" +
+                        "</Key>" +
+                        "<Property Name=\"Id\" Type=\"Edm.Int32\" Nullable=\"false\" />" +
+                        "<Property Name=\"Name\" Type=\"Edm.String\" Nullable=\"false\" />" +
+                      "</EntityType>" +
+                      "<EntityContainer Name=\"Container\">" +
+                        "<EntitySet Name=\"Customers\" EntityType=\"NS.Customer\" />" +
+                      "</EntityContainer>" +
+                    "</Schema>" +
+                  "</edmx:DataServices>" +
+                "</edmx:Edmx>", payload);
+        }
+
+        [Fact]
+        public async Task WriteMetadataDocumentPayload_MustEqual_WriteMetadataDocumentAsyncPayload_ForXmlCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act
+            var contentType = "application/xml";
+
+            // XML CSDL generated synchronously
+            string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            {
+                omWriter.WriteMetadataDocument();
+            });
+
+            // XML CSDL generated asynchronously
+            string asyncPayload = await this.WriteAndGetPayloadAsync(edmModel, contentType, async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert
+            Assert.Equal(asyncPayload, syncPayload);
         }
 
         #region "DisposeAsync"
@@ -1082,6 +1202,32 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingJsonMetadata_NoSyncSupport()
+        {
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/json");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            await msgWriter.WriteMetadataDocumentAsync();
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
         public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingXmlMetadata()
         {
             AsyncStream stream = new AsyncStream(new MemoryStream());
@@ -1112,6 +1258,32 @@ namespace Microsoft.OData.Tests
                 // See: https://github.com/OData/odata.net/issues/2684
                 // However, disposing the writer should still be truly async.
             }
+
+            await msgWriter.DisposeAsync();
+
+            Assert.True(stream.Disposed);
+        }
+
+        [Fact]
+        public async Task DisposeAsync_Should_Dispose_Stream_Asynchronously_AfterWritingXmlMetadata_NoSyncSupport()
+        {
+            AsyncStream stream = new AsyncStream(new MemoryStream());
+            InMemoryMessage message = new InMemoryMessage()
+            {
+                Stream = stream
+            };
+
+            IEdmModel edmModel = GetEdmModel();
+
+            ODataMessageWriterSettings writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = true;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+            message.SetHeader("Content-Type", "application/xml");
+
+            var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel);
+
+            await msgWriter.WriteMetadataDocumentAsync();
 
             await msgWriter.DisposeAsync();
 

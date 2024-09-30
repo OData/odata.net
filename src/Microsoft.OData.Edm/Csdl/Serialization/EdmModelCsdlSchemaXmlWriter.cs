@@ -20,7 +20,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// <summary>
     /// OData Common Schema Definition Language (CSDL) XML writer
     /// </summary>
-    internal class EdmModelCsdlSchemaXmlWriter : EdmModelCsdlSchemaWriter
+    internal partial class EdmModelCsdlSchemaXmlWriter : EdmModelCsdlSchemaWriter
     {
         protected XmlWriter xmlWriter;
         protected readonly string edmxNamespace;
@@ -342,7 +342,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteAnnotationStringAttribute(IEdmDirectValueAnnotation annotation)
         {
-            var edmValue = (IEdmPrimitiveValue)annotation.Value;
+            IEdmPrimitiveValue edmValue = (IEdmPrimitiveValue)annotation.Value;
             if (edmValue != null)
             {
                 this.xmlWriter.WriteAttributeString(annotation.Name, annotation.NamespaceUri, EdmValueWriter.PrimitiveValueAsXml(edmValue));
@@ -351,7 +351,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         internal override void WriteAnnotationStringElement(IEdmDirectValueAnnotation annotation)
         {
-            var edmValue = (IEdmPrimitiveValue)annotation.Value;
+            IEdmPrimitiveValue edmValue = (IEdmPrimitiveValue)annotation.Value;
             if (edmValue != null)
             {
                 this.xmlWriter.WriteRaw(((IEdmStringValue)edmValue).Value);
@@ -854,7 +854,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             if (operationImport.EntitySet != null)
             {
-                var pathExpression = operationImport.EntitySet as IEdmPathExpression;
+                IEdmPathExpression pathExpression = operationImport.EntitySet as IEdmPathExpression;
                 if (pathExpression != null)
                 {
                     this.WriteOptionalAttribute(CsdlConstants.Attribute_EntitySet, pathExpression.PathSegments, PathAsXml);

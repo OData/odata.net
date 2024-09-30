@@ -14,7 +14,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// <summary>
     /// The visitor for outputting &lt;edmx:referenced&gt; elements for referenced model.
     /// </summary>
-    internal class EdmModelReferenceElementsXmlVisitor
+    internal partial class EdmModelReferenceElementsXmlVisitor
     {
         private readonly EdmModelCsdlSchemaXmlWriter schemaWriter;
 
@@ -55,7 +55,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
         private void WriteAnnotations(IEdmModel model, IEdmVocabularyAnnotatable target)
         {
-            var annotations = model.FindDeclaredVocabularyAnnotations(target);
+            IEnumerable<IEdmVocabularyAnnotation> annotations = model.FindDeclaredVocabularyAnnotations(target);
             foreach (IEdmVocabularyAnnotation annotation in annotations)
             {
                 this.schemaWriter.WriteVocabularyAnnotationElementHeader(annotation, true);

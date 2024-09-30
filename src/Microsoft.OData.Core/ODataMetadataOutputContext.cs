@@ -100,16 +100,13 @@ namespace Microsoft.OData
         /// be included in the payload. This should only be used in debug scenarios.
         /// </param>
         /// <returns>Task which represents the pending write operation.</returns>
-        internal override Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
+        internal override async Task WriteInStreamErrorAsync(ODataError error, bool includeDebugInformation)
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    ODataMetadataWriterUtils.WriteError(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth);
-                    return this.FlushAsync();
-                });
+            await ODataMetadataWriterUtils.WriteErrorAsync(this.xmlWriter, error, includeDebugInformation, this.MessageWriterSettings.MessageQuotas.MaxNestingDepth).ConfigureAwait(false);
+
+            await this.FlushAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -117,16 +114,12 @@ namespace Microsoft.OData
         /// </summary>
         /// <returns>A task representing the asynchronous operation of writing the metadata document.</returns>
         /// <remarks>It is the responsibility of this method to flush the output before the task finishes.</remarks>
-        internal override Task WriteMetadataDocumentAsync()
+        internal override async Task WriteMetadataDocumentAsync()
         {
             this.AssertAsynchronous();
 
-            return TaskUtils.GetTaskForSynchronousOperationReturningTask(
-                () =>
-                {
-                    this.WriteMetadataDocumentImplementation();
-                    return this.FlushAsync();
-                });
+            await this.WriteMetadataDocumentImplementationAsync().ConfigureAwait(false);
+            await this.FlushAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -269,6 +262,27 @@ namespace Microsoft.OData
             IEnumerable<EdmError> errors;
             if (!CsdlWriter.TryWriteCsdl(this.Model, this.xmlWriter, CsdlTarget.OData, out errors))
             {
+                Debug.Assert(errors != null, "errors != null");
+
+                StringBuilder builder = new StringBuilder();
+                foreach (EdmError error in errors)
+                {
+                    builder.AppendLine(error.ToString());
+                }
+
+                throw new ODataException(Strings.ODataMetadataOutputContext_ErrorWritingMetadata(builder.ToString()));
+            }
+        }
+
+        private async Task WriteMetadataDocumentImplementationAsync()
+        {
+            Tuple<bool, IEnumerable<EdmError>> result = await CsdlWriter.TryWriteCsdlAsync(this.Model, this.xmlWriter, CsdlTarget.OData).ConfigureAwait(false);
+            bool success = result.Item1;
+
+            if (!success)
+            {
+                IEnumerable<EdmError> errors = result.Item2;
+
                 Debug.Assert(errors != null, "errors != null");
 
                 StringBuilder builder = new StringBuilder();

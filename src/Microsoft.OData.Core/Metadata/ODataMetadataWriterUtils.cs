@@ -10,6 +10,7 @@ namespace Microsoft.OData.Metadata
     using System.Diagnostics;
     using System.IO;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Xml;
     #endregion Namespaces
 
@@ -56,6 +57,18 @@ namespace Microsoft.OData.Metadata
         internal static void WriteError(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
         {
             ErrorUtils.WriteXmlError(writer, error, includeDebugInformation, maxInnerErrorDepth);
+        }
+
+        /// <summary>
+        /// Asynchronously writes an error message.
+        /// </summary>
+        /// <param name="writer">The Xml writer to write to.</param>
+        /// <param name="error">The error instance to write.</param>
+        /// <param name="includeDebugInformation">A flag indicating whether error details should be written (in debug mode only) or not.</param>
+        /// <param name="maxInnerErrorDepth">The maximum number of nested inner errors to allow.</param>
+        internal static Task WriteErrorAsync(XmlWriter writer, ODataError error, bool includeDebugInformation, int maxInnerErrorDepth)
+        {
+            return ErrorUtils.WriteXmlErrorAsync(writer, error, includeDebugInformation, maxInnerErrorDepth);
         }
 
         /// <summary>

@@ -6,6 +6,8 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using Microsoft.OData.Edm.Helpers;
 using Microsoft.OData.Edm.Vocabularies;
 
 namespace Microsoft.OData.Edm
@@ -228,6 +230,33 @@ namespace Microsoft.OData.Edm
             }
         }
 
+        public virtual async Task VisitEntityContainerElementsAsync(IEnumerable<IEdmEntityContainerElement> elements)
+        {
+            foreach (IEdmEntityContainerElement element in elements)
+            {
+                switch (element.ContainerElementKind)
+                {
+                    case EdmContainerElementKind.EntitySet:
+                        await this.ProcessEntitySetAsync((IEdmEntitySet)element).ConfigureAwait(false);
+                        break;
+                    case EdmContainerElementKind.Singleton:
+                        await this.ProcessSingletonAsync((IEdmSingleton)element).ConfigureAwait(false);
+                        break;
+                    case EdmContainerElementKind.ActionImport:
+                        await this.ProcessActionImportAsync((IEdmActionImport)element).ConfigureAwait(false);
+                        break;
+                    case EdmContainerElementKind.FunctionImport:
+                        await this.ProcessFunctionImportAsync((IEdmFunctionImport)element).ConfigureAwait(false);
+                        break;
+                    case EdmContainerElementKind.None:
+                        await this.ProcessEntityContainerElementAsync(element).ConfigureAwait(false);
+                        break;
+                    default:
+                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString()));
+                }
+            }
+        }
+
         #endregion
 
         #region Type References
@@ -414,7 +443,6 @@ namespace Microsoft.OData.Edm
         {
             this.ProcessElement(model);
 
-            // TODO: also visit referenced models?
             this.VisitSchemaElements(model.SchemaElements);
             this.VisitVocabularyAnnotations(model.VocabularyAnnotations);
         }
@@ -427,9 +455,22 @@ namespace Microsoft.OData.Edm
             this.VisitAnnotations(this.Model.DirectValueAnnotations(element));
         }
 
+        protected virtual Task ProcessElementAsync(IEdmElement element)
+        {
+            // TODO: DirectValueAnnotationsInMainSchema (not including those in referenced schemas)
+            this.VisitAnnotations(this.Model.DirectValueAnnotations(element));
+
+            return TaskUtils.CompletedTask;
+        }
+
         protected virtual void ProcessNamedElement(IEdmNamedElement element)
         {
             this.ProcessElement(element);
+        }
+
+        protected virtual async Task ProcessNamedElementAsync(IEdmNamedElement element)
+        {
+            await this.ProcessElementAsync(element).ConfigureAwait(false);
         }
 
         protected virtual void ProcessSchemaElement(IEdmSchemaElement element)
@@ -438,8 +479,19 @@ namespace Microsoft.OData.Edm
             this.ProcessNamedElement(element);
         }
 
+        protected virtual async Task ProcessSchemaElementAsync(IEdmSchemaElement element)
+        {
+            await this.ProcessVocabularyAnnotatableAsync(element).ConfigureAwait(false);
+            await this.ProcessNamedElementAsync(element).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessVocabularyAnnotatable(IEdmVocabularyAnnotatable annotatable)
         {
+        }
+
+        protected virtual Task ProcessVocabularyAnnotatableAsync(IEdmVocabularyAnnotatable annotatable)
+        {
+            return TaskUtils.CompletedTask;
         }
 
         #endregion
@@ -451,9 +503,19 @@ namespace Microsoft.OData.Edm
             this.ProcessStructuredTypeReference(reference);
         }
 
+        protected virtual async Task ProcessComplexTypeReferenceAsync(IEdmComplexTypeReference reference)
+        {
+            await this.ProcessStructuredTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessEntityTypeReference(IEdmEntityTypeReference reference)
         {
             this.ProcessStructuredTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessEntityTypeReferenceAsync(IEdmEntityTypeReference reference)
+        {
+            await this.ProcessStructuredTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         protected virtual void ProcessEntityReferenceTypeReference(IEdmEntityReferenceTypeReference reference)
@@ -462,10 +524,22 @@ namespace Microsoft.OData.Edm
             this.ProcessEntityReferenceType(reference.EntityReferenceDefinition());
         }
 
+        protected virtual async Task ProcessEntityReferenceTypeReferenceAsync(IEdmEntityReferenceTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
+            await this.ProcessEntityReferenceTypeAsync(reference.EntityReferenceDefinition()).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessCollectionTypeReference(IEdmCollectionTypeReference reference)
         {
             this.ProcessTypeReference(reference);
             this.ProcessCollectionType(reference.CollectionDefinition());
+        }
+
+        protected virtual async Task ProcessCollectionTypeReferenceAsync(IEdmCollectionTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
+            await this.ProcessCollectionTypeAsync(reference.CollectionDefinition()).ConfigureAwait(false);
         }
 
         protected virtual void ProcessEnumTypeReference(IEdmEnumTypeReference reference)
@@ -473,9 +547,19 @@ namespace Microsoft.OData.Edm
             this.ProcessTypeReference(reference);
         }
 
+        protected virtual async Task ProcessEnumTypeReferenceAsync(IEdmEnumTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessTypeDefinitionReference(IEdmTypeDefinitionReference reference)
         {
             this.ProcessTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessTypeDefinitionReferenceAsync(IEdmTypeDefinitionReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         protected virtual void ProcessBinaryTypeReference(IEdmBinaryTypeReference reference)
@@ -483,9 +567,19 @@ namespace Microsoft.OData.Edm
             this.ProcessPrimitiveTypeReference(reference);
         }
 
+        protected virtual async Task ProcessBinaryTypeReferenceAsync(IEdmBinaryTypeReference reference)
+        {
+            await this.ProcessPrimitiveTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessDecimalTypeReference(IEdmDecimalTypeReference reference)
         {
             this.ProcessPrimitiveTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessDecimalTypeReferenceAsync(IEdmDecimalTypeReference reference)
+        {
+            await this.ProcessPrimitiveTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         protected virtual void ProcessSpatialTypeReference(IEdmSpatialTypeReference reference)
@@ -493,9 +587,19 @@ namespace Microsoft.OData.Edm
             this.ProcessPrimitiveTypeReference(reference);
         }
 
+        protected virtual async Task ProcessSpatialTypeReferenceAsync(IEdmSpatialTypeReference reference)
+        {
+            await this.ProcessPrimitiveTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessStringTypeReference(IEdmStringTypeReference reference)
         {
             this.ProcessPrimitiveTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessStringTypeReferenceAsync(IEdmStringTypeReference reference)
+        {
+            await this.ProcessPrimitiveTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         protected virtual void ProcessTemporalTypeReference(IEdmTemporalTypeReference reference)
@@ -503,9 +607,19 @@ namespace Microsoft.OData.Edm
             this.ProcessPrimitiveTypeReference(reference);
         }
 
+        protected virtual async Task ProcessTemporalTypeReferenceAsync(IEdmTemporalTypeReference reference)
+        {
+            await this.ProcessPrimitiveTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessPrimitiveTypeReference(IEdmPrimitiveTypeReference reference)
         {
             this.ProcessTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessPrimitiveTypeReferenceAsync(IEdmPrimitiveTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         protected virtual void ProcessStructuredTypeReference(IEdmStructuredTypeReference reference)
@@ -513,9 +627,19 @@ namespace Microsoft.OData.Edm
             this.ProcessTypeReference(reference);
         }
 
+        protected virtual async Task ProcessStructuredTypeReferenceAsync(IEdmStructuredTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessTypeReference(IEdmTypeReference element)
         {
             this.ProcessElement(element);
+        }
+
+        protected virtual async Task ProcessTypeReferenceAsync(IEdmTypeReference element)
+        {
+            await this.ProcessElementAsync(element).ConfigureAwait(false);
         }
 
         protected virtual void ProcessPathTypeReference(IEdmPathTypeReference reference)
@@ -523,9 +647,19 @@ namespace Microsoft.OData.Edm
             this.ProcessTypeReference(reference);
         }
 
+        protected virtual async Task ProcessPathTypeReferenceAsync(IEdmPathTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessUntypedTypeReference(IEdmUntypedTypeReference reference)
         {
             this.ProcessTypeReference(reference);
+        }
+
+        protected virtual async Task ProcessUntypedTypeReferenceAsync(IEdmUntypedTypeReference reference)
+        {
+            await this.ProcessTypeReferenceAsync(reference).ConfigureAwait(false);
         }
 
         #endregion
@@ -535,6 +669,12 @@ namespace Microsoft.OData.Edm
         protected virtual void ProcessTerm(IEdmTerm term)
         {
             this.ProcessSchemaElement(term);
+            this.VisitTypeReference(term.Type);
+        }
+
+        protected virtual async Task ProcessTermAsync(IEdmTerm term)
+        {
+            await this.ProcessSchemaElementAsync(term).ConfigureAwait(false);
             this.VisitTypeReference(term.Type);
         }
 
@@ -549,6 +689,13 @@ namespace Microsoft.OData.Edm
             this.ProcessSchemaType(definition);
         }
 
+        protected virtual async Task ProcessComplexTypeAsync(IEdmComplexType definition)
+        {
+            await this.ProcessSchemaElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessStructuredTypeAsync(definition).ConfigureAwait(false);
+            await this.ProcessSchemaTypeAsync(definition).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessEntityType(IEdmEntityType definition)
         {
             this.ProcessSchemaElement(definition);
@@ -556,10 +703,24 @@ namespace Microsoft.OData.Edm
             this.ProcessSchemaType(definition);
         }
 
+        protected virtual async Task ProcessEntityTypeAsync(IEdmEntityType definition)
+        {
+            await this.ProcessSchemaElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessStructuredTypeAsync(definition).ConfigureAwait(false);
+            await this.ProcessSchemaTypeAsync(definition).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessCollectionType(IEdmCollectionType definition)
         {
             this.ProcessElement(definition);
             this.ProcessType(definition);
+            this.VisitTypeReference(definition.ElementType);
+        }
+
+        protected virtual async Task ProcessCollectionTypeAsync(IEdmCollectionType definition)
+        {
+            await this.ProcessElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessTypeAsync(definition).ConfigureAwait(false);
             this.VisitTypeReference(definition.ElementType);
         }
 
@@ -571,11 +732,26 @@ namespace Microsoft.OData.Edm
             this.VisitEnumMembers(definition.Members);
         }
 
+        protected virtual async Task ProcessEnumTypeAsync(IEdmEnumType definition)
+        {
+            await this.ProcessSchemaElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessTypeAsync(definition).ConfigureAwait(false);
+            await this.ProcessSchemaTypeAsync(definition).ConfigureAwait(false);
+            this.VisitEnumMembers(definition.Members);
+        }
+
         protected virtual void ProcessTypeDefinition(IEdmTypeDefinition definition)
         {
             this.ProcessSchemaElement(definition);
             this.ProcessType(definition);
             this.ProcessSchemaType(definition);
+        }
+
+        protected virtual async Task ProcessTypeDefinitionAsync(IEdmTypeDefinition definition)
+        {
+            await this.ProcessSchemaElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessTypeAsync(definition).ConfigureAwait(false);
+            await this.ProcessSchemaTypeAsync(definition).ConfigureAwait(false);
         }
 
         protected virtual void ProcessEntityReferenceType(IEdmEntityReferenceType definition)
@@ -584,9 +760,21 @@ namespace Microsoft.OData.Edm
             this.ProcessType(definition);
         }
 
+        protected virtual async Task ProcessEntityReferenceTypeAsync(IEdmEntityReferenceType definition)
+        {
+            await this.ProcessElementAsync(definition).ConfigureAwait(false);
+            await this.ProcessTypeAsync(definition).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessStructuredType(IEdmStructuredType definition)
         {
             this.ProcessType(definition);
+            this.VisitProperties(definition.DeclaredProperties);
+        }
+
+        protected virtual async Task ProcessStructuredTypeAsync(IEdmStructuredType definition)
+        {
+            await this.ProcessTypeAsync(definition).ConfigureAwait(false);
             this.VisitProperties(definition.DeclaredProperties);
         }
 
@@ -595,8 +783,19 @@ namespace Microsoft.OData.Edm
             // Do not visit type or schema element, because all types will do that on their own.
         }
 
+        protected virtual Task ProcessSchemaTypeAsync(IEdmSchemaType type)
+        {
+            // Do not visit type or schema element, because all types will do that on their own.
+            return TaskUtils.CompletedTask;
+        }
+
         protected virtual void ProcessType(IEdmType definition)
         {
+        }
+
+        protected virtual Task ProcessTypeAsync(IEdmType definition)
+        {
+            return TaskUtils.CompletedTask;
         }
 
         #endregion
@@ -608,9 +807,19 @@ namespace Microsoft.OData.Edm
             this.ProcessProperty(property);
         }
 
+        protected virtual async Task ProcessNavigationPropertyAsync(IEdmNavigationProperty property)
+        {
+            await this.ProcessPropertyAsync(property).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessStructuralProperty(IEdmStructuralProperty property)
         {
             this.ProcessProperty(property);
+        }
+
+        protected virtual async Task ProcessStructuralPropertyAsync(IEdmStructuralProperty property)
+        {
+            await this.ProcessPropertyAsync(property).ConfigureAwait(false);
         }
 
         protected virtual void ProcessProperty(IEdmProperty property)
@@ -620,9 +829,21 @@ namespace Microsoft.OData.Edm
             this.VisitTypeReference(property.Type);
         }
 
+        protected virtual async Task ProcessPropertyAsync(IEdmProperty property)
+        {
+            await this.ProcessVocabularyAnnotatableAsync(property).ConfigureAwait(false);
+            await this.ProcessNamedElementAsync(property).ConfigureAwait(false);
+            this.VisitTypeReference(property.Type);
+        }
+
         protected virtual void ProcessEnumMember(IEdmEnumMember enumMember)
         {
             this.ProcessNamedElement(enumMember);
+        }
+
+        protected virtual async Task ProcessEnumMemberAsync(IEdmEnumMember enumMember)
+        {
+            await this.ProcessNamedElementAsync(enumMember).ConfigureAwait(false);
         }
 
         #endregion
@@ -634,14 +855,30 @@ namespace Microsoft.OData.Edm
             this.ProcessElement(annotation);
         }
 
+        protected virtual async Task ProcessVocabularyAnnotationAsync(IEdmVocabularyAnnotation annotation)
+        {
+            await this.ProcessElementAsync(annotation).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessImmediateValueAnnotation(IEdmDirectValueAnnotation annotation)
         {
             this.ProcessNamedElement(annotation);
         }
 
+        protected virtual async Task ProcessImmediateValueAnnotationAsync(IEdmDirectValueAnnotation annotation)
+        {
+            await this.ProcessNamedElementAsync(annotation).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessAnnotation(IEdmVocabularyAnnotation annotation)
         {
             this.ProcessVocabularyAnnotation(annotation);
+            this.VisitExpression(annotation.Value);
+        }
+
+        protected virtual async Task ProcessAnnotationAsync(IEdmVocabularyAnnotation annotation)
+        {
+            await this.ProcessVocabularyAnnotationAsync(annotation).ConfigureAwait(false);
             this.VisitExpression(annotation.Value);
         }
 
@@ -658,14 +895,29 @@ namespace Microsoft.OData.Edm
         {
         }
 
+        protected virtual Task ProcessExpressionAsync(IEdmExpression expression)
+        {
+            return TaskUtils.CompletedTask;
+        }
+
         protected virtual void ProcessStringConstantExpression(IEdmStringConstantExpression expression)
         {
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessStringConstantExpressionAsync(IEdmStringConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessBinaryConstantExpression(IEdmBinaryConstantExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessBinaryConstantExpressionAsync(IEdmBinaryConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessRecordExpression(IEdmRecordExpression expression)
@@ -679,9 +931,25 @@ namespace Microsoft.OData.Edm
             this.VisitPropertyConstructors(expression.Properties);
         }
 
+        protected virtual async Task ProcessRecordExpressionAsync(IEdmRecordExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            if (expression.DeclaredType != null)
+            {
+                this.VisitTypeReference(expression.DeclaredType);
+            }
+
+            this.VisitPropertyConstructors(expression.Properties);
+        }
+
         protected virtual void ProcessPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessPathExpressionAsync(IEdmPathExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessPropertyPathExpression(IEdmPathExpression expression)
@@ -689,14 +957,29 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessPropertyPathExpressionAsync(IEdmPathExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessNavigationPropertyPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessNavigationPropertyPathExpressionAsync(IEdmPathExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessAnnotationPathExpression(IEdmPathExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessAnnotationPathExpressionAsync(IEdmPathExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessCollectionExpression(IEdmCollectionExpression expression)
@@ -705,9 +988,20 @@ namespace Microsoft.OData.Edm
             this.VisitExpressions(expression.Elements);
         }
 
+        protected virtual async Task ProcessCollectionExpressionAsync(IEdmCollectionExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            this.VisitExpressions(expression.Elements);
+        }
+
         protected virtual void ProcessLabeledExpressionReferenceExpression(IEdmLabeledExpressionReferenceExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessLabeledExpressionReferenceExpressionAsync(IEdmLabeledExpressionReferenceExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessIsTypeExpression(IEdmIsTypeExpression expression)
@@ -717,14 +1011,34 @@ namespace Microsoft.OData.Edm
             this.VisitExpression(expression.Operand);
         }
 
+        protected virtual async Task ProcessIsTypeExpressionAsync(IEdmIsTypeExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            this.VisitTypeReference(expression.Type);
+            this.VisitExpression(expression.Operand);
+        }
+
         protected virtual void ProcessIntegerConstantExpression(IEdmIntegerConstantExpression expression)
         {
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessIntegerConstantExpressionAsync(IEdmIntegerConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessIfExpression(IEdmIfExpression expression)
         {
             this.ProcessExpression(expression);
+            this.VisitExpression(expression.TestExpression);
+            this.VisitExpression(expression.TrueExpression);
+            this.VisitExpression(expression.FalseExpression);
+        }
+
+        protected virtual async Task ProcessIfExpressionAsync(IEdmIfExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
             this.VisitExpression(expression.TestExpression);
             this.VisitExpression(expression.TrueExpression);
             this.VisitExpression(expression.FalseExpression);
@@ -736,9 +1050,20 @@ namespace Microsoft.OData.Edm
             this.VisitExpressions(expression.Arguments);
         }
 
+        protected virtual async Task ProcessFunctionApplicationExpressionAsync(IEdmApplyExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            this.VisitExpressions(expression.Arguments);
+        }
+
         protected virtual void ProcessFloatingConstantExpression(IEdmFloatingConstantExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessFloatingConstantExpressionAsync(IEdmFloatingConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessGuidConstantExpression(IEdmGuidConstantExpression expression)
@@ -746,9 +1071,19 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessGuidConstantExpressionAsync(IEdmGuidConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessEnumMemberExpression(IEdmEnumMemberExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessEnumMemberExpressionAsync(IEdmEnumMemberExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessDecimalConstantExpression(IEdmDecimalConstantExpression expression)
@@ -756,9 +1091,19 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessDecimalConstantExpressionAsync(IEdmDecimalConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessDateConstantExpression(IEdmDateConstantExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessDateConstantExpressionAsync(IEdmDateConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessTimeOfDayConstantExpression(IEdmTimeOfDayConstantExpression expression)
@@ -766,9 +1111,19 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessTimeOfDayConstantExpressionAsync(IEdmTimeOfDayConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessDateTimeOffsetConstantExpression(IEdmDateTimeOffsetConstantExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessDateTimeOffsetConstantExpressionAsync(IEdmDateTimeOffsetConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessDurationConstantExpression(IEdmDurationConstantExpression expression)
@@ -776,9 +1131,19 @@ namespace Microsoft.OData.Edm
             this.ProcessExpression(expression);
         }
 
+        protected virtual async Task ProcessDurationConstantExpressionAsync(IEdmDurationConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessBooleanConstantExpression(IEdmBooleanConstantExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessBooleanConstantExpressionAsync(IEdmBooleanConstantExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         protected virtual void ProcessCastExpression(IEdmCastExpression expression)
@@ -788,9 +1153,24 @@ namespace Microsoft.OData.Edm
             this.VisitExpression(expression.Operand);
         }
 
+        protected virtual async Task ProcessCastExpressionAsync(IEdmCastExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
+            this.VisitTypeReference(expression.Type);
+            this.VisitExpression(expression.Operand);
+        }
+
+
         protected virtual void ProcessLabeledExpression(IEdmLabeledExpression element)
         {
             this.VisitExpression(element.Expression);
+        }
+
+        protected virtual Task ProcessLabeledExpressionAsync(IEdmLabeledExpression element)
+        {
+            this.VisitExpression(element.Expression);
+
+            return TaskUtils.CompletedTask;
         }
 
         protected virtual void ProcessPropertyConstructor(IEdmPropertyConstructor constructor)
@@ -798,9 +1178,21 @@ namespace Microsoft.OData.Edm
             this.VisitExpression(constructor.Value);
         }
 
+        protected virtual Task ProcessPropertyConstructorAsync(IEdmPropertyConstructor constructor)
+        {
+            this.VisitExpression(constructor.Value);
+
+            return TaskUtils.CompletedTask;
+        }
+
         protected virtual void ProcessNullConstantExpression(IEdmNullExpression expression)
         {
             this.ProcessExpression(expression);
+        }
+
+        protected virtual async Task ProcessNullConstantExpressionAsync(IEdmNullExpression expression)
+        {
+            await this.ProcessExpressionAsync(expression).ConfigureAwait(false);
         }
 
         #endregion
@@ -814,9 +1206,21 @@ namespace Microsoft.OData.Edm
             this.VisitEntityContainerElements(container.Elements);
         }
 
+        protected virtual async Task ProcessEntityContainerAsync(IEdmEntityContainer container)
+        {
+            await this.ProcessVocabularyAnnotatableAsync(container).ConfigureAwait(false);
+            await this.ProcessNamedElementAsync(container).ConfigureAwait(false);
+            await this.VisitEntityContainerElementsAsync(container.Elements).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessEntityContainerElement(IEdmEntityContainerElement element)
         {
             this.ProcessNamedElement(element);
+        }
+
+        protected virtual async Task ProcessEntityContainerElementAsync(IEdmEntityContainerElement element)
+        {
+            await this.ProcessNamedElementAsync(element).ConfigureAwait(false);
         }
 
         protected virtual void ProcessEntitySet(IEdmEntitySet set)
@@ -824,9 +1228,19 @@ namespace Microsoft.OData.Edm
             this.ProcessEntityContainerElement(set);
         }
 
+        protected virtual async Task ProcessEntitySetAsync(IEdmEntitySet set)
+        {
+            await this.ProcessEntityContainerElementAsync(set).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessSingleton(IEdmSingleton singleton)
         {
             this.ProcessEntityContainerElement(singleton);
+        }
+
+        protected virtual async Task ProcessSingletonAsync(IEdmSingleton singleton)
+        {
+            await this.ProcessEntityContainerElementAsync(singleton).ConfigureAwait(false);
         }
 
         #endregion
@@ -839,10 +1253,22 @@ namespace Microsoft.OData.Edm
             this.ProcessOperation(action);
         }
 
+        protected virtual async Task ProcessActionAsync(IEdmAction action)
+        {
+            await this.ProcessSchemaElementAsync(action).ConfigureAwait(false);
+            await this.ProcessOperationAsync(action).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessFunction(IEdmFunction function)
         {
             this.ProcessSchemaElement(function);
             this.ProcessOperation(function);
+        }
+
+        protected virtual async Task ProcessFunctionAsync(IEdmFunction function)
+        {
+            await this.ProcessSchemaElementAsync(function).ConfigureAwait(false);
+            await this.ProcessOperationAsync(function).ConfigureAwait(false);
         }
 
         protected virtual void ProcessActionImport(IEdmActionImport actionImport)
@@ -850,9 +1276,19 @@ namespace Microsoft.OData.Edm
             this.ProcessEntityContainerElement(actionImport);
         }
 
+        protected virtual async Task ProcessActionImportAsync(IEdmActionImport actionImport)
+        {
+            await this.ProcessEntityContainerElementAsync(actionImport).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessFunctionImport(IEdmFunctionImport functionImport)
         {
             this.ProcessEntityContainerElement(functionImport);
+        }
+
+        protected virtual async Task ProcessFunctionImportAsync(IEdmFunctionImport functionImport)
+        {
+            await this.ProcessEntityContainerElementAsync(functionImport).ConfigureAwait(false);
         }
 
         protected virtual void ProcessOperation(IEdmOperation operation)
@@ -864,10 +1300,26 @@ namespace Microsoft.OData.Edm
             this.ProcessOperationReturn(operationReturn);
         }
 
+        protected virtual async Task ProcessOperationAsync(IEdmOperation operation)
+        {
+            // Do not visit vocabularyAnnotatable because functions and operation imports are always going to be either a schema element or a container element and will be visited through those paths.
+            this.VisitOperationParameters(operation.Parameters);
+
+            IEdmOperationReturn operationReturn = operation.GetReturn();
+            await this.ProcessOperationReturnAsync(operationReturn).ConfigureAwait(false);
+        }
+
         protected virtual void ProcessOperationParameter(IEdmOperationParameter parameter)
         {
             this.ProcessVocabularyAnnotatable(parameter);
             this.ProcessNamedElement(parameter);
+            this.VisitTypeReference(parameter.Type);
+        }
+
+        protected virtual async Task ProcessOperationParameterAsync(IEdmOperationParameter parameter)
+        {
+            await this.ProcessVocabularyAnnotatableAsync(parameter).ConfigureAwait(false);
+            await this.ProcessNamedElementAsync(parameter).ConfigureAwait(false);
             this.VisitTypeReference(parameter.Type);
         }
 
@@ -879,6 +1331,17 @@ namespace Microsoft.OData.Edm
             }
 
             this.ProcessVocabularyAnnotatable(operationReturn);
+            this.VisitTypeReference(operationReturn.Type);
+        }
+
+        protected virtual async Task ProcessOperationReturnAsync(IEdmOperationReturn operationReturn)
+        {
+            if (operationReturn == null)
+            {
+                return;
+            }
+
+            await this.ProcessVocabularyAnnotatableAsync(operationReturn).ConfigureAwait(false);
             this.VisitTypeReference(operationReturn.Type);
         }
         #endregion

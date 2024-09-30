@@ -22,7 +22,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
     /// <summary>
     /// OData Common Schema Definition Language (CSDL) JSON writer
     /// </summary>
-    internal class EdmModelCsdlSchemaJsonWriter : EdmModelCsdlSchemaWriter
+    internal partial class EdmModelCsdlSchemaJsonWriter : EdmModelCsdlSchemaWriter
     {
         private Utf8JsonWriter jsonWriter;
         private CsdlJsonWriterSettings settings;

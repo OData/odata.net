@@ -2995,6 +2995,16 @@ public sealed class Microsoft.OData.Edm.Csdl.SchemaWriter {
     ExtensionAttribute(),
     ]
     public static bool TryWriteSchema (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static System.Threading.Tasks.Task`1[[System.Tuple`2[[System.Boolean],[System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]]]]] TryWriteSchemaAsync (Microsoft.OData.Edm.IEdmModel model, System.Func`2[[System.String],[System.Xml.XmlWriter]] writerProvider)
+
+    [
+    ExtensionAttribute(),
+    ]
+    public static System.Threading.Tasks.Task`1[[System.Tuple`2[[System.Boolean],[System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]]]]] TryWriteSchemaAsync (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer)
 }
 
 [
@@ -3100,7 +3110,13 @@ public class Microsoft.OData.Edm.Csdl.CsdlWriter {
 
     protected static string GetVersionString (System.Version version)
     public static bool TryWriteCsdl (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target, out System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]& errors)
+    [
+    AsyncStateMachineAttribute(),
+    ]
+    public static System.Threading.Tasks.Task`1[[System.Tuple`2[[System.Boolean],[System.Collections.Generic.IEnumerable`1[[Microsoft.OData.Edm.Validation.EdmError]]]]]] TryWriteCsdlAsync (Microsoft.OData.Edm.IEdmModel model, System.Xml.XmlWriter writer, Microsoft.OData.Edm.Csdl.CsdlTarget target)
+
     protected virtual void WriteCsdl ()
+    protected virtual System.Threading.Tasks.Task WriteCsdlAsync ()
 }
 
 [

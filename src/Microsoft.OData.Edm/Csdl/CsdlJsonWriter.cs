@@ -9,6 +9,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
+using System.Threading.Tasks;
 using Microsoft.OData.Edm.Csdl.Serialization;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -39,7 +40,7 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Write the JSON CSDL.
+        /// Writes the JSON CSDL.
         /// </summary>
         protected override void WriteCsdl()
         {
@@ -49,13 +50,30 @@ namespace Microsoft.OData.Edm.Csdl
             WriteReferenceElements();
 
             // It also MAY contain members for schemas.
-            WriteSchemata();
+            WriteSchemas();
 
             WriteCsdlEnd();
         }
 
         /// <summary>
-        /// CSDL JSON Document Object
+        /// Asynchronously writes the JSON CSDL.
+        /// </summary>
+        /// <returns>Task that represents the asynchronous operation.</returns>
+        protected override async Task WriteCsdlAsync()
+        {
+            await WriteCsdlStartAsync().ConfigureAwait(false);
+
+            // The CSDL JSON Document object MAY contain the member $Reference to reference other CSDL documents.
+            await WriteReferenceElementsAsync().ConfigureAwait(false);
+
+            // It also MAY contain members for schemas.
+            await WriteSchemasAsync().ConfigureAwait(false);
+
+            await WriteCsdlEndAsync().ConfigureAwait(false);
+        }
+
+        /// <summary>
+        /// Writes CSDL JSON document object
         /// </summary>
         private void WriteCsdlStart()
         {
@@ -73,7 +91,28 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// $Reference Object
+        /// Asynchronously writes CSDL JSON document object
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private Task WriteCsdlStartAsync()
+        {
+            // A CSDL JSON document consists of a single JSON object.
+            this.jsonWriter.WriteStartObject();
+
+            // This document object MUST contain the member $Version.
+            this.jsonWriter.WriteRequiredProperty("$Version", GetVersionString(edmxVersion));
+
+            // If the CSDL JSON document is the metadata document of an OData service, the document object MUST contain the member $EntityContainer.
+            if (model.EntityContainer != null)
+            {
+                this.jsonWriter.WriteRequiredProperty("$EntityContainer", model.EntityContainer.FullName());
+            }
+
+            return Task.CompletedTask;
+        }
+
+        /// <summary>
+        /// Writes reference object
         /// </summary>
         private void WriteReferenceElements()
         {
@@ -84,9 +123,20 @@ namespace Microsoft.OData.Edm.Csdl
         }
 
         /// <summary>
-        /// Schema Object.
+        /// Asynchronously writes reference object.
         /// </summary>
-        private void WriteSchemata()
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private Task WriteReferenceElementsAsync()
+        {
+            EdmModelReferenceElementsJsonVisitor visitor = new EdmModelReferenceElementsJsonVisitor(this.model, this.jsonWriter, this.edmxVersion);
+
+            return visitor.VisitEdmReferencesAsync(this.model);
+        }
+
+        /// <summary>
+        /// Writes schema object.
+        /// </summary>
+        private void WriteSchemas()
         {
             // A schema is represented as a member of the document object whose name is the schema namespace.
             // Its value is an object that MAY contain the members $Alias and $Annotations.
@@ -100,12 +150,42 @@ namespace Microsoft.OData.Edm.Csdl
             }
         }
 
+        /// <summary>
+        /// Asynchronously writes schema object
+        /// </summary>
+        /// <returns>A task that represents the asynchronous operation</returns>
+        private async Task WriteSchemasAsync()
+        {
+            // A schema is represented as a member of the document object whose name is the schema namespace.
+            // Its value is an object that MAY contain the members $Alias and $Annotations.
+            EdmModelCsdlSerializationVisitor visitor;
+            Version edmVersion = this.model.GetEdmVersion() ?? EdmConstants.EdmVersionLatest;
+            foreach (EdmSchema schema in this.schemas)
+            {
+                EdmModelCsdlSchemaWriter writer = new EdmModelCsdlSchemaJsonWriter(model, jsonWriter, edmVersion, settings);
+                visitor = new EdmModelCsdlSerializationVisitor(this.model, writer);
+                await visitor.VisitEdmSchemaAsync(schema, this.model.GetNamespacePrefixMappings()).ConfigureAwait(false);
+            }
+        }
+
         private void WriteCsdlEnd()
         {
             // End of the CSDL JSON document.
             this.jsonWriter.WriteEndObject();
 
             this.jsonWriter.Flush();
+        }
+
+        /// <summary>
+        /// Asynchronously writes the end of the CSDL JSON document.
+        /// </summary>
+        /// <returns>A task that flushing the JSON writer (jsonWriter) asynchronously.</returns>
+        private async Task WriteCsdlEndAsync()
+        {
+            // End of the CSDL JSON document.
+            this.jsonWriter.WriteEndObject();
+
+            await this.jsonWriter.FlushAsync().ConfigureAwait(false);
         }
     }
 }
