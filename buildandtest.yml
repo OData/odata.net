@@ -32,15 +32,15 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(BuildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect "Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
 - task: DotNetCoreCLI@2
   condition: eq(variables.buildConfiguration, 'Release')
-  displayName: 'Test'
+  displayName: 'Test - Microsoft.OData.Client.E2E.Tests'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Microsoft.OData.Client.E2E.Tests\Microsoft.OData.Client.E2E.Tests.csproj
