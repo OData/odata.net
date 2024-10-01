@@ -383,7 +383,7 @@ namespace Microsoft.OData.Tests.Json
             using (MemoryStream stream = new MemoryStream())
             {
                 IJsonWriterAsync jsonWriter = CreateJsonWriterAsync(stream, false, Encoding.UTF8);
-                jsonWriter.StartObjectScopeAsync();
+                await jsonWriter.StartObjectScopeAsync();
 
                 await jsonWriter.WriteNameAsync("s1");
                 await jsonWriter.WriteValueAsync("test");

@@ -45,16 +45,16 @@ steps:
   displayName: 'Test'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --no-build --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --no-build --collect "Code Coverage"'
     projects: |      
      $(Build.SourcesDirectory)\sln\OData.Pipeline.sln
 
 - task: DotNetCoreCLI@2
   condition: eq(variables.buildConfiguration, 'Release')
-  displayName: 'Test'
+  displayName: 'Test - Microsoft.Test.OData.Tests.Client'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\EndToEndTests\Tests\Client\Build.Desktop\Microsoft.Test.OData.Tests.Client.csproj
 
@@ -64,9 +64,9 @@ steps:
     version: '8.x'
 
 - task: DotNetCoreCLI@2
-  displayName: 'Microsoft.OData.Core.Tests for NET 8.0'
+  displayName: 'Test - Microsoft.OData.Core.Tests for NET 8.0'
   inputs:
     command: 'test'
-    arguments: '--configuration $(buildConfiguration) --collect "Code coverage"'
+    arguments: '--configuration $(buildConfiguration) --settings $(Build.SourcesDirectory)\test.runsettings --collect "Code Coverage"'
     projects: |      
       $(Build.SourcesDirectory)\test\FunctionalTests\Microsoft.OData.Core.Tests\Microsoft.OData.Core.Tests.Net8.csproj
