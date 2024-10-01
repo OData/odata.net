@@ -157,7 +157,7 @@ namespace Microsoft.OData.UriParser
             bool customFound = CustomUriFunctions.TryGetCustomFunction(functionCallToken, out customUriFunctionsNameSignatures,
                 enableCaseInsensitive);
 
-            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionCallToken, enableCaseInsensitive, out builtInUriFunctionName,
+            bool builtInFound = BuiltInUriFunctions.TryGetBuiltInFunction(functionCallToken, enableCaseInsensitive, out builtInUriFunctionName, 
                 out builtInUriFunctionsSignatures);
 
             // Populate the matched names found for built-in function
