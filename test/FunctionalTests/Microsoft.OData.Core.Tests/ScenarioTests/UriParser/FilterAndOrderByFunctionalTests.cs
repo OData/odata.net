@@ -831,15 +831,27 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("isof(Fully.Qualified.Namespace.Pet1)")]
-        [InlineData("isof(MyAddress, Fully.Qualified.Namespace.Pet1)")]
-        public void IsOfFunctionWithOrWithoutSingleQuotesOnTypeParameter_WithIncorrectType_ThrowHierarchyNotFollowedException(string filterQuery)
+        [InlineData("isof(Fully.Qualified.Namespace.Pet1)", "Fully.Qualified.Namespace.Pet1")]
+        [InlineData("cast(Fully.Qualified.Namespace.HomeAddress)/City eq 'City1'", "Fully.Qualified.Namespace.HomeAddress")]
+        public void IsOfAndCastFunctionsWithSingleParameterWithoutSingleQuotes_WithIncorrectType_ThrowException(string filterQuery, string fullyQualifiedTypeName)
         {
             // Arrange & Act
             Action test = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
 
             // Assert
-            test.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed("Fully.Qualified.Namespace.Pet1", "Fully.Qualified.Namespace.Person"));
+            test.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(fullyQualifiedTypeName, "Fully.Qualified.Namespace.Person"));
+        }
+
+        [Theory]
+        [InlineData("isof(MyAddress,Fully.Qualified.Namespace.Pet1)", "Fully.Qualified.Namespace.Pet1")]
+        [InlineData("cast(MyAddress,Fully.Qualified.Namespace.Employee)/WorkID eq 345", "Fully.Qualified.Namespace.Employee")]
+        public void IsOfAndCastFunctionsWithTwoParameterWhereTypeParameterIsWithoutSingleQuotes_WithIncorrectType_ThrowException(string filterQuery, string fullyQualifiedTypeName)
+        {
+            // Arrange & Act
+            Action test = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+
+            // Assert
+            test.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(fullyQualifiedTypeName, "Fully.Qualified.Namespace.Address"));
         }
 
         [Fact]
