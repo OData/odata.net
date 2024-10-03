@@ -10,6 +10,7 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
+    using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
 
     /// <summary>
@@ -32,6 +33,8 @@ namespace Microsoft.OData.UriParser
         /// If set to true, catches any ODataException thrown while trying to parse function arguments.
         /// </summary>
         private readonly bool restoreStateIfFail;
+
+        private string functionCallName = null;
 
         /// <summary>
         /// Create a new FunctionCallParser.
@@ -100,6 +103,8 @@ namespace Microsoft.OData.UriParser
                 functionName = this.Lexer.CurrentToken.Text;
                 this.Lexer.NextToken();
             }
+
+            functionCallName = functionName;
 
             FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
             if (arguments != null)
@@ -179,14 +184,47 @@ namespace Microsoft.OData.UriParser
         /// <returns>A list of FunctionParameterTokens representing each argument</returns>
         private List<FunctionParameterToken> ReadArgumentsAsPositionalValues()
         {
+            // Store the parent expression of the current argument.
+            Stack<QueryToken> expressionParents = new Stack<QueryToken>();
+
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
-                argList.Add(new FunctionParameterToken(null, this.parser.ParseExpression()));
+                // If we have a parent expression, we need to set the parent of the next argument to the current argument.
+                QueryToken parentExpression = expressionParents.Count > 0 ? expressionParents.Pop() : null;
+                QueryToken parameterToken = this.parser.ParseExpression();
+
+                // If parentExpression is not null and the function call is cast or isof, set the parent of the parameterToken to parentExpression.
+                // This is because the next argument is a dotted identifier.
+                if (parentExpression != null && functionCallName != null && (functionCallName == ExpressionConstants.UnboundFunctionCast || functionCallName == ExpressionConstants.UnboundFunctionIsOf))
+                {
+                    // If the parameter is a dotted identifier, we need to set the parent of the next argument to the current argument.
+                    // But if it is primitive literal, no need to set the parent.
+                    if (parameterToken is DottedIdentifierToken dottedIdentifierToken && dottedIdentifierToken.NextToken == null)
+                    {
+                        // Check if the dottedIdentifier is a primitive type
+                        EdmPrimitiveTypeKind primitiveTypeKind = EdmCoreModel.Instance.GetPrimitiveTypeKind(dottedIdentifierToken.Identifier);
+
+                        // If the dottedIdentifier is not a primitive type, set the parent of the next argument to the current argument.
+                        //  cast(1, Edm.Int32) -> Edm.Int32 is a dottedIdentifierToken
+                        //  cast(1, MyEnum'Value') -> MyEnum'Value' is a dottedIdentifierToken
+                        if (primitiveTypeKind == EdmPrimitiveTypeKind.None)
+                        {
+                            dottedIdentifierToken.NextToken = parentExpression;
+                            parameterToken = dottedIdentifierToken;
+                        }
+                    }
+                }
+
+                argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
                     break;
                 }
+
+                // In case of comma, we need to parse the next argument
+                // but first we need to set the parent of the next argument to the current argument.
+                expressionParents.Push(parameterToken);
 
                 this.Lexer.NextToken();
             }

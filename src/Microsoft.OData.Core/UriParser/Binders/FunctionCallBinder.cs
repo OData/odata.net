@@ -723,19 +723,18 @@ namespace Microsoft.OData.UriParser
             QueryNode queryNode = args.Last();
 
             IEdmTypeReference returnType = null;
-            string typeArgumentName = null;
+            string typeArgumentFullName = null;
 
             if (queryNode is SingleResourceCastNode singleResourceCastNode)
             {
                 returnType = singleResourceCastNode.TypeReference;
-                typeArgumentName = returnType.FullName();
+                typeArgumentFullName = returnType.FullName();
             }
             else if (queryNode is ConstantNode constantNode)
             {
-                typeArgumentName = constantNode.Value as string;
-                returnType = TryGetTypeReference(state.Model, typeArgumentName, state.Configuration.Resolver);
+                typeArgumentFullName = constantNode.Value as string;
+                returnType = TryGetTypeReference(state.Model, typeArgumentFullName, state.Configuration.Resolver);
             }
-
 
             if (returnType == null)
             {
@@ -767,7 +766,7 @@ namespace Microsoft.OData.UriParser
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgumentName, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
+                    && !string.Equals(typeArgumentFullName, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
                 {
                     throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
                 }
