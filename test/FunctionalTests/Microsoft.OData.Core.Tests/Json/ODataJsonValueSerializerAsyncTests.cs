@@ -426,6 +426,36 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public async Task WriteDateOnlyValueAsync_WritesExpectedValue()
+        {
+            var date = new DateOnly(2024, 9, 17);
+            var dateEdmTypeReference = EdmCoreModel.Instance.GetDate(false);
+
+            var result = await SetupJsonValueSerializerAndRunTestAsync(
+                (jsonValueSerializer) =>
+                {
+                    return jsonValueSerializer.WritePrimitiveValueAsync(date, dateEdmTypeReference);
+                });
+
+            Assert.Equal("\"2024-09-17\"", result);
+        }
+
+        [Fact]
+        public async Task WriteTimeOnlyValueAsync_WritesExpectedValue()
+        {
+            var timeOnly = new TimeOfDay(14, 9, 17, 2);
+            var dateEdmTypeReference = EdmCoreModel.Instance.GetTimeOfDay(false);
+
+            var result = await SetupJsonValueSerializerAndRunTestAsync(
+                (jsonValueSerializer) =>
+                {
+                    return jsonValueSerializer.WritePrimitiveValueAsync(timeOnly, dateEdmTypeReference);
+                });
+
+            Assert.Equal("\"14:09:17.0020000\"", result);
+        }
+
+        [Fact]
         public async Task WriteUntypedValueAsync_ThrowsExceptionForRawValueNullOrEmpty()
         {
             var untypedValue = new ODataUntypedValue { RawValue = "" };

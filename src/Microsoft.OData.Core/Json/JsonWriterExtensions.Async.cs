@@ -135,9 +135,19 @@ namespace Microsoft.OData.Json
                 return jsonWriter.WriteValueAsync((Date)value);
             }
 
+            if (value is DateOnly dateOnly)
+            {
+                return jsonWriter.WriteValueAsync(dateOnly); // will implicitly to call 'Date' version
+            }
+
             if (value is TimeOfDay)
             {
                 return jsonWriter.WriteValueAsync((TimeOfDay)value);
+            }
+
+            if (value is TimeOnly timeOnly)
+            {
+                return jsonWriter.WriteValueAsync(timeOnly); // will implicitly to call 'TimeOfDay' version
             }
 
             return TaskUtils.GetFaultedTask(

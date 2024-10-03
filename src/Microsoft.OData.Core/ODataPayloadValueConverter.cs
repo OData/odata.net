@@ -174,6 +174,18 @@ namespace Microsoft.OData
                 return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
             }
 
+            // DateOnly
+            if (targetType == typeof(DateOnly))
+            {
+                return PlatformHelper.ConvertStringToDateOnly(stringValue);
+            }
+
+            // TimeOnly
+            if (targetType == typeof(TimeOnly))
+            {
+                return PlatformHelper.ConvertStringToTimeOnly(stringValue);
+            }
+
             // DateTimeOffset needs to be read using the XML rules (as per the Json spec).
             if (targetType == typeof(DateTimeOffset))
             {

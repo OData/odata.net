@@ -1099,6 +1099,36 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(expectedOutput, rawOutput);
         }
 
+        [Fact]
+        public void WriteDateOnly()
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            jsonWriter.WriteValue(new DateOnly(2024,10,1));
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal("\"2024-10-01\"", rawOutput);
+        }
+
+        [Fact]
+        public void WriteTimeOnly()
+        {
+            using MemoryStream stream = new MemoryStream();
+            IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
+            jsonWriter.WriteValue(new TimeOnly(4, 3, 2, 1));
+            jsonWriter.Flush();
+
+            stream.Seek(0, SeekOrigin.Begin);
+
+            using StreamReader reader = new StreamReader(stream, encoding: Encoding.UTF8);
+            string rawOutput = reader.ReadToEnd();
+            Assert.Equal("\"04:03:02.0010000\"", rawOutput);
+        }
+
         /// <summary>
         /// Normalizes the differences between JSON text encoded
         /// by Utf8JsonWriter and OData's JsonWriter, to make

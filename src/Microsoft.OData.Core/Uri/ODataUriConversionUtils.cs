@@ -512,6 +512,12 @@ namespace Microsoft.OData
                         return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, new TimeSpan(0));
                     }
 
+                    if (primitiveValue is DateOnly dateOnly)
+                    {
+                        var dateValue = (Date)dateOnly;
+                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, new TimeSpan(0));
+                    }
+
                     break;
 
                 case EdmPrimitiveTypeKind.Date:

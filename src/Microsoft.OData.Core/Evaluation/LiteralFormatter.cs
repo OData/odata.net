@@ -27,12 +27,14 @@ namespace Microsoft.OData.Evaluation
 #if ODATA_CORE
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
+    using System.Globalization;
 #else
     using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
+    using System.Globalization;
 #endif
 
     /// <summary>
@@ -223,6 +225,11 @@ namespace Microsoft.OData.Evaluation
                 return value.ToString();
             }
 
+            if (value is DateOnly dateOnly)
+            {
+                return ((Date)dateOnly).ToString();
+            }
+
             if (value is DateTimeOffset)
             {
                 return XmlConvert.ToString((DateTimeOffset)value);
@@ -231,6 +238,11 @@ namespace Microsoft.OData.Evaluation
             if (value is TimeOfDay)
             {
                 return value.ToString();
+            }
+
+            if (value is TimeOnly timeOnly)
+            {
+                return ((TimeOfDay)timeOnly).ToString();
             }
 
             if (value is TimeSpan)

@@ -8,6 +8,7 @@ namespace Microsoft.OData.Client
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.Diagnostics;
     using System.Linq;
 
@@ -367,7 +368,10 @@ namespace Microsoft.OData.Client
             RegisterKnownType(typeof(GeometryMultiPolygon), XmlConstants.EdmGeometryMultiPolygonTypeName, EdmPrimitiveTypeKind.GeometryMultiPolygon, new GeometryTypeConverter(), true);
             RegisterKnownType(typeof(DataServiceStreamLink), XmlConstants.EdmStreamTypeName, EdmPrimitiveTypeKind.Stream, new NamedStreamTypeConverter(), false);
             RegisterKnownType(typeof(Date), XmlConstants.EdmDateTypeName, EdmPrimitiveTypeKind.Date, new DateTypeConverter(), true);
-            RegisterKnownType(typeof(TimeOfDay), XmlConstants.EdmTimeOfDayTypeName, EdmPrimitiveTypeKind.TimeOfDay, new TimeOfDayConvert(), true);
+            RegisterKnownType(typeof(TimeOfDay), XmlConstants.EdmTimeOfDayTypeName, EdmPrimitiveTypeKind.TimeOfDay, new TimeOfDayConverter(), true);
+
+            RegisterKnownType(typeof(DateOnly), XmlConstants.EdmDateTypeName, EdmPrimitiveTypeKind.Date, new DateOnlyTypeConverter(), true);
+            RegisterKnownType(typeof(TimeOnly), XmlConstants.EdmTimeOfDayTypeName, EdmPrimitiveTypeKind.TimeOfDay, new TimeOnlyConverter(), true);
 
             // Following are known types are mapped to existing Edm type
             RegisterKnownType(typeof(Char), XmlConstants.EdmStringTypeName, EdmPrimitiveTypeKind.String, new CharTypeConverter(), false);

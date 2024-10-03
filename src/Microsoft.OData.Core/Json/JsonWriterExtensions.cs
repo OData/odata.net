@@ -147,9 +147,24 @@ namespace Microsoft.OData.Json
                 return;
             }
 
+            // Why don't merge 'DateOnly' into 'Date' if clause?
+            // Because 'value' is System.Object, it's a boxed of 'DateOnly' and will throw exception to cast it to 'Date'.
+            // It's same for TimeOnly
+            if (value is DateOnly dateOnly)
+            {
+                jsonWriter.WriteValue(dateOnly);
+                return;
+            }
+
             if (value is TimeOfDay)
             {
                 jsonWriter.WriteValue((TimeOfDay)value);
+                return;
+            }
+
+            if (value is TimeOnly timeOnly)
+            {
+                jsonWriter.WriteValue(timeOnly);
                 return;
             }
 

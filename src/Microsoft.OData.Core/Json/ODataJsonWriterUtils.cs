@@ -121,7 +121,9 @@ namespace Microsoft.OData.Json
                         valueAsString = JsonValueUtils.GetEscapedJsonString(valueAsString);
                         sb.Append('"').Append(valueAsString).Append('"');
                     }
-                    else if (valueAsObject is byte[] || valueAsObject is DateTimeOffset || valueAsObject is Guid || valueAsObject is TimeSpan | valueAsObject is Date || valueAsObject is TimeOfDay)
+                    else if (valueAsObject is byte[] || valueAsObject is DateTimeOffset || valueAsObject is Guid
+                        || valueAsObject is TimeSpan || valueAsObject is Date || valueAsObject is TimeOfDay
+                        || valueAsObject is DateOnly || valueAsObject is TimeOnly)
                     {
                         sb.Append('"').Append(valueAsString).Append('"');
                     }

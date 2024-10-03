@@ -231,6 +231,26 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Convert Date to Clr DateOnly
+        /// </summary>
+        /// <param name="operand">Date Value</param>
+        /// <returns>DateTime Value which represent the Date</returns>
+        public static implicit operator DateOnly(Date operand)
+        {
+            return DateOnly.FromDateTime(operand.dateTime);
+        }
+
+        /// <summary>
+        /// Convert Clr DateOnly to Date
+        /// </summary>
+        /// <param name="operand">DateOnly Value</param>
+        /// <returns>Date Value from DateOnly</returns>
+        public static implicit operator Date(DateOnly operand)
+        {
+            return new Date(operand.Year, operand.Month, operand.Day);
+        }
+
+        /// <summary>
         /// Convert Date to String
         /// </summary>
         /// <returns>string value of Date</returns>
