@@ -104,6 +104,7 @@ namespace Microsoft.OData.UriParser
                 this.Lexer.NextToken();
             }
 
+            // Stores functionCallName for later use in parsing arguments.
             functionCallName = functionName;
 
             FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
@@ -196,7 +197,6 @@ namespace Microsoft.OData.UriParser
 
                 // Set the parent of the parameterToken if necessary.
                 parameterToken = SetParentForParameterToken(parentExpression, parameterToken);
-
 
                 argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
