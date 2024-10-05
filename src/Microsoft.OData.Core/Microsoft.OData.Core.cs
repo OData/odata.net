@@ -54,6 +54,7 @@ namespace Microsoft.OData
         internal const string ODataWriterCore_StreamNotDisposed = "ODataWriterCore_StreamNotDisposed";
         internal const string ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties = "ODataWriterCore_DeltaResourceWithoutIdOrKeyProperties";
         internal const string ODataWriterCore_QueryCountInRequest = "ODataWriterCore_QueryCountInRequest";
+        internal const string ODataWriterCore_QueryCountInODataNestedResourceInfo = "ODataWriterCore_QueryCountInODataNestedResourceInfo";
         internal const string ODataWriterCore_QueryNextLinkInRequest = "ODataWriterCore_QueryNextLinkInRequest";
         internal const string ODataWriterCore_QueryDeltaLinkInRequest = "ODataWriterCore_QueryDeltaLinkInRequest";
         internal const string ODataWriterCore_CannotWriteDeltaWithResourceSetWriter = "ODataWriterCore_CannotWriteDeltaWithResourceSetWriter";
