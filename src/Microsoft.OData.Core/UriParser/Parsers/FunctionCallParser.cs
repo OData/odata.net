@@ -34,6 +34,9 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         private readonly bool restoreStateIfFail;
 
+        /// <summary>
+        /// Function call name. For example, cast, isof, etc.
+        /// </summary>
         private string functionCallName = null;
 
         /// <summary>
@@ -196,7 +199,7 @@ namespace Microsoft.OData.UriParser
                 QueryToken parameterToken = this.parser.ParseExpression();
 
                 // Set the parent of the parameterToken if necessary.
-                parameterToken = SetParentForParameterToken(parentExpression, parameterToken);
+                parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
 
                 argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
@@ -240,7 +243,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="parentExpression">The parent expression.</param>
         /// <param name="parameterToken">The parameter token.</param>
         /// <returns>The updated parameter token.</returns>
-        private QueryToken SetParentForParameterToken(QueryToken parentExpression, QueryToken parameterToken)
+        private QueryToken SetParentForCurrentParameterToken(QueryToken parentExpression, QueryToken parameterToken)
         {
             if (parentExpression != null && functionCallName != null && (functionCallName == ExpressionConstants.UnboundFunctionCast || functionCallName == ExpressionConstants.UnboundFunctionIsOf))
             {
