@@ -866,6 +866,7 @@ namespace Microsoft.OData.JsonLight
                     else
                     {
                         resource.Id = (Uri)annotationValue;
+                        resource.HasExplicitODataId = true;
                     }
 
                     break;

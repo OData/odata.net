@@ -70,10 +70,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             Assert.Equal(2, entry.Properties.Count());
             Assert.Equal(10, entry.Properties.Single(p => p.Name == "WebId").Value);
             Assert.Equal("SingletonWeb", entry.Properties.Single(p => p.Name == "Name").Value);
+            Assert.False(entry.HasExplicitODataId);
         }
 
         [Fact]
-        public void ReadSingletonWithIdSpecifiedTest()
+        public void ReadSingletonWithODataIdSpecifiedTest()
         {
             const string payload = "{" +
                 "\"@odata.context\":\"http://odata.org/test/$metadata#MySingleton\"," +
@@ -86,6 +87,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Reader.JsonLight
             Assert.Equal(new Uri("http://odata.org/test/Bla"), entry.Id);
             Assert.Equal(new Uri("http://odata.org/test/BlaBla"), entry.EditLink);
             Assert.Equal(new Uri("http://odata.org/test/BlaBlaBla"), entry.ReadLink);
+            Assert.True(entry.HasExplicitODataId);
         }
 
         [Fact]
