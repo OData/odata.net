@@ -1104,7 +1104,7 @@ namespace Microsoft.OData.Tests.Json
         {
             using MemoryStream stream = new MemoryStream();
             IJsonWriter jsonWriter = CreateJsonWriter(stream, isIeee754Compatible: false, Encoding.UTF8);
-            jsonWriter.WriteValue(new DateOnly(2024,10,1));
+            jsonWriter.WriteValue(new DateOnly(2024, 10, 1));
             jsonWriter.Flush();
 
             stream.Seek(0, SeekOrigin.Begin);

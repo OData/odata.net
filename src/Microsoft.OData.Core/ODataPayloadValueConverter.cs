@@ -162,25 +162,21 @@ namespace Microsoft.OData
                 return EdmValueParser.ParseDuration(stringValue);
             }
 
-            // Date
             if (targetType == typeof(Date))
             {
                 return PlatformHelper.ConvertStringToDate(stringValue);
             }
 
-            // Time
             if (targetType == typeof(TimeOfDay))
             {
                 return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
             }
 
-            // DateOnly
             if (targetType == typeof(DateOnly))
             {
                 return PlatformHelper.ConvertStringToDateOnly(stringValue);
             }
 
-            // TimeOnly
             if (targetType == typeof(TimeOnly))
             {
                 return PlatformHelper.ConvertStringToTimeOnly(stringValue);

@@ -236,7 +236,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Converts a string to a DateOnly.
+        /// Converts a string to a <see cref="DateOnly"/>.
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <returns>DateOnly value</returns>
@@ -252,7 +252,7 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Converts a string to a TimeOfDay.
+        /// Converts a string to a <see cref="TimeOfDay">.
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <param name="timeOfDay">Time of the day</param>

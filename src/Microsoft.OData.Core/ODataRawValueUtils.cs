@@ -123,7 +123,7 @@ namespace Microsoft.OData
                 return true;
             }
 
-            if ( value is DateOnly dateOnly)
+            if (value is DateOnly dateOnly)
             {
                 result = ODataRawValueConverter.ToString(dateOnly);
                 return true;

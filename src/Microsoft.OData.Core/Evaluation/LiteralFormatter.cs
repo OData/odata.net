@@ -21,20 +21,19 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Text;
     using System.Linq;
     using System.Xml;
 #if ODATA_CORE
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
-    using System.Globalization;
 #else
     using System.Xml.Linq;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using Microsoft.Spatial;
     using ExpressionConstants = XmlConstants;
-    using System.Globalization;
 #endif
 
     /// <summary>

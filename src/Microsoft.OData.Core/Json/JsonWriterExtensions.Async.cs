@@ -137,7 +137,8 @@ namespace Microsoft.OData.Json
 
             if (value is DateOnly dateOnly)
             {
-                return jsonWriter.WriteValueAsync(dateOnly); // will implicitly to call 'Date' version
+                // will call 'WriteValueAsync(Date)' version implicitly
+                return jsonWriter.WriteValueAsync(dateOnly);
             }
 
             if (value is TimeOfDay)
@@ -147,7 +148,8 @@ namespace Microsoft.OData.Json
 
             if (value is TimeOnly timeOnly)
             {
-                return jsonWriter.WriteValueAsync(timeOnly); // will implicitly to call 'TimeOfDay' version
+                // will call 'WriteValueAsync(TimeOfDay)' version implicitly
+                return jsonWriter.WriteValueAsync(timeOnly);
             }
 
             return TaskUtils.GetFaultedTask(

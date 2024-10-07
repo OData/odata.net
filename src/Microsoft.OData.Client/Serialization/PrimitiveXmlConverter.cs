@@ -859,7 +859,7 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
-    /// Convert between primitive types Edm.Date and string
+    /// Convert between primitive types Edm.Date (using DateOnly) and string
     /// </summary>
     internal sealed class DateOnlyTypeConverter : PrimitiveTypeConverter
     {
@@ -911,7 +911,7 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
-    /// Convert between primitive types Edm.TimeOfDay and string
+    /// Convert between primitive types Edm.TimeOfDay (using TimeOnly) and string
     /// </summary>
     internal sealed class TimeOnlyConverter : PrimitiveTypeConverter
     {
