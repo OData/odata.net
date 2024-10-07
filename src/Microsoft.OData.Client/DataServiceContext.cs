@@ -2634,7 +2634,8 @@ namespace Microsoft.OData.Client
             var targetResource = new EntityDescriptor(this.model)
             {
                 Entity = target,
-                State = EntityStates.Added
+                State = EntityStates.Added,
+                DependsOnIds = new List<string> { sourceResource.ChangeOrder.ToString(CultureInfo.InvariantCulture) }
             };
 
             targetResource.SetParentForInsert(sourceResource, sourceProperty);
