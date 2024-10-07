@@ -1,6 +1,7 @@
 # Contributing to `odata.net`
 
-Thank you for considering contributing to [odata.net](/). We welcome contributions from the community and are excited to work with you. 
+Thank you for considering contributing to [odata.net](http://odata.github.io/odata.net). We welcome contributions from the community and are excited to work with you. 
+
 To ensure a smooth and collaborative process, please follow these guidelines.
 
 ## Coding Standards
@@ -11,7 +12,6 @@ To maintain a high level of code quality and consistency, please follow these co
 - Use PascalCase for class names, method names, and properties.
 - Use camelCase for local variables and method parameters.
 - Prefix interfaces with an "I" (e.g., `ICustomerService`).
-- Prefix boolean variables with "is" or "Is" (e.g., `isConnected`).
 - Avoid abbreviations or unclear acronyms.
 - Do not use `var`; always use explicit types for variable declarations.
 - Ensure `await` is followed by `configureAwait(false)` for non-blocking threads.
@@ -49,7 +49,7 @@ To maintain a high level of code quality and consistency, please follow these co
 
 ## Code of Conduct
 
-Please read and adhere to our [Security](/SECURITY.md)
+Please read and adhere to our [Security](https://github.com/OData/odata.net/?tab=security-ov-file)
 
 This project has adopted the [Microsoft Open Source Code of Conduct](https://opensource.microsoft.com/codeofconduct/).
 For more information, see the [Code of Conduct FAQ](https://opensource.microsoft.com/codeofconduct/faq/) or contact [opencode@microsoft.com](mailto:opencode@microsoft.com) with any additional questions or comments.
