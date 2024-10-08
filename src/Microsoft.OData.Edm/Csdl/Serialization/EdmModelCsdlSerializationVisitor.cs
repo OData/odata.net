@@ -180,13 +180,13 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
             await this.schemaWriter.WriteSchemaElementHeaderAsync(element, alias, mappings).ConfigureAwait(false);
 
-            VisitSchemaElements(element.SchemaElements);
+            await VisitSchemaElementsAsync(element.SchemaElements).ConfigureAwait(false);
 
             // process the functions/actions seperately
             foreach (var operation in element.SchemaOperations)
             {
                 await this.schemaWriter.WriteSchemaOperationsHeaderAsync(operation).ConfigureAwait(false);
-                VisitSchemaElements(operation.Value.AsEnumerable<IEdmSchemaElement>()); // Call AsEnumerable() to make .net 3.5 happy
+                await VisitSchemaElementsAsync(operation.Value.AsEnumerable<IEdmSchemaElement>()).ConfigureAwait(false); // Call AsEnumerable() to make .net 3.5 happy
                 await this.schemaWriter.WriteSchemaOperationsEndAsync(operation).ConfigureAwait(false);
             }
 
@@ -304,8 +304,8 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 await this.VisitEntityTypeDeclaredKeyAsync(element.DeclaredKey).ConfigureAwait(false);
             }
 
-            this.VisitProperties(element.DeclaredStructuralProperties().Cast<IEdmProperty>());
-            this.VisitProperties(element.DeclaredNavigationProperties().Cast<IEdmProperty>());
+            await this.VisitPropertiesAsync(element.DeclaredStructuralProperties().Cast<IEdmProperty>()).ConfigureAwait(false);
+            await this.VisitPropertiesAsync(element.DeclaredNavigationProperties().Cast<IEdmProperty>()).ConfigureAwait(false);
             await this.EndElementAsync(element).ConfigureAwait(false);
         }
 
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.BeginElementAsync(element, (IEdmStructuralProperty t) =>  this.schemaWriter.WriteStructuralPropertyElementHeaderAsync(t, inlineType), e =>  this.ProcessFacetsAsync(e.Type, inlineType)).ConfigureAwait(false);
             if (!inlineType)
             {
-                VisitTypeReference(element.Type);
+                await VisitTypeReferenceAsync(element.Type).ConfigureAwait(false);
             }
 
             await this.EndElementAsync(element).ConfigureAwait(false);
@@ -558,7 +558,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             {
                 if (term.Type != null)
                 {
-                    VisitTypeReference(term.Type);
+                    await VisitTypeReferenceAsync(term.Type).ConfigureAwait(false);
                 }
             }
 
@@ -629,7 +629,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 ).ConfigureAwait(false);
             if (!inlineType)
             {
-                VisitTypeReference(element.Type);
+                await VisitTypeReferenceAsync(element.Type).ConfigureAwait(false);
             }
 
             await this.VisitPrimitiveElementAnnotationsAsync(this.Model.DirectValueAnnotations(element)).ConfigureAwait(false);
@@ -691,7 +691,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     }
                     else
                     {
-                        this.VisitTypeReference(type);
+                        await this.VisitTypeReferenceAsync(type).ConfigureAwait(false);
                     }
                 }).ConfigureAwait(false);
             await this.EndElementAsync(operationReturn).ConfigureAwait(false);
@@ -726,7 +726,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                 ).ConfigureAwait(false);
             if (!inlineType)
             {
-                VisitTypeReference(element.ElementType);
+                await VisitTypeReferenceAsync(element.ElementType).ConfigureAwait(false);
             }
 
             await this.EndElementAsync(element).ConfigureAwait(false);
@@ -1031,7 +1031,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 if (!inlineType)
                 {
-                    VisitTypeReference(expression.Type);
+                    await VisitTypeReferenceAsync(expression.Type).ConfigureAwait(false);    
                 }
 
                 this.VisitExpression(expression.Operand);
@@ -1279,7 +1279,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
 
                 if (!inlineType)
                 {
-                    VisitTypeReference(expression.Type);
+                    await VisitTypeReferenceAsync(expression.Type).ConfigureAwait(false);
                 }
 
                 this.VisitExpression(expression.Operand);
@@ -1412,7 +1412,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             await this.BeginElementAsync(operation, writeElementAction).ConfigureAwait(false);
 
             await this.schemaWriter.WriteOperationParametersBeginAsync(operation.Parameters).ConfigureAwait(false);
-            this.VisitOperationParameters(operation.Parameters);
+            await this.VisitOperationParametersAsync(operation.Parameters).ConfigureAwait(false);
             await this.schemaWriter.WriteOperationParametersEndAsync(operation.Parameters).ConfigureAwait(false);
 
             IEdmOperationReturn operationReturn = operation.GetReturn();
@@ -1501,12 +1501,12 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
                     {
                         IEdmCollectionTypeReference collectionElement = element.AsCollection();
                         await this.schemaWriter.WriteNullableAttributeAsync(collectionElement.CollectionDefinition().ElementType).ConfigureAwait(false);
-                        VisitTypeReference(collectionElement.CollectionDefinition().ElementType);
+                        await VisitTypeReferenceAsync(collectionElement.CollectionDefinition().ElementType).ConfigureAwait(false);
                     }
                     else
                     {
                         await this.schemaWriter.WriteNullableAttributeAsync(element).ConfigureAwait(false);
-                        VisitTypeReference(element);
+                        await VisitTypeReferenceAsync(element).ConfigureAwait(false);
                     }
                 }
             }

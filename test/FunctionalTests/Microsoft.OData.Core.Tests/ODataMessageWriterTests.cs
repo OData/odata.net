@@ -915,6 +915,42 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public async Task WriteLargeMetadataDocumentAsync_MultipleTimes_WorksForXmlCsdl()
+        {
+            // Arrange
+            IEdmModel largeModel = GetLargeEdmModel();
+
+            var expectedPayload = await WriteAndGetPayloadAsync(largeModel, "application/xml", async writer =>
+            {
+                await writer.WriteMetadataDocumentAsync();
+            });
+
+            // Act - XML
+            for (int i = 0; i < 1000; i++)
+            {
+                string payload = await this.WriteAndGetPayloadAsync(largeModel, "application/xml", async omWriter =>
+                {
+                    try
+                    {
+                        await omWriter.WriteMetadataDocumentAsync();
+                    }
+                    catch (SynchronousIOException)
+                    {
+                        // We allow synchronous I/O for WriteMetadataDocumentAsync because
+                        // it relies on EdmLib's CsdlWriter which is still synchronous.
+                        // We should disable synchronous I/O here once CsdlWriter has an async API.
+                        // See: https://github.com/OData/odata.net/issues/2684
+                        // However, disposing the writer should still be truly async.
+                    }
+                });
+
+                // Assert - XML
+                Assert.NotNull(payload);
+                Assert.Equal(expectedPayload, payload);
+            }
+        }
+
+        [Fact]
         public async Task WriteMetadataDocumentAsync_WorksForXmlCsdl_WithNoSynchronousIOSupport()
         {
             // Arrange
@@ -1240,6 +1276,26 @@ namespace Microsoft.OData.Tests
             container.AddEntitySet("Customers", customerType);
 
             _edmModel = edmModel;
+
+            return edmModel;
+        }
+
+        private static IEdmModel GetLargeEdmModel()
+        {
+            EdmModel edmModel = new EdmModel();
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            edmModel.AddElement(container);
+
+            for (int i = 0; i < 1000; i++)
+            {
+                EdmEntityType entityType = new EdmEntityType("NS", $"Entity{i}");
+                var idProperty = new EdmStructuralProperty(entityType, "Id", EdmCoreModel.Instance.GetInt32(false));
+                entityType.AddProperty(idProperty);
+                entityType.AddKeys(new IEdmStructuralProperty[] { idProperty });
+                edmModel.AddElement(entityType);
+                container.AddEntitySet($"Entities{i}", entityType);
+            }
 
             return edmModel;
         }
