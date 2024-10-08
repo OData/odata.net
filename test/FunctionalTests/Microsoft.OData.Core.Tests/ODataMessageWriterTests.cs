@@ -846,6 +846,31 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
+        public async Task WriteLargeMetadataDocumentAsync_WorksForJsonCsdl_WithNoSynchronousIOSupport()
+        {
+            // Arrange
+            IEdmModel largeModel = GetLargeEdmModel();
+
+            var expectedPayload = await WriteAndGetPayloadAsync(largeModel, "application/json", async writer =>
+            {
+                await writer.WriteMetadataDocumentAsync();
+            });
+
+            for (int i = 0; i < 1000; i++)
+            {
+                // Act - JSON
+                string payload = await this.WriteAndGetPayloadAsync(largeModel, "application/json", async omWriter =>
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                });
+
+                // Assert
+                Assert.NotNull(payload);
+                Assert.Equal(expectedPayload, payload);
+            }
+        }
+
+        [Fact]
         public async Task WriteMetadataDocumentPayload_MustEqual_WriteMetadataDocumentAsyncPayload_ForJsonCsdl()
         {
             // Arrange
@@ -868,6 +893,34 @@ namespace Microsoft.OData.Tests
 
             // Assert
             Assert.Equal(syncPayload, asyncPayload);
+        }
+
+        [Fact]
+        public async Task WriteLargeMetadataDocumentPayload_MustEqual_WriteLargeMetadataDocumentAsyncPayload_ForJsonCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetLargeEdmModel();
+
+            // Act
+            var contentType = "application/json";
+
+            for(int i = 0; i < 1000; i++)
+            {
+                // Json CSDL generated synchronously
+                string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+                {
+                    omWriter.WriteMetadataDocument();
+                });
+
+                // Json CSDL generated asynchronously
+                string asyncPayload = await this.WriteAndGetPayloadAsync(edmModel, contentType, async omWriter =>
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                });
+
+                // Assert
+                Assert.Equal(syncPayload, asyncPayload);
+            }
         }
 #endif
 
