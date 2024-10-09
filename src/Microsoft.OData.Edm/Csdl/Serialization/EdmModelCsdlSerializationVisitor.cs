@@ -191,7 +191,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             }
 
             // EntityContainers are excluded from the EdmSchema.SchemaElements property so they can be forced to the end.
-            VisitCollection(element.EntityContainers, async (e) => await this.ProcessEntityContainerAsync(e).ConfigureAwait(false));
+            await VisitCollectionAsync(element.EntityContainers, (e) => this.ProcessEntityContainerAsync(e)).ConfigureAwait(false);
 
             if (element.OutOfLineAnnotations.Any())
             {

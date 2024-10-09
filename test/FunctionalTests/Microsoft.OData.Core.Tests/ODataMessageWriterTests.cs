@@ -901,7 +901,7 @@ namespace Microsoft.OData.Tests
 
             // Act
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 // Json CSDL generated synchronously
                 string syncPayload = this.WriteAndGetPayload(_largeEdmModel, contentType, omWriter =>
@@ -974,7 +974,7 @@ namespace Microsoft.OData.Tests
             });
 
             // Act - XML
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10; i++)
             {
                 string payload = await this.WriteAndGetPayloadAsync(_largeEdmModel, "application/xml", async omWriter =>
                 {
@@ -1333,7 +1333,11 @@ namespace Microsoft.OData.Tests
                 var idProperty = new EdmStructuralProperty(entityType, $"Entity{i}Id", EdmCoreModel.Instance.GetInt32(false));
                 entityType.AddProperty(idProperty);
                 entityType.AddKeys(new IEdmStructuralProperty[] { idProperty });
-                entityType.AddProperty(new EdmStructuralProperty(entityType, "Name", EdmCoreModel.Instance.GetString(false)));
+                for (int j = 0; j < 100; j++)
+                {
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"Property{j}", EdmCoreModel.Instance.GetString(false)));
+                }
+
                 edmModel.AddElement(entityType);
                 container.AddEntitySet($"Entities{i}", entityType);
             }
