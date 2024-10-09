@@ -236,7 +236,23 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
-        /// Converts a string to a TimeOfDay.
+        /// Converts a string to a <see cref="DateOnly"/>.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>DateOnly value</returns>
+        internal static DateOnly ConvertStringToDateOnly(string text)
+        {
+            DateOnly date;
+            if (!DateOnly.TryParse(text, out date))
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.Date.", text));
+            }
+
+            return date;
+        }
+
+        /// <summary>
+        /// Converts a string to a <see cref="TimeOfDay">.
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <param name="timeOfDay">Time of the day</param>
@@ -261,6 +277,22 @@ namespace Microsoft.OData.Edm
         {
             TimeOfDay timeOfDay;
             if (!PlatformHelper.TryConvertStringToTimeOfDay(text, out timeOfDay))
+            {
+                throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
+            }
+
+            return timeOfDay;
+        }
+
+        /// <summary>
+        /// Converts a string to a TimeOnly.
+        /// </summary>
+        /// <param name="text">String to be converted.</param>
+        /// <returns>TimeOnly value</returns>
+        internal static TimeOnly ConvertStringToTimeOnly(string text)
+        {
+            TimeOnly timeOfDay;
+            if (!TimeOnly.TryParse(text, out timeOfDay))
             {
                 throw new FormatException(string.Format(CultureInfo.InvariantCulture, "String '{0}' was not recognized as a valid Edm.TimeOfDay.", text));
             }

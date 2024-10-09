@@ -123,10 +123,22 @@ namespace Microsoft.OData
                 return true;
             }
 
+            if (value is DateOnly dateOnly)
+            {
+                result = ODataRawValueConverter.ToString(dateOnly);
+                return true;
+            }
+
             if (value is TimeOfDay)
             {
                 // Edm.TimeOfDay
                 result = ODataRawValueConverter.ToString((TimeOfDay)value);
+                return true;
+            }
+
+            if (value is TimeOnly timeOnly)
+            {
+                result = ODataRawValueConverter.ToString(timeOnly);
                 return true;
             }
 

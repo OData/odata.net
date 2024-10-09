@@ -254,6 +254,26 @@ namespace Microsoft.OData.Edm
         }
 
         /// <summary>
+        /// Convert TimeOfDay to .Net TimeOnly
+        /// </summary>
+        /// <param name="time">TimeOfDay Value</param>
+        /// <returns>TimeOnly Value which represent the TimeOfDay</returns>
+        public static implicit operator TimeOnly(TimeOfDay time)
+        {
+            return TimeOnly.FromTimeSpan(time.timeSpan);
+        }
+
+        /// <summary>
+        /// Convert .Net Clr TimeOnly to TimeOfDay
+        /// </summary>
+        /// <param name="timeOnly">TimeOnly Value</param>
+        /// <returns>TimeOfDay Value from TimeOnly</returns>
+        public static implicit operator TimeOfDay(TimeOnly timeOnly)
+        {
+            return new TimeOfDay(timeOnly.Ticks);
+        }
+
+        /// <summary>
         /// Compares the value of this instance to a specified TimeOfDay value
         /// and returns an bool that indicates whether this instance is same as the specified TimeOfDay value.
         /// </summary>

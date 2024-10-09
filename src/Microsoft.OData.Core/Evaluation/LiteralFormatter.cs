@@ -21,6 +21,7 @@ namespace Microsoft.OData.Evaluation
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Diagnostics.CodeAnalysis;
+    using System.Globalization;
     using System.Text;
     using System.Linq;
     using System.Xml;
@@ -223,6 +224,11 @@ namespace Microsoft.OData.Evaluation
                 return value.ToString();
             }
 
+            if (value is DateOnly dateOnly)
+            {
+                return ((Date)dateOnly).ToString();
+            }
+
             if (value is DateTimeOffset)
             {
                 return XmlConvert.ToString((DateTimeOffset)value);
@@ -231,6 +237,11 @@ namespace Microsoft.OData.Evaluation
             if (value is TimeOfDay)
             {
                 return value.ToString();
+            }
+
+            if (value is TimeOnly timeOnly)
+            {
+                return ((TimeOfDay)timeOnly).ToString();
             }
 
             if (value is TimeSpan)

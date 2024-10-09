@@ -205,9 +205,21 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
+        public void WritePrimitiveValueDateOnly()
+        {
+            this.VerifyWritePrimitiveValue(new DateOnly(2024, 10, 1), "\"2024-10-01\"");
+        }
+
+        [Fact]
         public void WritePrimitiveValueTimeOfDay()
         {
             this.VerifyWritePrimitiveValue(new TimeOfDay(12, 30, 5, 10), "\"12:30:05.0100000\"");
+        }
+
+        [Fact]
+        public void WritePrimitiveValueTimeOnly()
+        {
+            this.VerifyWritePrimitiveValue(new TimeOnly(4, 3, 2, 1), "\"04:03:02.0010000\"");
         }
 
         [Fact]

@@ -722,6 +722,11 @@ namespace Microsoft.OData.Tests.Metadata
         [InlineData(typeof(byte))]
         [InlineData(typeof(bool))]
         [InlineData(typeof(float))]
+        [InlineData(typeof(Date))]
+        [InlineData(typeof(DateOnly))]
+        [InlineData(typeof(DateOnly?))]
+        [InlineData(typeof(TimeOnly))]
+        [InlineData(typeof(TimeOnly?))]
         [InlineData(typeof(Geography))]
         [InlineData(typeof(Geometry))]
         public void IsPrimitiveTypeForSupportedTypesShouldBeTrue(Type type)
@@ -737,6 +742,22 @@ namespace Microsoft.OData.Tests.Metadata
         {
             bool result = EdmLibraryExtensions.IsPrimitiveType(type);
             Assert.False(result);
+        }
+
+        [Theory]
+        [InlineData(typeof(Date), EdmPrimitiveTypeKind.Date, false)]
+        [InlineData(typeof(Date?), EdmPrimitiveTypeKind.Date, true)]
+        [InlineData(typeof(TimeOfDay), EdmPrimitiveTypeKind.TimeOfDay, false)]
+        [InlineData(typeof(TimeOfDay?), EdmPrimitiveTypeKind.TimeOfDay, true)]
+        [InlineData(typeof(DateOnly), EdmPrimitiveTypeKind.Date, false)]
+        [InlineData(typeof(DateOnly?), EdmPrimitiveTypeKind.Date, true)]
+        [InlineData(typeof(TimeOnly), EdmPrimitiveTypeKind.TimeOfDay, false)]
+        [InlineData(typeof(TimeOnly?), EdmPrimitiveTypeKind.TimeOfDay, true)]
+        public void GetPrimitiveTypeReferenceForDateOnlyTimeOnlyShouldReturnCorrectEdmType(Type clrType, EdmPrimitiveTypeKind kind, bool nullable)
+        {
+            IEdmPrimitiveTypeReference primitiveTypeRef = EdmLibraryExtensions.GetPrimitiveTypeReference(clrType);
+            Assert.Equal(kind, primitiveTypeRef.PrimitiveKind());
+            Assert.Equal(nullable, primitiveTypeRef.IsNullable);
         }
 
         [Theory]

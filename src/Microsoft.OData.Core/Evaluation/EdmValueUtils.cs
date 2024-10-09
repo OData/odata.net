@@ -283,6 +283,12 @@ namespace Microsoft.OData.Evaluation
                 return new EdmDateConstant(dateType, (Date)primitiveValue);
             }
 
+            if (primitiveValue is DateOnly dateOnly)
+            {
+                IEdmPrimitiveTypeReference dateType = EnsurePrimitiveType(type, EdmPrimitiveTypeKind.Date);
+                return new EdmDateConstant(dateType, dateOnly);
+            }
+
             if (primitiveValue is DateTimeOffset)
             {
                 IEdmTemporalTypeReference dateTimeOffsetType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.DateTimeOffset);
@@ -299,6 +305,12 @@ namespace Microsoft.OData.Evaluation
             {
                 IEdmTemporalTypeReference timeOfDayType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.TimeOfDay);
                 return new EdmTimeOfDayConstant(timeOfDayType, (TimeOfDay)primitiveValue);
+            }
+
+            if (primitiveValue is TimeOnly timeOnly)
+            {
+                IEdmTemporalTypeReference timeOfDayType = (IEdmTemporalTypeReference)EnsurePrimitiveType(type, EdmPrimitiveTypeKind.TimeOfDay);
+                return new EdmTimeOfDayConstant(timeOfDayType, timeOnly);
             }
 
             if (primitiveValue is TimeSpan)

@@ -140,6 +140,11 @@ namespace Microsoft.OData.Metadata
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
             PrimitiveTypeReferenceMap.Add(typeof(TimeOfDay?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
 
+            PrimitiveTypeReferenceMap.Add(typeof(DateOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), false));
+            PrimitiveTypeReferenceMap.Add(typeof(DateOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.Date), true));
+            PrimitiveTypeReferenceMap.Add(typeof(TimeOnly), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), false));
+            PrimitiveTypeReferenceMap.Add(typeof(TimeOnly?), ToTypeReference(EdmCoreModel.Instance.GetPrimitiveType(EdmPrimitiveTypeKind.TimeOfDay), true));
+
 #if !NETSTANDARD1_1
             // Pack type codes of supported primitive types in the bitmap
             // See the type codes here: https://learn.microsoft.com/en-us/dotnet/api/system.typecode

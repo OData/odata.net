@@ -509,7 +509,13 @@ namespace Microsoft.OData
                     if (primitiveValue is Date)
                     {
                         var dateValue = (Date)primitiveValue;
-                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, new TimeSpan(0));
+                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
+                    }
+
+                    if (primitiveValue is DateOnly dateOnly)
+                    {
+                        var dateValue = (Date)dateOnly;
+                        return new DateTimeOffset(dateValue.Year, dateValue.Month, dateValue.Day, 0, 0, 0, TimeSpan.Zero);
                     }
 
                     break;

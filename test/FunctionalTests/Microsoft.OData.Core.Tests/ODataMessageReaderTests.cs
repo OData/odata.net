@@ -106,6 +106,7 @@ namespace Microsoft.OData.Tests
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
             Assert.Equal(new TimeOfDay(12, 30, 4, 998), result);
+            Assert.Equal(new TimeOnly(12, 30, 4, 998), (TimeOnly)(TimeOfDay)result); // need to cast from object to 'TimeOfDay' first then cast to 'TimeOnly'
         }
 
         [Fact]

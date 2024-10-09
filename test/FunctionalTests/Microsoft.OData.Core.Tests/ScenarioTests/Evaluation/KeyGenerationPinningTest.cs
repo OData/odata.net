@@ -105,6 +105,10 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
             RunPinningTest(builder, DateTimeOffset.MaxValue, DateTimeOffset.MinValue, XmlConvert.ToDateTimeOffset("2012-11-16T10:54:13.5422534-08:00"), XmlConvert.ToDateTimeOffset("2012-11-16T18:54:13.5422534Z"));
             RunPinningTest(builder, Date.MinValue, new Date(2014, 12, 31), Date.MaxValue);
             RunPinningTest(builder, TimeOfDay.MinValue, new TimeOfDay(12, 20, 4, 123), new TimeOfDay(TimeOfDay.MaxTickValue));
+
+            RunPinningTest(builder, DateOnly.MinValue, new DateOnly(2024, 10, 1), DateOnly.MaxValue);
+            RunPinningTest(builder, TimeOnly.MinValue, new TimeOnly(4, 3, 2, 1), TimeOnly.MaxValue);
+
             RunPinningTest(builder, TimeSpan.MaxValue, TimeSpan.MinValue, TimeSpan.FromDays(1.5));
             RunPinningTest(builder, Guid.Empty, Guid.Parse("b467459e-1eb5-4598-8a63-2c40c6a2590c"));
             RunPinningTest(builder, "", "  \t \r\n", ".,();", "\r\n", "\r\n\r\n\r\n\r\n", "\r", "\n", "\n\r", "a\x0302e\x0327\x0627\x0654\x0655", "a surrogate pair: \xd800\xdc00", "left to right \x05d0\x05d1 \x05ea\x05e9 english", "\x1\x2\x3\x4\x5\x20");
@@ -175,6 +179,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.Evaluation
 (12%3A20%3A04.1230000)
 (23%3A59%3A59.9999999)
 (prop0=00%3A00%3A00.0000000,prop1=12%3A20%3A04.1230000,prop2=23%3A59%3A59.9999999)
+
+(0001-01-01)
+(2024-10-01)
+(9999-12-31)
+(prop0=0001-01-01,prop1=2024-10-01,prop2=9999-12-31)
+
+(00%3A00%3A00.0000000)
+(04%3A03%3A02.0010000)
+(23%3A59%3A59.9999999)
+(prop0=00%3A00%3A00.0000000,prop1=04%3A03%3A02.0010000,prop2=23%3A59%3A59.9999999)
 
 (duration'P10675199DT2H48M5.4775807S')
 (duration'-P10675199DT2H48M5.4775808S')

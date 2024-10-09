@@ -162,16 +162,24 @@ namespace Microsoft.OData
                 return EdmValueParser.ParseDuration(stringValue);
             }
 
-            // Date
             if (targetType == typeof(Date))
             {
                 return PlatformHelper.ConvertStringToDate(stringValue);
             }
 
-            // Time
             if (targetType == typeof(TimeOfDay))
             {
                 return PlatformHelper.ConvertStringToTimeOfDay(stringValue);
+            }
+
+            if (targetType == typeof(DateOnly))
+            {
+                return PlatformHelper.ConvertStringToDateOnly(stringValue);
+            }
+
+            if (targetType == typeof(TimeOnly))
+            {
+                return PlatformHelper.ConvertStringToTimeOnly(stringValue);
             }
 
             // DateTimeOffset needs to be read using the XML rules (as per the Json spec).

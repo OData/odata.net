@@ -1,1 +1,4 @@
-﻿
+﻿static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateOnly operand) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.implicit operator System.DateOnly(Microsoft.OData.Edm.Date operand) -> System.DateOnly
+static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeOnly timeOnly) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.implicit operator System.TimeOnly(Microsoft.OData.Edm.TimeOfDay time) -> System.TimeOnly

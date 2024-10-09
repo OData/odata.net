@@ -859,9 +859,35 @@ namespace Microsoft.OData.Client
     }
 
     /// <summary>
+    /// Convert between primitive types Edm.Date (using DateOnly) and string
+    /// </summary>
+    internal sealed class DateOnlyTypeConverter : PrimitiveTypeConverter
+    {
+        /// <summary>
+        /// Create an instance of primitive type from a string representation
+        /// </summary>
+        /// <param name="text">The string representation</param>
+        /// <returns>An instance of primitive type</returns>
+        internal override object Parse(string text)
+        {
+            return PlatformHelper.ConvertStringToDateOnly(text);
+        }
+
+        /// <summary>
+        /// Convert an instance of primitive type to string
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <returns>The string representation of the instance</returns>
+        internal override string ToString(object instance)
+        {
+            return ((Date)(DateOnly)instance).ToString();
+        }
+    }
+
+    /// <summary>
     /// Convert between primitive types Edm.TimeOfDay and string
     /// </summary>
-    internal sealed class TimeOfDayConvert : PrimitiveTypeConverter
+    internal sealed class TimeOfDayConverter : PrimitiveTypeConverter
     {
         /// <summary>
         /// Create an instance of primitive type from a string representation
@@ -881,6 +907,32 @@ namespace Microsoft.OData.Client
         internal override string ToString(object instance)
         {
             return ((TimeOfDay)instance).ToString();
+        }
+    }
+
+    /// <summary>
+    /// Convert between primitive types Edm.TimeOfDay (using TimeOnly) and string
+    /// </summary>
+    internal sealed class TimeOnlyConverter : PrimitiveTypeConverter
+    {
+        /// <summary>
+        /// Create an instance of primitive type from a string representation
+        /// </summary>
+        /// <param name="text">The string representation</param>
+        /// <returns>An instance of primitive type</returns>
+        internal override object Parse(string text)
+        {
+            return PlatformHelper.ConvertStringToTimeOnly(text);
+        }
+
+        /// <summary>
+        /// Convert an instance of primitive type to string
+        /// </summary>
+        /// <param name="instance">The instance</param>
+        /// <returns>The string representation of the instance</returns>
+        internal override string ToString(object instance)
+        {
+            return ((TimeOfDay)(TimeOnly)instance).ToString();
         }
     }
 }

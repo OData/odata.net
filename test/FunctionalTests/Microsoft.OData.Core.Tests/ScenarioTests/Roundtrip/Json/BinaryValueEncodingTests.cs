@@ -71,6 +71,28 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             Assert.True(KeyAsSegmentsLiteralParser.TryParseLiteral(byteArray.GetType(), Uri.UnescapeDataString(keyAsSegmentFormattedByteArray), out keyAsSegmentParsedByteArray));
             Assert.Equal((byte[])keyAsSegmentParsedByteArray, byteArray);
         }
+
+        [Fact]
+        public void LiteralFormatterFormatDateOnlyLiteral()
+        {
+            DateOnly dateOnly = new DateOnly(2024, 10, 1);
+            string defaultFormattedDateOnly = DefaultLiteralFormatter.Format(dateOnly);
+            string keyAsSegmentFormattedDateOnly = KeyAsSegmentsLiteralFormatter.Format(dateOnly);
+
+            Assert.Equal("2024-10-01", defaultFormattedDateOnly);
+            Assert.Equal(defaultFormattedDateOnly, keyAsSegmentFormattedDateOnly);
+        }
+
+        [Fact]
+        public void LiteralFormatterFormatTimeOnlyLiteral()
+        {
+            TimeOnly timeOnly = new TimeOnly(4, 10, 1, 9);
+            string defaultFormattedTimeOnly = DefaultLiteralFormatter.Format(timeOnly);
+            string keyAsSegmentFormattedTimeOnly = KeyAsSegmentsLiteralFormatter.Format(timeOnly);
+
+            Assert.Equal("04%3A10%3A01.0090000", defaultFormattedTimeOnly);
+            Assert.Equal(defaultFormattedTimeOnly, keyAsSegmentFormattedTimeOnly);
+        }
     }
 }
 
