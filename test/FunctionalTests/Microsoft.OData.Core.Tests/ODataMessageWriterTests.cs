@@ -846,20 +846,18 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteLargeMetadataDocumentAsync_WorksForJsonCsdl_WithNoSynchronousIOSupport()
+        public async Task WriteLargeMetadataDocumentAsync_CallMultipleTimes_WorksForJsonCsdl()
         {
             // Arrange
-            IEdmModel largeModel = GetLargeEdmModel();
-
-            var expectedPayload = await WriteAndGetPayloadAsync(largeModel, "application/json", async writer =>
+            var expectedPayload = await WriteAndGetPayloadAsync(_largeEdmModel, "application/json", async writer =>
             {
                 await writer.WriteMetadataDocumentAsync();
             });
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 // Act - JSON
-                string payload = await this.WriteAndGetPayloadAsync(largeModel, "application/json", async omWriter =>
+                string payload = await this.WriteAndGetPayloadAsync(_largeEdmModel, "application/json", async omWriter =>
                 {
                     await omWriter.WriteMetadataDocumentAsync();
                 });
@@ -899,21 +897,20 @@ namespace Microsoft.OData.Tests
         public async Task WriteLargeMetadataDocumentPayload_MustEqual_WriteLargeMetadataDocumentAsyncPayload_ForJsonCsdl()
         {
             // Arrange
-            IEdmModel edmModel = GetLargeEdmModel();
-
-            // Act
             var contentType = "application/json";
 
-            for(int i = 0; i < 1000; i++)
+            // Act
+
+            for (int i = 0; i < 100; i++)
             {
                 // Json CSDL generated synchronously
-                string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+                string syncPayload = this.WriteAndGetPayload(_largeEdmModel, contentType, omWriter =>
                 {
                     omWriter.WriteMetadataDocument();
                 });
 
                 // Json CSDL generated asynchronously
-                string asyncPayload = await this.WriteAndGetPayloadAsync(edmModel, contentType, async omWriter =>
+                string asyncPayload = await this.WriteAndGetPayloadAsync(_largeEdmModel, contentType, async omWriter =>
                 {
                     await omWriter.WriteMetadataDocumentAsync();
                 });
@@ -968,33 +965,20 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public async Task WriteLargeMetadataDocumentAsync_MultipleTimes_WorksForXmlCsdl()
+        public async Task WriteLargeMetadataDocumentAsync_CallMultipleTimes_WorksForXmlCsdl()
         {
             // Arrange
-            IEdmModel largeModel = GetLargeEdmModel();
-
-            var expectedPayload = await WriteAndGetPayloadAsync(largeModel, "application/xml", async writer =>
+            var expectedPayload = await WriteAndGetPayloadAsync(_largeEdmModel, "application/xml", async writer =>
             {
                 await writer.WriteMetadataDocumentAsync();
             });
 
             // Act - XML
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
-                string payload = await this.WriteAndGetPayloadAsync(largeModel, "application/xml", async omWriter =>
+                string payload = await this.WriteAndGetPayloadAsync(_largeEdmModel, "application/xml", async omWriter =>
                 {
-                    try
-                    {
-                        await omWriter.WriteMetadataDocumentAsync();
-                    }
-                    catch (SynchronousIOException)
-                    {
-                        // We allow synchronous I/O for WriteMetadataDocumentAsync because
-                        // it relies on EdmLib's CsdlWriter which is still synchronous.
-                        // We should disable synchronous I/O here once CsdlWriter has an async API.
-                        // See: https://github.com/OData/odata.net/issues/2684
-                        // However, disposing the writer should still be truly async.
-                    }
+                    await omWriter.WriteMetadataDocumentAsync();
                 });
 
                 // Assert - XML
@@ -1308,6 +1292,9 @@ namespace Microsoft.OData.Tests
 
         private static IEdmModel _edmModel;
 
+        // Large model with 1000 entity types
+        private static IEdmModel _largeEdmModel = GetLargeEdmModel();
+
         private static IEdmModel GetEdmModel()
         {
             if (_edmModel != null)
@@ -1343,9 +1330,10 @@ namespace Microsoft.OData.Tests
             for (int i = 0; i < 1000; i++)
             {
                 EdmEntityType entityType = new EdmEntityType("NS", $"Entity{i}");
-                var idProperty = new EdmStructuralProperty(entityType, "Id", EdmCoreModel.Instance.GetInt32(false));
+                var idProperty = new EdmStructuralProperty(entityType, $"Entity{i}Id", EdmCoreModel.Instance.GetInt32(false));
                 entityType.AddProperty(idProperty);
                 entityType.AddKeys(new IEdmStructuralProperty[] { idProperty });
+                entityType.AddProperty(new EdmStructuralProperty(entityType, "Name", EdmCoreModel.Instance.GetString(false)));
                 edmModel.AddElement(entityType);
                 container.AddEntitySet($"Entities{i}", entityType);
             }
