@@ -33,7 +33,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             complexType.AddStructuralProperty("Breadth", EdmCoreModel.Instance.GetDecimal(6, 0, true));
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(v => v.VisitSchemaType(complexType),
+            await VisitAndVerifyXmlAsync(v => v.VisitSchemaTypeAsync(complexType),
                 @"<ComplexType Name=""Dimensions"">
   <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" />
   <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
@@ -42,7 +42,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 </ComplexType>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(v => v.VisitSchemaType(complexType), @"{
+            await VisitAndVerifyJsonAsync(v => v.VisitSchemaTypeAsync(complexType), @"{
   ""Dimensions"": {
     ""$Kind"": ""ComplexType"",
     ""Height"": {
@@ -751,7 +751,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
         #endregion
 
-        internal async Task VisitAndVerifyXmlAsync(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true)
+        internal async Task VisitAndVerifyXmlAsync(Func<EdmModelCsdlSerializationVisitor, Task> testAction, string expected, bool indent = true)
         {
             XmlWriter xmlWriter;
             MemoryStream memStream;
@@ -773,7 +773,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion, writerSettings);
             var visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
 
-            testAction(visitor);
+            await testAction(visitor);
             await xmlWriter.FlushAsync().ConfigureAwait(false);
 
             memStream.Seek(0, SeekOrigin.Begin);
@@ -784,7 +784,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Assert.Equal(expected, result);
         }
 
-        internal async Task VisitAndVerifyJsonAsync(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true, bool wrapper = true)
+        internal async Task VisitAndVerifyJsonAsync(Func<EdmModelCsdlSerializationVisitor, Task> testAction, string expected, bool indent = true, bool wrapper = true)
         {
             Version edmxVersion = this.model.GetEdmxVersion();
 
@@ -808,7 +808,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
                         jsonWriter.WriteStartObject();
                     }
 
-                    testAction(visitor);
+                    await testAction(visitor);
 
                     if (wrapper)
                     {

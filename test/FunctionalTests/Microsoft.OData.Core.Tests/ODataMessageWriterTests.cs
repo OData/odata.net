@@ -869,6 +869,62 @@ namespace Microsoft.OData.Tests
             // Assert
             Assert.Equal(syncPayload, asyncPayload);
         }
+
+        [Fact]
+        public async Task WriteLargeMetadataDocumentPayload_MustEqual_WriteLargeMetadataDocumentAsyncPayload_ForJsonCsdl()
+        {
+            // Arrange
+            var contentType = "application/json";
+
+            // Act
+            for (int i = 0; i < 10; i++)
+            {
+                // Json CSDL generated synchronously
+                string syncPayload = this.WriteAndGetPayload(_largeEdmModel, contentType, omWriter =>
+                {
+                    omWriter.WriteMetadataDocument();
+                });
+
+                // Json CSDL generated asynchronously
+                string asyncPayload = await this.WriteAndGetPayloadWithAsyncYieldStreamAsync(_largeEdmModel, contentType, async omWriter =>
+                {
+                    await omWriter.WriteMetadataDocumentAsync();
+                });
+
+                // Assert
+                Assert.Equal(syncPayload, asyncPayload);
+            }
+        }
+
+        [Fact]
+        public async Task WriteLargeMetadataDocumentAsync_CalledMultipleTimes_WorksForJsonCsdl_NoExceptionThrown()
+        {
+            // Arrange
+            string contentType = "application/json";
+
+            var message = new InMemoryMessage() { Stream = new AsyncYieldStream(new MemoryStream()) };
+
+            message.SetHeader("Content-Type", contentType);
+
+            var writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = false;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            // Act
+            for (int i = 0; i < 10; i++)
+            {
+                var exception = await Record.ExceptionAsync(async () =>
+                {
+                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, _largeEdmModel))
+                    {
+                        await msgWriter.WriteMetadataDocumentAsync();
+                    }
+                });
+
+                Assert.Null(exception);
+            }
+        }
 #endif
 
         [Fact]
@@ -912,6 +968,36 @@ namespace Microsoft.OData.Tests
                     "</Schema>" +
                   "</edmx:DataServices>" +
                 "</edmx:Edmx>", payload);
+        }
+
+        [Fact]
+        public async Task WriteLargeMetadataDocumentAsync_CalledMultipleTimes_WorksForXmlCsdl_NoExceptionThrown()
+        {
+            // Arrange
+            string contentType = "application/xml";
+
+            var message = new InMemoryMessage() { Stream = new AsyncYieldStream(new MemoryStream()) };
+
+            message.SetHeader("Content-Type", contentType);
+
+            var writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = false;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+            // Act
+            for (int i = 0; i < 10; i++)
+            {
+                var exception = await Record.ExceptionAsync(async () =>
+                {
+                    await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, _largeEdmModel))
+                    {
+                        await msgWriter.WriteMetadataDocumentAsync();
+                    }
+                });
+
+                Assert.Null(exception);
+            }
         }
 
         [Fact]
@@ -963,6 +1049,31 @@ namespace Microsoft.OData.Tests
 
             // XML CSDL generated asynchronously
             string asyncPayload = await this.WriteAndGetPayloadAsync(edmModel, contentType, async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            // Assert
+            Assert.Equal(asyncPayload, syncPayload);
+        }
+
+        [Fact]
+        public async Task WriteLargeMetadataDocumentPayload_MustEqual_WriteLargeMetadataDocumentAsyncPayload_ForXmlCsdl()
+        {
+            // Arrange
+            IEdmModel edmModel = GetEdmModel();
+
+            // Act
+            var contentType = "application/xml";
+
+            // XML CSDL generated synchronously
+            string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            {
+                omWriter.WriteMetadataDocument();
+            });
+
+            // XML CSDL generated asynchronously
+            string asyncPayload = await this.WriteAndGetPayloadWithAsyncYieldStreamAsync(edmModel, contentType, async omWriter =>
             {
                 await omWriter.WriteMetadataDocumentAsync();
             });
@@ -1219,6 +1330,9 @@ namespace Microsoft.OData.Tests
 
         private static IEdmModel _edmModel;
 
+        // Large model with 1000 entity types
+        private static IEdmModel _largeEdmModel = GetLargeEdmModel();
+
         private static IEdmModel GetEdmModel()
         {
             if (_edmModel != null)
@@ -1242,6 +1356,53 @@ namespace Microsoft.OData.Tests
             _edmModel = edmModel;
 
             return edmModel;
+        }
+
+        /// <summary>
+        /// This large EdmModel is used to test issues related to writing large metadata documents. 
+        /// For example, async writing of large metadata documents, writing large metadata documents multiple times, etc.
+        /// </summary>
+        /// <returns>Large EdmModel</returns>
+        private static IEdmModel GetLargeEdmModel()
+        {
+            EdmModel edmModel = new EdmModel();
+
+            EdmEntityContainer container = new EdmEntityContainer("NS", "Container");
+            edmModel.AddElement(container);
+
+            string longString = GenerateLongString();
+
+            // Add 1000 entity types
+            for (int i = 0; i < 1000; i++)
+            {
+                EdmEntityType entityType = new EdmEntityType("NS", $"Entity{i}");
+                var idProperty = new EdmStructuralProperty(entityType, $"Entity{i}Id", EdmCoreModel.Instance.GetInt32(false));
+                entityType.AddProperty(idProperty);
+                entityType.AddKeys(new IEdmStructuralProperty[] { idProperty });
+
+                // Add 300 properties to each entity type
+                for (int j = 0; j < 100; j++)
+                {
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"Property{DateTime.Now.Ticks}{j}", EdmCoreModel.Instance.GetString(false)));
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyInt{longString}{j}", EdmCoreModel.Instance.GetInt32(false)));
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyBool{j}{longString}{j}", EdmCoreModel.Instance.GetBoolean(false)));
+                }
+
+                edmModel.AddElement(entityType);
+                container.AddEntitySet($"Entities{i}{longString}", entityType);
+            }
+
+            return edmModel;
+        }
+
+        private static string GenerateLongString()
+        {
+            var sb = new StringBuilder();
+            for (int i = 0; i < 20; i++)
+            {
+                sb.Append("abcxyz");
+            }
+            return sb.ToString();
         }
 
 
@@ -1495,6 +1656,43 @@ namespace Microsoft.OData.Tests
 #else
                 message.Stream.Dispose();
 #endif
+                return contents;
+            }
+        }
+
+        /// <summary>
+        /// Asynchronously writes a message using an <see cref="ODataMessageWriter"/> instance, AsyncYieldStream
+        /// and returns the written payload as a string.
+        /// </summary>
+        /// <param name="edmModel">The <see cref="IEdmModel"/> used to initialize the writer.</param>
+        /// <param name="contentType">The value of the message's Content-Type header.</param>
+        /// <param name="test">The action that writes the payload.</param>
+        /// <returns>A task representing the asynchrnous operation. The result of the task will be the written output.</returns>
+        private async Task<string> WriteAndGetPayloadWithAsyncYieldStreamAsync(IEdmModel edmModel, string contentType, Func<ODataMessageWriter, Task> test)
+        {
+            var message = new InMemoryMessage() { Stream = new AsyncYieldStream(new MemoryStream()) };
+
+            message.SetHeader("Content-Type", contentType);
+
+            var writerSettings = new ODataMessageWriterSettings();
+            writerSettings.EnableMessageStreamDisposal = false;
+            writerSettings.BaseUri = new Uri("http://www.example.com/");
+            writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
+
+#if NETCOREAPP
+            await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+#else
+            using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
+#endif
+            {
+                await test(msgWriter);
+            }
+
+            message.Stream.Seek(0, SeekOrigin.Begin);
+
+            using (var reader = new StreamReader(message.Stream, encoding: Encoding.UTF8, detectEncodingFromByteOrderMarks: true, bufferSize: 1024, leaveOpen: true))
+            {
+                string contents = await reader.ReadToEndAsync();
                 return contents;
             }
         }
