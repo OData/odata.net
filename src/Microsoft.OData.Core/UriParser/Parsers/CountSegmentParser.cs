@@ -82,8 +82,8 @@ namespace Microsoft.OData.UriParser
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
                     string text = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                        ? this.lexer.CurrentToken.Text.ToString().ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text.ToString();
 
                     // Prepend '$' prefix if needed.
                     if (this.UriQueryExpressionParser.EnableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))

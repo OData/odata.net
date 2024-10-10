@@ -596,7 +596,7 @@ namespace Microsoft.OData.UriParser
                         object result;
                         UriTemplateExpression expression;
 
-                        if (enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(lexer.CurrentToken.Text, functionParameter.Type, out expression))
+                        if (enableUriTemplateParsing && UriTemplateParser.TryParseLiteral(lexer.CurrentToken.Span, functionParameter.Type, out expression))
                         {
                             result = expression;
                         }

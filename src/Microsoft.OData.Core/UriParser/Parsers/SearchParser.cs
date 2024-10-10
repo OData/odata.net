@@ -163,7 +163,7 @@ namespace Microsoft.OData.UriParser
                     expr = this.ParseParenExpression();
                     break;
                 case ExpressionTokenKind.StringLiteral:
-                    expr = new StringLiteralToken(this.lexer.CurrentToken.Text);
+                    expr = new StringLiteralToken(this.lexer.CurrentToken.Text.ToString());
                     this.lexer.NextToken();
                     break;
                 default:

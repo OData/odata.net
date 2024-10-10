@@ -85,7 +85,7 @@ namespace Microsoft.OData.UriParser
         public bool TryParseIdentifierAsFunction(QueryToken parent, out QueryToken result)
         {
             result = null;
-            string functionName;
+            ReadOnlySpan<char> functionName;
 
             ExpressionLexer.ExpressionLexerPosition position = lexer.SnapshotPosition();
 
@@ -97,14 +97,14 @@ namespace Microsoft.OData.UriParser
             else
             {
                 Debug.Assert(this.Lexer.CurrentToken.Kind == ExpressionTokenKind.Identifier, "Only identifier tokens can be treated as function calls.");
-                functionName = this.Lexer.CurrentToken.Text;
+                functionName = this.Lexer.CurrentToken.Span;
                 this.Lexer.NextToken();
             }
 
             FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
             if (arguments != null)
             {
-                result = new FunctionCallToken(functionName, arguments, parent);
+                result = new FunctionCallToken(functionName.ToString(), arguments, parent);
             }
 
             return result != null;

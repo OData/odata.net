@@ -143,14 +143,14 @@ namespace Microsoft.OData.Tests.UriParser
         private static void ValidateStringLiteralToken(ExpressionLexer lexer, string text)
         {
             Assert.Equal(ExpressionTokenKind.StringLiteral, lexer.CurrentToken.Kind);
-            Assert.Equal(text, lexer.CurrentToken.Text);
+            Assert.Equal(text, lexer.CurrentToken.Span.ToString());
             lexer.NextToken();
         }
 
         private static void ValidateIdentifierToken(ExpressionLexer lexer, string text)
         {
             Assert.Equal(ExpressionTokenKind.Identifier, lexer.CurrentToken.Kind);
-            Assert.Equal(text, lexer.CurrentToken.Text);
+            Assert.Equal(text, lexer.CurrentToken.Span.ToString());
             lexer.NextToken();
         }
 
