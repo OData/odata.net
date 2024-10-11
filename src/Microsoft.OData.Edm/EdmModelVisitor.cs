@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm.Vocabularies;
 
@@ -88,7 +89,8 @@ namespace Microsoft.OData.Edm
                 case EdmSchemaElementKind.None:
                     return this.ProcessSchemaElementAsync(element);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind)));
             }
         }
 
@@ -458,7 +460,8 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.Untyped:
                     return this.ProcessUntypedTypeReferenceAsync(reference as IEdmUntypedTypeReference);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString()));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString()));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(reference.TypeKind().ToString())));
             }
         }
 
@@ -564,7 +567,8 @@ namespace Microsoft.OData.Edm
                 case EdmPrimitiveTypeKind.None:
                     return this.ProcessPrimitiveTypeReferenceAsync(reference);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_PrimitiveKind(reference.PrimitiveKind().ToString()));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_PrimitiveKind(reference.PrimitiveKind().ToString()));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_PrimitiveKind(reference.PrimitiveKind().ToString())));
             }
         }
 
@@ -611,7 +615,8 @@ namespace Microsoft.OData.Edm
                 case EdmTypeKind.None:
                     return this.VisitSchemaTypeAsync(definition);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(definition.TypeKind));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_TypeKind(definition.TypeKind));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_TypeKind(definition.TypeKind)));
             }
         }
 
@@ -654,7 +659,8 @@ namespace Microsoft.OData.Edm
                 case EdmPropertyKind.None:
                     return this.ProcessPropertyAsync(property);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_PropertyKind(property.PropertyKind.ToString()));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_PropertyKind(property.PropertyKind.ToString()));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_PropertyKind(property.PropertyKind.ToString())));
             }
         }
 

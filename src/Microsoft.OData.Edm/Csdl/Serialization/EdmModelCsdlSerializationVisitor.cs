@@ -186,7 +186,7 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
             foreach (var operation in element.SchemaOperations)
             {
                 await this.schemaWriter.WriteSchemaOperationsHeaderAsync(operation).ConfigureAwait(false);
-                await VisitSchemaElementsAsync(operation.Value.AsEnumerable<IEdmSchemaElement>()).ConfigureAwait(false); // Call AsEnumerable() to make .net 3.5 happy
+                await VisitSchemaElementsAsync(operation.Value.AsEnumerable<IEdmSchemaElement>()).ConfigureAwait(false);
                 await this.schemaWriter.WriteSchemaOperationsEndAsync(operation).ConfigureAwait(false);
             }
 
