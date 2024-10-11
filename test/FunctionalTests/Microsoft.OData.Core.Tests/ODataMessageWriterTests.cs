@@ -1061,25 +1061,27 @@ namespace Microsoft.OData.Tests
         public async Task WriteLargeMetadataDocumentPayload_MustEqual_WriteLargeMetadataDocumentAsyncPayload_ForXmlCsdl()
         {
             // Arrange
-            IEdmModel edmModel = GetEdmModel();
-
-            // Act
             var contentType = "application/xml";
 
-            // XML CSDL generated synchronously
-            string syncPayload = this.WriteAndGetPayload(edmModel, contentType, omWriter =>
+            // Act
+            string syncPayload = this.WriteAndGetPayload(_largeEdmModel, contentType, omWriter =>
             {
                 omWriter.WriteMetadataDocument();
             });
 
-            // XML CSDL generated asynchronously
-            string asyncPayload = await this.WriteAndGetPayloadWithAsyncYieldStreamAsync(edmModel, contentType, async omWriter =>
+            string asyncPayload = await this.WriteAndGetPayloadAsync(_largeEdmModel, contentType, async omWriter =>
+            {
+                await omWriter.WriteMetadataDocumentAsync();
+            });
+
+            string asyncPayloadWithAsyncYield = await this.WriteAndGetPayloadWithAsyncYieldStreamAsync(_largeEdmModel, contentType, async omWriter =>
             {
                 await omWriter.WriteMetadataDocumentAsync();
             });
 
             // Assert
-            Assert.Equal(asyncPayload, syncPayload);
+            Assert.Equal(syncPayload, asyncPayload);
+            Assert.Equal(syncPayload, asyncPayloadWithAsyncYield);
         }
 
         #region "DisposeAsync"
