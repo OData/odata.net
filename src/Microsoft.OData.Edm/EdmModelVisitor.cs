@@ -320,7 +320,8 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.None:
                     return this.ProcessExpressionAsync(expression);
                 default:
-                    throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind));
+                    Contract.Assert(false, Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind));
+                    return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind)));
             }
         }
 
@@ -365,31 +366,29 @@ namespace Microsoft.OData.Edm
             }
         }
 
-        public virtual async Task VisitEntityContainerElementsAsync(IEnumerable<IEdmEntityContainerElement> elements)
+        public virtual Task VisitEntityContainerElementsAsync(IEnumerable<IEdmEntityContainerElement> elements)
         {
             foreach (IEdmEntityContainerElement element in elements)
             {
                 switch (element.ContainerElementKind)
                 {
                     case EdmContainerElementKind.EntitySet:
-                        await this.ProcessEntitySetAsync((IEdmEntitySet)element);
-                        break;
+                        return this.ProcessEntitySetAsync((IEdmEntitySet)element);
                     case EdmContainerElementKind.Singleton:
-                        await this.ProcessSingletonAsync((IEdmSingleton)element);
-                        break;
+                        return this.ProcessSingletonAsync((IEdmSingleton)element);
                     case EdmContainerElementKind.ActionImport:
-                        await this.ProcessActionImportAsync((IEdmActionImport)element);
-                        break;
+                        return this.ProcessActionImportAsync((IEdmActionImport)element);
                     case EdmContainerElementKind.FunctionImport:
-                        await this.ProcessFunctionImportAsync((IEdmFunctionImport)element);
-                        break;
+                        return this.ProcessFunctionImportAsync((IEdmFunctionImport)element);
                     case EdmContainerElementKind.None:
-                        await this.ProcessEntityContainerElementAsync(element);
-                        break;
+                        return this.ProcessEntityContainerElementAsync(element);
                     default:
-                        throw new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString()));
+                        Contract.Assert(false, Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString()));
+                        return Task.FromException<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_ContainerElementKind(element.ContainerElementKind.ToString())));
                 }
             }
+
+            return Task.CompletedTask;
         }
 
         #endregion
