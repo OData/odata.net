@@ -1385,7 +1385,7 @@ namespace Microsoft.OData.Tests
                 // Add 300 properties to each entity type
                 for (int j = 0; j < 100; j++)
                 {
-                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"Property{DateTime.Now.Ticks}{j}", EdmCoreModel.Instance.GetString(false)));
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"Property638642487961128210{j}", EdmCoreModel.Instance.GetString(false)));
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyInt{longString}{j}", EdmCoreModel.Instance.GetInt32(false)));
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyBool{j}{longString}{j}", EdmCoreModel.Instance.GetBoolean(false)));
                 }
@@ -1681,11 +1681,7 @@ namespace Microsoft.OData.Tests
             writerSettings.BaseUri = new Uri("http://www.example.com/");
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
-#if NETCOREAPP
             await using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
-#else
-            using (var msgWriter = new ODataMessageWriter((IODataResponseMessageAsync)message, writerSettings, edmModel))
-#endif
             {
                 await test(msgWriter);
             }

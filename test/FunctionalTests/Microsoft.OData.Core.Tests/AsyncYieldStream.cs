@@ -42,7 +42,7 @@ namespace Microsoft.OData.Tests
 
         public override void Flush()
         {
-            this.stream.FlushAsync().Wait();
+            this.stream.Flush();
         }
 
         public override async Task FlushAsync(CancellationToken cancellationToken)
@@ -53,12 +53,14 @@ namespace Microsoft.OData.Tests
 
         public override int Read(byte[] buffer, int offset, int count)
         {
-            return this.stream.ReadAsync(buffer, offset, count).Result;
+            return this.stream.Read(buffer, offset, count);
         }
 
-        public override Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
+        public override async Task<int> ReadAsync(byte[] buffer, int offset, int count, CancellationToken cancellationToken)
         {
-            return this.stream.ReadAsync(buffer, offset, count, cancellationToken);
+            await Task.Yield();
+            int result = await this.stream.ReadAsync(buffer, offset, count, cancellationToken);
+            return result;
         }
 
         public override int ReadByte()
@@ -71,9 +73,10 @@ namespace Microsoft.OData.Tests
             this.stream.WriteByte(value);
         }
 
-        public override Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
+        public override async Task CopyToAsync(Stream destination, int bufferSize, CancellationToken cancellationToken)
         {
-            return this.stream.CopyToAsync(destination, bufferSize, cancellationToken);
+            await Task.Yield();
+            await this.stream.CopyToAsync(destination, bufferSize, cancellationToken);
         }
 
         public override long Seek(long offset, SeekOrigin origin)
@@ -88,7 +91,7 @@ namespace Microsoft.OData.Tests
 
         public override void Write(byte[] buffer, int offset, int count)
         {
-            this.stream.WriteAsync(buffer, offset, count).GetAwaiter().GetResult();
+            this.stream.Write(buffer, offset, count);
         }
 
         public override async ValueTask WriteAsync(ReadOnlyMemory<byte> buffer, CancellationToken cancellationToken = default)
