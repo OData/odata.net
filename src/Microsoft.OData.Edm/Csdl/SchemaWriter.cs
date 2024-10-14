@@ -106,7 +106,7 @@ namespace Microsoft.OData.Edm.Csdl
                 return Tuple.Create(false, errors);
             }
 
-            IEnumerable<EdmSchema> schemas = new EdmModelSchemaSeparationSerializationVisitor(model).GetSchemas();
+            IEnumerable<EdmSchema> schemas = await (new EdmModelSchemaSeparationSerializationVisitor(model)).GetSchemasAsync().ConfigureAwait(false);
             if (schemas.Count() > 1 && singleFileExpected)
             {
                 errors = new EdmError[] { new EdmError(new CsdlLocation(0, 0), EdmErrorCode.SingleFileExpected, Edm.Strings.Serializer_SingleFileExpected) };

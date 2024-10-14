@@ -35,7 +35,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             complexType.AddStructuralProperty("Breadth", EdmCoreModel.Instance.GetDecimal(6, 0, true));
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(v => v.VisitSchemaType(complexType),
+            await VisitAndVerifyXmlAsync(v => v.VisitSchemaTypeAsync(complexType),
                 @"<ComplexType Name=""Dimensions"">
   <Property Name=""Height"" Type=""Edm.Decimal"" Precision=""6"" Scale=""2"" />
   <Property Name=""Weight"" Type=""Edm.Decimal"" Precision=""6"" Scale=""Variable"" />
@@ -44,7 +44,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 </ComplexType>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(v => v.VisitSchemaType(complexType), @"{
+            await VisitAndVerifyJsonAsync(v => v.VisitSchemaTypeAsync(complexType), @"{
   ""Dimensions"": {
     ""$Kind"": ""ComplexType"",
     ""Height"": {
@@ -87,7 +87,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             schema.AddSchemaElement(action);
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEdmSchemaAsync(schema, null).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEdmSchemaAsync(schema, null),
                 @"<Schema Namespace=""NS"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <Action Name=""DoStuff"" IsBound=""true"">
     <Parameter Name=""param1"" Type=""Edm.String"" />
@@ -100,7 +100,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 </Schema>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEdmSchemaAsync(schema, null).ConfigureAwait(false), @"{
+            await VisitAndVerifyJsonAsync((v) => v.VisitEdmSchemaAsync(schema, null), @"{
   ""NS"": {
     ""DoStuff"": [
       {
@@ -146,7 +146,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             EdmEntitySet entitySet = new EdmEntitySet(container, "Set", entityType);
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { entitySet }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new[] { entitySet }),
                 @"<EntitySet Name=""Set"" EntityType=""NS.EntityType"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
@@ -159,7 +159,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 }").ConfigureAwait(false);
 
             // Act & Assert for non-indent JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { entitySet }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new[] { entitySet }),
                 @"{""Set"":{""$Collection"":true,""$Type"":""NS.EntityType""}}", false).ConfigureAwait(false);
         }
 
@@ -226,7 +226,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             model.SetVocabularyAnnotation(annotation);
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { people }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new[] { people }),
                 @"<EntitySet Name=""People"" EntityType=""NS.Person"">
   <NavigationPropertyBinding Path=""Addresses/City"" Target=""City"" />
   <NavigationPropertyBinding Path=""HomeAddress/City"" Target=""City"" />
@@ -235,7 +235,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 </EntitySet>").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { people }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new[] { people }),
                 @"{
   ""People"": {
     ""$Collection"": true,
@@ -259,16 +259,16 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             IEdmEntityContainer container = new EdmEntityContainer("NS", "Container");
             EdmSingleton singleton = new EdmSingleton(container, "Me", entityType);
 
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { singleton }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new[] { singleton }),
                 @"<Singleton Name=""Me"" Type=""NS.EntityType"" />").ConfigureAwait(false);
 
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { singleton }).ConfigureAwait(false), @"{
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new[] { singleton }), @"{
   ""Me"": {
     ""$Type"": ""NS.EntityType""
   }
 }").ConfigureAwait(false);
 
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { singleton }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) =>  v.VisitEntityContainerElementsAsync(new[] { singleton }),
                 @"{""Me"":{""$Type"":""NS.EntityType""}}", false).ConfigureAwait(false);
         }
 
@@ -293,14 +293,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             annotation.SetSerializationLocation(model, EdmVocabularyAnnotationSerializationLocation.Inline);
             this.model.SetVocabularyAnnotation(annotation);
 
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { singleton }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new[] { singleton }),
                 @"<Singleton Name=""Me"" Type=""NS.EntityType"">
   <Annotation Term=""NS.MyTerm"">
     <EnumMember>NS.Permission/Read NS.Permission/Write</EnumMember>
   </Annotation>
 </Singleton>").ConfigureAwait(false);
 
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new[] { singleton }).ConfigureAwait(false), @"{
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new[] { singleton }), @"{
   ""Me"": {
     ""$Type"": ""NS.EntityType"",
     ""@NS.MyTerm"": ""Read,Write""
@@ -318,11 +318,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var actionImport = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, null);
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }),
                 @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }),
                 @"{
   ""Checkout"": {
     ""$Kind"": ""ActionImport"",
@@ -331,7 +331,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
 }").ConfigureAwait(false);
 
             // Act & Assert for non-indent JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport }),
                 @"{""Checkout"":{""$Kind"":""ActionImport"",""$Action"":""Default.NameSpace2.CheckOut""}}", false).ConfigureAwait(false);
         }
 
@@ -343,11 +343,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var actionImport2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, null);
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"{
   ""Checkout"": {
     ""$Kind"": ""ActionImport"",
@@ -364,11 +364,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var actionImport2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("Set"));
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Set"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"{
   ""Checkout"": {
     ""$Kind"": ""ActionImport"",
@@ -386,11 +386,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var actionImport2 = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("path1", "path2"));
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""path1/path2"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImport, actionImport2 }),
                 @"{
   ""Checkout"": {
     ""$Kind"": ""ActionImport"",
@@ -414,14 +414,14 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var actionImportWithUniqueEdmPath = new EdmActionImport(defaultContainer, "Checkout", defaultCheckoutAction, new EdmPathExpression("path1", "path2"));
 
             // Act & Assert for XML
-            await VisitAndVerifyXmlAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImportOnSet, actionImportOnSet2, actionImportWithNoEntitySet, actionImportWithUniqueEdmPath }).ConfigureAwait(false),
+            await VisitAndVerifyXmlAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImportOnSet, actionImportOnSet2, actionImportWithNoEntitySet, actionImportWithUniqueEdmPath }),
                 @"<ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Set"" />
 <ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""Set2"" />
 <ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" />
 <ActionImport Name=""Checkout"" Action=""Default.NameSpace2.CheckOut"" EntitySet=""path1/path2"" />").ConfigureAwait(false);
 
             // Act & Assert for JSON
-            await VisitAndVerifyJsonAsync(async (v) => await v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImportOnSet, actionImportOnSet2, actionImportWithNoEntitySet, actionImportWithUniqueEdmPath }).ConfigureAwait(false),
+            await VisitAndVerifyJsonAsync((v) => v.VisitEntityContainerElementsAsync(new IEdmEntityContainerElement[] { actionImportOnSet, actionImportOnSet2, actionImportWithNoEntitySet, actionImportWithUniqueEdmPath }),
     @"{
   ""Checkout"": {
     ""$Kind"": ""ActionImport"",
@@ -753,7 +753,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
         }
         #endregion
 
-        internal async Task VisitAndVerifyXmlAsync(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true)
+        internal async Task VisitAndVerifyXmlAsync(Func<EdmModelCsdlSerializationVisitor, Task> testAction, string expected, bool indent = true)
         {
             XmlWriter xmlWriter;
             MemoryStream memStream;
@@ -770,7 +770,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             var schemaWriter = new EdmModelCsdlSchemaXmlWriter(model, xmlWriter, edmxVersion);
             var visitor = new EdmModelCsdlSerializationVisitor(model, schemaWriter);
 
-            testAction(visitor);
+            await testAction(visitor);
             await xmlWriter.FlushAsync().ConfigureAwait(false);
 
             memStream.Seek(0, SeekOrigin.Begin);
@@ -781,7 +781,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
             Assert.Equal(expected, result);
         }
 
-        internal async Task VisitAndVerifyJsonAsync(Action<EdmModelCsdlSerializationVisitor> testAction, string expected, bool indent = true, bool wrapper = true)
+        internal async Task VisitAndVerifyJsonAsync(Func<EdmModelCsdlSerializationVisitor, Task> testAction, string expected, bool indent = true, bool wrapper = true)
         {
 #if NETCOREAPP3_1
             Version edmxVersion = this.model.GetEdmxVersion();
@@ -806,7 +806,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl.Serialization
                         jsonWriter.WriteStartObject();
                     }
 
-                    testAction(visitor);
+                    await testAction(visitor);
 
                     if (wrapper)
                     {
