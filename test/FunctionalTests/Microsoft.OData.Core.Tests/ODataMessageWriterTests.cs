@@ -1385,7 +1385,7 @@ namespace Microsoft.OData.Tests
                 // Add 300 properties to each entity type
                 for (int j = 0; j < 100; j++)
                 {
-                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"Property638642487961128210{j}", EdmCoreModel.Instance.GetString(false)));
+                    entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyString{longString}{j}", EdmCoreModel.Instance.GetString(false)));
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyInt{longString}{j}", EdmCoreModel.Instance.GetInt32(false)));
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyBool{j}{longString}{j}", EdmCoreModel.Instance.GetBoolean(false)));
                 }
