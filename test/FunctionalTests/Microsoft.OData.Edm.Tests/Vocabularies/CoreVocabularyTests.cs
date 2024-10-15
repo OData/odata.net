@@ -22,10 +22,8 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     {
         private readonly IEdmModel coreVocModel = CoreVocabularyModel.Instance;
 
-        [Fact]
-        public void TestBaseCoreVocabularyModel()
-        {
-            const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
+#region expectedText
+        private const string expectedText = @"<?xml version=""1.0"" encoding=""utf-16""?>
 <Schema Namespace=""Org.OData.Core.V1"" Alias=""Core"" xmlns=""http://docs.oasis-open.org/odata/ns/edm"">
   <TypeDefinition Name=""MessageSeverity"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Validation.AllowedValues"">
@@ -59,7 +57,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </TypeDefinition>
   <TypeDefinition Name=""QualifiedBoundOperationName"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""The qualified name of a bound action or function in scope."" />
-    <Annotation Term=""Core.LongDescription"" String=""Either&#xA;- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type, &#xA;- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or &#xA;- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.&#xA;"" />
+    <Annotation Term=""Core.LongDescription"" String=""&#xA;&#x9;&#x9;&#x9;&#x9;Either&#xA;&#x9;&#x9;&#x9;&#x9;- the qualified name of an action, to indicate the single bound overload with the specified binding parameter type,&#xA;&#x9;&#x9;&#x9;&#x9;- the qualified name of a function, to indicate all bound overloads with the specified binding parameter type, or&#xA;&#x9;&#x9;&#x9;&#x9;- the qualified name of a function followed by parentheses containing a comma-separated list of parameter types, in the order of their definition, to identify a single function overload with the first (binding) parameter matching the specified parameter type.&#xA;&#x9;&#x9;&#x9;"" />
   </TypeDefinition>
   <TypeDefinition Name=""LocalDateTime"" UnderlyingType=""Edm.String"">
     <Annotation Term=""Core.Description"" String=""A string representing a Local Date-Time value with no offset."" />
@@ -177,13 +175,13 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
     <Property Name=""Name"" Type=""Edm.PropertyPath"" Nullable=""false"">
       <Annotation Term=""Core.Description"" String=""A path expression resolving to a primitive property of the entity type itself or to a primitive property of a complex or navigation property (recursively) of the entity type. The names of the properties in the path are joined together by forward slashes."" />
     </Property>
-    <Property Name=""Alias"" Type=""Edm.String"" Nullable=""false"">
+    <Property Name=""Alias"" Type=""Edm.String"">
       <Annotation Term=""Core.Description"" String=""A SimpleIdentifier that MUST be unique within the set of aliases, structural and navigation properties of the containing entity type that MUST be used in the key predicate of URLs"" />
     </Property>
   </ComplexType>
   <ComplexType Name=""Dictionary"" OpenType=""true"">
     <Annotation Term=""Core.Description"" String=""A dictionary of name-value pairs. Names must be valid property names, values may be restricted to a list of types via an annotation with term `Validation.OpenPropertyTypeConstraint`."" />
-    <Annotation Term=""Core.LongDescription"" String=""&#xA;Property|Type&#xA;:-------|:---&#xA;Any simple identifier | Any type listed in `Validation.OpenPropertyTypeConstraint`, or any type if there is no constraint&#xA;"" />
+    <Annotation Term=""Core.LongDescription"" String=""&#xA;&#x9;&#x9;&#x9;&#x9;Property|Type&#xA;&#x9;&#x9;&#x9;&#x9;:-------|:---&#xA;&#x9;&#x9;&#x9;&#x9;Any simple identifier | Any type listed in `Validation.OpenPropertyTypeConstraint`, or any type if there is no constraint&#xA;&#x9;&#x9;&#x9;"" />
   </ComplexType>
   <ComplexType Name=""OptionalParameterType"">
     <Property Name=""DefaultValue"" Type=""Edm.String"">
@@ -303,7 +301,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""AppliesViaContainer"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""Term"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""The target path of an annotation with the tagged term MUST start with an entity container or the annotation MUST be embedded within an entity container, entity set or singleton"" />
-    <Annotation Term=""Core.LongDescription"" String=""Services MAY additionally annotate a container-independent model element (entity type, property, navigation property) if allowed by the `AppliesTo` property of the term&#xA;      and the annotation applies to all uses of that model element."" />
+    <Annotation Term=""Core.LongDescription"" String=""&#xA;&#x9;&#x9;&#x9;&#x9;Services MAY additionally annotate a container-independent model element (entity type, property, navigation property) if allowed by the `AppliesTo` property of the term&#xA;&#x9;&#x9;&#x9;&#x9;and the annotation applies to all uses of that model element.&#xA;&#x9;&#x9;&#x9;"" />
   </Term>
   <Term Name=""ResourcePath"" Type=""Edm.String"" AppliesTo=""EntitySet Singleton ActionImport FunctionImport"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Resource path for entity container child, can be relative to xml:base and the request URL"" />
@@ -402,10 +400,18 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
   </Term>
   <Term Name=""AnyStructure"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""EntityType ComplexType"" Nullable=""false"">
     <Annotation Term=""Core.Description"" String=""Instances of a type are annotated with this tag if they have no common structure in a given response payload"" />
-    <Annotation Term=""Core.LongDescription"" String=""The select-list of a context URL MUST be `(@Core.AnyStructure)` if it would otherwise be empty,&#xA;      but this instance annotation SHOULD be omitted from the response value."" />
+    <Annotation Term=""Core.LongDescription"" String=""&#xA;&#x9;&#x9;&#x9;&#x9;The select-list of a context URL MUST be `(@Core.AnyStructure)` if it would otherwise be empty,&#xA;&#x9;&#x9;&#x9;&#x9;but this instance annotation SHOULD be omitted from the response value.&#xA;&#x9;&#x9;&#x9;"" />
+  </Term>
+  <Term Name=""IsDelta"" Type=""Core.Tag"" DefaultValue=""true"" AppliesTo=""ReturnType Parameter"" Nullable=""false"">
+    <Annotation Term=""Core.Description"" String=""The annotated Action or Function Parameter or Return Type is represented as a Delta payload"" />
+    <Annotation Term=""Core.LongDescription"" String=""&#xA;&#x9;&#x9;&#x9;&#x9;The parameter or result is represented as a delta payload, which may include deleted entries as well as changes to related&#xA;&#x9;&#x9;&#x9;&#x9;entities and relationships, according to the format-specific delta representation.&#xA;&#x9;&#x9;&#x9;"" />
   </Term>
 </Schema>";
+#endregion
 
+        [Fact]
+        public void TestBaseCoreVocabularyModel()
+        {
             var s = coreVocModel.FindDeclaredTerm("Org.OData.Core.V1.OptimisticConcurrency");
             Assert.NotNull(s);
             Assert.Equal("Org.OData.Core.V1", s.Namespace);
@@ -566,6 +572,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
         [InlineData("SchemaVersion", "Edm.String", "Schema Reference")]
         [InlineData("ODataVersions", "Edm.String", "EntityContainer")]
         [InlineData("Example", "Org.OData.Core.V1.ExampleValue", "EntityType ComplexType TypeDefinition Term Property NavigationProperty Parameter ReturnType")]
+        [InlineData("IsDelta","Org.OData.Core.V1.Tag","ReturnType Parameter")]
         public void TestCoreVocabularyTermType(string termName, string typeName, string appliesTo)
         {
             var termType = this.coreVocModel.FindDeclaredTerm("Org.OData.Core.V1." + termName);
