@@ -91,7 +91,7 @@ namespace Microsoft.OData.Edm
                     return this.ProcessSchemaElementAsync(element);
                 default:
                     Debug.Assert(false, Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind));
-                    return Task.FromResult<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind)));
+                    return TaskUtils.GetFaultedTask<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_SchemaElementKind(element.SchemaElementKind)));
             }
         }
 
@@ -321,7 +321,8 @@ namespace Microsoft.OData.Edm
                 case EdmExpressionKind.None:
                     return this.ProcessExpressionAsync(expression);
                 default:
-                    return Task.FromResult<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind)));
+                    Debug.Assert(false, Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind));
+                    return TaskUtils.GetFaultedTask<InvalidOperationException>(new InvalidOperationException(Edm.Strings.UnknownEnumVal_ExpressionKind(expression.ExpressionKind)));
             }
         }
 
