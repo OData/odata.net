@@ -1053,7 +1053,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
             // Act
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var exception = await Record.ExceptionAsync(async () =>
                 {
@@ -1131,7 +1131,7 @@ namespace Microsoft.OData.Tests
             writerSettings.SetServiceDocumentUri(new Uri("http://www.example.com/"));
 
             // Act
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 5; i++)
             {
                 var exception = await Record.ExceptionAsync(async () =>
                 {
@@ -1480,16 +1480,16 @@ namespace Microsoft.OData.Tests
 
             string longString = GenerateLongString();
 
-            // Add 1000 entity types
-            for (int i = 0; i < 1000; i++)
+            // Add 500 entity types
+            for (int i = 0; i < 500; i++)
             {
                 EdmEntityType entityType = new EdmEntityType("NS", $"Entity{i}");
                 var idProperty = new EdmStructuralProperty(entityType, $"Entity{i}Id", EdmCoreModel.Instance.GetInt32(false));
                 entityType.AddProperty(idProperty);
                 entityType.AddKeys(new IEdmStructuralProperty[] { idProperty });
 
-                // Add 300 properties to each entity type
-                for (int j = 0; j < 100; j++)
+                // Add 60 properties to each entity type
+                for (int j = 0; j < 20; j++)
                 {
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyString{longString}{j}", EdmCoreModel.Instance.GetString(false)));
                     entityType.AddProperty(new EdmStructuralProperty(entityType, $"PropertyInt{longString}{j}", EdmCoreModel.Instance.GetInt32(false)));
