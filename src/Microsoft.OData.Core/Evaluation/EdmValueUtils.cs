@@ -148,6 +148,9 @@ namespace Microsoft.OData.Evaluation
 
                 case EdmValueKind.TimeOfDay:
                     return ((IEdmTimeOfDayValue)edmValue).Value;
+
+                case EdmValueKind.Enum:
+                    return ((IEdmEnumValue)edmValue).Value.Value;
             }
 
             throw new ODataException(ErrorStrings.EdmValueUtils_CannotConvertTypeToClrValue(edmValue.ValueKind));
