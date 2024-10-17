@@ -1,4 +1,8 @@
-﻿abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
+static Microsoft.OData.Edm.Date.implicit operator Microsoft.OData.Edm.Date(System.DateOnly operand) -> Microsoft.OData.Edm.Date
+static Microsoft.OData.Edm.Date.implicit operator System.DateOnly(Microsoft.OData.Edm.Date operand) -> System.DateOnly
+static Microsoft.OData.Edm.TimeOfDay.implicit operator Microsoft.OData.Edm.TimeOfDay(System.TimeOnly timeOnly) -> Microsoft.OData.Edm.TimeOfDay
+static Microsoft.OData.Edm.TimeOfDay.implicit operator System.TimeOnly(Microsoft.OData.Edm.TimeOfDay time) -> System.TimeOnly
+abstract Microsoft.OData.Edm.EdmModelBase.DeclaredNamespaces.get -> System.Collections.Generic.IEnumerable<string>
 abstract Microsoft.OData.Edm.EdmModelBase.FindDirectlyDerivedTypes(Microsoft.OData.Edm.IEdmStructuredType baseType) -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmStructuredType>
 abstract Microsoft.OData.Edm.EdmModelBase.SchemaElements.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Edm.IEdmSchemaElement>
 abstract Microsoft.OData.Edm.EdmNavigationSource.Path.get -> Microsoft.OData.Edm.IEdmPathExpression
