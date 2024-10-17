@@ -17,19 +17,19 @@ namespace Microsoft.OData.Tests.UriParser
 {
     public class ExpressionLexerTests
     {
-        private static readonly ExpressionToken CommaToken = new ExpressionToken() { Kind = ExpressionTokenKind.Comma, Text = "," };
-        private static readonly ExpressionToken OpenParenToken = new ExpressionToken() { Kind = ExpressionTokenKind.OpenParen, Text = "(" };
-        private static readonly ExpressionToken CloseParenToken = new ExpressionToken() { Kind = ExpressionTokenKind.CloseParen, Text = ")" };
-        private static readonly ExpressionToken EqualsToken = new ExpressionToken() { Kind = ExpressionTokenKind.Equal, Text = "=" };
-        private static readonly ExpressionToken SemiColonToken = new ExpressionToken() { Kind = ExpressionTokenKind.SemiColon, Text = ";" };
-        private static readonly ExpressionToken MinusToken = new ExpressionToken() { Kind = ExpressionTokenKind.Minus, Text = "-" };
-        private static readonly ExpressionToken SlashToken = new ExpressionToken() { Kind = ExpressionTokenKind.Slash, Text = "/" };
-        private static readonly ExpressionToken QuestionToken = new ExpressionToken() { Kind = ExpressionTokenKind.Question, Text = "?" };
-        private static readonly ExpressionToken DotToken = new ExpressionToken() { Kind = ExpressionTokenKind.Dot, Text = "." };
-        private static readonly ExpressionToken StarToken = new ExpressionToken() { Kind = ExpressionTokenKind.Star, Text = "*" };
-        private static readonly ExpressionToken ColonToken = new ExpressionToken() { Kind = ExpressionTokenKind.Colon, Text = ":" };
-        private static readonly ExpressionToken ItToken = new ExpressionToken() { Kind = ExpressionTokenKind.Identifier, Text = "$it" };
-        private static readonly ExpressionToken NullLiteralToken = new ExpressionToken() { Kind = ExpressionTokenKind.NullLiteral, Text = "null" };
+        private static readonly ExpressionToken CommaToken = new ExpressionToken() { Kind = ExpressionTokenKind.Comma, Text = ",".AsMemory() };
+        private static readonly ExpressionToken OpenParenToken = new ExpressionToken() { Kind = ExpressionTokenKind.OpenParen, Text = "(".AsMemory() };
+        private static readonly ExpressionToken CloseParenToken = new ExpressionToken() { Kind = ExpressionTokenKind.CloseParen, Text = ")".AsMemory() };
+        private static readonly ExpressionToken EqualsToken = new ExpressionToken() { Kind = ExpressionTokenKind.Equal, Text = "=".AsMemory() };
+        private static readonly ExpressionToken SemiColonToken = new ExpressionToken() { Kind = ExpressionTokenKind.SemiColon, Text = ";".AsMemory() };
+        private static readonly ExpressionToken MinusToken = new ExpressionToken() { Kind = ExpressionTokenKind.Minus, Text = "-".AsMemory() };
+        private static readonly ExpressionToken SlashToken = new ExpressionToken() { Kind = ExpressionTokenKind.Slash, Text = "/".AsMemory() };
+        private static readonly ExpressionToken QuestionToken = new ExpressionToken() { Kind = ExpressionTokenKind.Question, Text = "?".AsMemory() };
+        private static readonly ExpressionToken DotToken = new ExpressionToken() { Kind = ExpressionTokenKind.Dot, Text = ".".AsMemory() };
+        private static readonly ExpressionToken StarToken = new ExpressionToken() { Kind = ExpressionTokenKind.Star, Text = "*".AsMemory() };
+        private static readonly ExpressionToken ColonToken = new ExpressionToken() { Kind = ExpressionTokenKind.Colon, Text = ":".AsMemory() };
+        private static readonly ExpressionToken ItToken = new ExpressionToken() { Kind = ExpressionTokenKind.Identifier, Text = "$it".AsMemory() };
+        private static readonly ExpressionToken NullLiteralToken = new ExpressionToken() { Kind = ExpressionTokenKind.NullLiteral, Text = "null".AsMemory() };
 
         // internal static bool IsNumeric(ExpressionTokenKind id) tests
         [Fact]
@@ -233,7 +233,7 @@ namespace Microsoft.OData.Tests.UriParser
             ExpressionToken result = lexer.NextToken();
             Assert.Equal(ExpressionTokenKind.IntegerLiteral, result.Kind);
             Assert.Equal(result, lexer.CurrentToken);
-            Assert.Equal("5", result.Text);
+            Assert.Equal("5", result.Span.ToString());
         }
 
         [Fact]
@@ -341,7 +341,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldReturnStringIdentifierWhenGivenIdentifierToken()
         {
             ExpressionLexer lexer = new ExpressionLexer("misomethingk", true, false);
-            string result = lexer.ReadDottedIdentifier(false);
+            string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("misomethingk", result);
         }
 
@@ -349,7 +349,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldReturnStringIdentifierWhenGivenIdentifierTokenContainingDot()
         {
             ExpressionLexer lexer = new ExpressionLexer("m.i.something.k", true, false);
-            string result = lexer.ReadDottedIdentifier(false);
+            string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("m.i.something.k", result);
         }
 
@@ -357,7 +357,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldReturnStringIdentifierWhenGivenIdentifierTokenContainingWhitespace()
         {
             ExpressionLexer lexer = new ExpressionLexer("    m.i.something.k", true, false);
-            string result = lexer.ReadDottedIdentifier(false);
+            string result = lexer.ReadDottedIdentifier(false).ToString();
             Assert.Equal("m.i.something.k", result);
         }
 
@@ -373,7 +373,7 @@ namespace Microsoft.OData.Tests.UriParser
         public void ShouldNotThrowWhenGivenStarInAcceptStarMode()
         {
             ExpressionLexer lexer = new ExpressionLexer("m.*", true, false);
-            string result = lexer.ReadDottedIdentifier(true);
+            string result = lexer.ReadDottedIdentifier(true).ToString();
             Assert.Equal("m.*", result);
         }
 
@@ -532,7 +532,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1.id2.id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1.id2.id3", l.CurrentToken.Text);
+            Assert.Equal("id1.id2.id3", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -541,7 +541,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.True(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1", l.CurrentToken.Text);
+            Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -550,7 +550,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1.(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1", l.CurrentToken.Text);
+            Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -559,7 +559,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1.id2.id3", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1", l.CurrentToken.Text);
+            Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -568,7 +568,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1.id2.id3 (", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1", l.CurrentToken.Text);
+            Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -577,7 +577,7 @@ namespace Microsoft.OData.Tests.UriParser
         {
             ExpressionLexer l = new ExpressionLexer("id1.id2 .id3(", moveToFirstToken: true, useSemicolonDelimiter: false);
             Assert.False(l.ExpandIdentifierAsFunction());
-            Assert.Equal("id1", l.CurrentToken.Text);
+            Assert.Equal("id1", l.CurrentToken.Span.ToString());
             Assert.Equal(0, l.CurrentToken.Position);
         }
 
@@ -961,7 +961,7 @@ namespace Microsoft.OData.Tests.UriParser
             string result = lexer.AdvanceThroughExpandOption();
             Assert.Equal("'str with ; and () in it' eq StringProperty", result);
             Assert.Equal(43, lexer.Position);
-            Assert.StartsWith(")", lexer.CurrentToken.Text);
+            Assert.StartsWith(")", lexer.CurrentToken.Span.ToString());
         }
 
         // TODO: more unit tests for this method
@@ -973,7 +973,7 @@ namespace Microsoft.OData.Tests.UriParser
             Assert.Equal("(expression)", result);
             // TODO: the state of the lexer is weird right now, see note in AdvanceThroughBalancedParentheticalExpression.
 
-            Assert.Equal("next", lexer.NextToken().Text);
+            Assert.Equal("next", lexer.NextToken().Span.ToString());
         }
 
 #if !NETCOREAPP1_1 && !NETCOREAPP2_1&& !NETCOREAPP3_1
@@ -1000,42 +1000,42 @@ namespace Microsoft.OData.Tests.UriParser
 
         private static ExpressionToken IdentifierToken(string id)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.Identifier, Text = id };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.Identifier, Text = id.AsMemory() };
         }
 
         private static ExpressionToken IntegerToken(string integer)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.IntegerLiteral, Text = integer };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.IntegerLiteral, Text = integer.AsMemory() };
         }
 
         private static ExpressionToken ParameterAliasToken(string text)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.ParameterAlias, Text = text };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.ParameterAlias, Text = text.AsMemory() };
         }
 
         private static ExpressionToken SingleLiteralToken(string singleString )
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.SingleLiteral, Text = singleString };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.SingleLiteral, Text = singleString.AsMemory() };
         }
 
         private static ExpressionToken SpatialLiteralToken(string literal, bool geography = true)
         {
-            return new ExpressionToken() { Kind = geography ? ExpressionTokenKind.GeographyLiteral : ExpressionTokenKind.GeometryLiteral, Text = literal };
+            return new ExpressionToken() { Kind = geography ? ExpressionTokenKind.GeographyLiteral : ExpressionTokenKind.GeometryLiteral, Text = literal.AsMemory() };
         }
 
         private static ExpressionToken BracketToken(string text)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.BracketedExpression, Text = text };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.BracketedExpression, Text = text.AsMemory() };
         }
 
         private static ExpressionToken BracedToken(string text)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.BracedExpression, Text = text };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.BracedExpression, Text = text.AsMemory() };
         }
 
         private static ExpressionToken StringToken(string text)
         {
-            return new ExpressionToken() { Kind = ExpressionTokenKind.StringLiteral, Text = text };
+            return new ExpressionToken() { Kind = ExpressionTokenKind.StringLiteral, Text = text.AsMemory() };
         }
 
         private static void ValidateLexerException<T>(string expression, string message) where T : Exception
@@ -1063,7 +1063,7 @@ namespace Microsoft.OData.Tests.UriParser
             for (int i = 0; i < expectTokens.Length; ++i)
             {
                 Assert.Equal(expectTokens[i].Kind, l.CurrentToken.Kind);
-                Assert.Equal(expectTokens[i].Text, l.CurrentToken.Text);
+                Assert.Equal(expectTokens[i].Text.ToString(), l.CurrentToken.Text.ToString());
                 l.NextToken();
             }
 

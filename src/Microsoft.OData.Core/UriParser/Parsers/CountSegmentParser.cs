@@ -78,33 +78,30 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.UriParser_EmptyParenthesis);
                 }
 
+                StringComparison comparison = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier ?
+                        StringComparison.OrdinalIgnoreCase :
+                        StringComparison.Ordinal;
+
                 // Look for all the supported query options
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
-                    string text = this.UriQueryExpressionParser.EnableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                    ReadOnlySpan<char> textSpan = this.lexer.CurrentToken.Span;
 
-                    // Prepend '$' prefix if needed.
-                    if (this.UriQueryExpressionParser.EnableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    if (textSpan.Equals(ExpressionConstants.QueryOptionFilter, comparison) ||
+                        (this.UriQueryExpressionParser.EnableNoDollarQueryOptions && textSpan.Equals("filter", comparison)))
                     {
-                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                        // $filter within $count segment
+                        filterToken = ParseInnerFilter();
                     }
-
-                    switch (text)
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSearch, comparison) ||
+                        (this.UriQueryExpressionParser.EnableNoDollarQueryOptions && textSpan.Equals("search", comparison)))
                     {
-                        case ExpressionConstants.QueryOptionFilter: // $filter within $count segment
-                            filterToken = ParseInnerFilter();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSearch: // $search within $count segment
-                            searchToken = ParseInnerSearch();
-                            break;
-
-                        default:
-                            {
-                                throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
-                            }
+                        // $search within $count segment
+                        searchToken = ParseInnerSearch();
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.UriQueryExpressionParser_IllegalQueryOptioninDollarCount);
                     }
                 }
             }

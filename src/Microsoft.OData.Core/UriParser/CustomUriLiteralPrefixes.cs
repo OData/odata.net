@@ -92,12 +92,13 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="literalPrefix">The literal prefix of the EdmType</param>
         /// <returns>Null if the custom literal prefix has no registered EdmType.</returns>
-        internal static IEdmTypeReference GetEdmTypeByCustomLiteralPrefix(string literalPrefix)
+        internal static IEdmTypeReference GetEdmTypeByCustomLiteralPrefix(ReadOnlySpan<char> literalPrefix)
         {
             lock (Locker)
             {
                 IEdmTypeReference edmTypeReference;
-                if (CustomLiteralPrefixesOfEdmTypes.TryGetValue(literalPrefix, out edmTypeReference))
+                string literal = literalPrefix.ToString();
+                if (CustomLiteralPrefixesOfEdmTypes.TryGetValue(literal, out edmTypeReference))
                 {
                     return edmTypeReference;
                 }

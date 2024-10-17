@@ -66,7 +66,7 @@ namespace Microsoft.OData.UriParser
                 return TryParseLiteral(expressionLexer);
             }
 
-            throw new ODataException(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken(expressionLexer.CurrentToken.Text));
+            throw new ODataException(ODataErrorStrings.ExpressionLexer_ExpectedLiteralToken(expressionLexer.CurrentToken.Text.ToString()));
         }
 
         /// <summary>
@@ -92,7 +92,8 @@ namespace Microsoft.OData.UriParser
         private static object ParseTypedLiteral(this ExpressionLexer expressionLexer, IEdmTypeReference targetTypeReference)
         {
             UriLiteralParsingException typeParsingException;
-            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(expressionLexer.CurrentToken.Text, targetTypeReference, out typeParsingException);
+            string tokenText = expressionLexer.CurrentToken.Text.ToString();
+            object targetValue = DefaultUriLiteralParser.Instance.ParseUriStringToType(tokenText, targetTypeReference, out typeParsingException);
             if (targetValue == null)
             {
                 string message;
@@ -101,7 +102,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteral(
                         targetTypeReference.FullName(),
-                        expressionLexer.CurrentToken.Text,
+                        tokenText,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText);
 
@@ -111,7 +112,7 @@ namespace Microsoft.OData.UriParser
                 {
                     message = ODataErrorStrings.UriQueryExpressionParser_UnrecognizedLiteralWithReason(
                         targetTypeReference.FullName(),
-                        expressionLexer.CurrentToken.Text,
+                        tokenText,
                         expressionLexer.CurrentToken.Position,
                         expressionLexer.ExpressionText,
                         typeParsingException.Message);

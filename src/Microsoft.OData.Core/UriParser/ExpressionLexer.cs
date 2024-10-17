@@ -12,7 +12,6 @@ namespace Microsoft.OData.UriParser
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Globalization;
-    using System.Text;
     using Microsoft.OData;
     using Microsoft.OData.Edm;
     using ODataErrorStrings = Microsoft.OData.Strings;
@@ -133,34 +132,15 @@ namespace Microsoft.OData.UriParser
         /// <summary>Token being processed.</summary>
         internal ExpressionToken CurrentToken
         {
-            get
-            {
-                return this.token;
-            }
-
-            set
-            {
-                this.token = value;
-            }
+            get => this.token;
+            set => this.token = value;
         }
 
         /// <summary>Text being parsed.</summary>
-        internal string ExpressionText
-        {
-            get
-            {
-                return this.Text;
-            }
-        }
+        internal string ExpressionText => this.Text;
 
         /// <summary>Position on text being parsed.</summary>
-        internal int Position
-        {
-            get
-            {
-                return this.token.Position;
-            }
-        }
+        internal int Position => this.token.Position;
 
         #endregion Internal properties
 
@@ -265,11 +245,15 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="acceptStar">do we allow a star in this identifier</param>
         /// <returns>The dotted identifier starting at the current identifier.</returns>
-        internal string ReadDottedIdentifier(bool acceptStar)
+        internal ReadOnlySpan<char> ReadDottedIdentifier(bool acceptStar)
         {
             this.ValidateToken(ExpressionTokenKind.Identifier);
-            StringBuilder builder = null;
-            string result = this.CurrentToken.Text;
+
+            ReadOnlySpan<char> result = this.CurrentToken.Span;
+            int position = this.CurrentToken.Position;
+            int oldLength = this.CurrentToken.Length;
+            int length = this.CurrentToken.Length;
+
             this.NextToken();
             while (this.CurrentToken.Kind == ExpressionTokenKind.Dot)
             {
@@ -291,19 +275,13 @@ namespace Microsoft.OData.UriParser
                     }
                 }
 
-                if (builder == null)
-                {
-                    builder = new StringBuilder(result, result.Length + 1 + this.CurrentToken.Text.Length);
-                }
-
-                builder.Append('.');
-                builder.Append(this.CurrentToken.Text);
+                length += 1 + this.CurrentToken.Length; // one '.' and next current token length
                 this.NextToken();
             }
 
-            if (builder != null)
+            if (oldLength != length)
             {
-                result = builder.ToString();
+                return this.Text.AsSpan(position, length);
             }
 
             return result;
@@ -362,12 +340,12 @@ namespace Microsoft.OData.UriParser
                 // Nevertheless, we should still treat it as a function.
                 matched =
                     nextKind == ExpressionTokenKind.OpenParen ||
-                    (nextKind == ExpressionTokenKind.ParenthesesExpression && this.CurrentToken.Text == ExpressionConstants.KeywordIn);
+                    (nextKind == ExpressionTokenKind.ParenthesesExpression && this.CurrentToken.Span.Equals(ExpressionConstants.KeywordIn, StringComparison.Ordinal));
             }
 
             if (matched)
             {
-                this.token.Text = this.Text.Substring(tokenStartPos, this.textPos - tokenStartPos);
+                this.token.Text = this.Text.AsMemory(tokenStartPos, this.textPos - tokenStartPos);
                 this.token.Position = tokenStartPos;
             }
             else
@@ -564,7 +542,7 @@ namespace Microsoft.OData.UriParser
             switch (this.ch)
             {
                 case '(':
-                    if (this.CurrentToken.Text == ExpressionConstants.KeywordIn)
+                    if (this.CurrentToken.Span.Equals(ExpressionConstants.KeywordIn, StringComparison.Ordinal))
                     {
                         this.NextChar();
                         this.AdvanceThroughBalancedExpression('(', ')');
@@ -758,7 +736,7 @@ namespace Microsoft.OData.UriParser
             }
 
             this.token.Kind = t;
-            this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
+            this.token.Text = this.Text.AsMemory(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
             this.HandleTypePrefixedLiterals();
@@ -797,7 +775,7 @@ namespace Microsoft.OData.UriParser
             if (this.ch == '\'')
             {
                 // Get custom literal if exists.
-                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.token.Text);
+                IEdmTypeReference edmTypeOfCustomLiteral = CustomUriLiteralPrefixes.GetEdmTypeByCustomLiteralPrefix(this.token.Span);
                 if (edmTypeOfCustomLiteral != null)
                 {
                     this.token.SetCustomEdmTypeLiteral(edmTypeOfCustomLiteral);
@@ -805,7 +783,7 @@ namespace Microsoft.OData.UriParser
                 else
                 {
                     // Get built in type literal prefix for quoted values
-                    this.token.Kind = this.GetBuiltInTypesLiteralPrefixWithQuotedValue(this.token.Text);
+                    this.token.Kind = this.GetBuiltInTypesLiteralPrefixWithQuotedValue(this.token.Span);
                 }
 
                 this.HandleQuotedValues();
@@ -814,7 +792,7 @@ namespace Microsoft.OData.UriParser
             {
                 // Handle keywords.
                 // Get built in type literal prefix.
-                ExpressionTokenKind? regularTokenKind = GetBuiltInTypesLiteralPrefix(this.token.Text);
+                ExpressionTokenKind? regularTokenKind = GetBuiltInTypesLiteralPrefix(this.token.Span);
                 if (regularTokenKind.HasValue)
                 {
                     this.token.Kind = regularTokenKind.Value;
@@ -844,7 +822,7 @@ namespace Microsoft.OData.UriParser
             while (this.ch.HasValue && this.ch == '\'');
 
             // Update token.Text to include the literal + the quoted value
-            this.token.Text = this.Text.Substring(startPosition, this.textPos - startPosition);
+            this.token.Text = this.Text.AsMemory(startPosition, this.textPos - startPosition);
         }
 
         /// <summary>
@@ -852,7 +830,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="tokenText">Token texk</param>
         /// <returns>ExpressionTokenKind by the token text</returns>
-        private static ExpressionTokenKind? GetBuiltInTypesLiteralPrefix(string tokenText)
+        private static ExpressionTokenKind? GetBuiltInTypesLiteralPrefix(ReadOnlySpan<char> tokenText)
         {
             if (ExpressionLexerUtils.IsInfinityOrNaNDouble(tokenText))
             {
@@ -862,11 +840,11 @@ namespace Microsoft.OData.UriParser
             {
                 return ExpressionTokenKind.SingleLiteral;
             }
-            else if (tokenText == ExpressionConstants.KeywordTrue || tokenText == ExpressionConstants.KeywordFalse)
+            else if (tokenText.Equals(ExpressionConstants.KeywordTrue, StringComparison.Ordinal) || tokenText.Equals(ExpressionConstants.KeywordFalse, StringComparison.Ordinal))
             {
                 return ExpressionTokenKind.BooleanLiteral;
             }
-            else if (tokenText == ExpressionConstants.KeywordNull)
+            else if (tokenText.Equals(ExpressionConstants.KeywordNull, StringComparison.Ordinal))
             {
                 return ExpressionTokenKind.NullLiteral;
             }
@@ -880,25 +858,25 @@ namespace Microsoft.OData.UriParser
         /// <param name="tokenText">Token text</param>
         /// <returns>ExpressionTokenKind</returns>
         /// <example>geometry'POINT (79 84)'. 'geometry' is the tokenText </example>
-        private ExpressionTokenKind GetBuiltInTypesLiteralPrefixWithQuotedValue(string tokenText)
+        private ExpressionTokenKind GetBuiltInTypesLiteralPrefixWithQuotedValue(ReadOnlySpan<char> tokenText)
         {
-            if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
+            if (tokenText.Equals(ExpressionConstants.LiteralPrefixDuration, StringComparison.OrdinalIgnoreCase))
             {
                 return ExpressionTokenKind.DurationLiteral;
             }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase))
+            else if (tokenText.Equals(ExpressionConstants.LiteralPrefixBinary, StringComparison.OrdinalIgnoreCase))
             {
                 return ExpressionTokenKind.BinaryLiteral;
             }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeography, StringComparison.OrdinalIgnoreCase))
+            else if (tokenText.Equals(ExpressionConstants.LiteralPrefixGeography, StringComparison.OrdinalIgnoreCase))
             {
                 return ExpressionTokenKind.GeographyLiteral;
             }
-            else if (String.Equals(tokenText, ExpressionConstants.LiteralPrefixGeometry, StringComparison.OrdinalIgnoreCase))
+            else if (tokenText.Equals(ExpressionConstants.LiteralPrefixGeometry, StringComparison.OrdinalIgnoreCase))
             {
                 return ExpressionTokenKind.GeometryLiteral;
             }
-            else if (string.Equals(tokenText, ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
+            else if (tokenText.Equals(ExpressionConstants.KeywordNull, StringComparison.OrdinalIgnoreCase))
             {
                 // typed null literals are not supported.
                 throw ParseError(ODataErrorStrings.ExpressionLexer_SyntaxError(this.textPos, this.Text));
@@ -1042,7 +1020,7 @@ namespace Microsoft.OData.UriParser
         {
             int initialIndex = this.textPos;
 
-            string guidStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> guidStr = ParseLiteral(tokenPos);
 
             Guid tmpGuidValue;
             if (UriUtils.TryUriStringToGuid(guidStr, out tmpGuidValue))
@@ -1067,7 +1045,7 @@ namespace Microsoft.OData.UriParser
         {
             int initialIndex = this.textPos;
 
-            string datetimeOffsetStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> datetimeOffsetStr = ParseLiteral(tokenPos);
 
             DateTimeOffset tmpdatetimeOffsetValue;
             if (UriUtils.ConvertUriStringToDateTimeOffset(datetimeOffsetStr, out tmpdatetimeOffsetValue))
@@ -1085,7 +1063,7 @@ namespace Microsoft.OData.UriParser
         private bool TryParseDate(int tokenPos)
         {
             int initialIndex = this.textPos;
-            string dateStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> dateStr = ParseLiteral(tokenPos);
             Date tmpDateValue;
             if (UriUtils.TryUriStringToDate(dateStr, out tmpDateValue))
             {
@@ -1109,7 +1087,7 @@ namespace Microsoft.OData.UriParser
         {
             int initialIndex = this.textPos;
 
-            string timeOfDayStr = ParseLiteral(tokenPos);
+            ReadOnlySpan<char> timeOfDayStr = ParseLiteral(tokenPos);
 
             TimeOfDay tmpTimeOfDayValue;
             if (UriUtils.TryUriStringToTimeOfDay(timeOfDayStr, out tmpTimeOfDayValue))
@@ -1129,7 +1107,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         /// <param name="tokenPos">Index from which the substring starts</param>
         /// <returns>Substring from this.text that has parsed the literal and ends in one of above delimiting characters</returns>
-        private string ParseLiteral(int tokenPos)
+        private ReadOnlySpan<char> ParseLiteral(int tokenPos)
         {
             do
             {
@@ -1142,8 +1120,7 @@ namespace Microsoft.OData.UriParser
                 this.NextChar();
             }
 
-            string numericStr = this.Text.Substring(tokenPos, this.textPos - tokenPos);
-            return numericStr;
+            return this.Text.AsSpan(tokenPos, this.textPos - tokenPos);
         }
 
         /// <summary>
@@ -1152,7 +1129,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="numericStr">The numeric string.</param>
         /// <param name="guessedKind">The possible kind (IntegerLiteral or DoubleLiteral) from ParseFromDigit() method.</param>
         /// <returns>A more accurate ExpressionTokenKind</returns>
-        private static ExpressionTokenKind MakeBestGuessOnNoSuffixStr(string numericStr, ExpressionTokenKind guessedKind)
+        private static ExpressionTokenKind MakeBestGuessOnNoSuffixStr(ReadOnlySpan<char> numericStr, ExpressionTokenKind guessedKind)
         {
             // no suffix, so
             // (1) make a best guess (note: later we support promoting each to later one: int32->int64->single->double->decimal).
@@ -1220,7 +1197,7 @@ namespace Microsoft.OData.UriParser
                 return ExpressionTokenKind.DoubleLiteral;
             }
 
-            throw new ODataException(ODataErrorStrings.ExpressionLexer_InvalidNumericString(numericStr));
+            throw new ODataException(ODataErrorStrings.ExpressionLexer_InvalidNumericString(numericStr.ToString()));
         }
 
         /// <summary>
@@ -1262,8 +1239,6 @@ namespace Microsoft.OData.UriParser
                 this.NextChar();
             }
         }
-
-
 
         /// <summary>Parses an identifier by advancing the current character.</summary>
         /// <param name="includingDots">Optional flag for whether to include dots as part of the identifier.</param>

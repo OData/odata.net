@@ -26,6 +26,13 @@ namespace Microsoft.OData.UriParser
                 && literalText.EndsWith("}", StringComparison.Ordinal));
         }
 
+        internal static bool IsValidTemplateLiteral(ReadOnlySpan<char> literalText)
+        {
+            return !literalText.IsEmpty
+                && literalText.StartsWith("{", StringComparison.Ordinal)
+                && literalText.EndsWith("}", StringComparison.Ordinal);
+        }
+
         /// <summary>
         /// Parse a literal as Uri template.
         /// </summary>
@@ -38,6 +45,18 @@ namespace Microsoft.OData.UriParser
             if (IsValidTemplateLiteral(literalText))
             {
                 expression = new UriTemplateExpression { LiteralText = literalText, ExpectedType = expectedType };
+                return true;
+            }
+
+            expression = null;
+            return false;
+        }
+
+        internal static bool TryParseLiteral(ReadOnlySpan<char> literalText, IEdmTypeReference expectedType, out UriTemplateExpression expression)
+        {
+            if (IsValidTemplateLiteral(literalText))
+            {
+                expression = new UriTemplateExpression { LiteralText = literalText.ToString(), ExpectedType = expectedType };
                 return true;
             }
 

@@ -133,55 +133,56 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.UriParser_MissingSelectOption(pathToken.Identifier));
                 }
 
+                StringComparison comparison = this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
                 // Look for all the supported query options
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
-                    string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                    ReadOnlySpan<char> textSpan = this.lexer.CurrentToken.Span;
 
-                    // Prepend '$' prefix if needed.
-                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    if (textSpan.Equals(ExpressionConstants.QueryOptionFilter, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("filter", comparison)))
                     {
-                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                        filterOption = ParseInnerFilter();
                     }
-
-                    switch (text)
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionOrderby, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("orderby", comparison)))
                     {
-                        case ExpressionConstants.QueryOptionFilter: // inner $filter
-                            filterOption = ParseInnerFilter();
-                            break;
-
-                        case ExpressionConstants.QueryOptionOrderby: // inner $orderby
-                            orderByOptions = ParseInnerOrderBy();
-                            break;
-
-                        case ExpressionConstants.QueryOptionTop: // inner $top
-                            topOption = ParseInnerTop();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSkip: // innner $skip
-                            skipOption = ParseInnerSkip();
-                            break;
-
-                        case ExpressionConstants.QueryOptionCount: // inner $count
-                            countOption = ParseInnerCount();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSearch: // inner $search
-                            searchOption = ParseInnerSearch();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSelect: // inner $select
-                            selectOption = ParseInnerSelect(pathToken);
-                            break;
-
-                        case ExpressionConstants.QueryOptionCompute: // inner $compute
-                            computeOption = ParseInnerCompute();
-                            break;
-
-                        default:
-                            throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
+                        orderByOptions = ParseInnerOrderBy();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionTop, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("top", comparison)))
+                    {
+                        topOption = ParseInnerTop();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSkip, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("skip", comparison)))
+                    {
+                        skipOption = ParseInnerSkip();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionCount, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("count", comparison)))
+                    {
+                        countOption = ParseInnerCount();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSearch, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("search", comparison)))
+                    {
+                        searchOption = ParseInnerSearch();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSelect, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("select", comparison)))
+                    {
+                        selectOption = ParseInnerSelect(pathToken);
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionCompute, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("compute", comparison)))
+                    {
+                        computeOption = ParseInnerCompute();
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
                     }
                 }
 
@@ -239,69 +240,71 @@ namespace Microsoft.OData.UriParser
                     throw new ODataException(ODataErrorStrings.UriParser_MissingExpandOption(pathToken.Identifier));
                 }
 
+                StringComparison comparison = this.enableCaseInsensitiveBuiltinIdentifier ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+
                 // Look for all the supported query options
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
-                    string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                    ReadOnlySpan<char> textSpan = this.lexer.CurrentToken.Span;
 
-                    // Prepend '$' prefix if needed.
-                    if (this.enableNoDollarQueryOptions && !text.StartsWith(UriQueryConstants.DollarSign, StringComparison.Ordinal))
+                    if (textSpan.Equals(ExpressionConstants.QueryOptionFilter, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("filter", comparison)))
                     {
-                        text = string.Format(CultureInfo.InvariantCulture, "{0}{1}", UriQueryConstants.DollarSign, text);
+                        filterOption = ParseInnerFilter();
                     }
-
-                    switch (text)
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionOrderby, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("orderby", comparison)))
                     {
-                        case ExpressionConstants.QueryOptionFilter: // inner $filter
-                            filterOption = ParseInnerFilter();
-                            break;
-
-                        case ExpressionConstants.QueryOptionOrderby: // inner $orderby
-                            orderByOptions = ParseInnerOrderBy();
-                            break;
-
-                        case ExpressionConstants.QueryOptionTop: // inner $top
-                            topOption = ParseInnerTop();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSkip: // inner $skip
-                            skipOption = ParseInnerSkip();
-                            break;
-
-                        case ExpressionConstants.QueryOptionCount: // inner $count
-                            countOption = ParseInnerCount();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSearch: // inner $search
-                            searchOption = ParseInnerSearch();
-                            break;
-
-                        case ExpressionConstants.QueryOptionLevels: // inner $level
-                            levelsOption = ParseInnerLevel();
-                            break;
-
-                        case ExpressionConstants.QueryOptionSelect: // inner $select
-                            selectOption = ParseInnerSelect(pathToken);
-                            break;
-
-                        case ExpressionConstants.QueryOptionExpand: // inner $expand
-                            expandOption = ParseInnerExpand(pathToken);
-                            break;
-
-                        case ExpressionConstants.QueryOptionCompute: // inner $compute
-                            computeOption = ParseInnerCompute();
-                            break;
-
-                        case ExpressionConstants.QueryOptionApply: // inner $apply
-                            applyOptions = ParseInnerApply();
-                            break;
-
-                        default:
-                            {
-                                throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
-                            }
+                        orderByOptions = ParseInnerOrderBy();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionTop, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("top", comparison)))
+                    {
+                        topOption = ParseInnerTop();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSkip, comparison) ||
+                       (this.enableNoDollarQueryOptions && textSpan.Equals("skip", comparison)))
+                    {
+                        skipOption = ParseInnerSkip();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionCount, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("count", comparison)))
+                    {
+                        countOption = ParseInnerCount();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSearch, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("search", comparison)))
+                    {
+                        searchOption = ParseInnerSearch();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionLevels, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("levels", comparison)))
+                    {
+                        levelsOption = ParseInnerLevel();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionSelect, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("select", comparison)))
+                    {
+                        selectOption = ParseInnerSelect(pathToken);
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionExpand, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("expand", comparison)))
+                    {
+                        expandOption = ParseInnerExpand(pathToken);
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionCompute, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("compute", comparison)))
+                    {
+                        computeOption = ParseInnerCompute();
+                    }
+                    else if (textSpan.Equals(ExpressionConstants.QueryOptionApply, comparison) ||
+                      (this.enableNoDollarQueryOptions && textSpan.Equals("apply", comparison)))
+                    {
+                        applyOptions = ParseInnerApply();
+                    }
+                    else
+                    {
+                        throw new ODataException(ODataErrorStrings.UriSelectParser_TermIsNotValid(this.lexer.ExpressionText));
                     }
                 }
 
@@ -371,8 +374,8 @@ namespace Microsoft.OData.UriParser
                 while (this.lexer.CurrentToken.Kind != ExpressionTokenKind.CloseParen)
                 {
                     string text = this.enableCaseInsensitiveBuiltinIdentifier
-                        ? this.lexer.CurrentToken.Text.ToLowerInvariant()
-                        : this.lexer.CurrentToken.Text;
+                        ? this.lexer.CurrentToken.Text.ToString().ToLowerInvariant()
+                        : this.lexer.CurrentToken.Text.ToString();
                     switch (text)
                     {
                         case ExpressionConstants.QueryOptionLevels:
