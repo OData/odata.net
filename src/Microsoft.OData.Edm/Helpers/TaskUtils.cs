@@ -4,12 +4,14 @@
 // </copyright>
 //---------------------------------------------------------------------
 
+using System;
 using System.Threading.Tasks;
 
 namespace Microsoft.OData.Edm.Helpers
 {
     internal class TaskUtils
     {
+        #region Completed task
         /// <summary>
         /// Already completed task.
         /// </summary>
@@ -40,5 +42,36 @@ namespace Microsoft.OData.Edm.Helpers
                 return _completedTask;
             }
         }
+        #endregion
+
+        #region Faulted task
+        /// <summary>
+        /// Returns an already completed task instance with the specified error.
+        /// </summary>
+        /// <param name="exception">The exception of the faulted result.</param>
+        /// <returns>An already completed task with the specified exception.</returns>
+        internal static Task GetFaultedTask(Exception exception)
+        {
+            // Since there's no non-generic version use a dummy object return value and cast to non-generic version.
+            return GetFaultedTask<object>(exception);
+        }
+
+        /// <summary>
+        /// Returns an already completed task instance with the specified error.
+        /// </summary>
+        /// <typeparam name="T">Type of the result.</typeparam>
+        /// <param name="exception">The exception of the faulted result.</param>
+        /// <returns>An already completed task with the specified exception.</returns>
+        internal static Task<T> GetFaultedTask<T>(Exception exception)
+        {
+#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
+            return Task.FromException<T>(exception);
+#else
+            TaskCompletionSource<T> taskCompletionSource = new TaskCompletionSource<T>();
+            taskCompletionSource.SetException(exception);
+            return taskCompletionSource.Task;
+#endif
+        }
+        #endregion
     }
 }
