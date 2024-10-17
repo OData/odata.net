@@ -24,18 +24,33 @@ namespace Microsoft.OData.UriParser
         private readonly string name;
 
         /// <summary>
+        /// The name of the open property to be bound outside the EDM model.
+        /// </summary>
+        private readonly IEdmTypeReference typeReference;
+
+        /// <summary>
         /// Constructs a <see cref="SingleValueOpenPropertyAccessNode"/>.
         /// </summary>
         /// <param name="source">The value containing this property.</param>
         /// <param name="openPropertyName">The name of the open property to be bound outside the EDM model.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or openPropertyName is null.</exception>
-        public SingleValueOpenPropertyAccessNode(SingleValueNode source, string openPropertyName)
+        public SingleValueOpenPropertyAccessNode(SingleValueNode source, string openPropertyName) : this(source, openPropertyName, null) { }
+
+        /// <summary>
+        /// Constructs a <see cref="SingleValueOpenPropertyAccessNode"/>.
+        /// </summary>
+        /// <param name="source">The value containing this property.</param>
+        /// <param name="openPropertyName">The name of the open property to be bound outside the EDM model.</param>
+        /// <param name="typeReference">They type of the open property.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or openPropertyName is null.</exception>
+        public SingleValueOpenPropertyAccessNode(SingleValueNode source, string openPropertyName, IEdmTypeReference typeReference)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             ExceptionUtils.CheckArgumentStringNotNullOrEmpty(openPropertyName, "openPropertyName");
 
             this.name = openPropertyName;
             this.source = source;
+            this.typeReference = typeReference;
         }
 
         /// <summary>
@@ -62,7 +77,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         public override IEdmTypeReference TypeReference
         {
-            get { return null; }
+            get { return typeReference; }
         }
 
         /// <summary>

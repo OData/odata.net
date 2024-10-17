@@ -2944,6 +2944,26 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData("'a'", "Edm.String")]
+        [InlineData("1", "Edm.Int32")]
+        [InlineData("true", "Edm.Boolean")]
+        [InlineData("Artist","Edm.String")]
+        [InlineData("Value", "Edm.Decimal")]
+        [InlineData("ArtistAddress","Fully.Qualified.Namespace.Address")]
+        [InlineData("Owner", "Fully.Qualified.Namespace.Person")]
+        [InlineData("undefined","Edm.Untyped")]
+        public void FilterWithInOperationWithDynamicRightOperand(string lOperand, string typeName)
+        {
+            FilterClause filter = ParseFilter(String.Format("{0} in dynamicCollection",lOperand),
+                HardCodedTestModel.TestModel, HardCodedTestModel.GetPaintingType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+            var rNode = Assert.IsType<CollectionOpenPropertyAccessNode>(inNode.Right);
+            Assert.Equal("dynamicCollection", rNode.Name);
+            Assert.Equal(typeName, rNode.ItemType.FullName());
+        }
+
+        [Theory]
         [InlineData("example in ('')", "\"\"")] // No space
         [InlineData("example in (' ')", " ")] // 1 space
         [InlineData("example in ( '   ' )", "   ")] // 3 spaces
