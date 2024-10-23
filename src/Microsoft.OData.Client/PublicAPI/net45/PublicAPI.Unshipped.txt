@@ -1,0 +1,2 @@
+Microsoft.OData.Client.DataServiceActionQuery<T>.Context.get -> Microsoft.OData.Client.DataServiceContext
+Microsoft.OData.Client.DataServiceActionQuery<T>.Parameters.get -> System.Collections.Generic.IEnumerable<Microsoft.OData.Client.BodyOperationParameter>
