@@ -37,6 +37,8 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
             builder.EntitySet<StoredPI>("StoredPIs");
             builder.EntitySet<Subscription>("SubscriptionTemplates");
             builder.Singleton<StoredPI>("DefaultStoredPI");
+            builder.EntitySet<Bank>("Banks");
+            builder.EntitySet<BankAccount>("BankAccounts");
 
             builder.EntityType<Product>()
                 .Action("AddAccessRight")

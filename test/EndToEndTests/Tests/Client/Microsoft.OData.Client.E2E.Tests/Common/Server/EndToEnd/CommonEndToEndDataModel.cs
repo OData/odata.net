@@ -396,4 +396,22 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public GeographyPoint? GeographyPoint { get; set; }
         public GeometryPoint? GeometryPoint { get; set; }
     }
+
+    [Key("Id")]
+    public class Bank
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Location { get; set; }
+        public ICollection<BankAccount> BankAccounts { get; set; }
+    }
+
+    [Key("Id")]
+    public class BankAccount
+    {
+        public int Id { get; set; }
+        public string AccountNumber { get; set; }
+        public int BankId { get; set; }
+        public Bank Bank { get; set; }  
+    }
 }
