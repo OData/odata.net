@@ -46,11 +46,6 @@ namespace Microsoft.OData.UriParser
         private const string EscapeSequenceSet = "\\\"";
 
         /// <summary>
-        /// Keeps all keywords can be used in search query.
-        /// </summary>
-        private static readonly HashSet<string> KeyWords = new HashSet<string>(StringComparer.Ordinal) { ExpressionConstants.SearchKeywordAnd, ExpressionConstants.SearchKeywordOr, ExpressionConstants.SearchKeywordNot };
-
-        /// <summary>
         /// Indicate whether current char is escaped.
         /// </summary>
         private bool isEscape;
@@ -116,31 +111,46 @@ namespace Microsoft.OData.UriParser
             }
 
             this.token.Kind = t;
-            this.token.Text = this.Text.Substring(tokenPos, this.textPos - tokenPos);
+            this.token.Text = this.Text.AsMemory(tokenPos, this.textPos - tokenPos);
             this.token.Position = tokenPos;
 
             if (this.token.Kind == ExpressionTokenKind.StringLiteral)
             {
-                this.token.Text = this.token.Text.Substring(1, this.token.Text.Length - 2).Replace("\\\\", "\\", StringComparison.Ordinal).Replace("\\\"", "\"", StringComparison.Ordinal);
-                if (string.IsNullOrEmpty(this.token.Text))
+                string slicedText = this.token.Text.Slice(1, this.token.Length - 2).ToString(); // remove the leading and ending quotes
+                slicedText = slicedText.Replace("\\\\", "\\", StringComparison.Ordinal).Replace("\\\"", "\"", StringComparison.Ordinal);
+                this.token.Text = slicedText.AsMemory();
+
+                if (this.token.Text.IsEmpty)
                 {
                     throw ParseError(Strings.ExpressionToken_IdentifierExpected(this.token.Position));
                 }
             }
 
-            if ((this.token.Kind == ExpressionTokenKind.Identifier) && !KeyWords.Contains(this.token.Text))
+            if ((this.token.Kind == ExpressionTokenKind.Identifier) && !IsKeyWord(this.token.Span))
             {
-                Match match = InvalidWordPattern.Match(this.token.Text);
-                if (match.Success)
+                if (InvalidWordPattern.IsMatch(this.token.Span))
                 {
+                    Match match = InvalidWordPattern.Match(this.token.Text.ToString());
                     int index = match.Groups[0].Index;
-                    throw ParseError(Strings.ExpressionLexer_InvalidCharacter(this.token.Text[index], this.token.Position + index, this.Text));
+                    throw ParseError(Strings.ExpressionLexer_InvalidCharacter(this.token.Span[index], this.token.Position + index, this.Text));
                 }
 
                 this.token.Kind = ExpressionTokenKind.StringLiteral;
             }
 
             return this.token;
+        }
+
+        /// <summary>
+        /// Checks the text is the keywords can be used in search query.
+        /// </summary>
+        /// <param name="text">the token text.</param>
+        /// <returns>Whether the text is key word in search query.</returns>
+        private static bool IsKeyWord(ReadOnlySpan<char> text)
+        {
+            return text.Equals(ExpressionConstants.SearchKeywordAnd, StringComparison.Ordinal) || // "AND"
+                text.Equals(ExpressionConstants.SearchKeywordOr, StringComparison.Ordinal) || // "OR"
+                text.Equals(ExpressionConstants.SearchKeywordNot, StringComparison.Ordinal); // "NOT"
         }
 
         /// <summary>

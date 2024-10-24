@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -78,7 +79,7 @@ namespace Microsoft.OData.UriParser
             while (currentToken.Kind != endTokenKind)
             {
                 lexer.ValidateToken(ExpressionTokenKind.Identifier);
-                string identifier = lexer.CurrentToken.GetIdentifier();
+                ReadOnlySpan<char> identifier = lexer.CurrentToken.GetIdentifier();
                 lexer.NextToken();
 
                 lexer.ValidateToken(ExpressionTokenKind.Equal);
@@ -89,7 +90,7 @@ namespace Microsoft.OData.UriParser
                 //      parameterValue = arrayOrObject
                 //                       / commonExpr
                 QueryToken parameterValue = parser.ParseExpression();
-                parameters.Add(new FunctionParameterToken(identifier, parameterValue));
+                parameters.Add(new FunctionParameterToken(identifier.ToString(), parameterValue));
 
                 // the above parser.ParseExpression() already moves to the next token, now get CurrentToken checking a comma followed by something
                 currentToken = lexer.CurrentToken;

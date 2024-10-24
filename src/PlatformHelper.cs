@@ -208,7 +208,7 @@ namespace Microsoft.OData.Edm
         /// <param name="text">String to be converted.</param>
         /// <param name="date">The converted date value</param>
         /// <returns>if parsing was successful</returns>
-        internal static bool TryConvertStringToDate(string text, out Date date)
+        internal static bool TryConvertStringToDate(ReadOnlySpan<char> text, out Date date)
         {
             date = default(Date);
             if (text == null || !PlatformHelper.DateValidator.IsMatch(text))
@@ -216,7 +216,9 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            return Date.TryParse(text, CultureInfo.InvariantCulture, out date);
+            bool b = DateTime.TryParse(text, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime dateTime);
+            date = dateTime;
+            return b;
         }
 
         /// <summary>
@@ -257,7 +259,7 @@ namespace Microsoft.OData.Edm
         /// <param name="text">String to be converted.</param>
         /// <param name="timeOfDay">Time of the day</param>
         /// <returns>Whether the value is a valid time of day</returns>
-        internal static bool TryConvertStringToTimeOfDay(string text, out TimeOfDay timeOfDay)
+        internal static bool TryConvertStringToTimeOfDay(ReadOnlySpan<char> text, out TimeOfDay timeOfDay)
         {
             timeOfDay = default(TimeOfDay);
             if (text == null || !PlatformHelper.TimeOfDayValidator.IsMatch(text))
@@ -265,7 +267,15 @@ namespace Microsoft.OData.Edm
                 return false;
             }
 
-            return TimeOfDay.TryParse(text, CultureInfo.InvariantCulture, out timeOfDay);
+            TimeSpan time;
+            bool b = TimeSpan.TryParse(text, CultureInfo.InvariantCulture, out time);
+            if (b && time.Ticks >= TimeOfDay.MinTickValue && time.Ticks <= TimeOfDay.MaxTickValue)
+            {
+                timeOfDay = new TimeOfDay(time.Ticks);
+                return true;
+            }
+
+            return false;
         }
 
         /// <summary>
@@ -306,13 +316,13 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String to be converted.</param>
         /// <returns>See documentation for method being accessed in the body of the method.</returns>
-        internal static DateTimeOffset ConvertStringToDateTimeOffset(string text)
+        internal static DateTimeOffset ConvertStringToDateTimeOffset(ReadOnlySpan<char> text)
         {
-            text = AddSecondsPaddingIfMissing(text);
-            DateTimeOffset dateTimeOffset = XmlConvert.ToDateTimeOffset(text);
+            string updatedText = AddSecondsPaddingIfMissing(text);
+            DateTimeOffset dateTimeOffset = XmlConvert.ToDateTimeOffset(updatedText);
 
             // Validate the time zone after we know that the text is a valid date time offset string.
-            ValidateTimeZoneInformationInDateTimeOffsetString(text);
+            ValidateTimeZoneInformationInDateTimeOffsetString(updatedText);
 
             return dateTimeOffset;
         }
@@ -354,7 +364,7 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String to be validated.</param>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1811:AvoidUncalledPrivateCode", Justification = "Code is shared among multiple assemblies and this method should be available as a helper in case it is needed in new code.")]
-        private static void ValidateTimeZoneInformationInDateTimeOffsetString(string text)
+        private static void ValidateTimeZoneInformationInDateTimeOffsetString(ReadOnlySpan<char> text)
         {
 
             // The XML DateTime pattern is described here: http://www.w3.org/TR/xmlschema-2/#dateTime
@@ -374,7 +384,7 @@ namespace Microsoft.OData.Edm
             }
 
             // No timezone specified, for example: "2012-12-21T15:01:23.1234567"
-            throw new FormatException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text));
+            throw new FormatException(Strings.PlatformHelper_DateTimeOffsetMustContainTimeZone(text.ToString()));
         }
 
         /// <summary>
@@ -382,9 +392,9 @@ namespace Microsoft.OData.Edm
         /// </summary>
         /// <param name="text">String that needs seconds padding</param>
         /// <returns>DateTime string after adding seconds padding</returns>
-        internal static string AddSecondsPaddingIfMissing(string text)
+        internal static string AddSecondsPaddingIfMissing(ReadOnlySpan<char> text)
         {
-            int indexOfT = text.IndexOf("T", System.StringComparison.Ordinal);
+            int indexOfT = text.IndexOf("T", StringComparison.Ordinal);
             const int ColonBeforeSecondsOffset = 6;
             int indexOfColonBeforeSeconds = indexOfT + ColonBeforeSecondsOffset;
 
@@ -392,10 +402,10 @@ namespace Microsoft.OData.Edm
             if (indexOfT > 0 &&
                 (text.Length == indexOfColonBeforeSeconds || text.Length > indexOfColonBeforeSeconds && text[indexOfColonBeforeSeconds] != ':'))
             {
-                text = text.Insert(indexOfColonBeforeSeconds, ":00");
+                return text.ToString().Insert(indexOfColonBeforeSeconds, ":00");
             }
 
-            return text;
+            return text.ToString();
         }
 
         /// <summary>

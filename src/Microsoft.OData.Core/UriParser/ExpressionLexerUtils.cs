@@ -46,7 +46,7 @@ namespace Microsoft.OData.Service.Parsing
         /// </summary>
         /// <param name="tokenText">Input token.</param>
         /// <returns>true if match found, false otherwise.</returns>
-        internal static bool IsInfinityOrNaNDouble(string tokenText)
+        internal static bool IsInfinityOrNaNDouble(ReadOnlySpan<char> tokenText)
         {
             Debug.Assert(tokenText != null, "tokenText != null");
 
@@ -62,7 +62,7 @@ namespace Microsoft.OData.Service.Parsing
                 {
                     if (tokenText[0] == ExpressionConstants.NaNLiteral[0])
                     {
-                        return String.CompareOrdinal(tokenText, 0, ExpressionConstants.NaNLiteral, 0, 3) == 0;
+                        return tokenText.Slice(0, 3).Equals(ExpressionConstants.NaNLiteral, StringComparison.Ordinal);
                     }
                 }
             }
@@ -76,13 +76,14 @@ namespace Microsoft.OData.Service.Parsing
         /// </summary>
         /// <param name="text">Text to look in.</param>
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
-        internal static bool IsInfinityLiteralDouble(string text)
+        internal static bool IsInfinityLiteralDouble(ReadOnlySpan<char> text)
         {
             Debug.Assert(text != null, "text != null");
 
             // COMPAT 30 - INFd/INFD and NaNd/NaND are rejected as Edm.Double literals
             // For now we behave exactly the same as WCF DS, we should consider "fixing" this bug in ODataLib, but it is technically a breaking change!
-            return String.CompareOrdinal(text, 0, ExpressionConstants.InfinityLiteral, 0, text.Length) == 0;
+
+            return text.Equals(ExpressionConstants.InfinityLiteral, StringComparison.Ordinal);
         }
 
         /// <summary>
@@ -91,7 +92,7 @@ namespace Microsoft.OData.Service.Parsing
         /// </summary>
         /// <param name="tokenText">Input token.</param>
         /// <returns>true if match found, false otherwise.</returns>
-        internal static bool IsInfinityOrNanSingle(string tokenText)
+        internal static bool IsInfinityOrNanSingle(ReadOnlySpan<char> tokenText)
         {
             Debug.Assert(tokenText != null, "tokenText != null");
 
@@ -104,7 +105,7 @@ namespace Microsoft.OData.Service.Parsing
                 else if (tokenText[0] == ExpressionConstants.NaNLiteral[0])
                 {
                     return (tokenText[3] == SingleSuffixLower || tokenText[3] == SingleSuffixUpper) &&
-                            String.CompareOrdinal(tokenText, 0, ExpressionConstants.NaNLiteral, 0, 3) == 0;
+                        tokenText.Slice(0, 3).Equals(ExpressionConstants.NaNLiteral, StringComparison.Ordinal);
                 }
             }
 
@@ -117,12 +118,12 @@ namespace Microsoft.OData.Service.Parsing
         /// </summary>
         /// <param name="text">Text to look in.</param>
         /// <returns>true if the substring is equal using an ordinal comparison; false otherwise.</returns>
-        internal static bool IsInfinityLiteralSingle(string text)
+        internal static bool IsInfinityLiteralSingle(ReadOnlySpan<char> text)
         {
             Debug.Assert(text != null, "text != null");
             return text.Length == 4 &&
                    (text[3] == SingleSuffixLower || text[3] == SingleSuffixUpper) &&
-                   String.CompareOrdinal(text, 0, ExpressionConstants.InfinityLiteral, 0, 3) == 0;
+                   text.Slice(0, 3).Equals(ExpressionConstants.InfinityLiteral, StringComparison.Ordinal);
         }
     }
 }
