@@ -70,6 +70,7 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
             PopulatePerson_PersonMetadata();
             PopulateEmployee_Manager();
             PopulateSpecialEmployee_Car();
+            PopulateBank();
         }
 
         private void ResetData()
@@ -124,6 +125,31 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
         public IList<Driver>? Drivers { get; private set; }
         public IList<License>? Licenses { get; private set; }
         public IList<PersonMetadata>? PersonMetadata { get; private set; }
+        public IList<Bank>? Banks { get; private set; }
+        public IList<BankAccount>? BankAccounts { get; private set; }
+
+        private void PopulateBank()
+        {
+            this.Banks =
+                [
+                 new (){
+                     Id = 300,
+                     Name = "ICM",
+                     Location = "KE",
+                     BankAccounts = new List<BankAccount>()
+                 }
+                ];
+
+        }
+
+        private void PopulateBankAccount()
+        {
+            this.AddBankAccountToBank(300, new BankAccount()
+            {
+                AccountNumber = "2002",
+                BankId = 300
+            });
+        }
 
         private void PopulateAllTypesSet()
         {
@@ -8408,6 +8434,23 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd
 
                         // Set the Login reference on the order
                         order.Login = login;
+                    }
+                }
+            }
+        }
+
+        private void AddBankAccountToBank(int bankId, params BankAccount[] bankAccounts)
+        {
+            var bank = this.Banks.FirstOrDefault(b => b.Id == bankId);
+
+            if (bank != null) 
+            {
+                foreach (var bankAccount in bankAccounts)
+                {
+                    if (bankAccount != null)
+                    {
+                        bankAccount.Bank = bank;
+                        bank.BankAccounts.Add(bankAccount);
                     }
                 }
             }
