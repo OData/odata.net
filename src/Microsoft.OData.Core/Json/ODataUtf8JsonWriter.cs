@@ -28,7 +28,7 @@ namespace Microsoft.OData.Json
     /// </summary>
     internal sealed partial class ODataUtf8JsonWriter : IJsonStreamWriter, IDisposable, IJsonStreamWriterAsync, IAsyncDisposable
     {
-        private const int DefaultBufferSize = 16 * 1024;
+        private const int DefaultBufferSize = 1024 * 1024; // Temporarily set to 1MB to test perf impact (default was 16 * 1024)
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
         private readonly static ReadOnlyMemory<byte> itemSeparator = new byte[] { (byte)',' };
