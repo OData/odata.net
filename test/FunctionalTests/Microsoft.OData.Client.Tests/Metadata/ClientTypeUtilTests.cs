@@ -1,4 +1,4 @@
-﻿//---------------------------------------------------------------------
+//---------------------------------------------------------------------
 // <copyright file="ClientTypeUtilTests.cs" company="Microsoft">
 //      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
 // </copyright>
@@ -17,6 +17,19 @@ namespace Microsoft.OData.Client.Tests.Metadata
     /// </summary>
     public class ClientTypeUtilTests
     {
+        [Theory]
+        [InlineData(typeof(Giraffe), true)]
+        [InlineData(typeof(Hippo), true)]
+        [InlineData(typeof(Ferret), true)]
+        [InlineData(typeof(Lion), false)]
+        public void IfTypeProperty_HasConventionalKey_TypeIsEntity(Type entityType, bool isEntity)
+        {
+            //Act
+            bool actualResult = ClientTypeUtil.TypeOrElementTypeIsEntity(entityType);
+            //Assert
+            Assert.Equal(actualResult, isEntity);
+        }
+
         [Fact]
         public void IFTypeProperty_HasKeyAttribute_TypeIsEntity()
         {
@@ -214,5 +227,37 @@ namespace Microsoft.OData.Client.Tests.Metadata
             public int EmpTypeId { get; set; }
         }
 
+        public class Giraffe
+        {
+            /// <summary>
+            /// Conventional Id Key property
+            /// </summary>
+            public int Id { get; set; }
+            public string Name { get; set; }
+        }
+
+        public class Hippo
+        {
+            /// <summary>
+            /// Conventional {TypeName + Id} Key Property
+            /// </summary>
+            public int HippoId { get; set; }
+            public double Weight { get; set; }
+        }
+
+        public class Ferret
+        {
+            /// <summary>
+            /// Conventional {TypeName + Id} Key Property with odd casing
+            /// </summary>
+            public int FeRReTID { get; set; }
+            public double Weight { get; set; }
+        }
+
+        public class Lion
+        {
+            public int SomeId { get; set; }
+            public string Name { get; set; }
+        }
     }
 }
