@@ -121,7 +121,7 @@ namespace Microsoft.OData.Json
                 await this.textWriter.DisposeAsync();
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
 
             CheckIfSeparatorNeeded();
             CheckIfManualValueAtArrayStart();
@@ -347,7 +347,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    this.jsonWriter.FlushIfBufferThresholdReached();
+                    this.jsonWriter.DrainBufferIfThresholdReached();
                 }
             }
 
@@ -397,7 +397,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    await this.jsonWriter.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+                    await this.jsonWriter.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
                 }
             }
 
@@ -441,7 +441,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    this.jsonWriter.FlushIfBufferThresholdReached();
+                    this.jsonWriter.DrainBufferIfThresholdReached();
                 }
             }
 
@@ -485,7 +485,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    await this.jsonWriter.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+                    await this.jsonWriter.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
                 }
             }
 

@@ -28,7 +28,7 @@ namespace Microsoft.OData.Json
     /// </summary>
     internal sealed partial class ODataUtf8JsonWriter : IJsonStreamWriter, IDisposable, IJsonStreamWriterAsync, IAsyncDisposable
     {
-        private const int DefaultBufferSize = 1024 * 1024; // Temporarily set to 1MB to test perf impact (default was 16 * 1024)
+        private const int DefaultBufferSize = 16 * 1024;
         private readonly float bufferFlushThreshold;
         private readonly static ReadOnlyMemory<byte> parentheses = new byte[] { (byte)'(', (byte)')' };
         private readonly static ReadOnlyMemory<byte> itemSeparator = new byte[] { (byte)',' };
@@ -156,8 +156,12 @@ namespace Microsoft.OData.Json
             this.writeStream.Flush();
         }
 
+        /// <summary>
+        /// If buffer threshold is reached, writes the buffered data
+        /// to the stream and clears the buffer.
+        /// </summary>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void FlushIfBufferThresholdReached()
+        private void DrainBufferIfThresholdReached()
         {
             if ((this.utf8JsonWriter.BytesPending + this.bufferWriter.WrittenCount) >= this.bufferFlushThreshold)
             {
@@ -187,21 +191,21 @@ namespace Microsoft.OData.Json
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[..1].Span);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WritePaddingFunctionName(string functionName)
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void EndPaddingFunctionScope()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[1..2].Span);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void StartObjectScope()
@@ -209,14 +213,14 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
             this.utf8JsonWriter.WriteStartObject();
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void EndObjectScope()
         {
             this.utf8JsonWriter.WriteEndObject();
             this.ExitScope();
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void StartArrayScope()
@@ -224,35 +228,35 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
             this.utf8JsonWriter.WriteStartArray();
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void EndArrayScope()
         {
             this.utf8JsonWriter.WriteEndArray();
             this.ExitScope();
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteName(string name)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WritePropertyName(name);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(bool value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteBooleanValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(int value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(float value)
@@ -276,14 +280,14 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(short value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(long value)
@@ -298,7 +302,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(double value)
@@ -321,14 +325,14 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(Guid value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(decimal value)
@@ -343,7 +347,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(DateTimeOffset value)
@@ -364,7 +368,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteStringValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(TimeSpan value)
@@ -372,35 +376,35 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.utf8JsonWriter.WriteStringValue(stringValue);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(Date value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(TimeOfDay value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(byte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(sbyte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteValue(string value)
@@ -420,7 +424,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteStringValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         /// <summary>
@@ -463,7 +467,7 @@ namespace Microsoft.OData.Json
                 }
 
                 // Flush the buffer if needed
-                this.FlushIfBufferThresholdReached();
+                this.DrainBufferIfThresholdReached();
             }
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -603,7 +607,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
 
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         /// <summary>
@@ -631,7 +635,7 @@ namespace Microsoft.OData.Json
 
                 Base64EncodeAndWriteChunk(chunk, isFinalBlock, out bytesNotWrittenFromPreviousChunk);
 
-                this.FlushIfBufferThresholdReached();
+                this.DrainBufferIfThresholdReached();
             }
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -668,13 +672,13 @@ namespace Microsoft.OData.Json
         {
             this.WriteSeparatorIfNecessary();
             value.WriteTo(this.utf8JsonWriter);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         public void WriteRawValue(string rawValue)
         {
             this.WriteRawValueCore(rawValue);
-            this.FlushIfBufferThresholdReached();
+            this.DrainBufferIfThresholdReached();
         }
 
         /// <summary>
@@ -888,21 +892,21 @@ namespace Microsoft.OData.Json
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[..1].Span);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WritePaddingFunctionNameAsync(string functionName)
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(Encoding.UTF8.GetBytes(functionName));
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task EndPaddingFunctionScopeAsync()
         {
             this.CommitUtf8JsonWriterContentsToBuffer();
             this.bufferWriter.Write(parentheses[1..2].Span);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task StartObjectScopeAsync()
@@ -910,14 +914,14 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterObjectScope();
             this.utf8JsonWriter.WriteStartObject();
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task EndObjectScopeAsync()
         {
             this.utf8JsonWriter.WriteEndObject();
             this.ExitScope();
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task StartArrayScopeAsync()
@@ -925,35 +929,35 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             this.EnterArrayScope();
             this.utf8JsonWriter.WriteStartArray();
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task EndArrayScopeAsync()
         {
             this.utf8JsonWriter.WriteEndArray();
             this.ExitScope();
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteNameAsync(string name)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WritePropertyName(name);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(bool value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteBooleanValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(int value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(float value)
@@ -976,14 +980,14 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(short value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(long value)
@@ -998,7 +1002,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(double value)
@@ -1021,14 +1025,14 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(Guid value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(decimal value)
@@ -1043,7 +1047,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteNumberValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(DateTimeOffset value)
@@ -1065,7 +1069,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteStringValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeSpan value)
@@ -1073,35 +1077,35 @@ namespace Microsoft.OData.Json
             this.WriteSeparatorIfNecessary();
             string stringValue = EdmValueWriter.DurationAsXml(value);
             this.utf8JsonWriter.WriteStringValue(stringValue);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(Date value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(TimeOfDay value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteStringValue(value.ToString());
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(byte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(sbyte value)
         {
             this.WriteSeparatorIfNecessary();
             this.utf8JsonWriter.WriteNumberValue(value);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteValueAsync(string value)
@@ -1121,7 +1125,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteStringValue(value.ToString());
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1165,7 +1169,7 @@ namespace Microsoft.OData.Json
                 }
 
                 // Flush the buffer if needed
-                await this.FlushIfBufferThresholdReachedAsync();
+                await this.DrainBufferIfThresholdReachedAsync();
             }
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -1194,7 +1198,7 @@ namespace Microsoft.OData.Json
                 this.utf8JsonWriter.WriteBase64StringValue(value);
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         /// <summary>
@@ -1222,7 +1226,7 @@ namespace Microsoft.OData.Json
 
                 Base64EncodeAndWriteChunk(chunk.Span, isFinalBlock, out bytesNotWrittenFromPreviousChunk);
 
-                await FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+                await DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
             }
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
@@ -1238,13 +1242,13 @@ namespace Microsoft.OData.Json
         {
             this.WriteSeparatorIfNecessary();
             value.WriteTo(utf8JsonWriter);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task WriteRawValueAsync(string rawValue)
         {
             this.WriteRawValueCore(rawValue);
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
         }
 
         public async Task FlushAsync()
@@ -1283,7 +1287,12 @@ namespace Microsoft.OData.Json
             this.Dispose(false);
         }
 
-        private async ValueTask FlushIfBufferThresholdReachedAsync()
+        /// <summary>
+        /// If the buffer threshold is reached, write the buffered data
+        /// to the underlying stream asynchronously, then clear the buffer.
+        /// </summary>
+        /// <returns>ValueTask representing the eventual completion of the asynchronous operation.</returns>
+        private async ValueTask DrainBufferIfThresholdReachedAsync()
         {
             if ((this.utf8JsonWriter.BytesPending + this.bufferWriter.WrittenCount) >= this.bufferFlushThreshold)
             {
