@@ -589,7 +589,7 @@ namespace Microsoft.OData.Tests.Json
         #endregion
 
         [Fact]
-        public void FlushesWhenBufferThresholdIsReached()
+        public void WritesToStreamWhenBufferThresholdIsReached()
         {
             using var stream = new MemoryStream();
             // set buffer size to 10, in current implementation, buffer threshold will be 9
@@ -617,7 +617,7 @@ namespace Microsoft.OData.Tests.Json
         }
 
         [Fact]
-        public void FlushesWhenBufferThresholdIsReached_WithRawValues()
+        public void WritesToStreamWhenBufferThresholdIsReached_WithRawValues()
         {
             using var stream = new MemoryStream();
             // set buffer size to 10, in current implementation, buffer threshold will be 9
@@ -672,6 +672,34 @@ namespace Microsoft.OData.Tests.Json
             using var jsonWriter = new ODataUtf8JsonWriter(stream, true, Encoding.UTF8, leaveStreamOpen: true);
             jsonWriter.Flush();
             Assert.Equal(0, stream.Length);
+        }
+
+        [Fact]
+        public void WritingWhenBufferIsFullShouldNotForceFlush()
+        {
+            using var finalStream = new MemoryStream();
+            using var bufStream = new BufferedStream(finalStream, bufferSize: 1024);
+
+            using var jsonWriter = new ODataUtf8JsonWriter(bufStream, true, Encoding.UTF8, bufferSize: 16, leaveStreamOpen: true);
+            jsonWriter.StartArrayScope();
+
+            jsonWriter.WriteValue("foofoo");
+
+            // should have written to stream because we have not reached the writer's buffer threshold
+            Assert.Equal(0, bufStream.Position);
+            Assert.Equal(0, finalStream.Position);
+
+            jsonWriter.WriteValue("foofoofoofoo");
+            jsonWriter.EndArrayScope();
+
+            // should write to bufStream since we exceeded the threshold
+            Assert.Equal(24, bufStream.Position);
+            // should not have written to final stream because we have not reached intermediate stream's buffer size
+            Assert.Equal(0, finalStream.Position);
+
+            jsonWriter.Flush();
+            // should flush content to final stream
+            Assert.Equal(@"[""foofoo"",""foofoofoofoo""]", this.ReadStream(jsonWriter, finalStream, Encoding.UTF8));
         }
 
         [Theory]
