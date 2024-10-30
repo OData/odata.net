@@ -685,7 +685,7 @@ namespace Microsoft.OData.Tests.Json
 
             jsonWriter.WriteValue("foofoo");
 
-            // should have written to stream because we have not reached the writer's buffer threshold
+            // should not have written to stream because we have not reached the writer's buffer threshold
             Assert.Equal(0, bufStream.Position);
             Assert.Equal(0, finalStream.Position);
 
