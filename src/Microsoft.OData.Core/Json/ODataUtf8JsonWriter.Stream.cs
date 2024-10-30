@@ -83,7 +83,7 @@ namespace Microsoft.OData.Json
                 this.binaryValueStream = null;
             }
 
-            await this.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+            await this.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
 
             this.bufferWriter.Write(this.DoubleQuote.Slice(0, 1).Span);
 
@@ -282,7 +282,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    this.jsonWriter.FlushIfBufferThresholdReached();
+                    this.jsonWriter.DrainBufferIfThresholdReached();
                 }
             }
 
@@ -328,7 +328,7 @@ namespace Microsoft.OData.Json
                     }
 
                     // Flush the writer if the buffer threshold is reached
-                    await this.jsonWriter.FlushIfBufferThresholdReachedAsync().ConfigureAwait(false);
+                    await this.jsonWriter.DrainBufferIfThresholdReachedAsync().ConfigureAwait(false);
                 }
             }
 
