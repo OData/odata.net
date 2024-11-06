@@ -7,6 +7,7 @@
 using Microsoft.OData.Edm.Csdl;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.IO;
 using System.Linq;
@@ -105,6 +106,58 @@ namespace Microsoft.OData.Client.Tests.Tracking
             IEnumerable<Employee> employees = await query.ExecuteAsync();
 
             // Assert
+            Assert.Equal(expectedUri, query.ToString());
+            Assert.Equal(2, employees.Count());
+        }
+
+        [Fact]
+        public async Task DetachAndAttachEntity_WithEnumAsKey_DoNotThrowException()
+        {
+            // Arrange
+            var expectedUri = $"{ServiceRoot}/Employees";
+
+            string response = @"{
+    ""@odata.context"": ""http://localhost:8007/$metadata#Employees"",
+    ""value"": [
+        {
+            ""EmpNumber"": 1,
+            ""EmpType"": ""FullTime"",
+            ""OrgId"": 1,
+            ""Name"": ""John Doe""
+        },
+        {
+            ""EmpNumber"": 2,
+            ""EmpType"": ""PartTime"",
+            ""OrgId"": 1,
+            ""Name"": ""Jane Doe""
+        }
+    ]
+}";
+            SetupContextWithRequestPipeline(_defaultContext, response, "Employees");
+            _defaultContext.SendingRequest2 += (sender, args) =>
+            {
+                Assert.Equal(expectedUri, args.RequestMessage.Url.ToString());
+            };
+
+            // Act
+            var employeeCollection = new DataServiceCollection<Employee>(_defaultContext.Employees);
+
+            // Get the first entity from the context
+            object entity = _defaultContext.Entities.First().Entity;
+
+            // Remove the entity from the context
+            _defaultContext.Detach(entity);
+
+            // Attach the entity back to the context
+            var exception = Record.Exception(() => _defaultContext.AttachTo("Employees", entity));
+
+            // Assert
+            Assert.Null(exception);
+            Assert.Equal(2, employeeCollection.Count());
+
+            DataServiceQuery<Employee> query = _defaultContext.Employees;
+            IEnumerable<Employee> employees = await query.ExecuteAsync();
+
             Assert.Equal(expectedUri, query.ToString());
             Assert.Equal(2, employees.Count());
         }
@@ -274,7 +327,7 @@ namespace Microsoft.OData.Client.Tests.Tracking
     }
 
     [Key("EmpNumber", "EmpType", "OrgId")]
-    public class Employee : BaseEntityType
+    public class Employee : BaseEntityType, INotifyPropertyChanged
     {
         public int EmpNumber { get; set; }
 
@@ -287,6 +340,8 @@ namespace Microsoft.OData.Client.Tests.Tracking
 
         [ForeignKey("OrgId")]
         public virtual Organization Organization { get; set; }
+
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 
     public class Organization
