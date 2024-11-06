@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData.UriParser
 {
+    using Microsoft.OData.Edm;
     using System;
     using System.Collections.Generic;
     using System.Diagnostics;
@@ -32,6 +33,11 @@ namespace Microsoft.OData.UriParser
         /// If set to true, catches any ODataException thrown while trying to parse function arguments.
         /// </summary>
         private readonly bool restoreStateIfFail;
+
+        /// <summary>
+        /// If the function call is cast or isof, set to true.
+        /// </summary>
+        private bool isFunctionCallNameCastOrIsOf = false;
 
         /// <summary>
         /// Create a new FunctionCallParser.
@@ -100,6 +106,9 @@ namespace Microsoft.OData.UriParser
                 functionName = this.Lexer.CurrentToken.Span;
                 this.Lexer.NextToken();
             }
+
+            // This is used to set the parent of the next argument to the current argument for cast and isof functions.
+            isFunctionCallNameCastOrIsOf = functionName.SequenceEqual(ExpressionConstants.UnboundFunctionCast.AsSpan()) || functionName.SequenceEqual(ExpressionConstants.UnboundFunctionIsOf.AsSpan());
 
             FunctionParameterToken[] arguments = this.ParseArgumentListOrEntityKeyList(() => lexer.RestorePosition(position));
             if (arguments != null)
@@ -179,14 +188,28 @@ namespace Microsoft.OData.UriParser
         /// <returns>A list of FunctionParameterTokens representing each argument</returns>
         private List<FunctionParameterToken> ReadArgumentsAsPositionalValues()
         {
+            // Store the parent expression of the current argument.
+            Stack<QueryToken> expressionParents = new Stack<QueryToken>();
+
             List<FunctionParameterToken> argList = new List<FunctionParameterToken>();
             while (true)
             {
-                argList.Add(new FunctionParameterToken(null, this.parser.ParseExpression()));
+                // If we have a parent expression, we need to set the parent of the next argument to the current argument.
+                QueryToken parentExpression = expressionParents.Count > 0 ? expressionParents.Pop() : null;
+                QueryToken parameterToken = this.parser.ParseExpression();
+
+                // Set the parent of the parameterToken if necessary.
+                parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
+
+                argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
                 {
                     break;
                 }
+
+                // In case of comma, we need to parse the next argument
+                // but first we need to set the parent of the next argument to the current argument.
+                expressionParents.Push(parameterToken);
 
                 this.Lexer.NextToken();
             }
@@ -212,6 +235,36 @@ namespace Microsoft.OData.UriParser
             }
 
             return false;
+        }
+
+        /// <summary>
+        /// Sets the parent of the parameterToken if the parentExpression is not null and the function call is cast or isof.
+        /// </summary>
+        /// <param name="parentExpression">The parent expression.</param>
+        /// <param name="parameterToken">The parameter token.</param>
+        /// <returns>The updated parameter token.</returns>
+        private QueryToken SetParentForCurrentParameterToken(QueryToken parentExpression, QueryToken parameterToken)
+        {
+            if (parentExpression != null && isFunctionCallNameCastOrIsOf)
+            {
+                // If the parameter is a dotted identifier, we need to set the parent of the next argument to the current argument.
+                // But if it is primitive literal, no need to set the parent.
+                if (parameterToken is DottedIdentifierToken dottedIdentifierToken && dottedIdentifierToken.NextToken == null)
+                {
+                    // Check if the dottedIdentifier is a primitive type
+                    EdmPrimitiveTypeKind primitiveTypeKind = EdmCoreModel.Instance.GetPrimitiveTypeKind(dottedIdentifierToken.Identifier);
+
+                    // If the dottedIdentifier is not a primitive type, set the parent of the next argument to the current argument.
+                    //  cast(1, Edm.Int32) -> Edm.Int32 is a dottedIdentifierToken but it is a primitive type
+                    if (primitiveTypeKind == EdmPrimitiveTypeKind.None)
+                    {
+                        dottedIdentifierToken.NextToken = parentExpression;
+                        parameterToken = dottedIdentifierToken;
+                    }
+                }
+            }
+
+            return parameterToken;
         }
     }
 }
