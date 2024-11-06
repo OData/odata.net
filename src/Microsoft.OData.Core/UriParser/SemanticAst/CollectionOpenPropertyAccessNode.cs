@@ -29,18 +29,33 @@ namespace Microsoft.OData.UriParser
         private readonly string name;
 
         /// <summary>
+        /// The value containing the property.
+        /// </summary>
+        private readonly IEdmCollectionTypeReference collectionType;
+
+        /// <summary>
         /// Constructs a new <see cref="CollectionOpenPropertyAccessNode"/>.
         /// </summary>
         /// <param name="source">The value containing the property.</param>
         /// <param name="openPropertyName">The name of the open collection property to be bound outside the EDM model.</param>
         /// <exception cref="System.ArgumentNullException">Throws if the input source or openPropertyName is null.</exception>
-        public CollectionOpenPropertyAccessNode(SingleValueNode source, string openPropertyName)
+        public CollectionOpenPropertyAccessNode(SingleValueNode source, string openPropertyName) : this(source, openPropertyName, null) { }
+
+        /// <summary>
+        /// Constructs a new <see cref="CollectionOpenPropertyAccessNode"/>.
+        /// </summary>
+        /// <param name="source">The value containing the property.</param>
+        /// <param name="openPropertyName">The name of the open collection property to be bound outside the EDM model.</param>
+        /// <param name="collectionType">The type of the open collection property.</param>
+        /// <exception cref="System.ArgumentNullException">Throws if the input source or openPropertyName is null.</exception>
+        public CollectionOpenPropertyAccessNode(SingleValueNode source, string openPropertyName, IEdmCollectionTypeReference collectionType)
         {
             ExceptionUtils.CheckArgumentNotNull(source, "source");
             ExceptionUtils.CheckArgumentNotNull(openPropertyName, "openPropertyName");
 
             this.source = source;
             this.name = openPropertyName;
+            this.collectionType = collectionType;
         }
 
         /// <summary>
@@ -64,7 +79,7 @@ namespace Microsoft.OData.UriParser
         /// </summary>
         public override IEdmTypeReference ItemType
         {
-            get { return null; }
+            get { return collectionType?.ElementType(); }
         }
 
         /// <summary>
@@ -75,7 +90,7 @@ namespace Microsoft.OData.UriParser
         /// </remarks>
         public override IEdmCollectionTypeReference CollectionType
         {
-            get { return null; }
+            get { return collectionType; }
         }
 
         /// <summary>

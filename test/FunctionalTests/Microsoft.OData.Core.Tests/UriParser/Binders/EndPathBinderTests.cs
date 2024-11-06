@@ -208,7 +208,7 @@ namespace Microsoft.OData.Tests.UriParser.Binders
         // GeneratePropertyAccessQueryNodeForOpenTypes tests
 
         [Fact]
-        public void ShouldThrowNotImplementedIfTypeIsOpen()
+        public void ShouldSucceedIfTypeIsOpen()
         {
             const string OpenPropertyName = "Style";
             var token = new EndPathToken(OpenPropertyName, new RangeVariableToken("a"));
