@@ -780,8 +780,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             SingleValueFunctionCallNode singleValueFunctionCallNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("isof");
-            ResourceRangeVariableReferenceNode rangeVariableReferece = singleValueFunctionCallNode.Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode("$it");
-            Assert.Equal("Fully.Qualified.Namespace.Person", rangeVariableReferece.GetEdmTypeReference().FullName()); // $it is of type Person
+            ResourceRangeVariableReferenceNode rangeVariableReference = singleValueFunctionCallNode.Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode("$it");
+            Assert.Equal("Fully.Qualified.Namespace.Person", rangeVariableReference.GetEdmTypeReference().FullName()); // $it is of type Person
 
             var constantNode = singleValueFunctionCallNode.Parameters.ElementAt(1).ShouldBeConstantQueryNode("Fully.Qualified.Namespace.Employee");
             Assert.Equal("Fully.Qualified.Namespace.Employee", constantNode.Value); // 'Fully.Qualified.Namespace.Employee' is the type parameter
@@ -798,8 +798,8 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
             // Assert
             SingleValueFunctionCallNode singleValueFunctionCallNode = filter.Expression.ShouldBeSingleValueFunctionCallQueryNode("isof");
-            ResourceRangeVariableReferenceNode rangeVariableReferece = singleValueFunctionCallNode.Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode("$it");
-            Assert.Equal("Fully.Qualified.Namespace.Person", rangeVariableReferece.GetEdmTypeReference().FullName()); // $it is of type Person
+            ResourceRangeVariableReferenceNode rangeVariableReference = singleValueFunctionCallNode.Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode("$it");
+            Assert.Equal("Fully.Qualified.Namespace.Person", rangeVariableReference.GetEdmTypeReference().FullName()); // $it is of type Person
 
             var singleResourceCastNode = singleValueFunctionCallNode.Parameters.ElementAt(1).ShouldBeSingleResourceCastNode(HardCodedTestModel.GetEmployeeTypeReference());
             Assert.Equal("Fully.Qualified.Namespace.Employee", singleResourceCastNode.TypeReference.FullName()); // Fully.Qualified.Namespace.Employee is the type parameter
