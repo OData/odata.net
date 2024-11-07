@@ -943,22 +943,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             ResourceRangeVariableReferenceNode resourceRangeVariable = function.Parameters.ElementAt(0).ShouldBeResourceRangeVariableReferenceNode("$it");
             Assert.Equal("Fully.Qualified.Namespace.Person", resourceRangeVariable.GetEdmTypeReference().FullName()); // $it is of type Person
 
+            string fullyQualifiedTypeName;
             QueryNode node = function.Parameters.ElementAt(1);
             if (node is SingleResourceCastNode singleResourceCastNode)
             {
                 node.ShouldBeSingleCastNode(HardCodedTestModel.GetEmployeeTypeReference());
-                Assert.Equal("Fully.Qualified.Namespace.Employee", singleResourceCastNode.TypeReference.FullName()); // Fully.Qualified.Namespace.Employee is the type parameter
-            }
-            else if (node is ConstantNode constantNode)
-            {
-                node.ShouldBeConstantQueryNode("Fully.Qualified.Namespace.Employee");
-                Assert.Equal("Fully.Qualified.Namespace.Employee", constantNode.Value); // Fully.Qualified.Namespace.Employee is the type parameter
+                fullyQualifiedTypeName = singleResourceCastNode.TypeReference.FullName();
             }
             else
             {
-                Assert.True(false, "Expected SingleResourceCastNode or ConstantNode");
+                ConstantNode constantNode = node.ShouldBeConstantQueryNode("Fully.Qualified.Namespace.Employee");
+                fullyQualifiedTypeName = constantNode.Value as string;
             }
 
+            Assert.Equal("Fully.Qualified.Namespace.Employee", fullyQualifiedTypeName); // Fully.Qualified.Namespace.Employee is the type parameter
             Assert.IsType<BinaryOperatorNode>(filter.Expression).Right.ShouldBeConstantQueryNode(345); // 345 is the right operand
         }
 
@@ -979,22 +977,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             SingleComplexNode complexNode = function.Parameters.ElementAt(0).ShouldBeSingleComplexNode(HardCodedTestModel.GetPersonAddressProp());
             Assert.Equal("Fully.Qualified.Namespace.Address", complexNode.GetEdmTypeReference().FullName()); // MyAddress is of type Address
 
+            string fullyQualifiedTypeName;
             QueryNode node = function.Parameters.ElementAt(1);
             if (node is SingleResourceCastNode singleResourceCastNode)
             {
                 node.ShouldBeSingleResourceCastNode(HardCodedTestModel.GetHomeAddressReference());
-                Assert.Equal("Fully.Qualified.Namespace.HomeAddress", singleResourceCastNode.TypeReference.FullName()); // Fully.Qualified.Namespace.HomeAddress is the type parameter
-            }
-            else if (node is ConstantNode constantNode)
-            {
-                node.ShouldBeConstantQueryNode("Fully.Qualified.Namespace.HomeAddress");
-                Assert.Equal("Fully.Qualified.Namespace.HomeAddress", constantNode.Value); // Fully.Qualified.Namespace.HomeAddress is the type parameter
+                fullyQualifiedTypeName = singleResourceCastNode.TypeReference.FullName();
             }
             else
             {
-                Assert.True(false, "Expected SingleResourceCastNode or ConstantNode");
+                ConstantNode constantNode = node.ShouldBeConstantQueryNode("Fully.Qualified.Namespace.HomeAddress");
+                fullyQualifiedTypeName = constantNode.Value as string;
             }
 
+            Assert.Equal("Fully.Qualified.Namespace.HomeAddress", fullyQualifiedTypeName); // Fully.Qualified.Namespace.HomeAddress is the type parameter
             Assert.IsType<BinaryOperatorNode>(filter.Expression).Right.ShouldBeConstantQueryNode("H-1234");
         }
 
