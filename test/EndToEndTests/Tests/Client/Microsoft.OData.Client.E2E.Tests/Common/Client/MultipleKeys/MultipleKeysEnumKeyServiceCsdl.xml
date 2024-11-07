@@ -1,0 +1,41 @@
+﻿<edmx:Edmx xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx" Version="4.0">
+	<edmx:DataServices>
+		<Schema xmlns="http://docs.oasis-open.org/odata/ns/edm" Namespace="Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys">
+			<EntityType Name="EmployeeWithEnumKey">
+				<Key>
+					<PropertyRef Name="EmployeeNumber"/>
+					<PropertyRef Name="EmployeeType"/>
+				</Key>
+				<Property Name="EmployeeNumber" Type="Edm.Int32" Nullable="false"/>
+				<Property Name="EmployeeType" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys.EmployeeType" Nullable="false"/>
+				<Property Name="Name" Type="Edm.String" Nullable="false"/>
+				<Property Name="Salary" Type="Edm.Decimal" Nullable="false" Scale="Variable"/>
+				<Property Name="OrganizationId" Type="Edm.Int32" Nullable="false"/>
+				<NavigationProperty Name="Organization" Type="Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys.Organization" Nullable="false">
+					<ReferentialConstraint Property="OrganizationId" ReferencedProperty="Id"/>
+				</NavigationProperty>
+			</EntityType>
+			<EntityType Name="Organization">
+				<Key>
+					<PropertyRef Name="Id"/>
+				</Key>
+				<Property Name="Id" Type="Edm.Int32" Nullable="false"/>
+				<Property Name="Name" Type="Edm.String" Nullable="false"/>
+				<NavigationProperty Name="Employees" Type="Collection(Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys.EmployeeWithEnumKey)"/>
+			</EntityType>
+			<EnumType Name="EmployeeType">
+				<Member Name="FullTime" Value="0"/>
+				<Member Name="PartTime" Value="1"/>
+				<Member Name="Contractor" Value="2"/>
+			</EnumType>
+			<EntityContainer Name="Container">
+				<EntitySet Name="Employees" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys.EmployeeWithEnumKey">
+					<NavigationPropertyBinding Path="Organization" Target="Organizations"/>
+				</EntitySet>
+				<EntitySet Name="Organizations" EntityType="Microsoft.OData.Client.E2E.Tests.Common.Server.MultipleKeys.Organization">
+					<NavigationPropertyBinding Path="Employees" Target="Employees"/>
+				</EntitySet>
+			</EntityContainer>
+		</Schema>
+	</edmx:DataServices>
+</edmx:Edmx>
