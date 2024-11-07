@@ -1,2 +1,0 @@
-Microsoft.OData.UriParser.CollectionOpenPropertyAccessNode.CollectionOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmCollectionTypeReference collectionType) -> void
-Microsoft.OData.UriParser.SingleValueOpenPropertyAccessNode.SingleValueOpenPropertyAccessNode(Microsoft.OData.UriParser.SingleValueNode source, string openPropertyName, Microsoft.OData.Edm.IEdmTypeReference typeReference) -> void
