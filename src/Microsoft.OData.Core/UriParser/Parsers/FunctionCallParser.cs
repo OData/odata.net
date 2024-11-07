@@ -198,8 +198,11 @@ namespace Microsoft.OData.UriParser
                 QueryToken parentExpression = expressionParents.Count > 0 ? expressionParents.Pop() : null;
                 QueryToken parameterToken = this.parser.ParseExpression();
 
-                // Set the parent of the parameterToken if necessary.
-                parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
+                // If the function call is cast or isof, set the parent of the next argument to the current argument.
+                if (parentExpression != null && isFunctionCallNameCastOrIsOf)
+                {
+                    parameterToken = SetParentForCurrentParameterToken(parentExpression, parameterToken);
+                }
 
                 argList.Add(new FunctionParameterToken(null, parameterToken));
                 if (this.Lexer.CurrentToken.Kind != ExpressionTokenKind.Comma)
@@ -238,29 +241,29 @@ namespace Microsoft.OData.UriParser
         }
 
         /// <summary>
-        /// Sets the parent of the parameterToken if the parentExpression is not null and the function call is cast or isof.
+        /// Set the parent of the next argument to the current argument.
+        /// For example, in the following query:
+        ///     cast(Location, NS.HomeAddress) where Location is the parentExpression and NS.HomeAddress is the parameterToken.
+        ///     isof(Location, NS.HomeAddress) where Location is the parentExpression and NS.HomeAddress is the parameterToken.
         /// </summary>
-        /// <param name="parentExpression">The parent expression.</param>
-        /// <param name="parameterToken">The parameter token.</param>
+        /// <param name="parentExpression">The previous parameter token.</param>
+        /// <param name="parameterToken">The current parameter token.</param>
         /// <returns>The updated parameter token.</returns>
-        private QueryToken SetParentForCurrentParameterToken(QueryToken parentExpression, QueryToken parameterToken)
+        private static QueryToken SetParentForCurrentParameterToken(QueryToken parentExpression, QueryToken parameterToken)
         {
-            if (parentExpression != null && isFunctionCallNameCastOrIsOf)
+            // If the parameter is a dotted identifier, we need to set the parent of the next argument to the current argument.
+            // But if it is primitive literal, no need to set the parent.
+            if (parameterToken is DottedIdentifierToken dottedIdentifierToken && dottedIdentifierToken.NextToken == null)
             {
-                // If the parameter is a dotted identifier, we need to set the parent of the next argument to the current argument.
-                // But if it is primitive literal, no need to set the parent.
-                if (parameterToken is DottedIdentifierToken dottedIdentifierToken && dottedIdentifierToken.NextToken == null)
-                {
-                    // Check if the dottedIdentifier is a primitive type
-                    EdmPrimitiveTypeKind primitiveTypeKind = EdmCoreModel.Instance.GetPrimitiveTypeKind(dottedIdentifierToken.Identifier);
+                // Check if the dottedIdentifier is a primitive type
+                EdmPrimitiveTypeKind primitiveTypeKind = EdmCoreModel.Instance.GetPrimitiveTypeKind(dottedIdentifierToken.Identifier);
 
-                    // If the dottedIdentifier is not a primitive type, set the parent of the next argument to the current argument.
-                    //  cast(1, Edm.Int32) -> Edm.Int32 is a dottedIdentifierToken but it is a primitive type
-                    if (primitiveTypeKind == EdmPrimitiveTypeKind.None)
-                    {
-                        dottedIdentifierToken.NextToken = parentExpression;
-                        parameterToken = dottedIdentifierToken;
-                    }
+                // If the dottedIdentifier is not a primitive type, set the parent of the next argument to the current argument.
+                //  cast(1, Edm.Int32) -> Edm.Int32 is a dottedIdentifierToken but it is a primitive type
+                if (primitiveTypeKind == EdmPrimitiveTypeKind.None)
+                {
+                    dottedIdentifierToken.NextToken = parentExpression;
+                    parameterToken = dottedIdentifierToken;
                 }
             }
 
