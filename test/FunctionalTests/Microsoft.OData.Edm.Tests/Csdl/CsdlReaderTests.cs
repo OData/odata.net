@@ -2241,8 +2241,11 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             using var reader = XmlReader.Create(new StringReader(csdl));
             var model = CsdlReader.Parse(reader);
 
-            var someEnum = model.FindDeclaredType("name.space.someEnum") as IEdmElement;
+            var someEnum = model.FindDeclaredType("name.space.someEnum") as IEdmEnumType;
             AssertLineLocation(someEnum, 5, 8);
+
+            AssertLineLocation(
+                someEnum.Members.FirstOrDefault(m => m.Name == "disabled"), 11, 10);
 
             var otherEnum = model.FindDeclaredType("name.space.otherEnum") as IEdmElement;
             AssertLineLocation(otherEnum, 15, 8);
