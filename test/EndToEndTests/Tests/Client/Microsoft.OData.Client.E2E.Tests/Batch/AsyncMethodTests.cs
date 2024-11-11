@@ -77,14 +77,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch
             var response = await _context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch);
             Assert.Equal(2, response.Count());
 
-            var firstBankResponse = response.First() as ChangeOperationResponse;
-            var secondBankAccountResponse = response.Last() as ChangeOperationResponse;
+            var bankResponse = response.First() as ChangeOperationResponse;
+            var bankAccountResponse = response.Last() as ChangeOperationResponse;
 
-            Assert.NotNull(firstBankResponse);
-            Assert.NotNull(secondBankAccountResponse);
+            Assert.NotNull(bankResponse);
+            Assert.NotNull(bankAccountResponse);
 
-            Assert.Equal(201, firstBankResponse.StatusCode);
-            Assert.Equal(201, secondBankAccountResponse.StatusCode);
+            Assert.Equal(201, bankResponse.StatusCode);
+            Assert.Equal(201, bankAccountResponse.StatusCode);
         }
     }
 
