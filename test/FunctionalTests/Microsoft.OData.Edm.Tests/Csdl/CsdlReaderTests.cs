@@ -2217,12 +2217,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl
                   <edmx:DataServices>
                     <Schema Namespace="name.space" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
                       <EnumType
+
                         Name="someEnum">
                         <Member Name="notApplicable" Value="0" />
+
                         <Member Name="enabled" Value="1" />
                         <Member Name="disabled" Value="2" />
                         <Member Name="unknownFutureValue" Value="3" />
                       </EnumType>
+
                       <EnumType Name="otherEnum">
                         <Member Name="success" Value="0" />
                         <Member Name="failure" Value="1" />
@@ -2242,7 +2245,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             AssertLineLocation(someEnum, 5, 8);
 
             var otherEnum = model.FindDeclaredType("name.space.otherEnum") as IEdmElement;
-            AssertLineLocation(otherEnum, 12, 8);
+            AssertLineLocation(otherEnum, 15, 8);
         }
 
 
