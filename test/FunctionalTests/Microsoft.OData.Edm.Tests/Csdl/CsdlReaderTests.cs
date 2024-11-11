@@ -2207,6 +2207,134 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Null(geographyPointProperty.SpatialReferenceIdentifier);
         }
 
+        [Fact]
+        public void ShouldReportCorrectLineNumbersWithMultiLineElements()
+        {
+            string csdl =
+                """
+                <?xml version="1.0" encoding="utf-8"?>
+                <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+                  <edmx:DataServices>
+                    <Schema Namespace="name.space" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+                      <EnumType
+                        Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                        <Member Name="disabled" Value="2" />
+                        <Member Name="unknownFutureValue" Value="3" />
+                      </EnumType>
+                      <EnumType Name="otherEnum">
+                        <Member Name="success" Value="0" />
+                        <Member Name="failure" Value="1" />
+                        <Member Name="unknownFutureValue" Value="2" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </edmx:Edmx>
+                """;
+
+
+
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var model = CsdlReader.Parse(reader);
+
+            var someEnum = model.FindDeclaredType("name.space.someEnum") as IEdmElement;
+            AssertLineLocation(someEnum, 5, 8);
+
+            var otherEnum = model.FindDeclaredType("name.space.otherEnum") as IEdmElement;
+            AssertLineLocation(otherEnum, 12, 8);
+        }
+
+
+        [Fact]
+        public void ShouldReportCorrectLineNumbersWithMultiLineElementsAndMultipleSchemas()
+        {
+            string csdl =
+                """
+                <?xml version="1.0" encoding="utf-8"?>
+                <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+                  <edmx:DataServices>
+                    <Schema Namespace="ns.one" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+                      <EnumType
+                        Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+                        <Member Name="enabled" Value="1" />
+                        <Member Name="disabled" Value="2" />
+                        <Member Name="unknownFutureValue" Value="3" />
+                      </EnumType>
+                      <EnumType Name="otherEnum">
+                        <Member Name="success" Value="0" />
+                        <Member Name="failure"
+                          Value="1" />
+                        <Member Name="unknownFutureValue" Value="2" />
+                      </EnumType>
+                    </Schema>
+                    <Schema Namespace="ns.two" xmlns="http://docs.oasis-open.org/odata/ns/edm"
+                      xmlns:ags="http://aggregator.microsoft.com/internal">
+                      <EntityType
+                        Name="task">
+                        <Key>
+                          <PropertyRef Name="id" />
+                        </Key>
+                        <Property Name="id" Type="Edm.String" />
+                        <Property 
+                            Name="status"
+                            Type="ns.one.someEnum" />
+                        <Property Name="title" Type="Edm.String" />
+                      </EntityType>
+                        <EntityContainer Name="defaultContainer">
+                        <EntitySet Name="tasks" EntityType="ns.two.task"/>
+                      </EntityContainer>
+                    </Schema>
+                  </edmx:DataServices>
+                </edmx:Edmx>
+                """;
+
+
+
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var model = CsdlReader.Parse(reader);
+
+            AssertLineLocation(
+                model.FindDeclaredType("ns.one.someEnum"),
+                5,
+                8);
+
+            var otherEnum = model.FindDeclaredType("ns.one.otherEnum") as IEdmEnumType;
+
+            AssertLineLocation(
+                otherEnum,
+                12,
+                8);
+
+            AssertLineLocation(
+                otherEnum.Members.FirstOrDefault(m => m.Name == "unknownFutureValue"),
+                16,
+                10);
+
+            var task = model.FindDeclaredType("ns.two.task") as IEdmEntityType;
+
+            AssertLineLocation(
+                task,
+                21,
+                8);
+
+            AssertLineLocation(
+                task.DeclaredProperties.FirstOrDefault(p => p.Name == "title"),
+                30,
+                10);
+
+            AssertLineLocation(
+                model.EntityContainer,
+                32,
+                10);
+
+            AssertLineLocation(
+                model.FindDeclaredEntitySet("defaultContainer.tasks"),
+                33,
+                10);
+        }
+
         static void VerifyXmlModel(IEdmModel model, string csdl)
         {
             var stream = new MemoryStream();
@@ -2216,6 +2344,15 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             Assert.Empty(errors);
             stream.Position = 0;
             Assert.Contains(csdl, new StreamReader(stream).ReadToEnd());
+        }
+
+        private static void AssertLineLocation(IEdmElement element, int lineNumber, int position)
+        {
+            Assert.NotNull(element);
+            var location = element.Location() as CsdlLocation;
+            Assert.NotNull(location);
+            Assert.Equal(lineNumber, location.LineNumber);
+            Assert.Equal(position, location.LinePosition);
         }
     }
 }
