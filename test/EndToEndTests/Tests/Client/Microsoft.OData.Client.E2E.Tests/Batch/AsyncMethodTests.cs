@@ -75,8 +75,16 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch
 
             // Save both entities in a single batch request using JSON
             var response = await _context.SaveChangesAsync(SaveChangesOptions.BatchWithSingleChangeset | SaveChangesOptions.UseJsonBatch);
-            Assert.Equal(201, (response.First() as ChangeOperationResponse).StatusCode);
-            Assert.Equal(201, (response.Last() as ChangeOperationResponse).StatusCode);
+            Assert.Equal(2, response.Count());
+
+            var firstBankResponse = response.First() as ChangeOperationResponse;
+            var secondBankAccountResponse = response.Last() as ChangeOperationResponse;
+
+            Assert.NotNull(firstBankResponse);
+            Assert.NotNull(secondBankAccountResponse);
+
+            Assert.Equal(201, firstBankResponse.StatusCode);
+            Assert.Equal(201, secondBankAccountResponse.StatusCode);
         }
     }
 

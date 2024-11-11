@@ -5,6 +5,7 @@
 // </copyright>
 //------------------------------------------------------------------------------
 
+using Microsoft.OData.Client.E2E.Tests.Common.Server.EndToEnd;
 using Microsoft.OData.Edm;
 using Microsoft.OData.ModelBuilder;
 

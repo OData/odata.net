@@ -340,22 +340,4 @@ namespace Microsoft.OData.Client.E2E.Tests.Common.Server.Default
         public DateTimeOffset UpdatedTime { get; set; }
         public Dictionary<string, object>? DynamicProperties { get; set; } = new Dictionary<string, object>();
     }
-
-    [global::Microsoft.OData.Client.Key("Id")]
-    public class Bank
-    {
-        public int Id { get; set; }
-        public string Name { get; set; }
-        public string Location { get; set; }
-        public ICollection<BankAccount> BankAccounts { get; set; } = new List<BankAccount>();
-    }
-
-    [global::Microsoft.OData.Client.Key("Id")]
-    public class BankAccount
-    {
-        public int Id { get; set; }
-        public string AccountNumber { get; set; }
-
-        public Bank Bank { get; set; }
-    }
 }

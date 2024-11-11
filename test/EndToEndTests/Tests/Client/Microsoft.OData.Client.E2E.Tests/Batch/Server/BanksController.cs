@@ -21,14 +21,14 @@ namespace Microsoft.OData.Client.E2E.Tests.Batch.Server
         // POST: odata/Banks
         [EnableQuery]
         [HttpPost("odata/Banks")]
-        public IActionResult Post([FromBody] Bank bankd)
+        public IActionResult Post([FromBody] Bank bank)
         {
-            if (bankd == null)
+            if (bank == null)
             {
                 return BadRequest();
             }
-            _dataSource.Banks.Add(bankd);
-            return Created(bankd);
+            _dataSource.Banks.Add(bank);
+            return Created(bank);
         }
 
         // POST: /odata/$1/BankAccounts
