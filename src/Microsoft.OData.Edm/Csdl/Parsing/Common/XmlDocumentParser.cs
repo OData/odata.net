@@ -122,6 +122,13 @@ namespace Microsoft.OData.Edm.Csdl.Parsing.Common
                 {
                 }
             }
+            else if (this.reader.ReadState == ReadState.Initial)
+            {
+                // If the state is initial, perform a read to advance
+                // the state to Interactive so that future reads will
+                // correctly advance the reader.
+                this.reader.Read();
+            }
 
             // There must be a root element for all current artifacts
             if (this.reader.EOF)

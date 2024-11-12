@@ -652,22 +652,7 @@ namespace Microsoft.OData.Edm.Csdl
         private void ParseSchemaElement()
         {
             Debug.Assert(this.reader.LocalName == CsdlConstants.Element_Schema, "Must call ParseCsdlSchemaElement on Schema Element");
-
-            XmlReaderSettings settings = new XmlReaderSettings();
-            IXmlLineInfo lineInfo = this.reader as IXmlLineInfo;
-            if (lineInfo != null && lineInfo.HasLineInfo())
-            {
-                settings.LineNumberOffset = lineInfo.LineNumber - 1;
-                settings.LinePositionOffset = lineInfo.LinePosition - 2;
-            }
-
-            using (StringReader sr = new StringReader(this.reader.ReadOuterXml()))
-            {
-                using (XmlReader xr = XmlReader.Create(sr, settings))
-                {
-                    this.csdlParser.AddReader(xr, this.source);
-                }
-            }
+            this.csdlParser.AddReader(this.reader, this.source);
         }
 
         private void RaiseEmptyFile()
