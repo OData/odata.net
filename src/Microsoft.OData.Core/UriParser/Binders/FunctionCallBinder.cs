@@ -240,9 +240,9 @@ namespace Microsoft.OData.UriParser
                 QueryNode argumentNode;
 
                 // If the function is IsOf and the argument is a dotted identifier, we should bind it as a single resource node
-                if ((functionCallToken.Name == ExpressionConstants.UnboundFunctionIsOf || functionCallToken.Name == ExpressionConstants.UnboundFunctionCast) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                if (UnboundFunctionNames.Contains(functionCallToken.Name) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
                 {
-                    argumentNode = this.TryBindDottedIdentifierAsIsOfFunctionCall(dottedIdentifier);
+                    argumentNode = this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier);
                 }
                 else
                 {
@@ -449,7 +449,7 @@ namespace Microsoft.OData.UriParser
         /// <param name="dottedIdentifierToken">The dotted identifier token to bind.</param>
         /// <returns>A <see cref="QueryNode"/> representing the bound single resource node.</returns>
         /// <exception cref="ODataException">Thrown when the token cannot be bound as a single resource node.</exception>
-        private QueryNode TryBindDottedIdentifierAsIsOfFunctionCall(DottedIdentifierToken dottedIdentifierToken)
+        private QueryNode TryBindDottedIdentifierForIsOfOrCastFunctionCall(DottedIdentifierToken dottedIdentifierToken)
         {
             QueryNode parent = null;
             IEdmType parentType = null;
