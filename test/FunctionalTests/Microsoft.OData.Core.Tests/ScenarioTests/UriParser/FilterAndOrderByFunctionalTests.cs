@@ -844,27 +844,31 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
-        [InlineData("isof(Fully.Qualified.Namespace.Pet1)", "Fully.Qualified.Namespace.Pet1")]
-        [InlineData("cast(Fully.Qualified.Namespace.HomeAddress)/City eq 'City1'", "Fully.Qualified.Namespace.HomeAddress")]
-        public void IsOfAndCastFunctionsWithSingleParameterWithoutSingleQuotes_WithIncorrectType_ThrowException(string filterQuery, string fullyQualifiedTypeName)
+        [InlineData("isof(Fully.Qualified.Namespace.Pet1)")]
+        [InlineData("isof(MyAddress,Fully.Qualified.Namespace.Pet1)")]
+        [InlineData("isof(null,Fully.Qualified.Namespace.Person)")]
+        [InlineData("isof('',Fully.Qualified.Namespace.Person)")]
+        public void IsOfFunctionsWithUnquotedTypeParameter_WithIncorrectType_DoesNotThrowException(string filterQuery)
         {
             // Arrange & Act
-            Action test = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var exception = Record.Exception(() => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
 
             // Assert
-            test.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(fullyQualifiedTypeName, "Fully.Qualified.Namespace.Person"));
+            Assert.Null(exception);
         }
 
         [Theory]
-        [InlineData("isof(MyAddress,Fully.Qualified.Namespace.Pet1)", "Fully.Qualified.Namespace.Pet1")]
-        [InlineData("cast(MyAddress,Fully.Qualified.Namespace.Employee)/WorkID eq 345", "Fully.Qualified.Namespace.Employee")]
-        public void IsOfAndCastFunctionsWithTwoParameterWhereTypeParameterIsWithoutSingleQuotes_WithIncorrectType_ThrowException(string filterQuery, string fullyQualifiedTypeName)
+        [InlineData("cast(Fully.Qualified.Namespace.HomeAddress)/City eq 'City1'")]
+        [InlineData("cast(MyAddress,Fully.Qualified.Namespace.Employee)/WorkID eq 345")]
+        [InlineData("cast(null,Fully.Qualified.Namespace.Employee)/WorkID eq 345")]
+        [InlineData("cast('',Fully.Qualified.Namespace.Employee)/WorkID eq 345")]
+        public void CastFunctionWithUnquotedTypeParameter_WithIncorrectType_DoesNotThrowException(string filterQuery)
         {
             // Arrange & Act
-            Action test = () => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet());
+            var exception = Record.Exception(() => ParseFilter(filterQuery, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet()));
 
             // Assert
-            test.Throws<ODataException>(Strings.MetadataBinder_HierarchyNotFollowed(fullyQualifiedTypeName, "Fully.Qualified.Namespace.Address"));
+            Assert.Null(exception);
         }
 
         [Fact]
