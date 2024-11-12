@@ -26,6 +26,7 @@ csdl
 
 
 
+TODO avoid the c# stuff for now?
 
 serialize and deserialize
 
