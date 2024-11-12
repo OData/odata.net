@@ -234,7 +234,24 @@ namespace Microsoft.OData.UriParser
 
             // If there isn't, bind as Uri function
             // Bind all arguments
-            List<QueryNode> argumentNodes = new List<QueryNode>(functionCallToken.Arguments.Select(ar => this.bindMethod(ar)));
+            List<QueryNode> argumentNodes = new List<QueryNode>();
+            foreach (FunctionParameterToken argument in functionCallToken.Arguments)
+            {
+                QueryNode argumentNode;
+
+                // If the function is IsOf and the argument is a dotted identifier, we should bind it as a single resource node
+                if ((functionCallToken.Name == ExpressionConstants.UnboundFunctionIsOf || functionCallToken.Name == ExpressionConstants.UnboundFunctionCast) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                {
+                    argumentNode = this.TryBindDottedIdentifierAsIsOfFunctionCall(dottedIdentifier);
+                }
+                else
+                {
+                    argumentNode = this.bindMethod(argument);
+                }
+
+                argumentNodes.Add(argumentNode);
+            }
+
             return BindAsUriFunction(functionCallToken, argumentNodes);
         }
 
@@ -424,6 +441,54 @@ namespace Microsoft.OData.UriParser
             }
 
             return true;
+        }
+
+        /// <summary>
+        /// Binds a <see cref="DottedIdentifierToken"/> for the 'isof' and 'cast' function calls.
+        /// </summary>
+        /// <param name="dottedIdentifierToken">The dotted identifier token to bind.</param>
+        /// <returns>A <see cref="QueryNode"/> representing the bound single resource node.</returns>
+        /// <exception cref="ODataException">Thrown when the token cannot be bound as a single resource node.</exception>
+        private QueryNode TryBindDottedIdentifierAsIsOfFunctionCall(DottedIdentifierToken dottedIdentifierToken)
+        {
+            QueryNode parent = null;
+            IEdmType parentType = null;
+
+            if (state.ImplicitRangeVariable != null)
+            {
+                if (dottedIdentifierToken.NextToken == null)
+                {
+                    parent = NodeFactory.CreateRangeVariableReferenceNode(state.ImplicitRangeVariable);
+                    parentType = state.ImplicitRangeVariable.TypeReference.Definition;
+                }
+                else
+                {
+                    parent = this.bindMethod(dottedIdentifierToken.NextToken);
+                    parentType = parent.GetEdmType();
+                }
+            }
+
+            SingleResourceNode parentAsSingleResource = parent as SingleResourceNode;
+            IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
+            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
+
+            if (childStructuredType == null)
+            {
+                return this.bindMethod(dottedIdentifierToken);
+            }
+
+            if (parentType != null)
+            {
+                this.state.ParsedSegments.Add(new TypeSegment(childType, parentType, null));
+            }
+
+            CollectionResourceNode parentAsCollection = parent as CollectionResourceNode;
+            if (parentAsCollection != null)
+            {
+                return new CollectionResourceCastNode(parentAsCollection, childStructuredType);
+            }
+
+            return new SingleResourceCastNode(parentAsSingleResource, childStructuredType);
         }
 
         /// <summary>
