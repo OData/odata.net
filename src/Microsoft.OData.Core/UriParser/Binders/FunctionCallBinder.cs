@@ -468,7 +468,6 @@ namespace Microsoft.OData.UriParser
                 }
             }
 
-            SingleResourceNode parentAsSingleResource = parent as SingleResourceNode;
             IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
             IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
 
@@ -482,13 +481,12 @@ namespace Microsoft.OData.UriParser
                 this.state.ParsedSegments.Add(new TypeSegment(childType, parentType, null));
             }
 
-            CollectionResourceNode parentAsCollection = parent as CollectionResourceNode;
-            if (parentAsCollection != null)
+            if (parent is CollectionResourceNode parentAsCollection)
             {
                 return new CollectionResourceCastNode(parentAsCollection, childStructuredType);
             }
 
-            return new SingleResourceCastNode(parentAsSingleResource, childStructuredType);
+            return new SingleResourceCastNode(parent as SingleResourceNode, childStructuredType);
         }
 
         /// <summary>
