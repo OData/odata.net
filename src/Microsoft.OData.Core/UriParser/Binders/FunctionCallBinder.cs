@@ -234,12 +234,10 @@ namespace Microsoft.OData.UriParser
 
             // If there isn't, bind as Uri function
             // Bind all arguments
-            List<QueryNode> argumentNodes = new List<QueryNode>();
-            foreach (FunctionParameterToken argument in functionCallToken.Arguments)
+            List<QueryNode> argumentNodes = new List<QueryNode>(functionCallToken.Arguments.Select(argument =>
             {
                 QueryNode argumentNode;
-
-                // If the function is IsOf and the argument is a dotted identifier, we should bind it as a single resource node
+                // If the function is IsOf or Cast and the argument is a dotted identifier, we need to bind it differently
                 if (UnboundFunctionNames.Contains(functionCallToken.Name) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
                 {
                     argumentNode = this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier);
@@ -249,8 +247,8 @@ namespace Microsoft.OData.UriParser
                     argumentNode = this.bindMethod(argument);
                 }
 
-                argumentNodes.Add(argumentNode);
-            }
+                return argumentNode;
+            }));
 
             return BindAsUriFunction(functionCallToken, argumentNodes);
         }
