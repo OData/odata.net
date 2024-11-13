@@ -94,10 +94,11 @@ or creating a new `customer` (for first-time customers):
 ```http
 POST /orders
 ```
-```json
+```diff
 {
   "customer": {
-    "displayName": "Alfreds Futterkiste"
+-   "@id": "Customers('ALFKI')"
++   "displayName": "Alfreds Futterkiste"
   },
   "items": [
     {
