@@ -40,7 +40,7 @@ tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format
         <Key>
           <PropertyRef Name="id" />
         </Key>
-        <Property Name="id" Type="Edm.String" Nullable="false" />
+        <Property Name="id" Type="Edm.Int32" Nullable="false" />
       </EntityType>
 
       <EntityType Name="order">
@@ -79,13 +79,13 @@ POST /orders
   "items": [
     {
       "product": {
-        "@id": "Products('someproduct')"
+        "@id": "Products(28)"
       },
       "quantity": 3
     },
     {
       "product": {
-        "@id": "Products('anotherproduct')"
+        "@id": "Products(43)"
       },
       "quantity": 5
     }
@@ -117,6 +117,42 @@ POST /orders
     }
   ]
 }
+```
+
+Taking a naive approach to modeling the CSDL with C# types, we would have:
+```csharp
+class Customer
+{
+  public string Id { get; }
+  public string DisplayName { get; }
+}
+
+class Product
+{
+  public int Id { get; }
+}
+
+class Order
+{
+  public string Id { get; }
+  public Customer Customer { get; }
+  public Items[] Items { get; }
+}
+
+class OrderItem
+{
+  public Product Product { get; }
+  public int Quantity { get; }
+}
+
+class Client
+{
+  void CreateOrder(Order order);
+}
+```
+
+If a client wants to call `CreateOrder`, how should they construct the `Order` instance for each case?
+```csharp
 ```
 
 ### data flow
