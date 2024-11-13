@@ -216,7 +216,11 @@ For these reasons (and many others), I think it's best for now to simply underst
 
 ### data flow
 
-TODO
+```mermaid
+graph TD;
+   construct url-->determine http verb;
+   determine http verb-->construct request payload
+```
 
 ## follow-ups
 1. being able to stream payloads
