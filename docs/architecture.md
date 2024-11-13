@@ -72,7 +72,7 @@ POST /orders
 ```json
 {
   "customer": {
-    "@id": "Customers('gdebruin')"
+    "@id": "Customers('ALFKI')"
   },
   "items": [
     {
@@ -91,7 +91,29 @@ POST /orders
 }
 ```
 or creating a new `customer` (for first-time customers):
+```http
+POST /orders
 ```
+```json
+{
+  "customer": {
+    "displayName": "Alfreds Futterkiste"
+  },
+  "items": [
+    {
+      "product": {
+        "@id": "Products('someproduct')"
+      },
+      "quantity": 3
+    },
+    {
+      "product": {
+        "@id": "Products('anotherproduct')"
+      },
+      "quantity": 5
+    }
+  ]
+}
 ```
 
 ## follow-ups
