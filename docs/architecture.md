@@ -210,7 +210,7 @@ Because we are referencing an existing `customer` and not creating a new one, th
 
 #### {4} product id
 
-`28` is the value for the `id` property of the `product`, but what is needed for this bind operation is the **entity-id**. For `product, unlike `customer`, our `id` proeprties are `int`, and so we have no way at all to provide the entity-id. Since there is no navigation property binding, it is only coincidence that we can look at the CSDL and know that the `product`s can be found in the `products` entity set.
+`28` is the value for the `id` property of the `product`, but what is needed for this bind operation is the **entity-id**. For `product`, unlike `customer`, our `id` proeprties are `int`, and so we have no way at all to provide the entity-id. Since there is no navigation property binding, it is only coincidence that we can look at the CSDL and know that the `product`s can be found in the `products` entity set.
 
 For these reasons (and many others), I think it's best for now to simply understand that OData is too expressive for a simple C# data model to be used as an equivalent to the EDM model produced by CSDL. For this reason, I would like to leave the discussion of these C# data models to a later time. It is absolutely **required** that we have a design for such models, but I would like to first focus on representing the OData concepts themselves.
 
