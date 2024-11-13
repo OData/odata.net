@@ -402,7 +402,7 @@ namespace Microsoft.OData
         /// <param name="isQuotedString">Returns true if the value is a quoted-string, false if the value is a token.</param>
         /// <param name="createException">Func to create the appropriate exception to throw from the given error message.</param>
         /// <returns>The token or quoted-string value that was read from the header.</returns>
-        internal static string ReadTokenOrQuotedStringValue(string headerName, string headerText, ref int textIndex, out bool isQuotedString, Func<string, Exception> createException)
+        internal static ReadOnlyMemory<char> ReadTokenOrQuotedStringValue(string headerName, string headerText, ref int textIndex, out bool isQuotedString, Func<string, Exception> createException)
         {
             //// NOTE: See RFC 2616, Sections 3.6 and 2.2 for the full grammar for HTTP parameter values
             ////
@@ -420,8 +420,6 @@ namespace Microsoft.OData
             //// TEXT               = <any OCTET except CTLs, but including LWS>
             //// quoted-pair        = "\" CHAR
 
-            StringBuilder parameterValue = new StringBuilder();
-
             // Check if the value is quoted.
             isQuotedString = false;
             if (textIndex < headerText.Length)
@@ -433,18 +431,22 @@ namespace Microsoft.OData
                 }
             }
 
-            char currentChar = default(char);
+            // if not a quoted string, reading it as Token
+            if (!isQuotedString)
+            {
+                return ReadTokenValue(headerName, headerText, ref textIndex, createException);
+            }
+
+            // Now, we are reading quoted string, since the quoted string could be escaped, using StringBuilder only if the origin string contains the escaped.
+            StringBuilder parameterValue = null;
+            int start = textIndex; // the starting of quoted string (next position of the leading ")
+            char currentChar = default;
             while (textIndex < headerText.Length)
             {
                 currentChar = headerText[textIndex];
 
                 if (currentChar == '\\' || currentChar == '\"')
                 {
-                    if (!isQuotedString)
-                    {
-                        throw createException(Strings.HttpUtils_EscapeCharWithoutQuotes(headerName, headerText, textIndex, currentChar));
-                    }
-
                     textIndex++;
 
                     // End of quoted parameter value.
@@ -453,37 +455,83 @@ namespace Microsoft.OData
                         break;
                     }
 
+                    if (parameterValue == null)
+                    {
+                        parameterValue = new StringBuilder();
+                        int i = start;
+                        while (i < textIndex - 1)
+                        {
+                            parameterValue.Append(headerText[i]); // initial the string builder for the unescaped string
+                            i++;
+                        }
+                    }
+
                     if (textIndex >= headerText.Length)
                     {
                         throw createException(Strings.HttpUtils_EscapeCharAtEnd(headerName, headerText, textIndex, currentChar));
                     }
 
-                    currentChar = headerText[textIndex];
+                    currentChar = headerText[textIndex]; // only save the char after '\'? not unescape it? or it's never used?
                 }
                 else
                 {
-                    if (!isQuotedString && !IsHttpToken(currentChar))
-                    {
-                        // If the given character is special, we stop processing.
-                        break;
-                    }
-
-                    if (isQuotedString && !IsValidInQuotedHeaderValue(currentChar))
+                    if (!IsValidInQuotedHeaderValue(currentChar))
                     {
                         throw createException(Strings.HttpUtils_InvalidCharacterInQuotedParameterValue(headerName, headerText, textIndex, currentChar));
                     }
                 }
 
-                parameterValue.Append(currentChar);
+                if (parameterValue != null)
+                {
+                    parameterValue.Append(currentChar);
+                }
+
                 textIndex++;
             }
 
-            if (isQuotedString && currentChar != '\"')
+            if (currentChar != '\"')
             {
                 throw createException(Strings.HttpUtils_ClosingQuoteNotFound(headerName, headerText, textIndex));
             }
 
-            return parameterValue.ToString();
+            if (parameterValue != null)
+            {
+                return parameterValue.ToString().AsMemory();
+            }
+            else
+            {
+                return headerText.AsMemory(start, textIndex - start - 1);
+            }
+        }
+
+        /// <summary>
+        /// Reads a token value from the header.
+        /// </summary>
+        /// <param name="headerName">Name of the header.</param>
+        /// <param name="headerText">Header text.</param>
+        /// <param name="textIndex">The text index.</param>
+        /// <param name="createException">Func to create the appropriate exception to throw from the given error message.</param>
+        /// <returns>The token that was read from the header.</returns>
+        private static ReadOnlyMemory<char> ReadTokenValue(string headerName, string headerText, ref int textIndex, Func<string, Exception> createException)
+        {
+            int start = textIndex;
+            char currentChar = default;
+            while (textIndex < headerText.Length)
+            {
+                currentChar = headerText[textIndex];
+                if (currentChar == '\\' || currentChar == '\"')
+                {
+                    throw createException(Strings.HttpUtils_EscapeCharWithoutQuotes(headerName, headerText, textIndex, currentChar));
+                }
+                else if (!IsHttpToken(currentChar))
+                {
+                    break;
+                }
+
+                textIndex++;
+            }
+
+            return headerText.AsMemory(start, textIndex - start);
         }
 
         /// <summary>
@@ -681,11 +729,11 @@ namespace Microsoft.OData
             textIndex++;
 
             bool isQuotedString;
-            string parameterValue = ReadTokenOrQuotedStringValue(ODataConstants.ContentTypeHeader, text, ref textIndex, out isQuotedString, message => new ODataContentTypeException(message));
+            ReadOnlyMemory<char> parameterValue = ReadTokenOrQuotedStringValue(ODataConstants.ContentTypeHeader, text, ref textIndex, out isQuotedString, message => new ODataContentTypeException(message));
 
             if (CompareMediaTypeParameterNames(ODataConstants.Charset, parameterName))
             {
-                charset = parameterValue;
+                charset = parameterValue.ToString();
             }
             else
             {
@@ -695,7 +743,7 @@ namespace Microsoft.OData
                     parameters = new List<KeyValuePair<string, string>>(1);
                 }
 
-                parameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue));
+                parameters.Add(new KeyValuePair<string, string>(parameterName, parameterValue.ToString()));
             }
         }
 

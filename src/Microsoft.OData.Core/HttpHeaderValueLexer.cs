@@ -6,6 +6,7 @@
 
 namespace Microsoft.OData
 {
+    using System;
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
@@ -49,13 +50,13 @@ namespace Microsoft.OData
         /// The value of the current parsed item. If the item type is quoted-string, this returns the unescaped and unquoted string value. For other item types,
         /// the value is the same as the original text from the header.
         /// </summary>
-        private readonly string value;
+        private readonly ReadOnlyMemory<char> value;
 
         /// <summary>
         /// The original text of the current parsed item. If the item type is quoted-string, this returns the escaped and quoted string value straight from the header.
         /// For other item types, the original text is the same as the item value.
         /// </summary>
-        private readonly string originalText;
+        private readonly ReadOnlyMemory<char> originalText;
 
         /// <summary>
         /// Constructs a new instance of <see cref="HttpHeaderValueLexer"/>.
@@ -67,7 +68,7 @@ namespace Microsoft.OData
         /// <param name="originalText">The original text of the current parsed item. If the item type is quoted-string, this returns the escaped and quoted string value straight from the header.
         /// For other item types, the original text is the same as the item value.</param>
         /// <param name="startIndexOfNextItem">The start index of the next item to be parsed.</param>
-        private HttpHeaderValueLexer(string httpHeaderName, string httpHeaderValue, string value, string originalText, int startIndexOfNextItem)
+        private HttpHeaderValueLexer(string httpHeaderName, string httpHeaderValue, ReadOnlyMemory<char> value, ReadOnlyMemory<char> originalText, int startIndexOfNextItem)
         {
             this.httpHeaderName = httpHeaderName;
             this.httpHeaderValue = httpHeaderValue;
@@ -114,25 +115,13 @@ namespace Microsoft.OData
         /// The value of the current parsed item. If the item type is quoted-string, this returns the unescaped and unquoted string value. For other item types,
         /// the value is the same as the original text from the header.
         /// </summary>
-        internal string Value
-        {
-            get
-            {
-                return this.value;
-            }
-        }
+        internal ReadOnlyMemory<char> Value => this.value;
 
         /// <summary>
         /// The original text of the current parsed item. If the item type is quoted-string, this returns the escaped and quoted string value straight from the header.
         /// For other item types, the original text is the same as the item value.
         /// </summary>
-        internal string OriginalText
-        {
-            get
-            {
-                return this.originalText;
-            }
-        }
+        internal ReadOnlyMemory<char> OriginalText => this.originalText;
 
         /// <summary>
         /// The type of the current parsed item.
@@ -246,7 +235,7 @@ namespace Microsoft.OData
         {
             Debug.Assert(lexer.Type == HttpHeaderValueItemType.Token, "lexer.Type == HttpHeaderValueItemType.Token");
 
-            string name = lexer.OriginalText;
+            ReadOnlyMemory<char> name = lexer.OriginalText;
             string value = null;
             lexer = lexer.ReadNext();
             if (lexer.Type == HttpHeaderValueItemType.ValueSeparator)
@@ -256,7 +245,7 @@ namespace Microsoft.OData
                     lexer.Type == HttpHeaderValueItemType.Token || lexer.Type == HttpHeaderValueItemType.QuotedString,
                     "lexer.Type == HttpHeaderValueItemType.Token || lexer.Type == HttpHeaderValueItemType.QuotedString");
 
-                value = lexer.OriginalText;
+                value = lexer.OriginalText.ToString();
                 lexer = lexer.ReadNext();
             }
 
@@ -264,7 +253,7 @@ namespace Microsoft.OData
                 lexer.Type == HttpHeaderValueItemType.End || lexer.Type == HttpHeaderValueItemType.ElementSeparator || lexer.Type == HttpHeaderValueItemType.ParameterSeparator,
                 "lexer.Type == HttpHeaderValueItemType.End || lexer.Type == HttpHeaderValueItemType.ElementSeparator || lexer.Type == HttpHeaderValueItemType.ParameterSeparator");
 
-            return new KeyValuePair<string, string>(name, value);
+            return new KeyValuePair<string, string>(name.ToString(), value);
         }
 
         /// <summary>
@@ -284,7 +273,7 @@ namespace Microsoft.OData
         {
             int index = this.startIndexOfNextItem;
             bool isQuotedString;
-            string nextValue = HttpUtils.ReadTokenOrQuotedStringValue(this.httpHeaderName, this.httpHeaderValue, ref index, out isQuotedString, message => new ODataException(message));
+            ReadOnlyMemory<char> nextValue = HttpUtils.ReadTokenOrQuotedStringValue(this.httpHeaderName, this.httpHeaderValue, ref index, out isQuotedString, message => new ODataException(message));
 
             // Instead of testing whether result is null or empty, we check to see if the index have moved forward because we can encounter the empty quoted string "".
             if (index == this.startIndexOfNextItem)
@@ -294,7 +283,7 @@ namespace Microsoft.OData
 
             if (isQuotedString)
             {
-                string original = this.httpHeaderValue.Substring(this.startIndexOfNextItem, index - this.startIndexOfNextItem);
+                ReadOnlyMemory<char> original = this.httpHeaderValue.AsMemory(this.startIndexOfNextItem, index - this.startIndexOfNextItem);
                 return new HttpHeaderQuotedString(this.httpHeaderName, this.httpHeaderValue, nextValue, original, index);
             }
 
@@ -323,8 +312,9 @@ namespace Microsoft.OData
         private HttpHeaderSeparator ReadNextSeparator()
         {
             Debug.Assert(this.startIndexOfNextItem < this.httpHeaderValue.Length, "this.startIndexOfNextItem < this.httpHeaderValue.Length");
-            string separator = this.httpHeaderValue.Substring(this.startIndexOfNextItem, 1);
-            if (separator != ElementSeparator && separator != ParameterSeparator && separator != ValueSeparator)
+            ReadOnlyMemory<char> separator = this.httpHeaderValue.AsMemory(this.startIndexOfNextItem, 1);
+            ReadOnlySpan<char> span = separator.Span;
+            if (!span.Equals(ElementSeparator, StringComparison.Ordinal) && !span.Equals(ParameterSeparator, StringComparison.Ordinal) && !span.Equals(ValueSeparator, StringComparison.Ordinal))
             {
                 throw new ODataException(Strings.HttpHeaderValueLexer_UnrecognizedSeparator(this.httpHeaderName, this.httpHeaderValue, this.startIndexOfNextItem, separator));
             }
@@ -343,7 +333,7 @@ namespace Microsoft.OData
             /// <param name="httpHeaderName">The name of the HTTP header being parsed.</param>
             /// <param name="httpHeaderValue">The value of the HTTP header being parsed.</param>
             internal HttpHeaderStart(string httpHeaderName, string httpHeaderValue)
-                : base(httpHeaderName, httpHeaderValue, /*value*/ null, /*originalText*/ null, 0)
+                : base(httpHeaderName, httpHeaderValue, default, default, 0)
             {
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderName), "!string.IsNullOrEmpty(this.httpHeaderName)");
                 Debug.Assert(
@@ -354,13 +344,7 @@ namespace Microsoft.OData
             /// <summary>
             /// The type of the current item.
             /// </summary>
-            internal override HttpHeaderValueItemType Type
-            {
-                get
-                {
-                    return HttpHeaderValueItemType.Start;
-                }
-            }
+            internal override HttpHeaderValueItemType Type => HttpHeaderValueItemType.Start;
 
             /// <summary>
             /// Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.
@@ -395,25 +379,19 @@ namespace Microsoft.OData
             /// <param name="httpHeaderValue">The value of the HTTP header being parsed.</param>
             /// <param name="value">The value of the token.</param>
             /// <param name="startIndexOfNextItem">The start index of the next item.</param>
-            internal HttpHeaderToken(string httpHeaderName, string httpHeaderValue, string value, int startIndexOfNextItem)
+            internal HttpHeaderToken(string httpHeaderName, string httpHeaderValue, ReadOnlyMemory<char> value, int startIndexOfNextItem)
                 : base(httpHeaderName, httpHeaderValue, value, value, startIndexOfNextItem)
             {
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderName), "!string.IsNullOrEmpty(this.httpHeaderName)");
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderValue), "!string.IsNullOrEmpty(this.httpHeaderValue)");
                 Debug.Assert(this.startIndexOfNextItem <= this.httpHeaderValue.Length, "this.startIndexOfNextItem <= this.httpHeaderValue.Length");
-                Debug.Assert(!string.IsNullOrEmpty(this.value), "!string.IsNullOrEmpty(this.value)");
+                Debug.Assert(!value.IsEmpty, "!value.IsEmpty");
             }
 
             /// <summary>
             /// The type of the current item.
             /// </summary>
-            internal override HttpHeaderValueItemType Type
-            {
-                get
-                {
-                    return HttpHeaderValueItemType.Token;
-                }
-            }
+            internal override HttpHeaderValueItemType Type => HttpHeaderValueItemType.Token;
 
             /// <summary>
             /// Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.
@@ -449,25 +427,19 @@ namespace Microsoft.OData
             /// <param name="value">The value of the quoted string, unescaped and without quotes.</param>
             /// <param name="originalText">The original text of the quoted string, escaped and with quotes.</param>
             /// <param name="startIndexOfNextItem">The start index of the next item.</param>
-            internal HttpHeaderQuotedString(string httpHeaderName, string httpHeaderValue, string value, string originalText, int startIndexOfNextItem)
+            internal HttpHeaderQuotedString(string httpHeaderName, string httpHeaderValue, ReadOnlyMemory<char> value, ReadOnlyMemory<char> originalText, int startIndexOfNextItem)
                 : base(httpHeaderName, httpHeaderValue, value, originalText, startIndexOfNextItem)
             {
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderName), "!string.IsNullOrEmpty(this.httpHeaderName)");
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderValue), "!string.IsNullOrEmpty(this.httpHeaderValue)");
                 Debug.Assert(this.startIndexOfNextItem <= this.httpHeaderValue.Length, "this.startIndexOfNextItem <= this.httpHeaderValue.Length");
-                Debug.Assert(!string.IsNullOrEmpty(this.originalText), "!string.IsNullOrEmpty(this.originalText)");
+                Debug.Assert(!originalText.IsEmpty, "!originalText.IsEmpty");
             }
 
             /// <summary>
             /// The type of the current item.
             /// </summary>
-            internal override HttpHeaderValueItemType Type
-            {
-                get
-                {
-                    return HttpHeaderValueItemType.QuotedString;
-                }
-            }
+            internal override HttpHeaderValueItemType Type => HttpHeaderValueItemType.QuotedString;
 
             /// <summary>
             /// Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.
@@ -488,7 +460,8 @@ namespace Microsoft.OData
                 HttpHeaderSeparator separator = this.ReadNextSeparator();
 
                 // ',' and ';' can come after a quoted-string.
-                if (separator.Value == ElementSeparator || separator.Value == ParameterSeparator)
+                ReadOnlySpan<char> span = separator.Value.Span;
+                if (span.Equals(ElementSeparator, StringComparison.Ordinal) || span.Equals(ParameterSeparator, StringComparison.Ordinal))
                 {
                     return separator;
                 }
@@ -509,14 +482,18 @@ namespace Microsoft.OData
             /// <param name="httpHeaderValue">The value of the HTTP header being parsed.</param>
             /// <param name="value">The value of the separator.</param>
             /// <param name="startIndexOfNextItem">The start index of the next item.</param>
-            internal HttpHeaderSeparator(string httpHeaderName, string httpHeaderValue, string value, int startIndexOfNextItem)
+            internal HttpHeaderSeparator(string httpHeaderName, string httpHeaderValue, ReadOnlyMemory<char> value, int startIndexOfNextItem)
                 : base(httpHeaderName, httpHeaderValue, value, value, startIndexOfNextItem)
             {
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderName), "!string.IsNullOrEmpty(this.httpHeaderName)");
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderValue), "!string.IsNullOrEmpty(this.httpHeaderValue)");
                 Debug.Assert(this.startIndexOfNextItem <= this.httpHeaderValue.Length, "this.startIndexOfNextItem <= this.httpHeaderValue.Length");
+
+                ReadOnlySpan<char> span = value.Span;
                 Debug.Assert(
-                    this.Value == ElementSeparator || this.Value == ParameterSeparator || this.Value == ValueSeparator,
+                    span.Equals(ElementSeparator, StringComparison.Ordinal) ||
+                    span.Equals(ParameterSeparator, StringComparison.Ordinal) ||
+                    span.Equals(ValueSeparator, StringComparison.Ordinal),
                     "this.Value == CommaSeparator || this.Value == SemicolonSeparator || this.Value == EqualsSeparator");
             }
 
@@ -527,15 +504,19 @@ namespace Microsoft.OData
             {
                 get
                 {
-                    switch (this.Value)
+                    ReadOnlySpan<char> span = Value.Span;
+                    if (span.Equals(ElementSeparator, StringComparison.Ordinal))
                     {
-                        case ElementSeparator:
-                            return HttpHeaderValueItemType.ElementSeparator;
-                        case ParameterSeparator:
-                            return HttpHeaderValueItemType.ParameterSeparator;
-                        default:
-                            Debug.Assert(this.Value == ValueSeparator, "this.Value == ValueSeparator");
-                            return HttpHeaderValueItemType.ValueSeparator;
+                        return HttpHeaderValueItemType.ElementSeparator;
+                    }
+                    else if (span.Equals(ParameterSeparator, StringComparison.Ordinal))
+                    {
+                        return HttpHeaderValueItemType.ParameterSeparator;
+                    }
+                    else
+                    {
+                        Debug.Assert(span.Equals(ValueSeparator, StringComparison.Ordinal), "this.Value == ValueSeparator");
+                        return HttpHeaderValueItemType.ValueSeparator;
                     }
                 }
             }
@@ -557,7 +538,7 @@ namespace Microsoft.OData
                 }
 
                 // Token or quoted-string can come after '='. i.e. token ['=' (token | quoted-string)]
-                if (this.Value == ValueSeparator)
+                if (this.Value.Span.Equals(ValueSeparator, StringComparison.Ordinal))
                 {
                     return this.ReadNextTokenOrQuotedString();
                 }
@@ -581,20 +562,14 @@ namespace Microsoft.OData
             /// Constructs a new instance of <see cref="HttpHeaderEnd"/>.
             /// </summary>
             private HttpHeaderEnd()
-                : base(/*httpHeaderName*/ null, /*httpHeaderValue*/ null, /*value*/ null, /*originalText*/ null, /*startIndexOfNextItem*/ -1)
+                : base(null, null, default, default, -1)
             {
             }
 
             /// <summary>
             /// The type of the current item.
             /// </summary>
-            internal override HttpHeaderValueItemType Type
-            {
-                get
-                {
-                    return HttpHeaderValueItemType.End;
-                }
-            }
+            internal override HttpHeaderValueItemType Type => HttpHeaderValueItemType.End;
 
             /// <summary>
             /// Returns an instance of <see cref="HttpHeaderValueLexer"/> to parse the rest of the items on the header value.
