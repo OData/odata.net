@@ -65,6 +65,34 @@ tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format
   </edmx:DataServices>
 </edmx:Edmx>
 ```
+With this model, it's reasonable that a client will want to place an order using an existing `customer`:
+```http
+POST /orders
+```
+```json
+{
+  "customer": {
+    "@id": "Customers('gdebruin')"
+  },
+  "items": [
+    {
+      "product": {
+        "@id": "Products('someproduct')"
+      },
+      "quantity": 3
+    },
+    {
+      "product": {
+        "@id": "Products('anotherproduct')"
+      },
+      "quantity": 5
+    }
+  ]
+}
+```
+or creating a new `customer` (for first-time customers):
+```
+```
 
 ## follow-ups
 1. being able to stream payloads
