@@ -24,10 +24,11 @@ tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format
 <
 ```
 
+## follow-ups
+1. being able to stream payloads
+2. handling serialization of customer-defined types
 
 
-
-TODO make sure that we can "stream" payloads
 
 
 
