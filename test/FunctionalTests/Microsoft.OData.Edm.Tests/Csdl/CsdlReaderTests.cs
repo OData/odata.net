@@ -153,6 +153,61 @@ namespace Microsoft.OData.Edm.Tests.Csdl
         }
 
         [Fact]
+        public void ReadNavigationPropertyPartnerOnlyOnOneSideTest()
+        {
+            var csdl =
+                "<?xml version=\"1.0\" encoding=\"utf-16\"?>" +
+                    "<edmx:Edmx Version=\"4.0\" xmlns:edmx=\"http://docs.oasis-open.org/odata/ns/edmx\">" +
+                        "<edmx:DataServices>" +
+                            "<Schema Namespace=\"NS\" xmlns=\"http://docs.oasis-open.org/odata/ns/edm\">" +
+                                "<EntityType Name=\"Product\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                    "<NavigationProperty Name=\"Category\" Type=\"NS.Category\" Nullable=\"false\" Partner=\"Products\" />" +
+                                "</EntityType>" +
+                                "<EntityType Name=\"Category\">" +
+                                    "<Key><PropertyRef Name=\"ID\" /></Key>" +
+                                    "<Property Name=\"ID\" Type=\"Edm.Int32\" />" +
+                                    "<NavigationProperty Name=\"Products\" Type=\"Collection(NS.Product)\" Nullable=\"false\" />" +
+                                "</EntityType>" +
+                            "</Schema>" +
+                        "</edmx:DataServices>" +
+                    "</edmx:Edmx>";
+            var model = CsdlReader.Parse(XElement.Parse(csdl).CreateReader());
+            var product = (IEdmEntityType)model.FindDeclaredType("NS.Product");
+            var category = (IEdmEntityType)model.FindDeclaredType("NS.Category");
+            IEdmNavigationProperty categoryNavigationProperty = (IEdmNavigationProperty)product.FindProperty("Category");
+            IEdmNavigationProperty productsNavigationProperty = (IEdmNavigationProperty)category.FindProperty("Products");
+
+            Assert.Equal("Products", categoryNavigationProperty.GetPartnerPath().Path);
+            Assert.Null(productsNavigationProperty.GetPartnerPath());
+
+            Assert.Same(productsNavigationProperty, categoryNavigationProperty.Partner);
+            Assert.Same(categoryNavigationProperty, productsNavigationProperty.Partner);
+        }
+
+        [Fact]
+        public void ReadNavigationPropertyPartnerFromBigCsdlTestNoExceptionThrows()
+        {
+            var model = CsdlReader.Parse(XElement.Parse(BigCsdl).CreateReader());
+
+            Action test = () =>
+            {
+                foreach (var entityType in model.SchemaElements.OfType<IEdmEntityType>())
+                {
+                    foreach (var nav in entityType.NavigationProperties())
+                    {
+                        IEdmNavigationProperty partner = nav.Partner;
+                        Assert.Null(partner);
+                    }
+                }
+            };
+
+            var exception = Record.Exception(test);
+            Assert.Null(exception);
+        }
+
+        [Fact]
         public void ValidateNavigationPropertyBindingPathInvalidTypeCast()
         {
             var csdl

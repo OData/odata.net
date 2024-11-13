@@ -166,7 +166,7 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
             return (IEdmEntityType)target;
         }
 
-        private IEdmNavigationProperty ComputePartner()
+        internal IEdmNavigationProperty ResolveParter()
         {
             var partnerPropertyPath = this.navigationProperty.PartnerPath;
             IEdmEntityType targetEntityType = this.TargetEntityType;
@@ -177,6 +177,34 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                        ?? new UnresolvedNavigationPropertyPath(targetEntityType, partnerPropertyPath.Path, Location);
             }
 
+            return null;
+        }
+
+        private bool partnerResolved = false;
+        private IEdmNavigationProperty resolvedPartner = null;
+        private IEdmNavigationProperty ResolvedPartner
+        {
+            get
+            {
+                if (!this.partnerResolved)
+                {
+                    this.resolvedPartner = ResolveParter();
+                    this.partnerResolved = true;
+                }
+
+                return this.resolvedPartner;
+            }
+        }
+
+        private IEdmNavigationProperty ComputePartner()
+        {
+            IEdmNavigationProperty navPartner = ResolvedPartner;
+            if (navPartner != null)
+            {
+                return navPartner;
+            }
+
+            IEdmEntityType targetEntityType = this.TargetEntityType;
             foreach (IEdmNavigationProperty potentialPartner in targetEntityType.NavigationProperties())
             {
                 if (potentialPartner == this)
@@ -184,9 +212,19 @@ namespace Microsoft.OData.Edm.Csdl.CsdlSemantics
                     continue;
                 }
 
-                if (potentialPartner.Partner == this)
+                if (potentialPartner is CsdlSemanticsNavigationProperty semanticsNav)
                 {
-                    return potentialPartner;
+                    if (semanticsNav.ResolvedPartner == this)
+                    {
+                        return potentialPartner;
+                    }
+                }
+                else if (potentialPartner is EdmNavigationProperty edmNav)
+                {
+                    if (edmNav.Partner == this)
+                    {
+                        return potentialPartner;
+                    }
                 }
             }
 
