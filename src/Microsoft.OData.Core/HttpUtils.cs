@@ -505,12 +505,13 @@ namespace Microsoft.OData
         }
 
         /// <summary>
-        /// Skips whitespace in the specified text by advancing an index to
-        /// the next non-whitespace character.
+        /// Reads a token value from the header.
         /// </summary>
-        /// <param name="text">Text to scan.</param>
-        /// <param name="textIndex">Index to begin scanning from.</param>
-        /// <returns>true if the end of the string was reached, false otherwise.</returns>
+        /// <param name="headerName">Name of the header.</param>
+        /// <param name="headerText">Header text.</param>
+        /// <param name="textIndex">The text index.</param>
+        /// <param name="createException">Func to create the appropriate exception to throw from the given error message.</param>
+        /// <returns>The token that was read from the header.</returns>
         private static ReadOnlyMemory<char> ReadTokenValue(string headerName, string headerText, ref int textIndex, Func<string, Exception> createException)
         {
             int start = textIndex;

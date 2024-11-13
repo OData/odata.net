@@ -333,7 +333,7 @@ namespace Microsoft.OData
             /// <param name="httpHeaderName">The name of the HTTP header being parsed.</param>
             /// <param name="httpHeaderValue">The value of the HTTP header being parsed.</param>
             internal HttpHeaderStart(string httpHeaderName, string httpHeaderValue)
-                : base(httpHeaderName, httpHeaderValue, /*value*/ default, /*originalText*/ default, 0)
+                : base(httpHeaderName, httpHeaderValue, default, default, 0)
             {
                 Debug.Assert(!string.IsNullOrEmpty(this.httpHeaderName), "!string.IsNullOrEmpty(this.httpHeaderName)");
                 Debug.Assert(
@@ -562,7 +562,7 @@ namespace Microsoft.OData
             /// Constructs a new instance of <see cref="HttpHeaderEnd"/>.
             /// </summary>
             private HttpHeaderEnd()
-                : base(/*httpHeaderName*/ null, /*httpHeaderValue*/ null, /*value*/ default, /*originalText*/ default, /*startIndexOfNextItem*/ -1)
+                : base(null, null, default, default, -1)
             {
             }
 
