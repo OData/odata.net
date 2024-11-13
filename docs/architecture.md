@@ -216,11 +216,7 @@ For these reasons (and many others), I think it's best for now to simply underst
 
 ### data flow
 
-```mermaid
-graph TD;
-   construct url-->determine http verb;
-   determine http verb-->construct request payload
-```
+https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ## follow-ups
 1. being able to stream payloads
