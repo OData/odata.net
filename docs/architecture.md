@@ -17,6 +17,8 @@ The handling of an odata request involves 5 components:
 4. request body
 5. response body
 
+### avoiding customer-defined c# models
+
 I want to take a moment now to convince why we should avoid dicsussing C# models for the time being and expect customers to rely strictly on odata types. This can be improved and built on top of in the future, and we **must** make certain that doing so is possible, or else our architecture will severely limit what customers can reasonably migrate to. Now for the convincing, consider the following CSDL:
 
 tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_DeepInsert
@@ -116,6 +118,10 @@ POST /orders
   ]
 }
 ```
+
+### data flow
+
+TODO
 
 ## follow-ups
 1. being able to stream payloads
