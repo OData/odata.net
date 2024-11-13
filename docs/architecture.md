@@ -21,7 +21,6 @@ The handling of an odata request involves 5 components:
 
 I want to take a moment now to convince why we should avoid dicsussing C# models for the time being and expect customers to rely strictly on odata types. This can be improved and built on top of in the future, and we **must** make certain that doing so is possible, or else our architecture will severely limit what customers can reasonably migrate to. Now for the convincing, consider the following CSDL:
 
-tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_DeepInsert
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
@@ -199,13 +198,21 @@ There are a number of issues:
 
 #### {1} order id
 
-When creatinga  
+When creating a new `order`, we don't yet have an `id`, so we have no value to put here. However, the `id` property is non-nullable. If we mark the `Id` property in C# as nullable, our model becomes incorrect when reading `order`s.
 
 #### {2} customer id
 
+The value provided for the `customer` `id` here is the **entity-id**, not the key property called `id`. The only reason this works at all is because the `id` property **happens** to be a `string`. More on this later.
+
 #### {3} customer display name
 
+Because we are referencing an existing `customer` and not creating a new one, there's no value for `displayName`. This has the same issues as {1} regarding the differences between C# classes for reading vs writing (we can mark `DisplayName` as nullable, but doing so means that our model for reads is now incorrect).
+
 #### {4} product id
+
+`28` is the value for the `id` property of the `product`, but what is needed for this bind operation is the **entity-id**. For `product, unlike `customer`, our `id` proeprties are `int`, and so we have no way at all to provide the entity-id. Since there is no navigation property binding, it is only coincidence that we can look at the CSDL and know that the `product`s can be found in the `products` entity set.
+
+For these reasons (and many others), I think it's best for now to simply understand that OData is too expressive for a simple C# data model to be used as an equivalent to the EDM model produced by CSDL. For this reason, I would like to leave the discussion of these C# data models to a later time. It is absolutely **required** that we have a design for such models, but I would like to first focus on representing the OData concepts themselves.
 
 ### data flow
 
