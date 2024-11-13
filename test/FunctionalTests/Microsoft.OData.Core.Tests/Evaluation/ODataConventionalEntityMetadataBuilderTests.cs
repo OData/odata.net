@@ -602,7 +602,7 @@ namespace Microsoft.OData.Tests.Evaluation
             // validates that important uri literal values that OData uses don't change, and that we escape characters when
             // producing the etag for Json
             var escapedStrings = Uri.EscapeDataString(@".:''-");
-            Assert.Equal(@".:''-", escapedStrings);
+            Assert.Equal(@".%3A%27%27-", escapedStrings);
 
             var testSubject = new ODataConventionalEntityMetadataBuilder(new TestEntryMetadataContext { Resource = new ODataResource(), ETagProperties = new[] { new KeyValuePair<string, object>("ETag", "Value ") } }, this.metadataContext, this.uriBuilder);
             Assert.Equal(@"W/""'Value%20'""", testSubject.GetETag());
