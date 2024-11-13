@@ -105,13 +105,13 @@ POST /orders
   "items": [
     {
       "product": {
-        "@id": "Products('someproduct')"
+        "@id": "Products(28)"
       },
       "quantity": 3
     },
     {
       "product": {
-        "@id": "Products('anotherproduct')"
+        "@id": "Products(43)"
       },
       "quantity": 5
     }
@@ -178,8 +178,34 @@ class Client
 If a client wants to call `CreateOrder`, how should they construct the `Order` instance for each case?
 ```csharp
 var order = new Order(
-  new 
+  null, // point {1}: order id
+  new Customer(
+    "Customers('ALFKI')", // point {2}: customer id
+    null), // point {3}: customer display name
+  new[]
+  {
+    new OrderItem(
+      new Product(
+        28), // point {4}: product id
+      3),
+    new OrderItem(
+      new Product(
+        43), // point {4}: product id
+      5),
+  });
 ```
+
+There are a number of issues:
+
+#### {1} order id
+
+When creatinga  
+
+#### {2} customer id
+
+#### {3} customer display name
+
+#### {4} product id
 
 ### data flow
 
