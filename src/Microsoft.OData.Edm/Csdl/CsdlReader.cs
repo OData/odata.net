@@ -623,7 +623,7 @@ namespace Microsoft.OData.Edm.Csdl
 
             if (referenceParser.HasErrors)
             {
-                foreach (var error in referenceParser.Errors)
+                foreach (EdmError error in referenceParser.Errors)
                 {
                     this.errors.Add(error);
                 }
