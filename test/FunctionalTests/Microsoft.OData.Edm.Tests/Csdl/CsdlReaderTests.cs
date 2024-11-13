@@ -2253,6 +2253,61 @@ namespace Microsoft.OData.Edm.Tests.Csdl
 
 
         [Fact]
+        public void ShouldReportCorrectLineNumbersWithMultiLineReferenceElement()
+        {
+            string csdl =
+                """
+                <?xml version="1.0" encoding="utf-8"?>
+                <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+                  <edmx:Reference
+                    Uri="https://docs.oasis-open.org/odata/odata-data-aggregation-ext/v4.0/cs03/vocabularies/Org.OData.Aggregation.V1.xml"
+                  >
+                    <edmx:Include
+                      Namespace="Org.OData.Aggregation.V1" Alias="Aggregation"/>
+                  </edmx:Reference>
+                  <edmx:DataServices>
+                    <Schema Namespace="name.space" Alias="self" xmlns="http://docs.oasis-open.org/odata/ns/edm" xmlns:ags="http://aggregator.microsoft.com/internal">
+                      <EnumType
+
+                        Name="someEnum">
+                        <Member Name="notApplicable" Value="0" />
+
+                        <Member Name="enabled" Value="1" />
+                        <Member Name="disabled" Value="2" />
+                        <Member Name="unknownFutureValue" Value="3" />
+                      </EnumType>
+
+                      <EnumType Name="otherEnum">
+                        <Member Name="success" Value="0" />
+                        <Member Name="failure" Value="1" />
+                        <Member Name="unknownFutureValue" Value="2" />
+                      </EnumType>
+                    </Schema>
+                  </edmx:DataServices>
+                </edmx:Edmx>
+                """;
+
+
+
+            using var reader = XmlReader.Create(new StringReader(csdl));
+            var model = CsdlReader.Parse(reader);
+
+            var reference = model.GetEdmReferences().FirstOrDefault();
+            var edmInclude = reference.Includes.FirstOrDefault(i => i.Alias == "Aggregation");
+            AssertLineLocation(edmInclude, 6, 6);
+
+            var someEnum = model.FindDeclaredType("name.space.someEnum") as IEdmEnumType;
+            AssertLineLocation(someEnum, 11, 8);
+
+            AssertLineLocation(
+                someEnum.Members.FirstOrDefault(m => m.Name == "disabled"), 17, 10);
+
+            var otherEnum = model.FindDeclaredType("name.space.otherEnum") as IEdmElement;
+            AssertLineLocation(otherEnum, 21, 8);
+        }
+
+
+        [Fact]
         public void ShouldReportCorrectLineNumbersWithMultiLineElementsAndMultipleSchemas()
         {
             string csdl =
