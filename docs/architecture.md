@@ -27,6 +27,9 @@ tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format
 
 
 
+TODO make sure that we can "stream" payloads
+
+
 
 
 
