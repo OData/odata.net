@@ -123,24 +123,48 @@ Taking a naive approach to modeling the CSDL with C# types, we would have:
 ```csharp
 class Customer
 {
+  public Customer(string id, string displayName)
+  {
+    this.Id = id;
+    this.DisplayName = displayName;
+  }
+
   public string Id { get; }
   public string DisplayName { get; }
 }
 
 class Product
 {
+  public Product(int id)
+  {
+    this.Id = id;
+  }
+
   public int Id { get; }
 }
 
 class Order
 {
+  public Order(string id, Customer customer, IReadOnlyList<Item> items)
+  {
+    this.Id = id;
+    this.Customer = customer;
+    this.Items = items;
+  }
+
   public string Id { get; }
   public Customer Customer { get; }
-  public Items[] Items { get; }
+  public IReadOnlyList<Item> Items { get; }
 }
 
 class OrderItem
 {
+  public OrderItem(Product product, int quantity)
+  {
+    this.Product = product;
+    this.Quantity = quantity;
+  }
+
   public Product Product { get; }
   public int Quantity { get; }
 }
@@ -153,6 +177,8 @@ class Client
 
 If a client wants to call `CreateOrder`, how should they construct the `Order` instance for each case?
 ```csharp
+var order = new Order(
+  new 
 ```
 
 ### data flow
