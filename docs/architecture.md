@@ -21,7 +21,14 @@ I want to take a moment now to convince why we should avoid dicsussing C# models
 
 tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format-v4.01.html#sec_DeepInsert
 ```xml
-<
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
+  <edmx:DataServices>
+    <Schema Namespace="self" xmlns="http://docs.oasis-open.org/odata/ns/edm">
+      
+    </Schema>
+  </edmx:DataServices>
+</edmx:Edmx>
 ```
 
 ## follow-ups
