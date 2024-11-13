@@ -25,7 +25,42 @@ tODO https://docs.oasis-open.org/odata/odata-json-format/v4.01/odata-json-format
 <edmx:Edmx Version="4.0" xmlns:edmx="http://docs.oasis-open.org/odata/ns/edmx">
   <edmx:DataServices>
     <Schema Namespace="self" xmlns="http://docs.oasis-open.org/odata/ns/edm">
-      
+      <EntityType Name="customer">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+
+        <Property Name="displayName" Type="Edm.String" Nullable="false" />
+      </EntityType>
+
+      <EntityType Name="product">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+      </EntityType>
+
+      <EntityType Name="order">
+        <Key>
+          <PropertyRef Name="id" />
+        </Key>
+        <Property Name="id" Type="Edm.String" Nullable="false" />
+
+        <NavigationProperty Name="customer" Type="self.customer" Nullable="false" ContainsTarget="false" />
+        <Property Name="items" Type="Collection(self.orderItem)" Nullable="false" />
+      </EntityType>
+
+      <ComplexType Name="orderItem">
+        <NavigationProperty Name="product" Type="self.product" Nullable="false" ContainsTarget="false" />
+        <Property Name="quantity" Type="Edm.Int32" Nullable="false" />
+      </ComplexType>
+
+      <EntityContainer Name="container">
+        <EntitySet Name="customers" EntityType="self.customer" />
+        <EntitySet Name="products" EntityType="self.product" />
+        <EntitySet Name="orders" EntityType="self.order" />
+      </EntityContainer>
     </Schema>
   </edmx:DataServices>
 </edmx:Edmx>
