@@ -218,6 +218,14 @@ For these reasons (and many others), I think it's best for now to simply underst
 
 https://mermaid.js.org/syntax/sequenceDiagram.html
 
+```mermaid
+sequenceDiagram
+    participant Alice
+    participant Bob
+    Bob->>Alice: Hi Alice
+    Alice->>Bob: Hi Bob
+```
+
 ## follow-ups
 1. being able to stream payloads
 2. handling serialization of customer-defined types
