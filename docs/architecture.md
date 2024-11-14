@@ -8,6 +8,13 @@ Also note that it is very useful for dataProviders to be modeled as OdataService
 
 Once data providers are seen as odata services themselves, we can also see that there will be at least one odata service implementation that is an odata client. This means that odata clients and odata services will have a unified interface and not differ from each other.
 
+
+TODO list all benefits:
+TODO testing webapi in parallel
+TODO being able to implement the playground
+TODO AGS composability (show an example? maybe this doc is too early for that)
+TODO what is compelling about this to existing workloads?
+
 ## architecture
 
 The handling of an odata request involves 5 components:
@@ -215,10 +222,6 @@ Because we are referencing an existing `customer` and not creating a new one, th
 For these reasons (and many others), I think it's best for now to simply understand that OData is too expressive for a simple C# data model to be used as an equivalent to the EDM model produced by CSDL. For this reason, I would like to leave the discussion of these C# data models to a later time. It is absolutely **required** that we have a design for such models, but I would like to first focus on representing the OData concepts themselves.
 
 ### data flow
-
-TODO testing webapi in parallel
-TODO being able to implement the playground
-TODO AGS composability (show an example? maybe this doc is too early for that)
 
 https://mermaid.js.org/syntax/sequenceDiagram.html
 
