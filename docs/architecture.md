@@ -216,6 +216,10 @@ For these reasons (and many others), I think it's best for now to simply underst
 
 ### data flow
 
+TODO testing webapi in parallel
+TODO being able to implement the playground
+TODO AGS composability (show an example? maybe this doc is too early for that)
+
 https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
