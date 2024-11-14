@@ -273,4 +273,5 @@ data provider
 ## follow-ups
 1. being able to stream payloads
 2. handling serialization of customer-defined types
-3. custom headers, query options, endpoints, etc.
+3. CSDL define authz
+4. custom headers, query options, endpoints, etc.
