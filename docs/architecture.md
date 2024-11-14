@@ -233,22 +233,36 @@ sequenceDiagram
 
 
 user defined types 
--generate-> 
+->generate-> 
 odata uri AST
--converted to->
+->converted to->
 odata uri CST
--transcribed to->
+->transcribed to->
 HTTP URL string
 
 user defined types
--generate->
+->serialized to->
 odata request payload AST
--converted to->
+->converted to->
 odata request payload CST
--transcribed to->
+->transcribed to->
 HTTP request body string
 
+HTTP request body string
+->parsed to->
+odata request payload CST
+->converted to->
+odata request payload AST
+->applied to->
+data provider
 
+HTTP URL string
+->parsed to->
+odata uri CST
+->converted to->
+odata uri AST
+->applied to->
+data provider
 
 
 
