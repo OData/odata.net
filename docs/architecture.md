@@ -270,16 +270,3 @@ data provider
 1. being able to stream payloads
 2. handling serialization of customer-defined types
 3. custom headers, query options, endpoints, etc.
-
-
-
-
-
-
-TODO avoid the c# stuff for now?
-
-serialize and deserialize
-
-
-odata structure in c#
-.net structure in c#
