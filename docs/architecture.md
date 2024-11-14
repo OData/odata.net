@@ -220,10 +220,13 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
 sequenceDiagram
-    participant Alice
-    participant Bob
-    Bob->>Alice: Hi Alice
-    Alice->>Bob: Hi Bob
+    participant api consumer
+    participant api producer
+    participant http client
+    participant http handler
+    api consumer->>http client: Hi Alice
+    http client->>http handler: Hi Bob
+    http handler->>api producer: what??
 ```
 
 ## follow-ups
