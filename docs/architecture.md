@@ -221,9 +221,9 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 ```mermaid
 sequenceDiagram
     participant api consumer
-    participant api producer
     participant http client
     participant http handler
+    participant api producer
     api consumer->>http client: Hi Alice
     http client->>http handler: Hi Bob
     http handler->>api producer: what??
