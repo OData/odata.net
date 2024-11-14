@@ -224,16 +224,38 @@ sequenceDiagram
     participant http client
     participant http handler
     participant api producer
+    api consumer->>api consumer: user-defined types --> 
     api consumer->>http client: Hi Alice
     http client->>http handler: Hi Bob
     http handler->>api producer: what??
     api producer->>api producer: does this work?
 ```
 
+
+user defined types 
+-generate-> 
+odata uri AST
+-converted to->
+odata uri CST
+-transcribed to->
+HTTP URL string
+
+user defined types
+-generate->
+odata request payload AST
+-converted to->
+odata request payload CST
+-transcribed to->
+HTTP request body string
+
+
+
+
+
 ## follow-ups
 1. being able to stream payloads
 2. handling serialization of customer-defined types
-
+3. custom headers, query options, endpoints, etc.
 
 
 
