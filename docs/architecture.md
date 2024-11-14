@@ -12,7 +12,7 @@ Once data providers are seen as odata services themselves, we can also see that 
 TODO list all benefits:
 TODO testing webapi in parallel
 TODO being able to implement the playground
-TODO composing multiple odata services into a single service (this would be able to benefit AGS, but also used by external customers)
+TODO composing multiple odata services into a single service (this would be able to benefit AGS, but also used by external customers) (TODO this has been explored a bit with restier; restier would handle the composition through query providers, though; generally speaking, query providers are *not* composable, while odata services *Are*, and as a result, data providers should be to)
 TODO AGS composability (show an example? maybe this doc is too early for that)
 TODO what is compelling about this to existing workloads?
 
