@@ -227,6 +227,7 @@ sequenceDiagram
     api consumer->>http client: Hi Alice
     http client->>http handler: Hi Bob
     http handler->>api producer: what??
+    api producer->>api producer: does this work?
 ```
 
 ## follow-ups
