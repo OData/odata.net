@@ -97,21 +97,23 @@ namespace Microsoft.OData.UriParser
             LiteralToken literalToken = queryToken as LiteralToken;
             if (literalToken != null)
             {
-                string originalLiteralText = literalToken.OriginalText;
-
                 // Parentheses-based collections are not standard JSON but bracket-based ones are.
                 // Temporarily switch our collection to bracket-based so that the JSON reader will
                 // correctly parse the collection. Then pass the original literal text to the token.
-                string bracketLiteralText = originalLiteralText;
-                if (bracketLiteralText[0] == '(')
-                {
-                    Debug.Assert(bracketLiteralText[bracketLiteralText.Length - 1] == ')',
-                        "Collection with opening '(' should have corresponding ')'");
+                ReadOnlySpan<char> bracketLiteralText = literalToken.OriginalText.AsSpan();
 
-                    StringBuilder replacedText = new StringBuilder(bracketLiteralText);
-                    replacedText[0] = '[';
-                    replacedText[replacedText.Length - 1] = ']';
-                    bracketLiteralText = replacedText.ToString();
+                if (bracketLiteralText[0] == '(' || bracketLiteralText[0] == '[')
+                {
+                    Debug.Assert((bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')') || (bracketLiteralText[0] == '[' && bracketLiteralText[^1] == ']'),
+                        $"Collection with opening '{bracketLiteralText[0]}' should have corresponding '{bracketLiteralText[^1]}'");
+
+                    if(bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')')
+                    {
+                        Span<char> replacedText = new Span<char>(bracketLiteralText.ToArray());
+                        replacedText[0] = '[';
+                        replacedText[replacedText.Length - 1] = ']';
+                        bracketLiteralText = replacedText;
+                    }
 
                     Debug.Assert(expectedType.IsCollection());
                     string expectedTypeFullName = expectedType.Definition.AsElementType().FullTypeName();
@@ -122,7 +124,7 @@ namespace Microsoft.OData.UriParser
                         // and also, per ABNF, a single quote within a string literal is "encoded" as two consecutive single quotes in either
                         // literal or percent - encoded representation.
                         // Sample: ['a''bc','''def','xyz'''] ==> ["a'bc","'def","xyz'"], which is legitimate Json format.
-                        bracketLiteralText = NormalizeStringCollectionItems(bracketLiteralText);
+                        bracketLiteralText = NormalizeStringCollectionItems(bracketLiteralText.ToString());
                     }
                     else if (expectedTypeFullName.Equals("Edm.Guid", StringComparison.Ordinal))
                     {
@@ -130,7 +132,7 @@ namespace Microsoft.OData.UriParser
                         // with the Json reader used for deserialization.
                         // Sample: [D01663CF-EB21-4A0E-88E0-361C10ACE7FD, 492CF54A-84C9-490C-A7A4-B5010FAD8104]
                         //    ==>  ['D01663CF-EB21-4A0E-88E0-361C10ACE7FD', '492CF54A-84C9-490C-A7A4-B5010FAD8104']
-                        bracketLiteralText = NormalizeGuidCollectionItems(bracketLiteralText);
+                        bracketLiteralText = NormalizeGuidCollectionItems(bracketLiteralText.ToString());
                     }
                     else if (expectedTypeFullName.Equals("Edm.DateTimeOffset", StringComparison.Ordinal) ||
                              expectedTypeFullName.Equals("Edm.Date", StringComparison.Ordinal) ||
@@ -141,12 +143,12 @@ namespace Microsoft.OData.UriParser
                         // with the Json reader used for deserialization.
                         // Sample: [1970-01-01T00:00:00Z, 1980-01-01T01:01:01+01:00]
                         //    ==>  ['1970-01-01T00:00:00Z', '1980-01-01T01:01:01+01:00']
-                        bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText);
+                        bracketLiteralText = NormalizeDateTimeCollectionItems(bracketLiteralText.ToString());
                     }
                 }
 
-                object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText, model, expectedType);
-                LiteralToken collectionLiteralToken = new LiteralToken(collection, originalLiteralText, expectedType);
+                object collection = ODataUriConversionUtils.ConvertFromCollectionValue(bracketLiteralText.ToString(), model, expectedType);
+                LiteralToken collectionLiteralToken = new LiteralToken(collection, literalToken.OriginalText, expectedType);
                 operand = this.bindMethod(collectionLiteralToken) as CollectionConstantNode;
             }
             else

@@ -2718,11 +2718,49 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData("SSN in ['']")]     // Edm.String
+        [InlineData("SSN in [ '' ]")]     // Edm.String
+        [InlineData("SSN in [\"\"]")]     // Edm.String
+        [InlineData("SSN in [ \"\" ]")]     // Edm.String
+        public void FilterWithInOperationWithEmptyStringInSquareBrackets(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            ConstantNode constantNode = collectionNode.Collection.First();
+            Assert.Equal("\"\"", constantNode.LiteralText);
+        }
+
+        [Theory]
         [InlineData("SSN in ( ' ' )", " ")]     // 1 space
         [InlineData("SSN in ( '   ' )", "   ")]     // 3 spaces
         [InlineData("SSN in ( \"  \" )", "  ")]     // 2 spaces
         [InlineData("SSN in ( \"    \" )", "    ")]     // 4 spaces
         public void FilterWithInOperationWithWhitespace(string filterClause, string expectedLiteralText)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(1, collectionNode.Collection.Count);
+
+            ConstantNode constantNode = collectionNode.Collection.First();
+            Assert.Equal(expectedLiteralText, constantNode.LiteralText);
+        }
+
+        [Theory]
+        [InlineData("SSN in [ ' ' ]", " ")]     // 1 space
+        [InlineData("SSN in [ '   ' ]", "   ")]     // 3 spaces
+        [InlineData("SSN in [ \"  \" ]", "  ")]     // 2 spaces
+        [InlineData("SSN in [ \"    \" ]", "    ")]     // 4 spaces
+        public void FilterWithInOperationWithWhitespaceInSquareBrackets(string filterClause, string expectedLiteralText)
         {
             FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
 
@@ -2755,9 +2793,29 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Theory]
+        [InlineData("SSN in [ '', ' ' ]")]     // Edm.String
+        [InlineData("SSN in [ \"\", \" \" ]")]     // Edm.String
+        [InlineData("SSN in [ '', \" \" ]")]     // Edm.String
+        [InlineData("SSN in [ \"\", ' ' ]")]     // Edm.String
+        public void FilterWithInOperationWithEmptyStringAndWhitespaceInSquareBrackets(string filterClause)
+        {
+            FilterClause filter = ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
+
+            var inNode = Assert.IsType<InNode>(filter.Expression);
+
+            CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
+
+            // A single whitespace or multiple whitespaces are valid literals
+            Assert.Equal(2, collectionNode.Collection.Count);
+        }
+
+        [Theory]
         [InlineData("MyGuid in ( '' )", "")]  // Edm.Guid
         [InlineData("MyGuid in ( '  ' )", "  ")]  // Edm.Guid
         [InlineData("MyGuid in ( \" \" )", " ")]  // Edm.Guid
+        [InlineData("MyGuid in [ '' ]", "")]  // Edm.Guid
+        [InlineData("MyGuid in [ '  ' ]", "  ")]  // Edm.Guid
+        [InlineData("MyGuid in [ \" \" ]", " ")]  // Edm.Guid
         public void FilterWithInOperationGuidWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2768,6 +2826,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("Birthdate in ( '' )", "")]  // Edm.DateTimeOffset
         [InlineData("Birthdate in ( \" \" )", " ")]  // Edm.DateTimeOffset
         [InlineData("Birthdate in ('   ')", "   ")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in [ '' ]", "")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in [ \" \" ]", " ")]  // Edm.DateTimeOffset
+        [InlineData("Birthdate in ['   ']", "   ")]  // Edm.DateTimeOffset
         public void FilterWithInOperationDateTimeOffsetWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2778,6 +2839,9 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [InlineData("MyDate in ( '' )", "")]  // Edm.Date
         [InlineData("MyDate in ( \" \" )", " ")]  // Edm.Date
         [InlineData("MyDate in ('   ')", "   ")]  // Edm.Date
+        [InlineData("MyDate in [ '' ]", "")]  // Edm.Date
+        [InlineData("MyDate in [ \" \" ]", " ")]  // Edm.Date
+        [InlineData("MyDate in ['   ']", "   ")]  // Edm.Date
         public void FilterWithInOperationDateWithEmptyQuotesThrows(string filterClause, string quotedString)
         {
             Action parse = () => ParseFilter(filterClause, HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());

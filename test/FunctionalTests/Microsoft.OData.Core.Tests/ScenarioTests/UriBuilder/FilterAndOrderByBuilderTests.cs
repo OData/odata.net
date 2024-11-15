@@ -450,6 +450,16 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             Assert.Equal(new Uri("http://gobbledygook/People?$filter=ID%20in%20[1%2C2%2C3]"), actualUri, new UriComparer<Uri>());
         }
 
+        [Theory]
+        [InlineData("People?$filter=Name in ('')", "http://gobbledygook/People?$filter=Name%20in%20(%27%27)")]
+        [InlineData("People?$filter=Name in ['']", "http://gobbledygook/People?$filter=Name%20in%20[%27%27]")]
+        public void BuildFilterWithInOperatorUsingCollectionWithEmptyString(string filterQuery, string expectedQuery)
+        {
+            Uri queryUri = new Uri(filterQuery, UriKind.Relative);
+            Uri actualUri = UriBuilder(queryUri, ODataUrlKeyDelimiter.Parentheses, settings);
+            Assert.Equal(new Uri(expectedQuery), actualUri, new UriComparer<Uri>());
+        }
+
         [Fact]
         public void BuildFilterWithInOperatorUsingSingleConstant()
         {
