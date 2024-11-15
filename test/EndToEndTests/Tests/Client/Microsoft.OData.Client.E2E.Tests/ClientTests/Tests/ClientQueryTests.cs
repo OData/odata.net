@@ -63,6 +63,37 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             Assert.Equal(expectedCount, result.Length);
         }
 
+        [Theory]
+        [InlineData("People?$filter=Name in ('')", 0)]
+        [InlineData("People?$filter=Name in ['']", 0)]
+        [InlineData("People?$filter=Name in ( '' )", 0)]
+        [InlineData("People?$filter=Name in [ '' ]", 0)]
+        [InlineData("People?$filter=Name in (\"\")", 0)]
+        [InlineData("People?$filter=Name in [\"\"]", 0)]
+        [InlineData("People?$filter=Name in ( \"\" )", 0)]
+        [InlineData("People?$filter=Name in [ \"\" ]", 0)]
+        [InlineData("People?$filter=Name in ( ' ' )", 0)]
+        [InlineData("People?$filter=Name in [ ' ' ]", 0)]
+        [InlineData("People?$filter=Name in ( \"  \" )", 0)]
+        [InlineData("People?$filter=Name in [ \"   \"]", 0)]
+        [InlineData("People?$filter=Name in ( '', ' ' )", 0)]
+        [InlineData("People?$filter=Name in [ '', ' ' ]", 0)]
+        [InlineData("People?$filter=Name in ( \"\", \" \" )", 0)]
+        [InlineData("People?$filter=Name in [ \"\", \" \" ]", 0)]
+        [InlineData("People?$filter=Name in ( '', \" \" )", 0)]
+        [InlineData("People?$filter=Name in [ '', \" \" ]", 0)]
+        [InlineData("People?$filter=Name in ( \"\", ' ' )", 0)]
+        [InlineData("People?$filter=Name in [ \"\", ' ' ]", 0)]
+        [InlineData("People?$filter=Name in [ 'null', 'null' ]", 0)]
+        public async Task DollarFilter_WithCollectionWithEmptyString_ExecutesSuccessfully(string query, int expectedCount)
+        {
+            // Act
+            var response = await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + query));
+
+            // Assert
+            Assert.Equal(expectedCount, response.ToArray().Length);
+        }
+
         [Fact]
         public async Task Using_LinqContains_ExecutesSuccessfully()
         {
