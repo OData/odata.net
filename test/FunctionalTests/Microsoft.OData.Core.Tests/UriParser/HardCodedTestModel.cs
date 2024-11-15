@@ -1785,6 +1785,16 @@ namespace Microsoft.OData.Tests.UriParser
             return TestModel.FindType("Fully.Qualified.Namespace.FramedPainting") as IEdmEntityType;
         }
 
+        public static IEdmComplexType GetColorPatternType()
+        {
+            return TestModel.FindType("Fully.Qualified.Namespace.ColorPattern") as IEdmComplexType;
+        }
+
+        public static IEdmComplexTypeReference GetColorPatternTypeReference()
+        {
+            return new EdmComplexTypeReference(GetColorPatternType(), false);
+        }
+
         /// <summary>
         /// Gets a type reference to a painting. We use 'false' for nullable because that is the value the product should set
         /// it to when we have to create a reference (like for the item type of the collection you are filtering or something).

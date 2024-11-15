@@ -462,9 +462,8 @@ namespace Microsoft.OData.UriParser
             }
 
             IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
-            IEdmStructuredType childStructuredType = childType as IEdmStructuredType;
 
-            if (childStructuredType == null)
+            if (childType is not IEdmStructuredType childStructuredType)
             {
                 return this.bindMethod(dottedIdentifierToken);
             }
