@@ -234,12 +234,34 @@ namespace Microsoft.OData.UriParser
 
             // If there isn't, bind as Uri function
             // Bind all arguments
+            // Initialize a stack to keep track of previous query tokens
+            Stack<QueryToken> previousQueryTokens = new Stack<QueryToken>();
             List<QueryNode> argumentNodes = functionCallToken.Arguments.Select(argument =>
             {
                 // If the function is IsOf or Cast and the argument is a dotted identifier, we need to bind it differently
-                if (UnboundFunctionNames.Contains(functionCallToken.Name) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                if (UnboundFunctionNames.Contains(functionCallToken.Name))
                 {
-                    return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier);
+                    if(argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                    {
+                        // Pop the previous query token if available
+                        QueryToken previousArgument = previousQueryTokens.Count > 0 ? previousQueryTokens.Pop() : null;
+
+                        IEdmSchemaType dottedIdentifierType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifier.Identifier, this.Resolver);
+
+                        // If cast or isof has 2 arguments, then the first argument is the next token of the second argument
+                        // If the parent is not a primitive type, set the NextToken of the current dotted identifier to the first argument
+                        if (previousArgument != null && dottedIdentifierType is not IEdmPrimitiveType)
+                        {
+                            // Push the current argument onto the stack to keep track of the previous argument
+                            dottedIdentifier.NextToken = previousArgument;
+                        }
+
+                        return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier, dottedIdentifierType);
+                    }
+
+                    // first we need to set the parent of the next argument as the current argument.
+                    // isof and cast can have 1 or 2 arguments, so we need to keep track of the previous argument
+                    previousQueryTokens.Push(argument);
                 }
 
                 return this.bindMethod(argument);
@@ -440,9 +462,10 @@ namespace Microsoft.OData.UriParser
         /// Binds a <see cref="DottedIdentifierToken"/> for the 'isof' and 'cast' function calls.
         /// </summary>
         /// <param name="dottedIdentifierToken">The dotted identifier token to bind.</param>
+        /// <param name="childType">The child type to bind to.</param>
         /// <returns>A <see cref="QueryNode"/> representing the bound single resource node.</returns>
         /// <exception cref="ODataException">Thrown when the token cannot be bound as a single resource node.</exception>
-        private QueryNode TryBindDottedIdentifierForIsOfOrCastFunctionCall(DottedIdentifierToken dottedIdentifierToken)
+        private QueryNode TryBindDottedIdentifierForIsOfOrCastFunctionCall(DottedIdentifierToken dottedIdentifierToken, IEdmSchemaType childType)
         {
             QueryNode parent = null;
             IEdmType parentType = null;
@@ -460,8 +483,6 @@ namespace Microsoft.OData.UriParser
                     parentType = parent.GetEdmType();
                 }
             }
-
-            IEdmSchemaType childType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifierToken.Identifier, this.Resolver);
 
             if (childType is not IEdmStructuredType childStructuredType)
             {
