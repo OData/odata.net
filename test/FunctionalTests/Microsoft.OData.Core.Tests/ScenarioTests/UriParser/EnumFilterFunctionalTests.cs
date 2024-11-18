@@ -412,7 +412,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("cast(NS.Color'Green', 'Edm.String') eq 'blue'")]
         [InlineData("cast(NS.Color'Green', Edm.String) eq 'blue'")]
-        public void ParseFilterCastMethod1(string filterQuery)
+        public void ParseFilterCastMethodWithEdmPrimitiveTypes(string filterQuery)
         {
             var filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
@@ -424,7 +424,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("cast('Green', 'NS.Color') eq NS.Color'Green'")]
         [InlineData("cast('Green', NS.Color) eq NS.Color'Green'")]
-        public void ParseFilterCastMethod2(string filterQuery)
+        public void ParseFilterCastMethodWithOrWithoutSingleQuotesOnType(string filterQuery)
         {
             var filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
