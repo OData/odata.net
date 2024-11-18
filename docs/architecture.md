@@ -231,6 +231,18 @@ sequenceDiagram
     api producer->>api producer: does this work?
 ```
 
+#### request
+
+```mermaid
+graph TD;
+    user defined types-->data request;
+```
+user defined types -> odata request -> http request -> http client -> http handler -> http request -> odata request -> data store request
+
+#### response
+
+data store response -> odata response -> http response -> http handler -> http client -> http response -> odata response -> user defined types
+
 
 user defined types 
 ->generate-> 
