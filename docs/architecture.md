@@ -220,15 +220,17 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
 sequenceDiagram
-    participant api consumer
+    participant user defined types
+    participant odata request
+    participant http request
     participant http client
     participant http handler
-    participant api producer
-    api consumer->>api consumer: user-defined types
-    api consumer->>http client: Hi Alice
+    participant data store request
+    participant data store response
+    participant odata response
+    participant http response
+    user defined types->>odata request: adapt
     http client->>http handler: Hi Bob
-    http handler->>api producer: what??
-    api producer->>api producer: does this work?
 ```
 
 #### request
