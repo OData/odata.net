@@ -284,7 +284,7 @@ sequenceDiagram
     participant odata request CST
     participant odata request AST
 
-    user defined types->>odata CST: serialized to
+    user defined types->>odata request CST: serialized to
 ```
 
 #### odata request to http request
