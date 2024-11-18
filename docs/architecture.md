@@ -224,18 +224,20 @@ title: Node
 ---
 flowchart LR
     user_defined_types
-    odata_request
-    http_request
+    odata_request1[odata_request]
+    http_request1[http_request]
     http_client
     http_handler
+    http_request2[http_request]
+    odata_request2[odata_request]
     data_store_request
-    user_defined_types --> odata_request
-    odata_request --> http_request
-    http_request --> http_client
+    user_defined_types --> odata_request1
+    odata_request1 --> http_request1
+    http_request1 --> http_client
     http_client --> http_handler
-    http_handler --> http_request
-    http_request --> odata_request
-    odata_request --> data_store_request
+    http_handler --> http_request2
+    http_request2 --> odata_request2
+    odata_request2 --> data_store_request
 ```
 
 ```mermaid
