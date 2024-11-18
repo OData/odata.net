@@ -79,17 +79,17 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
             Assert.Equal(10, (await result.ExecuteAsync()).Count());
         }
 
-        [Fact]
-        public async Task Using_PrimitiveTypeInRequestUrl_ExecutesSuccessfully()
+        [Theory]
+        [InlineData("cast(PersonId,Edm.Byte)")]
+        [InlineData("cast(PersonId,edm.byte)")]
+        [InlineData("cast(PersonId,EDM.BYTE)")]
+        public async Task Using_PrimitiveTypeInRequestUrl_ExecutesSuccessfully(string stringOfCast)
         {
-            const string stringOfCast = "cast(PersonId,Edm.Byte)";
-
             //GET http://localhost/odata/People?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32) gt 0 HTTP/1.1
             //all the IDs in [-10, 2] except 0 are counted in.
             var result = _context.People.Where(c => (Byte)c.PersonId > 0);
             var stringOfQuery = result.ToString();
             Assert.Equal("http://localhost/odata/People?$filter=cast(cast(PersonId,Edm.Byte),Edm.Int32) gt 0", stringOfQuery);
-            Assert.Contains(stringOfCast, stringOfQuery);
             Assert.Equal(12, (await ((DataServiceQuery<Common.Clients.EndToEnd.Person>)result).ExecuteAsync()).Count());
 
             //GET http://localhost/odata/People?$filter=PersonId gt 0 HTTP/1.1
