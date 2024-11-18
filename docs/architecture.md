@@ -263,8 +263,10 @@ flowchart LR
     http_response2 --> odata_response2
     odata_response2 --> user_defined_types
 
-    style odata_response1 fill:#ff0000
-    style odata_response2 fill:#ff0000
+    style odata_response1 fill:#08FF08
+    style odata_response2 fill:#08FF08
+    style http_response1 fill:#CCFF00
+    style http_response2 fill:#CCFF00
 ```
 
 user defined types 
