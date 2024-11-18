@@ -369,7 +369,7 @@ sequenceDiagram
 
 ### a common abstraction for handling a request
 
-TODO In the data flow diagram, we saw that...
+In the data flow diagram, we saw that odata services "should" become composable if the http portion was removed. The types to model that might look like:
 
 ```csharp
 public interface IOdataRequestHandler
@@ -382,6 +382,7 @@ public abstract class OdataRequest
   private OdataRequest()
   {
   }
+
   // implement a discriminated union pattern here
 }
 
@@ -390,11 +391,93 @@ public abstract class OdataResponse
   private OdataResponse()
   {
   }
+
   // implement a discriminated union pattern here
 }
 ```
 
-TODO an aggregated collection
+Throughout this document and others, I am going to start fleshing out an implementation for a service that has an entity collection which is populated but 3 other external odata services. Let's see what the implementation would look like so far:
+
+```csharp
+public sealed class CollectionAggregatorOdataRequestHandler : IOdataRequestHandler
+{
+    private readonly IOdataRequestHandler defaultOdataRequestHandler;
+
+    private readonly IReadOnlyList<IOdataRequestHandler> aggregatedCollectionOdataRequestHandlers;
+
+    private readonly int pageSize;
+
+    public CollectionAggregatorOdataRequestHandler(
+        IOdataRequestHandler defaultOdataRequestHandler,
+        IReadOnlyList<IOdataRequestHandler> aggregatedCollectionOdataRequestHandlers,
+        int pageSize)
+    {
+        this.defaultOdataRequestHandler = defaultOdataRequestHandler;
+        this.aggregatedCollectionOdataRequestHandlers = aggregatedCollectionOdataRequestHandlers;
+        this.pageSize = pageSize;
+    }
+
+    public OdataResponse HandleRequest(OdataRequest request)
+    {
+        if (!IsRequestToAggregatedCollection(request))
+        {
+            return this.defaultOdataRequestHandler.HandleRequest(request);
+        }
+
+
+        if (IsOrderByRequest(request))
+        {
+            //// TODO flesh this out
+            //// you need to get one page from every handler, and then merge those pages
+            //// you need the skip token to keep track of how deep into each handler you got
+            //// you need the skip token to keep track of the skip token for each of the other handlers
+            return default;
+        }
+        else if (IsSkipRequest(request))
+        {
+            //// TODO flesh this out
+            //// you need to start by finding the correct first handler to begin returning from (the other handlers were skipped)
+            return default;
+        }
+        else
+        {
+            foreach (var odataRequestHandler in this.aggregatedCollectionOdataRequestHandlers)
+            {
+                //// TODO flesh this out
+                //// you need to fill one of your response pages with as many pages from the other handlers that you can
+                //// go through each handler one at a time; if the client doesn't page through all the way, there's no reason to make unnecessary requests to some handlers
+                //// make sure to handle $count requests by summing the count
+                //// the returned skip tokens need to keep track of the skip token given by the current handler
+                //// the returned skip tokens need to keep track of how deep into the current page of the current handler you are
+                //// the returned skip tokens need to keep track if you are on the boudnary between two handlers
+                //// if the original request contains $top, then you need to keep track of how many have been retruned so far; the $top sent to the delegate handlers needs to reflect this
+            }
+
+            return default;
+        }
+    }
+
+    private static bool IsRequestToAggregatedCollection(OdataRequest odataRequest)
+    {
+        //// TODO flesh this out
+        return true;
+    }
+
+    private static bool IsOrderByRequest(OdataRequest odataRequest)
+    {
+        //// TODO flesh this out
+        return true;
+    }
+
+    private static bool IsSkipRequest(OdataRequest odataRequest)
+    {
+        //// TODO flesh this out
+        return true;
+    }
+}
+```
+
+Clearly, there's still a lot of infrastructure to flesh out, and a lot of implementation to finish, but it appears to be "sound" so far.
 
 ### TODO dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
 
@@ -404,182 +487,6 @@ TODO an aggregated collection
 3. CSDL defined authz
 4. custom headers, query options, endpoints, etc.
 
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
-
-asdf
 
 
 
