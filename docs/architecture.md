@@ -223,8 +223,8 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 title: Node
 ---
 flowchart LR
-    user defined types
-    odata request
+    user_defined_types
+    odata_request
     user defined types --> odata request
 ```
 
