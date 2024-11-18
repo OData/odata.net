@@ -234,34 +234,22 @@ namespace Microsoft.OData.UriParser
 
             // If there isn't, bind as Uri function
             // Bind all arguments
-            // Initialize a stack to keep track of previous query tokens
-            Stack<QueryToken> previousQueryTokens = new Stack<QueryToken>();
             List<QueryNode> argumentNodes = functionCallToken.Arguments.Select(argument =>
             {
                 // If the function is IsOf or Cast and the argument is a dotted identifier, we need to bind it differently
-                if (UnboundFunctionNames.Contains(functionCallToken.Name))
+                if (UnboundFunctionNames.Contains(functionCallToken.Name) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
                 {
-                    if(argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                    // Find the type of the dotted identifier by resolving it against the model. This also ensure case-insensitive resolution.
+                    IEdmSchemaType dottedIdentifierType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifier.Identifier, this.Resolver);
+
+                    // If the dotted identifier is a primitive type and the next token is not null, we need to ensure next token is null
+                    if (dottedIdentifierType is IEdmPrimitiveType && dottedIdentifier.NextToken != null)
                     {
-                        // Pop the previous query token if available
-                        QueryToken previousArgument = previousQueryTokens.Count > 0 ? previousQueryTokens.Pop() : null;
-
-                        IEdmSchemaType dottedIdentifierType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifier.Identifier, this.Resolver);
-
-                        // If cast or isof has 2 arguments, then the first argument is the next token of the second argument
-                        // If the parent is not a primitive type, set the NextToken of the current dotted identifier to the first argument
-                        if (previousArgument != null && dottedIdentifierType is not IEdmPrimitiveType)
-                        {
-                            // Push the current argument onto the stack to keep track of the previous argument
-                            dottedIdentifier.NextToken = previousArgument;
-                        }
-
-                        return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier, dottedIdentifierType);
+                        // Push the current argument onto the stack to keep track of the previous argument
+                        dottedIdentifier.NextToken = null;
                     }
 
-                    // first we need to set the parent of the next argument as the current argument.
-                    // isof and cast can have 1 or 2 arguments, so we need to keep track of the previous argument
-                    previousQueryTokens.Push(argument);
+                    return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier, dottedIdentifierType);
                 }
 
                 return this.bindMethod(argument);
