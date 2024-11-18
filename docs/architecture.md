@@ -230,7 +230,12 @@ sequenceDiagram
     participant odata response
     participant http response
     user defined types->>odata request: adapt
-    http client->>http handler: Hi Bob
+    odata request->>http request: adapt
+    http request->>http client: pass
+    http client->>http handler: transmit
+    http handler->>http request: fork thread
+    http request->>odata request: adapt
+    odata request->>data store request: adapt
 ```
 
 #### request
