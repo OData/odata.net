@@ -479,13 +479,12 @@ public sealed class CollectionAggregatorOdataRequestHandler : IOdataRequestHandl
 
 Clearly, there's still a lot of infrastructure to flesh out, and a lot of implementation to finish, but it appears to be "sound" so far.
 
-### TODO dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
-
 ## follow-ups
-1. being able to stream payloads
-2. handling serialization of customer-defined types
-3. CSDL defined authz
-4. custom headers, query options, endpoints, etc.
+1. dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
+2. being able to stream payloads
+3. handling serialization of customer-defined types
+4. CSDL defined authz
+5. custom headers, query options, endpoints, etc.
 
 
 
