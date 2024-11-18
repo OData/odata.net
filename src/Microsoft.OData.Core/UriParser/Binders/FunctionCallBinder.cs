@@ -237,7 +237,8 @@ namespace Microsoft.OData.UriParser
             List<QueryNode> argumentNodes = functionCallToken.Arguments.Select(argument =>
             {
                 // If the function is IsOf or Cast and the argument is a dotted identifier, we need to bind it differently
-                if (UnboundFunctionNames.Contains(functionCallToken.Name) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
+                string functionCallTokenName = IsUnboundFunction(functionCallToken.Name);
+                if ((ExpressionConstants.UnboundFunctionIsOf == functionCallTokenName || ExpressionConstants.UnboundFunctionCast == functionCallTokenName) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
                 {
                     // Find the type of the dotted identifier by resolving it against the model. This also ensure case-insensitive resolution.
                     IEdmSchemaType dottedIdentifierType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifier.Identifier, this.Resolver);
@@ -245,8 +246,8 @@ namespace Microsoft.OData.UriParser
                     // If the dotted identifier is a primitive type and the next token is not null, we need to ensure next token is null
                     if (dottedIdentifierType is IEdmPrimitiveType && dottedIdentifier.NextToken != null)
                     {
-                        // Push the current argument onto the stack to keep track of the previous argument
-                        dottedIdentifier.NextToken = null;
+                        // If the next token is not null, we need to ensure it is null
+                        dottedIdentifier = new DottedIdentifierToken(dottedIdentifier.Identifier, null);
                     }
 
                     return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier, dottedIdentifierType);
