@@ -236,6 +236,10 @@ sequenceDiagram
 ```mermaid
 graph TD;
     use_defined_types-->odata_request;
+    odata_request-->http_request;
+    http_request-->http_client;
+    http_handler-->http_request;
+    http_request-->odata_request
 ```
 user defined types -> odata request -> http request -> http client -> http handler -> http request -> odata request -> data store request
 
