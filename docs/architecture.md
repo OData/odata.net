@@ -320,7 +320,52 @@ sequenceDiagram
     odata request AST->>data store request AST: translated to
 ```
 
-TODO do the response version
+#### data store response to odata response
+
+```mermaid
+sequenceDiagram
+    participant data store response AST
+    participant odata response AST
+
+    data store response AST->>odata response AST: translated to
+```
+
+#### odata response to http response
+
+```mermaid
+sequenceDiagram
+    participant odata response AST
+    participant odata response CST
+    participant http response
+
+    odata response AST->>odata response CST: converted to
+    odata response CST->>http response: transcribed to
+```
+
+#### http response to odata response
+
+```mermaid
+sequenceDiagram
+    participant http response
+    participant odata response CST
+    participant odata response AST
+
+    http response->>odata response CST: parsed to
+    odata response CST->>odata response AST: translated to
+```
+
+#### odata response to user defined types
+
+```mermaid
+sequenceDiagram
+    participant odata response AST
+    participant user defined types
+
+    odata response AST->>user defined types: deserialized to
+```
+
+
+TODO notice that you can cut out HTTP now (not this above)
 
 
 
@@ -329,3 +374,63 @@ TODO do the response version
 2. handling serialization of customer-defined types
 3. CSDL defined authz
 4. custom headers, query options, endpoints, etc.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
