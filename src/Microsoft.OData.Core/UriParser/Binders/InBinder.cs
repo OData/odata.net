@@ -27,12 +27,19 @@ namespace Microsoft.OData.UriParser
         private readonly Func<QueryToken, QueryNode> bindMethod;
 
         /// <summary>
+        /// Resolver for parsing
+        /// </summary>
+        private readonly ODataUriResolver resolver;
+
+        /// <summary>
         /// Constructs a InBinder with the given method to be used binding the parent token if needed.
         /// </summary>
         /// <param name="bindMethod">Method to use for binding the parent token, if needed.</param>
-        internal InBinder(Func<QueryToken, QueryNode> bindMethod)
+        /// <param name="resolver">Resolver for parsing.</param>
+        internal InBinder(Func<QueryToken, QueryNode> bindMethod, ODataUriResolver resolver)
         {
             this.bindMethod = bindMethod;
+            this.resolver = resolver;
         }
 
         /// <summary>
@@ -64,6 +71,8 @@ namespace Microsoft.OData.UriParser
             {
                 left = MetadataBindingUtils.ConvertToTypeIfNeeded(left, right.ItemType);
             }
+
+            MetadataBindingUtils.VerifyCollectionNode(right, this.resolver.EnableCaseInsensitive);
 
             return new InNode(left, right);
         }
