@@ -292,6 +292,7 @@ sequenceDiagram
 sequenceDiagram
     participant odata request AST
     participant odata request CST
+    participant http request
 
     odata request AST->>odata request CST: converted to
     odata request CST->>http request: transcribed to
