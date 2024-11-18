@@ -225,7 +225,17 @@ title: Node
 flowchart LR
     user_defined_types
     odata_request
+    http_request
+    http_client
+    http_handler
+    data_store_request
     user_defined_types --> odata_request
+    odata_request --> http_request
+    http_request --> http_client
+    http_client --> http_handler
+    http_handler --> http_request
+    http_request --> odata_request
+    odata_request --> data_store_request
 ```
 
 ```mermaid
