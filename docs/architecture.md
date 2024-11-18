@@ -282,13 +282,20 @@ Notice that in each case, the request and response types are the same for both t
 sequenceDiagram
     participant user defined types
     participant odata request AST
-    participant odata request CST
 
     user defined types->>odata request AST: serialized to
-    odata request AST->>odata request CST: converted to
 ```
 
 #### odata request to http request
+
+```mermaid
+sequenceDiagram
+    participant odata request AST
+    participant odata request CST
+
+    odata request AST->>odata request CST: converted to
+    odata request CST->>http request: transcribed to
+```
 
 user defined types 
 ->generate-> 
