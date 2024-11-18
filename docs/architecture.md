@@ -369,7 +369,32 @@ sequenceDiagram
 
 ### a common abstraction for handling a request
 
-TODO
+TODO In the data flow diagram, we saw that...
+
+```csharp
+public interface IOdataRequestHandler
+{
+  OdataResponse HandleRequest(OdataRequest request);
+}
+
+public abstract class OdataRequest
+{
+  private OdataRequest()
+  {
+  }
+  // implement a discriminated union pattern here
+}
+
+public abstract class OdataResponse
+{
+  private OdataResponse()
+  {
+  }
+  // implement a discriminated union pattern here
+}
+```
+
+TODO an aggregated collection
 
 ### TODO dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
 
