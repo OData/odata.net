@@ -265,7 +265,7 @@ flowchart LR
 
     style odata_response1 fill:#08FF08
     style odata_response2 fill:#08FF08
-    style http_response1 fill:#FBF719
+    style http_response1 fill:#FFDE64
     style http_response2 fill:#FBF719
 ```
 
