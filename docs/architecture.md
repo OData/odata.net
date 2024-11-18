@@ -224,7 +224,7 @@ sequenceDiagram
     participant http client
     participant http handler
     participant api producer
-    api consumer->>api consumer: user-defined types --> 
+    api consumer->>api consumer: user-defined types
     api consumer->>http client: Hi Alice
     http client->>http handler: Hi Bob
     http handler->>api producer: what??
