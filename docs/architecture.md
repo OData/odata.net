@@ -276,7 +276,7 @@ flowchart LR
 
 Notice that in each case, the request and response types are the same for both the client and the service. There are three side effects of this:
 1. The entire HTTP portion of the flow can be removed, meaning that **any** routing infrastructure can be leveraged while sharing the same common "odata_request" and "odata_response" types. This would allow ASP.NET services and azure functions to share the same basic scaffolding.
-2. Because the HTTP portion is not strictly necessary for processing a request, it means that odata services can be easily composed at this layer. If an odata_request is sent by a client using the same type that it is processed by the service, then it means that additional odata services can themselves be treated as "data stores". More on this later.
+2. Because the HTTP portion is not strictly necessary for processing a request, it means that odata services can be easily composed at this layer. If an odata_request is sent by a client using the same type that it is processed by the service, then it means that additional odata services can themselves be treated as "data stores". More on this [later](#a-common-abstraction-for-handling-a-request).
 3. These types can be shared but consumers of the odata libraries, but currently they are not. To see the impact of this sharing, let's dive into the mechanics of each translation of the data:
 
 #### user defined types to odata request
