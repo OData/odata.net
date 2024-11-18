@@ -301,13 +301,28 @@ sequenceDiagram
 #### http request to odata request
 
 ```mermaid
+sequenceDiagram
     participant http request
     participant odata request CST
     participant odata request AST
 
-    http request->>odata request CST
-    odata request CST->>odata request AST
+    http request->>odata request CST: parsed to
+    odata request CST->>odata request AST: converted to
 ```
+
+#### odata request to data store request
+
+```mermaid
+sequenceDiagram
+    participant odata request AST
+    participant data store request AST
+
+    odata request AST->>data store request AST: translated to
+```
+
+"translated to"
+
+
 
 user defined types 
 ->generate-> 
