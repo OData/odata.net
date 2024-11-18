@@ -2413,45 +2413,86 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
 
         [Theory]
         [InlineData("('a''bc')", "('a''bc')", 1)]
+        [InlineData("['a''bc']", "['a''bc']", 1)]
         [InlineData("('''def')", "('''def')", 1)]
+        [InlineData("['''def']", "['''def']", 1)]
         [InlineData("('xyz''')", "('xyz''')", 1)]
+        [InlineData("['xyz''']", "['xyz''']", 1)]
         [InlineData("('''pqr''')", "('''pqr''')", 1)]
+        [InlineData("['''pqr''']", "['''pqr''']", 1)]
         [InlineData("('a''bc','''def')", "('a''bc','''def')", 2)]
+        [InlineData("['a''bc','''def']", "['a''bc','''def']", 2)]
         [InlineData("('a''bc','xyz''')", "('a''bc','xyz''')", 2)]
+        [InlineData("['a''bc','xyz''']", "['a''bc','xyz''']", 2)]
         [InlineData("('a''bc','''pqr''')", "('a''bc','''pqr''')", 2)]
+        [InlineData("['a''bc','''pqr''']", "['a''bc','''pqr''']", 2)]
         [InlineData("('''def','a''bc')", "('''def','a''bc')", 2)]
+        [InlineData("['''def','a''bc']", "['''def','a''bc']", 2)]
         [InlineData("('''def','xyz''')", "('''def','xyz''')", 2)]
+        [InlineData("['''def','xyz''']", "['''def','xyz''']", 2)]
         [InlineData("('''def','''pqr''')", "('''def','''pqr''')", 2)]
+        [InlineData("['''def','''pqr''']", "['''def','''pqr''']", 2)]
         [InlineData("('xyz''','a''bc')", "('xyz''','a''bc')", 2)]
+        [InlineData("['xyz''','a''bc']", "['xyz''','a''bc']", 2)]
         [InlineData("('xyz''','''def')", "('xyz''','''def')", 2)]
+        [InlineData("['xyz''','''def']", "['xyz''','''def']", 2)]
         [InlineData("('xyz''','''pqr''')", "('xyz''','''pqr''')", 2)]
+        [InlineData("['xyz''','''pqr''']", "['xyz''','''pqr''']", 2)]
         [InlineData("('''pqr''','a''bc')", "('''pqr''','a''bc')", 2)]
+        [InlineData("['''pqr''','a''bc']", "['''pqr''','a''bc']", 2)]
         [InlineData("('''pqr''','''def')", "('''pqr''','''def')", 2)]
+        [InlineData("['''pqr''','''def']", "['''pqr''','''def']", 2)]
         [InlineData("('''pqr''','xyz''')", "('''pqr''','xyz''')", 2)]
+        [InlineData("['''pqr''','xyz''']", "['''pqr''','xyz''']", 2)]
         [InlineData("('a''bc','''def','xyz''')", "('a''bc','''def','xyz''')", 3)]
+        [InlineData("['a''bc','''def','xyz''']", "['a''bc','''def','xyz''']", 3)]
         [InlineData("('a''bc','''def','''pqr''')", "('a''bc','''def','''pqr''')", 3)]
+        [InlineData("['a''bc','''def','''pqr''']", "['a''bc','''def','''pqr''']", 3)]
         [InlineData("('a''bc','xyz''','''def')", "('a''bc','xyz''','''def')", 3)]
+        [InlineData("['a''bc','xyz''','''def']", "['a''bc','xyz''','''def']", 3)]
         [InlineData("('a''bc','xyz''','''pqr''')", "('a''bc','xyz''','''pqr''')", 3)]
+        [InlineData("['a''bc','xyz''','''pqr''']", "['a''bc','xyz''','''pqr''']", 3)]
         [InlineData("('a''bc','''pqr''','''def')", "('a''bc','''pqr''','''def')", 3)]
+        [InlineData("['a''bc','''pqr''','''def']", "['a''bc','''pqr''','''def']", 3)]
         [InlineData("('a''bc','''pqr''','xyz''')", "('a''bc','''pqr''','xyz''')", 3)]
+        [InlineData("['a''bc','''pqr''','xyz''']", "['a''bc','''pqr''','xyz''']", 3)]
         [InlineData("('''def','a''bc','xyz''')", "('''def','a''bc','xyz''')", 3)]
+        [InlineData("['''def','a''bc','xyz''']", "['''def','a''bc','xyz''']", 3)]
         [InlineData("('''def','a''bc','''pqr''')", "('''def','a''bc','''pqr''')", 3)]
+        [InlineData("['''def','a''bc','''pqr''']", "['''def','a''bc','''pqr''']", 3)]
         [InlineData("('''def','xyz''','a''bc')", "('''def','xyz''','a''bc')", 3)]
+        [InlineData("['''def','xyz''','a''bc']", "['''def','xyz''','a''bc']", 3)]
         [InlineData("('''def','xyz''','''pqr''')", "('''def','xyz''','''pqr''')", 3)]
+        [InlineData("['''def','xyz''','''pqr''']", "['''def','xyz''','''pqr''']", 3)]
         [InlineData("('''def','''pqr''','a''bc')", "('''def','''pqr''','a''bc')", 3)]
+        [InlineData("['''def','''pqr''','a''bc']", "['''def','''pqr''','a''bc']", 3)]
         [InlineData("('''def','''pqr''','xyz''')", "('''def','''pqr''','xyz''')", 3)]
+        [InlineData("['''def','''pqr''','xyz''']", "['''def','''pqr''','xyz''']", 3)]
         [InlineData("('xyz''','a''bc','''def')", "('xyz''','a''bc','''def')", 3)]
+        [InlineData("['xyz''','a''bc','''def']", "['xyz''','a''bc','''def']", 3)]
         [InlineData("('xyz''','a''bc','''pqr''')", "('xyz''','a''bc','''pqr''')", 3)]
+        [InlineData("['xyz''','a''bc','''pqr''']", "['xyz''','a''bc','''pqr''']", 3)]
         [InlineData("('xyz''','''def','''pqr''')", "('xyz''','''def','''pqr''')", 3)]
+        [InlineData("['xyz''','''def','''pqr''']", "['xyz''','''def','''pqr''']", 3)]
         [InlineData("('xyz''','''def','a''bc')", "('xyz''','''def','a''bc')", 3)]
+        [InlineData("['xyz''','''def','a''bc']", "['xyz''','''def','a''bc']", 3)]
         [InlineData("('xyz''','''pqr''','a''bc')", "('xyz''','''pqr''','a''bc')", 3)]
+        [InlineData("['xyz''','''pqr''','a''bc']", "['xyz''','''pqr''','a''bc']", 3)]
         [InlineData("('xyz''','''pqr''','''def')", "('xyz''','''pqr''','''def')", 3)]
+        [InlineData("['xyz''','''pqr''','''def']", "['xyz''','''pqr''','''def']", 3)]
         [InlineData("('''pqr''','a''bc','''def')", "('''pqr''','a''bc','''def')", 3)]
+        [InlineData("['''pqr''','a''bc','''def']", "['''pqr''','a''bc','''def']", 3)]
         [InlineData("('''pqr''','a''bc','xyz''')", "('''pqr''','a''bc','xyz''')", 3)]
+        [InlineData("['''pqr''','a''bc','xyz''']", "['''pqr''','a''bc','xyz''']", 3)]
         [InlineData("('''pqr''','''def','a''bc')", "('''pqr''','''def','a''bc')", 3)]
+        [InlineData("['''pqr''','''def','a''bc']", "['''pqr''','''def','a''bc']", 3)]
         [InlineData("('''pqr''','''def','xyz''')", "('''pqr''','''def','xyz''')", 3)]
+        [InlineData("['''pqr''','''def','xyz''']", "['''pqr''','''def','xyz''']", 3)]
         [InlineData("('''pqr''','xyz''','a''bc')", "('''pqr''','xyz''','a''bc')", 3)]
+        [InlineData("['''pqr''','xyz''','a''bc']", "['''pqr''','xyz''','a''bc']", 3)]
         [InlineData("('''pqr''','xyz''','''def')", "('''pqr''','xyz''','''def')", 3)]
+        [InlineData("['''pqr''','xyz''','''def']", "['''pqr''','xyz''','''def']", 3)]
+
         public void FilterWithInExpressionContainingEscapedSingleQuotes(string inExpr, string parsedExpr, int count)
         {
             FilterClause filter = ParseFilter($"SSN in {inExpr}", HardCodedTestModel.TestModel, HardCodedTestModel.GetPersonType());
@@ -2749,7 +2790,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(expectedLiteralText, constantNode.LiteralText);
@@ -2769,7 +2810,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
             CollectionConstantNode collectionNode = Assert.IsType<CollectionConstantNode>(inNode.Right);
 
             // A single whitespace or multiple whitespaces are valid literals
-            Assert.Equal(1, collectionNode.Collection.Count);
+            Assert.Single(collectionNode.Collection);
 
             ConstantNode constantNode = collectionNode.Collection.First();
             Assert.Equal(expectedLiteralText, constantNode.LiteralText);

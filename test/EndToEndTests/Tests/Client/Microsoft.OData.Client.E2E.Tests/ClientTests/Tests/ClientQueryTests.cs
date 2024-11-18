@@ -64,34 +64,34 @@ namespace Microsoft.OData.Client.E2E.Tests.ClientTests.Tests
         }
 
         [Theory]
-        [InlineData("People?$filter=Name in ('')", 0)]
-        [InlineData("People?$filter=Name in ['']", 0)]
-        [InlineData("People?$filter=Name in ( '' )", 0)]
-        [InlineData("People?$filter=Name in [ '' ]", 0)]
-        [InlineData("People?$filter=Name in (\"\")", 0)]
-        [InlineData("People?$filter=Name in [\"\"]", 0)]
-        [InlineData("People?$filter=Name in ( \"\" )", 0)]
-        [InlineData("People?$filter=Name in [ \"\" ]", 0)]
-        [InlineData("People?$filter=Name in ( ' ' )", 0)]
-        [InlineData("People?$filter=Name in [ ' ' ]", 0)]
-        [InlineData("People?$filter=Name in ( \"  \" )", 0)]
-        [InlineData("People?$filter=Name in [ \"   \"]", 0)]
-        [InlineData("People?$filter=Name in ( '', ' ' )", 0)]
-        [InlineData("People?$filter=Name in [ '', ' ' ]", 0)]
-        [InlineData("People?$filter=Name in ( \"\", \" \" )", 0)]
-        [InlineData("People?$filter=Name in [ \"\", \" \" ]", 0)]
-        [InlineData("People?$filter=Name in ( '', \" \" )", 0)]
-        [InlineData("People?$filter=Name in [ '', \" \" ]", 0)]
-        [InlineData("People?$filter=Name in ( \"\", ' ' )", 0)]
-        [InlineData("People?$filter=Name in [ \"\", ' ' ]", 0)]
-        [InlineData("People?$filter=Name in [ 'null', 'null' ]", 0)]
-        public async Task DollarFilter_WithCollectionWithEmptyString_ExecutesSuccessfully(string query, int expectedCount)
+        [InlineData("People?$filter=Name in ('')")]
+        [InlineData("People?$filter=Name in ['']")]
+        [InlineData("People?$filter=Name in ( '' )")]
+        [InlineData("People?$filter=Name in [ '' ]")]
+        [InlineData("People?$filter=Name in (\"\")")]
+        [InlineData("People?$filter=Name in [\"\"]")]
+        [InlineData("People?$filter=Name in ( \"\" )")]
+        [InlineData("People?$filter=Name in [ \"\" ]")]
+        [InlineData("People?$filter=Name in ( ' ' )")]
+        [InlineData("People?$filter=Name in [ ' ' ]")]
+        [InlineData("People?$filter=Name in ( \"  \" )")]
+        [InlineData("People?$filter=Name in [ \"   \"]")]
+        [InlineData("People?$filter=Name in ( '', ' ' )")]
+        [InlineData("People?$filter=Name in [ '', ' ' ]")]
+        [InlineData("People?$filter=Name in ( \"\", \" \" )")]
+        [InlineData("People?$filter=Name in [ \"\", \" \" ]")]
+        [InlineData("People?$filter=Name in ( '', \" \" )")]
+        [InlineData("People?$filter=Name in [ '', \" \" ]")]
+        [InlineData("People?$filter=Name in ( \"\", ' ' )")]
+        [InlineData("People?$filter=Name in [ \"\", ' ' ]")]
+        [InlineData("People?$filter=Name in [ 'null', 'null' ]")]
+        public async Task DollarFilter_WithCollectionWithEmptyString_ExecutesSuccessfully(string query)
         {
             // Act
             var response = await _context.ExecuteAsync<Common.Clients.EndToEnd.Person>(new Uri(_baseUri.OriginalString + query));
 
             // Assert
-            Assert.Equal(expectedCount, response.ToArray().Length);
+            Assert.Empty(response.ToArray());
         }
 
         [Fact]
