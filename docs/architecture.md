@@ -241,7 +241,7 @@ flowchart LR
     odata_request2 --> data_store_request
 
     style odata_request1 fill:#08FF08
-    style odata_request52 fill:#08FF08
+    style odata_request2 fill:#08FF08
     style http_request1 fill:#FBF719
     style http_request2 fill:#FBF719
 ```
