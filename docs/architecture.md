@@ -220,7 +220,7 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
 ---
-title:
+title: request flow
 ---
 flowchart LR
     user_defined_types
@@ -241,38 +241,26 @@ flowchart LR
 ```
 
 ```mermaid
-sequenceDiagram
-    participant user defined types
-    participant odata request
-    participant http request
-    participant http client
-    participant http handler
-    participant data store request
-    participant data store response
-    participant odata response
-    participant http response
-    user defined types->>odata request: adapt
-    odata request->>http request: adapt
-    http request->>http client: pass
-    http client->>http handler: transmit
-    http handler->>http request: fork thread
-    http request->>odata request: adapt
-    odata request->>data store request: adapt
+---
+title: response flow
+---
+flowchart LR
+    user_defined_types
+    odata_request1[odata_request]
+    http_request1[http_request]
+    http_client
+    http_handler
+    http_request2[http_request]
+    odata_request2[odata_request]
+    data_store_request
+    user_defined_types --> odata_request1
+    odata_request1 --> http_request1
+    http_request1 --> http_client
+    http_client --> http_handler
+    http_handler --> http_request2
+    http_request2 --> odata_request2
+    odata_request2 --> data_store_request
 ```
-
-#### request
-
-```mermaid
-graph TD;
-    use_defined_types-->odata_request;
-    odata_request-->http_request;
-    http_request-->http_client;
-    http_handler-->http_request;
-    http_request-->odata_request
-```
-user defined types -> odata request -> http request -> http client -> http handler -> http request -> odata request -> data store request
-
-#### response
 
 data store response -> odata response -> http response -> http handler -> http client -> http response -> odata response -> user defined types
 
