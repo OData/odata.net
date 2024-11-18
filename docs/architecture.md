@@ -231,6 +231,7 @@ flowchart LR
     http_request2[http_request]
     odata_request2[odata_request]
     data_store_request
+
     user_defined_types --> odata_request1
     odata_request1 --> http_request1
     http_request1 --> http_client
