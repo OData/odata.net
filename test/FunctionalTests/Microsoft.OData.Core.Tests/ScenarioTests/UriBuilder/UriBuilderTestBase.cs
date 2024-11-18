@@ -25,15 +25,20 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriBuilder
             }
         }
 
-        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlKeyDelimiter, ODataUriParserSettings settings)
+        public static Uri UriBuilder(Uri queryUri, ODataUrlKeyDelimiter urlKeyDelimiter, ODataUriParserSettings settings, ODataUriResolver resolver = null)
         {
             ODataUriParser odataUriParser = new ODataUriParser(HardCodedTestModel.TestModel, ServiceRoot, queryUri);
+            if (resolver != null)
+            {
+                odataUriParser.Resolver = resolver;
+            }
+
             SetODataUriParserSettingsTo(settings, odataUriParser.Settings);
             odataUriParser.UrlKeyDelimiter = urlKeyDelimiter;
             ODataUri odataUri = odataUriParser.ParseUri();
 
             return odataUri.BuildUri(urlKeyDelimiter);
         }
-        #endregion  
+        #endregion
     }
 }

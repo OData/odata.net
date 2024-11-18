@@ -371,7 +371,7 @@ namespace Microsoft.OData.UriParser
                  return this.Bind(queryToken);
              };
 
-            InBinder inBinder = new InBinder(InBinderMethod);
+            InBinder inBinder = new InBinder(InBinderMethod, this.BindingState.Configuration.Resolver);
             return inBinder.BindInOperator(inToken, this.BindingState);
         }
 

@@ -64,7 +64,7 @@ namespace Microsoft.OData.UriParser
                 {
                     string memberName = constantNode.Value.ToString();
                     IEdmEnumType enumType = targetTypeReference.Definition as IEdmEnumType;
-                    if(enumType.ContainsMember(memberName, StringComparison.Ordinal))
+                    if (enumType.ContainsMember(memberName, StringComparison.Ordinal))
                     {
                         string literalText = ODataUriUtils.ConvertToUriLiteral(constantNode.Value, default(ODataVersion));
                         return new ConstantNode(new ODataEnumValue(memberName, enumType.ToString()), literalText, targetTypeReference);
@@ -182,6 +182,31 @@ namespace Microsoft.OData.UriParser
             }
 
             return null;
+        }
+
+        internal static void VerifyCollectionNode(CollectionNode node, bool enableCaseInsensitive = false)
+        {
+            if (node == null ||
+                !(node is CollectionConstantNode collectionConstantNode) ||
+                !collectionConstantNode.ItemType.IsEnum()
+                )
+            {
+                return;
+            }
+
+            IEdmEnumType enumType = collectionConstantNode.ItemType.Definition as IEdmEnumType;
+
+            StringComparison comparison = enableCaseInsensitive ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            foreach (ConstantNode item in collectionConstantNode.Collection)
+            {
+                if (item != null && item.Value != null && item.Value is ODataEnumValue enumValue)
+                {
+                    if (!enumType.ContainsMember(enumValue.Value, comparison))
+                    {
+                        throw new ODataException(ODataErrorStrings.Binder_IsNotValidEnumConstant(enumValue.Value));
+                    }
+                }
+            }
         }
     }
 }
