@@ -262,9 +262,6 @@ flowchart LR
     odata_response2 --> user_defined_types
 ```
 
-data store response -> odata response -> http response -> http handler -> http client -> http response -> odata response -> user defined types
-
-
 user defined types 
 ->generate-> 
 odata uri AST
