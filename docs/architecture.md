@@ -219,6 +219,14 @@ For these reasons (and many others), I think it's best for now to simply underst
 https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
+---
+title: Node
+---
+flowchart LR
+    id
+```
+
+```mermaid
 sequenceDiagram
     participant user defined types
     participant odata request
