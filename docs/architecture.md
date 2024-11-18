@@ -298,6 +298,17 @@ sequenceDiagram
     odata request CST->>http request: transcribed to
 ```
 
+#### http request to odata request
+
+```mermaid
+    participant http request
+    participant odata request CST
+    participant odata request AST
+
+    http request->>odata request CST
+    odata request CST->>odata request AST
+```
+
 user defined types 
 ->generate-> 
 odata uri AST
