@@ -220,7 +220,7 @@ https://mermaid.js.org/syntax/sequenceDiagram.html
 
 ```mermaid
 ---
-title: Node
+title:
 ---
 flowchart LR
     user_defined_types
