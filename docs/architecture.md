@@ -281,10 +281,10 @@ Notice that in each case, the request and response types are the same for both t
 ```mermaid
 sequenceDiagram
     participant user defined types
-    participant odata request CST (concrete syntax tree, also known as a parse tree)
-    participant odata request AST (abstract syntax tree)
+    participant odata request CST
+    participant odata request AST
 
-    user defined types->>odata CST (concrete syntax tree, also known as a parse tree): serialized to
+    user defined types->>odata CST: serialized to
 ```
 
 #### odata request to http request
