@@ -274,6 +274,21 @@ flowchart LR
     style http_response2 fill:#FBF719
 ```
 
+Notice that in each case, the request and response types are the same for both the client and the service. These types can be shared but consumers of the odata libraries, but currently they are not. To see the impact of this sharing, let's dive into the mechanics of each translation of the data:
+
+#### user defined types to odata request
+
+```mermaid
+sequenceDiagram
+    participant user defined types
+    participant odata request CST (concrete syntax tree, also known as a parse tree)
+    participant odata request AST (abstract syntax tree)
+
+    user defined types->>odata CST (concrete syntax tree, also known as a parse tree): serialized to
+```
+
+#### odata request to http request
+
 user defined types 
 ->generate-> 
 odata uri AST
