@@ -254,6 +254,7 @@ flowchart LR
     http_response2[http_response]
     odata_response2[odata_response]
     user_defined_types
+
     data_store_response --> odata_response1
     odata_response1 --> http_response1
     http_response1 --> http_handler
@@ -261,6 +262,9 @@ flowchart LR
     http_client --> http_response2
     http_response2 --> odata_response2
     odata_response2 --> user_defined_types
+
+    style odata_response1 fill:#ff0000
+    style odata_response2 fill:#ff0000
 ```
 
 user defined types 
