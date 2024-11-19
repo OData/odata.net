@@ -14,6 +14,9 @@ An OData request has a verb, a URL, and a request body. Taking a bottom up appro
 
 ##### CST
 
+```csharp
+```
+
 ##### AST
 
 ```csharp
@@ -346,3 +349,19 @@ namespace Root.OdataRelativeUri.Cst
   }
 }
 ```
+
+#### CST transcriber
+
+TODO
+
+#### CST to AST translator
+
+TODO
+
+#### AST to CST translator
+
+TODO
+
+#### uri parser
+
+TODO
