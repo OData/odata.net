@@ -141,7 +141,7 @@
             public MetadataWithOptionsAndContext(MetadataOptions metadataOptions, Context context)
             {
                 this.MetadataOptions = metadataOptions;
-                this.context = context;
+                this.Context = context;
             }
 
             public MetadataOptions MetadataOptions { get; }
