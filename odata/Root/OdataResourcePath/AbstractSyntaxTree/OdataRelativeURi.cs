@@ -1,4 +1,4 @@
-﻿namespace Root.OdataResourcePath.ConcreteSyntaxTree
+﻿namespace Root.OdataRelativeUri.AbstractSyntaxTree
 {
     /// <summary>
     /// this is the AST for odata resource paths
@@ -35,12 +35,7 @@
         {
             private BatchOnly()
             {
-                this.Batch = Batch.Instance;
-                this.QuestionMark = QuestionMark.Instance;
             }
-
-            public Batch Batch { get; }
-            public QuestionMark QuestionMark { get; }
 
             public static BatchOnly Instance { get; } = new BatchOnly();
 
@@ -54,13 +49,9 @@
         {
             public BatchWithOptions(BatchOptions batchOptions)
             {
-                this.Batch = Batch.Instance;
-                this.QuestionMark = QuestionMark.Instance;
                 this.BatchOptions = batchOptions;
             }
 
-            public Batch Batch { get; }
-            public QuestionMark QuestionMark { get; }
             public BatchOptions BatchOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -73,13 +64,9 @@
         {
             public EntityWithOptions(EntityOptions entityOptions)
             {
-                this.Entity = Entity.Instance;
-                this.QuestionMark = QuestionMark.Instance;
                 this.EntityOptions = entityOptions;
             }
 
-            public Entity Entity { get; }
-            public QuestionMark QuestionMark { get; }
             public EntityOptions EntityOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -92,17 +79,11 @@
         {
             public EntityWithCast(QualifiedEntityTypeName qualifiedEntityTypeName, EntityCastOptions entityCastOptions)
             {
-                this.Entity = Entity.Instance;
-                this.Slash = Slash.Instance;
                 this.QualifiedEntityTypeName = qualifiedEntityTypeName;
-                this.QuestionMark = QuestionMark.Instance;
                 this.EntityCastOptions = entityCastOptions;
             }
 
-            public Entity Entity { get; }
-            public Slash Slash { get; }
             public QualifiedEntityTypeName QualifiedEntityTypeName { get; }
-            public QuestionMark QuestionMark { get; }
             public EntityCastOptions EntityCastOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -115,10 +96,7 @@
         {
             private MetadataOnly()
             {
-                this.Metadata = Metadata.Instance;
             }
-
-            public Metadata Metadata { get; }
 
             public static MetadataOnly Instance { get; } = new MetadataOnly();
 
@@ -132,13 +110,9 @@
         {
             public MetadataWithOptions(MetadataOptions metadataOptions)
             {
-                this.Metadata = Metadata.Instance;
-                this.QuestionMark = QuestionMark.Instance;
                 this.MetadataOptions = metadataOptions;
             }
 
-            public Metadata Metadata { get; }
-            public QuestionMark QuestionMark { get; }
             public MetadataOptions MetadataOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -151,11 +125,9 @@
         {
             public MetadataWithContext(Context context)
             {
-                this.Metadata = Metadata.Instance;
                 this.Context = context;
             }
 
-            public Metadata Metadata { get; }
             public Context Context { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -168,14 +140,10 @@
         {
             public MetadataWithOptionsAndContext(MetadataOptions metadataOptions, Context context)
             {
-                this.Metadata = Metadata.Instance;
-                this.QuestionMark = QuestionMark.Instance;
                 this.MetadataOptions = metadataOptions;
-                this.Context = context;
+                this.context = context;
             }
 
-            public Metadata Metadata { get; }
-            public QuestionMark QuestionMark { get; }
             public MetadataOptions MetadataOptions { get; }
             public Context Context { get; }
 
@@ -202,15 +170,11 @@
 
         public sealed class ResourcePathWithQueryOptions : OdataRelativeUri
         {
-            public ResourcePathWithQueryOptions(ResourcePath resourcePath, QueryOptions queryOptions)
+            public ResourcePathWithQueryOptions(QueryOptions queryOptions)
             {
-                this.ResourcePath = resourcePath;
-                this.QuestionMark = QuestionMark.Instance;
                 this.QueryOptions = queryOptions;
             }
 
-            public ResourcePath ResourcePath { get; }
-            public QuestionMark QuestionMark { get; }
             public QueryOptions QueryOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
@@ -218,24 +182,6 @@
                 return visitor.Accept(this, context);
             }
         }
-    }
-
-    public sealed class Batch
-    {
-        private Batch()
-        {
-        }
-
-        public static Batch Instance { get; } = new Batch();
-    }
-
-    public sealed class QuestionMark
-    {
-        private QuestionMark()
-        {
-        }
-
-        public static QuestionMark Instance { get; } = new QuestionMark();
     }
 
     // TODO this is just a stub for now
@@ -256,15 +202,6 @@
         }
     }
 
-    public sealed class Entity
-    {
-        private Entity()
-        {
-        }
-
-        public static Entity Instance { get; } = new Entity();
-    }
-
     // TODO this is just a stub for now
     public abstract class EntityOptions
     {
@@ -281,15 +218,6 @@
                 return node.Dispatch(this, context);
             }
         }
-    }
-
-    public sealed class Slash
-    {
-        private Slash()
-        {
-        }
-
-        public static Slash Instance { get; } = new Slash();
     }
 
     // TODO this is just a stub for now
@@ -326,15 +254,6 @@
                 return node.Dispatch(this, context);
             }
         }
-    }
-
-    public sealed class Metadata
-    {
-        private Metadata()
-        {
-        }
-
-        public static Metadata Instance { get; } = new Metadata();
     }
 
     // TODO this is just a stub for now
