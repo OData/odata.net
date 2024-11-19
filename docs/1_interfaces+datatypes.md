@@ -15,7 +15,7 @@ An OData request has a verb, a URL, and a request body. Taking a bottom up appro
 ##### CST
 
 ```csharp
-// this is the CST for 
+// this is the AST for odata resource paths
 // pulled from `odataRelativeUri` definition in https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt
 public abstract class OdataRelativeUri
 {
@@ -32,20 +32,86 @@ public abstract class OdataRelativeUri
       return odataRelativeUri.Dispatch(this, context);
     }
 
-    public abstract TResult Accept(Batch batch, TContext context);
+    public abstract TResult Accept(BatchWithoutOptions batch, TContext context);
   }
 
-  public sealed class Batch : OdataRelativeUri
+  public sealed class BatchWithoutOptions : OdataRelativeUri
   {
-    private Batch()
+    private BatchWithoutOptions()
     {
     }
 
-    public static Batch Instance { get; } = new Batch();
+    public static BatchWithoutOptions Instance { get; } = new BatchWithoutOptions();
 
     protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
     {
       return visitor.Accept(this, context);
+    }
+  }
+
+  public sealed class BatchWithOptions : OdataRelativeUri
+  {
+    public BatchWithOptions(BatchOptions batchOptions)
+    {
+      this.BatchOptions = batchOptions;
+    }
+
+    public BatchOptions BatchOptions { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
+
+  public sealed class EntityWithOptions : OdataRelativeUri
+  {
+    public EntityWithOptions(EntityOptions entityOptions)
+    {
+      this.EntityOptions = entityOptions;
+    }
+
+    public EntityOptions EntityOptions { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class BatchOptions
+{
+  private BatchOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(BatchOptions batchOptions, TContext context)
+    {
+      return batchOptions.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class EntityOptions
+{
+  private EntityOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(EntityOptions entityOptions, TContext context)
+    {
+      return entityOptions.Dispatch(this, context);
     }
   }
 }
