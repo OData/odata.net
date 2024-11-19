@@ -1,7 +1,0 @@
-$search = bike
-
-
-SearchQueryOption
-	Expression = 
-	SearchTermNode
-		Text = bike

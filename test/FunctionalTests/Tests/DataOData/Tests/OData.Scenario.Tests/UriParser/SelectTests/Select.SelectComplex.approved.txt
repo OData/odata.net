@@ -1,8 +1,0 @@
-$select = HomeAddress
-$expand = 
-
-
-SelectExpandQueryOption
-	AllSelected = False
-	SelectedItems
-		Path[(Property: HomeAddress)]

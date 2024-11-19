@@ -1,8 +1,0 @@
-$select = Microsoft.Test.Taupo.OData.WCFService.GetOrderRate
-$expand = 
-
-
-SelectExpandQueryOption
-	AllSelected = False
-	SelectedItems
-		Path[(Operation: GetOrderRate)]

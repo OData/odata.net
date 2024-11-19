@@ -1,8 +1,0 @@
-Combination #1: $search=A
-Match:A, AB;
-Unmatch:, B;
-
-Combination #2: $search=NOT A
-Match:, B;
-Unmatch:A, AB;
-
