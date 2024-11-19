@@ -139,6 +139,23 @@ public abstract class OdataRelativeUri
       return visitor.Accept(this, context);
     }
   }
+
+  public sealed class MetadataWithOptionsAndContext : OdataRelativeUri
+  {
+    public MetadataWithOptionsAndContext(MetadataOptions metadataOptions, Context context)
+    {
+      this.MetadataOptions = metadataOptions;
+      this.context = context;
+    }
+
+    public MetadataOptions MetadataOptions { get; }
+    public Context Context { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
 }
 
 // TODO this is just a stub for now
