@@ -58,6 +58,38 @@ public abstract class OdataRelativeUri
     public QuestionMark QuestionMark { get; }
     public BatchOptions BatchOptions { get; }
   }
+
+  public sealed class EntityWithOptions : OdataRelativeUri
+  {
+    public EntityWithOptions(EntityOptions entityOptions)
+    {
+      this.Entity = Entity.Instance;
+      this.QuestionMark = QuestionMark.Instance;
+      this.EntityOptions = entityOptions;
+    }
+
+    public Entity Entity { get; }
+    public QuestionMark QuestionMark { get; }
+    public EntityOptions EntityOptions { get; }
+  }
+
+  public sealed class EntityWithCast : OdataRelativeUri
+  {
+    public EntityWithCast(QualifiedEntityTypeName qualifiedEntityTypeName, EntityCastOptions entityCastOptions)
+    {
+      this.Entity = Entity.Instance;
+      this.Slash = Slash.Instance;
+      this.QualifiedEntityTypeName = qualifiedEntityTypeName;
+      this.QuestionMark = QuestionMark.Instance;
+      this.EntityCastOptions = entityCastOptions;
+    }
+
+    public Entity Entity { get; }
+    public Slash Slash { get; }
+    public QualifiedEntityTypeName QualifiedEntityTypeName { get; }
+    public QuestionMark QuestionMark { get; }
+    public EntityCastOptions EntityCastOptions { get; }
+  }
 }
 
 public sealed class Batch
@@ -78,7 +110,167 @@ public sealed class QuestionMark
   public static QuestionMark Instance { get; } = new QuestionMark();
 }
 
-public sealed
+// TODO this is just a stub for now
+public abstract class BatchOptions
+{
+  private BatchOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(BatchOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+public sealed class Entity
+{
+  private Entity()
+  {
+  }
+
+  public static Entity Instance { get; }
+}
+
+// TODO this is just a stub for now
+public abstract class EntityOptions
+{
+  private EntityOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(EntityOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+public sealed class Slash
+{
+  private Slash()
+  {
+  }
+
+  public static Slash Instance { get; } = new Slash();
+}
+
+// TODO this is just a stub for now
+public abstract class QualifiedEntityTypeName
+{
+  private QualifiedEntityTypeName()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(QualifiedEntityTypeName node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class EntityCastOptions
+{
+  private EntityCastOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(EntityCastOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class MetadataOptions
+{
+  private MetadataOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(MetadataOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class Context
+{
+  private Context()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(Context node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class ResourcePath
+{
+  private ResourcePath()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(ResourcePath node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class QueryOptions
+{
+  private QueryOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(QueryOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
 ```
 
 ##### AST
@@ -415,6 +607,7 @@ namespace Root.OdataRelativeUri.Ast
 ```
 
 TODO put the code in a repo
+TODO try ref struct
 
 #### CST transcriber
 
