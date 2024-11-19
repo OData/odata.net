@@ -170,11 +170,13 @@
 
         public sealed class ResourcePathWithQueryOptions : OdataRelativeUri
         {
-            public ResourcePathWithQueryOptions(QueryOptions queryOptions)
+            public ResourcePathWithQueryOptions(ResourcePath resourcePath, QueryOptions queryOptions)
             {
+                this.ResourcePath = resourcePath;
                 this.QueryOptions = queryOptions;
             }
 
+            public ResourcePath ResourcePath { get; }
             public QueryOptions QueryOptions { get; }
 
             protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
