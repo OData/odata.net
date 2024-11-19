@@ -27,21 +27,21 @@ public abstract class OdataRelativeUri
 
   public abstract class Visitor<TResult, TContext>
   {
-    public TResult Visit(OdataRelativeUri odataRelativeUri, TContext context)
+    public TResult Visit(OdataRelativeUri node, TContext context)
     {
       return odataRelativeUri.Dispatch(this, context);
     }
 
-    public abstract TResult Accept(BatchWithoutOptions batch, TContext context);
+    public abstract TResult Accept(BatchOnly node, TContext context);
   }
 
-  public sealed class BatchWithoutOptions : OdataRelativeUri
+  public sealed class BatchOnly : OdataRelativeUri
   {
-    private BatchWithoutOptions()
+    private BatchOnly()
     {
     }
 
-    public static BatchWithoutOptions Instance { get; } = new BatchWithoutOptions();
+    public static BatchOnly Instance { get; } = new BatchOnly();
 
     protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
     {
@@ -95,6 +95,50 @@ public abstract class OdataRelativeUri
       return visitor.Accept(this, context);
     }
   }
+
+  public sealed class MetadataOnly : OdataRelativeUri
+  {
+    private MetadataOnly()
+    {
+    }
+
+    public static MetadataOnly Instance { get; } = new MetadataOnly();
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
+
+  public sealed class MetadataWithOptions : OdataRelativeUri
+  {
+    public MetadataWithOptions(MetadataOptions metadataOptions)
+    {
+      this.MetadataOptions = metadataOptions;
+    }
+
+    public MetadataOptions MetadataOptions { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
+
+  public sealed class MetadataWithContext : OdataRelativeUri
+  {
+    public MetadataWithContext(Context context)
+    {
+      this.Context = context;
+    }
+
+    public Context Context { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
 }
 
 // TODO this is just a stub for now
@@ -108,9 +152,9 @@ public abstract class BatchOptions
 
   public abstract class Visitor<TResult, TContext>
   {
-    public TResult Visit(BatchOptions batchOptions, TContext context)
+    public TResult Visit(BatchOptions node, TContext context)
     {
-      return batchOptions.Dispatch(this, context);
+      return node.Dispatch(this, context);
     }
   }
 }
@@ -126,9 +170,9 @@ public abstract class EntityOptions
 
   public abstract class Visitor<TResult, TContext>
   {
-    public TResult Visit(EntityOptions entityOptions, TContext context)
+    public TResult Visit(EntityOptions node, TContext context)
     {
-      return entityOptions.Dispatch(this, context);
+      return node.Dispatch(this, context);
     }
   }
 }
@@ -144,9 +188,9 @@ public abstract class QualifiedEntityTypeName
 
   public abstract class Visitor<TResult, TContext>
   {
-    public TResult Visit(QualifiedEntityTypeName qualifiedEntityTypeName, TContext context)
+    public TResult Visit(QualifiedEntityTypeName node, TContext context)
     {
-      return qualifiedEntityTypeName.Dispatch(this, context);
+      return node.Dispatch(this, context);
     }
   }
 }
@@ -162,9 +206,45 @@ public abstract class EntityCastOptions
 
   public abstract class Visitor<TResult, TContext>
   {
-    public TResult Visit(EntityCastOptions entityCastOptions, TContext context)
+    public TResult Visit(EntityCastOptions node, TContext context)
     {
-      return entityCastOptions.Dispatch(this, context);
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class MetadataOptions
+{
+  private MetadataOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(MetadataOptions node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class Context
+{
+  private Context()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(Context node, TContext context)
+    {
+      return node.Dispatch(this, context);
     }
   }
 }
