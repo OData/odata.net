@@ -15,12 +15,76 @@ An OData request has a verb, a URL, and a request body. Taking a bottom up appro
 ##### CST
 
 ```csharp
+public abstract class OdataRelativeUri
+{
+  private OdataRelativeUri
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(OdataRelativeUri node, TContext context)
+    {
+      return odataRelativeUri.Dispatch(this, context);
+    }
+  }
+
+  public sealed class BatchOnly : OdataRelativeUri
+  {
+    private BatchOnly()
+    {
+      this.Batch = Batch.Instance;
+      this.QuestionMark = QuestionMark.Intance { get; }
+    }
+
+    public Batch Batch { get; }
+    public QuestionMark QuestionMark { get; }
+
+    public static BatchOnly Instance { get; } = new BatchOnly();
+  }
+
+  public sealed class BatchWithOptions : OdataRelativeUri
+  {
+    public BatchWithOptions(BatchOptions batchOptions)
+    {
+      this.Batch = Batch.Instance;
+      this.QuestionMark = QuestionMark.Instance;
+      this.BatchOptions = batchOptions;
+    }
+
+    public Batch Batch { get; }
+    public QuestionMark QuestionMark { get; }
+    public BatchOptions BatchOptions { get; }
+  }
+}
+
+public sealed class Batch
+{
+  private Batch()
+  {
+  }
+
+  public static Batch Intance { get; } = new Batch();
+}
+
+public sealed class QuestionMark
+{
+  private QuestionMark()
+  {
+  }
+
+  public static QuestionMark Instance { get; } = new QuestionMark();
+}
+
+public sealed
 ```
 
 ##### AST
 
 ```csharp
-namespace Root.OdataRelativeUri.Cst
+namespace Root.OdataRelativeUri.Ast
 {
   // this is the AST for odata resource paths
   // pulled from `odataRelativeUri` definition in https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt
@@ -349,6 +413,8 @@ namespace Root.OdataRelativeUri.Cst
   }
 }
 ```
+
+TODO put the code in a repo
 
 #### CST transcriber
 
