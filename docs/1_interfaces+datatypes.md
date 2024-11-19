@@ -33,6 +33,15 @@ public abstract class OdataRelativeUri
     }
 
     public abstract TResult Accept(BatchOnly node, TContext context);
+    public abstract TResult Accept(BatchWithOptions node, TContext context);
+    public abstract TResult Accept(EntityWithOptions node, TContext context);
+    public abstract TResult Accept(EntityWithCast node, TContext context);
+    public abstract TResult Accept(MetadataOnly node, TContext context);
+    public abstract TResult Accept(MetadataWithOptions node, TContext context);
+    public abstract TResult Accept(MetadataWithContext node, TContext context);
+    public abstract TResult Accept(MetadataWithOptionsAndContext node, TContext context);
+    public abstract TResult Accept(ResourcePathOnly node, TContext context);
+    public abstract TResult Accept(ResourcePathWithQueryOptions node, TContext context);
   }
 
   public sealed class BatchOnly : OdataRelativeUri
