@@ -1671,6 +1671,22 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         }
 
         [Fact]
+        public void ComputedPropertyTreatedAsOpenPropertyInCastAndOrderBy()
+        {
+            var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
+                HardCodedTestModel.GetPersonType(), HardCodedTestModel.GetPeopleSet(),
+                new Dictionary<string, string>()
+                {
+                    {"$orderby", "DoubleTotal asc"},
+                    {"$apply", "aggregate(cast(FavoriteNumber, edm.int64) with sum as Total)/compute(Total mul 2 as DoubleTotal)"}
+                }) { Resolver = new ODataUriResolver() { EnableCaseInsensitive = true } };
+            var applyClause = odataQueryOptionParser.ParseApply();
+            var orderByClause = odataQueryOptionParser.ParseOrderBy();
+            Assert.Equal(OrderByDirection.Ascending, orderByClause.Direction);
+            orderByClause.Expression.ShouldBeSingleValueOpenPropertyAccessQueryNode("DoubleTotal");
+        }
+
+        [Fact]
         public void DollarComputedPropertyTreatedAsOpenPropertyInOrderBy()
         {
             var odataQueryOptionParser = new ODataQueryOptionParser(HardCodedTestModel.TestModel,
