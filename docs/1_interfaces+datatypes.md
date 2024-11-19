@@ -78,6 +78,23 @@ public abstract class OdataRelativeUri
       return visitor.Accept(this, context);
     }
   }
+
+  public sealed class EntityWithCast : OdataRelativeUri
+  {
+    public EntityWithCast(QualifiedEntityTypeName qualifiedEntityTypeName, EntityCastOptions entityCastOptions)
+    {
+      this.QualifiedEntityTypeName = qualifiedEntityTypeName;
+      this.EntityCastOptions = entityCastOptions;
+    }
+
+    public QualifiedEntityTypeName QualifiedEntityTypeName { get; }
+    public EntityCastOptions EntityCastOptions { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
 }
 
 // TODO this is just a stub for now
@@ -112,6 +129,42 @@ public abstract class EntityOptions
     public TResult Visit(EntityOptions entityOptions, TContext context)
     {
       return entityOptions.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class QualifiedEntityTypeName
+{
+  private QualifiedEntityTypeName()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(QualifiedEntityTypeName qualifiedEntityTypeName, TContext context)
+    {
+      return qualifiedEntityTypeName.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class EntityCastOptions
+{
+  private EntityCastOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(EntityCastOptions entityCastOptions, TContext context)
+    {
+      return entityCastOptions.Dispatch(this, context);
     }
   }
 }
