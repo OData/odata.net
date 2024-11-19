@@ -12,331 +12,336 @@ An OData request has a verb, a URL, and a request body. Taking a bottom up appro
 
 #### odata resource path
 
+##### CST
+
 ##### AST
 
 ```csharp
-// this is the AST for odata resource paths
-// pulled from `odataRelativeUri` definition in https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt
-public abstract class OdataRelativeUri
+namespace Root.OdataRelativeUri.Cst
 {
-  private OdataRelativeUri()
+  // this is the AST for odata resource paths
+  // pulled from `odataRelativeUri` definition in https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt
+  public abstract class OdataRelativeUri
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(OdataRelativeUri node, TContext context)
-    {
-      return odataRelativeUri.Dispatch(this, context);
-    }
-
-    public abstract TResult Accept(BatchOnly node, TContext context);
-    public abstract TResult Accept(BatchWithOptions node, TContext context);
-    public abstract TResult Accept(EntityWithOptions node, TContext context);
-    public abstract TResult Accept(EntityWithCast node, TContext context);
-    public abstract TResult Accept(MetadataOnly node, TContext context);
-    public abstract TResult Accept(MetadataWithOptions node, TContext context);
-    public abstract TResult Accept(MetadataWithContext node, TContext context);
-    public abstract TResult Accept(MetadataWithOptionsAndContext node, TContext context);
-    public abstract TResult Accept(ResourcePathOnly node, TContext context);
-    public abstract TResult Accept(ResourcePathWithQueryOptions node, TContext context);
-  }
-
-  public sealed class BatchOnly : OdataRelativeUri
-  {
-    private BatchOnly()
+    private OdataRelativeUri()
     {
     }
-
-    public static BatchOnly Instance { get; } = new BatchOnly();
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
     {
-      return visitor.Accept(this, context);
+      public TResult Visit(OdataRelativeUri node, TContext context)
+      {
+        return odataRelativeUri.Dispatch(this, context);
+      }
+  
+      public abstract TResult Accept(BatchOnly node, TContext context);
+      public abstract TResult Accept(BatchWithOptions node, TContext context);
+      public abstract TResult Accept(EntityWithOptions node, TContext context);
+      public abstract TResult Accept(EntityWithCast node, TContext context);
+      public abstract TResult Accept(MetadataOnly node, TContext context);
+      public abstract TResult Accept(MetadataWithOptions node, TContext context);
+      public abstract TResult Accept(MetadataWithContext node, TContext context);
+      public abstract TResult Accept(MetadataWithOptionsAndContext node, TContext context);
+      public abstract TResult Accept(ResourcePathOnly node, TContext context);
+      public abstract TResult Accept(ResourcePathWithQueryOptions node, TContext context);
     }
-  }
-
-  public sealed class BatchWithOptions : OdataRelativeUri
-  {
-    public BatchWithOptions(BatchOptions batchOptions)
+  
+    public sealed class BatchOnly : OdataRelativeUri
     {
-      this.BatchOptions = batchOptions;
+      private BatchOnly()
+      {
+      }
+  
+      public static BatchOnly Instance { get; } = new BatchOnly();
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-
-    public BatchOptions BatchOptions { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    public sealed class BatchWithOptions : OdataRelativeUri
     {
-      return visitor.Accept(this, context);
+      public BatchWithOptions(BatchOptions batchOptions)
+      {
+        this.BatchOptions = batchOptions;
+      }
+  
+      public BatchOptions BatchOptions { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-  }
-
-  public sealed class EntityWithOptions : OdataRelativeUri
-  {
-    public EntityWithOptions(EntityOptions entityOptions)
+  
+    public sealed class EntityWithOptions : OdataRelativeUri
     {
-      this.EntityOptions = entityOptions;
+      public EntityWithOptions(EntityOptions entityOptions)
+      {
+        this.EntityOptions = entityOptions;
+      }
+  
+      public EntityOptions EntityOptions { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-
-    public EntityOptions EntityOptions { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    public sealed class EntityWithCast : OdataRelativeUri
     {
-      return visitor.Accept(this, context);
+      public EntityWithCast(QualifiedEntityTypeName qualifiedEntityTypeName, EntityCastOptions entityCastOptions)
+      {
+        this.QualifiedEntityTypeName = qualifiedEntityTypeName;
+        this.EntityCastOptions = entityCastOptions;
+      }
+  
+      public QualifiedEntityTypeName QualifiedEntityTypeName { get; }
+      public EntityCastOptions EntityCastOptions { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-  }
-
-  public sealed class EntityWithCast : OdataRelativeUri
-  {
-    public EntityWithCast(QualifiedEntityTypeName qualifiedEntityTypeName, EntityCastOptions entityCastOptions)
+  
+    public sealed class MetadataOnly : OdataRelativeUri
     {
-      this.QualifiedEntityTypeName = qualifiedEntityTypeName;
-      this.EntityCastOptions = entityCastOptions;
+      private MetadataOnly()
+      {
+      }
+  
+      public static MetadataOnly Instance { get; } = new MetadataOnly();
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-
-    public QualifiedEntityTypeName QualifiedEntityTypeName { get; }
-    public EntityCastOptions EntityCastOptions { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    public sealed class MetadataWithOptions : OdataRelativeUri
     {
-      return visitor.Accept(this, context);
+      public MetadataWithOptions(MetadataOptions metadataOptions)
+      {
+        this.MetadataOptions = metadataOptions;
+      }
+  
+      public MetadataOptions MetadataOptions { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-  }
-
-  public sealed class MetadataOnly : OdataRelativeUri
-  {
-    private MetadataOnly()
+  
+    public sealed class MetadataWithContext : OdataRelativeUri
     {
+      public MetadataWithContext(Context context)
+      {
+        this.Context = context;
+      }
+  
+      public Context Context { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-
-    public static MetadataOnly Instance { get; } = new MetadataOnly();
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    public sealed class MetadataWithOptionsAndContext : OdataRelativeUri
     {
-      return visitor.Accept(this, context);
+      public MetadataWithOptionsAndContext(MetadataOptions metadataOptions, Context context)
+      {
+        this.MetadataOptions = metadataOptions;
+        this.context = context;
+      }
+  
+      public MetadataOptions MetadataOptions { get; }
+      public Context Context { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-  }
-
-  public sealed class MetadataWithOptions : OdataRelativeUri
-  {
-    public MetadataWithOptions(MetadataOptions metadataOptions)
+  
+    public sealed class ResourcePathOnly : OdataRelativeUri
     {
-      this.MetadataOptions = metadataOptions;
+      public ResourcePathOnly(ResourcePath resourcePath)
+      {
+        this.ResourcePath = resourcePath;
+      }
+  
+      public ResourcePath ResourcePath { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
-
-    public MetadataOptions MetadataOptions { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+  
+    public sealed class ResourcePathWithQueryOptions : OdataRelativeUri
     {
-      return visitor.Accept(this, context);
-    }
-  }
-
-  public sealed class MetadataWithContext : OdataRelativeUri
-  {
-    public MetadataWithContext(Context context)
-    {
-      this.Context = context;
-    }
-
-    public Context Context { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-    {
-      return visitor.Accept(this, context);
-    }
-  }
-
-  public sealed class MetadataWithOptionsAndContext : OdataRelativeUri
-  {
-    public MetadataWithOptionsAndContext(MetadataOptions metadataOptions, Context context)
-    {
-      this.MetadataOptions = metadataOptions;
-      this.context = context;
-    }
-
-    public MetadataOptions MetadataOptions { get; }
-    public Context Context { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-    {
-      return visitor.Accept(this, context);
-    }
-  }
-
-  public sealed class ResourcePathOnly : OdataRelativeUri
-  {
-    public ResourcePathOnly(ResourcePath resourcePath)
-    {
-      this.ResourcePath = resourcePath;
-    }
-
-    public ResourcePath ResourcePath { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-    {
-      return visitor.Accept(this, context);
-    }
-  }
-
-  public sealed class ResourcePathWithQueryOptions : OdataRelativeUri
-  {
-    public ResourcePathWithQueryOptions(QueryOptions queryOptions)
-    {
-      this.QueryOptions = queryOptions;
-    }
-
-    public QueryOptions QueryOptions { get; }
-
-    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
-    {
-      return visitor.Accept(this, context);
-    }
-  }
-}
-
-// TODO this is just a stub for now
-public abstract class BatchOptions
-{
-  private BatchOptions()
-  {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(BatchOptions node, TContext context)
-    {
-      return node.Dispatch(this, context);
+      public ResourcePathWithQueryOptions(QueryOptions queryOptions)
+      {
+        this.QueryOptions = queryOptions;
+      }
+  
+      public QueryOptions QueryOptions { get; }
+  
+      protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+      {
+        return visitor.Accept(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class EntityOptions
-{
-  private EntityOptions()
+  
+  // TODO this is just a stub for now
+  public abstract class BatchOptions
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(EntityOptions node, TContext context)
+    private BatchOptions()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(BatchOptions node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class QualifiedEntityTypeName
-{
-  private QualifiedEntityTypeName()
+  
+  // TODO this is just a stub for now
+  public abstract class EntityOptions
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(QualifiedEntityTypeName node, TContext context)
+    private EntityOptions()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(EntityOptions node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class EntityCastOptions
-{
-  private EntityCastOptions()
+  
+  // TODO this is just a stub for now
+  public abstract class QualifiedEntityTypeName
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(EntityCastOptions node, TContext context)
+    private QualifiedEntityTypeName()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(QualifiedEntityTypeName node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class MetadataOptions
-{
-  private MetadataOptions()
+  
+  // TODO this is just a stub for now
+  public abstract class EntityCastOptions
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(MetadataOptions node, TContext context)
+    private EntityCastOptions()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(EntityCastOptions node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class Context
-{
-  private Context()
+  
+  // TODO this is just a stub for now
+  public abstract class MetadataOptions
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(Context node, TContext context)
+    private MetadataOptions()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(MetadataOptions node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class ResourcePath
-{
-  private ResourcePath()
+  
+  // TODO this is just a stub for now
+  public abstract class Context
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(ResourcePath node, TContext context)
+    private Context()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(Context node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
-}
-
-// TODO this is just a stub for now
-public abstract class QueryOptions
-{
-  private QueryOptions()
+  
+  // TODO this is just a stub for now
+  public abstract class ResourcePath
   {
-  }
-
-  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
-
-  public abstract class Visitor<TResult, TContext>
-  {
-    public TResult Visit(QueryOptions node, TContext context)
+    private ResourcePath()
     {
-      return node.Dispatch(this, context);
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(ResourcePath node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
+    }
+  }
+  
+  // TODO this is just a stub for now
+  public abstract class QueryOptions
+  {
+    private QueryOptions()
+    {
+    }
+  
+    protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+  
+    public abstract class Visitor<TResult, TContext>
+    {
+      public TResult Visit(QueryOptions node, TContext context)
+      {
+        return node.Dispatch(this, context);
+      }
     }
   }
 }
