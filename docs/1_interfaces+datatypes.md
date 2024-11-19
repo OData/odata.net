@@ -90,6 +90,18 @@ public abstract class OdataRelativeUri
     public QuestionMark QuestionMark { get; }
     public EntityCastOptions EntityCastOptions { get; }
   }
+
+  public sealed class MetadataOnly : OdataRelativeUri
+  {
+    private MetadataOnly()
+    {
+      this.Metadata = new Metadata();
+    }
+
+    public Metadata Metadata { get; }
+
+    public static MetadataOnly Instance { get; } = new MetadataOnly();
+  }
 }
 
 public sealed class Batch
@@ -198,6 +210,15 @@ public abstract class EntityCastOptions
       return node.Dispatch(this, context);
     }
   }
+}
+
+public sealed class Metadata
+{
+  private Metadata()
+  {
+  }
+
+  public static Metadata Instance { get; } = new Metadata();
 }
 
 // TODO this is just a stub for now
