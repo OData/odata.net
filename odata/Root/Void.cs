@@ -1,4 +1,4 @@
-﻿namespace System
+﻿namespace Root
 {
     public struct Void
     {

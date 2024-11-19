@@ -1,7 +1,7 @@
 ﻿namespace Root.OdataResourcePath.CstToAstTranslators
 {
-    using System;
-
+    using Root;
+    
     public sealed class ContextTranslator :
         ConcreteSyntaxTree.Context.Visitor<
             AbstractSyntaxTree.Context,

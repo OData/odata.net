@@ -1,6 +1,6 @@
 ﻿namespace Root.OdataResourcePath.CstToAstTranslators
 {
-    using System;
+    using Root;
 
     public sealed class OdataRelativeUriTranslator :
         ConcreteSyntaxTree.OdataRelativeUri.Visitor<

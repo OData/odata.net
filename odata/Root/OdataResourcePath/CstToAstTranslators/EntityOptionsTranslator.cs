@@ -1,6 +1,6 @@
 ﻿namespace Root.OdataResourcePath.CstToAstTranslators
 {
-    using System;
+    using Root;
 
     public sealed class EntityOptionsTranslator :
         ConcreteSyntaxTree.EntityOptions.Visitor<
