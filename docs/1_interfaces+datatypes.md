@@ -628,6 +628,7 @@ namespace Root.OdataRelativeUri.Ast
 ```
 
 TODO put the code in a repo
+TODO split classes into individual files
 TODO try ref struct
 
 #### CST transcriber
