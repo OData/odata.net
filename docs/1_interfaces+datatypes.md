@@ -156,6 +156,21 @@ public abstract class OdataRelativeUri
       return visitor.Accept(this, context);
     }
   }
+
+  public sealed class ResourcePathOnly : OdataRelativeUri
+  {
+    public ResourcePathOnly(ResourcePath resourcePath)
+    {
+      this.ResourcePath = resourcePath;
+    }
+
+    public ResourcePath ResourcePath { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
 }
 
 // TODO this is just a stub for now
@@ -260,6 +275,24 @@ public abstract class Context
   public abstract class Visitor<TResult, TContext>
   {
     public TResult Visit(Context node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class ResourcePath
+{
+  private ResourcePath()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(ResourcePath node, TContext context)
     {
       return node.Dispatch(this, context);
     }
