@@ -1,4 +1,4 @@
-﻿namespace Root.OdataRelativeUri.AbstractSyntaxTree
+﻿namespace Root.OdataResourcePath.AbstractSyntaxTree
 {
     /// <summary>
     /// this is the AST for odata resource paths
