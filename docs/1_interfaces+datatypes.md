@@ -12,7 +12,7 @@ An OData request has a verb, a URL, and a request body. Taking a bottom up appro
 
 #### odata resource path
 
-##### CST
+##### AST
 
 ```csharp
 // this is the AST for odata resource paths
