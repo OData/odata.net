@@ -171,6 +171,21 @@ public abstract class OdataRelativeUri
       return visitor.Accept(this, context);
     }
   }
+
+  public sealed class ResourcePathWithQueryOptions : OdataRelativeUri
+  {
+    public ResourcePathWithQueryOptions(QueryOptions queryOptions)
+    {
+      this.QueryOptions = queryOptions;
+    }
+
+    public QueryOptions QueryOptions { get; }
+
+    protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+    {
+      return visitor.Accept(this, context);
+    }
+  }
 }
 
 // TODO this is just a stub for now
@@ -293,6 +308,24 @@ public abstract class ResourcePath
   public abstract class Visitor<TResult, TContext>
   {
     public TResult Visit(ResourcePath node, TContext context)
+    {
+      return node.Dispatch(this, context);
+    }
+  }
+}
+
+// TODO this is just a stub for now
+public abstract class QueryOptions
+{
+  private QueryOptions()
+  {
+  }
+
+  protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+  public abstract class Visitor<TResult, TContext>
+  {
+    public TResult Visit(QueryOptions node, TContext context)
     {
       return node.Dispatch(this, context);
     }
