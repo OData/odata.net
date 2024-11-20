@@ -49,3 +49,9 @@ TODO
 TODO do a demo of implementing a discriminated union
 TODO do a demo of a "terminal" tree that parses and transcribes; try using /entityset/key/property for this (i think you can't actually use combinators because odata is not a context free grammar)
 TODO try ref struct
+
+## appendix
+
+### parsing
+
+Parser combinators were tried using the Sprache nuget package. Though combinators are very flexible, the code is trivially readable, and development is exceedingly fast, combinators result in potentially incorrect parsing on grammars that are not context-free; the OData ABNF is not a context-free grammar, so we cannot rely on combinators. 
