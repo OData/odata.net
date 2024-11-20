@@ -26,11 +26,11 @@ A sample implementation of the transcriber is [here](../odata/Root/OdataResource
 
 #### CST to AST translator
 
-A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/CstToAstTranslator/OdataRelativeUriTranslator.cs).
+A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/CstToAstTranslators/OdataRelativeUriTranslator.cs).
 
 #### AST to CST translator
 
-A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/AstToCstTranslator/OdataRelativeUriTranslator.cs).
+A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/AstToCstTranslators/OdataRelativeUriTranslator.cs).
 
 #### uri parser
 
