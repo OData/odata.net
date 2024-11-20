@@ -14,6 +14,8 @@ TODO parsers will be...
 
 TODO translators will be...
 
+Please see the [appendix](#appendix) for other modeling options that were explored.
+
 ## odata resource path example
 
 Let's use the odata resource path as an example of the above patterns.
@@ -54,4 +56,4 @@ TODO try ref struct
 
 ### parsing
 
-Parser combinators were tried using the Sprache nuget package. Though combinators are very flexible, the code is trivially readable, and development is exceedingly fast, combinators result in potentially incorrect parsing on grammars that are not context-free; the OData ABNF is not a context-free grammar, so we cannot rely on combinators. 
+Parser combinators were tried using the Sprache nuget package. Though combinators are very flexible, the code is trivially readable, and development is exceedingly fast, combinators result in potentially incorrect parsing on grammars that are not context-free; the OData ABNF is not a context-free grammar, so we cannot rely on combinators. You can see an attempt at this implementation [here](https://github.com/OData/odata.net/blob/corranrogue9/framework/interfacesanddatatypes/odata/Root/OdataResourcePath/CombinatorParsers/OdataRelativeUriParser.cs).
