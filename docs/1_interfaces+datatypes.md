@@ -6,8 +6,6 @@ The CSTs will be a discriminated union that corresponds directly to the [OData A
 
 The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
 
-TODO fix your code samples to align with your own naming
-
 TODO transcribers will be...
 
 TODO converts will be...
