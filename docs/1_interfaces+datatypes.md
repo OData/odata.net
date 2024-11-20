@@ -12,7 +12,7 @@ The converters will be implemented as visitors on the AST or CST nodes to produc
 
 TODO parsers will be...
 
-TODO translators will be...
+The translators will be implemented as visitors on the AST nodes to produce a corresponding AST for the desired data store.
 
 Please see the [appendix](#appendix) for other modeling options that were explored.
 
