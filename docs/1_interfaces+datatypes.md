@@ -1,43 +1,57 @@
 ## pattern overview
 
-The general pattern is that the CSTs will be a discriminated union that corresponds directly to the [OData ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt). The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
+We should stick to the naming conventions laid out in the [architecture](./architecture.md). So, we should have "parser"s to create CSTs from strings, "converter"s to move between CSTs and ASTs, "translator"s to move between different types of ASTs, "transcriber"s to create strings from CSTs, "serializer"s to go from user defined types to ASTs, and "deserializer"s to go from ASTs to user defined types. 
 
-We should also stick to the naming conventions laid out in the [architecture](./architecture.md). So, we should have "parser"s to create CSTs from strings, "converter"s to move between CSTs and ASTs, "translator"s to move between different types of ASTs, "transcriber"s to create strings from CSTs, "serializer"s to go from user defined types to ASTs, and "deserializer"s to go from ASTs to user defined types. 
+The CSTs will be a discriminated union that corresponds directly to the [OData ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt).
 
-## odata request
+The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
 
-An OData request has a verb, a URL, and a request body. Taking a bottom up approach, let's start with the URL and request body and build into an odata request type.
+The transcribers will be implemented as visitors on the CST nodes to convert them to strings using an intermediate `StringBuilder`.
 
-### odata uri
+The converters will be implemented as visitors on the AST or CST nodes to produce instances of the other.
 
-#### odata resource path
+TODO parsers will be...
 
-##### CST
+TODO translators will be...
+
+## odata resource path example
+
+Let's use the odata resource path as an example of the above patterns.
+
+### CST
 
 A sample implementation of the CST is [here](../odata/Root/OdataResourcePath/ConcreteSyntaxTreeNodes/OdataRelativeUri.cs).
 
-##### AST
+### AST
 
 A sample implementation of the AST is [here](../odata/Root/OdataResourcePath/AbstractSyntaxTreeNodes/OdataRelativeUri.cs).
 
-#### CST transcriber
+### CST transcriber
 
 A sample implementation of the transcriber is [here](../odata/Root/OdataResourcePath/Transcribers/OdataRelativeUriTranscriber.cs).
 
-#### CST to AST translator
+### CST to AST converter
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/CstToAstTranslators/OdataRelativeUriTranslator.cs).
 
-#### AST to CST translator
+### AST to CST converter
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/AstToCstTranslators/OdataRelativeUriTranslator.cs).
 
-#### uri parser
+### uri parser
 
 TODO
 
+### translator
 
-TODO split classes into individual files
+TODO
+
 TODO do a demo of implementing a discriminated union
 TODO do a demo of a "terminal" tree that parses and transcribes; try using /entityset/key/property for this (i think you can't actually use combinators because odata is not a context free grammar)
 TODO try ref struct
+
+## appendix
+
+### parsing
+
+Parser combinators were tried using the Sprache nuget package. Though combinators are very flexible, the code is trivially readable, and development is exceedingly fast, combinators result in potentially incorrect parsing on grammars that are not context-free; the OData ABNF is not a context-free grammar, so we cannot rely on combinators. 
