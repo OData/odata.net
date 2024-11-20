@@ -1,6 +1,6 @@
 ﻿namespace odata.tests
 {
-    using Root.OdataResourcePath.Parsers;
+    using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
     using Sprache;
     using System.Text;

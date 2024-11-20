@@ -1,4 +1,4 @@
-﻿namespace Root.OdataResourcePath.Parsers
+﻿namespace Root.OdataResourcePath.CombinatorParsers
 {
     using Root.OdataResourcePath.ConcreteSyntaxTreeNodes;
     using Sprache;
