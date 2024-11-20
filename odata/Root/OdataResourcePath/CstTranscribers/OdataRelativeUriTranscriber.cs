@@ -16,6 +16,9 @@
         private readonly EntityCastOptionsTranscriber entityCastOptionsTranscriber;
         private readonly MetadataTranscriber metadataTranscriber;
         private readonly MetadataOptionsTranscriber metadataOptionsTranscriber;
+        private readonly ContextTranscriber contextTranscriber;
+        private readonly ResourcePathTranscriber resourcePathTranscriber;
+        private readonly QueryOptionsTranscriber queryOptionsTranscriber;
 
         private OdataRelativeUriTranscriber(
             BatchTranscriber batchTranscriber,
@@ -27,7 +30,10 @@
             QualifiedEntityTypeNameTranscriber qualifiedEntityTypeNameTranscriber,
             EntityCastOptionsTranscriber entityCastOptionsTranscriber,
             MetadataTranscriber metadataTranscriber,
-            MetadataOptionsTranscriber metadataOptionsTranscriber)
+            MetadataOptionsTranscriber metadataOptionsTranscriber,
+            ContextTranscriber contextTranscriber,
+            ResourcePathTranscriber resourcePathTranscriber,
+            QueryOptionsTranscriber queryOptionsTranscriber)
         {
             this.batchTranscriber = batchTranscriber;
             this.questionMarkTranscriber = questionMarkTranscriber;
@@ -39,6 +45,9 @@
             this.entityCastOptionsTranscriber = entityCastOptionsTranscriber;
             this.metadataTranscriber = metadataTranscriber;
             this.metadataOptionsTranscriber = metadataOptionsTranscriber;
+            this.contextTranscriber = contextTranscriber;
+            this.resourcePathTranscriber = resourcePathTranscriber;
+            this.queryOptionsTranscriber = queryOptionsTranscriber;
         }
 
         public static OdataRelativeUriTranscriber Default { get; } = new OdataRelativeUriTranscriber(
@@ -51,7 +60,10 @@
             QualifiedEntityTypeNameTranscriber.Default,
             EntityCastOptionsTranscriber.Default,
             MetadataTranscriber.Default,
-            MetadataOptionsTranscriber.Default);
+            MetadataOptionsTranscriber.Default,
+            ContextTranscriber.Default,
+            ResourcePathTranscriber.Default,
+            QueryOptionsTranscriber.Default);
 
         public override Void Accept(OdataRelativeUri.BatchOnly node, StringBuilder context)
         {
@@ -101,22 +113,32 @@
 
         public override Void Accept(OdataRelativeUri.MetadataWithContext node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            this.metadataTranscriber.Transcribe(node.Metadata, context);
+            this.contextTranscriber.Visit(node.Context, context);
+            return default;
         }
 
         public override Void Accept(OdataRelativeUri.MetadataWithOptionsAndContext node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            this.metadataTranscriber.Transcribe(node.Metadata, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.metadataOptionsTranscriber.Visit(node.MetadataOptions, context);
+            this.contextTranscriber.Visit(node.Context, context);
+            return default;
         }
 
         public override Void Accept(OdataRelativeUri.ResourcePathOnly node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            this.resourcePathTranscriber.Visit(node.ResourcePath, context);
+            return default;
         }
 
         public override Void Accept(OdataRelativeUri.ResourcePathWithQueryOptions node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            this.resourcePathTranscriber.Visit(node.ResourcePath, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.queryOptionsTranscriber.Visit(node.QueryOptions, context);
+            return default;
         }
     }
 }
