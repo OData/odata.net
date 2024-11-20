@@ -6,9 +6,13 @@ The CSTs will be a discriminated union that corresponds directly to the [OData A
 
 The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
 
-TODO transcribers will be...
+The transcribers will be implemented as visitors on the CST nodes to convert them to strings using an intermediate `StringBuilder`.
 
-TODO converts will be...
+The converters will be implemented as visitors on the AST or CST nodes to produce instances of the other.
+
+TODO parsers will be...
+
+TODO translators will be...
 
 ## odata resource path example
 
@@ -38,6 +42,9 @@ A sample implementation of the CST to AST translator is [here](../odata/Root/Oda
 
 TODO
 
+### translator
+
+TODO
 
 TODO do a demo of implementing a discriminated union
 TODO do a demo of a "terminal" tree that parses and transcribes; try using /entityset/key/property for this (i think you can't actually use combinators because odata is not a context free grammar)
