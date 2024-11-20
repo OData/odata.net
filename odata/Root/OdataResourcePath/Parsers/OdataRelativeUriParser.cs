@@ -5,19 +5,6 @@
 
     public static class OdataRelativeUriParser
     {
-        public static Parser<OdataRelativeUri> Instance { get; } =
-            //// TODO fix nullability; i think this is a sprache issue...
-            ((Parser<OdataRelativeUri>)BatchOnly)
-            .Or(BatchWithOptions)
-            .Or(EntityWithOptions)
-            .Or(EntityWithCast)
-            .Or(MetadataOnly)
-            .Or(MetadataWithOptions)
-            .Or(MetadataWithContext)
-            .Or(MetadataWithOptionsAndContext)
-            .Or(ResourcePathOnly)
-            .Or(ResourcePathWithQueryOptions);
-
         public static Parser<OdataRelativeUri.BatchOnly> BatchOnly { get; } =
             from batch in BatchParser.Instance
             select OdataRelativeUri.BatchOnly.Instance;
@@ -74,5 +61,17 @@
             from questionMark in QuestionMarkParser.Instance
             from queryOptions in QueryOptionsParser.Instance
             select new OdataRelativeUri.ResourcePathWithQueryOptions(resourcePath, queryOptions);
+
+        public static Parser<OdataRelativeUri> Instance { get; } =
+            BatchOnly
+            .Or<OdataRelativeUri>(BatchWithOptions)
+            .Or(EntityWithOptions)
+            .Or(EntityWithCast)
+            .Or(MetadataOnly)
+            .Or(MetadataWithOptions)
+            .Or(MetadataWithContext)
+            .Or(MetadataWithOptionsAndContext)
+            .Or(ResourcePathOnly)
+            .Or(ResourcePathWithQueryOptions);
     }
 }
