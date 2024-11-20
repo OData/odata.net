@@ -1,0 +1,122 @@
+﻿namespace Root.OdataResourcePath.CstTranscribers
+{
+    using System.Text;
+
+    using Root.OdataResourcePath.ConcreteSyntaxTree;
+
+    public sealed class OdataRelativeUriTranscriber : OdataRelativeUri.Visitor<Void, StringBuilder>
+    {
+        private readonly BatchTranscriber batchTranscriber;
+        private readonly QuestionMarkTranscriber questionMarkTranscriber;
+        private readonly BatchOptionsTranscriber batchOptionsTranscriber;
+        private readonly EntityTranscriber entityTranscriber;
+        private readonly EntityOptionsTranscriber entityOptionsTranscriber;
+        private readonly SlashTranscriber slashTranscriber;
+        private readonly QualifiedEntityTypeNameTranscriber qualifiedEntityTypeNameTranscriber;
+        private readonly EntityCastOptionsTranscriber entityCastOptionsTranscriber;
+        private readonly MetadataTranscriber metadataTranscriber;
+        private readonly MetadataOptionsTranscriber metadataOptionsTranscriber;
+
+        private OdataRelativeUriTranscriber(
+            BatchTranscriber batchTranscriber,
+            QuestionMarkTranscriber questionMarkTranscriber,
+            BatchOptionsTranscriber batchOptionsTranscriber,
+            EntityTranscriber entityTranscriber,
+            EntityOptionsTranscriber entityOptionsTranscriber,
+            SlashTranscriber slashTranscriber,
+            QualifiedEntityTypeNameTranscriber qualifiedEntityTypeNameTranscriber,
+            EntityCastOptionsTranscriber entityCastOptionsTranscriber,
+            MetadataTranscriber metadataTranscriber,
+            MetadataOptionsTranscriber metadataOptionsTranscriber)
+        {
+            this.batchTranscriber = batchTranscriber;
+            this.questionMarkTranscriber = questionMarkTranscriber;
+            this.batchOptionsTranscriber = batchOptionsTranscriber;
+            this.entityTranscriber = entityTranscriber;
+            this.entityOptionsTranscriber = entityOptionsTranscriber;
+            this.slashTranscriber = slashTranscriber;
+            this.qualifiedEntityTypeNameTranscriber = qualifiedEntityTypeNameTranscriber;
+            this.entityCastOptionsTranscriber = entityCastOptionsTranscriber;
+            this.metadataTranscriber = metadataTranscriber;
+            this.metadataOptionsTranscriber = metadataOptionsTranscriber;
+        }
+
+        public static OdataRelativeUriTranscriber Default { get; } = new OdataRelativeUriTranscriber(
+            BatchTranscriber.Default,
+            QuestionMarkTranscriber.Default,
+            BatchOptionsTranscriber.Default,
+            EntityTranscriber.Default,
+            EntityOptionsTranscriber.Default,
+            SlashTranscriber.Default,
+            QualifiedEntityTypeNameTranscriber.Default,
+            EntityCastOptionsTranscriber.Default,
+            MetadataTranscriber.Default,
+            MetadataOptionsTranscriber.Default);
+
+        public override Void Accept(OdataRelativeUri.BatchOnly node, StringBuilder context)
+        {
+            this.batchTranscriber.Transcribe(node.Batch, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.BatchWithOptions node, StringBuilder context)
+        {
+            this.batchTranscriber.Transcribe(node.Batch, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.batchOptionsTranscriber.Visit(node.BatchOptions, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.EntityWithOptions node, StringBuilder context)
+        {
+            this.entityTranscriber.Transcribe(node.Entity, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.entityOptionsTranscriber.Visit(node.EntityOptions, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.EntityWithCast node, StringBuilder context)
+        {
+            this.entityTranscriber.Transcribe(node.Entity, context);
+            this.slashTranscriber.Transcribe(node.Slash, context);
+            this.qualifiedEntityTypeNameTranscriber.Visit(node.QualifiedEntityTypeName, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.entityCastOptionsTranscriber.Visit(node.EntityCastOptions, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.MetadataOnly node, StringBuilder context)
+        {
+            this.metadataTranscriber.Transcribe(node.Metadata, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.MetadataWithOptions node, StringBuilder context)
+        {
+            this.metadataTranscriber.Transcribe(node.Metadata, context);
+            this.questionMarkTranscriber.Transcribe(node.QuestionMark, context);
+            this.metadataOptionsTranscriber.Visit(node.MetadataOptions, context);
+            return default;
+        }
+
+        public override Void Accept(OdataRelativeUri.MetadataWithContext node, StringBuilder context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Void Accept(OdataRelativeUri.MetadataWithOptionsAndContext node, StringBuilder context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Void Accept(OdataRelativeUri.ResourcePathOnly node, StringBuilder context)
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public override Void Accept(OdataRelativeUri.ResourcePathWithQueryOptions node, StringBuilder context)
+        {
+            throw new System.NotImplementedException();
+        }
+    }
+}
