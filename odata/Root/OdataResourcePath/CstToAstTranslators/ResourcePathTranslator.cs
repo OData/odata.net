@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class ResourcePathTranslator :
-        ConcreteSyntaxTree.ResourcePath.Visitor<
-            AbstractSyntaxTree.ResourcePath,
+        ConcreteSyntaxTreeNodes.ResourcePath.Visitor<
+            AbstractSyntaxTreeNodes.ResourcePath,
             Void>
     {
         private ResourcePathTranslator()

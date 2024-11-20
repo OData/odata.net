@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class QualifiedEntityTypeNameTranslator :
-        AbstractSyntaxTree.QualifiedEntityTypeName.Visitor<
-            ConcreteSyntaxTree.QualifiedEntityTypeName,
+        AbstractSyntaxTreeNodes.QualifiedEntityTypeName.Visitor<
+            ConcreteSyntaxTreeNodes.QualifiedEntityTypeName,
             Void>
     {
         private QualifiedEntityTypeNameTranslator()

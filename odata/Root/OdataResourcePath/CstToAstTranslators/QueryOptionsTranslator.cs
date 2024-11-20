@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class QueryOptionsTranslator :
-        ConcreteSyntaxTree.QueryOptions.Visitor<
-            AbstractSyntaxTree.QueryOptions,
+        ConcreteSyntaxTreeNodes.QueryOptions.Visitor<
+            AbstractSyntaxTreeNodes.QueryOptions,
             Void>
     {
         private QueryOptionsTranslator()

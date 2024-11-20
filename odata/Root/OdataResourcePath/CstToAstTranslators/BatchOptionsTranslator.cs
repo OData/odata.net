@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class BatchOptionsTranslator : 
-        ConcreteSyntaxTree.BatchOptions.Visitor<
-            AbstractSyntaxTree.BatchOptions, 
+        ConcreteSyntaxTreeNodes.BatchOptions.Visitor<
+            AbstractSyntaxTreeNodes.BatchOptions, 
             Void>
     {
         private BatchOptionsTranslator()

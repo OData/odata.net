@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class EntityCastOptionsTranslator :
-        ConcreteSyntaxTree.EntityCastOptions.Visitor<
-            AbstractSyntaxTree.EntityCastOptions,
+        ConcreteSyntaxTreeNodes.EntityCastOptions.Visitor<
+            AbstractSyntaxTreeNodes.EntityCastOptions,
             Void>
     {
         private EntityCastOptionsTranslator()

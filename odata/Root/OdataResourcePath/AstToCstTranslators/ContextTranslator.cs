@@ -3,8 +3,8 @@
     using Root;
     
     public sealed class ContextTranslator :
-        AbstractSyntaxTree.Context.Visitor<
-            ConcreteSyntaxTree.Context,
+        AbstractSyntaxTreeNodes.Context.Visitor<
+            ConcreteSyntaxTreeNodes.Context,
             Void>
     {
         private ContextTranslator()

@@ -2,7 +2,7 @@
 {
     using System.Text;
 
-    using Root.OdataResourcePath.ConcreteSyntaxTree;
+    using Root.OdataResourcePath.ConcreteSyntaxTreeNodes;
 
     public sealed class EntityCastOptionsTranscriber : EntityCastOptions.Visitor<Void, StringBuilder>
     {

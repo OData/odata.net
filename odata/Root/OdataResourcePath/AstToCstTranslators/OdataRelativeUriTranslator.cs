@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class OdataRelativeUriTranslator :
-        AbstractSyntaxTree.OdataRelativeUri.Visitor<
-            ConcreteSyntaxTree.OdataRelativeUri,
+        AbstractSyntaxTreeNodes.OdataRelativeUri.Visitor<
+            ConcreteSyntaxTreeNodes.OdataRelativeUri,
             Void>
     {
         private readonly BatchOptionsTranslator batchOptionsCstToAstTranslator;
@@ -46,85 +46,85 @@
             ResourcePathTranslator.Default,
             QueryOptionsTranslator.Default);
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.BatchOnly node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.BatchOnly node,
             Void context)
         {
-            return ConcreteSyntaxTree.OdataRelativeUri.BatchOnly.Instance;
+            return ConcreteSyntaxTreeNodes.OdataRelativeUri.BatchOnly.Instance;
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.BatchWithOptions node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.BatchWithOptions node,
             Void context)
         {
             var batchOptions = this.batchOptionsCstToAstTranslator.Visit(node.BatchOptions, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.BatchWithOptions(batchOptions);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.BatchWithOptions(batchOptions);
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.EntityWithOptions node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.EntityWithOptions node,
             Void context)
         {
             var entityOptions = this.entityOptionsTranslator.Visit(node.EntityOptions, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.EntityWithOptions(entityOptions);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.EntityWithOptions(entityOptions);
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.EntityWithCast node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.EntityWithCast node,
             Void context)
         {
             var qualifiedEntityTypeName = this.qualifiedEntityTypeNameTranslator.Visit(node.QualifiedEntityTypeName, context);
             var entityCastOptions = this.entityCastOptionsTranslator.Visit(node.EntityCastOptions, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.EntityWithCast(qualifiedEntityTypeName, entityCastOptions);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.EntityWithCast(qualifiedEntityTypeName, entityCastOptions);
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.MetadataOnly node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.MetadataOnly node,
             Void context)
         {
-            return ConcreteSyntaxTree.OdataRelativeUri.MetadataOnly.Instance;
+            return ConcreteSyntaxTreeNodes.OdataRelativeUri.MetadataOnly.Instance;
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.MetadataWithOptions node,
-            Void context)
-        {
-            var metadataOptions = this.metadataOptionsTranslator.Visit(node.MetadataOptions, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.MetadataWithOptions(metadataOptions);
-        }
-
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.MetadataWithContext node,
-            Void context)
-        {
-            var metadataContext = this.contextTranslator.Visit(node.Context, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.MetadataWithContext(metadataContext);
-        }
-
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.MetadataWithOptionsAndContext node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.MetadataWithOptions node,
             Void context)
         {
             var metadataOptions = this.metadataOptionsTranslator.Visit(node.MetadataOptions, context);
-            var metadataContext = this.contextTranslator.Visit(node.Context, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.MetadataWithOptionsAndContext(metadataOptions, metadataContext);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.MetadataWithOptions(metadataOptions);
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.ResourcePathOnly node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.MetadataWithContext node,
+            Void context)
+        {
+            var metadataContext = this.contextTranslator.Visit(node.Context, context);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.MetadataWithContext(metadataContext);
+        }
+
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.MetadataWithOptionsAndContext node,
+            Void context)
+        {
+            var metadataOptions = this.metadataOptionsTranslator.Visit(node.MetadataOptions, context);
+            var metadataContext = this.contextTranslator.Visit(node.Context, context);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.MetadataWithOptionsAndContext(metadataOptions, metadataContext);
+        }
+
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.ResourcePathOnly node,
             Void context)
         {
             var resourcePath = this.resourcePathTranslator.Visit(node.ResourcePath, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.ResourcePathOnly(resourcePath);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.ResourcePathOnly(resourcePath);
         }
 
-        public override ConcreteSyntaxTree.OdataRelativeUri Accept(
-            AbstractSyntaxTree.OdataRelativeUri.ResourcePathWithQueryOptions node,
+        public override ConcreteSyntaxTreeNodes.OdataRelativeUri Accept(
+            AbstractSyntaxTreeNodes.OdataRelativeUri.ResourcePathWithQueryOptions node,
             Void context)
         {
             var resourcePath = this.resourcePathTranslator.Visit(node.ResourcePath, context);
             var queryOptions = this.queryOptionsTranslator.Visit(node.QueryOptions, context);
-            return new ConcreteSyntaxTree.OdataRelativeUri.ResourcePathWithQueryOptions(resourcePath, queryOptions);
+            return new ConcreteSyntaxTreeNodes.OdataRelativeUri.ResourcePathWithQueryOptions(resourcePath, queryOptions);
         }
     }
 }

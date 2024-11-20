@@ -3,8 +3,8 @@
     using Root;
 
     public sealed class MetadataOptionsTranslator :
-        ConcreteSyntaxTree.MetadataOptions.Visitor<
-            AbstractSyntaxTree.MetadataOptions,
+        ConcreteSyntaxTreeNodes.MetadataOptions.Visitor<
+            AbstractSyntaxTreeNodes.MetadataOptions,
             Void>
     {
         private MetadataOptionsTranslator()
