@@ -1,8 +1,16 @@
 ## pattern overview
 
-The general pattern is that the CSTs will be a discriminated union that corresponds directly to the [OData ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt). The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
+We should stick to the naming conventions laid out in the [architecture](./architecture.md). So, we should have "parser"s to create CSTs from strings, "converter"s to move between CSTs and ASTs, "translator"s to move between different types of ASTs, "transcriber"s to create strings from CSTs, "serializer"s to go from user defined types to ASTs, and "deserializer"s to go from ASTs to user defined types. 
 
-We should also stick to the naming conventions laid out in the [architecture](./architecture.md). So, we should have "parser"s to create CSTs from strings, "converter"s to move between CSTs and ASTs, "translator"s to move between different types of ASTs, "transcriber"s to create strings from CSTs, "serializer"s to go from user defined types to ASTs, and "deserializer"s to go from ASTs to user defined types. 
+The CSTs will be a discriminated union that corresponds directly to the [OData ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt).
+
+The ASTs will be a discriminated union that corresponds to the same ABNF but with the string literals removed, as well as "overhead" from the CST like aliases. 
+
+TODO fix your code samples to align with your own naming
+
+TODO transcribers will be...
+
+TODO converts will be...
 
 ## odata resource path example
 
@@ -20,11 +28,11 @@ A sample implementation of the AST is [here](../odata/Root/OdataResourcePath/Abs
 
 A sample implementation of the transcriber is [here](../odata/Root/OdataResourcePath/Transcribers/OdataRelativeUriTranscriber.cs).
 
-### CST to AST translator
+### CST to AST converter
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/CstToAstTranslators/OdataRelativeUriTranslator.cs).
 
-### AST to CST translator
+### AST to CST converter
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/AstToCstTranslators/OdataRelativeUriTranslator.cs).
 
