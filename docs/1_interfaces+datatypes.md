@@ -50,7 +50,7 @@ TODO
 
 ## let's now attempt take some time to show mechanically how to implement a node in the AST and all of its associated utilities
 
-TODO which node?
+Let's try with `keyPredicate` using the [ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt).
 
 ## appendix
 
