@@ -18,7 +18,7 @@
                 .Default
                 .Visit(cst, default);
 
-            var newCst = Root.OdataResourcePath.AstToCstTranslators.OdataRelativeUriTranslator
+            var newCst = Root.OdataResourcePath.AstToCstConverters.OdataRelativeUriTranslator
                 .Default
                 .Visit(ast, default);
 

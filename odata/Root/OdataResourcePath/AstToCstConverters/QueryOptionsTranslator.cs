@@ -1,4 +1,4 @@
-﻿namespace Root.OdataResourcePath.AstToCstTranslators
+﻿namespace Root.OdataResourcePath.AstToCstConverters
 {
     using Root;
 
