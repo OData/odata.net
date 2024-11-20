@@ -2,15 +2,15 @@
 {
     using Root;
     
-    public sealed class ContextTranslator :
+    public sealed class ContextConverter :
         AbstractSyntaxTreeNodes.Context.Visitor<
             ConcreteSyntaxTreeNodes.Context,
             Void>
     {
-        private ContextTranslator()
+        private ContextConverter()
         {
         }
 
-        public static ContextTranslator Default { get; } = new ContextTranslator();
+        public static ContextConverter Default { get; } = new ContextConverter();
     }
 }

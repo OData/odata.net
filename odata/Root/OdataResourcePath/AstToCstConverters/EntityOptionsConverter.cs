@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class EntityOptionsTranslator :
+    public sealed class EntityOptionsConverter :
         AbstractSyntaxTreeNodes.EntityOptions.Visitor<
             ConcreteSyntaxTreeNodes.EntityOptions,
             Void>
     {
-        private EntityOptionsTranslator()
+        private EntityOptionsConverter()
         {
         }
 
-        public static EntityOptionsTranslator Default { get; } = new EntityOptionsTranslator();
+        public static EntityOptionsConverter Default { get; } = new EntityOptionsConverter();
     }
 }

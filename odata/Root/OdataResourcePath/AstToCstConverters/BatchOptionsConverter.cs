@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class BatchOptionsTranslator : 
+    public sealed class BatchOptionsConverter : 
         AbstractSyntaxTreeNodes.BatchOptions.Visitor<
             ConcreteSyntaxTreeNodes.BatchOptions, 
             Void>
     {
-        private BatchOptionsTranslator()
+        private BatchOptionsConverter()
         {
         }
 
-        public static BatchOptionsTranslator Default { get; } = new BatchOptionsTranslator();
+        public static BatchOptionsConverter Default { get; } = new BatchOptionsConverter();
     }
 }

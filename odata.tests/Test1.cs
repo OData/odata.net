@@ -14,11 +14,11 @@
             var url = "$metadata";
             var cst = OdataRelativeUriParser.Instance.Parse(url);
 
-            var ast = Root.OdataResourcePath.CstToAstTranslators.OdataRelativeUriTranslator
+            var ast = Root.OdataResourcePath.CstToAstConverters.OdataRelativeUriConverter
                 .Default
                 .Visit(cst, default);
 
-            var newCst = Root.OdataResourcePath.AstToCstConverters.OdataRelativeUriTranslator
+            var newCst = Root.OdataResourcePath.AstToCstConverters.OdataRelativeUriConverter
                 .Default
                 .Visit(ast, default);
 

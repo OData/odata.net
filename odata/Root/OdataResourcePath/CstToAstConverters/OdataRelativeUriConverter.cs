@@ -1,30 +1,30 @@
-﻿namespace Root.OdataResourcePath.CstToAstTranslators
+﻿namespace Root.OdataResourcePath.CstToAstConverters
 {
     using Root;
 
-    public sealed class OdataRelativeUriTranslator :
+    public sealed class OdataRelativeUriConverter :
         ConcreteSyntaxTreeNodes.OdataRelativeUri.Visitor<
             AbstractSyntaxTreeNodes.OdataRelativeUri,
             Void>
     {
-        private readonly BatchOptionsTranslator batchOptionsCstToAstTranslator;
-        private readonly EntityOptionsTranslator entityOptionsTranslator;
-        private readonly QualifiedEntityTypeNameTranslator qualifiedEntityTypeNameTranslator;
-        private readonly EntityCastOptionsTranslator entityCastOptionsTranslator;
-        private readonly MetadataOptionsTranslator metadataOptionsTranslator;
-        private readonly ContextTranslator contextTranslator;
-        private readonly ResourcePathTranslator resourcePathTranslator;
-        private readonly QueryOptionsTranslator queryOptionsTranslator;
+        private readonly BatchOptionsConverter batchOptionsCstToAstTranslator;
+        private readonly EntityOptionsConverter entityOptionsTranslator;
+        private readonly QualifiedEntityTypeNameConverter qualifiedEntityTypeNameTranslator;
+        private readonly EntityCastOptionsConverter entityCastOptionsTranslator;
+        private readonly MetadataOptionsConverter metadataOptionsTranslator;
+        private readonly ContextConverter contextTranslator;
+        private readonly ResourcePathConverter resourcePathTranslator;
+        private readonly QueryOptionsConverter queryOptionsTranslator;
 
-        private OdataRelativeUriTranslator(
-            BatchOptionsTranslator batchOptionsCstToAstTranslator,
-            EntityOptionsTranslator entityOptionsTranslator,
-            QualifiedEntityTypeNameTranslator qualifiedEntityTypeNameTranslator,
-            EntityCastOptionsTranslator entityCastOptionsTranslator,
-            MetadataOptionsTranslator metadataOptionsTranslator,
-            ContextTranslator contextTranslator,
-            ResourcePathTranslator resourcePathTranslator,
-            QueryOptionsTranslator queryOptionsTranslator)
+        private OdataRelativeUriConverter(
+            BatchOptionsConverter batchOptionsCstToAstTranslator,
+            EntityOptionsConverter entityOptionsTranslator,
+            QualifiedEntityTypeNameConverter qualifiedEntityTypeNameTranslator,
+            EntityCastOptionsConverter entityCastOptionsTranslator,
+            MetadataOptionsConverter metadataOptionsTranslator,
+            ContextConverter contextTranslator,
+            ResourcePathConverter resourcePathTranslator,
+            QueryOptionsConverter queryOptionsTranslator)
         {
             this.batchOptionsCstToAstTranslator = batchOptionsCstToAstTranslator;
             this.entityOptionsTranslator = entityOptionsTranslator;
@@ -36,15 +36,15 @@
             this.queryOptionsTranslator = queryOptionsTranslator;
         }
 
-        public static OdataRelativeUriTranslator Default { get; } = new OdataRelativeUriTranslator(
-            BatchOptionsTranslator.Default,
-            EntityOptionsTranslator.Default,
-            QualifiedEntityTypeNameTranslator.Default,
-            EntityCastOptionsTranslator.Default,
-            MetadataOptionsTranslator.Default,
-            ContextTranslator.Default,
-            ResourcePathTranslator.Default,
-            QueryOptionsTranslator.Default);
+        public static OdataRelativeUriConverter Default { get; } = new OdataRelativeUriConverter(
+            BatchOptionsConverter.Default,
+            EntityOptionsConverter.Default,
+            QualifiedEntityTypeNameConverter.Default,
+            EntityCastOptionsConverter.Default,
+            MetadataOptionsConverter.Default,
+            ContextConverter.Default,
+            ResourcePathConverter.Default,
+            QueryOptionsConverter.Default);
 
         public override AbstractSyntaxTreeNodes.OdataRelativeUri Accept(
             ConcreteSyntaxTreeNodes.OdataRelativeUri.BatchOnly node,

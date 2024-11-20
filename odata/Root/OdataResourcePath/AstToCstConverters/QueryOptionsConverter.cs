@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class QueryOptionsTranslator :
+    public sealed class QueryOptionsConverter :
         AbstractSyntaxTreeNodes.QueryOptions.Visitor<
             ConcreteSyntaxTreeNodes.QueryOptions,
             Void>
     {
-        private QueryOptionsTranslator()
+        private QueryOptionsConverter()
         {
         }
 
-        public static QueryOptionsTranslator Default { get; } = new QueryOptionsTranslator();
+        public static QueryOptionsConverter Default { get; } = new QueryOptionsConverter();
     }
 }

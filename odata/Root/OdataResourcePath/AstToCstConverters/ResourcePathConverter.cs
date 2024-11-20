@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class ResourcePathTranslator :
+    public sealed class ResourcePathConverter :
         AbstractSyntaxTreeNodes.ResourcePath.Visitor<
             ConcreteSyntaxTreeNodes.ResourcePath,
             Void>
     {
-        private ResourcePathTranslator()
+        private ResourcePathConverter()
         {
         }
 
-        public static ResourcePathTranslator Default { get; } = new ResourcePathTranslator();
+        public static ResourcePathConverter Default { get; } = new ResourcePathConverter();
     }
 }

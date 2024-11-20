@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class MetadataOptionsTranslator :
+    public sealed class MetadataOptionsConverter :
         AbstractSyntaxTreeNodes.MetadataOptions.Visitor<
             ConcreteSyntaxTreeNodes.MetadataOptions,
             Void>
     {
-        private MetadataOptionsTranslator()
+        private MetadataOptionsConverter()
         {
         }
 
-        public static MetadataOptionsTranslator Default { get; } = new MetadataOptionsTranslator();
+        public static MetadataOptionsConverter Default { get; } = new MetadataOptionsConverter();
     }
 }

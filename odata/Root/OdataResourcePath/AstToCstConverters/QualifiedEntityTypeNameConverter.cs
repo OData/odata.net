@@ -2,15 +2,15 @@
 {
     using Root;
 
-    public sealed class QualifiedEntityTypeNameTranslator :
+    public sealed class QualifiedEntityTypeNameConverter :
         AbstractSyntaxTreeNodes.QualifiedEntityTypeName.Visitor<
             ConcreteSyntaxTreeNodes.QualifiedEntityTypeName,
             Void>
     {
-        private QualifiedEntityTypeNameTranslator()
+        private QualifiedEntityTypeNameConverter()
         {
         }
 
-        public static QualifiedEntityTypeNameTranslator Default { get; } = new QualifiedEntityTypeNameTranslator();
+        public static QualifiedEntityTypeNameConverter Default { get; } = new QualifiedEntityTypeNameConverter();
     }
 }
