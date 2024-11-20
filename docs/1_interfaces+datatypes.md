@@ -630,7 +630,7 @@ namespace Root.OdataRelativeUri.Ast
 TODO link to the repo instead of having markdown code blocks
 TODO split classes into individual files
 TODO do a demo of implementing a discriminated union
-TODO do a demo of a "terminal" tree that transcribes
+TODO do a demo of a "terminal" tree that parses and transcribes
 TODO try ref struct
 
 #### CST transcriber
