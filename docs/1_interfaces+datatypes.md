@@ -4,35 +4,31 @@ The general pattern is that the CSTs will be a discriminated union that correspo
 
 We should also stick to the naming conventions laid out in the [architecture](./architecture.md). So, we should have "parser"s to create CSTs from strings, "converter"s to move between CSTs and ASTs, "translator"s to move between different types of ASTs, "transcriber"s to create strings from CSTs, "serializer"s to go from user defined types to ASTs, and "deserializer"s to go from ASTs to user defined types. 
 
-## odata request
+## odata resource path example
 
-An OData request has a verb, a URL, and a request body. Taking a bottom up approach, let's start with the URL and request body and build into an odata request type.
+Let's use the odata resource path as an example of the above patterns.
 
-### odata uri
-
-#### odata resource path
-
-##### CST
+### CST
 
 A sample implementation of the CST is [here](../odata/Root/OdataResourcePath/ConcreteSyntaxTreeNodes/OdataRelativeUri.cs).
 
-##### AST
+### AST
 
 A sample implementation of the AST is [here](../odata/Root/OdataResourcePath/AbstractSyntaxTreeNodes/OdataRelativeUri.cs).
 
-#### CST transcriber
+### CST transcriber
 
 A sample implementation of the transcriber is [here](../odata/Root/OdataResourcePath/Transcribers/OdataRelativeUriTranscriber.cs).
 
-#### CST to AST translator
+### CST to AST translator
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/CstToAstTranslators/OdataRelativeUriTranslator.cs).
 
-#### AST to CST translator
+### AST to CST translator
 
 A sample implementation of the CST to AST translator is [here](../odata/Root/OdataResourcePath/AstToCstTranslators/OdataRelativeUriTranslator.cs).
 
-#### uri parser
+### uri parser
 
 TODO
 
