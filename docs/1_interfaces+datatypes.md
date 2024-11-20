@@ -52,6 +52,12 @@ TODO
 
 Let's try with `keyPredicate` using the [ABNF](https://docs.oasis-open.org/odata/odata/v4.01/cs01/abnf/odata-abnf-construction-rules.txt).
 
+## some takeaways
+
+Using this discriminated union pattern, it is clear from the code where the "feature gaps" are: any nodes that only have a private constructor have not yet been implemented. We should implement a node in its completeness so that we can maintain this status. Doing this will ensure that the "feature gaps" are never tribal knowledge, but something that any developer can discover just by looking at the code.
+
+These unions *also* allow us to easily scale across developers. Any number of developers can implement as many nodes as there are developers provided that no two developers are working on the same node. Also, by separating each phase of the handling process in this way, we are able to implement the nodes "piecewise", meaning: a developer can define the AST node, create a PR, and merge it; the developer can then define the CST node, create a PR, and merge it; they can then implement a converter, and so in. These can all be done as individual, discrete, atomic steps done (mostly) independently of each other. 
+
 ## appendix
 
 ### parsing
