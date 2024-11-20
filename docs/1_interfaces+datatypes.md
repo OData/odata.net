@@ -48,9 +48,9 @@ TODO
 
 TODO
 
-TODO do a demo of implementing a discriminated union
-TODO do a demo of a "terminal" tree that parses and transcribes; try using /entityset/key/property for this (i think you can't actually use combinators because odata is not a context free grammar)
-TODO try ref struct
+## let's now attempt take some time to show mechanically how to implement a node in the AST and all of its associated utilities
+
+TODO which node?
 
 ## appendix
 
