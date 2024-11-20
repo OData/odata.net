@@ -5,7 +5,7 @@
 
     public static class EntityCastOptionsParser
     {
-        //// TODO how to implement this for the "Feature gap" case?
-        public static Parser<EntityCastOptions> Instance { get; }
+        public static Parser<EntityCastOptions> Instance { get; } = Parser.None<EntityCastOptions>(
+            "BatchOptions parsing has not been implemented");
     }
 }

@@ -5,7 +5,7 @@
 
     public static class MetadataOptionsParser
     {
-        //// TODO how to implement this for the "Feature gap" case?
-        public static Parser<MetadataOptions> Instance { get; }
+        public static Parser<MetadataOptions> Instance { get; } = Parser.None<MetadataOptions>(
+            "BatchOptions parsing has not been implemented");
     }
 }

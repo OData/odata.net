@@ -5,7 +5,7 @@
 
     public static class BatchOptionsParser
     {
-        //// TODO how to implement this for the "Feature gap" case?
-        public static Parser<BatchOptions> Instance { get; }
+        public static Parser<BatchOptions> Instance { get; } = Parser.None<BatchOptions>(
+            "BatchOptions parsing has not been implemented");
     }
 }

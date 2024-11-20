@@ -5,7 +5,7 @@
 
     public static class ResourcePathParser
     {
-        //// TODO how to implement this for the "Feature gap" case?
-        public static Parser<ResourcePath> Instance { get; }
+        public static Parser<ResourcePath> Instance { get; } = Parser.None<ResourcePath>(
+            "BatchOptions parsing has not been implemented");
     }
 }

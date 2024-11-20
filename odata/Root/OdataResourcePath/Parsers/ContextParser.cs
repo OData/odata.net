@@ -5,7 +5,7 @@
 
     public static class ContextParser
     {
-        //// TODO how to implement this for the "Feature gap" case?
-        public static Parser<Context> Instance { get; }
+        public static Parser<Context> Instance { get; } = Parser.None<Context>(
+            "BatchOptions parsing has not been implemented");
     }
 }
