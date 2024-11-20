@@ -481,10 +481,11 @@ Clearly, there's still a lot of infrastructure to flesh out, and a lot of implem
 
 ## follow-ups
 1. dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
-2. being able to stream payloads
-3. handling serialization of customer-defined types
-4. CSDL defined authz
-5. custom headers, query options, endpoints, etc.
+2. there must be an analog to the existing "syntactic AST"
+3. being able to stream payloads
+4. handling serialization of customer-defined types
+5. CSDL defined authz
+6. custom headers, query options, endpoints, etc.
 
 
 
