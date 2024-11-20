@@ -3,9 +3,6 @@
     using Root.OdataResourcePath.ConcreteSyntaxTreeNodes;
     using Sprache;
 
-    /// <summary>
-    /// TODO figure out the naming and structuring...
-    /// </summary>
     public static class OdataRelativeUriParser
     {
         public static Parser<OdataRelativeUri> Instance { get; } =
