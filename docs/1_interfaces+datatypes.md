@@ -23,6 +23,7 @@ Let's use the odata resource path as an example of the above patterns.
 ### syntactic CST?
 
 TODO do you want to have a syntactic CST that is a context-free grammar? then your parsers could be combinators; if you do this you will need a converter from syntactic to semantic CST
+TODO regardless of the above, you need to have a syntactic CST **anyway** to have parity with ODL
 
 ### (semantic?) CST
 
