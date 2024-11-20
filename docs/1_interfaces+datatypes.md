@@ -37,7 +37,6 @@ A sample implementation of the CST to AST translator is [here](../odata/Root/Oda
 TODO
 
 
-TODO split classes into individual files
 TODO do a demo of implementing a discriminated union
 TODO do a demo of a "terminal" tree that parses and transcribes; try using /entityset/key/property for this (i think you can't actually use combinators because odata is not a context free grammar)
 TODO try ref struct
