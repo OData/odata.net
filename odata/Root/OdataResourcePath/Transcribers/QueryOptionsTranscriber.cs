@@ -1,4 +1,4 @@
-﻿namespace Root.OdataResourcePath.CstTranscribers
+﻿namespace Root.OdataResourcePath.Transcribers
 {
     using System.Text;
 
