@@ -314,7 +314,7 @@ namespace Microsoft.OData.Edm.Tests.Csdl
             var setA = model.FindDeclaredNavigationSource("SetA");
             Assert.NotNull(setA);
 
-            var navProp = setA.EntityType().FindProperty("Nav") as IEdmNavigationProperty;
+            var navProp = setA.EntityType.FindProperty("Nav") as IEdmNavigationProperty;
             Assert.NotNull(navProp);
             Assert.Equal(2, setA.NavigationPropertyBindings.Count());
 

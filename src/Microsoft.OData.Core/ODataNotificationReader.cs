@@ -14,11 +14,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper for TextReader to listen for dispose.
     /// </summary>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
     internal sealed class ODataNotificationReader : TextReader, IAsyncDisposable
-#else
-    internal sealed class ODataNotificationReader : TextReader
-#endif
     {
         private readonly TextReader textReader;
         private readonly IODataStreamListener listener;
@@ -148,7 +144,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         public async ValueTask DisposeAsync()
         {
             if (!this.disposed)
@@ -161,6 +156,5 @@ namespace Microsoft.OData
             // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
             this.Dispose(false);
         }
-#endif
     }
 }

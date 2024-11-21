@@ -4,14 +4,13 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Buffers;
 using System.Diagnostics;
 
 namespace Microsoft.OData.Json
 {
-    // This class has been adapated from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
+    // This class has been adapted from https://github.com/dotnet/runtime/blob/main/src/libraries/Common/src/System/Text/Json/PooledByteBufferWriter.cs
     /// <summary>
     /// An implementation of <see cref="IBufferWriter{T}"/> that rents
     /// buffers from an array pool instead of allocating a new array every time.
@@ -226,4 +225,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
-#endif

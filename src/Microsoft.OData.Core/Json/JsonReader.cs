@@ -22,11 +22,7 @@ namespace Microsoft.OData.Json
     /// Reader for the JSON format. http://www.json.org
     /// </summary>
     [DebuggerDisplay("{NodeType}: {GetValue()}")]
-#if NETCOREAPP
     internal class JsonReader : IJsonReader, IDisposable, IAsyncDisposable
-#else
-    internal class JsonReader : IJsonReader, IDisposable
-#endif
     {
         /// <summary>
         /// The initial size of the buffer of characters.
@@ -827,13 +823,11 @@ namespace Microsoft.OData.Json
             }
         }
 
-#if NETCOREAPP
         public ValueTask DisposeAsync()
         {
             Dispose();
             return ValueTask.CompletedTask;
         }
-#endif
 
         /// <summary>
         /// Determines if a given character is a whitespace character.
@@ -2148,11 +2142,7 @@ namespace Microsoft.OData.Json
         /// The value of the TResult parameter contains true if a non-whitespace character was found,
         /// in which case the <see cref="tokenStartIndex"/> is pointing at that character;
         /// otherwise false if there are no non-whitespace characters left in the input.</returns>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> SkipWhitespacesAsync()
-#else
-        private async Task<bool> SkipWhitespacesAsync()
-#endif
         {
             do
             {
@@ -2176,11 +2166,7 @@ namespace Microsoft.OData.Json
         /// <returns>A task that represents the asynchronous operation.
         /// The value of the TResult parameter contains true if at least the required number of characters is available; 
         /// otherwise false if end of input was reached.</returns>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
-#else
-        private async Task<bool> EnsureAvailableCharactersAsync(int characterCountAfterTokenStart)
-#endif
         {
             while (this.tokenStartIndex + characterCountAfterTokenStart > this.storedCharacterCount)
             {
@@ -2201,11 +2187,7 @@ namespace Microsoft.OData.Json
         /// otherwise false if end of input was reached.</returns>
         /// <remarks>This may move characters in the <see cref="characterBuffer"/>, so after this is called
         /// all indices to the <see cref="characterBuffer"/> are invalid except for <see cref="tokenStartIndex"/>.</remarks>
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
         private async ValueTask<bool> ReadInputAsync()
-#else
-        private async Task<bool> ReadInputAsync()
-#endif
         {
             Debug.Assert(this.tokenStartIndex >= 0 && this.tokenStartIndex <= this.storedCharacterCount, "The token start is out of stored characters range.");
 

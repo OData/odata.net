@@ -117,13 +117,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
                 "]," +
                 "\"FloatNumbers\":[" +
                 "1," +
-#if NETCOREAPP
                 "-3.4028235E+38," +
                 "3.4028235E+38," +
-#else
-                "-3.40282347E+38," +
-                "3.40282347E+38," +
-#endif
                 "\"INF\"," +
                 "\"-INF\"," +
                 "\"NaN\"" +

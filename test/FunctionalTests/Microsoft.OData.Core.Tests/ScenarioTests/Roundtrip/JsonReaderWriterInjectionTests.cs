@@ -9,9 +9,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-#if NETCOREAPP
 using System.Text.Json;
-#endif
 using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
@@ -462,9 +460,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
 
             public void WriteValue(TimeOfDay value) => throw new NotImplementedException();
 
-#if NETCOREAPP
             public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
-#endif
 
             public void WriteRawValue(string rawValue) => throw new NotImplementedException();
 
@@ -548,9 +544,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip
                 return this.textWriter.FlushAsync();
             }
 
-#if NETCOREAPP
             public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
-#endif
 
             public Stream StartStreamValueScope() => throw new NotImplementedException();
 

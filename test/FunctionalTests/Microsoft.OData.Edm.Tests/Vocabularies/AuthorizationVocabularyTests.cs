@@ -146,11 +146,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             this._authorizationModel.TryWriteSchema(xw, out errors);
             xw.Flush();
 
-#if NETCOREAPP1_1
-            xw.Dispose();
-#else
             xw.Close();
-#endif
             string output = sw.ToString();
 
             Assert.True(!errors.Any(), "No Errors");

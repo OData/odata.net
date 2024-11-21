@@ -8,14 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-
-#if NETCOREAPP
 using System.Text.Json;
 using System.Threading.Tasks;
-
-#endif
-
 using System.Xml;
 using Microsoft.OData.Edm.Csdl.Serialization;
 
@@ -47,7 +41,6 @@ namespace Microsoft.OData.Edm.Csdl
             this.edmxVersion = edmxVersion;
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Outputs a CSDL JSON artifact to the provided <see cref="Utf8JsonWriter"/>.
         /// </summary>
@@ -122,7 +115,6 @@ namespace Microsoft.OData.Edm.Csdl
 
             return (true, Enumerable.Empty<EdmError>());
         }
-#endif
 
         /// <summary>
         /// Outputs a CSDL XML artifact to the provided <see cref="XmlWriter"/>.

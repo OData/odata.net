@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -110,4 +109,3 @@ namespace Microsoft.OData
         }
     }
 }
-#endif

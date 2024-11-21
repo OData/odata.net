@@ -17,11 +17,7 @@ namespace Microsoft.OData
     /// <summary>
     /// Class that handles writing top level raw values to a stream.
     /// </summary>
-#if NETCOREAPP
     internal sealed class RawValueWriter : IDisposable, IAsyncDisposable
-#else
-    internal sealed class RawValueWriter : IDisposable
-#endif
     {
         /// <summary>
         /// Writer settings.
@@ -90,7 +86,6 @@ namespace Microsoft.OData
             this.textWriter = null;
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Asynchronously disposes the <see cref="RawValueWriter"/>.
         /// It flushes itself and then disposes its inner <see cref="System.IO.TextWriter"/>.
@@ -112,7 +107,6 @@ namespace Microsoft.OData
                 this.textWriter = null;
             }
         }
-#endif
 
         /// <summary>
         /// Start writing a raw output. This should only be called once.
@@ -281,11 +275,7 @@ namespace Microsoft.OData
             // We must create the text writer over a stream which will ignore Dispose, since we need to be able to Dispose
             // the writer without disposing the underlying message stream.
             Stream nonDisposingStream;
-#if NETSTANDARD1_1
-            if (MessageStreamWrapper.IsNonDisposingStream(this.stream) || this.stream is AsyncBufferedStream)
-#else
             if (MessageStreamWrapper.IsNonDisposingStream(this.stream))
-#endif
             {
                 // AsyncBufferedStream ignores Dispose
                 nonDisposingStream = this.stream;

@@ -328,7 +328,6 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(value != null, "value != null");
 
-#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 // We don't perform validation for ODataJsonElementValue.
@@ -336,7 +335,6 @@ namespace Microsoft.OData.Json
                 this.JsonWriter.WriteValue(jsonElementValue.Value);
                 return;
             }
-#endif
 
             if (actualTypeReference == null)
             {
@@ -663,7 +661,6 @@ namespace Microsoft.OData.Json
         {
             Debug.Assert(value != null, "value != null");
 
-#if NETCOREAPP
             if (value is ODataJsonElementValue jsonElementValue)
             {
                 // We don't perform validation for ODataJsonElementValue.
@@ -671,7 +668,6 @@ namespace Microsoft.OData.Json
                 await this.JsonWriter.WriteValueAsync(jsonElementValue.Value).ConfigureAwait(false);
                 return;
             }
-#endif
 
             if (actualTypeReference == null)
             {
@@ -734,20 +730,12 @@ namespace Microsoft.OData.Json
             Stream stream = await this.JsonWriter.StartStreamValueScopeAsync().ConfigureAwait(false);
             await streamValue.Stream.CopyToAsync(stream).ConfigureAwait(false);
             await stream.FlushAsync().ConfigureAwait(false);
-#if NETCOREAPP
             await stream.DisposeAsync();
-#else
-                stream.Dispose();
-#endif
             await this.JsonWriter.EndStreamValueScopeAsync().ConfigureAwait(false);
 
             if (!streamValue.LeaveOpen)
             {
-#if NETCOREAPP
                 await streamValue.Stream.DisposeAsync();
-#else
-                streamValue.Stream.Dispose();
-#endif
             }
         }
 

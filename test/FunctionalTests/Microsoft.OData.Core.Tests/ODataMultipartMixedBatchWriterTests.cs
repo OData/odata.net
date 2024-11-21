@@ -79,11 +79,7 @@ POST http://tempuri.org/Orders HTTP/1.1
                     var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -123,11 +119,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage1 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -139,11 +131,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage2 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "2");
 
-#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                     {
                         var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -198,11 +186,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage1 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "PUT", new Uri($"{ServiceUri}/Orders(1)"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -217,11 +201,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage2 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "PUT", new Uri($"{ServiceUri}/Customers(1)"), "2");
 
-#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                    using (var messageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                     {
                         var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -280,11 +260,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage1 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -298,11 +274,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage2 = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -357,11 +329,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -407,11 +375,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -449,11 +413,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), /*contentId*/ null, BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -494,11 +454,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationRequestMessage = await multipartMixedBatchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri("/Orders", UriKind.Relative), /*contentId*/ null, BatchPayloadUriOption.RelativeUri);
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -563,11 +519,7 @@ POST http://tempuri.org/Orders HTTP/1.1
                     var operationResponseMessage = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("1");
                     operationResponseMessage.StatusCode = 200;
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationResponseMessage, this.settings))
-#endif
                     {
                         var jsonWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -607,11 +559,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationResponseMessage1 = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("1");
                     operationResponseMessage1.StatusCode = 200;
 
-#if NETCOREAPP
                     await using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, this.settings))
-#else
-                    using (var messageWriter1 = new ODataMessageWriter(operationResponseMessage1, this.settings))
-#endif
                     {
                         var jsonWriter = await messageWriter1.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -626,11 +574,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                     var operationResponseMessage2 = await multipartMixedBatchWriter.CreateOperationResponseMessageAsync("2");
                     operationResponseMessage2.StatusCode = 200;
 
-#if NETCOREAPP
                     await using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, this.settings))
-#else
-                    using (var messageWriter2 = new ODataMessageWriter(operationResponseMessage2, this.settings))
-#endif
                     {
                         var jsonWriter = await messageWriter2.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 

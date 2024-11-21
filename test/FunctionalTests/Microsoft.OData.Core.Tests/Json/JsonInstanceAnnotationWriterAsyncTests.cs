@@ -414,11 +414,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 MessageStream = this.stream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
                 Encoding = Encoding.GetEncoding(0),
-#else
-                Encoding = Encoding.Default,
-#endif
                 IsResponse = writingResponse,
                 IsAsync = isAsync,
                 Model = model,

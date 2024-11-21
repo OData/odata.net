@@ -31,11 +31,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two/Three/Four/Five/Six/Seven/Eight/Nine/Ten/Eleven"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -44,11 +40,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two(1)/Three"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two(1)", "Three" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         // TODO: Astoria does this. Not quite sure what the spec says.
@@ -58,11 +50,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One////Three"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Three" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -71,11 +59,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('stringkey')"), this.baseUri);
             string[] expectedListOrder = new[] { "EntitySet('stringkey')" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -84,11 +68,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "EntitySet('string/key')"), this.baseUri);
             string[] expectedListOrder = new[] { "EntitySet('string", "key')" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -97,11 +77,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "S p a c e"), this.baseUri);
             string[] expectedListOrder = new[] { "S p a c e" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -113,11 +89,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "Newline\n"), this.baseUri);
             string[] expectedListOrder = new[] { "Newline" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -126,11 +98,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Space ")), this.baseUri);
             string[] expectedListOrder = new[] { "Space " };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -139,11 +107,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Tab\t")), this.baseUri);
             string[] expectedListOrder = new[] { "Tab\t" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -152,11 +116,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("Newline\n")), this.baseUri);
             string[] expectedListOrder = new[] { "Newline\n" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -165,11 +125,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + Uri.EscapeDataString("CarriageReturn\r")), this.baseUri);
             string[] expectedListOrder = new[] { "CarriageReturn\r" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -178,11 +134,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Fact]
@@ -191,11 +143,7 @@ namespace Microsoft.OData.Tests.UriParser.Parsers
             var list = this.pathParser.ParsePathIntoSegments(new Uri(this.baseUri.AbsoluteUri + "One/Two?query=value/with/slashes"), this.baseUri);
             string[] expectedListOrder = new[] { "One", "Two" };
 
-#if NETCOREAPP1_1
-            Assert.True(list.SequenceEqual(expectedListOrder));
-#else
             list.ContainExactly(expectedListOrder);
-#endif
         }
 
         [Theory]

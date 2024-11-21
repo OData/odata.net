@@ -64,7 +64,6 @@ namespace Microsoft.OData.Tests
             Assert.Equal(expected, result);
         }
 
-#if NETCOREAPP
         [Fact]
         public async Task NotificationWriterDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -98,23 +97,6 @@ namespace Microsoft.OData.Tests
             // StreamDisposeAsync was written only once
             Assert.Equal("StreamDisposedAsync", result);
         }
-
-#else
-        [Fact]
-        public async Task NotificationWriterDisposeAsyncShouldInvokeStreamDisposedAsync()
-        {
-            using (TextWriter notificationWriter = new ODataNotificationWriter(
-                this.writer,
-                this.streamListener,
-                /*synchronous*/ false))
-            {
-            }
-
-            var result = await this.ReadStreamContentsAsync();
-
-            Assert.Equal("StreamDisposedAsync", result);
-        }
-#endif
 
         private string ReadStreamContents()
         {

@@ -73,21 +73,13 @@ namespace Microsoft.OData.Tests
             Assert.Equal(ReturnRepresentationPreference, this.requestMessage.GetHeader(PreferHeaderName));
         }
 
-#if NETCOREAPP
         [Fact]
         public void SetAnnotationFilterToEmptyShouldThrow()
         {
             Action test = () => this.preferHeader.AnnotationFilter = "";
             test.Throws<ArgumentException>(Strings.ExceptionUtils_ArgumentStringEmpty + " (Parameter 'AnnotationFilter')");
         }
-#else
-        [Fact]
-        public void SetAnnotationFilterToEmptyShouldThrow()
-        {
-            Action test = () => this.preferHeader.AnnotationFilter = "";
-            test.Throws<ArgumentException>(Strings.ExceptionUtils_ArgumentStringEmpty + "\r\nParameter name: AnnotationFilter");
-        }
-#endif
+
         [Fact]
         public void SetAnnotationFilterToNullShouldNoOpIfODataAnnotationPreferenceIsMissing()
         {

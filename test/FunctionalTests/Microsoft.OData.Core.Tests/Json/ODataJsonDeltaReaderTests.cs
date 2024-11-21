@@ -4554,11 +4554,7 @@ namespace Microsoft.OData.Tests.Json
             var messageInfo = new ODataMessageInfo
             {
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = isResponse,
                 IsAsync = isAsync,
                 Model = this.Model,

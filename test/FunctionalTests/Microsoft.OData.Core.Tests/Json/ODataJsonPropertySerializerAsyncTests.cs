@@ -273,7 +273,6 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal("{\"@odata.context\":\"http://tempuri.org/$metadata#Edm.Int32\",\"value\":13}", result);
         }
 
-#if NETCOREAPP
         [Fact]
         public async Task WritingJsonElementPropertiesAsync_ShouldSerializeJsonInput()
         {
@@ -334,7 +333,6 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.Equal("{\"JsonProp\":{\"foo\":\"bar\"}}", result);
         }
-#endif
 
         private async Task<string> SetupSerializerAndRunTestAsync(Func<ODataJsonPropertySerializer, Task> func, Action<IServiceCollection> configureServices = null)
         {

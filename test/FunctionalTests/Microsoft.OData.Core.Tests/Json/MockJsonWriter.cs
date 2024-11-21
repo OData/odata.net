@@ -5,15 +5,12 @@
 //---------------------------------------------------------------------
 
 using System;
+using System.Threading.Tasks;
+using System.IO;
+using System.Text.Json;
 using Microsoft.OData.Json;
 using Microsoft.OData.Edm;
 using Xunit;
-using System.Threading.Tasks;
-using System.IO;
-
-#if NETCOREAPP
-using System.Text.Json;
-#endif
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -87,9 +84,7 @@ namespace Microsoft.OData.Tests.Json
             this.WriteValueVerifier(Convert.ToBase64String(value));
         }
 
-#if NETCOREAPP
-        public void WriteValue(System.Text.Json.JsonElement value) => throw new NotImplementedException();
-#endif
+        public void WriteValue(JsonElement value) => throw new NotImplementedException();
 
         public void WriteRawValue(string rawValue)
         {
@@ -171,9 +166,7 @@ namespace Microsoft.OData.Tests.Json
 
         public Task FlushAsync() => throw new NotImplementedException();
 
-#if NETCOREAPP
         public Task WriteValueAsync(JsonElement value) => throw new NotImplementedException();
-#endif
 
         public Stream StartStreamValueScope() => throw new NotImplementedException();
 

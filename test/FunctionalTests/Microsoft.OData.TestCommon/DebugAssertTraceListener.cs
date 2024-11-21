@@ -1,5 +1,4 @@
-﻿#if !NETCOREAPP1_1
-namespace Microsoft.OData.TestCommon
+﻿namespace Microsoft.OData.TestCommon
 {
     using System;
     using System.Diagnostics;
@@ -81,4 +80,3 @@ namespace Microsoft.OData.TestCommon
         }
     }
 }
-#endif

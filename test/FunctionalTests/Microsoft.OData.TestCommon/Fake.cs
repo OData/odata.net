@@ -1,5 +1,4 @@
-﻿#if !NETCOREAPP1_1
-namespace Microsoft.OData.TestCommon
+﻿namespace Microsoft.OData.TestCommon
 {
     /// <summary>
     /// A fake <see cref="System.Delegate"/> that is defined to refer to some construct in Microsoft.OData.TestCommon
@@ -19,4 +18,3 @@ namespace Microsoft.OData.TestCommon
     /// </remarks>
     internal delegate void Fake(DebugAssertTraceListener listener);
 }
-#endif

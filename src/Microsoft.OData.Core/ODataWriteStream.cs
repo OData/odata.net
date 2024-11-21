@@ -164,7 +164,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Encapsulates the common asynchronous cleanup operations.
         /// </summary>
@@ -175,6 +174,5 @@ namespace Microsoft.OData
 
             return base.DisposeAsyncCore();
         }
-#endif
     }
 }

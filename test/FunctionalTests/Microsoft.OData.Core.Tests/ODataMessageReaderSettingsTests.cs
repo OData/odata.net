@@ -184,7 +184,7 @@ namespace Microsoft.OData.Tests
             copyOfSettings = settings.Clone();
             this.CompareMessageReaderSettings(settings, copyOfSettings);
         }
-#if NETCOREAPP
+
         [Fact]
         public void ODataMessageReaderSettingsErrorTest()
         {
@@ -210,33 +210,7 @@ namespace Microsoft.OData.Tests
             test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
             test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("0") + " (Parameter 'MaxReceivedMessageSize')");
         }
-#else
-        [Fact]
-        public void ODataMessageReaderSettingsErrorTest()
-        {
-            // MaxPartsPerBatch
-            Action test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxPartsPerBatch = -1 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxPartsPerBatch");
 
-            // MaxOperationsPerChangeset
-            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxOperationsPerChangeset = -1 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerNotNegative("-1") + "\r\nParameter name: MaxOperationsPerChangeset");
-
-            // MaxNestingDepth
-            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = -1 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("-1") + "\r\nParameter name: MaxNestingDepth");
-
-            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxNestingDepth = 0 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckIntegerPositive("0") + "\r\nParameter name: MaxNestingDepth");
-
-            // MaxMessageSize
-            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = -1 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("-1") + "\r\nParameter name: MaxReceivedMessageSize");
-
-            test = () => new ODataMessageReaderSettings() { MessageQuotas = new ODataMessageQuotas() { MaxReceivedMessageSize = 0 } };
-            test.Throws<ArgumentOutOfRangeException>(Strings.ExceptionUtils_CheckLongPositive("0") + "\r\nParameter name: MaxReceivedMessageSize");
-        }
-#endif
         private void CompareMessageReaderSettings(ODataMessageReaderSettings expected, ODataMessageReaderSettings actual)
         {
             if (expected == null && actual == null)

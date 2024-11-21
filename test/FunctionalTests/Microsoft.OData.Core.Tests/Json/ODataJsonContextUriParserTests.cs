@@ -23,11 +23,7 @@ namespace Microsoft.OData.Tests.Json
             model.AddElement(edmEntityType);
             EdmEntityContainer container = new EdmEntityContainer("NS", "EntityContainer");
             model.AddElement(container);
-#if NETCOREAPP2_0
-            container.AddEntitySet("people", edmEntityType);
-#else
-             container.AddEntitySet("People", edmEntityType);
-#endif
+            container.AddEntitySet("People", edmEntityType);
             return model;
         }
 
@@ -56,16 +52,6 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(new Uri("https://www.example.com/api/$metadata#People"), parsedContextUrl.ContextUri);
         }
 
-
-#if NETCOREAPP2_0
-        [Fact]
-        public void ParseContextUrlWithEscapedSpecailMeaningCharactersShouldSucceed()
-        {
-            string urlWithUnescapedSpecialMeaningCharacters = "https://www.example.com/api/$metadata#people('i%3A0%23.f%7Cmembership%7Cexample%40example.org')/Dogs";
-            Action parseContextUri = () => ODataJsonContextUriParser.Parse(GetModel(), urlWithUnescapedSpecialMeaningCharacters, ODataPayloadKind.Unsupported, null, true);
-            parseContextUri.DoesNotThrow();
-        }
-#else
         [Fact]
         public void ParseContextUrlWithEscapedSpecailMeaningCharactersShouldSucceed()
         {
@@ -73,6 +59,5 @@ namespace Microsoft.OData.Tests.Json
             Action parseContextUri = () => ODataJsonContextUriParser.Parse(GetModel(), urlWithUnescapedSpecialMeaningCharacters, ODataPayloadKind.Unsupported, null, true);
             parseContextUri.DoesNotThrow();
         }
-#endif
     }
 }

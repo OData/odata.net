@@ -163,12 +163,10 @@ namespace Microsoft.Test.OData.Utils.Common
         /// </returns>
         public static bool IsCatchable(Exception exception)
         {
-#if !NETCOREAPP1_1 && !NETCOREAPP2_1 && !NETCOREAPP3_1
             if (exception is ThreadAbortException)
             {
                 return false;
             }
-#endif
 
             return true;
         }

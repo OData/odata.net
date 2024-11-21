@@ -18,11 +18,7 @@ namespace Microsoft.OData
     /// or representing a stream value.
     /// This stream communicates status changes to an IODataStreamListener instance.
     /// </summary>
-#if NETSTANDARD2_0
-    internal abstract class ODataStream : Stream, IAsyncDisposable
-#else
     internal abstract class ODataStream : Stream
-#endif
     {
         /// <summary>Listener interface to be notified of operation changes.</summary>
         private IODataStreamListener listener;
@@ -82,7 +78,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         public override async ValueTask DisposeAsync()
         {
             await DisposeAsyncCore()
@@ -92,19 +87,7 @@ namespace Microsoft.OData
             // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
             this.Dispose(false);
         }
-#elif NETSTANDARD2_0
-        public async ValueTask DisposeAsync()
-        {
-            await DisposeAsyncCore()
-                .ConfigureAwait(false);
 
-            // Dispose unmanaged resources
-            // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
-            this.Dispose(false);
-        }
-#endif
-
-#if NETCOREAPP
         /// <summary>
         /// Encapsulates the common asynchronous cleanup operations.
         /// </summary>
@@ -119,7 +102,6 @@ namespace Microsoft.OData
                 this.listener = null;
             }
         }
-#endif
 
         /// <summary>
         /// Validates that the stream was not already disposed.

@@ -1214,11 +1214,7 @@ namespace Microsoft.OData.Core.Tests.Json
             var messageInfo = new ODataMessageInfo
             {
                 MediaType = this.mediaType,
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = isResponse,
                 IsAsync = isAsync,
                 Model = this.model

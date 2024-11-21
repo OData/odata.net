@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System.Text.Json;
 
 namespace Microsoft.OData
@@ -36,4 +35,3 @@ namespace Microsoft.OData
         public JsonElement Value { get; private set; }
     }
 }
-#endif

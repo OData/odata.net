@@ -7,9 +7,7 @@
 namespace Microsoft.OData
 {
     using System.Collections.Generic;
-#if NETCOREAPP
     using Microsoft.Extensions.ObjectPool;
-#endif
     using Microsoft.OData.Edm;
     using Microsoft.OData.Metadata;
 
@@ -23,12 +21,10 @@ namespace Microsoft.OData
         /// </summary>
         private readonly ODataMessageWriterSettings settings;
 
-#if NETCOREAPP
         /// <summary>
         /// Object pool that stores instances of the DuplicatePropertyNameChecker.
         /// </summary>
         private ObjectPool<DuplicatePropertyNameChecker> duplicatePropertyNameCheckerObjectPool;
-#endif
 
         /// <summary>
         /// Creates a WriterValidator instance and binds it to settings.
@@ -46,7 +42,6 @@ namespace Microsoft.OData
 
             if (settings.ThrowOnDuplicatePropertyNames)
             {
-#if NETCOREAPP
                 if (this.duplicatePropertyNameCheckerObjectPool == null)
                 {
                     DefaultObjectPoolProvider poolProvider = new DefaultObjectPoolProvider { MaximumRetained = 8 };
@@ -55,9 +50,6 @@ namespace Microsoft.OData
 
                 duplicatePropertyNameChecker = this.duplicatePropertyNameCheckerObjectPool.Get();
                 duplicatePropertyNameChecker.Reset();
-#else
-                duplicatePropertyNameChecker = new DuplicatePropertyNameChecker();
-#endif
             }
             else
             {
@@ -70,13 +62,11 @@ namespace Microsoft.OData
         /// <inheritdoc/>
         public void ReturnDuplicatePropertyNameChecker(IDuplicatePropertyNameChecker duplicatePropertyNameChecker)
         {
-#if NETCOREAPP
             // We only return the DuplicatePropertyNameChecker to the object pool and ignore the NullDuplicatePropertyNameChecker.
             if (duplicatePropertyNameChecker is DuplicatePropertyNameChecker duplicateChecker)
             {
                 this.duplicatePropertyNameCheckerObjectPool.Return(duplicateChecker);
             }
-#endif
         }
 
         /// <summary>

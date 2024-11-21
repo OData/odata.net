@@ -4,10 +4,7 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm.Csdl.Serialization;
@@ -189,4 +186,3 @@ namespace Microsoft.OData.Edm.Csdl
         }
     }
 }
-#endif

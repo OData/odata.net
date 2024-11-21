@@ -62,21 +62,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonInputContext(messageInfo, messageReaderSettings);
             }
 
             return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return new ODataMetadataInputContext(messageInfo, messageReaderSettings);
-#endif
         }
 
         /// <summary>
@@ -94,21 +85,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings);
             }
 
             return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return new ODataMetadataOutputContext(messageInfo, messageWriterSettings);
-#endif
         }
 
         /// <summary>
@@ -159,21 +141,12 @@ namespace Microsoft.OData
 
             bool isJson = IsJsonMetadata(messageInfo.MediaType);
 
-#if NETSTANDARD2_0 || NETCOREAPP3_1_OR_GREATER
             if (isJson)
             {
                 return Task.FromResult<ODataOutputContext>(new ODataMetadataJsonOutputContext(messageInfo, messageWriterSettings));
             }
 
             return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#else
-            if (isJson)
-            {
-                throw new ODataException(Strings.ODataMetadataOutputContext_NotSupportJsonMetadata);
-            }
-
-            return Task.FromResult<ODataOutputContext>(new ODataMetadataOutputContext(messageInfo, messageWriterSettings));
-#endif
         }
 
         private static bool IsJsonMetadata(ODataMediaType contentType)

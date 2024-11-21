@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System.Collections.Generic;
 
 namespace Microsoft.OData.Edm.Csdl
@@ -69,4 +68,3 @@ namespace Microsoft.OData.Edm.Csdl
         }
     }
 }
-#endif

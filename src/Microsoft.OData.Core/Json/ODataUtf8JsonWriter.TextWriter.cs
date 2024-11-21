@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 namespace Microsoft.OData.Json
 {
     using System;
@@ -533,4 +532,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
-#endif

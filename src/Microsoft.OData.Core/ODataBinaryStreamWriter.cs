@@ -26,14 +26,8 @@ namespace Microsoft.OData
         /// <summary>The writer to write to the underlying stream.</summary>
         private readonly TextWriter Writer;
 
-
         /// <summary>Trailing bytes from a previous write to be prepended to the next write.</summary>
-#if NETCOREAPP
         private byte[] trailingBytes = Array.Empty<byte>();
-#else
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        private byte[] trailingBytes = new byte[0];
-#endif
 
         /// <summary>
         /// The wrapped buffer to help with streaming responses.
@@ -45,19 +39,13 @@ namespace Microsoft.OData
         /// </summary>
         private ICharArrayPool bufferPool;
 
-
         /// <summary>An empty byte[].</summary>
-#if NETCOREAPP
         private byte[] emptyByteArray = Array.Empty<byte>();
-#else
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1825:Avoid zero-length array allocations.", Justification = "<Pending>")]
-        private static byte[] emptyByteArray = new byte[0];
-#endif
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="writer">A Textwriter for writing to the stream.</param>
+        /// <param name="writer">A TextWriter for writing to the stream.</param>
         public ODataBinaryStreamWriter(TextWriter writer)
         {
             Debug.Assert(writer != null, "Creating a binary stream writer for a null textWriter.");
@@ -68,7 +56,7 @@ namespace Microsoft.OData
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="writer">A Textwriter for writing to the stream.</param>
+        /// <param name="writer">A TextWriter for writing to the stream.</param>
         /// <param name="streamingBuffer">A temporary buffer to use when converting binary values.</param>
         /// <param name="bufferPool">Array pool for renting a buffer.</param>
         public ODataBinaryStreamWriter(TextWriter writer, Ref<char[]> wrappedBuffer, ICharArrayPool bufferPool)
@@ -245,7 +233,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         public override async ValueTask DisposeAsync()
         {
             // write any trailing bytes to stream
@@ -257,7 +244,6 @@ namespace Microsoft.OData
 
             await this.Writer.FlushAsync().ConfigureAwait(false);
         }
-#endif
 
         /// <summary>
         /// Prepares bytes to be written for the particular write event

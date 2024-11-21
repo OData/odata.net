@@ -438,11 +438,7 @@ namespace Microsoft.OData.Tests.Json
                     var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                         "POST", new Uri($"{ServiceUri}/Orders"), "1");
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                    using (var messageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                     {
                         var resourceWriter = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
                         var orderResource = CreateOrderResource();
