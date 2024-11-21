@@ -1,6 +1,6 @@
 odataRelativeUri	= '$batch' [ "?" batchOptions ]
 					/ '$entity' "?" entityOptions
-					/ '$entity' "/" qualifiedEntityTypeName ? entityCastOptions
+					/ '$entity' "/" qualifiedTypeName ? entityCastOptions
 					/ '$metadata' [ "?" metadataOptions ] [ context ]
 					/ resourcePath [ "?" queryOptions ]
 
@@ -9,9 +9,14 @@ batchOptions	= batchOption *( "&" batchOption )
 ; TODO do `odataRelativeUri`s that start with $entity 
 ; TODO do `odataRelativeUri`s that start with $metadata
 
-resourcePath	= /											; entitySetName                  [ collectionNavigation ]
+resourcePath	= first
 				/ TODO
-				/ '$all' [ "/" qualifiedEntityTypeName ]	; '$all'                         [ "/" qualifiedEntityTypeName ]
+				/ '$all' [ "/" qualifiedTypeName ]	; '$all' [ "/" qualifiedTypeName ]
+
+; entitySetName [ collectionNavigation ]
+first	= odataIdentifier [ "/" qualifiedTypeName ] [ simpleKey ] [ "/" qualifiedTypeName ] [ "/" ( propertyPath / boundOperation / ref / value )] ; TODO finish this
+		/ odataIdentifier [ "/" qualifiedTypeName ] [ compoundKey ]; TODO finish this
+		/ ; TODO finsih this
 
 batchOption	= format
 			/ customQueryOption
@@ -29,7 +34,7 @@ customName	= qchar-no-AMP-EQ-AT-DOLLAR *( qchar-no-AMP-EQ )
 
 customValue	= *( qchar-no-AMP )
 
-qualifiedEntityTypeName	= namespace "." entityTypeName
+qualifiedTypeName	= namespace "." entityTypeName
 
 namespace	= namespacePart *( "." namespacePart )
 
