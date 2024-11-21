@@ -1,15 +1,16 @@
-﻿using Microsoft.OData.Edm;
-using Microsoft.OData.Json;
+﻿//---------------------------------------------------------------------
+// <copyright file="JsonWriterBaseTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
 using System;
 using System.IO;
 using System.Text;
-using Xunit;
-using System.Net.Mime;
-
-#if NETCOREAPP
 using System.Text.Json;
-using System.Buffers.Text;
-#endif
+using Microsoft.OData.Edm;
+using Microsoft.OData.Json;
+using Xunit;
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -232,7 +233,6 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
-#if NETCOREAPP
         public void WritesJsonElementCorrectly()
         {
             using (JsonDocument jsonDoc = JsonDocument.Parse(MixedObjectJson))
@@ -293,7 +293,6 @@ namespace Microsoft.OData.Tests.Json
                 }
             }
         }
-#endif
 
         [Fact]
         public void WritesLargeByteArraysCorrectly()

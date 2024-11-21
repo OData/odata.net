@@ -15,11 +15,8 @@ namespace Microsoft.OData
     /// <summary>
     /// Wrapper to listen for dispose on a <see cref="Stream"/>.
     /// </summary>
-#if NETSTANDARD2_0
     internal sealed class ODataNotificationStream : Stream, IAsyncDisposable
-#else
-    internal sealed class ODataNotificationStream : Stream
-#endif
+
     {
         private Stream stream;
         private IODataStreamListener listener;
@@ -227,24 +224,12 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         /// <inheritdoc/>
         public override ValueTask DisposeAsync()
         {
             return DisposeAsyncCore();
         }
-#elif NETSTANDARD2_0
-        /// <summary>
-        /// Asynchronously releases all resources used by the <see cref="ODataNotificationStream"/> object.
-        /// </summary>
-        /// <returns>A task that represents the asynchronous dispose operation.</returns>
-        public ValueTask DisposeAsync()
-        {
-            return DisposeAsyncCore();
-        }
-#endif
 
-#if NETCOREAPP
         /// <summary>
         /// Asynchronously releases all resources used by the <see cref="ODataNotificationStream"/> object.
         /// </summary>
@@ -265,6 +250,5 @@ namespace Microsoft.OData
             // Pass `false` to ensure functional equivalence with the synchronous dispose pattern
             this.Dispose(false);
         }
-#endif
     }
 }

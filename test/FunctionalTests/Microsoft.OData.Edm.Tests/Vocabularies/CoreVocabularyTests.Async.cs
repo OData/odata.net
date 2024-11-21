@@ -73,11 +73,7 @@ namespace Microsoft.OData.Edm.Tests.Vocabularies
             XmlWriter xw = XmlWriter.Create(sw, settings);
             var (_, errors) = await coreVocModel.TryWriteSchemaAsync(xw).ConfigureAwait(false);
             await xw.FlushAsync().ConfigureAwait(false);
-#if NETCOREAPP1_1
-            xw.Dispose();
-#else
             xw.Close();
-#endif
             string output = sw.ToString();
             Assert.False(errors.Any(), "No Errors");
             Assert.Equal(expectedText, output);

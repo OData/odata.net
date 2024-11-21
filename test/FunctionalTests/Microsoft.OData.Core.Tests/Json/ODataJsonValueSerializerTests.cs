@@ -336,7 +336,6 @@ namespace Microsoft.OData.Tests.Json
             Assert.Equal(leaveOpen, !stream.Disposed);
         }
 
-#if NETCOREAPP
         [Fact]
         public void WriteStreamValue_UsingODataUtf8JsonWriter_WritesStreamValue()
         {
@@ -362,7 +361,6 @@ namespace Microsoft.OData.Tests.Json
 
             Assert.Equal("\"CjEyMzQ1Njc4OTA=\"", result);
         }
-#endif
 
         private ODataJsonValueSerializer CreateODataJsonValueSerializer(bool writingResponse, IServiceProvider serviceProvider = null)
         {
@@ -370,11 +368,7 @@ namespace Microsoft.OData.Tests.Json
             {
                 MessageStream = stream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = writingResponse,
                 IsAsync = false,
                 Model = model,

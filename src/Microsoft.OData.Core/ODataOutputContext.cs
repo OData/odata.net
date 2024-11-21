@@ -19,11 +19,7 @@ namespace Microsoft.OData
     /// Base class for all output contexts, defines the interface
     /// to be implemented by the specific formats.
     /// </summary>
-#if NETCOREAPP
     public abstract class ODataOutputContext : IDisposable, IAsyncDisposable
-#else
-    public abstract class ODataOutputContext : IDisposable
-#endif
     {
         /// <summary>The format for this output context.</summary>
         private readonly ODataFormat format;
@@ -673,7 +669,6 @@ namespace Microsoft.OData
         {
         }
 
-#if NETCOREAPP
         /// <summary>
         /// IAsyncDisposable.DisposeAsync() implementation to asynchronously cleanup unmanaged resources of the context.
         /// </summary>
@@ -698,7 +693,6 @@ namespace Microsoft.OData
         {
             return default;
         }
-#endif
 
         /// <summary>
         /// Creates an exception which reports that the specified payload kind if not support by this format.

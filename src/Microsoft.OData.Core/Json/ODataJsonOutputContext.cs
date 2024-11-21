@@ -838,7 +838,6 @@ namespace Microsoft.OData.Json
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -880,7 +879,6 @@ namespace Microsoft.OData.Json
                 this.jsonWriter = null;
             }
         }
-#endif
 
         /// <summary>
         /// Creates a new JSON writer of <see cref="IJsonWriter"/>.

@@ -192,11 +192,7 @@ namespace Microsoft.OData
 
         public static T[] GetEmptyArray<T>()
         {
-#if NETCOREAPP
             return Array.Empty<T>();
-#else
-            return new T[0];
-#endif
         }
 
         /// <summary>

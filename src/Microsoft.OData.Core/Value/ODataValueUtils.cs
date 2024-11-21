@@ -7,10 +7,8 @@
 #if ODATA_SERVICE
 namespace Microsoft.OData.Service
 #else
-#if NETCOREAPP
 using System;
 using System.Text.Json;
-#endif
 
 namespace Microsoft.OData
 #endif
@@ -50,7 +48,6 @@ namespace Microsoft.OData
                 return new ODataEnumValue(objectToConvert.ToString().Replace(", ", ",", StringComparison.Ordinal));
             }
 
-#if NETCOREAPP
             // Ideally, the JsonElement should be wrapped inside an ODataJsonElementValue
             // when being assigned to an ODataProperty, that will avoid
             // this conversion and avoid boxing the JsonElement.
@@ -58,7 +55,6 @@ namespace Microsoft.OData
             {
                 return new ODataJsonElementValue(jsonElement);
             }
-#endif
 
             // Otherwise treat it as a primitive and wrap in an ODataPrimitiveValue. This includes spatial types.
             return new ODataPrimitiveValue(objectToConvert);

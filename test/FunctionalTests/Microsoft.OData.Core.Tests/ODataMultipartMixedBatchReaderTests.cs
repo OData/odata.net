@@ -460,7 +460,6 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchReaderStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -507,30 +506,6 @@ OData-Version: 4.0
 
             Assert.Equal("StreamDisposedAsync", contents);
         }
-#else
-        [Fact]
-        public async Task ODataBatchReaderStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
-        {
-            var payload = @"
-
-{""@odata.type"":""NS.Customer"",""Id"":1,""Name"":""Sue""}
---batch_aed653ab--
-";
-            var stream = new MemoryStream();
-            using (Stream batchReaderStream = ODataBatchUtils.CreateBatchOperationReadStream(
-                CreateBatchReaderStream(payload),
-                this.batchOperationHeaders,
-                new MockODataStreamListener(new StreamWriter(stream)),
-                synchronous: false))
-            {
-            }
-
-            stream.Position = 0;
-            var contents = await new StreamReader(stream).ReadToEndAsync();
-
-            Assert.Equal("StreamDisposedAsync", contents);
-        }
-#endif
 
         #endregion BatchOperationReadStream
         #region BatchOperationWriteStream
@@ -576,7 +551,6 @@ OData-Version: 4.0
             Assert.Equal(expected, contents);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public async Task ODataBatchWriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
         {
@@ -611,24 +585,6 @@ OData-Version: 4.0
 
             Assert.Equal("StreamDisposedAsync", contents);
         }
-#else
-        [Fact]
-        public async Task ODataBatchWriteStreamDisposeAsyncShouldInvokeStreamDisposedAsync()
-        {
-            var stream = new MemoryStream();
-            using (Stream batchWriteStream = ODataBatchUtils.CreateBatchOperationWriteStream(
-                new MemoryStream(),
-                new MockODataStreamListener(new StreamWriter(stream)),
-                synchronous: false))
-            {
-            }
-
-            stream.Position = 0;
-            var contents = await new StreamReader(stream).ReadToEndAsync();
-
-            Assert.Equal("StreamDisposedAsync", contents);
-        }
-#endif
 
         #endregion BatchOperationWriteStream
 

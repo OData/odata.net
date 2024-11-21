@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -910,5 +909,3 @@ namespace Microsoft.OData.Tests.Json
         }
     }
 }
-
-#endif

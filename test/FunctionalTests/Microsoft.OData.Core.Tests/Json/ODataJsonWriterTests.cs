@@ -18,9 +18,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.OData.Core.Tests.DependencyInjection;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Edm.Csdl;
-#if NETCOREAPP
 using Microsoft.OData.Json;
-#endif
 using Microsoft.OData.UriParser;
 using Microsoft.OData.Tests;
 using Xunit;
@@ -1233,11 +1231,7 @@ namespace Microsoft.OData.Core.Tests.Json
                     await jsonWriter.WriteStartAsync(addressResource);
                     await jsonWriter.WriteStartAsync(streamProperty);
 
-#if NETCOREAPP
                     await using (var stream = await jsonWriter.CreateBinaryWriteStreamAsync())
-#else
-                    using (var stream = await jsonWriter.CreateBinaryWriteStreamAsync())
-#endif
                     {
                         var bytes = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 0 };
 
@@ -1263,7 +1257,6 @@ namespace Microsoft.OData.Core.Tests.Json
                 result);
         }
 
-#if NETCOREAPP
         [Fact]
         public async Task WriteBinaryValueToStream_WithODataUtf8JsonWriter_Async()
         {
@@ -1360,8 +1353,6 @@ namespace Microsoft.OData.Core.Tests.Json
                 "\"Pangram\":\"The quick brown fox jumps over the lazy dog\"}",
                 result);
         }
-
-#endif
 
         [Fact]
         public async Task WriteRequestPayloadAsync()
@@ -2433,11 +2424,7 @@ namespace Microsoft.OData.Core.Tests.Json
             {
                 MessageStream = messageStream,
                 MediaType = new ODataMediaType("application", "json"),
-#if NETCOREAPP1_1
-                Encoding = Encoding.GetEncoding(0),
-#else
                 Encoding = Encoding.Default,
-#endif
                 IsResponse = !writingRequest,
                 IsAsync = isAsync,
                 Model = this.model,

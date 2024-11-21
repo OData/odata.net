@@ -13,22 +13,16 @@ namespace Microsoft.OData.Json
     using System.Diagnostics.CodeAnalysis;
     using System.Globalization;
     using System.IO;
+    using System.Text.Json;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
-#if NETCOREAPP
-    using System.Text.Json;
-#endif
     #endregion Namespaces
 
     /// <summary>
     /// Writer for the JSON format. http://www.json.org
     /// </summary>
     [SuppressMessage("Microsoft.Design", "CA1001:TypesThatOwnDisposableFieldsShouldBeDisposable", Justification = "This class does not own the underlying stream/writer and thus should never dispose it.")]
-#if NETCOREAPP
     internal sealed partial class JsonWriter : IJsonWriter, IDisposable, IAsyncDisposable
-#else
-    internal sealed partial class JsonWriter : IJsonWriter, IDisposable
-#endif
     {
         /// <summary>
         /// Writer to write text into.
@@ -413,7 +407,6 @@ namespace Microsoft.OData.Json
             JsonValueUtils.WriteValue(this.writer, value, this.wrappedBuffer, this.ArrayPool);
         }
 
-#if NETCOREAPP
         public void WriteValue(JsonElement value)
         {
             switch (value.ValueKind)
@@ -542,7 +535,6 @@ namespace Microsoft.OData.Json
                 return;
             }
         }
-#endif
 
         /// <summary>
         /// Write a raw value.
@@ -563,7 +555,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Start the stream property valuescope.
+        /// Start the stream property value scope.
         /// </summary>
         /// <returns>The stream to write the property value to</returns>
         public Stream StartStreamValueScope()
@@ -589,10 +581,10 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// Start the TextWriter valuescope.
+        /// Start the TextWriter values cope.
         /// </summary>
         /// <param name="contentType">ContentType of the string being written.</param>
-        /// <returns>The textwriter to write the text property value to</returns>
+        /// <returns>The TextWriter to write the text property value to</returns>
         public TextWriter StartTextWriterValueScope(string contentType)
         {
             this.WriteValueSeparator();
@@ -610,7 +602,7 @@ namespace Microsoft.OData.Json
         }
 
         /// <summary>
-        /// End the TextWriter valuescope.
+        /// End the TextWriter value scope.
         /// </summary>
         public void EndTextWriterValueScope()
         {

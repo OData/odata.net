@@ -55,11 +55,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfTypeDefinitionShouldWork()
         {
-#if NETCOREAPP1_1
-            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("123"));
-#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("123"));
-#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "Length", EdmPrimitiveTypeKind.Int32), true));
@@ -69,11 +65,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfDateShouldWork()
         {
-#if NETCOREAPP1_1
-            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-01-03"));
-#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-01-03"));
-#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
@@ -83,11 +75,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfAbbreviativeDateShouldWork()
         {
-#if NETCOREAPP1_1
-            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("2014-1-3"));
-#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("2014-1-3"));
-#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "DateValue", EdmPrimitiveTypeKind.Date), true));
@@ -97,11 +85,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfTimeOfDayShouldWork()
         {
-#if NETCOREAPP1_1
-            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:04.998"));
-#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:04.998"));
-#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
@@ -112,11 +96,7 @@ namespace Microsoft.OData.Tests
         [Fact]
         public void ReadValueOfAbbreviativeTimeOfDayShouldWork()
         {
-#if NETCOREAPP1_1
-            Stream stream = new MemoryStream(Encoding.GetEncoding(0).GetBytes("12:30:4.998"));
-#else
             Stream stream = new MemoryStream(Encoding.Default.GetBytes("12:30:4.998"));
-#endif
             IODataResponseMessage responseMessage = new InMemoryMessage() { StatusCode = 200, Stream = stream };
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
             var result = reader.ReadValue(new EdmTypeDefinitionReference(new EdmTypeDefinition("NS", "TimeOfDayValue", EdmPrimitiveTypeKind.TimeOfDay), true));
@@ -259,7 +239,6 @@ namespace Microsoft.OData.Tests
             responseMessage.SetHeader("Content-Type", "application/json");
             ODataMessageReader reader = new ODataMessageReader(responseMessage, new ODataMessageReaderSettings(), new EdmModel());
 
-#if NETCOREAPP
             IEdmModel model = reader.ReadMetadataDocument();
 
             IEdmEntityType customerType = model.FindDeclaredType("NS.Customer") as IEdmEntityType;
@@ -276,12 +255,6 @@ namespace Microsoft.OData.Tests
             IEdmEntitySet customers = Assert.Single(model.EntityContainer.EntitySets());
             Assert.Equal("Customers", customers.Name);
             Assert.Same(customerType, customers.EntityType);
-#else
-            Action test = () => reader.ReadMetadataDocument();
-
-            ODataException exception = Assert.Throws<ODataException>(test);
-            Assert.Equal("The JSON metadata is not supported at this platform. It's only supported at platform implementing .NETStardard 2.0.", exception.Message);
-#endif
         }
 
         [Fact]

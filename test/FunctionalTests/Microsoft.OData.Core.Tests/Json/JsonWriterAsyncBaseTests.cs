@@ -1,13 +1,17 @@
-﻿using System;
+﻿//---------------------------------------------------------------------
+// <copyright file="JsonWriterAsyncBaseTests.cs" company="Microsoft">
+//      Copyright (C) Microsoft Corporation. All rights reserved. See License.txt in the project root for license information.
+// </copyright>
+//---------------------------------------------------------------------
+
+using System;
 using System.IO;
 using System.Text;
+using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.OData.Edm;
 using Microsoft.OData.Json;
 using Xunit;
-#if NETCOREAPP
-using System.Text.Json;
-#endif
 
 namespace Microsoft.OData.Tests.Json
 {
@@ -230,7 +234,6 @@ namespace Microsoft.OData.Tests.Json
             }
         }
 
-#if NETCOREAPP
         [Fact(Skip ="This test fails intermittently on the release pipeline but works on the build pipeline and locally. Needs investigation.")]
         public async Task WritesJsonElementCorrectly()
         {
@@ -293,7 +296,6 @@ namespace Microsoft.OData.Tests.Json
                 }
             }
         }
-#endif
 
         [Fact]
         public async Task WritesLargeByteArraysCorrectly()

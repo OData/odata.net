@@ -32,11 +32,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         public Action<HttpRequestMessage> OnRequestStarted { get; set; }
 
-#if NETCOREAPP
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-#else
-        public override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-#endif
         {
             NotifyRequestStart(request);
             Stopwatch stopwatch = new Stopwatch();

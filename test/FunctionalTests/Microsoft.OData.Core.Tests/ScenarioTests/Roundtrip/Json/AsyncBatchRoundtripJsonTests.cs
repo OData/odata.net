@@ -1030,11 +1030,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
             Assert.True(payloadString.Contains("GET /Customers('ALFKI') HTTP/1.1") &&
                 payloadString.Contains("POST /Customers HTTP/1.1") &&
                 payloadString.Contains("PATCH /Customers('ALFKI') HTTP/1.1") &&
@@ -1049,11 +1045,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
         {
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeMultipartMixed);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
             Assert.Contains("GET Customers('ALFKI') HTTP/1.1", payloadString);
             Assert.Contains("POST Customers HTTP/1.1", payloadString);
             Assert.Contains("PATCH Customers('ALFKI') HTTP/1.1", payloadString);
@@ -1071,11 +1063,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.AbsoluteUriUsingHostHeader, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
 
             Assert.Contains("\"url\":\"/root/service/Customers('ALFKI')\"", payloadString);
             Assert.Contains("\"url\":\"/root/service/Customers\"", payloadString);
@@ -1093,11 +1081,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Roundtrip.Json
             var requestPayload = this.ClientWriteAsyncBatchRequest(BatchPayloadUriOption.RelativeUri, batchContentTypeApplicationJson,
                 SkipBatchWriterStep.None, baseUri);
 
-#if NETCOREAPP1_1
-            var payloadString = System.Text.Encoding.GetEncoding(0).GetString(requestPayload);
-#else
             var payloadString = System.Text.Encoding.Default.GetString(requestPayload);
-#endif
 
             Assert.Contains("\"url\":\"Customers('ALFKI')\"", payloadString);
             Assert.Contains("\"url\":\"Customers\"", payloadString);

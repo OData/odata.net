@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -3277,4 +3276,3 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
     }
 }
-#endif

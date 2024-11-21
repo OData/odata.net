@@ -11,12 +11,10 @@ namespace Microsoft.OData.Json
     using System.Diagnostics;
     using System.Globalization;
     using System.IO;
+    using System.Text.Json;
     using System.Threading.Tasks;
     using Microsoft.OData.Buffers;
     using Microsoft.OData.Edm;
-#if NETCOREAPP
-    using System.Text.Json;
-#endif
     #endregion Namespaces
 
     internal sealed partial class JsonWriter
@@ -242,7 +240,6 @@ namespace Microsoft.OData.Json
             await this.writer.WriteValueAsync(value, this.wrappedBuffer, this.ArrayPool).ConfigureAwait(false);
         }
 
-#if NETCOREAPP
         public Task WriteValueAsync(JsonElement value)
         {
             switch (value.ValueKind)
@@ -358,7 +355,6 @@ namespace Microsoft.OData.Json
             Debug.Fail($"Exhausted all known JSON number types and did not find match.");
             return Task.CompletedTask;
         }
-#endif
 
         /// <inheritdoc/>
         public async Task WriteRawValueAsync(string rawValue)
@@ -373,7 +369,6 @@ namespace Microsoft.OData.Json
             return this.writer.FlushAsync();
         }
 
-#if NETCOREAPP
         public async ValueTask DisposeAsync()
         {
             if (this.ArrayPool != null && this.wrappedBuffer.Value != null)
@@ -395,7 +390,6 @@ namespace Microsoft.OData.Json
                 }
             }
         }
-#endif
 
         /// <inheritdoc/>
         public async Task<Stream> StartStreamValueScopeAsync()
@@ -417,11 +411,8 @@ namespace Microsoft.OData.Json
         public async Task EndStreamValueScopeAsync()
         {
             await this.binaryValueStream.FlushAsync().ConfigureAwait(false);
-#if NETCOREAPP
             await this.binaryValueStream.DisposeAsync().ConfigureAwait(false);
-#else
-            this.binaryValueStream.Dispose();
-#endif
+
             this.binaryValueStream = null;
             await this.writer.FlushAsync().ConfigureAwait(false);
             await this.writer.WriteAsync(JsonConstants.QuoteCharacter).ConfigureAwait(false);

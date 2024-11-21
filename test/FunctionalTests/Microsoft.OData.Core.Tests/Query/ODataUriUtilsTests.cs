@@ -63,11 +63,7 @@ namespace Microsoft.OData.Tests.Query
         public void TestDecimalConvertFromUriLiteral(string value)
         {
             object dec = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
-#if NETCOREAPP
             Assert.True(dec is double || dec is decimal);
-#else
-            Assert.True(dec is decimal);
-#endif
         }
 
         [Fact]
@@ -97,17 +93,9 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertToUriLiteral()
         {
             string singleString = ODataUriUtils.ConvertToUriLiteral(float.MaxValue, ODataVersion.V4);
-#if NETCOREAPP
             Assert.Equal("3.4028235E+38", singleString);
-#else
-            Assert.Equal("3.40282347E+38", singleString);
-#endif 
             singleString = ODataUriUtils.ConvertToUriLiteral(float.MinValue, ODataVersion.V4);
-#if NETCOREAPP
             Assert.Equal("-3.4028235E+38", singleString);
-#else
-            Assert.Equal("-3.40282347E+38", singleString);
-#endif
             singleString = ODataUriUtils.ConvertToUriLiteral(1000000000000f, ODataVersion.V4);
             Assert.Equal("1E+12", singleString);
         }
@@ -119,11 +107,7 @@ namespace Microsoft.OData.Tests.Query
         public void TestSingleConvertFromUriLiteral(string value)
         {
             object singleNumber = ODataUriUtils.ConvertFromUriLiteral(value, ODataVersion.V4);
-#if NETCOREAPP
             Assert.True(singleNumber is float || singleNumber is double);
-#else
-            Assert.True(singleNumber is float);
-#endif
         }
 
         [Fact]

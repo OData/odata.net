@@ -89,11 +89,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -182,12 +178,7 @@ namespace Microsoft.OData.Tests.Json
             var orderItemResource = CreateOrderItemResource();
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -266,11 +257,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.superEntitySet, this.superEntityType);
 
@@ -507,11 +494,7 @@ namespace Microsoft.OData.Tests.Json
         {
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -553,11 +536,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -609,11 +588,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -663,11 +638,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync();
 
@@ -730,11 +701,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -792,11 +759,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -855,11 +818,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -924,11 +883,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -999,11 +954,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -1066,11 +1017,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataCollectionWriterAsync(EdmCoreModel.Instance.GetString(false));
 
@@ -1117,11 +1064,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#endif
             {
                 var parameterWriter = await messageWriter.CreateODataParameterWriterAsync(rateCustomerAction);
 
@@ -1163,11 +1106,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#endif
             {
                 var parameterWriter = await messageWriter.CreateODataUriParameterResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1208,11 +1147,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings, this.model))
-#endif
             {
                 var parameterWriter = await messageWriter.CreateODataUriParameterResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1257,11 +1192,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1324,11 +1255,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1382,11 +1309,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -1438,11 +1361,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -1493,11 +1412,7 @@ namespace Microsoft.OData.Tests.Json
             var deltaDeletedLink = new ODataDeltaDeletedLink(new Uri($"{ServiceUri}/Orders(2)"), new Uri($"{ServiceUri}/Customers(2)"), "Customer");
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -1564,11 +1479,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -1685,11 +1596,7 @@ namespace Microsoft.OData.Tests.Json
         {
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.streamEntitySet, this.streamEntityType);
 
@@ -1741,11 +1648,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceWriterAsync(this.streamEntitySet, this.streamEntityType);
 
@@ -1802,11 +1705,7 @@ namespace Microsoft.OData.Tests.Json
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -1814,11 +1713,7 @@ namespace Microsoft.OData.Tests.Json
                 var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1884,11 +1779,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -1897,11 +1788,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -1978,11 +1865,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -1991,11 +1874,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage1 = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#else
-                using (var nestedMessageWriter1 = new ODataMessageWriter(operationRequestMessage1))
-#endif
                 {
                     var writer = await nestedMessageWriter1.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2008,11 +1887,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage2 = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/Orders"), "2", BatchPayloadUriOption.AbsoluteUri, dependsOnIds);
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#else
-                using (var nestedMessageWriter2 = new ODataMessageWriter(operationRequestMessage2))
-#endif
                 {
                     var writer = await nestedMessageWriter2.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -2115,22 +1990,14 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
 
                 var operationResponseMessage = await batchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2199,11 +2066,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -2211,11 +2074,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
                 var operationResponseMessage = await batchWriter.CreateOperationResponseMessageAsync("1");
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationResponseMessage, nestedWriterSettings))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2288,11 +2147,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -2300,11 +2155,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri($"{ServiceUri}/odata/Customers"), "1", BatchPayloadUriOption.AbsoluteUriUsingHostHeader);
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2371,11 +2222,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -2383,11 +2230,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
                 var operationRequestMessage = await batchWriter.CreateOperationRequestMessageAsync(
                     "POST", new Uri("/odata/Customers", UriKind.Relative), "1", BatchPayloadUriOption.RelativeUri);
 
-#if NETCOREAPP
                 await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                 {
                     var writer = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2453,11 +2296,7 @@ Content-Type: application/json;odata.metadata=minimal;odata.streaming=true;IEEE7
 
             IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
             {
                 var batchWriter = await messageWriter.CreateODataBatchWriterAsync();
                 await batchWriter.WriteStartBatchAsync();
@@ -2522,11 +2361,7 @@ POST http://tempuri.org/Customers HTTP/1.1
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 await messageWriter.WriteServiceDocumentAsync(serviceDocument);
             }
@@ -2587,11 +2422,7 @@ POST http://tempuri.org/Customers HTTP/1.1
             this.writerSettings.LibraryCompatibility |= libraryCompatibility;
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 await messageWriter.CreateODataResourceWriterAsync();
                 await messageWriter.WriteErrorAsync(nullReferenceError, includeDebugInformation: true);
@@ -2636,11 +2467,7 @@ POST http://tempuri.org/Customers HTTP/1.1
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 await messageWriter.WritePropertyAsync(new ODataProperty { Name = "Count", Value = 5 });
             }
@@ -2674,11 +2501,7 @@ POST http://tempuri.org/Customers HTTP/1.1
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2716,11 +2539,7 @@ POST http://tempuri.org/Customers HTTP/1.1
 
             IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
             await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-            using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
             {
                 var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2760,11 +2579,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2800,11 +2615,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2839,11 +2650,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2880,11 +2687,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2925,11 +2728,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -2966,11 +2765,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3009,11 +2804,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync();
 
@@ -3062,11 +2853,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync();
 
@@ -3107,11 +2894,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3146,11 +2929,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3186,11 +2965,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3230,11 +3005,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -3273,11 +3044,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -3319,11 +3086,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3372,11 +3135,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataDeltaResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -3420,11 +3179,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -3463,11 +3218,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 async () =>
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceSetWriterAsync(this.orderEntitySet, this.orderEntityType);
 
@@ -3506,11 +3257,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3553,11 +3300,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -3601,11 +3344,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataResourceWriterAsync();
 
@@ -3655,11 +3394,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 async () =>
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3698,11 +3433,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3739,11 +3470,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3782,11 +3509,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3821,11 +3544,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3862,11 +3581,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3905,11 +3620,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3944,11 +3655,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataResponseMessage asyncResponseMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncResponseMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -3985,11 +3692,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4032,11 +3735,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4045,11 +3744,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                         var operationRequestMessage = await writer.CreateOperationRequestMessageAsync(
                             "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                         await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                         {
                             var nestedWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -4101,11 +3796,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4114,11 +3805,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                         var operationRequestMessage = await writer.CreateOperationRequestMessageAsync(
                             "POST", new Uri($"{ServiceUri}/Customers"), "1");
 
-#if NETCOREAPP
                         await using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#else
-                        using (var nestedMessageWriter = new ODataMessageWriter(operationRequestMessage))
-#endif
                         {
                             var nestedWriter = await nestedMessageWriter.CreateODataResourceWriterAsync(this.customerEntitySet, this.customerEntityType);
 
@@ -4164,11 +3851,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4211,11 +3894,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4254,11 +3933,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4301,11 +3976,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4350,11 +4021,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4397,11 +4064,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4446,11 +4109,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 
@@ -4495,11 +4154,7 @@ POST http://tempuri.org/Customers HTTP/1.1
                 {
                     IODataRequestMessage asyncRequestMessage = new InMemoryMessage { Stream = this.asyncStream };
 
-#if NETCOREAPP
                     await using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#else
-                    using (var messageWriter = new ODataMessageWriter(asyncRequestMessage, this.writerSettings))
-#endif
                     {
                         var writer = await messageWriter.CreateODataBatchWriterAsync();
 

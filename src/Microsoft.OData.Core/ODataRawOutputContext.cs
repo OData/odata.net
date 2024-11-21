@@ -31,11 +31,7 @@ namespace Microsoft.OData
         private Stream messageOutputStream;
 
         /// <summary>The asynchronous output stream if we're writing asynchronously.</summary>
-#if NETSTANDARD1_1
-        private AsyncBufferedStream asynchronousOutputStream;
-#else
         private Stream asynchronousOutputStream;
-#endif
 
         /// <summary>The output stream to write to (both sync and async cases).</summary>
         private Stream outputStream;
@@ -68,11 +64,7 @@ namespace Microsoft.OData
                 }
                 else
                 {
-#if NETSTANDARD1_1
-                    this.asynchronousOutputStream = new AsyncBufferedStream(this.messageOutputStream);
-#else
-	                this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, messageWriterSettings.BufferSize);
-#endif
+                    this.asynchronousOutputStream = new BufferedStream(this.messageOutputStream, messageWriterSettings.BufferSize);
                     this.outputStream = this.asynchronousOutputStream;
                 }
             }
@@ -294,11 +286,7 @@ namespace Microsoft.OData
         {
             if (this.asynchronousOutputStream != null)
             {
-#if NETSTANDARD1_1
-                this.asynchronousOutputStream.FlushSync();
-#else
                 this.asynchronousOutputStream.Flush();
-#endif
             }
         }
 
@@ -318,7 +306,6 @@ namespace Microsoft.OData
             }
         }
 
-#if NETCOREAPP
         /// <summary>
         /// Closes the text writer asynchronously.
         /// </summary>
@@ -330,7 +317,6 @@ namespace Microsoft.OData
             await this.rawValueWriter.DisposeAsync().ConfigureAwait(false);
             this.rawValueWriter = null;
         }
-#endif
 
         /// <summary>
         /// Perform the actual cleanup work.
@@ -353,11 +339,7 @@ namespace Microsoft.OData
                         // In the async case the underlying stream is the async buffered stream, so we have to flush that explicitly.
                         if (this.asynchronousOutputStream != null)
                         {
-#if NETSTANDARD1_1
-                            this.asynchronousOutputStream.FlushSync();
-#else
                             this.asynchronousOutputStream.Flush();
-#endif
                         }
 
                         // Dispose the message stream (note that we OWN this stream, so we always dispose it).
@@ -376,7 +358,6 @@ namespace Microsoft.OData
             base.Dispose(disposing);
         }
 
-#if NETCOREAPP
         protected override async ValueTask DisposeAsyncCore()
         {
             try
@@ -408,7 +389,6 @@ namespace Microsoft.OData
 
             await base.DisposeAsyncCore().ConfigureAwait(false);
         }
-#endif
 
         /// <summary>
         /// Writes a single value as the message body.

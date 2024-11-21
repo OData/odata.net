@@ -279,12 +279,11 @@ namespace Microsoft.OData.Evaluation
 
             if (propertyValue is ODataValue && !(propertyValue is ODataEnumValue))
             {
-#if NETCOREAPP3_1_OR_GREATER
                 if (propertyValue is ODataJsonElementValue)
                 {
                     return propertyValue;
                 }
-#endif
+
                 throw new ODataException(Strings.ODataResourceMetadataContext_KeyOrETagValuesMustBePrimitiveValues(propertyInfo.Name, GetResourceTypeName(resource, entityType)));
             }
 

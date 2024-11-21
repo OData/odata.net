@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.IO;
 using System.Text;
@@ -52,4 +51,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
-#endif

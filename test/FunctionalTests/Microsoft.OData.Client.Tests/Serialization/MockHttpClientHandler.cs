@@ -59,11 +59,7 @@ namespace Microsoft.OData.Client.Tests.Serialization
         /// </summary>
         public bool Disposed { get; private set; } = false;
 
-#if NETCOREAPP
         protected override HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-#else
-        public virtual HttpResponseMessage Send(HttpRequestMessage request, CancellationToken cancellationToken)
-#endif
         {
             _requests.Add($"{request.Method} {request.RequestUri.AbsoluteUri}");
             HttpResponseMessage response = _requestHandler(request);

@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using Microsoft.OData.Edm.Vocabularies;
 using System;
 using System.Collections.Generic;
@@ -262,4 +261,3 @@ namespace Microsoft.OData.Edm.Csdl.Serialization
         }
     }
 }
-#endif

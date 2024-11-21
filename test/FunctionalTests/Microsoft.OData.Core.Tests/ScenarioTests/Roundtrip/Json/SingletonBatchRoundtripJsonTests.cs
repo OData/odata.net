@@ -997,7 +997,6 @@ Content-Type: application/json;odata.metadata=none
             BatchJsonTestUsingBatchFormat(BatchFormat.ApplicationJson, 0);
         }
 
-#if NETCOREAPP3_1_OR_GREATER
         [Fact]
         public void BatchJsonTestUsingMultipartMixed_WithODataUtf8JsonWriter()
         {
@@ -1019,7 +1018,6 @@ Content-Type: application/json;odata.metadata=none
 
             BatchJsonTestUsingBatchFormat(BatchFormat.ApplicationJson, 0, configure);
         }
-#endif
 
         [Fact]
         public void BatchJsonTestChangesetsFollowedByQueryUsingMultipartMixed()

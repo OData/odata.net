@@ -4,7 +4,6 @@
 // </copyright>
 //---------------------------------------------------------------------
 
-#if NETCOREAPP
 using System;
 using System.Buffers;
 using System.Diagnostics;
@@ -425,5 +424,3 @@ namespace Microsoft.OData.Json
         }
     }
 }
- 
-#endif
