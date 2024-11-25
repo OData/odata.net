@@ -239,6 +239,8 @@ namespace Microsoft.OData.Client
             {
                 case ODataProtocolVersion.V4:
                     return value;
+                case ODataProtocolVersion.V401:
+                    return value;
                 default:
                     throw Error.ArgumentOutOfRange(parameterName);
             }
