@@ -9,13 +9,13 @@ batchOptions	= batchOption *( "&" batchOption )
 ; TODO do `odataRelativeUri`s that start with $entity 
 ; TODO do `odataRelativeUri`s that start with $metadata
 
-resourcePath	= first
+resourcePath	= one
 				/ TODO
 				/ '$all' [ "/" qualifiedTypeName ]	; '$all' [ "/" qualifiedTypeName ]
 
 ; entitySetName [ collectionNavigation ]
-first	= odataIdentifier [ "/" qualifiedTypeName ] [ simpleKey ] [ "/" qualifiedTypeName ] [ "/" ( propertyPath / boundOperation / ref / value )] ; TODO finish this
-		/ odataIdentifier [ "/" qualifiedTypeName ] [ compoundKey ]; TODO finish this
+one	= odataIdentifier [ "/" qualifiedTypeName ] [ simpleKey ] ; TODO finish this
+		/ odataIdentifier [ "/" qualifiedTypeName ] [ compoundKey ] ; TODO finish this
 		/ ; TODO finsih this
 
 batchOption	= format
