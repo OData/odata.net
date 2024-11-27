@@ -104,13 +104,10 @@ namespace Microsoft.OData.UriParser
 
                 if (bracketLiteralText[0] == '(' || bracketLiteralText[0] == '[')
                 {
-                    bool isParenthesesBased = bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')';
-                    bool isBracketBased = bracketLiteralText[0] == '[' && bracketLiteralText[^1] == ']';
+                    Debug.Assert((bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')') || (bracketLiteralText[0] == '[' && bracketLiteralText[^1] == ']'),
+                        $"Collection with opening '{bracketLiteralText[0]}' should have corresponding '{(bracketLiteralText[0] == '(' ? ')' : ']')}'");
 
-                    Debug.Assert(isParenthesesBased || isBracketBased,
-                        $"Collection with opening '{bracketLiteralText[0]}' should have corresponding '{bracketLiteralText[^1]}'");
-
-                    if(isParenthesesBased)
+                    if (bracketLiteralText[0] == '(' && bracketLiteralText[^1] == ')')
                     {
                         bracketLiteralText = string.Create(bracketLiteralText.Length, bracketLiteralText, (span, state) =>
                         {
