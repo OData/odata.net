@@ -498,7 +498,6 @@ namespace Microsoft.OData.Client
         /// The value may be changed between requests to a data service and the new value
         /// will be picked up by the next data service request.
         /// </remarks>
-        [Obsolete("The Timeout property is obsolete. Use IHttpClientFactory to configure the timeout.")]
         public virtual int Timeout
         {
             get

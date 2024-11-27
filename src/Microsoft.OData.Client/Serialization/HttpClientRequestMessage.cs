@@ -165,6 +165,7 @@ namespace Microsoft.OData.Client
         /// <summary>
         /// Gets or sets the timeout (in seconds) for this request.
         /// </summary>
+        [Obsolete("The Timeout property is obsolete. Use IHttpClientFactory to configure the timeout.")]
         public override int Timeout
         {
             get
