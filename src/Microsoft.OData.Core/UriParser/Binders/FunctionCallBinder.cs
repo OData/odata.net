@@ -233,6 +233,9 @@ namespace Microsoft.OData.UriParser
             }
 
             // If there isn't, bind as Uri function
+            // Initialize a stack to keep track of previous query tokens
+            Stack<QueryToken> previousQueryTokens = new Stack<QueryToken>();
+
             // Bind all arguments
             List<QueryNode> argumentNodes = functionCallToken.Arguments.Select(argument =>
             {
@@ -240,15 +243,21 @@ namespace Microsoft.OData.UriParser
                 string functionCallTokenName = IsUnboundFunction(functionCallToken.Name);
                 if ((ExpressionConstants.UnboundFunctionIsOf == functionCallTokenName || ExpressionConstants.UnboundFunctionCast == functionCallTokenName) && argument.ValueToken is DottedIdentifierToken dottedIdentifier)
                 {
+                    // Pop the previous query token if available
+                    QueryToken previousArgument = previousQueryTokens.Count > 0 ? previousQueryTokens.Pop() : null;
+
                     // Find the type of the dotted identifier by resolving it against the model. This also ensure case-insensitive resolution.
                     IEdmSchemaType dottedIdentifierType = UriEdmHelpers.FindTypeFromModel(state.Model, dottedIdentifier.Identifier, this.Resolver);
 
-                    // If the dotted identifier is a primitive type and the next token is not null, we need to ensure next token is null
-                    if (dottedIdentifierType is IEdmPrimitiveType && dottedIdentifier.NextToken != null)
+                    // If the dotted identifier is not a primitive type, set the next token to the previous argument
+                    if (dottedIdentifierType is not IEdmPrimitiveType && previousArgument != null)
                     {
-                        // If the next token is not null, we need to ensure it is null
-                        dottedIdentifier = new DottedIdentifierToken(dottedIdentifier.Identifier, null);
+                        // Set the next token of the dotted identifier to the previous argument
+                        dottedIdentifier.NextToken = previousArgument;
                     }
+
+                    // isof and cast can have 1 or 2 arguments, so we need to keep track of the previous argument
+                    previousQueryTokens.Push(argument);
 
                     return this.TryBindDottedIdentifierForIsOfOrCastFunctionCall(dottedIdentifier, dottedIdentifierType);
                 }
@@ -785,12 +794,16 @@ namespace Microsoft.OData.UriParser
                     ODataErrorStrings.MetadataBinder_CastOrIsOfExpressionWithWrongNumberOfOperands(args.Count));
             }
 
-            ConstantNode typeArgument = args.Last() as ConstantNode;
+            QueryNode queryNode = args.Last();
 
             IEdmTypeReference returnType = null;
-            if (typeArgument != null)
+            if (queryNode is SingleResourceCastNode singleResourceCastNode)
             {
-                returnType = TryGetTypeReference(state.Model, typeArgument.Value as string, state.Configuration.Resolver);
+                returnType = singleResourceCastNode.TypeReference;
+            }
+            else if (queryNode is ConstantNode constantNode)
+            {
+                returnType = TryGetTypeReference(state.Model, constantNode.Value as string, state.Configuration.Resolver);
             }
 
             if (returnType == null)
@@ -823,7 +836,7 @@ namespace Microsoft.OData.UriParser
             {
                 // throw if cast enum to not-string :
                 if ((args[0].GetEdmTypeReference() is IEdmEnumTypeReference)
-                    && !string.Equals(typeArgument.Value as string, Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
+                    && !string.Equals(returnType.FullName(), Microsoft.OData.Metadata.EdmConstants.EdmStringTypeName, StringComparison.Ordinal))
                 {
                     throw new ODataException(ODataErrorStrings.CastBinder_EnumOnlyCastToOrFromString);
                 }

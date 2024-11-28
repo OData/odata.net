@@ -412,9 +412,11 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         [Theory]
         [InlineData("cast(NS.Color'Green', 'Edm.String') eq 'blue'")]
         [InlineData("cast(NS.Color'Green', Edm.String) eq 'blue'")]
+        [InlineData("cast(NS.Color'Green', edm.string) eq 'blue'")]
+        [InlineData("cast(NS.Color'Green', EDM.STRING) eq 'blue'")]
         public void ParseFilterCastMethodWithEdmPrimitiveTypes(string filterQuery)
         {
-            var filter = ParseFilter(filterQuery, this.userModel, this.entityType, this.entitySet);
+            var filter = ParseFilter(filterQuery, true, this.userModel, this.entityType, this.entitySet);
             var bon = filter.Expression.ShouldBeBinaryOperatorNode(BinaryOperatorKind.Equal);
             var convertNode = Assert.IsType<ConvertNode>(bon.Left);
             var functionCallNode = Assert.IsType<SingleValueFunctionCallNode>(convertNode.Source);
@@ -657,6 +659,12 @@ namespace Microsoft.OData.Tests.ScenarioTests.UriParser
         private FilterClause ParseFilter(string text, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet)
         {
             return new ODataQueryOptionParser(edmModel, entityType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } }).ParseFilter();
+        }
+
+        private FilterClause ParseFilter(string text, bool caseInsensitive, IEdmModel edmModel, IEdmEntityType edmEntityType, IEdmEntitySet edmEntitySet)
+        {
+            return new ODataQueryOptionParser(edmModel, entityType, edmEntitySet, new Dictionary<string, string>() { { "$filter", text } })
+            { Resolver = new ODataUriResolver() { EnableCaseInsensitive = caseInsensitive } }.ParseFilter();
         }
     }
 }
