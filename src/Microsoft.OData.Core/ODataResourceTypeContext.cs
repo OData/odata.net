@@ -55,7 +55,7 @@ namespace Microsoft.OData
         /// </summary>
         public virtual string NavigationSourceName
         {
-            get { return this.ValidateAndReturn(default(string)); }
+            get { return default(string); }
         }
 
         /// <summary>
@@ -63,7 +63,7 @@ namespace Microsoft.OData
         /// </summary>
         public virtual string NavigationSourceEntityTypeName
         {
-            get { return this.ValidateAndReturn(default(string)); }
+            get { return default(string); }
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Microsoft.OData
         /// </summary>
         public virtual string NavigationSourceFullTypeName
         {
-            get { return this.ValidateAndReturn(default(string)); }
+            get { return default(string); }
         }
 
         /// <summary>
@@ -155,22 +155,6 @@ namespace Microsoft.OData
             }
 
             return new ODataResourceTypeContext(expectedResourceType, throwIfMissingTypeInfo);
-        }
-
-        /// <summary>
-        /// Validate and return the given value.
-        /// </summary>
-        /// <typeparam name="T">The type of the value to validate.</typeparam>
-        /// <param name="value">The value to validate.</param>
-        /// <returns>The return value.</returns>
-        private T ValidateAndReturn<T>(T value) where T : class
-        {
-            if (this.throwIfMissingTypeInfo && value == null)
-            {
-                throw new ODataException(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-            }
-
-            return value;
         }
 
         /// <summary>

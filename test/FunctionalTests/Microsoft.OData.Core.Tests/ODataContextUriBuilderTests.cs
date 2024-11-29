@@ -393,12 +393,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void ShouldThrowIfEntitySetIsMissingWithoutSerializationInfoOnFeedResponse()
+        public void ShouldThrowIfEntitySetAndTypeInfoIsMissingWithoutSerializationInfoOnFeedResponse()
         {
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateFeedContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+                test.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 
@@ -455,12 +455,12 @@ namespace Microsoft.OData.Tests
         }
 
         [Fact]
-        public void ShouldThrowIfEntitySetIsMissingOnEntryResponse()
+        public void ShouldThrowIfEntitySetAndTypeInfoIsMissingOnEntryResponse()
         {
             foreach (ODataVersion version in Versions)
             {
                 Action test = () => this.CreateEntryContextUri(ResponseTypeContextWithoutTypeInfo, version);
-                test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+                test.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             }
         }
 

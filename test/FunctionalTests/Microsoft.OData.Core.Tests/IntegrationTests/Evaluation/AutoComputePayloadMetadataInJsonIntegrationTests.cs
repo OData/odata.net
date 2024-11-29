@@ -6,6 +6,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -2084,7 +2085,7 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
         }
 
         [Fact]
-        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldThrowODataResourceTypeContext_MetadataOrSerializationInfoMissingException()
+        public void WritingInFullMetadataModeForNavigationPropertyWithoutBindingShouldPass()
         {
             ODataItem[] itemsToWrite = new ODataItem[]
             {
@@ -2095,8 +2096,8 @@ namespace Microsoft.OData.Tests.IntegrationTests.Evaluation
             const string selectClause = "UnknownCollectionNavProp";
             const string expandClause = "ExpandedNavLink($expand=UnknownCollectionNavProp)";
 
-            Action test = () => this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
-            test.Throws<ODataException>(Strings.ODataMetadataBuilder_UnknownEntitySet("UnknownCollectionNavProp"));
+            this.GetWriterOutputForContentTypeAndKnobValue("application/json;odata.metadata=full", true, itemsToWrite, Model, EntitySet, EntityType, selectClause, expandClause);
+            Assert.Equal(new Uri("http://example.com/EntitySet(123)/UnknownCollectionNavProp(234)"),this.entryWithOnlyData2.Id);
         }
 
         [Fact]

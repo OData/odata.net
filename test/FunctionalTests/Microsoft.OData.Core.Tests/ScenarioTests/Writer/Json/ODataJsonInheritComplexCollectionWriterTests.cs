@@ -117,7 +117,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
           //  Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, items, "", writingResponse: true);
-            sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            sync.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
            // Assert.Throws<AggregateException>(async);
         }
 
@@ -186,7 +186,7 @@ namespace Microsoft.OData.Tests.ScenarioTests.Writer.Json
         {
             Action sync = () => WriteAndValidateSync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
             //Action async = () => WriteAndValidateAsync(/*itemTypeReference*/ null, this.collectionStartWithoutSerializationInfo, derivedItems, "", writingResponse: true);
-            sync.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            sync.Throws<ODataException>(Strings.ODataContextUriBuilder_NavigationSourceOrTypeNameMissingForResourceOrResourceSet);
             //Assert.Throws<AggregateException>(async);
         }
 

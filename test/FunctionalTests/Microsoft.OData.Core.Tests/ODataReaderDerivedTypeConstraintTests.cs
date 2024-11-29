@@ -320,7 +320,7 @@ namespace Microsoft.OData.Tests
                 Assert.Equal(5, resource.Properties.OfType<ODataProperty>().Single().Value);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
-                Assert.Throws<ODataException>(() => nestedResourceInfo.Url);
+                Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer/FriendCustomer"), nestedResourceInfo.Url);
                 Assert.Equal("FriendCustomer", nestedResourceInfo.Name);
             };
 
@@ -364,7 +364,7 @@ namespace Microsoft.OData.Tests
                 Assert.Equal("NS.VipCustomer", resource.TypeName);
 
                 ODataNestedResourceInfo nestedResourceInfo = Assert.IsType<ODataNestedResourceInfo>(ms.Pop()); // FriendCustomer Nested resource info
-                Assert.Throws<ODataException>(() => nestedResourceInfo.Url);
+                Assert.Equal(new Uri("http://example.com/Customers(7)/FriendCustomer/NS.VipCustomer/FriendCustomer"), nestedResourceInfo.Url);
                 Assert.Equal("FriendCustomer", nestedResourceInfo.Name);
             };
 

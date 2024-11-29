@@ -37,12 +37,14 @@ namespace Microsoft.OData.Tests.IntegrationTests.Writer.Json
         }
 
         [Fact]
-        public void ShouldNotBeAbleToWriteEntryInResponseWithoutSpecifyingEntitySet()
+        public void ShouldBeAbleToWriteEntryInResponseWithoutSpecifyingEntitySet()
         {
             IEdmEntityType entityType = GetEntityType();
             IEdmEntitySet entitySet = GetEntitySet(entityType);
-            Action writeEmptyEntry = () => WriteJsonEntry(false, new Uri("http://temp.org/"), false, new ODataResource(), entitySet, entityType);
-            writeEmptyEntry.Throws<ODataException>(ErrorStrings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
+            var resource = new ODataResource { Properties = new ODataProperty[] { new ODataProperty { Name = "Key", Value = new ODataPrimitiveValue("abc") } } };
+            const string expected = "{\"@odata.context\":\"http://temp.org/$metadata#Fake.Type\",\"Key\":\"abc\"}";
+            var actual = WriteJsonEntry(false, new Uri("http://temp.org/"), false, resource, entitySet, entityType);
+            Assert.Equal(expected, actual);
         }
 
         [Fact]

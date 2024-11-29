@@ -155,20 +155,6 @@ namespace Microsoft.OData.Tests
 
         #region BaseTypeContextThatThrows
         [Fact]
-        public void BaseTypeContextThatThrowsShouldThrowForEntitySetName()
-        {
-            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceName);
-            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-        }
-
-        [Fact]
-        public void BaseTypeContextThatThrowsShouldThrowForEntitySetElementTypeName()
-        {
-            Action test = () => Assert.Null(BaseTypeContextThatThrows.NavigationSourceEntityTypeName);
-            test.Throws<ODataException>(Strings.ODataResourceTypeContext_MetadataOrSerializationInfoMissing);
-        }
-
-        [Fact]
         public void BaseTypeContextThatThrowsShouldReturnNullExpectedEntityTypeName()
         {
             Assert.Null(BaseTypeContextThatThrows.ExpectedResourceTypeName);

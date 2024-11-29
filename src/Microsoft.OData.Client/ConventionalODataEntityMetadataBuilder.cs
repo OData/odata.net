@@ -68,6 +68,11 @@ namespace Microsoft.OData.Client
         /// </returns>
         internal override Uri GetEditLink()
         {
+            if(this.entitySetName == null)
+            {
+                return null;
+            }
+
             Uri entitySetUri = this.uriBuilder.BuildEntitySetUri(this.baseUri, this.entitySetName);
             Uri editLink = this.uriBuilder.BuildEntityInstanceUri(entitySetUri, this.entityInstance);
             return editLink;

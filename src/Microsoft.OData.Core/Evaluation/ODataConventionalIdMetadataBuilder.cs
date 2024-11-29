@@ -131,11 +131,11 @@ namespace Microsoft.OData.Evaluation
                 case EdmNavigationSourceKind.Singleton:
                     uri = this.ComputeIdForSingleton();
                     break;
+                // Treat UnknownEntitySet as a containment
+                case EdmNavigationSourceKind.UnknownEntitySet:
                 case EdmNavigationSourceKind.ContainedEntitySet:
                     uri = this.ComputeIdForContainment();
                     break;
-                case EdmNavigationSourceKind.UnknownEntitySet:
-                    throw new ODataException(Strings.ODataMetadataBuilder_UnknownEntitySet(this.ResourceMetadataContext.TypeContext.NavigationSourceName));
                 default:
                     uri = this.ComputeId();
                     break;
@@ -152,7 +152,7 @@ namespace Microsoft.OData.Evaluation
         /// </returns>
         private Uri ComputeId()
         {
-            if (this.ResourceMetadataContext.KeyProperties.Any())
+            if (this.ResourceMetadataContext.KeyProperties.Any() && this.ResourceMetadataContext.TypeContext.NavigationSourceName != null)
             {
                 Uri uri = this.UriBuilder.BuildBaseUri();
                 uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);
