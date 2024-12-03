@@ -152,7 +152,7 @@ namespace Microsoft.OData.Evaluation
         /// </returns>
         private Uri ComputeId()
         {
-            if (this.ResourceMetadataContext.KeyProperties.Any() && this.ResourceMetadataContext.TypeContext.NavigationSourceName != null)
+            if (this.ResourceMetadataContext.TypeContext.NavigationSourceName != null && this.ResourceMetadataContext.KeyProperties.Any())
             {
                 Uri uri = this.UriBuilder.BuildBaseUri();
                 uri = this.UriBuilder.BuildEntitySetUri(uri, this.ResourceMetadataContext.TypeContext.NavigationSourceName);

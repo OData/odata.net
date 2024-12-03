@@ -4101,17 +4101,11 @@ namespace Microsoft.OData
             {
                 if (this.typeContext == null)
                 {
-                    // For Entity, currently we check the navigation source.
-                    // For Complex, we don't have navigation source, So we shouldn't check it.
-                    // If ResourceType is not provided, serialization info or navigation source info should be provided.
-                    bool throwIfMissingTypeInfo = writingResponse && (this.ResourceType == null || this.ResourceType.TypeKind == EdmTypeKind.Entity);
-
                     this.typeContext = ODataResourceTypeContext.Create(
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
-                        this.ResourceType,
-                        throwIfMissingTypeInfo);
+                        this.ResourceType);
                 }
 
                 return this.typeContext;
@@ -4270,15 +4264,11 @@ namespace Microsoft.OData
                 {
                     IEdmStructuredType expectedResourceType = this.ResourceTypeFromMetadata ?? this.ResourceType;
 
-                    // For entity, we will check the navigation source info
-                    bool throwIfMissingTypeInfo = writingResponse && (expectedResourceType == null || expectedResourceType.TypeKind == EdmTypeKind.Entity);
-
                     this.typeContext = ODataResourceTypeContext.Create(
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
-                        expectedResourceType,
-                        throwIfMissingTypeInfo);
+                        expectedResourceType);
                 }
 
                 return this.typeContext;
@@ -4379,8 +4369,7 @@ namespace Microsoft.OData
                         this.serializationInfo,
                         this.NavigationSource,
                         EdmTypeWriterResolver.Instance.GetElementType(this.NavigationSource),
-                        this.fakeEntityType,
-                        writingResponse);
+                        this.fakeEntityType);
                 }
 
                 return this.typeContext;

@@ -26,53 +26,35 @@ namespace Microsoft.OData
         protected string expectedResourceTypeName;
 
         /// <summary>
-        /// If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.
-        /// </summary>
-        private readonly bool throwIfMissingTypeInfo;
-
-        /// <summary>
         /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
-        /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
-        private ODataResourceTypeContext(bool throwIfMissingTypeInfo)
+        private ODataResourceTypeContext()
         {
-            this.throwIfMissingTypeInfo = throwIfMissingTypeInfo;
         }
 
         /// <summary>
         /// Constructs an instance of <see cref="ODataResourceTypeContext"/>.
         /// </summary>
         /// <param name="expectedResourceType">The expected resource type of resource set or resource.</param>
-        /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
-        private ODataResourceTypeContext(IEdmStructuredType expectedResourceType, bool throwIfMissingTypeInfo)
+        private ODataResourceTypeContext(IEdmStructuredType expectedResourceType)
         {
             this.expectedResourceType = expectedResourceType;
-            this.throwIfMissingTypeInfo = throwIfMissingTypeInfo;
         }
 
         /// <summary>
         /// The navigation source name of the resource set or resource.
         /// </summary>
-        public virtual string NavigationSourceName
-        {
-            get { return default(string); }
-        }
+        public virtual string NavigationSourceName { get; }
 
         /// <summary>
         /// The entity type name of the navigation source of the resource set or resource.
         /// </summary>
-        public virtual string NavigationSourceEntityTypeName
-        {
-            get { return default(string); }
-        }
+        public virtual string NavigationSourceEntityTypeName { get;  }
 
         /// <summary>
         /// The full type name of the navigation source of the resource set or resource.
         /// </summary>
-        public virtual string NavigationSourceFullTypeName
-        {
-            get { return default(string); }
-        }
+        public virtual string NavigationSourceFullTypeName { get; }
 
         /// <summary>
         /// The kind of the navigation source of the resource set or resource.
@@ -133,9 +115,8 @@ namespace Microsoft.OData
         /// <param name="navigationSource">The navigation source of the resource set or resource.</param>
         /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
         /// <param name="expectedResourceType">The expected structured type of the resource set or resource.</param>
-        /// <param name="throwIfMissingTypeInfo">If true, throw if any of the set or type name cannot be determined; if false, return null when any of the set or type name cannot determined.</param>
         /// <returns>A new instance of <see cref="ODataResourceTypeContext"/>.</returns>
-        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType, bool throwIfMissingTypeInfo)
+        internal static ODataResourceTypeContext Create(ODataResourceSerializationInfo serializationInfo, IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType)
         {
             if (serializationInfo != null)
             {
@@ -154,7 +135,7 @@ namespace Microsoft.OData
                 return new ODataResourceTypeContextWithModel(navigationSource, navigationSourceEntityType, expectedResourceType);
             }
 
-            return new ODataResourceTypeContext(expectedResourceType, throwIfMissingTypeInfo);
+            return new ODataResourceTypeContext(expectedResourceType);
         }
 
         /// <summary>
@@ -172,7 +153,7 @@ namespace Microsoft.OData
             /// </summary>
             /// <param name="serializationInfo">The serialization info from the resource set or resource instance.</param>
             internal ODataResourceTypeContextWithoutModel(ODataResourceSerializationInfo serializationInfo)
-                : base(/*throwIfMissingTypeInfo*/false)
+                : base()
             {
                 Debug.Assert(serializationInfo != null, "serializationInfo != null");
                 this.serializationInfo = serializationInfo;
@@ -311,7 +292,7 @@ namespace Microsoft.OData
             /// <param name="navigationSourceEntityType">The entity type of the navigation source.</param>
             /// <param name="expectedResourceType">The expected resource type of the resource set or resource.</param>
             internal ODataResourceTypeContextWithModel(IEdmNavigationSource navigationSource, IEdmEntityType navigationSourceEntityType, IEdmStructuredType expectedResourceType)
-                : base(expectedResourceType, /*throwIfMissingTypeInfo*/false)
+                : base(expectedResourceType)
             {
                 Debug.Assert(expectedResourceType != null, "expectedResourceType != null");
                 Debug.Assert(navigationSource != null
