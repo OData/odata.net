@@ -20,6 +20,131 @@
 
     //// TODO fill in the rest
 
+    public sealed class x2D
+    {
+        private x2D()
+        {
+        }
+
+        public static x2D Instance { get; } = new x2D();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x2F
+    {
+        private x2F()
+        {
+        }
+
+        public static x2F Instance { get; } = new x2F();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x30
+    {
+        private x30()
+        {
+        }
+
+        public static x30 Instance { get; } = new x30();
+    }
+
+    public sealed class x31
+    {
+        private x31()
+        {
+        }
+
+        public static x31 Instance { get; } = new x31();
+    }
+
+    public sealed class x32
+    {
+        private x32()
+        {
+        }
+
+        public static x32 Instance { get; } = new x32();
+    }
+
+    public sealed class x33
+    {
+        private x33()
+        {
+        }
+
+        public static x33 Instance { get; } = new x33();
+    }
+
+    public sealed class x34
+    {
+        private x34()
+        {
+        }
+
+        public static x34 Instance { get; } = new x34();
+    }
+
+    public sealed class x35
+    {
+        private x35()
+        {
+        }
+
+        public static x35 Instance { get; } = new x35();
+    }
+
+    public sealed class x36
+    {
+        private x36()
+        {
+        }
+
+        public static x36 Instance { get; } = new x36();
+    }
+
+    public sealed class x37
+    {
+        private x37()
+        {
+        }
+
+        public static x37 Instance { get; } = new x37();
+    }
+
+    public sealed class x38
+    {
+        private x38()
+        {
+        }
+
+        public static x38 Instance { get; } = new x38();
+    }
+
+    public sealed class x39
+    {
+        private x39()
+        {
+        }
+
+        public static x39 Instance { get; } = new x39();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x3D
+    {
+        private x3D()
+        {
+        }
+
+        public static x3D Instance { get; } = new x3D();
+    }
+
+    //// TODO fill in the rest
+
     public sealed class x41
     {
         private x41()

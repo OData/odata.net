@@ -42,12 +42,12 @@ namespace AbnfParser.CstNodes
 
             public sealed class DashInner : Inner
             {
-                public DashInner(Dash dash)
+                public DashInner(x2D dash)
                 {
                     Dash = dash;
                 }
 
-                public Dash Dash { get; }
+                public x2D Dash { get; }
             }
         }
     }
