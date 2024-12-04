@@ -265,5 +265,265 @@
 
             public Core.x5A Value { get; }
         }
+
+        public sealed class x61 : Alpha
+        {
+            public x61(AbnfParser.CstNodes.Core.x61 value)
+            {
+                Value = value;
+            }
+
+            public Core.x61 Value { get; }
+        }
+
+        public sealed class x62 : Alpha
+        {
+            public x62(AbnfParser.CstNodes.Core.x62 value)
+            {
+                Value = value;
+            }
+
+            public Core.x62 Value { get; }
+        }
+
+        public sealed class x63 : Alpha
+        {
+            public x63(AbnfParser.CstNodes.Core.x63 value)
+            {
+                Value = value;
+            }
+
+            public Core.x63 Value { get; }
+        }
+
+        public sealed class x64 : Alpha
+        {
+            public x64(AbnfParser.CstNodes.Core.x64 value)
+            {
+                Value = value;
+            }
+
+            public Core.x64 Value { get; }
+        }
+
+        public sealed class x65 : Alpha
+        {
+            public x65(AbnfParser.CstNodes.Core.x65 value)
+            {
+                Value = value;
+            }
+
+            public Core.x65 Value { get; }
+        }
+
+        public sealed class x66 : Alpha
+        {
+            public x66(AbnfParser.CstNodes.Core.x66 value)
+            {
+                Value = value;
+            }
+
+            public Core.x66 Value { get; }
+        }
+
+        public sealed class x67 : Alpha
+        {
+            public x67(AbnfParser.CstNodes.Core.x67 value)
+            {
+                Value = value;
+            }
+
+            public Core.x67 Value { get; }
+        }
+
+        public sealed class x68 : Alpha
+        {
+            public x68(AbnfParser.CstNodes.Core.x68 value)
+            {
+                Value = value;
+            }
+
+            public Core.x68 Value { get; }
+        }
+
+        public sealed class x69 : Alpha
+        {
+            public x69(AbnfParser.CstNodes.Core.x69 value)
+            {
+                Value = value;
+            }
+
+            public Core.x69 Value { get; }
+        }
+
+        public sealed class x6A : Alpha
+        {
+            public x6A(AbnfParser.CstNodes.Core.x6A value)
+            {
+                Value = value;
+            }
+
+            public Core.x6A Value { get; }
+        }
+
+        public sealed class x6B : Alpha
+        {
+            public x6B(AbnfParser.CstNodes.Core.x6B value)
+            {
+                Value = value;
+            }
+
+            public Core.x6B Value { get; }
+        }
+
+        public sealed class x6C : Alpha
+        {
+            public x6C(AbnfParser.CstNodes.Core.x6C value)
+            {
+                Value = value;
+            }
+
+            public Core.x6C Value { get; }
+        }
+
+        public sealed class x6D : Alpha
+        {
+            public x6D(AbnfParser.CstNodes.Core.x6D value)
+            {
+                Value = value;
+            }
+
+            public Core.x6D Value { get; }
+        }
+
+        public sealed class x6E : Alpha
+        {
+            public x6E(AbnfParser.CstNodes.Core.x6E value)
+            {
+                Value = value;
+            }
+
+            public Core.x6E Value { get; }
+        }
+
+        public sealed class x6F : Alpha
+        {
+            public x6F(AbnfParser.CstNodes.Core.x6F value)
+            {
+                Value = value;
+            }
+
+            public Core.x6F Value { get; }
+        }
+
+        public sealed class x70 : Alpha
+        {
+            public x70(AbnfParser.CstNodes.Core.x70 value)
+            {
+                Value = value;
+            }
+
+            public Core.x70 Value { get; }
+        }
+
+        public sealed class x71 : Alpha
+        {
+            public x71(AbnfParser.CstNodes.Core.x71 value)
+            {
+                Value = value;
+            }
+
+            public Core.x71 Value { get; }
+        }
+
+        public sealed class x72 : Alpha
+        {
+            public x72(AbnfParser.CstNodes.Core.x72 value)
+            {
+                Value = value;
+            }
+
+            public Core.x72 Value { get; }
+        }
+
+        public sealed class x73 : Alpha
+        {
+            public x73(AbnfParser.CstNodes.Core.x73 value)
+            {
+                Value = value;
+            }
+
+            public Core.x73 Value { get; }
+        }
+
+        public sealed class x74 : Alpha
+        {
+            public x74(AbnfParser.CstNodes.Core.x74 value)
+            {
+                Value = value;
+            }
+
+            public Core.x74 Value { get; }
+        }
+
+        public sealed class x75 : Alpha
+        {
+            public x75(AbnfParser.CstNodes.Core.x75 value)
+            {
+                Value = value;
+            }
+
+            public Core.x75 Value { get; }
+        }
+
+        public sealed class x76 : Alpha
+        {
+            public x76(AbnfParser.CstNodes.Core.x76 value)
+            {
+                Value = value;
+            }
+
+            public Core.x76 Value { get; }
+        }
+
+        public sealed class x77 : Alpha
+        {
+            public x77(AbnfParser.CstNodes.Core.x77 value)
+            {
+                Value = value;
+            }
+
+            public Core.x77 Value { get; }
+        }
+
+        public sealed class x78 : Alpha
+        {
+            public x78(AbnfParser.CstNodes.Core.x78 value)
+            {
+                Value = value;
+            }
+
+            public Core.x78 Value { get; }
+        }
+
+        public sealed class x79 : Alpha
+        {
+            public x79(AbnfParser.CstNodes.Core.x79 value)
+            {
+                Value = value;
+            }
+
+            public Core.x79 Value { get; }
+        }
+
+        public sealed class x7A : Alpha
+        {
+            public x7A(AbnfParser.CstNodes.Core.x7A value)
+            {
+                Value = value;
+            }
+
+            public Core.x7A Value { get; }
+        }
     }
 }
