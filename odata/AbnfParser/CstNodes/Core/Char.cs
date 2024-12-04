@@ -62,6 +62,35 @@
 
     //// TODO fill in the rest
 
+    public sealed class x28
+    {
+        private x28()
+        {
+        }
+
+        public static x28 Instance { get; } = new x28();
+    }
+
+    public sealed class x29
+    {
+        private x29()
+        {
+        }
+
+        public static x29 Instance { get; } = new x29();
+    }
+
+    public sealed class x2A
+    {
+        private x2A()
+        {
+        }
+
+        public static x2A Instance { get; } = new x2A();
+    }
+
+    //// TODO fill in the rest
+
     public sealed class x2D
     {
         private x2D()
@@ -430,6 +459,26 @@
         }
 
         public static x5A Instance { get; } = new x5A();
+    }
+
+    public sealed class x5B
+    {
+        private x5B()
+        {
+        }
+
+        public static x5B Instance { get; } = new x5B();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x5D
+    {
+        private x5D()
+        {
+        }
+
+        public static x5D Instance { get; } = new x5D();
     }
 
     //// TODO fill in the rest
