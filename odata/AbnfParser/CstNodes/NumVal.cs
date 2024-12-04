@@ -1,12 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace AbnfParser.CstNodes
+﻿namespace AbnfParser.CstNodes
 {
-    public class NumVal
+    public abstract class NumVal
     {
+        private NumVal()
+        {
+        }
+
+        //// TODO do these
+
+        public sealed class BinVal : NumVal
+        {
+        }
+
+        public sealed class DecVal : NumVal
+        {
+        }
+
+        public sealed class HexVal : NumVal
+        {
+        }
     }
 }

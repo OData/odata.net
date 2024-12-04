@@ -60,7 +60,68 @@
         public static x20 Instance { get; } = new x20();
     }
 
-    //// TODO fill in the rest
+    public sealed class x21
+    {
+        private x21()
+        {
+        }
+
+        public static x21 Instance { get; } = new x21();
+    }
+
+    public sealed class x22
+    {
+        private x22()
+        {
+        }
+
+        public static x22 Instance { get; } = new x22();
+    }
+
+    public sealed class x23
+    {
+        private x23()
+        {
+        }
+
+        public static x23 Instance { get; } = new x23();
+    }
+
+    public sealed class x24
+    {
+        private x24()
+        {
+        }
+
+        public static x24 Instance { get; } = new x24();
+    }
+
+    public sealed class x25
+    {
+        private x25()
+        {
+        }
+
+        public static x25 Instance { get; } = new x25();
+    }
+
+    public sealed class x26
+    {
+        private x26()
+        {
+        }
+
+        public static x26 Instance { get; } = new x26();
+    }
+
+    public sealed class x27
+    {
+        private x27()
+        {
+        }
+
+        public static x27 Instance { get; } = new x27();
+    }
 
     public sealed class x28
     {
