@@ -17,6 +17,28 @@
             private Inner()
             {
             }
+
+            public sealed class RuleInner : Inner
+            {
+                public RuleInner(Rule rule)
+                {
+                    Rule = rule;
+                }
+
+                public Rule Rule { get; }
+            }
+
+            public sealed class CommentInner : Inner
+            {
+                public CommentInner(IEnumerable<Cwsp> cwsps, Cnl cnl)
+                {
+                    Cwsps = cwsps;
+                    Cnl = cnl;
+                }
+
+                public IEnumerable<Cwsp> Cwsps { get; }
+                public Cnl Cnl { get; }
+            }
         }
     }
 }
