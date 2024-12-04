@@ -29,6 +29,26 @@
         public static x09 Instance { get; } = new x09();
     }
 
+    public sealed class x0A
+    {
+        private x0A()
+        {
+        }
+
+        public static x0A Instance { get; } = new x0A();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x0D
+    {
+        private x0D()
+        {
+        }
+
+        public static x0D Instance { get; } = new x0D();
+    }
+
     //// TODO fill in the rest
 
     public sealed class x20
