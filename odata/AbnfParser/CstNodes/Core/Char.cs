@@ -20,6 +20,28 @@
 
     //// TODO fill in the rest
 
+    public sealed class x09
+    {
+        private x09()
+        {
+        }
+
+        public static x09 Instance { get; } = new x09();
+    }
+
+    //// TODO fill in the rest
+
+    public sealed class x20
+    {
+        private x20()
+        {
+        }
+
+        public static x20 Instance { get; } = new x20();
+    }
+
+    //// TODO fill in the rest
+
     public sealed class x2D
     {
         private x2D()
