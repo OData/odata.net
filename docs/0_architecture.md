@@ -216,8 +216,6 @@ For these reasons (and many others), I think it's best for now to simply underst
 
 ### data flow
 
-https://mermaid.js.org/syntax/sequenceDiagram.html
-
 ```mermaid
 ---
 title: request flow
@@ -278,6 +276,8 @@ Notice that in each case, the request and response types are the same for both t
 1. The entire HTTP portion of the flow can be removed, meaning that **any** routing infrastructure can be leveraged while sharing the same common "odata_request" and "odata_response" types. This would allow ASP.NET services and azure functions to share the same basic scaffolding.
 2. Because the HTTP portion is not strictly necessary for processing a request, it means that odata services can be easily composed at this layer. If an odata_request is sent by a client using the same type that it is processed by the service, then it means that additional odata services can themselves be treated as "data stores". More on this [later](#a-common-abstraction-for-handling-a-request).
 3. These types can be shared by consumers of the odata libraries, but currently they are not. To see the impact of this sharing, let's dive into the mechanics of each translation of the data:
+
+(NOTE: whenever a CST is reference below, it is not necessarily being exposed to customers or something that customers are expected to use).
 
 #### user defined types to odata request
 
@@ -481,65 +481,8 @@ Clearly, there's still a lot of infrastructure to flesh out, and a lot of implem
 
 ## follow-ups
 1. dive into all of the interfaces+datatypes for request handling, parsing, transcribing, translating, etc.
-2. being able to stream payloads
-3. handling serialization of customer-defined types
-4. CSDL defined authz
-5. custom headers, query options, endpoints, etc.
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+2. there must be an analog to the existing "syntactic AST"
+3. being able to stream payloads
+4. handling serialization of customer-defined types
+5. CSDL defined authz
+6. custom headers, query options, endpoints, etc.
