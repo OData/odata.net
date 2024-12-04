@@ -2,6 +2,9 @@
 {
     using System.Collections.Generic;
 
+    /// <summary>
+    /// https://www.rfc-editor.org/rfc/rfc5234
+    /// </summary>
     public sealed class RuleList
     {
         public RuleList(IEnumerable<Inner> inners)
