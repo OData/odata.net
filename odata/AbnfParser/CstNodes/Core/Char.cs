@@ -176,6 +176,17 @@
 
     //// TODO fill in the rest
 
+    public sealed class x3B
+    {
+        private x3B()
+        {
+        }
+
+        public static x3B Instance { get; } = new x3B();
+    }
+
+    //// TODO fill in the rest
+
     public sealed class x3D
     {
         private x3D()
