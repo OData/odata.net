@@ -1838,7 +1838,7 @@ namespace Microsoft.OData.Json
                     string expectedNavigationSource = deltaResourceSetScope?.NavigationSource?.Name;
                     string currentNavigationSource = resource.SerializationInfo?.NavigationSourceName ?? resourceScope.NavigationSource?.Name;
 
-                    if (String.IsNullOrEmpty(currentNavigationSource) || currentNavigationSource != expectedNavigationSource)
+                    if (!String.IsNullOrEmpty(currentNavigationSource) && currentNavigationSource != expectedNavigationSource)
                     {
                         Debug.Assert(this.ScopeLevel <= 3, "Writing a nested deleted resource of the wrong type should already have been caught.");
 

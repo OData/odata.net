@@ -393,6 +393,12 @@ namespace Microsoft.OData.Evaluation
         /// </returns>
         internal override bool TryGetIdForSerialization(out Uri id)
         {
+            if(this.ResourceMetadataContext.TypeContext.NavigationSourceName == null)
+            {
+                id = null;
+                return false;
+            }
+
             id = this.ResourceMetadataContext.Resource.IsTransient ? null : this.GetId();
             return true;
         }
@@ -405,10 +411,13 @@ namespace Microsoft.OData.Evaluation
         {
             Uri uri = this.ResourceMetadataContext.Resource.HasNonComputedId ? this.ResourceMetadataContext.Resource.NonComputedId : this.ComputedId;
 
-            Debug.Assert(this.ResourceMetadataContext != null && this.ResourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
-            if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
+            if (uri != null)
             {
-                uri = this.UriBuilder.AppendTypeSegment(uri, this.ResourceMetadataContext.ActualResourceTypeName);
+                Debug.Assert(this.ResourceMetadataContext != null && this.ResourceMetadataContext.TypeContext != null, "this.resourceMetadataContext != null && this.resourceMetadataContext.TypeContext != null");
+                if (this.ResourceMetadataContext.ActualResourceTypeName != this.ResourceMetadataContext.TypeContext.NavigationSourceEntityTypeName)
+                {
+                    uri = this.UriBuilder.AppendTypeSegment(uri, this.ResourceMetadataContext.ActualResourceTypeName);
+                }
             }
 
             return uri;

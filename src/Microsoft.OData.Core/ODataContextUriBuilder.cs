@@ -172,25 +172,40 @@ namespace Microsoft.OData
             }
             else
             {
-                // No path information
-                switch (info.DeltaKind)
-                {
-                    case ODataDeltaKind.ResourceSet:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaResourceSet, UriKind.Relative);
-                    case ODataDeltaKind.DeletedEntry:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedEntry, UriKind.Relative);
-                    case ODataDeltaKind.Link:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaLink, UriKind.Relative);
-                    case ODataDeltaKind.DeletedLink:
-                        return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedLink, UriKind.Relative);
-                }
-
                 if (!string.IsNullOrEmpty(info.TypeName))
                 {   // #TypeName
                     builder.Append(info.TypeName);
+
+                    switch (info.DeltaKind)
+                    {
+                        case ODataDeltaKind.ResourceSet:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeltaResourceSet);
+                            break;
+                        case ODataDeltaKind.DeletedEntry:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeletedEntry);
+                            break;
+                        case ODataDeltaKind.Link:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeltaLink);
+                            break;
+                        case ODataDeltaKind.DeletedLink:
+                            builder.Append(ODataConstants.UriSegmentSeparatorChar + ODataConstants.DeletedLink);
+                            break;
+                    }
                 }
                 else
                 {
+                    switch (info.DeltaKind)
+                    {
+                        case ODataDeltaKind.ResourceSet:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaResourceSet, UriKind.Relative);
+                        case ODataDeltaKind.DeletedEntry:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedEntry, UriKind.Relative);
+                        case ODataDeltaKind.Link:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeltaLink, UriKind.Relative);
+                        case ODataDeltaKind.DeletedLink:
+                            return new Uri(ODataConstants.ContextUriFragmentIndicator + ODataConstants.DeletedLink, UriKind.Relative);
+                    }
+
                     return null;
                 }
             }

@@ -267,8 +267,7 @@ namespace Microsoft.OData.Evaluation
                     IEdmEntityType navigationSourceElementType = this.edmTypeResolver.GetElementType(navigationSource);
                     IODataResourceTypeContext typeContext =
                         ODataResourceTypeContext.Create( /*serializationInfo*/
-                            null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType,
-                            /*throwIfMissingTypeInfo*/ true);
+                            null, navigationSource, navigationSourceElementType, resourceState.ResourceTypeFromMetadata ?? resourceState.ResourceType);
 
                     IODataResourceMetadataContext resourceMetadataContext = ODataResourceMetadataContext.Create(
                         resource,

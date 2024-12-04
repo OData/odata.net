@@ -238,12 +238,14 @@ namespace Microsoft.OData
         {
             Debug.Assert(typeContext != null, "typeContext != null");
 
+            string typeName = typeContext.NavigationSourceEntityTypeName ?? typeContext.ExpectedResourceTypeName;
+
             ODataContextUrlInfo contextUriInfo = new ODataContextUrlInfo()
             {
                 IsUnknownEntitySet = typeContext.NavigationSourceKind == EdmNavigationSourceKind.UnknownEntitySet,
                 NavigationSource = typeContext.NavigationSourceName,
-                TypeCast = typeContext.NavigationSourceEntityTypeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
-                TypeName = typeContext.NavigationSourceEntityTypeName,
+                TypeCast = typeName == typeContext.ExpectedResourceTypeName ? null : typeContext.ExpectedResourceTypeName,
+                TypeName = EdmLibraryExtensions.GetCollectionTypeName(typeName),
                 IncludeFragmentItemSelector = kind == ODataDeltaKind.Resource && typeContext.NavigationSourceKind != EdmNavigationSourceKind.Singleton,
                 DeltaKind = kind,
                 NavigationPath = ComputeNavigationPath(typeContext.NavigationSourceKind, null, typeContext.NavigationSourceName),

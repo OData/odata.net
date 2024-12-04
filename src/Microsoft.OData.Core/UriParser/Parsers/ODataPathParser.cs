@@ -1516,7 +1516,7 @@ namespace Microsoft.OData.UriParser
                         segment.TargetKind = RequestTargetKind.Enum;
                         break;
                     default:
-                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition(), "must be primitive type or type definition property");
+                        Debug.Assert(property.Type.IsPrimitive() || property.Type.IsTypeDefinition() || property.Type.IsUntyped(), "must be primitive type or type definition property");
                         segment.TargetKind = RequestTargetKind.Primitive;
                         break;
                 }
