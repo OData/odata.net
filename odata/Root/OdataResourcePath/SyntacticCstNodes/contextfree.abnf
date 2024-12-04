@@ -1,3 +1,17 @@
+
+
+; TODO TODO TODO TODO TODO TODO TODO TODO
+; "evaluate" the ABNF to show where expression sequences are allowed by multiple paths through the ABNF; these are the "ambiguities"
+; use literals and odataIdentifier as "terminal" and re-evaluate if there are other teminals that are needed (keyPathLiteral for example seems likely)
+; 
+; how do you want to distinguish between things like odataIdentifier and keyPathLiteral? you could
+; 1. treat them both as "identifier" or something
+; 2. distinguish them as individual things (but this might lead to cases where a keyPathLiteral is labeled as an odataIdentifier)
+; 3. have a DU that says "we *know* this was a keyPathLiteral" and "we *know* this was an odataIdentifier" and "it's possible this was a keyPathLiteral or an odataIdentifier, we can't distinguish"
+; TODO TODO TODO TODO TODO TODO TODO TODO
+
+
+
 odataRelativeUri	= '$batch' [ "?" batchOptions ]
 					/ '$entity' "?" entityOptions
 					/ '$entity' "/" qualifiedTypeName ? entityCastOptions
