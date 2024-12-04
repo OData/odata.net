@@ -1,0 +1,120 @@
+odataRelativeUri	= '$batch' [ "?" batchOptions ]
+					/ '$entity' "?" entityOptions
+					/ '$entity' "/" qualifiedTypeName ? entityCastOptions
+					/ '$metadata' [ "?" metadataOptions ] [ context ]
+					/ resourcePath [ "?" queryOptions ]
+
+batchOptions	= batchOption *( "&" batchOption )
+
+; TODO do `odataRelativeUri`s that start with $entity 
+; TODO do `odataRelativeUri`s that start with $metadata
+
+resourcePath	= one
+				/ TODO
+				/ '$all' [ "/" qualifiedTypeName ]	; '$all' [ "/" qualifiedTypeName ]
+
+; entitySetName [ collectionNavigation ]
+one	= odataIdentifier [ "/" qualifiedTypeName ] [ simpleKey ] ; TODO finish this
+		/ odataIdentifier [ "/" qualifiedTypeName ] [ compoundKey ] ; TODO finish this
+		/ ; TODO finsih this
+
+batchOption	= format
+			/ customQueryOption
+
+format	= ( "$format" / "format" ) EQ
+		  ( "atom"
+		  / "json"
+		  / "xml"
+		  / 1*pchar "/" 1*pchar
+		  )
+
+customQueryOption	= customName [ EQ customValue ]
+
+customName	= qchar-no-AMP-EQ-AT-DOLLAR *( qchar-no-AMP-EQ )
+
+customValue	= *( qchar-no-AMP )
+
+qualifiedTypeName	= namespace "." entityTypeName
+
+namespace	= namespacePart *( "." namespacePart )
+
+namespacePart = odataIdentifier
+
+entityTypeName	= odataIdentifier
+
+odataIdentifier	= identifierLeadingCharacter *127identifierCharacter
+
+identifierLeadingCharacter	= ALPHA / "_" ; plus Unicode characters from the categories L or Nl
+
+identifierCharacter	= ALPHA / "_" / DIGIT ; plus Unicode characters from the categories L, Nl, Nd, Mn, Mc, Pc, or Cf
+
+pchar	= unreserved
+		/ pct-encoded
+		/ sub-delims
+		/ ":"
+		/ "@"
+
+unreserved	= ALPHA
+			/ DIGIT
+			/ "-"
+			/ "."
+			/ "_"
+			/ "~"
+
+pct-encoded	= "%" HEXDIG HEXDIG
+
+sub-delims	= "$" 
+			/ "&"
+			/ "'"
+			/ "="
+			/ other-delims
+
+other-delims	= "!"
+				/ "("
+				/ ")"
+				/ "*"
+				/ "+"
+				/ ","
+				/ ";"
+
+qchar-no-AMP	= unreserved
+				/ pct-encoded
+				/ other-delims
+				/ ":"
+				/ "@"
+				/ "/"
+				/ "?"
+				/ "$"
+				/ "'"
+				/ "="
+
+qchar-no-AMP-EQ	= unreserved
+				/ pct-encoded
+				/ other-delims
+				/ ":"
+				/ "@"
+				/ "/"
+				/ "?"
+				/ "$"
+				/ "'"
+qchar-no-AMP-EQ-AT-DOLLAR	= unreserved
+							/ pct-encoded
+							/ other-delims
+							/ ":"
+							/ "/"
+							/ "?"
+							/ "'"
+
+;------------------------------------------------------------------------------
+; 9. Punctuation
+;------------------------------------------------------------------------------
+
+EQ	= "="
+
+;------------------------------------------------------------------------------
+; C. ABNF core definitions [RFC5234]
+;------------------------------------------------------------------------------
+
+ALPHA	= %x41-5A / %x61-7A 
+DIGIT	= %x30-39 
+HEXDIG = DIGIT / A-to-F
