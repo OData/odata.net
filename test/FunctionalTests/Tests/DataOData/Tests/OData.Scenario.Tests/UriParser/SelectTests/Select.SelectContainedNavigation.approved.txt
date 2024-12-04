@@ -1,8 +1,0 @@
-$select = Child
-$expand = 
-
-
-SelectExpandQueryOption
-	AllSelected = False
-	SelectedItems
-		Path[(NavigationProperty: Child)]

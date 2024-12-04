@@ -1,8 +1,0 @@
-Combination: 1; TestConfiguration = Format: Json, Request: True, Synchronous: True
-Model Present: true
-{"primitive":"Hi"}
-
-Combination: 2; TestConfiguration = Format: Json, Request: True, Synchronous: False
-Model Present: true
-{"primitive":"Hi"}
-
