@@ -1,8 +1,0 @@
-$select = *
-$expand = 
-
-
-SelectExpandQueryOption
-	AllSelected = False
-	SelectedItems
-		(Wildcard)
