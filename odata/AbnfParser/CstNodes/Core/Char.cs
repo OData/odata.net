@@ -280,7 +280,14 @@
         public static x3B Instance { get; } = new x3B();
     }
 
-    //// TODO fill in the rest
+    public sealed class x3C
+    {
+        private x3C()
+        {
+        }
+
+        public static x3C Instance { get; } = new x3C();
+    }
 
     public sealed class x3D
     {
@@ -289,6 +296,15 @@
         }
 
         public static x3D Instance { get; } = new x3D();
+    }
+
+    public sealed class x3E
+    {
+        private x3E()
+        {
+        }
+
+        public static x3E Instance { get; } = new x3E();
     }
 
     //// TODO fill in the rest
