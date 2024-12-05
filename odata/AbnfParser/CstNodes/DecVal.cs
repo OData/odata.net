@@ -10,6 +10,20 @@
         {
         }
 
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(DecVal node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(DecsOnly node, TContext context);
+            protected internal abstract TResult Accept(ConcatenatedDecs node, TContext context);
+            protected internal abstract TResult Accept(Range node, TContext context);
+        }
+
         public sealed class DecsOnly : DecVal
         {
             public DecsOnly(x64 d, IEnumerable<Digit> digits)
@@ -20,6 +34,11 @@
 
             public x64 D { get; }
             public IEnumerable<Digit> Digits { get; }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class ConcatenatedDecs : DecVal
@@ -46,6 +65,11 @@
                 public x2E Dot { get; }
                 public IEnumerable<Digit> Digits { get; }
             }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class Range : DecVal
@@ -71,6 +95,11 @@
 
                 public x2D Dash { get; }
                 public IEnumerable<Digit> Digits { get; }
+            }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
             }
         }
     }
