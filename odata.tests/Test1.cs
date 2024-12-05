@@ -31,27 +31,19 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x3F;
-            var end = 0x7E;
+            var start = 0x61;
+            var end = 0x7A;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                builder.AppendLine($"public sealed class {className} : ProseVal");
-                builder.AppendLine("{");
-                builder.AppendLine($"public {className}(Core.x3C lessThan, Core.{className} value, Core.x3E greaterThan)");
-                builder.AppendLine("{");
-                builder.AppendLine("LessThan = lessThan;");
-                builder.AppendLine("Value = value;");
-                builder.AppendLine("GreaterThan = greaterThan;");
-                builder.AppendLine("}");
-                builder.AppendLine();
-                builder.AppendLine($"public Core.x3C LessThan {{ get; }}");
-                builder.AppendLine($"public Core.{className} Value {{ get; }}");
-                builder.AppendLine($"public Core.x3E GreaterThan {{ get; }}");
-                builder.AppendLine("}");
-                builder.AppendLine();
+                /*builder.AppendLine($"public static Parser<Alpha.{className}> {className} {{ get; }} =");
+                builder.AppendLine($"\tfrom value in {className}Parser.Instance");
+                builder.AppendLine($"\tselect new Alpha.{className}(value);");
+                builder.AppendLine();*/
+
+                builder.AppendLine($".Or({className})");
             }
 
             File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
