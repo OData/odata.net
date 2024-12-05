@@ -6,7 +6,7 @@
     public static class RuleListParser
     {
         public static Parser<RuleList> Instance { get; } =
-            from inners in InnerParser.Instance.Many()
+            from inners in InnerParser.Instance.AtLeastOnce()
             select new RuleList(inners);
 
         public static class InnerParser
