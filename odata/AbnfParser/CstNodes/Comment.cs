@@ -23,6 +23,19 @@
             {
             }
 
+            protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+            public abstract class Visitor<TResult, TContext>
+            {
+                public TResult Visit(Inner node, TContext context)
+                {
+                    return node.Dispatch(this, context);
+                }
+
+                protected internal abstract TResult Accept(InnerWsp node, TContext context);
+                protected internal abstract TResult Accept(InnerVchar node, TContext context);
+            }
+
             public sealed class InnerWsp : Inner
             {
                 public InnerWsp(Wsp wsp)
@@ -31,6 +44,11 @@
                 }
 
                 public Wsp Wsp { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
             }
 
             public sealed class InnerVchar : Inner
@@ -41,6 +59,11 @@
                 }
 
                 public Vchar Vchar { get; }
+
+                protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+                {
+                    return visitor.Accept(this, context);
+                }
             }
         }
     }
