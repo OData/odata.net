@@ -50,5 +50,12 @@
 
             File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
         }
+
+        [TestMethod]
+        public void CoreRules()
+        {
+            var coreRulesText = File.ReadAllText(@"C:\github\odata.net\odata\AbnfParser\core.abnf");
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
+        }
     }
 }

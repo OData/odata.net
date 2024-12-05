@@ -7,7 +7,7 @@
     public static class RepeatParser
     {
         public static Parser<Repeat.Count> Count { get; } =
-            from digits in DigitParser.Instance.Many()
+            from digits in DigitParser.Instance.AtLeastOnce()
             select new Repeat.Count(digits);
 
         public static Parser<Repeat.Range> Range { get; } =

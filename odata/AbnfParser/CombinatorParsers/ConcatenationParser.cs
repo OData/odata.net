@@ -13,7 +13,7 @@
         public static class InnerParser
         {
             public static Parser<Concatenation.Inner> Instance { get; } =
-                from cwsps in CwspParser.Instance.Many()
+                from cwsps in CwspParser.Instance.AtLeastOnce()
                 from repetition in RepetitionParser.Instance
                 select new Concatenation.Inner(cwsps, repetition);
         }
