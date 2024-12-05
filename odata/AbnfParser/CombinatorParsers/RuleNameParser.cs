@@ -8,7 +8,7 @@
     {
         public static Parser<RuleName> Instance { get; } =
             from alpha in AlphaParser.Instance
-            from inners in Parse.Many(InnerParser.Instance)
+            from inners in InnerParser.Instance.Many()
             select new RuleName(alpha, inners);
 
         public static class InnerParser

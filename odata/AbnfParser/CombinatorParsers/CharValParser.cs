@@ -6,6 +6,12 @@
 
     public static class CharValParser
     {
+        public static Parser<CharVal> Instance { get; } =
+            from openDquote in DquoteParser.Instance
+            from inners in InnerParser.Instance.Many()
+            from closeDquote in DquoteParser.Instance
+            select new CharVal(openDquote, inners, closeDquote);
+
         public static class InnerParser
         {
             public static Parser<CharVal.Inner.x20> x20 { get; } =

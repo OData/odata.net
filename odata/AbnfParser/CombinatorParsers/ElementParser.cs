@@ -17,5 +17,9 @@
         public static Parser<Element.Option> Option { get; } =
             from value in OptionParser.Instance
             select new Element.Option(value);
+
+        public static Parser<Element.CharVal> CharVal { get; } =
+            from value in CharValParser.Instance
+            select new Element.CharVal(value);
     }
 }

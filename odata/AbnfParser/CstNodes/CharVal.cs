@@ -4,7 +4,7 @@
 
     using AbnfParser.CstNodes.Core;
 
-    public class CharVal
+    public sealed class CharVal
     {
         public CharVal(Dquote openDquote, IEnumerable<Inner> inners, Dquote closeDquote)
         {

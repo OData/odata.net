@@ -9,7 +9,7 @@
     {
         public static Parser<Comment> Instance { get; } =
             from semicolon in x3BParser.Instance
-            from inners in Parse.Many(InnerParser.Instance)
+            from inners in InnerParser.Instance.Many()
             from crlf in CrlfParser.Instance
             select new Comment(semicolon, inners, crlf);
 
