@@ -27,5 +27,29 @@
 
             Assert.AreEqual(url, stringBuilder.ToString());
         }
+
+        [TestMethod]
+        public void Generate()
+        {
+            var start = 0x01;
+            var end = 0x7F;
+
+            var builder = new StringBuilder();
+            for (int i = start; i <= end; ++i)
+            {
+                var className = $"x{i:X2}";
+                builder.AppendLine($"public sealed class {className}");
+                builder.AppendLine("{");
+                builder.AppendLine($"private {className}()");
+                builder.AppendLine("{");
+                builder.AppendLine("}");
+                builder.AppendLine();
+                builder.AppendLine($"public static {className} Instance {{ get; }} = new {className}();");
+                builder.AppendLine("}");
+                builder.AppendLine();
+            }
+
+            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
+        }
     }
 }

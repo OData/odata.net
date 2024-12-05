@@ -18,7 +18,68 @@
         public static x01 Instance { get; } = new x01();
     }
 
-    //// TODO fill in the rest
+    public sealed class x02
+    {
+        private x02()
+        {
+        }
+
+        public static x02 Instance { get; } = new x02();
+    }
+
+    public sealed class x03
+    {
+        private x03()
+        {
+        }
+
+        public static x03 Instance { get; } = new x03();
+    }
+
+    public sealed class x04
+    {
+        private x04()
+        {
+        }
+
+        public static x04 Instance { get; } = new x04();
+    }
+
+    public sealed class x05
+    {
+        private x05()
+        {
+        }
+
+        public static x05 Instance { get; } = new x05();
+    }
+
+    public sealed class x06
+    {
+        private x06()
+        {
+        }
+
+        public static x06 Instance { get; } = new x06();
+    }
+
+    public sealed class x07
+    {
+        private x07()
+        {
+        }
+
+        public static x07 Instance { get; } = new x07();
+    }
+
+    public sealed class x08
+    {
+        private x08()
+        {
+        }
+
+        public static x08 Instance { get; } = new x08();
+    }
 
     public sealed class x09
     {
@@ -38,7 +99,23 @@
         public static x0A Instance { get; } = new x0A();
     }
 
-    //// TODO fill in the rest
+    public sealed class x0B
+    {
+        private x0B()
+        {
+        }
+
+        public static x0B Instance { get; } = new x0B();
+    }
+
+    public sealed class x0C
+    {
+        private x0C()
+        {
+        }
+
+        public static x0C Instance { get; } = new x0C();
+    }
 
     public sealed class x0D
     {
@@ -49,7 +126,167 @@
         public static x0D Instance { get; } = new x0D();
     }
 
-    //// TODO fill in the rest
+    public sealed class x0E
+    {
+        private x0E()
+        {
+        }
+
+        public static x0E Instance { get; } = new x0E();
+    }
+
+    public sealed class x0F
+    {
+        private x0F()
+        {
+        }
+
+        public static x0F Instance { get; } = new x0F();
+    }
+
+    public sealed class x10
+    {
+        private x10()
+        {
+        }
+
+        public static x10 Instance { get; } = new x10();
+    }
+
+    public sealed class x11
+    {
+        private x11()
+        {
+        }
+
+        public static x11 Instance { get; } = new x11();
+    }
+
+    public sealed class x12
+    {
+        private x12()
+        {
+        }
+
+        public static x12 Instance { get; } = new x12();
+    }
+
+    public sealed class x13
+    {
+        private x13()
+        {
+        }
+
+        public static x13 Instance { get; } = new x13();
+    }
+
+    public sealed class x14
+    {
+        private x14()
+        {
+        }
+
+        public static x14 Instance { get; } = new x14();
+    }
+
+    public sealed class x15
+    {
+        private x15()
+        {
+        }
+
+        public static x15 Instance { get; } = new x15();
+    }
+
+    public sealed class x16
+    {
+        private x16()
+        {
+        }
+
+        public static x16 Instance { get; } = new x16();
+    }
+
+    public sealed class x17
+    {
+        private x17()
+        {
+        }
+
+        public static x17 Instance { get; } = new x17();
+    }
+
+    public sealed class x18
+    {
+        private x18()
+        {
+        }
+
+        public static x18 Instance { get; } = new x18();
+    }
+
+    public sealed class x19
+    {
+        private x19()
+        {
+        }
+
+        public static x19 Instance { get; } = new x19();
+    }
+
+    public sealed class x1A
+    {
+        private x1A()
+        {
+        }
+
+        public static x1A Instance { get; } = new x1A();
+    }
+
+    public sealed class x1B
+    {
+        private x1B()
+        {
+        }
+
+        public static x1B Instance { get; } = new x1B();
+    }
+
+    public sealed class x1C
+    {
+        private x1C()
+        {
+        }
+
+        public static x1C Instance { get; } = new x1C();
+    }
+
+    public sealed class x1D
+    {
+        private x1D()
+        {
+        }
+
+        public static x1D Instance { get; } = new x1D();
+    }
+
+    public sealed class x1E
+    {
+        private x1E()
+        {
+        }
+
+        public static x1E Instance { get; } = new x1E();
+    }
+
+    public sealed class x1F
+    {
+        private x1F()
+        {
+        }
+
+        public static x1F Instance { get; } = new x1F();
+    }
 
     public sealed class x20
     {
@@ -150,7 +387,23 @@
         public static x2A Instance { get; } = new x2A();
     }
 
-    //// TODO fill in the rest
+    public sealed class x2B
+    {
+        private x2B()
+        {
+        }
+
+        public static x2B Instance { get; } = new x2B();
+    }
+
+    public sealed class x2C
+    {
+        private x2C()
+        {
+        }
+
+        public static x2C Instance { get; } = new x2C();
+    }
 
     public sealed class x2D
     {
@@ -269,7 +522,14 @@
         public static x39 Instance { get; } = new x39();
     }
 
-    //// TODO fill in the rest
+    public sealed class x3A
+    {
+        private x3A()
+        {
+        }
+
+        public static x3A Instance { get; } = new x3A();
+    }
 
     public sealed class x3B
     {
@@ -307,7 +567,23 @@
         public static x3E Instance { get; } = new x3E();
     }
 
-    //// TODO fill in the rest
+    public sealed class x3F
+    {
+        private x3F()
+        {
+        }
+
+        public static x3F Instance { get; } = new x3F();
+    }
+
+    public sealed class x40
+    {
+        private x40()
+        {
+        }
+
+        public static x40 Instance { get; } = new x40();
+    }
 
     public sealed class x41
     {
@@ -552,7 +828,14 @@
         public static x5B Instance { get; } = new x5B();
     }
 
-    //// TODO fill in the rest
+    public sealed class x5C
+    {
+        private x5C()
+        {
+        }
+
+        public static x5C Instance { get; } = new x5C();
+    }
 
     public sealed class x5D
     {
@@ -563,7 +846,32 @@
         public static x5D Instance { get; } = new x5D();
     }
 
-    //// TODO fill in the rest
+    public sealed class x5E
+    {
+        private x5E()
+        {
+        }
+
+        public static x5E Instance { get; } = new x5E();
+    }
+
+    public sealed class x5F
+    {
+        private x5F()
+        {
+        }
+
+        public static x5F Instance { get; } = new x5F();
+    }
+
+    public sealed class x60
+    {
+        private x60()
+        {
+        }
+
+        public static x60 Instance { get; } = new x60();
+    }
 
     public sealed class x61
     {
@@ -799,5 +1107,50 @@
         public static x7A Instance { get; } = new x7A();
     }
 
-    //// TODO fill in the rest
+    public sealed class x7B
+    {
+        private x7B()
+        {
+        }
+
+        public static x7B Instance { get; } = new x7B();
+    }
+
+    public sealed class x7C
+    {
+        private x7C()
+        {
+        }
+
+        public static x7C Instance { get; } = new x7C();
+    }
+
+    public sealed class x7D
+    {
+        private x7D()
+        {
+        }
+
+        public static x7D Instance { get; } = new x7D();
+    }
+
+    public sealed class x7E
+    {
+        private x7E()
+        {
+        }
+
+        public static x7E Instance { get; } = new x7E();
+    }
+
+    public sealed class x7F
+    {
+        private x7F()
+        {
+        }
+
+        public static x7F Instance { get; } = new x7F();
+    }
+
+
 }
