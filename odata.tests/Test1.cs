@@ -200,6 +200,11 @@
             var abnfRulesText = File.ReadAllText(abnfRulesPath);
             var fullRulesText = string.Join(Environment.NewLine, coreRulesText, abnfRulesText);
             var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(fullRulesText);
+
+            var stringBuilder = new StringBuilder();
+            AbnfParser.Transcribers.RuleListTranscriber.Instance.Transcribe(cst, stringBuilder);
+            var transcribedText = stringBuilder.ToString();
+            Assert.AreEqual(fullRulesText, transcribedText);
         }
 
         [TestMethod]
