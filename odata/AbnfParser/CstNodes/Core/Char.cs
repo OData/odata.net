@@ -161,7 +161,14 @@
         public static x2D Instance { get; } = new x2D();
     }
 
-    //// TODO fill in the rest
+    public sealed class x2E
+    {
+        private x2E()
+        {
+        }
+
+        public static x2E Instance { get; } = new x2E();
+    }
 
     public sealed class x2F
     {
@@ -171,8 +178,6 @@
 
         public static x2F Instance { get; } = new x2F();
     }
-
-    //// TODO fill in the rest
 
     public sealed class x30
     {
