@@ -63,9 +63,9 @@
         {
             var ranges = new[]
             {
-                (0x01, 0x7F),
+                (0x30, 0x39),
             };
-            var elementName = "Char";
+            var elementName = "Digit";
 
             var builder = new StringBuilder();
             builder.AppendLine("using System.Text;");
