@@ -31,21 +31,25 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x21;
+            var start = 0x3F;
             var end = 0x7E;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                builder.AppendLine($"public sealed class {className} : Vchar");
+                builder.AppendLine($"public sealed class {className} : ProseVal");
                 builder.AppendLine("{");
-                builder.AppendLine($"public {className}(Core.{className} value)");
+                builder.AppendLine($"public {className}(Core.x3C lessThan, Core.{className} value, Core.x3E greaterThan)");
                 builder.AppendLine("{");
+                builder.AppendLine("LessThan = lessThan;");
                 builder.AppendLine("Value = value;");
+                builder.AppendLine("GreaterThan = greaterThan;");
                 builder.AppendLine("}");
                 builder.AppendLine();
+                builder.AppendLine($"public Core.x3C LessThan {{ get; }}");
                 builder.AppendLine($"public Core.{className} Value {{ get; }}");
+                builder.AppendLine($"public Core.x3E GreaterThan {{ get; }}");
                 builder.AppendLine("}");
                 builder.AppendLine();
             }
