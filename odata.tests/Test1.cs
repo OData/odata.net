@@ -1,6 +1,7 @@
 ﻿namespace odata.tests
 {
     using AbnfParser.CstNodes.Core;
+    using AbnfParserGenerator.CstNodesGenerator;
     using Root;
     using Root.OdataResourcePath.CombinatorParsers;
     using Root.OdataResourcePath.Transcribers;
@@ -221,6 +222,17 @@
 
             File.WriteAllText(odataRulesPath, transcribedText);
             Assert.AreEqual(odataRulesText, transcribedText);
+        }
+
+        [TestMethod]
+        public void CodeGenerator()
+        {
+            var coreRulesPath = @"C:\github\odata.net\odata\AbnfParser\core.abnf";
+            var coreRulesText = File.ReadAllText(coreRulesPath);
+            var cst = AbnfParser.CombinatorParsers.RuleListParser.Instance.Parse(coreRulesText);
+
+            var classes = new Classes();
+            new RuleListGenerator().Generate(cst, classes);
         }
     }
 }
