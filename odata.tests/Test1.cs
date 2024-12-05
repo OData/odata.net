@@ -31,7 +31,7 @@
         }
 
         [TestMethod]
-        public void GenerateCharTranscribers()
+        public void GenerateAlphaTranscribers()
         {
             var range = (0x01, 0x7E);
 
@@ -77,11 +77,27 @@
             builder.AppendLine();
             builder.AppendLine($"public static {elementName}Transcriber Instance {{ get; }} = new {elementName}Transcriber();");
             builder.AppendLine();
+            foreach (var range in ranges)
+            {
+                GenerateAccepts(builder, elementName, range.Item1, range.Item2);
+            }
 
+            builder.AppendLine("}");
+
+            File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
         }
 
         private void GenerateAccepts(StringBuilder builder, string elementName, int start, int end)
         {
+            for (int i = start; i <= end; ++i)
+            {
+                var className = $"x{i:X2}";
+                builder.AppendLine($"protected internal override Void Accept({elementName}.{className} node, StringBuilder context)");
+                builder.AppendLine("{");
+                builder.AppendLine($"return {className}Transcriber.Instance.Transcribe(node.Value, context);");
+                builder.AppendLine("}");
+                builder.AppendLine();
+            }
         }
 
         [TestMethod]
