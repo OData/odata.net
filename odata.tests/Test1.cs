@@ -63,9 +63,9 @@
         {
             var ranges = new[]
             {
-                (0x30, 0x39),
+                (0x21, 0x7E),
             };
-            var elementName = "Digit";
+            var elementName = "Vchar";
 
             var builder = new StringBuilder();
             builder.AppendLine("using System.Text;");
