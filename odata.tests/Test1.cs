@@ -31,14 +31,14 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x23;
+            var start = 0x21;
             var end = 0x7E;
 
             var builder = new StringBuilder();
             for (int i = start; i <= end; ++i)
             {
                 var className = $"x{i:X2}";
-                builder.AppendLine($"public sealed class {className} : Inner");
+                builder.AppendLine($"public sealed class {className} : Vchar");
                 builder.AppendLine("{");
                 builder.AppendLine($"public {className}(Core.{className} value)");
                 builder.AppendLine("{");
