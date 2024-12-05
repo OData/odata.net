@@ -9,6 +9,20 @@
         {
         }
 
+        protected abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);
+
+        public abstract class Visitor<TResult, TContext>
+        {
+            public TResult Visit(HexVal node, TContext context)
+            {
+                return node.Dispatch(this, context);
+            }
+
+            protected internal abstract TResult Accept(HexOnly node, TContext context);
+            protected internal abstract TResult Accept(ConcatenatedHex node, TContext context);
+            protected internal abstract TResult Accept(Range node, TContext context);
+        }
+
         public sealed class HexOnly : HexVal
         {
             public HexOnly(x78 x, IEnumerable<HexDig> hexDigs)
@@ -19,6 +33,11 @@
 
             public x78 X { get; }
             public IEnumerable<HexDig> HexDigs { get; }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class ConcatenatedHex : HexVal
@@ -45,6 +64,11 @@
                 public x2E Dot { get; }
                 public IEnumerable<HexDig> HexDigs { get; }
             }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
+            }
         }
 
         public sealed class Range : HexVal
@@ -70,6 +94,11 @@
 
                 public x2D Dash { get; }
                 public IEnumerable<HexDig> HexDigs { get; }
+            }
+
+            protected sealed override TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context)
+            {
+                return visitor.Accept(this, context);
             }
         }
     }
