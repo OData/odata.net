@@ -10,6 +10,13 @@
             from wsp in WspParser.Instance
             select new Cwsp.WspOnly(wsp);
 
-        public static Parser<Cwsp.CnlAndWsp> CnlAndWsp { get; }
+        public static Parser<Cwsp.CnlAndWsp> CnlAndWsp { get; } =
+            from cnl in CnlParser.Instance
+            from wsp in WspParser.Instance
+            select new Cwsp.CnlAndWsp(cnl, wsp);
+
+        public static Parser<Cwsp> Instance { get; } =
+            WspOnly
+            .Or<Cwsp>(CnlAndWsp);
     }
 }

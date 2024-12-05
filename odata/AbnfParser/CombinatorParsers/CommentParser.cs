@@ -7,7 +7,11 @@
 
     public static class CommentParser
     {
-        public static Parser<Comment> Instance { get; }
+        public static Parser<Comment> Instance { get; } =
+            from semicolon in x3BParser.Instance
+            from inners in Parse.Many(InnerParser.Instance)
+            from crlf in CrlfParser.Instance
+            select new Comment(semicolon, inners, crlf);
 
         public static class InnerParser
         {

@@ -5,6 +5,9 @@
 
     public static class CrlfParser
     {
-        public static Parser<Crlf> Instance { get; }
+        public static Parser<Crlf> Instance { get; } =
+            from cr in CrParser.Instance
+            from lf in LfParser.Instance
+            select new Crlf(cr, lf);
     }
 }
