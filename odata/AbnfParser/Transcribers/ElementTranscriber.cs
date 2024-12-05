@@ -1,9 +1,10 @@
-﻿using AbnfParser.CstNodes;
-using Root;
-using System.Text;
-
-namespace AbnfParser.Transcribers
+﻿namespace AbnfParser.Transcribers
 {
+    using System.Text;
+
+    using AbnfParser.CstNodes;
+    using Root;
+
     public sealed class ElementTranscriber : Element.Visitor<Void, StringBuilder>
     {
         private ElementTranscriber()
@@ -20,27 +21,32 @@ namespace AbnfParser.Transcribers
 
         protected internal override Void Accept(Element.Group node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            GroupTranscriber.Instance.Transcribe(node.Value, context);
+            return default;
         }
 
         protected internal override Void Accept(Element.Option node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            OptionTranscriber.Instance.Transcribe(node.Value, context);
+            return default;
         }
 
         protected internal override Void Accept(Element.CharVal node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            CharValTranscriber.Instance.Transcribe(node.Value, context);
+            return default;
         }
 
         protected internal override Void Accept(Element.NumVal node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            NumValTranscriber.Instance.Visit(node.Value, context);
+            return default;
         }
 
         protected internal override Void Accept(Element.ProseVal node, StringBuilder context)
         {
-            throw new System.NotImplementedException();
+            ProseValTranscriber.Instance.Visit(node.Value, context);
+            return default;
         }
     }
 }

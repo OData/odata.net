@@ -63,9 +63,10 @@
         {
             var ranges = new[]
             {
-                (0x21, 0x7E),
+                (0x20, 0x3D),
+                (0x3F, 0x7E),
             };
-            var elementName = "Vchar";
+            var elementName = "ProseVal";
 
             var builder = new StringBuilder();
             builder.AppendLine("using System.Text;");
