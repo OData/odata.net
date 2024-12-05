@@ -1769,5 +1769,18 @@
             return default;
         }
     }
+    public sealed class x7FTranscriber
+    {
+        private x7FTranscriber()
+        {
+        }
 
+        public static x7FTranscriber Instance { get; } = new x7FTranscriber();
+
+        public Void Transcribe(x7F node, StringBuilder context)
+        {
+            context.Append((char)0x7F);
+            return default;
+        }
+    }
 }

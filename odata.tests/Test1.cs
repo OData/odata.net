@@ -63,13 +63,17 @@
         {
             var ranges = new[]
             {
-                (0x41, 0x5A),
-                (0x61, 0x7A),
+                (0x01, 0x7F),
             };
-            var elementName = "Alpha";
+            var elementName = "Char";
 
             var builder = new StringBuilder();
-            builder.AppendLine($"public sealed class {elementName}Transcriber : {elementName}.Visitor<Root.Void, StringBuilder>");
+            builder.AppendLine("using System.Text;");
+            builder.AppendLine();
+            builder.AppendLine("using AbnfParser.CstNodes.Core;");
+            builder.AppendLine("using Root;");
+            builder.AppendLine();
+            builder.AppendLine($"public sealed class {elementName}Transcriber : {elementName}.Visitor<Void, StringBuilder>");
             builder.AppendLine("{");
             builder.AppendLine($"private {elementName}Transcriber()");
             builder.AppendLine("{");
