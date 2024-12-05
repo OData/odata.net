@@ -33,9 +33,12 @@
         [TestMethod]
         public void Generate()
         {
-            var start = 0x21;
-            var end = 0x7E;
-            var elementName = "Vchar";
+            var ranges = new[]
+            {
+                (0x20, 0x21),
+                (0x23, 0x7E),
+            };
+            var elementName = "Inner";
 
             var builder = new StringBuilder();
             builder.AppendLine("public abstract TResult Dispatch<TResult, TContext>(Visitor<TResult, TContext> visitor, TContext context);");
@@ -47,10 +50,17 @@
             builder.AppendLine("return node.Dispatch(this, context);");
             builder.AppendLine("}");
             builder.AppendLine();
-            GenerateAccepts(builder, start, end);
+            foreach (var range in ranges)
+            {
+                GenerateAccepts(builder, range.Item1, range.Item2);
+            }
+
             builder.AppendLine("}");
             builder.AppendLine();
-            GenerateClasses(builder, elementName, start, end);
+            foreach (var range in ranges)
+            {
+                GenerateClasses(builder, elementName, range.Item1, range.Item2);
+            }
 
 
             File.WriteAllText(@"C:\Users\gdebruin\code.txt", builder.ToString());
